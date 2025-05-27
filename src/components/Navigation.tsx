@@ -19,12 +19,12 @@ const Navigation = () => {
   return (
     <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center space-x-2">
             <img 
-              src="/lovable-uploads/61b6a361-9741-4d73-8075-0df2b2f8fb27.png" 
+              src="/lovable-uploads/c0b2c3e4-3b48-4b70-8e59-8b0f7b7a8e9b.png" 
               alt="MusicGift by Mango Records" 
-              className="h-10 w-auto"
+              className="h-16 w-auto"
             />
           </Link>
 
