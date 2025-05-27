@@ -24,7 +24,7 @@ const Navigation = () => {
             <img 
               src="/lovable-uploads/c0b2c3e4-3b48-4b70-8e59-8b0f7b7a8e9b.png" 
               alt="MusicGift by Mango Records" 
-              className="h-16 w-auto"
+              className="h-12 w-auto"
             />
           </Link>
 
