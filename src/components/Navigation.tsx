@@ -21,10 +21,11 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-purple rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">MG</span>
-            </div>
-            <span className="text-xl font-bold gradient-text">MusicGift</span>
+            <img 
+              src="/lovable-uploads/61b6a361-9741-4d73-8075-0df2b2f8fb27.png" 
+              alt="MusicGift by Mango Records" 
+              className="h-10 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation */}

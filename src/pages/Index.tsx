@@ -38,10 +38,12 @@ const Index = () => {
             </div>
             
             <div className="relative lg:pl-12">
-              <div className="w-80 h-80 mx-auto bg-white/10 rounded-full flex items-center justify-center animate-float glass-effect">
-                <div className="w-60 h-60 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center shadow-2xl">
-                  <div className="text-6xl">🎁</div>
-                </div>
+              <div className="w-80 h-80 mx-auto flex items-center justify-center animate-float">
+                <img 
+                  src="/lovable-uploads/65518432-abfe-42fc-acc5-25014d321134.png" 
+                  alt="Music Gift Box" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               
               {/* Floating music notes */}

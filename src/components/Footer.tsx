@@ -10,12 +10,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-purple rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">MG</span>
-              </div>
-              <span className="text-xl font-bold gradient-text">MusicGift</span>
-            </div>
+            <Link to="/" className="flex items-center space-x-2">
+              <img 
+                src="/lovable-uploads/61b6a361-9741-4d73-8075-0df2b2f8fb27.png" 
+                alt="MusicGift by Mango Records" 
+                className="h-10 w-auto"
+              />
+            </Link>
             <p className="text-gray-600">
               Creating personalized musical memories since 2020.
             </p>
