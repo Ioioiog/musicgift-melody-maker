@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { CalendarIcon, Upload, Mic } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslation } from '@/hooks/useTranslations';
 import AudioRecorder from './AudioRecorder';
 
 interface FieldOption {
@@ -66,7 +67,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   onAddonFieldChange,
   selectedPackage = ''
 }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const [date, setDate] = useState<Date>();
 
   // Helper function to check if addon should be shown based on trigger condition
@@ -182,7 +183,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
                           <Label className="font-semibold text-base cursor-pointer">
-                            {addon.label_key}
+                            {t(addon.label_key)}
                           </Label>
                           <Badge variant="secondary" className="bg-purple-100 text-purple-700">
                             +{addon.price} RON
@@ -190,7 +191,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                         </div>
                         {addon.description_key && (
                           <p className="text-sm text-gray-600 mb-3">
-                            {addon.description_key}
+                            {t(addon.description_key)}
                           </p>
                         )}
                         
