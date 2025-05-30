@@ -70,21 +70,6 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
           ))}
         </div>
       </div>
-      
-      {/* Progress Text */}
-      <div className="text-center">
-        <div className="inline-flex items-center px-4 py-2 bg-purple-50 rounded-full">
-          <span className="text-sm text-purple-700 font-medium">
-            Step {currentStep} of {steps.length}
-          </span>
-          <div className="ml-2 w-16 bg-gray-200 rounded-full h-1.5">
-            <div 
-              className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 rounded-full transition-all duration-700 ease-out"
-              style={{ width: `${(currentStep / steps.length) * 100}%` }}
-            />
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
