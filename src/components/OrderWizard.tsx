@@ -10,6 +10,7 @@ import TestimonialSection from './order/TestimonialSection';
 import OrderSummary from './order/OrderSummary';
 import { usePackages, usePackageSteps, useAddons } from '@/hooks/usePackageData';
 import { useTranslation } from '@/hooks/useTranslations';
+import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
 interface OrderWizardProps {
@@ -52,6 +53,7 @@ const ensureFieldOptionFormat = (field: any): Field => {
 
 const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const { t } = useTranslation();
+  const { user, loading: authLoading } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPackage, setSelectedPackage] = useState('');
   const [formData, setFormData] = useState<any>({
@@ -102,6 +104,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   console.log('Package steps:', packageSteps);
   console.log('Total steps:', totalSteps);
   console.log('Steps loading:', stepsLoading);
+  console.log('Auth user:', user);
+  console.log('Auth loading:', authLoading);
+
+  // Check authentication on component mount
+  useEffect(() => {
+    if (!authLoading && !user) {
+      toast({
+        title: t('authRequired', 'Authentication Required'),
+        description: t('authRequiredDesc', 'You must be logged in to place an order.'),
+        variant: "destructive"
+      });
+    }
+  }, [user, authLoading, toast, t]);
 
   const updateFormData = (field: string, value: any) => {
     console.log('Updating form data:', field, value);
@@ -188,6 +203,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   };
 
   const handleSubmit = async () => {
+    // Check authentication first
+    if (!user) {
+      toast({
+        title: t('authRequired', 'Authentication Required'),
+        description: t('authRequiredDesc', 'You must be logged in to place an order.'),
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (!canProceed()) {
       toast({
         title: t('completeRequiredFields', 'Please complete all required fields'),
@@ -209,10 +234,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         package: selectedPackage
       };
 
-      // Save order to database
+      console.log('Submitting order with user_id:', user.id);
+
+      // Save order to database with user_id
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .insert({
+          user_id: user.id, // Add user_id to satisfy RLS policy
           package_id: selectedPackageData?.id,
           form_data: finalData,
           selected_addons: selectedAddons,
@@ -222,7 +250,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         .select()
         .single();
 
-      if (orderError) throw orderError;
+      if (orderError) {
+        console.error('Order insert error:', orderError);
+        throw orderError;
+      }
+
+      console.log('Order created successfully:', orderData);
 
       // Save addon field data if any
       if (Object.keys(addonFieldValues).length > 0) {
@@ -311,6 +344,41 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const currentStepData = getCurrentStepData();
   const completionPercentage = totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0;
   const selectedPackageDetails = packages.find(pkg => pkg.value === selectedPackage);
+
+  // Show loading state for auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">{t('loadingAuth', 'Checking authentication...')}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show authentication required message
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="text-6xl mb-4">🔐</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            {t('authRequired', 'Authentication Required')}
+          </h2>
+          <p className="text-gray-600 mb-6">
+            {t('authRequiredDesc', 'You must be logged in to place an order.')}
+          </p>
+          <Button 
+            onClick={() => window.location.href = '/auth'}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold"
+          >
+            {t('signIn', 'Sign In')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   // Show loading state for packages
   if (packagesLoading) {

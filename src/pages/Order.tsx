@@ -2,6 +2,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
+import AuthGuard from "@/components/AuthGuard";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -28,17 +29,19 @@ const Order = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <Navigation />
-      
-      <section className="py-8 bg-gray-80">
-        <div className="container mx-auto px-4">
-          <OrderWizard onComplete={handleOrderComplete} />
-        </div>
-      </section>
+    <AuthGuard requireAuth={true}>
+      <div className="min-h-screen">
+        <Navigation />
+        
+        <section className="py-8 bg-gray-80">
+          <div className="container mx-auto px-4">
+            <OrderWizard onComplete={handleOrderComplete} />
+          </div>
+        </section>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </AuthGuard>
   );
 };
 
