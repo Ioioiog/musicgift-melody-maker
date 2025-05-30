@@ -80,7 +80,7 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('ro');
 
   const t = (key: string): string => {
     return translations[currentLanguage][key as keyof typeof translations['en']] || key;
