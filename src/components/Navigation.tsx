@@ -60,9 +60,9 @@ const Navigation = () => {
             </div>
             <Link
               to="/packages"
-              className="text-base font-medium transition-colors hover:text-purple-600 text-gray-700"
+              className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
             >
-              Order
+              Order Now
             </Link>
           </div>
 
@@ -108,10 +108,10 @@ const Navigation = () => {
                 </div>
                 <Link
                   to="/packages"
-                  className="text-sm font-medium transition-colors hover:text-purple-600 text-gray-600"
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Order
+                  Order Now
                 </Link>
               </div>
             </nav>
