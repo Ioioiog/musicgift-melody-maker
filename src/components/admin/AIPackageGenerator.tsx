@@ -12,6 +12,10 @@ import { Wand2, Eye, Check, X, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import type { Database } from '@/integrations/supabase/types';
+
+type FieldType = Database['public']['Enums']['field_type'];
+type PackageTagType = Database['public']['Enums']['package_tag_type'];
 
 interface GeneratedPackage {
   generationId: string;
@@ -62,6 +66,39 @@ const AIPackageGenerator = () => {
   const [showPreview, setShowPreview] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+
+  // Helper function to map field types to valid database enums
+  const mapFieldType = (fieldType: string): FieldType => {
+    const typeMap: Record<string, FieldType> = {
+      'text': 'text',
+      'textarea': 'textarea',
+      'email': 'email',
+      'tel': 'tel',
+      'phone': 'tel',
+      'select': 'select',
+      'checkbox': 'checkbox',
+      'checkbox-group': 'checkbox-group',
+      'radio': 'checkbox', // Map radio to checkbox as radio isn't in enum
+      'number': 'text', // Map number to text
+      'date': 'date',
+      'url': 'url',
+      'file': 'file'
+    };
+    return typeMap[fieldType] || 'text';
+  };
+
+  // Helper function to map tag types to valid database enums
+  const mapTagType = (tagType: string): PackageTagType => {
+    const typeMap: Record<string, PackageTagType> = {
+      'popular': 'popular',
+      'hot': 'hot',
+      'discount': 'discount',
+      'new': 'new',
+      'limited': 'limited',
+      'recommended': 'popular' // Map recommended to popular
+    };
+    return typeMap[tagType] || 'new';
+  };
 
   const handleGenerate = async () => {
     if (!formData.description.trim()) {
@@ -132,12 +169,11 @@ const AIPackageGenerator = () => {
             .insert({
               step_id: stepData.id,
               field_name: field.field_name,
-              field_type: field.field_type,
+              field_type: mapFieldType(field.field_type),
               placeholder_key: field.placeholder_key,
               required: field.required,
               field_order: field.field_order,
-              options: field.options ? JSON.stringify(field.options) : null,
-              is_active: true
+              options: field.options ? JSON.stringify(field.options) : null
             });
 
           if (fieldError) throw fieldError;
@@ -163,7 +199,7 @@ const AIPackageGenerator = () => {
           .from('package_tags')
           .insert({
             package_id: packageData.id,
-            tag_type: tag.tag_type,
+            tag_type: mapTagType(tag.tag_type),
             tag_label_key: tag.tag_label_key,
             styling_class: tag.styling_class
           });
@@ -321,7 +357,7 @@ const AIPackageGenerator = () => {
                             <div key={fieldIdx} className="flex items-center justify-between text-sm">
                               <span>{field.field_name}</span>
                               <div className="flex items-center space-x-2">
-                                <Badge variant="outline">{field.field_type}</Badge>
+                                <Badge variant="outline">{mapFieldType(field.field_type)}</Badge>
                                 {field.required && <Badge variant="destructive">Required</Badge>}
                               </div>
                             </div>
@@ -352,7 +388,7 @@ const AIPackageGenerator = () => {
                   <div className="flex space-x-2">
                     {generatedPackage.generatedData.tags.map((tag, idx) => (
                       <Badge key={idx} className={tag.styling_class}>
-                        {tag.tag_label_key}
+                        {tag.tag_label_key} ({mapTagType(tag.tag_type)})
                       </Badge>
                     ))}
                   </div>
