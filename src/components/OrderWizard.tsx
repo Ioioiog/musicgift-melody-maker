@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,11 +10,8 @@ import HelpSection from './order/HelpSection';
 import TestimonialSection from './order/TestimonialSection';
 import OrderSummary from './order/OrderSummary';
 import { usePackages, usePackageSteps, useAddons } from '@/hooks/usePackageData';
-import { getStepsForPackage } from '@/utils/dynamicStepConfig';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
-import { useFieldDependencies, shouldShowField } from '@/hooks/useFieldDependencies';
-import { useFieldValidation, validateField } from '@/hooks/useFieldValidation';
 
 interface OrderWizardProps {
   onComplete: (data: any) => void;
@@ -62,9 +60,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const { data: packageSteps = [], isLoading: stepsLoading } = usePackageSteps(selectedPackage);
   const { data: addons = [] } = useAddons();
 
-  // Transform steps for wizard usage
-  const allSteps = getStepsForPackage(packageSteps);
-  const maxSteps = Math.max(5, allSteps.length);
+  // Use dynamic steps from database, fallback to 5 steps minimum
+  const maxSteps = Math.max(5, packageSteps.length);
 
   const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({
@@ -86,8 +83,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   };
 
   const canProceed = () => {
-    const currentStepData = allSteps.find(step => step.step === currentStep);
-    if (!currentStepData) return false;
+    // For step 1 (package selection), check if package is selected
+    if (currentStep === 1) {
+      return formData.package && formData.package !== '';
+    }
+
+    // For other steps, check dynamic step fields
+    const currentStepData = packageSteps.find(step => step.step_number === currentStep);
+    if (!currentStepData) return true;
 
     return currentStepData.fields.every(field => {
       if (!field.required) return true;
@@ -177,12 +180,38 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     return packagePrice + addonsPrice;
   };
 
-  const currentStepData = allSteps.find(step => step.step === currentStep);
+  // Get current step data - either from database or fallback for package selection
+  const getCurrentStepData = () => {
+    if (currentStep === 1) {
+      // Package selection step
+      return {
+        step: 1,
+        step_number: 1,
+        title_key: 'selectYourPackage',
+        fields: [{
+          id: 'package-select',
+          field_name: 'package',
+          field_type: 'select',
+          placeholder_key: 'selectPackage',
+          required: true,
+          field_order: 1,
+          options: packages.map(pkg => ({
+            value: pkg.value,
+            label_key: pkg.label_key
+          }))
+        }]
+      };
+    }
+
+    return packageSteps.find(step => step.step_number === currentStep);
+  };
+
+  const currentStepData = getCurrentStepData();
   const completionPercentage = (currentStep / maxSteps) * 100;
   const selectedPackageDetails = packages.find(pkg => pkg.value === selectedPackage);
 
   // Show loading state
-  if (packagesLoading || stepsLoading) {
+  if (packagesLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
@@ -214,7 +243,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                           </div>
                           <div>
                             <h2 className="text-3xl font-bold text-gray-900">
-                              {currentStep === 3 ? t('tellUsAboutRecipient') : t(currentStepData.title)}
+                              {currentStep === 1 ? t('selectYourPackage') : t(currentStepData.title_key)}
                             </h2>
                             <p className="text-purple-600 font-medium">
                               {t('stepPackage')} {currentStep} {t('of')} {maxSteps}
@@ -232,12 +261,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                           <span>{Math.round(completionPercentage)}%</span>
                         </div>
                       </div>
-                      
-                      {currentStep === 3 && (
-                        <p className="text-lg text-gray-600 leading-relaxed">
-                          {t('helpUnderstand')}
-                        </p>
-                      )}
                     </div>
 
                     {/* Package Details Section */}
@@ -265,25 +288,27 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                               {selectedPackageDetails.delivery_time_key && (
                                 <div className="flex items-center space-x-1 text-gray-600">
                                   <Clock className="w-4 h-4" />
-                                  <span className="text-sm">{t(selectedPackageDetails.delivery_time_key)}</span>
+                                  <span className="text-sm">{selectedPackageDetails.delivery_time_key}</span>
                                 </div>
                               )}
                             </div>
                             
-                            <div className="mb-4">
-                              <h4 className="font-semibold text-gray-800 mb-2 flex items-center">
-                                <Star className="w-4 h-4 mr-2 text-yellow-500" />
-                                {t('whatsIncluded')}
-                              </h4>
-                              <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                {selectedPackageDetails.includes.map((include, index) => (
-                                  <li key={index} className="flex items-start space-x-2 text-sm text-gray-700">
-                                    <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
-                                    <span>{t(include.include_key)}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
+                            {selectedPackageDetails.includes && selectedPackageDetails.includes.length > 0 && (
+                              <div className="mb-4">
+                                <h4 className="font-semibold text-gray-800 mb-2 flex items-center">
+                                  <Star className="w-4 h-4 mr-2 text-yellow-500" />
+                                  {t('whatsIncluded')}
+                                </h4>
+                                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                  {selectedPackageDetails.includes.map((include, index) => (
+                                    <li key={index} className="flex items-start space-x-2 text-sm text-gray-700">
+                                      <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
+                                      <span>{t(include.include_key)}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
 
                             <div className="flex items-center space-x-2 text-sm text-green-600 font-medium">
                               <Shield className="w-4 h-4" />
