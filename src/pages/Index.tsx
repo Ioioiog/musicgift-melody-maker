@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -10,26 +11,25 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="pt-24 pb-16 bg-gradient-purple text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
+      <section className="pt-24 pb-16 bg-gradient-to-br from-purple-50 via-blue-50 to-purple-100 relative overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8 animate-fade-in">
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+              <h1 className="text-5xl lg:text-6xl font-bold leading-tight text-gray-800">
                 Give the Gift of Music
               </h1>
-              <p className="text-xl text-white/90 leading-relaxed">
+              <p className="text-xl text-gray-600 leading-relaxed">
                 A personalized song, created just for your special someone. 
                 The most unique gift they'll ever receive.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/packages">
-                  <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold">
+                  <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 rounded-full">
                     See Packages
                   </Button>
                 </Link>
                 <Link to="/testimonials">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
+                  <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-3 rounded-full">
                     Listen to Samples
                   </Button>
                 </Link>
@@ -51,11 +51,11 @@ const Index = () => {
               <div className="absolute top-32 left-10 text-2xl animate-bounce delay-300">♪</div>
               
               {/* Info Card */}
-              <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg max-w-xs">
+              <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg max-w-xs border border-purple-100">
                 <h3 className="font-semibold text-gray-900 mb-2">What is MusicGift for?</h3>
-                <p className="text-purple-600 font-medium">Wedding Songs</p>
+                <p className="text-purple-600 font-medium">Cereri în căsătorie</p>
                 <Link to="/testimonials">
-                  <Button size="sm" className="mt-3 bg-gradient-purple">
+                  <Button size="sm" className="mt-3 bg-purple-600 hover:bg-purple-700 text-white rounded-full">
                     See examples
                   </Button>
                 </Link>
