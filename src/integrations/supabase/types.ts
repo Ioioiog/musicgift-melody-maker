@@ -528,6 +528,7 @@ export type Database = {
         | "date"
         | "url"
         | "file"
+        | "audio-recorder"
       package_tag_type: "popular" | "hot" | "discount" | "new" | "limited"
       validation_rule_type:
         | "required"
@@ -668,6 +669,7 @@ export const Constants = {
         "date",
         "url",
         "file",
+        "audio-recorder",
       ],
       package_tag_type: ["popular", "hot", "discount", "new", "limited"],
       validation_rule_type: [

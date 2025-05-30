@@ -4,8 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown } from 'lucide-react';
-import { packages } from '@/data/packages';
-import { addons } from '@/data/packages';
+import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface OrderSummaryProps {
@@ -17,16 +16,28 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
   const { t } = useLanguage();
   const [isIncludesOpen, setIsIncludesOpen] = useState(false);
   
+  const { data: packages = [] } = usePackages();
+  const { data: addons = [] } = useAddons();
+  
   const packageDetails = packages.find(pkg => pkg.value === selectedPackage);
   
   if (!selectedPackage || !packageDetails) {
-    return null;
+    return (
+      <Card className="sticky top-8">
+        <CardHeader>
+          <CardTitle className="text-lg">{t('orderSummary')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-gray-500 text-sm">{t('selectPackageToSeeDetails')}</p>
+        </CardContent>
+      </Card>
+    );
   }
 
   const calculateTotal = () => {
     let total = packageDetails.price;
-    selectedAddons.forEach(addonId => {
-      const addon = addons[addonId as keyof typeof addons];
+    selectedAddons.forEach(addonKey => {
+      const addon = addons.find(a => a.addon_key === addonKey);
       if (addon) {
         total += addon.price;
       }
@@ -42,14 +53,14 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
       <CardContent className="space-y-4">
         {/* Package Summary */}
         <div className="border-b pb-4">
-          <h4 className="font-semibold mb-2">{t(packageDetails.labelKey)}</h4>
+          <h4 className="font-semibold mb-2">{t(packageDetails.label_key)}</h4>
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-600">{t('package')}</span>
             <span className="font-semibold">{packageDetails.price} RON</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600">{t('delivery')}</span>
-            <span className="text-sm">{t(packageDetails.details.deliveryTimeKey)}</span>
+            <span className="text-sm">{packageDetails.delivery_time_key ? t(packageDetails.delivery_time_key) : '3-5 days'}</span>
           </div>
         </div>
 
@@ -62,10 +73,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-2">
               <ul className="space-y-1">
-                {packageDetails.details.includesKeys.map((includeKey, index) => (
+                {packageDetails.includes && packageDetails.includes.map((include, index) => (
                   <li key={index} className="text-xs text-gray-600 flex items-start">
                     <span className="w-1 h-1 bg-purple-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
-                    <span>{t(includeKey)}</span>
+                    <span>{t(include.include_key)}</span>
                   </li>
                 ))}
               </ul>
@@ -78,11 +89,11 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
           <div className="border-b pb-4">
             <h5 className="font-medium mb-2 text-sm">{t('selectedAddons')}:</h5>
             <div className="space-y-2">
-              {selectedAddons.map(addonId => {
-                const addon = addons[addonId as keyof typeof addons];
+              {selectedAddons.map(addonKey => {
+                const addon = addons.find(a => a.addon_key === addonKey);
                 return addon ? (
-                  <div key={addonId} className="flex justify-between items-center">
-                    <span className="text-xs text-gray-600">{t(addon.labelKey)}</span>
+                  <div key={addonKey} className="flex justify-between items-center">
+                    <span className="text-xs text-gray-600">{t(addon.label_key)}</span>
                     <span className="text-xs font-semibold">+{addon.price} RON</span>
                   </div>
                 ) : null;

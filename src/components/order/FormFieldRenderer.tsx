@@ -156,35 +156,66 @@ const renderMultiselectField = (
   field: FormField,
   value: any[],
   onChange: (value: any[]) => void,
-  errors: string[] = []
+  errors: string[] = [],
+  selectedAddons?: string[],
+  onAddonChange?: (addonId: string, checked: boolean) => void,
+  availableAddons?: any[]
 ) => {
   const hasError = errors.length > 0;
   const selectedValues = Array.isArray(value) ? value : [];
   const validOptions = normalizeOptions(field.options);
 
+  // Check if this is an addons field
+  const isAddonsField = field.field_name === 'addons' || field.field_name.includes('addon');
+
   const handleCheckboxChange = (optionValue: string) => {
-    if (selectedValues.includes(optionValue)) {
-      onChange(selectedValues.filter((v) => v !== optionValue));
+    if (isAddonsField && onAddonChange) {
+      const isSelected = selectedAddons?.includes(optionValue) || false;
+      onAddonChange(optionValue, !isSelected);
     } else {
-      onChange([...selectedValues, optionValue]);
+      if (selectedValues.includes(optionValue)) {
+        onChange(selectedValues.filter((v) => v !== optionValue));
+      } else {
+        onChange([...selectedValues, optionValue]);
+      }
     }
   };
 
+  const getAddonPrice = (optionValue: string) => {
+    if (isAddonsField && availableAddons) {
+      const addon = availableAddons.find(a => a.addon_key === optionValue);
+      return addon?.price || 0;
+    }
+    return null;
+  };
+
+  const currentlySelected = isAddonsField ? selectedAddons || [] : selectedValues;
+
   return (
     <div className="space-y-2">
-      <div className={cn("grid gap-2 grid-cols-2 md:grid-cols-3", hasError && 'border border-red-500 rounded-md p-2')}>
-        {validOptions.map((option, index) => (
-          <div key={`${field.field_name}-multiselect-${option.value}-${index}`} className="flex items-center space-x-2">
-            <Checkbox
-              id={`${field.field_name}-${option.value}-${index}`}
-              checked={selectedValues.includes(option.value)}
-              onCheckedChange={() => handleCheckboxChange(option.value)}
-            />
-            <Label htmlFor={`${field.field_name}-${option.value}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              {option.label_key}
-            </Label>
-          </div>
-        ))}
+      <div className={cn("grid gap-2 grid-cols-1", hasError && 'border border-red-500 rounded-md p-2')}>
+        {validOptions.map((option, index) => {
+          const addonPrice = getAddonPrice(option.value);
+          return (
+            <div key={`${field.field_name}-multiselect-${option.value}-${index}`} className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
+              <div className="flex items-center space-x-3">
+                <Checkbox
+                  id={`${field.field_name}-${option.value}-${index}`}
+                  checked={currentlySelected.includes(option.value)}
+                  onCheckedChange={() => handleCheckboxChange(option.value)}
+                />
+                <Label htmlFor={`${field.field_name}-${option.value}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  {option.label_key}
+                </Label>
+              </div>
+              {addonPrice !== null && (
+                <span className="text-sm font-semibold text-purple-600">
+                  +{addonPrice} RON
+                </span>
+              )}
+            </div>
+          );
+        })}
       </div>
       {hasError && (
         <div className="text-red-500 text-sm">
@@ -407,13 +438,19 @@ interface FormFieldRendererProps {
   value: any;
   onChange: (value: any) => void;
   validationErrors?: string[];
+  selectedAddons?: string[];
+  onAddonChange?: (addonId: string, checked: boolean) => void;
+  availableAddons?: any[];
 }
 
 const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({ 
   field, 
   value, 
   onChange,
-  validationErrors = []
+  validationErrors = [],
+  selectedAddons,
+  onAddonChange,
+  availableAddons
 }) => {
   const { t } = useLanguage();
 
@@ -429,7 +466,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       case 'select':
         return renderSelectField(field, value, onChange, validationErrors, t);
       case 'multiselect':
-        return renderMultiselectField(field, value, onChange, validationErrors);
+        return renderMultiselectField(field, value, onChange, validationErrors, selectedAddons, onAddonChange, availableAddons);
       case 'checkbox':
         return renderCheckboxField(field, value, onChange, validationErrors);
       case 'radio':

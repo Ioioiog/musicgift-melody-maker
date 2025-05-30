@@ -325,7 +325,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                           <FormFieldRenderer 
                             field={field} 
                             value={formData[field.field_name]} 
-                            onChange={(value) => updateFormData(field.field_name, value)} 
+                            onChange={(value) => updateFormData(field.field_name, value)}
+                            selectedAddons={selectedAddons}
+                            onAddonChange={handleAddonChange}
+                            availableAddons={addons}
                           />
                         </div>
                       ))}
@@ -392,7 +395,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
             <div className="sticky top-8 space-y-6">
               <HelpSection />
               <TestimonialSection />
-              <OrderSummary selectedPackage={selectedPackage} selectedAddons={selectedAddons} />
+              {selectedPackage && (
+                <OrderSummary selectedPackage={selectedPackage} selectedAddons={selectedAddons} />
+              )}
             </div>
           </div>
         </div>
