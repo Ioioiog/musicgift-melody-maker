@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export type Language = 'en' | 'ro' | 'fr' | 'pl' | 'de';
@@ -16,7 +17,11 @@ const translations = {
     howItWorks: 'How It Works',
     testimonials: 'Testimonials',
     contact: 'Contact',
-    orderNow: 'Order Now'
+    orderNow: 'Order Now',
+    signIn: 'Sign In',
+    user: 'User',
+    accountSettings: 'Account Settings',
+    signOut: 'Sign Out'
   },
   ro: {
     home: 'Acasă',
@@ -25,7 +30,11 @@ const translations = {
     howItWorks: 'Cum Funcționează',
     testimonials: 'Testimoniale',
     contact: 'Contact',
-    orderNow: 'Comandă Acum'
+    orderNow: 'Comandă Acum',
+    signIn: 'Conectează-te',
+    user: 'Utilizator',
+    accountSettings: 'Setări cont',
+    signOut: 'Deconectează-te'
   },
   fr: {
     home: 'Accueil',
@@ -34,7 +43,11 @@ const translations = {
     howItWorks: 'Comment Ça Marche',
     testimonials: 'Témoignages',
     contact: 'Contact',
-    orderNow: 'Commander'
+    orderNow: 'Commander',
+    signIn: 'Se connecter',
+    user: 'Utilisateur',
+    accountSettings: 'Paramètres du compte',
+    signOut: 'Se déconnecter'
   },
   pl: {
     home: 'Strona Główna',
@@ -43,7 +56,11 @@ const translations = {
     howItWorks: 'Jak To Działa',
     testimonials: 'Opinie',
     contact: 'Kontakt',
-    orderNow: 'Zamów Teraz'
+    orderNow: 'Zamów Teraz',
+    signIn: 'Zaloguj się',
+    user: 'Użytkownik',
+    accountSettings: 'Ustawienia konta',
+    signOut: 'Wyloguj się'
   },
   de: {
     home: 'Startseite',
@@ -52,7 +69,11 @@ const translations = {
     howItWorks: 'Wie Es Funktioniert',
     testimonials: 'Bewertungen',
     contact: 'Kontakt',
-    orderNow: 'Jetzt Bestellen'
+    orderNow: 'Jetzt Bestellen',
+    signIn: 'Anmelden',
+    user: 'Benutzer',
+    accountSettings: 'Kontoeinstellungen',
+    signOut: 'Abmelden'
   }
 };
 
