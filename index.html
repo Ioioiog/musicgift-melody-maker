@@ -1,26 +1,623 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>musicgift-melody-maker</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicGift.ro - Create Your Perfect Music Gift</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="hero.css">
+    <link rel="stylesheet" href="packages.css">
+    <link rel="stylesheet" href="how-it-works.css">
+    <link rel="stylesheet" href="samples.css">
+    <link rel="stylesheet" href="testimonials.css">
+    <link rel="stylesheet" href="about.css">
+    <link rel="stylesheet" href="contact.css">
+    <link rel="stylesheet" href="modals.css">
+    <link rel="stylesheet" href="footer.css">
+    
+    <!-- External Resources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="logoMusicGift (1).png" alt="MusicGift by Mango Records" class="logo-img">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active" data-translate="nav_home">Home</a></li>
+                    <li><a href="#about" data-translate="nav_about">About Us</a></li>
+                    <li><a href="#packages" data-translate="nav_packages">Packages</a></li>
+                    <li><a href="#how-it-works" data-translate="nav_how_it_works">How It Works</a></li>
+                    <li><a href="#testimonials" data-translate="nav_testimonials">Testimonials</a></li>
+                    <li><a href="order.html" class="order-link" data-translate="nav_order">Order</a></li>
+                    <li><a href="#contact" data-translate="nav_contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="language-select">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="ro">RO</button>
+            </div>
+        </div>
+    </header>
 
-    <meta property="og:title" content="musicgift-melody-maker" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <!-- Main Content Sections -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 data-translate="hero_title">Give the Gift of Music</h1>
+                <p data-translate="hero_subtitle">A personalized song, created just for your special someone. The most unique gift they'll ever receive.</p>
+                <div class="cta-buttons">
+                    <a href="#packages" class="btn primary-btn" data-translate="hero_btn_packages">See Packages</a>
+                    <a href="#samples" class="btn secondary-btn" data-translate="hero_btn_samples">Listen to Samples</a>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="hero-image-container">
+                    <img src="hero_image.png" alt="Music Gift">
+                    <div id="motion-content" class="motion-content">
+                        <h3 data-translate="motion_title">Pentru ce este MusicGift?</h3>
+                        <div class="typewriter-container">
+                            <span id="typewriter-text">Aniversări </span>
+                            <span class="cursor">|</span>
+                        </div>
+                        <a href="#samples" class="btn primary-btn" data-translate="motion_btn">Vezi exemple</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h3 data-translate="about_subtitle">Creating Musical Memories </h3>
+                    <p data-translate="about_desc1">MusicGift.ro was founded with a simple mission: to help people express their deepest emotions through personalized music. We believe that every love story, every friendship, and every special moment deserves its own soundtrack.</p>
+                    
+                    <p data-translate="about_desc2">Our team of talented composers, lyricists, and vocalists work together to transform your stories into beautiful, custom-made songs. From romantic ballads to upbeat celebration songs, we've helped over customers create unforgettable musical gifts.</p>
+                    
+                    </div>
+                </div>
+                
+                <div class="about-team">
+                    <h3 data-translate="team_title">Our Creative Team</h3>
+                    <div class="team-members">
+                        <div class="team-member">
+                            <div class="member-avatar"></div>
+                            <div>
+                                <h4>Mihai Gruia</h4>
+                                <p data-translate="role_mihai">Producător muzical și compozitor, membru fondator Akcent, cu hituri internaționale precum 'That's My Name', 'Kylie'.</p>
+                            </div>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-avatar"></div>
+                            <div>
+                                <h4>Mango Records</h4>
+                                <p data-translate="role_mango">Casă de discuri independentă, cu peste 1000 de piese lansate global pe Spotify, Apple Music și YouTube.</p>
+                            </div>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-avatar"></div>
+                            <div>
+                                <h4>DOMG Studio</h4>
+                                <p data-translate="role_domg">Studio de creație muzicală pentru artiști români și internaționali de top: Akcent, Andra, Lora.</p>
+                            </div>
+                        </div>
+                        <div class="team-member">
+                            <div class="member-avatar"></div>
+                            <div>
+                                <h4>Do Music for Good Band</h4>
+                                <p data-translate="role_dmfg">Colectiv de interpreți profesioniști ce aduc la viață poveștile transformate în muzică.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="animated-scenarios">
+                    <div class="scenario-display">
+                        <div class="scenario-text">
+                            <span class="scenario-emoji">🎂</span>
+                            <span class="scenario-message">E ziua cuiva drag? Sărbătorește cu versuri, nu doar cu tort!</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="about-video">
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/aZMaYjnKLHA" frameborder="0" allowfullscreen></iframe>
 
-  <body>
-    <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="packages" class="packages">
+        <div class="container">
+            <h2 class="section-title" data-translate="packages_title">Choose Your Package</h2>
+            <p class="section-description" data-translate="packages_description">Select the perfect music package that fits your needs and budget</p>
+            
+            <div class="packages-grid">
+                <div class="package glassmorphism" data-package="personal">
+                    <div class="package-header">
+                        <h3 data-translate="package_personal">Personal</h3>
+                        <div class="price">300 <span>RON</span></div>
+                    </div>
+                    <div class="package-body">
+                        <p class="package-tagline">"A song made just for you and your loved ones."</p>
+                        <p class="package-for">For those who want to turn a personal story into a unique and meaningful gift – perfect for birthdays, weddings, and special occasions.</p>
+                        <ul class="features">
+                            <li><i class="fas fa-check"></i> <span>A custom-made song based on your story</span></li>
+                            <li><i class="fas fa-check"></i> <span>Professional vocals by the MusicGift team</span></li>
+                            <li><i class="fas fa-check"></i> <span>Fast delivery in 3–5 days</span></li>
+                            <li><i class="fas fa-check"></i> <span>Personal-use rights (non-commercial)</span></li>
+                        </ul>
+                        <button class="btn primary-btn select-package-btn animated-btn" data-translate="order_btn">Comandă</button>
+                    </div>
+                </div>
+                
+                <div class="package glassmorphism" data-package="business">
+                    <div class="package-header">
+                        <h3 data-translate="package_business">Business</h3>
+                        <div class="price">900 <span>RON</span></div>
+                    </div>
+                    <div class="package-body">
+                        <p class="package-tagline">"Give your brand the voice it deserves."</p>
+                        <p class="package-for">For companies and brands seeking an original song for advertising, branding, or image campaigns.</p>
+                        <ul class="features">
+                            <li><i class="fas fa-check"></i> <span>Custom-composed song tailored to your business</span></li>
+                            <li><i class="fas fa-check"></i> <span>Professional vocals and premium production</span></li>
+                            <li><i class="fas fa-check"></i> <span>Limited commercial usage rights</span></li>
+                            <li><i class="fas fa-check"></i> <span>Option to upgrade to full rights (+5,000 RON)</span></li>
+                        </ul>
+                        <button class="btn primary-btn select-package-btn animated-btn" data-translate="order_btn">Comandă</button>
+                    </div>
+                </div>
+                
+                <div class="package glassmorphism popular" data-package="premium">
+                    <div class="popular-tag" data-translate="popular_tag">Most Popular</div>
+                    <div class="package-header">
+                        <h3 data-translate="package_premium">Premium</h3>
+                        <div class="price">1,000 <span>RON</span></div>
+                    </div>
+                    <div class="package-body">
+                        <p class="package-tagline">"Make an impact. Let your music speak for you."</p>
+                        <p class="package-for">For those looking for a complete launch: song + video + official distribution.</p>
+                        <ul class="features">
+                            <li><i class="fas fa-check"></i> <span>Original song with full production</span></li>
+                            <li><i class="fas fa-check"></i> <span>Standard animated video (Do Music for Good Band style)</span></li>
+                            <li><i class="fas fa-check"></i> <span>Official release via Mango Records network</span></li>
+                            <li><i class="fas fa-check"></i> <span>Extended commercial usage rights</span></li>
+                        </ul>
+                        <button class="btn primary-btn select-package-btn animated-btn" data-translate="order_btn">Comandă</button>
+                    </div>
+                </div>
+                
+                <div class="package glassmorphism" data-package="artist">
+                    <div class="package-header">
+                        <h3 data-translate="package_artist">Artist</h3>
+                        <div class="price">8,000 <span>RON</span></div>
+                    </div>
+                    <div class="package-body">
+                        <p class="package-tagline">"Your musical journey starts here."</p>
+                        <p class="package-for">For serious artists seeking a top-tier original track and real distribution opportunities.</p>
+                        <ul class="features">
+                            <li><i class="fas fa-check"></i> <span>Custom song and professional instrumental</span></li>
+                            <li><i class="fas fa-check"></i> <span>Vocal guide + studio recording of your voice</span></li>
+                            <li><i class="fas fa-check"></i> <span>50/50 co-ownership of the master</span></li>
+                            <li><i class="fas fa-check"></i> <span>Distribution via Mango Records on all major platforms</span></li>
+                        </ul>
+                        <button class="btn primary-btn select-package-btn animated-btn" data-translate="order_btn">Comandă</button>
+                    </div>
+                </div>
+                
+                <div class="package glassmorphism" data-package="instrumental">
+                    <div class="package-header">
+                        <h3>Instrumental</h3>
+                        <div class="price">500 <span>RON</span></div>
+                    </div>
+                    <div class="package-body">
+                        <p class="package-tagline">"Build your song on a premium instrumental."</p>
+                        <p class="package-for">For artists who want high-quality instrumentals but prefer to write their own melody and record their vocals.</p>
+                        <ul class="features">
+                            <li><i class="fas fa-check"></i> <span>Original instrumental created by the MusicGift team</span></li>
+                            <li><i class="fas fa-check"></i> <span>Full composition: beat, harmonies, and structure</span></li>
+                            <li><i class="fas fa-check"></i> <span>No vocals – creative freedom for your own voice</span></li>
+                            <li><i class="fas fa-check"></i> <span>High-quality audio file (WAV or MP3)</span></li>
+                            <li><i class="fas fa-plus-circle" style="color: #ffa500;"></i> <span>Full rights purchase (+1,000 RON)</span></li>
+                        </ul>
+                        <button class="btn primary-btn select-package-btn animated-btn" data-translate="order_btn">Comandă</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title" data-translate="how_title">How It Works</h2>
+            <p class="section-description" data-translate="how_description">Creating your personalized song is easy</p>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 data-translate="step1_title">Choose a Package</h3>
+                        <p data-translate="step1_desc">Select the package that best fits your needs and budget.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 data-translate="step2_title">Tell Your Story</h3>
+                        <p data-translate="step2_desc">Fill out our detailed questionnaire about your recipient and the occasion.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 data-translate="step3_title">We Create</h3>
+                        <p data-translate="step3_desc">Our team of professional musicians and songwriters create your custom song.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3 data-translate="step5_title">Deliver & Delight</h3>
+                        <p data-translate="step5_desc">Receive your finished song and surprise your special someone!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="samples" class="samples">
+        <div class="container">
+            <h2 class="section-title">Listen to Our Work</h2>
+            <p class="section-description">Check out samples of songs we've created for others</p>
+            
+            <div class="video-slider">
+                <div class="video-grid">
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/b-NYGzKSBiE" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-content">
+                            <h3>👶 Pentru copii</h3>
+                            <p>O melodie-cadou pentru cel mai mic suflet din casă. Versuri blânde, pline de căldură – o amintire pe viață.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/b_2CFQztmww" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-content">
+                            <h3>💼 Melodie Business</h3>
+                            <p>O piesă creată pentru branduri – jingle, sound logo sau melodie inspirațională.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/Abk3kceKgP4" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-content">
+                            <h3>❤️ Exemplu: Ana</h3>
+                            <p>O piesă scrisă pentru o aniversare romantică – cu versuri inspirate din relația lor.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/guBBAoM-dZQ" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-content">
+                            <h3>💕 Exemplu: Nati</h3>
+                            <p>Un cadou emoționant pentru o zi de naștere – plin de personalitate și iubire.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-nav">
+                    <button class="video-prev-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="video-next-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <div class="testimonial-slider">
+                <div class="testimonial-slides">
+                    <div class="testimonial-grid">
+                        <div class="testimonial-video-card">
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/Abk3kceKgP4" frameborder="0" allowfullscreen></iframe>
+                                <div class="play-overlay">
+                                    <i class="fas fa-play"></i>
+                                    <span class="play-text">CHECK THIS SONG</span>
+                                </div>
+                            </div>
+                            <div class="testimonial-info">
+                                <div class="client-header">
+                                    <h4>Ana M. <i class="fas fa-check-circle verified"></i></h4>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <p>"Cea mai frumoasă surpriză de aniversare."</p>
+                                <span class="location">București</span>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-video-card">
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/guBBAoM-dZQ" frameborder="0" allowfullscreen></iframe>
+                                <div class="play-overlay">
+                                    <i class="fas fa-play"></i>
+                                    <span class="play-text">CHECK THIS SONG</span>
+                                </div>
+                            </div>
+                            <div class="testimonial-info">
+                                <div class="client-header">
+                                    <h4>Nati G. <i class="fas fa-check-circle verified"></i></h4>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <p>"Un cadou emoționant pentru ziua de naștere."</p>
+                                <span class="location">Cluj-Napoca</span>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-video-card">
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/b_2CFQztmww" frameborder="0" allowfullscreen></iframe>
+                                <div class="play-overlay">
+                                    <i class="fas fa-play"></i>
+                                    <span class="play-text">CHECK THIS SONG</span>
+                                </div>
+                            </div>
+                            <div class="testimonial-info">
+                                <div class="client-header">
+                                    <h4>TechCorp <i class="fas fa-check-circle verified"></i></h4>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <p>"Jingle-ul perfect pentru brandul nostru."</p>
+                                <span class="location">Timișoara</span>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-video-card">
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/b-NYGzKSBiE" frameborder="0" allowfullscreen></iframe>
+                                <div class="play-overlay">
+                                    <i class="fas fa-play"></i>
+                                    <span class="play-text">CHECK THIS SONG</span>
+                                </div>
+                            </div>
+                            <div class="testimonial-info">
+                                <div class="client-header">
+                                    <h4>Maria P. <i class="fas fa-check-circle verified"></i></h4>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <p>"Melodie perfectă pentru copilul nostru."</p>
+                                <span class="location">Iași</span>
+                            </div>
+                        </div>
+                        
+                        <div class="testimonial-video-card">
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/aZMaYjnKLHA" frameborder="0" allowfullscreen></iframe>
+                                <div class="play-overlay">
+                                    <i class="fas fa-play"></i>
+                                    <span class="play-text">CHECK THIS SONG</span>
+                                </div>
+                            </div>
+                            <div class="testimonial-info">
+                                <div class="client-header">
+                                    <h4>Alex R. <i class="fas fa-check-circle verified"></i></h4>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <p>"Serviciu profesionist și rezultat excelent."</p>
+                                <span class="location">Brașov</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-nav">
+                        <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                
+                <div class="testimonial-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2 class="section-title" data-translate="contact_title">Contact Us</h2>
+                    <p data-translate="contact_description">Have questions? We're here to help!</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <div class="method-details">
+                                <h3 data-translate="contact_email">Email Us</h3>
+                                <p>info@musicgift.ro</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <i class="fas fa-phone-alt"></i>
+                            <div class="method-details">
+                                <h3 data-translate="contact_phone">Call Us</h3>
+                                <p>+40 721 234 567</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="method-details">
+                                <h3 data-translate="contact_visit">Visit Us</h3>
+                                <p>Strada Muzicii 42, București</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h3 data-translate="contact_form_title">Send us a message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name" data-translate="form_name">Your Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" data-translate="form_email">Your Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone" data-translate="form_phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message" data-translate="form_message">Your Message</label>
+                            <textarea id="message" name="message" rows="4" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn primary-btn" data-translate="send_message">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Components -->
+    <div id="orderModal" class="modal">
+    </div>
+
+    <div id="thankYouModal" class="modal">
+        <div class="modal-content thank-you">
+            <span class="close-btn">&times;</span>
+            <div class="thank-you-content">
+                <i class="fas fa-check-circle"></i>
+                <h2 data-translate="thank_you_title">Thank You!</h2>
+                <p data-translate="thank_you_desc">Your order has been received. We'll contact you shortly to discuss the details of your custom music gift.</p>
+                <button class="btn primary-btn close-thank-you" data-translate="close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <h2>MusicGift<span>.ro</span></h2>
+                    </div>
+                    <p data-translate="footer_description">Creating personalized musical memories that last forever. Transform your emotions into beautiful melodies with our professional team.</p>
+                    <div class="payment-methods">
+                        <img src="payment_icons.png" alt="Payment Methods">
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3 data-translate="footer_quick_links">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home" data-translate="footer_home">Home</a></li>
+                        <li><a href="#about" data-translate="footer_about">About</a></li>
+                        <li><a href="#packages" data-translate="footer_packages">Packages</a></li>
+                        <li><a href="#samples" data-translate="footer_samples">Samples</a></li>
+                        <li><a href="#contact" data-translate="footer_contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3 data-translate="footer_services">Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#how-it-works" data-translate="footer_how_it_works">How It Works</a></li>
+                        <li><a href="#testimonials" data-translate="footer_testimonials">Testimonials</a></li>
+                        <li><a href="order.html" data-translate="footer_order">Order Now</a></li>
+                        <li><a href="#" data-translate="footer_terms">Terms & Conditions</a></li>
+                        <li><a href="#" data-translate="footer_privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3 data-translate="footer_newsletter">Stay Connected</h3>
+                    <p data-translate="footer_newsletter_desc">Subscribe to get special offers, new samples, and exclusive content delivered to your inbox.</p>
+                    <form class="newsletter-form">
+                        <input type="email" data-translate="newsletter_placeholder" placeholder="Enter your email address">
+                        <button type="submit" class="btn primary-btn" data-translate="subscribe">Subscribe Now</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 MusicGift.ro. All rights reserved. Powered by RED DOMAIN | Made with ❤️ for music lovers</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Modules -->
+    <script type="module" src="script.js"></script>
+</body>
 </html>
