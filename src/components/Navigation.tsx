@@ -2,19 +2,29 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { currentLanguage, setCurrentLanguage, t } = useLanguage();
 
   const navItems = [
-    { path: "/", label: "Home" },
-    { path: "/about", label: "About Us" },
-    { path: "/packages", label: "Packages" },
-    { path: "/how-it-works", label: "How It Works" },
-    { path: "/testimonials", label: "Testimonials" },
-    { path: "/contact", label: "Contact" },
+    { path: "/", label: t('home') },
+    { path: "/about", label: t('about') },
+    { path: "/packages", label: t('packages') },
+    { path: "/how-it-works", label: t('howItWorks') },
+    { path: "/testimonials", label: t('testimonials') },
+    { path: "/contact", label: t('contact') },
   ];
+
+  const languages: Language[] = ['en', 'ro', 'fr', 'pl', 'de'];
 
   return (
     <header className="fixed top-0 w-full bg-white z-50 border-b border-gray-100">
@@ -50,19 +60,29 @@ const Navigation = () => {
 
           {/* Language selector and Order button on the right */}
           <div className="hidden lg:flex items-center space-x-4">
-            <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
-              <Button variant="ghost" size="sm" className="text-sm font-medium px-3 py-1 h-8 rounded-none bg-gray-100 hover:bg-gray-200">
-                EN
-              </Button>
-              <Button variant="ghost" size="sm" className="text-sm font-medium px-3 py-1 h-8 rounded-none hover:bg-gray-100">
-                RO
-              </Button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="text-sm font-medium">
+                  {languageNames[currentLanguage]}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {languages.map((lang) => (
+                  <DropdownMenuItem
+                    key={lang}
+                    onClick={() => setCurrentLanguage(lang)}
+                    className={currentLanguage === lang ? "bg-purple-50" : ""}
+                  >
+                    {languageNames[lang]}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Link
               to="/packages"
               className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
             >
-              Order Now
+              {t('orderNow')}
             </Link>
           </div>
 
@@ -98,20 +118,30 @@ const Navigation = () => {
                 </Link>
               ))}
               <div className="flex items-center pt-4 space-x-4">
-                <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
-                  <Button variant="ghost" size="sm" className="text-sm font-medium px-3 py-1 h-8 rounded-none bg-gray-100">
-                    EN
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-sm font-medium px-3 py-1 h-8 rounded-none">
-                    RO
-                  </Button>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="text-sm font-medium">
+                      {languageNames[currentLanguage]}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {languages.map((lang) => (
+                      <DropdownMenuItem
+                        key={lang}
+                        onClick={() => setCurrentLanguage(lang)}
+                        className={currentLanguage === lang ? "bg-purple-50" : ""}
+                      >
+                        {languageNames[lang]}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <Link
                   to="/packages"
                   className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Order Now
+                  {t('orderNow')}
                 </Link>
               </div>
             </nav>
