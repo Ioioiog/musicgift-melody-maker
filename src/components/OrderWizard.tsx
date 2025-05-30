@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -60,8 +61,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const { data: packageSteps = [], isLoading: stepsLoading } = usePackageSteps(selectedPackage);
   const { data: addons = [] } = useAddons();
 
-  // Calculate total steps: 1 (package selection) + dynamic steps from database
-  const totalSteps = packageSteps.length > 0 ? packageSteps.length + 1 : 5;
+  // Calculate total steps from database steps only
+  const totalSteps = packageSteps.length;
 
   console.log('Current step:', currentStep);
   console.log('Selected package:', selectedPackage);
@@ -106,20 +107,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const canProceed = () => {
     console.log('Checking if can proceed from step:', currentStep);
     
-    // For step 1 (package selection), check if package is selected
-    if (currentStep === 1) {
-      const canProceedStep1 = formData.package && formData.package !== '';
-      console.log('Can proceed from step 1:', canProceedStep1, 'Package:', formData.package);
-      return canProceedStep1;
-    }
-
-    // For database steps, check dynamic step fields
+    // Get current step data from database
     const currentStepData = packageSteps.find(step => step.step_number === currentStep);
     console.log('Current step data for validation:', currentStepData);
     
     if (!currentStepData) {
       console.log('No step data found for step:', currentStep);
-      return true; // Allow progression if no step data is found
+      return false;
     }
 
     const validation = currentStepData.fields.every(field => {
@@ -247,42 +241,39 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     return packagePrice + addonsPrice;
   };
 
-  // Get current step data based on step number
+  // Get current step data from database steps
   const getCurrentStepData = () => {
     console.log('Getting current step data for step:', currentStep);
     
-    if (currentStep === 1) {
-      // Package selection step (hardcoded)
-      const stepData = {
-        step: 1,
-        step_number: 1,
-        title_key: 'selectYourPackage',
-        fields: [{
-          id: 'package-select',
-          field_name: 'package',
-          field_type: 'select',
-          placeholder_key: 'selectPackage',
-          required: true,
-          field_order: 1,
-          options: packages.map(pkg => ({
-            value: pkg.value,
-            label_key: pkg.label_key
-          }))
-        }]
-      };
-      console.log('Step 1 data:', stepData);
-      return stepData;
-    }
-
-    // For steps 2+, find the corresponding database step
-    // Database steps are numbered 2, 3, 4, etc. but stored as step_number 2, 3, 4
     const dbStep = packageSteps.find(step => step.step_number === currentStep);
     console.log('Database step found:', dbStep);
+    
+    // If it's a package selection step, enhance the options with package data
+    if (dbStep && dbStep.fields.some(field => field.field_name === 'package')) {
+      const enhancedStep = {
+        ...dbStep,
+        fields: dbStep.fields.map(field => {
+          if (field.field_name === 'package' && field.field_type === 'select') {
+            return {
+              ...field,
+              options: packages.map(pkg => ({
+                value: pkg.value,
+                label_key: pkg.label_key
+              }))
+            };
+          }
+          return field;
+        })
+      };
+      console.log('Enhanced step with package options:', enhancedStep);
+      return enhancedStep;
+    }
+    
     return dbStep;
   };
 
   const currentStepData = getCurrentStepData();
-  const completionPercentage = (currentStep / totalSteps) * 100;
+  const completionPercentage = totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0;
   const selectedPackageDetails = packages.find(pkg => pkg.value === selectedPackage);
 
   // Show loading state for packages
@@ -298,7 +289,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   }
 
   // Show loading state for steps (when package is selected but steps are loading)
-  if (selectedPackage && stepsLoading && currentStep > 1) {
+  if (selectedPackage && stepsLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
@@ -309,16 +300,43 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     );
   }
 
-  // If we're on step 2+ but don't have step data and not loading, show error
-  if (currentStep > 1 && !currentStepData && !stepsLoading) {
+  // If we don't have step data and not loading, show error
+  if (!currentStepData && !stepsLoading && totalSteps === 0) {
+    console.error('No step data available and no steps configured');
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">No steps configured. Please select a package first or contact support.</p>
+          <Button onClick={() => window.location.reload()} className="mt-4">
+            Reload Page
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // If we're trying to access a step that doesn't exist
+  if (!currentStepData && !stepsLoading && totalSteps > 0) {
     console.error('No step data available for step:', currentStep);
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600">Error: Step data not found for step {currentStep}</p>
+          <p className="text-red-600">Error: Step {currentStep} not found</p>
           <Button onClick={() => setCurrentStep(1)} className="mt-4">
             Return to Step 1
           </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // If we don't have current step data but we're still loading, show loading
+  if (!currentStepData && stepsLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">{t('loadingSteps', 'Loading steps...')}</p>
         </div>
       </div>
     );
@@ -345,7 +363,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                           </div>
                           <div>
                             <h2 className="text-3xl font-bold text-gray-900">
-                              {currentStep === 1 ? t('selectYourPackage', 'Select Your Package') : t(currentStepData.title_key)}
+                              {t(currentStepData.title_key)}
                             </h2>
                             <p className="text-purple-600 font-medium">
                               {t('stepPackage', 'Step')} {currentStep} {t('of', 'of')} {totalSteps}
@@ -365,7 +383,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                       </div>
                     </div>
 
-                    {/* Package Details Section */}
+                    {/* Package Details Section - Show when package is selected and it's step 1 */}
                     {selectedPackageDetails && currentStep === 1 && (
                       <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
                         <div className="flex items-start space-x-4">
