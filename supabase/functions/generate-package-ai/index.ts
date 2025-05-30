@@ -10,7 +10,7 @@ const corsHeaders = {
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -18,17 +18,23 @@ serve(async (req) => {
   }
 
   try {
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: { persistSession: false }
-    });
-
     // Get the authorization header
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       throw new Error('No authorization header');
     }
 
-    // Set the auth for supabase
+    // Create supabase client with the user's session
+    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: { persistSession: false },
+      global: {
+        headers: {
+          Authorization: authHeader,
+        },
+      },
+    });
+
+    // Verify the user is authenticated
     const token = authHeader.replace('Bearer ', '');
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     
@@ -150,8 +156,11 @@ Respond with ONLY the JSON object, no additional text.`;
       throw new Error('Invalid JSON response from AI');
     }
 
+    // Create a new supabase client with service role key for the insert
+    const adminSupabase = createClient(supabaseUrl, supabaseServiceKey);
+
     // Store the generation request in the database
-    const { data: generation, error: insertError } = await supabase
+    const { data: generation, error: insertError } = await adminSupabase
       .from('ai_package_generations')
       .insert({
         user_id: user.id,
