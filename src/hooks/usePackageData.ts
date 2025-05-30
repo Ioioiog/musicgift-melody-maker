@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from './useTranslations';
@@ -33,7 +32,7 @@ export interface StepData {
     placeholder_key?: string;
     required: boolean;
     field_order: number;
-    options?: string[] | Array<{ value: string; label_key: string; }>;
+    options?: Array<{ value: string; label_key: string; }>;
   }>;
 }
 
@@ -116,8 +115,19 @@ export const usePackageSteps = (packageValue: string) => {
           .sort((a: any, b: any) => a.field_order - b.field_order)
           .map((field: any) => ({
             ...field,
-            // Handle options properly - the database returns arrays or null, not JSON strings
-            options: field.options || undefined
+            // Transform options to proper FieldOption format
+            options: field.options ? field.options.map((option: any) => {
+              // If it's already a FieldOption object, return as is
+              if (typeof option === 'object' && option.value && option.label_key) {
+                return option;
+              }
+              // If it's a string, transform to FieldOption
+              if (typeof option === 'string') {
+                return { value: option, label_key: option };
+              }
+              // Fallback for any other format
+              return { value: String(option), label_key: String(option) };
+            }) : undefined
           }))
       })) as StepData[];
     },
