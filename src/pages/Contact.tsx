@@ -7,9 +7,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Contact = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,8 +22,8 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
-      title: "Message sent!",
-      description: "We'll get back to you as soon as possible.",
+      title: t('messageSent'),
+      description: t('messageThankYou'),
     });
     setFormData({ name: "", email: "", phone: "", message: "" });
   };
@@ -36,17 +38,17 @@ const Contact = () => {
   const contactMethods = [
     {
       icon: "📧",
-      title: "Email Us",
+      title: t('emailUs'),
       details: "info@musicgift.ro"
     },
     {
       icon: "📞", 
-      title: "Call Us",
+      title: t('callUs'),
       details: "+40 721 234 567"
     },
     {
       icon: "📍",
-      title: "Visit Us", 
+      title: t('visitUs'), 
       details: "Strada Muzicii 42, București"
     }
   ];
@@ -58,9 +60,9 @@ const Contact = () => {
       {/* Hero Section */}
       <section className="pt-24 pb-16 bg-gradient-purple text-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl lg:text-6xl font-bold mb-6">Contact Us</h1>
+          <h1 className="text-5xl lg:text-6xl font-bold mb-6">{t('contactTitle')}</h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto">
-            Have questions? We're here to help!
+            {t('contactSubtitle')}
           </p>
         </div>
       </section>
@@ -72,10 +74,9 @@ const Contact = () => {
             {/* Contact Info */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">Get in Touch</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('getInTouch')}</h2>
                 <p className="text-gray-600 text-lg leading-relaxed">
-                  Whether you have questions about our services, need help choosing the right package, 
-                  or want to discuss your musical vision, we're here to help make your gift perfect.
+                  {t('contactDescription')}
                 </p>
               </div>
 
@@ -97,7 +98,7 @@ const Contact = () => {
 
               {/* Social Links */}
               <div className="pt-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Follow Us</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('followUs')}</h3>
                 <div className="flex space-x-4">
                   {["📘", "📷", "📺", "🎵"].map((icon, index) => (
                     <button 
@@ -114,12 +115,12 @@ const Contact = () => {
             {/* Contact Form */}
             <Card className="shadow-xl">
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a message</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('sendMessage')}</h3>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      Your Name
+                      {t('yourName')}
                     </label>
                     <Input
                       type="text"
@@ -134,7 +135,7 @@ const Contact = () => {
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Your Email
+                      {t('yourEmail')}
                     </label>
                     <Input
                       type="email"
@@ -149,7 +150,7 @@ const Contact = () => {
 
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number
+                      {t('phoneNumber')}
                     </label>
                     <Input
                       type="tel"
@@ -163,7 +164,7 @@ const Contact = () => {
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                      Your Message
+                      {t('yourMessage')}
                     </label>
                     <Textarea
                       id="message"
@@ -181,7 +182,7 @@ const Contact = () => {
                     className="w-full bg-gradient-purple hover:opacity-90"
                     size="lg"
                   >
-                    Send Message
+                    {t('sendMessageBtn')}
                   </Button>
                 </form>
               </CardContent>

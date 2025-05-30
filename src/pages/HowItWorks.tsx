@@ -2,31 +2,34 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const HowItWorks = () => {
+  const { t } = useLanguage();
+  
   const steps = [
     {
       number: "1",
-      title: "Choose a Package",
-      description: "Select the package that best fits your needs and budget.",
+      title: t('choosePackage'),
+      description: t('choosePackageDesc'),
       color: "bg-green-500"
     },
     {
       number: "2", 
-      title: "Tell Your Story",
-      description: "Fill out our detailed questionnaire about your recipient and the occasion.",
+      title: t('tellYourStory'),
+      description: t('tellYourStoryDesc'),
       color: "bg-gradient-purple"
     },
     {
       number: "3",
-      title: "We Create",
-      description: "Our team of professional musicians and songwriters create your custom song.",
+      title: t('weCreate'),
+      description: t('weCreateDesc'),
       color: "bg-gray-400"
     },
     {
       number: "4",
-      title: "Deliver & Delight", 
-      description: "Receive your finished song and surprise your special someone!",
+      title: t('deliverDelight'), 
+      description: t('deliverDelightDesc'),
       color: "bg-gray-300"
     }
   ];
@@ -38,9 +41,9 @@ const HowItWorks = () => {
       {/* Hero Section */}
       <section className="pt-24 pb-16 bg-gradient-purple text-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl lg:text-6xl font-bold mb-6">How It Works</h1>
+          <h1 className="text-5xl lg:text-6xl font-bold mb-6">{t('howItWorksTitle')}</h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto">
-            Creating your personalized song is easy
+            {t('howItWorksSubtitle')}
           </p>
         </div>
       </section>

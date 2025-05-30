@@ -8,8 +8,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Music, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Auth = () => {
+  const { t } = useLanguage();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,21 +46,21 @@ const Auth = () => {
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
             toast({
-              title: "Eroare de autentificare",
-              description: "Email sau parolă incorectă. Verificați datele introduse.",
+              title: t('authError'),
+              description: t('invalidCredentials'),
               variant: "destructive",
             });
           } else {
             toast({
-              title: "Eroare",
+              title: t('orderError'),
               description: error.message,
               variant: "destructive",
             });
           }
         } else {
           toast({
-            title: "Conectare reușită!",
-            description: "Bun venit înapoi!",
+            title: t('signInSuccess'),
+            description: t('welcomeBack'),
           });
           navigate('/');
         }
@@ -76,21 +78,21 @@ const Auth = () => {
         if (error) {
           if (error.message.includes('User already registered')) {
             toast({
-              title: "Cont existent",
-              description: "Un cont cu acest email există deja. Încercați să vă conectați.",
+              title: t('accountExists'),
+              description: t('accountExistsMessage'),
               variant: "destructive",
             });
           } else {
             toast({
-              title: "Eroare",
+              title: t('orderError'),
               description: error.message,
               variant: "destructive",
             });
           }
         } else {
           toast({
-            title: "Cont creat cu succes!",
-            description: "Vă puteți conecta acum cu noile credențiale.",
+            title: t('accountCreated'),
+            description: t('canSignIn'),
           });
           setIsLogin(true);
           setFullName('');
@@ -98,8 +100,8 @@ const Auth = () => {
       }
     } catch (error) {
       toast({
-        title: "Eroare neașteptată",
-        description: "A apărut o eroare. Încercați din nou.",
+        title: t('unexpectedError'),
+        description: t('tryAgain'),
         variant: "destructive",
       });
     } finally {
@@ -116,7 +118,7 @@ const Auth = () => {
             className="inline-flex items-center text-purple-600 hover:text-purple-700 transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Înapoi acasă
+            {t('backHome')}
           </Link>
           
           <div className="text-center">
@@ -125,9 +127,9 @@ const Auth = () => {
                 <Music className="w-8 h-8 text-white" />
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Music Gift</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('musicGift')}</h1>
             <p className="text-gray-600">
-              {isLogin ? 'Conectează-te pentru a continua' : 'Creează un cont nou'}
+              {isLogin ? t('signInSubtitle') : t('signUpSubtitle')}
             </p>
           </div>
         </div>
@@ -135,12 +137,12 @@ const Auth = () => {
         <Card className="shadow-xl border-0">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center">
-              {isLogin ? 'Conectare' : 'Înregistrare'}
+              {isLogin ? t('signInBtn') : t('signUpBtn')}
             </CardTitle>
             <CardDescription className="text-center">
               {isLogin 
-                ? 'Introdu datele tale pentru a te conecta'
-                : 'Creează un cont pentru a începe'
+                ? t('connectToContinue')
+                : t('createAccount')
               }
             </CardDescription>
           </CardHeader>
@@ -149,12 +151,12 @@ const Auth = () => {
               {!isLogin && (
                 <div className="space-y-2">
                   <label htmlFor="fullName" className="text-sm font-medium text-gray-700">
-                    Nume complet
+                    {t('fullName')}
                   </label>
                   <Input
                     id="fullName"
                     type="text"
-                    placeholder="Numele tău complet"
+                    placeholder={t('fullName')}
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required={!isLogin}
@@ -165,7 +167,7 @@ const Auth = () => {
               
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                  Email
+                  {t('email')}
                 </label>
                 <Input
                   id="email"
@@ -180,13 +182,13 @@ const Auth = () => {
               
               <div className="space-y-2">
                 <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                  Parolă
+                  {t('password')}
                 </label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Parola ta"
+                    placeholder={t('password')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -203,7 +205,7 @@ const Auth = () => {
                 </div>
                 {!isLogin && (
                   <p className="text-xs text-gray-500">
-                    Parola trebuie să aibă cel puțin 6 caractere
+                    {t('passwordMinLength')}
                   </p>
                 )}
               </div>
@@ -216,10 +218,10 @@ const Auth = () => {
                 {isLoading ? (
                   <div className="flex items-center">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                    {isLogin ? 'Se conectează...' : 'Se înregistrează...'}
+                    {isLogin ? t('signingIn') : t('signingUp')}
                   </div>
                 ) : (
-                  isLogin ? 'Conectează-te' : 'Înregistrează-te'
+                  isLogin ? t('signInBtn') : t('signUpBtn')
                 )}
               </Button>
             </form>
@@ -236,8 +238,8 @@ const Auth = () => {
                 className="text-purple-600 hover:text-purple-700 font-medium"
               >
                 {isLogin 
-                  ? 'Nu ai cont? Înregistrează-te aici'
-                  : 'Ai deja cont? Conectează-te aici'
+                  ? t('noAccount')
+                  : t('haveAccount')
                 }
               </button>
             </div>

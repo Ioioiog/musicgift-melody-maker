@@ -4,9 +4,11 @@ import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Order = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleOrderComplete = async (orderData: any) => {
     try {
@@ -16,14 +18,14 @@ const Order = () => {
       // For now, we'll just show the success message
       
       toast({
-        title: "Comandă trimisă!",
-        description: "Mulțumim pentru comandă. Vă vom contacta în curând pentru confirmarea detaliilor."
+        title: t('orderSent'),
+        description: t('orderThankYou')
       });
     } catch (error) {
       console.error("Error saving order:", error);
       toast({
-        title: "Eroare",
-        description: "A apărut o eroare la salvarea comenzii. Încercați din nou.",
+        title: t('orderError'),
+        description: t('orderErrorMessage'),
         variant: "destructive"
       });
     }
@@ -36,9 +38,9 @@ const Order = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-gradient-purple text-white px-0 py-0">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl lg:text-6xl font-bold mb-6">Plasează Comanda</h1>
+          <h1 className="text-5xl lg:text-6xl font-bold mb-6">{t('placeOrder')}</h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto">
-            Să creăm ceva magic împreună. Completează formularul de mai jos pentru a începe.
+            {t('orderSubtitle')}
           </p>
         </div>
       </section>

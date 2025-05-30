@@ -4,25 +4,27 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Testimonials = () => {
+  const { t } = useLanguage();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   
   const testimonials = [
     {
-      quote: "I was searching for a truly unique gift for my wife's 40th birthday. The song MusicGift created brought her to tears. It captured our story perfectly and is something we'll cherish forever.",
-      author: "Andrei Popescu",
-      location: "București"
+      quote: t('testimonial1'),
+      author: t('author1'),
+      location: t('location1')
     },
     {
-      quote: "As a business owner, I wanted something special for our company's 10th anniversary. The team at MusicGift.ro delivered a fantastic song that perfectly embodied our company values and journey.",
-      author: "Maria Ionescu", 
-      location: "Cluj-Napoca"
+      quote: t('testimonial2'),
+      author: t('author2'), 
+      location: t('location2')
     },
     {
-      quote: "I surprised my parents with a custom song for their 30th wedding anniversary. The process was so smooth, and the result was beyond what I could have imagined. They play it for everyone who visits!",
-      author: "Elena Dumitrescu",
-      location: "Timișoara"
+      quote: t('testimonial3'),
+      author: t('author3'),
+      location: t('location3')
     }
   ];
 
@@ -41,9 +43,9 @@ const Testimonials = () => {
       {/* Hero Section */}
       <section className="pt-24 pb-16 bg-gradient-purple text-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl lg:text-6xl font-bold mb-6">What Our Customers Say</h1>
+          <h1 className="text-5xl lg:text-6xl font-bold mb-6">{t('testimonialsTitle')}</h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto">
-            Real stories from people who chose MusicGift for their special moments
+            {t('testimonialsSubtitle')}
           </p>
         </div>
       </section>

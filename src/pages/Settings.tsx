@@ -10,10 +10,12 @@ import { ArrowLeft, User, Mail, Save } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Settings = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -37,8 +39,8 @@ const Settings = () => {
       if (error) {
         console.error('Error loading profile:', error);
         toast({
-          title: "Eroare",
-          description: "Nu s-au putut încărca datele profilului",
+          title: t('orderError'),
+          description: t('loadError'),
           variant: "destructive",
         });
       } else if (data) {
@@ -67,20 +69,20 @@ const Settings = () => {
 
       if (error) {
         toast({
-          title: "Eroare",
-          description: "Nu s-au putut actualiza datele profilului",
+          title: t('orderError'),
+          description: t('profileError'),
           variant: "destructive",
         });
       } else {
         toast({
           title: "Succes!",
-          description: "Profilul a fost actualizat cu succes",
+          description: t('profileUpdated'),
         });
       }
     } catch (error) {
       toast({
-        title: "Eroare neașteptată",
-        description: "A apărut o eroare. Încercați din nou.",
+        title: t('unexpectedError'),
+        description: t('tryAgain'),
         variant: "destructive",
       });
     } finally {
@@ -111,7 +113,7 @@ const Settings = () => {
               className="inline-flex items-center text-purple-600 hover:text-purple-700 transition-colors mb-6"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Înapoi acasă
+              {t('backHome')}
             </Link>
             
             <div className="text-center mb-8">
@@ -120,9 +122,9 @@ const Settings = () => {
                   <User className="w-8 h-8 text-white" />
                 </div>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Setări cont</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('accountSettingsTitle')}</h1>
               <p className="text-gray-600">
-                Gestionează informațiile contului tău
+                {t('manageAccount')}
               </p>
             </div>
           </div>
@@ -133,22 +135,22 @@ const Settings = () => {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <User className="w-5 h-5 mr-2" />
-                  Informații profil
+                  {t('profileInfo')}
                 </CardTitle>
                 <CardDescription>
-                  Actualizează informațiile tale personale
+                  {t('updateProfile')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleUpdateProfile} className="space-y-4">
                   <div className="space-y-2">
                     <label htmlFor="fullName" className="text-sm font-medium text-gray-700">
-                      Nume complet
+                      {t('fullName')}
                     </label>
                     <Input
                       id="fullName"
                       type="text"
-                      placeholder="Numele tău complet"
+                      placeholder={t('fullName')}
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       className="h-12"
@@ -157,7 +159,7 @@ const Settings = () => {
                   
                   <div className="space-y-2">
                     <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                      Email
+                      {t('email')}
                     </label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -170,7 +172,7 @@ const Settings = () => {
                       />
                     </div>
                     <p className="text-xs text-gray-500">
-                      Emailul nu poate fi modificat din această pagină
+                      {t('emailCannotChange')}
                     </p>
                   </div>
                   
@@ -182,12 +184,12 @@ const Settings = () => {
                     {isLoading ? (
                       <div className="flex items-center">
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Se salvează...
+                        {t('saving')}
                       </div>
                     ) : (
                       <div className="flex items-center">
                         <Save className="w-4 h-4 mr-2" />
-                        Salvează modificările
+                        {t('saveChanges')}
                       </div>
                     )}
                   </Button>
@@ -198,26 +200,26 @@ const Settings = () => {
             {/* Account Information Card */}
             <Card className="shadow-xl border-0">
               <CardHeader>
-                <CardTitle>Informații cont</CardTitle>
+                <CardTitle>{t('accountInfo')}</CardTitle>
                 <CardDescription>
-                  Detalii despre contul tău
+                  {t('accountDetails')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-sm font-medium text-gray-700">ID utilizator</span>
+                  <span className="text-sm font-medium text-gray-700">{t('userId')}</span>
                   <span className="text-sm text-gray-500 font-mono">{user?.id}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-sm font-medium text-gray-700">Data înregistrării</span>
+                  <span className="text-sm font-medium text-gray-700">{t('registrationDate')}</span>
                   <span className="text-sm text-gray-500">
-                    {user?.created_at ? new Date(user.created_at).toLocaleDateString('ro-RO') : 'N/A'}
+                    {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-sm font-medium text-gray-700">Ultima actualizare</span>
+                  <span className="text-sm font-medium text-gray-700">{t('lastUpdate')}</span>
                   <span className="text-sm text-gray-500">
-                    {user?.updated_at ? new Date(user.updated_at).toLocaleDateString('ro-RO') : 'N/A'}
+                    {user?.updated_at ? new Date(user.updated_at).toLocaleDateString() : 'N/A'}
                   </span>
                 </div>
               </CardContent>
