@@ -4,17 +4,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export const useTranslations = () => {
-  const { language } = useLanguage();
+  const { currentLanguage } = useLanguage();
   
   return useQuery({
-    queryKey: ['translations', language],
+    queryKey: ['translations', currentLanguage],
     queryFn: async () => {
-      console.log('Fetching translations for language:', language);
+      console.log('Fetching translations for language:', currentLanguage);
       
       const { data, error } = await supabase
         .from('translations')
         .select('key_name, translation')
-        .eq('language_code', language);
+        .eq('language_code', currentLanguage);
 
       if (error) {
         console.error('Error fetching translations:', error);
