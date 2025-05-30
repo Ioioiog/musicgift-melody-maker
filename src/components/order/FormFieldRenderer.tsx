@@ -14,7 +14,6 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { validateField } from '@/hooks/useFieldValidation';
 import { useLanguage } from '@/contexts/LanguageContext';
-import LanguageSelector from './LanguageSelector';
 
 interface FormField {
   id: string;
@@ -103,27 +102,19 @@ const renderSelectField = (
 ) => {
   const hasError = errors.length > 0;
 
-  // Special handling for language selection
-  if (field.field_name === 'songLanguage' || field.field_name === 'language') {
-    return (
-      <LanguageSelector
-        value={value || ''}
-        onChange={onChange}
-        placeholder={field.placeholder_key ? t(field.placeholder_key) : t('selectLanguage')}
-        required={field.required}
-      />
-    );
-  }
-
   return (
     <div className="space-y-2">
-      <Select onValueChange={onChange} defaultValue={value}>
-        <SelectTrigger className={cn('bg-white border border-gray-300 shadow-sm', hasError && 'border-red-500')}>
+      <Select onValueChange={onChange} value={value || ''}>
+        <SelectTrigger className={cn('w-full bg-white border border-gray-300 shadow-sm', hasError && 'border-red-500')}>
           <SelectValue placeholder={field.placeholder_key ? t(field.placeholder_key) : field.field_name} />
         </SelectTrigger>
-        <SelectContent className="bg-white border border-gray-200 rounded-md shadow-lg z-50">
+        <SelectContent className="bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
           {field.options?.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
+            <SelectItem 
+              key={option.value} 
+              value={option.value}
+              className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
+            >
               {option.label_key ? t(option.label_key) : option.value}
             </SelectItem>
           ))}
