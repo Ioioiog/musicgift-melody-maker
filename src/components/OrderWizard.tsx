@@ -17,6 +17,40 @@ interface OrderWizardProps {
   onComplete: (data: any) => void;
 }
 
+// Define the Field interface that FormFieldRenderer expects
+interface Field {
+  id: string;
+  field_name: string;
+  field_type: string;
+  placeholder_key?: string;
+  required: boolean;
+  field_order: number;
+  options?: Array<{ value: string; label_key: string; }>;
+}
+
+// Type guard to ensure field has proper FieldOption format
+const ensureFieldOptionFormat = (field: any): Field => {
+  if (!field.options || !Array.isArray(field.options)) {
+    return field as Field;
+  }
+
+  return {
+    ...field,
+    options: field.options.map((option: any) => {
+      // If it's already a FieldOption object, return as is
+      if (typeof option === 'object' && option.value && option.label_key) {
+        return option;
+      }
+      // If it's a string, transform to FieldOption
+      if (typeof option === 'string') {
+        return { value: option, label_key: option };
+      }
+      // Fallback for any other format
+      return { value: String(option), label_key: String(option) };
+    })
+  } as Field;
+};
+
 const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
@@ -241,7 +275,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     return packagePrice + addonsPrice;
   };
 
-  // Get current step data from database steps
+  // Get current step data from database steps with proper type transformation
   const getCurrentStepData = () => {
     console.log('Getting current step data for step:', currentStep);
     
@@ -250,41 +284,24 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     
     if (!dbStep) return dbStep;
     
-    // Transform all fields to ensure options are in the correct format
+    // Transform all fields to ensure proper Field interface compliance
     const enhancedStep = {
       ...dbStep,
       fields: dbStep.fields.map(field => {
         // Handle package field specifically - inject package options
         if (field.field_name === 'package' && field.field_type === 'select') {
-          return {
+          const packageField: Field = {
             ...field,
             options: packages.map(pkg => ({
               value: pkg.value,
               label_key: pkg.label_key
             }))
           };
+          return packageField;
         }
         
-        // For ALL other fields with options, ensure they're in FieldOption format
-        if (field.options && Array.isArray(field.options)) {
-          return {
-            ...field,
-            options: field.options.map((option: any) => {
-              // If it's already a FieldOption object, return as is
-              if (typeof option === 'object' && option.value && option.label_key) {
-                return option;
-              }
-              // If it's a string, transform to FieldOption
-              if (typeof option === 'string') {
-                return { value: option, label_key: option };
-              }
-              // Fallback for any other format
-              return { value: String(option), label_key: String(option) };
-            })
-          };
-        }
-        
-        return field;
+        // For ALL other fields, ensure they conform to Field interface
+        return ensureFieldOptionFormat(field);
       })
     };
     
@@ -464,7 +481,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                       {currentStepData.fields && currentStepData.fields.map((field, index) => (
                         <div key={index} className="transform transition-all duration-200 hover:scale-[1.02]">
                           <FormFieldRenderer 
-                            field={field} 
+                            field={field}
                             value={formData[field.field_name]} 
                             onChange={(value) => updateFormData(field.field_name, value)}
                             selectedAddons={selectedAddons}
