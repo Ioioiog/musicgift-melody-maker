@@ -42,6 +42,53 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_package_generations: {
+        Row: {
+          created_at: string
+          generated_data: Json | null
+          id: string
+          input_delivery_time: string | null
+          input_description: string
+          input_price: number | null
+          package_id: string | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          generated_data?: Json | null
+          id?: string
+          input_delivery_time?: string | null
+          input_description: string
+          input_price?: number | null
+          package_id?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          generated_data?: Json | null
+          id?: string
+          input_delivery_time?: string | null
+          input_description?: string
+          input_price?: number | null
+          package_id?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_package_generations_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "package_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       field_dependencies: {
         Row: {
           condition: Database["public"]["Enums"]["dependency_condition"]
