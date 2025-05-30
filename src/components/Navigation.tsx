@@ -92,7 +92,7 @@ const Navigation = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
               <Link 
-                to="/packages" 
+                to="/order" 
                 className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
               >
                 {t("orderNow")}
@@ -148,7 +148,7 @@ const Navigation = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <Link 
-                    to="/packages" 
+                    to="/order" 
                     className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors" 
                     onClick={() => setIsMenuOpen(false)}
                   >
