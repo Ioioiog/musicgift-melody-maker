@@ -15,30 +15,27 @@ const Order = () => {
     try {
       console.log("Order completed:", orderData);
 
-      // Create NETOPIA payment session
-      const response = await fetch('/functions/v1/create-netopia-payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
-        },
-        body: JSON.stringify({
+      // Create NETOPIA payment session using Supabase function invoke
+      const { data: result, error } = await supabase.functions.invoke('create-netopia-payment', {
+        body: {
           orderId: orderData.orderId,
           amount: orderData.totalPrice,
           currency: 'RON',
           customerEmail: orderData.email || orderData.recipientEmail,
           customerName: orderData.fullName || orderData.recipientName,
           description: `Order for ${orderData.package} package`
-        })
+        }
       });
 
-      const result = await response.json();
+      if (error) {
+        throw new Error(error.message || 'Failed to create payment session');
+      }
 
-      if (result.success && result.paymentUrl) {
+      if (result?.success && result?.paymentUrl) {
         // Redirect to NETOPIA payment page
         window.location.href = result.paymentUrl;
       } else {
-        throw new Error(result.error || 'Failed to create payment session');
+        throw new Error(result?.error || 'Failed to create payment session');
       }
 
     } catch (error) {
