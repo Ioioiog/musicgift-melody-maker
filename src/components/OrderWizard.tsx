@@ -248,28 +248,42 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     const dbStep = packageSteps.find(step => step.step_number === currentStep);
     console.log('Database step found:', dbStep);
     
-    // If it's a package selection step, enhance the options with package data
-    if (dbStep && dbStep.fields.some(field => field.field_name === 'package')) {
-      const enhancedStep = {
-        ...dbStep,
-        fields: dbStep.fields.map(field => {
-          if (field.field_name === 'package' && field.field_type === 'select') {
-            return {
-              ...field,
-              options: packages.map(pkg => ({
-                value: pkg.value,
-                label_key: pkg.label_key
-              }))
-            };
-          }
-          return field;
-        })
-      };
-      console.log('Enhanced step with package options:', enhancedStep);
-      return enhancedStep;
-    }
+    if (!dbStep) return dbStep;
     
-    return dbStep;
+    // Transform all fields to ensure options are in the correct format
+    const enhancedStep = {
+      ...dbStep,
+      fields: dbStep.fields.map(field => {
+        // Handle package field specifically - inject package options
+        if (field.field_name === 'package' && field.field_type === 'select') {
+          return {
+            ...field,
+            options: packages.map(pkg => ({
+              value: pkg.value,
+              label_key: pkg.label_key
+            }))
+          };
+        }
+        
+        // Handle other fields with options - transform string[] to FieldOption[]
+        if (field.options && Array.isArray(field.options)) {
+          return {
+            ...field,
+            options: field.options.map(option => {
+              if (typeof option === 'string') {
+                return { value: option, label_key: option };
+              }
+              return option;
+            })
+          };
+        }
+        
+        return field;
+      })
+    };
+    
+    console.log('Enhanced step with transformed options:', enhancedStep);
+    return enhancedStep;
   };
 
   const currentStepData = getCurrentStepData();
