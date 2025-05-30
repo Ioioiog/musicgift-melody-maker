@@ -62,8 +62,8 @@ const Navigation = () => {
                   <Link 
                     key={item.path + item.label} 
                     to={item.path} 
-                    className={`text-sm font-medium transition-colors hover:text-purple-600 ${
-                      location.pathname === item.path ? "text-purple-600" : "text-gray-700"
+                    className={`text-sm font-medium transition-colors hover:text-violet-600 ${
+                      location.pathname === item.path ? "text-violet-600" : "text-gray-700"
                     }`}
                   >
                     {item.label}
@@ -85,7 +85,7 @@ const Navigation = () => {
                     <DropdownMenuItem 
                       key={lang} 
                       onClick={() => setCurrentLanguage(lang)} 
-                      className={currentLanguage === lang ? "bg-purple-50" : ""}
+                      className={currentLanguage === lang ? "bg-violet-50" : ""}
                     >
                       {languageNames[lang]}
                     </DropdownMenuItem>
@@ -97,7 +97,7 @@ const Navigation = () => {
               
               <Link 
                 to="/order" 
-                className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                className="bg-violet-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-violet-700 transition-colors"
               >
                 {t("orderNow")}
               </Link>
@@ -124,8 +124,8 @@ const Navigation = () => {
                   <Link 
                     key={item.path + item.label} 
                     to={item.path} 
-                    className={`text-sm font-medium transition-colors hover:text-purple-600 ${
-                      location.pathname === item.path ? "text-purple-600" : "text-gray-600"
+                    className={`text-sm font-medium transition-colors hover:text-violet-600 ${
+                      location.pathname === item.path ? "text-violet-600" : "text-gray-600"
                     }`} 
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -144,7 +144,7 @@ const Navigation = () => {
                         <DropdownMenuItem 
                           key={lang} 
                           onClick={() => setCurrentLanguage(lang)} 
-                          className={currentLanguage === lang ? "bg-purple-50" : ""}
+                          className={currentLanguage === lang ? "bg-violet-50" : ""}
                         >
                           {languageNames[lang]}
                         </DropdownMenuItem>
@@ -156,7 +156,7 @@ const Navigation = () => {
                   
                   <Link 
                     to="/order" 
-                    className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors" 
+                    className="bg-violet-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors" 
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {t("orderNow")}

@@ -22,7 +22,7 @@ const UserMenu = () => {
   if (!user) {
     return (
       <Link to="/auth">
-        <Button variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
+        <Button variant="outline" className="border-white text-white hover:bg-white hover:text-violet-600">
           Conectează-te
         </Button>
       </Link>
