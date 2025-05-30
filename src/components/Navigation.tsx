@@ -32,22 +32,22 @@ const Navigation = () => {
   }];
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
   return <>
-      {/* Floating Logo - positioned on the left */}
-      <div className="fixed -top-7 left-20 z-[100]">
+      {/* Floating Logo - positioned absolutely and centered */}
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[100]">
         <Link to="/" className="block">
-          <img src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" alt="MusicGift Logo" className="h-60 w-40 transition-transform duration-100 ease-in-out hover:scale-105" />
+          <img src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" alt="MusicGift Logo" className="h-24 w-auto transition-transform duration-300 ease-in-out hover:scale-105" />
         </Link>
       </div>
 
       {/* Navigation Bar */}
-      <header className="fixed top-4 w-full bg-white z-50 border-b border-gray-100">
+      <header className="fixed top-0 w-full bg-white z-50 border-b border-gray-100">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between h-20">
             
             {/* Desktop Nav - centered */}
             <nav className="hidden lg:flex items-center justify-center flex-1">
-              <div className="flex items-center space-x-40 px-0">
-                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-lg font-bold uppercase transition-colors hover:text-purple-600 ${location.pathname === item.path ? "text-purple-600" : "text-gray-700"}`}>
+              <div className="flex items-center space-x-20 py-[20px] px-[95px] my-3 mx-[6 px] rounded-none">
+                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-sm font-medium transition-colors hover:text-purple-600 ${location.pathname === item.path ? "text-purple-600" : "text-gray-700"}`}>
                     {item.label}
                   </Link>)}
               </div>
@@ -85,7 +85,7 @@ const Navigation = () => {
           {/* Mobile Menu */}
           {isMenuOpen && <div className="lg:hidden py-4 border-t">
               <nav className="flex flex-col space-y-4">
-                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-lg font-bold uppercase transition-colors hover:text-purple-600 ${location.pathname === item.path ? "text-purple-600" : "text-gray-600"}`} onClick={() => setIsMenuOpen(false)}>
+                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-sm font-medium transition-colors hover:text-purple-600 ${location.pathname === item.path ? "text-purple-600" : "text-gray-600"}`} onClick={() => setIsMenuOpen(false)}>
                     {item.label}
                   </Link>)}
                 <div className="flex items-center pt-4 space-x-4">
