@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -61,10 +60,17 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const { data: packageSteps = [], isLoading: stepsLoading } = usePackageSteps(selectedPackage);
   const { data: addons = [] } = useAddons();
 
-  // Use dynamic steps from database, fallback to 5 steps minimum
-  const maxSteps = Math.max(5, packageSteps.length);
+  // Calculate total steps: 1 (package selection) + dynamic steps from database
+  const totalSteps = packageSteps.length > 0 ? packageSteps.length + 1 : 5;
+
+  console.log('Current step:', currentStep);
+  console.log('Selected package:', selectedPackage);
+  console.log('Package steps:', packageSteps);
+  console.log('Total steps:', totalSteps);
+  console.log('Steps loading:', stepsLoading);
 
   const updateFormData = (field: string, value: any) => {
+    console.log('Updating form data:', field, value);
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -72,6 +78,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
 
     if (field === 'package') {
       setSelectedPackage(value);
+      console.log('Package selected:', value);
     }
   };
 
@@ -97,28 +104,47 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   };
 
   const canProceed = () => {
+    console.log('Checking if can proceed from step:', currentStep);
+    
     // For step 1 (package selection), check if package is selected
     if (currentStep === 1) {
-      return formData.package && formData.package !== '';
+      const canProceedStep1 = formData.package && formData.package !== '';
+      console.log('Can proceed from step 1:', canProceedStep1, 'Package:', formData.package);
+      return canProceedStep1;
     }
 
-    // For other steps, check dynamic step fields
+    // For database steps, check dynamic step fields
     const currentStepData = packageSteps.find(step => step.step_number === currentStep);
-    if (!currentStepData) return true;
+    console.log('Current step data for validation:', currentStepData);
+    
+    if (!currentStepData) {
+      console.log('No step data found for step:', currentStep);
+      return true; // Allow progression if no step data is found
+    }
 
-    return currentStepData.fields.every(field => {
+    const validation = currentStepData.fields.every(field => {
       if (!field.required) return true;
       if (field.field_type === 'checkbox-group') return true;
       const fieldValue = formData[field.field_name];
-      return fieldValue && fieldValue !== '';
+      const isValid = fieldValue && fieldValue !== '';
+      console.log(`Field ${field.field_name} validation:`, isValid, 'Value:', fieldValue);
+      return isValid;
     });
+
+    console.log('Step validation result:', validation);
+    return validation;
   };
 
   const handleNext = () => {
-    if (canProceed() && currentStep < maxSteps) {
-      setCurrentStep(currentStep + 1);
+    console.log('Attempting to go to next step from:', currentStep);
+    
+    if (canProceed() && currentStep < totalSteps) {
+      const nextStep = currentStep + 1;
+      console.log('Moving to step:', nextStep);
+      setCurrentStep(nextStep);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
+      console.log('Cannot proceed - validation failed or at last step');
       toast({
         title: t('completeRequiredFields', 'Please complete all required fields'),
         description: t('completeRequiredFieldsDesc', 'Make sure all required fields are filled out before proceeding.'),
@@ -221,11 +247,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     return packagePrice + addonsPrice;
   };
 
-  // Modified getCurrentStepData to pass selected package context
+  // Get current step data based on step number
   const getCurrentStepData = () => {
+    console.log('Getting current step data for step:', currentStep);
+    
     if (currentStep === 1) {
-      // Package selection step
-      return {
+      // Package selection step (hardcoded)
+      const stepData = {
         step: 1,
         step_number: 1,
         title_key: 'selectYourPackage',
@@ -242,22 +270,55 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
           }))
         }]
       };
+      console.log('Step 1 data:', stepData);
+      return stepData;
     }
 
-    return packageSteps.find(step => step.step_number === currentStep);
+    // For steps 2+, find the corresponding database step
+    // Database steps are numbered 2, 3, 4, etc. but stored as step_number 2, 3, 4
+    const dbStep = packageSteps.find(step => step.step_number === currentStep);
+    console.log('Database step found:', dbStep);
+    return dbStep;
   };
 
   const currentStepData = getCurrentStepData();
-  const completionPercentage = (currentStep / maxSteps) * 100;
+  const completionPercentage = (currentStep / totalSteps) * 100;
   const selectedPackageDetails = packages.find(pkg => pkg.value === selectedPackage);
 
-  // Show loading state
+  // Show loading state for packages
   if (packagesLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600">{t('loadingPackages', 'Loading packages...')}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state for steps (when package is selected but steps are loading)
+  if (selectedPackage && stepsLoading && currentStep > 1) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">{t('loadingSteps', 'Loading steps...')}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If we're on step 2+ but don't have step data and not loading, show error
+  if (currentStep > 1 && !currentStepData && !stepsLoading) {
+    console.error('No step data available for step:', currentStep);
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">Error: Step data not found for step {currentStep}</p>
+          <Button onClick={() => setCurrentStep(1)} className="mt-4">
+            Return to Step 1
+          </Button>
         </div>
       </div>
     );
@@ -287,7 +348,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                               {currentStep === 1 ? t('selectYourPackage', 'Select Your Package') : t(currentStepData.title_key)}
                             </h2>
                             <p className="text-purple-600 font-medium">
-                              {t('stepPackage', 'Step')} {currentStep} {t('of', 'of')} {maxSteps}
+                              {t('stepPackage', 'Step')} {currentStep} {t('of', 'of')} {totalSteps}
                             </p>
                           </div>
                         </div>
@@ -362,7 +423,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                     )}
 
                     <div className="space-y-8">
-                      {currentStepData.fields.map((field, index) => (
+                      {currentStepData.fields && currentStepData.fields.map((field, index) => (
                         <div key={index} className="transform transition-all duration-200 hover:scale-[1.02]">
                           <FormFieldRenderer 
                             field={field} 
@@ -391,7 +452,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                       </Button>
 
                       <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500">
-                        {Array.from({ length: maxSteps }, (_, i) => (
+                        {Array.from({ length: totalSteps }, (_, i) => (
                           <div 
                             key={i} 
                             className={`w-2 h-2 rounded-full transition-all duration-300 ${
@@ -401,7 +462,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                         ))}
                       </div>
 
-                      {currentStep === maxSteps ? (
+                      {currentStep === totalSteps ? (
                         <Button 
                           onClick={handleSubmit} 
                           disabled={!canProceed() || isSubmitting} 
