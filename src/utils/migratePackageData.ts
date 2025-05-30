@@ -80,49 +80,49 @@ export const migratePackageData = async () => {
             step_number: 1,
             title_key: 'choosePackage',
             fields: [
-              { field_name: 'package', field_type: 'select', placeholder_key: 'choosePackage', required: true }
+              { field_name: 'package', field_type: 'select' as const, placeholder_key: 'choosePackage', required: true }
             ]
           },
           {
             step_number: 2,
             title_key: 'generalDetails',
             fields: [
-              { field_name: 'recipientName', field_type: 'text', placeholder_key: 'recipientName', required: true },
-              { field_name: 'relationship', field_type: 'select', placeholder_key: 'relationship', required: true },
-              { field_name: 'occasion', field_type: 'select', placeholder_key: 'occasion', required: true },
-              { field_name: 'eventDate', field_type: 'date', placeholder_key: 'eventDate', required: false },
-              { field_name: 'songLanguage', field_type: 'select', placeholder_key: 'songLanguage', required: true },
-              { field_name: 'pronunciationAudio_recipient', field_type: 'file', placeholder_key: 'pronunciationAudioRecipient', required: false }
+              { field_name: 'recipientName', field_type: 'text' as const, placeholder_key: 'recipientName', required: true },
+              { field_name: 'relationship', field_type: 'select' as const, placeholder_key: 'relationship', required: true },
+              { field_name: 'occasion', field_type: 'select' as const, placeholder_key: 'occasion', required: true },
+              { field_name: 'eventDate', field_type: 'date' as const, placeholder_key: 'eventDate', required: false },
+              { field_name: 'songLanguage', field_type: 'select' as const, placeholder_key: 'songLanguage', required: true },
+              { field_name: 'pronunciationAudio_recipient', field_type: 'file' as const, placeholder_key: 'pronunciationAudioRecipient', required: false }
             ]
           },
           {
             step_number: 3,
             title_key: 'storyAndEmotionalDetails',
             fields: [
-              { field_name: 'story', field_type: 'textarea', placeholder_key: 'story', required: true },
-              { field_name: 'emotionalTone', field_type: 'select', placeholder_key: 'emotionalTone', required: true },
-              { field_name: 'keyMoments', field_type: 'textarea', placeholder_key: 'keyMoments', required: true },
-              { field_name: 'specialWords', field_type: 'textarea', placeholder_key: 'specialWords', required: false },
-              { field_name: 'pronunciationAudio_keywords', field_type: 'file', placeholder_key: 'pronunciationAudioKeywords', required: false }
+              { field_name: 'story', field_type: 'textarea' as const, placeholder_key: 'story', required: true },
+              { field_name: 'emotionalTone', field_type: 'select' as const, placeholder_key: 'emotionalTone', required: true },
+              { field_name: 'keyMoments', field_type: 'textarea' as const, placeholder_key: 'keyMoments', required: true },
+              { field_name: 'specialWords', field_type: 'textarea' as const, placeholder_key: 'specialWords', required: false },
+              { field_name: 'pronunciationAudio_keywords', field_type: 'file' as const, placeholder_key: 'pronunciationAudioKeywords', required: false }
             ]
           },
           {
             step_number: 4,
             title_key: 'musicalPreferences',
             fields: [
-              { field_name: 'musicStyle', field_type: 'select', placeholder_key: 'musicStyle', required: true },
-              { field_name: 'referenceSong', field_type: 'url', placeholder_key: 'referenceSong', required: false },
-              { field_name: 'addons', field_type: 'checkbox-group', options: ['rushDelivery', 'commercialRights', 'distributionMangoRecords', 'customVideo', 'audioMessageFromSender', 'extendedSong'] }
+              { field_name: 'musicStyle', field_type: 'select' as const, placeholder_key: 'musicStyle', required: true },
+              { field_name: 'referenceSong', field_type: 'url' as const, placeholder_key: 'referenceSong', required: false },
+              { field_name: 'addons', field_type: 'checkbox-group' as const, options: ['rushDelivery', 'commercialRights', 'distributionMangoRecords', 'customVideo', 'audioMessageFromSender', 'extendedSong'] }
             ]
           },
           {
             step_number: 5,
             title_key: 'confirmation',
             fields: [
-              { field_name: 'fullName', field_type: 'text', placeholder_key: 'fullName', required: true },
-              { field_name: 'email', field_type: 'email', placeholder_key: 'email', required: true },
-              { field_name: 'phone', field_type: 'tel', placeholder_key: 'phone', required: false },
-              { field_name: 'acceptMentionObligation', field_type: 'checkbox', placeholder_key: 'acceptMentionObligation', required: true }
+              { field_name: 'fullName', field_type: 'text' as const, placeholder_key: 'fullName', required: true },
+              { field_name: 'email', field_type: 'email' as const, placeholder_key: 'email', required: true },
+              { field_name: 'phone', field_type: 'tel' as const, placeholder_key: 'phone', required: false },
+              { field_name: 'acceptMentionObligation', field_type: 'checkbox' as const, placeholder_key: 'acceptMentionObligation', required: true }
             ]
           }
         ]
@@ -135,51 +135,51 @@ export const migratePackageData = async () => {
             step_number: 1,
             title_key: 'choosePackage',
             fields: [
-              { field_name: 'package', field_type: 'select', placeholder_key: 'choosePackage', required: true }
+              { field_name: 'package', field_type: 'select' as const, placeholder_key: 'choosePackage', required: true }
             ]
           },
           {
             step_number: 2,
             title_key: 'generalDetails',
             fields: [
-              { field_name: 'recipientName', field_type: 'text', placeholder_key: 'recipientName', required: true },
-              { field_name: 'relationship', field_type: 'select', placeholder_key: 'relationship', required: true },
-              { field_name: 'occasion', field_type: 'select', placeholder_key: 'occasion', required: true },
-              { field_name: 'eventDate', field_type: 'date', placeholder_key: 'eventDate', required: false },
-              { field_name: 'songLanguage', field_type: 'select', placeholder_key: 'songLanguage', required: true },
-              { field_name: 'pronunciationAudio_recipient', field_type: 'file', placeholder_key: 'pronunciationAudioRecipient', required: false }
+              { field_name: 'recipientName', field_type: 'text' as const, placeholder_key: 'recipientName', required: true },
+              { field_name: 'relationship', field_type: 'select' as const, placeholder_key: 'relationship', required: true },
+              { field_name: 'occasion', field_type: 'select' as const, placeholder_key: 'occasion', required: true },
+              { field_name: 'eventDate', field_type: 'date' as const, placeholder_key: 'eventDate', required: false },
+              { field_name: 'songLanguage', field_type: 'select' as const, placeholder_key: 'songLanguage', required: true },
+              { field_name: 'pronunciationAudio_recipient', field_type: 'file' as const, placeholder_key: 'pronunciationAudioRecipient', required: false }
             ]
           },
           {
             step_number: 3,
             title_key: 'storyAndEmotionalDetails',
             fields: [
-              { field_name: 'story', field_type: 'textarea', placeholder_key: 'story', required: true },
-              { field_name: 'emotionalTone', field_type: 'select', placeholder_key: 'emotionalTone', required: true },
-              { field_name: 'keyMoments', field_type: 'textarea', placeholder_key: 'keyMoments', required: true },
-              { field_name: 'specialWords', field_type: 'textarea', placeholder_key: 'specialWords', required: false },
-              { field_name: 'pronunciationAudio_keywords', field_type: 'file', placeholder_key: 'pronunciationAudioKeywords', required: false }
+              { field_name: 'story', field_type: 'textarea' as const, placeholder_key: 'story', required: true },
+              { field_name: 'emotionalTone', field_type: 'select' as const, placeholder_key: 'emotionalTone', required: true },
+              { field_name: 'keyMoments', field_type: 'textarea' as const, placeholder_key: 'keyMoments', required: true },
+              { field_name: 'specialWords', field_type: 'textarea' as const, placeholder_key: 'specialWords', required: false },
+              { field_name: 'pronunciationAudio_keywords', field_type: 'file' as const, placeholder_key: 'pronunciationAudioKeywords', required: false }
             ]
           },
           {
             step_number: 4,
             title_key: 'musicalPreferences',
             fields: [
-              { field_name: 'musicStyle', field_type: 'select', placeholder_key: 'musicStyle', required: true },
-              { field_name: 'referenceSong', field_type: 'url', placeholder_key: 'referenceSong', required: false },
-              { field_name: 'addons', field_type: 'checkbox-group', options: ['rushDelivery', 'customVideo', 'audioMessageFromSender', 'extendedSong'] }
+              { field_name: 'musicStyle', field_type: 'select' as const, placeholder_key: 'musicStyle', required: true },
+              { field_name: 'referenceSong', field_type: 'url' as const, placeholder_key: 'referenceSong', required: false },
+              { field_name: 'addons', field_type: 'checkbox-group' as const, options: ['rushDelivery', 'customVideo', 'audioMessageFromSender', 'extendedSong'] }
             ]
           },
           {
             step_number: 5,
             title_key: 'confirmation',
             fields: [
-              { field_name: 'fullName', field_type: 'text', placeholder_key: 'fullName', required: true },
-              { field_name: 'email', field_type: 'email', placeholder_key: 'email', required: true },
-              { field_name: 'phone', field_type: 'tel', placeholder_key: 'phone', required: false },
-              { field_name: 'acceptMentionObligation', field_type: 'checkbox', placeholder_key: 'acceptMentionObligation', required: true },
-              { field_name: 'acceptDistribution', field_type: 'checkbox', placeholder_key: 'acceptDistribution', required: true },
-              { field_name: 'finalNote', field_type: 'checkbox', placeholder_key: 'finalNote', required: true }
+              { field_name: 'fullName', field_type: 'text' as const, placeholder_key: 'fullName', required: true },
+              { field_name: 'email', field_type: 'email' as const, placeholder_key: 'email', required: true },
+              { field_name: 'phone', field_type: 'tel' as const, placeholder_key: 'phone', required: false },
+              { field_name: 'acceptMentionObligation', field_type: 'checkbox' as const, placeholder_key: 'acceptMentionObligation', required: true },
+              { field_name: 'acceptDistribution', field_type: 'checkbox' as const, placeholder_key: 'acceptDistribution', required: true },
+              { field_name: 'finalNote', field_type: 'checkbox' as const, placeholder_key: 'finalNote', required: true }
             ]
           }
         ]
