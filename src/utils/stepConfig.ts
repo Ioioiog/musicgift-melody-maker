@@ -1,4 +1,5 @@
 
+
 export const getStepsForPackage = (selectedPackage: string) => {
   const commonSteps = [
     {
@@ -95,7 +96,9 @@ export const getStepsForPackage = (selectedPackage: string) => {
           { name: "fullName", type: "text", placeholder: "fullName", required: true },
           { name: "email", type: "email", placeholder: "email", required: true },
           { name: "phone", type: "tel", placeholder: "phone", required: false },
-          { name: "acceptMentionObligation", type: "checkbox", placeholder: "acceptMentionObligation", required: true }
+          { name: "acceptMentionObligation", type: "checkbox", placeholder: "acceptMentionObligation", required: true },
+          { name: "acceptDistribution", type: "checkbox", placeholder: "acceptDistribution", required: true },
+          { name: "finalNote", type: "checkbox", placeholder: "finalNote", required: true }
         ]
       }
     ]
@@ -103,3 +106,4 @@ export const getStepsForPackage = (selectedPackage: string) => {
 
   return [...commonSteps, ...(packageSpecificSteps[selectedPackage] || [])];
 };
+
