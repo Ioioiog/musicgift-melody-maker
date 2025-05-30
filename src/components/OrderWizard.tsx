@@ -251,6 +251,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (field === 'package') {
       setSelectedPackage(value);
+      console.log('Package selected:', value);
     }
   };
 
@@ -263,7 +264,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   };
 
   const getSelectedPackageDetails = () => {
-    return packages.find(pkg => pkg.value === selectedPackage);
+    const packageDetails = packages.find(pkg => pkg.value === selectedPackage);
+    console.log('Selected package details:', packageDetails);
+    return packageDetails;
   };
 
   const calculateTotal = () => {
@@ -426,6 +429,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const currentStepData = allSteps.find(step => step.step === currentStep);
   const selectedPackageDetails = getSelectedPackageDetails();
 
+  console.log('Current selected package:', selectedPackage);
+  console.log('Package details:', selectedPackageDetails);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -580,6 +586,20 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                       <span className="text-gray-600">Base Price:</span>
                       <span className="font-medium">{selectedPackageDetails.details.price}</span>
                     </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Delivery Time:</span>
+                      <span className="font-medium">{selectedPackageDetails.details.deliveryTime}</span>
+                    </div>
+                    
+                    <div className="pt-2 border-t">
+                      <div className="text-sm text-gray-600 mb-2">Package includes:</div>
+                      <ul className="text-xs text-gray-500 space-y-1">
+                        {selectedPackageDetails.details.includes.map((item, index) => (
+                          <li key={index}>• {item}</li>
+                        ))}
+                      </ul>
+                    </div>
+
                     {selectedAddons.length > 0 && (
                       <div className="pt-2 border-t">
                         <div className="text-sm text-gray-600 mb-2">Add-ons:</div>
