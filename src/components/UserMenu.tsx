@@ -22,7 +22,7 @@ const UserMenu = () => {
   if (!user) {
     return (
       <Link to="/auth">
-        <Button variant="outline" className="border-white text-white hover:bg-white hover:text-violet-600">
+        <Button variant="outline" className="border-violet-600 text-violet-600 hover:bg-violet-600 hover:text-white">
           Conectează-te
         </Button>
       </Link>
@@ -32,14 +32,14 @@ const UserMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="text-white hover:bg-white/20 flex items-center space-x-2">
+        <Button variant="outline" className="border-violet-600 text-violet-600 hover:bg-violet-600 hover:text-white flex items-center space-x-2">
           <User className="w-4 h-4" />
           <span className="hidden md:inline">
             {user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilizator'}
           </span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="w-56 bg-white shadow-lg border">
         <div className="px-2 py-1.5 text-sm text-gray-600">
           {user.email}
         </div>
