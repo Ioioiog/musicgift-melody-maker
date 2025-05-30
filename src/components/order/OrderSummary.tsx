@@ -23,7 +23,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
   const calculateTotal = () => {
     let total = packageDetails.price;
     selectedAddons.forEach(addonId => {
-      const addon = addons.find(a => a.value === addonId);
+      const addon = addons[addonId as keyof typeof addons];
       if (addon) {
         total += addon.price;
       }
@@ -34,25 +34,25 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
   return (
     <Card className="sticky top-8">
       <CardHeader>
-        <CardTitle className="text-lg">Order Summary</CardTitle>
+        <CardTitle className="text-lg">{t('orderSummary')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Package Summary */}
         <div className="border-b pb-4">
           <h4 className="font-semibold mb-2">{t(packageDetails.labelKey)}</h4>
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600">Package</span>
-            <span className="font-semibold">{t(packageDetails.details.priceKey)}</span>
+            <span className="text-sm text-gray-600">{t('package')}</span>
+            <span className="font-semibold">{packageDetails.price} RON</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">Delivery</span>
+            <span className="text-sm text-gray-600">{t('delivery')}</span>
             <span className="text-sm">{t(packageDetails.details.deliveryTimeKey)}</span>
           </div>
         </div>
 
         {/* Package Includes */}
         <div className="border-b pb-4">
-          <h5 className="font-medium mb-2 text-sm">What's included:</h5>
+          <h5 className="font-medium mb-2 text-sm">{t('whatsIncluded')}:</h5>
           <ul className="space-y-1">
             {packageDetails.details.includesKeys.map((includeKey, index) => (
               <li key={index} className="text-xs text-gray-600 flex items-start">
@@ -66,10 +66,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
         {/* Selected Addons */}
         {selectedAddons.length > 0 && (
           <div className="border-b pb-4">
-            <h5 className="font-medium mb-2 text-sm">Selected Addons:</h5>
+            <h5 className="font-medium mb-2 text-sm">{t('selectedAddons')}:</h5>
             <div className="space-y-2">
               {selectedAddons.map(addonId => {
-                const addon = addons.find(a => a.value === addonId);
+                const addon = addons[addonId as keyof typeof addons];
                 return addon ? (
                   <div key={addonId} className="flex justify-between items-center">
                     <span className="text-xs text-gray-600">{t(addon.labelKey)}</span>
@@ -84,7 +84,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
         {/* Total */}
         <div className="pt-2">
           <div className="flex justify-between items-center">
-            <span className="font-semibold">Total:</span>
+            <span className="font-semibold">{t('total')}:</span>
             <span className="font-bold text-lg text-purple-600">{calculateTotal()} RON</span>
           </div>
         </div>
@@ -92,7 +92,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
         {/* Quality Badge */}
         <div className="pt-2">
           <Badge variant="secondary" className="w-full justify-center">
-            Professional Quality Guaranteed
+            {t('professionalQualityGuaranteed')}
           </Badge>
         </div>
       </CardContent>
