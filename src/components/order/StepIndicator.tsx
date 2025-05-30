@@ -16,31 +16,74 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
   ];
 
   return (
-    <div className="mb-8">
-      <div className="flex items-center justify-between mb-4">
-        {steps.map((step, index) => (
-          <div key={step.number} className="flex items-center">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
-              step.number < currentStep ? 'bg-green-500 text-white' :
-              step.number === currentStep ? 'bg-purple-600 text-white' :
-              'bg-gray-300 text-gray-600'
-            }`}>
-              {step.number < currentStep ? <Check className="w-5 h-5" /> : step.number}
+    <div className="mb-12">
+      {/* Progress Bar Background */}
+      <div className="relative mb-8">
+        <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-200 rounded-full" />
+        <div 
+          className="absolute top-5 left-0 h-0.5 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full transition-all duration-700 ease-in-out"
+          style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
+        />
+        
+        {/* Step Circles */}
+        <div className="relative flex items-center justify-between">
+          {steps.map((step, index) => (
+            <div key={step.number} className="flex flex-col items-center group">
+              <div className={`
+                relative w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold
+                transition-all duration-300 ease-in-out transform
+                ${step.number < currentStep 
+                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg scale-110' :
+                  step.number === currentStep 
+                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-xl scale-110 ring-4 ring-purple-200' :
+                    'bg-white border-2 border-gray-300 text-gray-500 hover:border-purple-300'
+                }
+              `}>
+                {step.number < currentStep ? (
+                  <Check className="w-5 h-5 animate-fade-in" />
+                ) : (
+                  <span className="transition-all duration-200">{step.number}</span>
+                )}
+                
+                {/* Pulse animation for current step */}
+                {step.number === currentStep && (
+                  <div className="absolute inset-0 rounded-full bg-purple-600 animate-ping opacity-20" />
+                )}
+              </div>
+              
+              {/* Step Label */}
+              <div className={`
+                mt-3 text-center transition-all duration-300
+                ${step.number <= currentStep 
+                  ? 'text-purple-700 font-semibold' 
+                  : 'text-gray-500 font-medium'
+                }
+              `}>
+                <span className="text-sm lg:text-base whitespace-nowrap">
+                  {step.label}
+                </span>
+                {step.number === currentStep && (
+                  <div className="w-2 h-2 bg-purple-600 rounded-full mx-auto mt-1 animate-pulse" />
+                )}
+              </div>
             </div>
-            {index < steps.length - 1 && (
-              <div className={`h-1 w-16 mx-2 ${
-                step.number < currentStep ? 'bg-green-500' :
-                step.number === currentStep ? 'bg-purple-200' :
-                'bg-gray-300'
-              }`} />
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      <div className="flex justify-between text-sm text-gray-600">
-        {steps.map((step) => (
-          <span key={step.number}>{step.label}</span>
-        ))}
+      
+      {/* Progress Text */}
+      <div className="text-center">
+        <div className="inline-flex items-center px-4 py-2 bg-purple-50 rounded-full">
+          <span className="text-sm text-purple-700 font-medium">
+            Step {currentStep} of {steps.length}
+          </span>
+          <div className="ml-2 w-16 bg-gray-200 rounded-full h-1.5">
+            <div 
+              className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 rounded-full transition-all duration-700 ease-out"
+              style={{ width: `${(currentStep / steps.length) * 100}%` }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
