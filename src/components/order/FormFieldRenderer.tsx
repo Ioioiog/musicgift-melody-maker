@@ -211,17 +211,38 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
             {field.options?.map((addonId: string) => {
               const addon = addons[addonId as keyof typeof addons];
               return addon ? (
-                <div key={addonId} className="flex items-center space-x-3 p-4 border-2 border-gray-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-all duration-200">
-                  <Checkbox
-                    id={addonId}
-                    checked={selectedAddons.includes(addonId)}
-                    onCheckedChange={(checked) => handleAddonChange(addonId, checked as boolean)}
-                    className="border-2"
-                  />
-                  <Label htmlFor={addonId} className="flex-1 cursor-pointer">
-                    <span className="font-medium">{addon.label}</span>
-                    <span className="text-purple-600 ml-2 font-semibold">+{addon.price} RON</span>
-                  </Label>
+                <div key={addonId}>
+                  <div className="flex items-center space-x-3 p-4 border-2 border-gray-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-all duration-200">
+                    <Checkbox
+                      id={addonId}
+                      checked={selectedAddons.includes(addonId)}
+                      onCheckedChange={(checked) => handleAddonChange(addonId, checked as boolean)}
+                      className="border-2"
+                    />
+                    <Label htmlFor={addonId} className="flex-1 cursor-pointer">
+                      <span className="font-medium">{addon.label}</span>
+                      <span className="text-purple-600 ml-2 font-semibold">+{addon.price} RON</span>
+                    </Label>
+                  </div>
+                  
+                  {/* Show file upload field when customVideo addon is selected */}
+                  {addonId === 'customVideo' && selectedAddons.includes('customVideo') && (
+                    <div className="mt-3 ml-8 space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">
+                        Încarcă imagini sau video pentru videoclipul personalizat
+                      </Label>
+                      <Input
+                        type="file"
+                        accept="image/*,video/*"
+                        multiple
+                        onChange={(e) => updateFormData('customVideoFiles', e.target.files)}
+                        className="h-12 border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200"
+                      />
+                      <p className="text-xs text-gray-500">
+                        Acceptăm imagini (JPG, PNG) și video (MP4, MOV). Poți selecta mai multe fișiere.
+                      </p>
+                    </div>
+                  )}
                 </div>
               ) : null;
             })}
