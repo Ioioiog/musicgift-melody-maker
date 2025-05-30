@@ -10,6 +10,14 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+interface OrderFormData {
+  email?: string;
+  fullName?: string;
+  recipientName?: string;
+  occasion?: string;
+  [key: string]: any;
+}
+
 const OrdersManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const { toast } = useToast();
@@ -54,9 +62,10 @@ const OrdersManagement = () => {
   const exportOrders = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
       + "ID,Package,Total Price,Status,Created At,Customer Email\n"
-      + orders.map(order => 
-          `${order.id},${order.package?.label_key || 'N/A'},${order.total_price},${order.status},${order.created_at},${order.form_data?.email || 'N/A'}`
-        ).join("\n");
+      + orders.map(order => {
+          const formData = order.form_data as OrderFormData;
+          return `${order.id},${order.package?.label_key || 'N/A'},${order.total_price},${order.status},${order.created_at},${formData?.email || 'N/A'}`;
+        }).join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -102,83 +111,86 @@ const OrdersManagement = () => {
       </div>
 
       <div className="grid gap-4">
-        {orders.map((order) => (
-          <Card key={order.id}>
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-semibold">Order #{order.id.slice(0, 8)}</h3>
-                    <Badge className={getStatusColor(order.status)}>
-                      {order.status}
-                    </Badge>
-                    <span className="text-lg font-bold text-purple-600">
-                      {order.total_price} RON
-                    </span>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p><strong>Package:</strong> {order.package?.label_key || 'N/A'}</p>
-                      <p><strong>Customer:</strong> {order.form_data?.fullName || 'N/A'}</p>
-                      <p><strong>Email:</strong> {order.form_data?.email || 'N/A'}</p>
+        {orders.map((order) => {
+          const formData = order.form_data as OrderFormData;
+          return (
+            <Card key={order.id}>
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <h3 className="text-lg font-semibold">Order #{order.id.slice(0, 8)}</h3>
+                      <Badge className={getStatusColor(order.status)}>
+                        {order.status}
+                      </Badge>
+                      <span className="text-lg font-bold text-purple-600">
+                        {order.total_price} RON
+                      </span>
                     </div>
-                    <div>
-                      <p><strong>Created:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
-                      <p><strong>Recipient:</strong> {order.form_data?.recipientName || 'N/A'}</p>
-                      <p><strong>Occasion:</strong> {order.form_data?.occasion || 'N/A'}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col space-y-2">
-                  <Select 
-                    value={order.status} 
-                    onValueChange={(value) => updateOrderStatus(order.id, value)}
-                  >
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="in_progress">In Progress</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                      <SelectItem value="cancelled">Cancelled</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Details
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>Order Details #{order.id.slice(0, 8)}</DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-semibold mb-2">Form Data:</h4>
-                          <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
-                            {JSON.stringify(order.form_data, null, 2)}
-                          </pre>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold mb-2">Selected Addons:</h4>
-                          <pre className="bg-gray-100 p-4 rounded text-sm">
-                            {JSON.stringify(order.selected_addons, null, 2)}
-                          </pre>
-                        </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p><strong>Package:</strong> {order.package?.label_key || 'N/A'}</p>
+                        <p><strong>Customer:</strong> {formData?.fullName || 'N/A'}</p>
+                        <p><strong>Email:</strong> {formData?.email || 'N/A'}</p>
                       </div>
-                    </DialogContent>
-                  </Dialog>
+                      <div>
+                        <p><strong>Created:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
+                        <p><strong>Recipient:</strong> {formData?.recipientName || 'N/A'}</p>
+                        <p><strong>Occasion:</strong> {formData?.occasion || 'N/A'}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col space-y-2">
+                    <Select 
+                      value={order.status} 
+                      onValueChange={(value) => updateOrderStatus(order.id, value)}
+                    >
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="in_progress">In Progress</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Eye className="w-4 h-4 mr-2" />
+                          View Details
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>Order Details #{order.id.slice(0, 8)}</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="font-semibold mb-2">Form Data:</h4>
+                            <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+                              {JSON.stringify(order.form_data, null, 2)}
+                            </pre>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold mb-2">Selected Addons:</h4>
+                            <pre className="bg-gray-100 p-4 rounded text-sm">
+                              {JSON.stringify(order.selected_addons, null, 2)}
+                            </pre>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {orders.length === 0 && (

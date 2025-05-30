@@ -40,15 +40,15 @@ export const useFieldDependencies = (packageValue: string) => {
 
       if (stepsError) throw stepsError;
 
-      // Flatten dependencies from all fields
-      const dependencies: FieldDependency[] = [];
+      // Flatten dependencies from all fields and add field name
+      const dependencies: (FieldDependency & { field_name: string })[] = [];
       steps.forEach(step => {
         step.fields.forEach((field: any) => {
           field.dependencies.forEach((dep: any) => {
             dependencies.push({
               ...dep,
               field_id: field.id,
-              target_field: field.field_name
+              field_name: field.field_name
             });
           });
         });
@@ -87,11 +87,11 @@ export const evaluateFieldDependency = (
 
 export const shouldShowField = (
   fieldName: string,
-  dependencies: FieldDependency[],
+  dependencies: (FieldDependency & { field_name: string })[],
   formData: any
 ): boolean => {
   const fieldDependencies = dependencies.filter(dep => 
-    dep.target_field === fieldName && dep.is_active
+    dep.field_name === fieldName && dep.is_active
   );
 
   if (fieldDependencies.length === 0) return true;

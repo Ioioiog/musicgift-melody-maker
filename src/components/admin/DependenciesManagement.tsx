@@ -156,7 +156,7 @@ const DependenciesManagement = () => {
         <h2 className="text-2xl font-bold">Field Dependencies</h2>
         <Button 
           onClick={() => setIsCreating(true)} 
-          disabled={!selectedPackage || isCreating || editingDependency}
+          disabled={!selectedPackage || isCreating || !!editingDependency}
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Dependency
@@ -299,7 +299,7 @@ const DependenciesManagement = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => handleEdit(dependency)}
-                      disabled={isCreating || editingDependency}
+                      disabled={isCreating || !!editingDependency}
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
@@ -307,7 +307,7 @@ const DependenciesManagement = () => {
                       variant="destructive"
                       size="sm"
                       onClick={() => handleDelete(dependency.id)}
-                      disabled={isCreating || editingDependency}
+                      disabled={isCreating || !!editingDependency}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>

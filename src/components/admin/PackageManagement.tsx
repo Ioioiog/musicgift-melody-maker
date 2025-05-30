@@ -106,7 +106,7 @@ const PackageManagement = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Package Management</h2>
-        <Button onClick={() => setIsCreating(true)} disabled={isCreating || editingPackage}>
+        <Button onClick={() => setIsCreating(true)} disabled={isCreating || !!editingPackage}>
           <Plus className="w-4 h-4 mr-2" />
           Add Package
         </Button>
@@ -217,7 +217,7 @@ const PackageManagement = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => handleEdit(pkg)}
-                    disabled={isCreating || editingPackage}
+                    disabled={isCreating || !!editingPackage}
                   >
                     <Edit className="w-4 h-4" />
                   </Button>
@@ -225,7 +225,7 @@ const PackageManagement = () => {
                     variant="destructive"
                     size="sm"
                     onClick={() => handleDelete(pkg.id)}
-                    disabled={isCreating || editingPackage}
+                    disabled={isCreating || !!editingPackage}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
