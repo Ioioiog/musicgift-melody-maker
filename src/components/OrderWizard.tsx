@@ -159,7 +159,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
             {/* Enhanced Form Content */}
             <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-10 lg:p-12">
+              <CardContent className="p-10 lg:p-12 py-[225px] px-[63px] my-[8px]">
                 {currentStepData && <>
                     <div className="mb-8">
                       <div className="flex items-center justify-between mb-4">
