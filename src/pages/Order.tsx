@@ -38,7 +38,7 @@ const Order = () => {
       
 
       {/* Order Wizard Section */}
-      <section className="py-1 bg-gray-80">
+      <section className="py-8 bg-gray-80">
         <div className="container mx-auto px-4">
           <OrderWizard onComplete={handleOrderComplete} />
         </div>
