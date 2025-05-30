@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -178,17 +179,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
             order_id: orderData.id,
             addon_key: addonKey,
             field_type: addon?.trigger_field_type || 'unknown',
-            field_data: fieldValue instanceof File ? { fileName: fieldValue.name } : fieldValue,
+            field_data: fieldValue instanceof File ? { fileName: fieldValue.name } : (fieldValue as any),
             file_url: fieldValue instanceof File ? null : null // File upload handling would go here
           };
         });
 
-        const { error: addonDataError } = await supabase
-          .from('addon_form_data')
-          .insert(addonFormData);
+        if (addonFormData.length > 0) {
+          const { error: addonDataError } = await supabase
+            .from('addon_form_data')
+            .insert(addonFormData);
 
-        if (addonDataError) {
-          console.error('Addon data save error:', addonDataError);
+          if (addonDataError) {
+            console.error('Addon data save error:', addonDataError);
+          }
         }
       }
 

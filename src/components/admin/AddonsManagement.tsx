@@ -39,7 +39,7 @@ const AddonsManagement = () => {
     description_key: '',
     price: 0,
     is_active: true,
-    trigger_field_type: null,
+    trigger_field_type: undefined,
     trigger_field_config: {},
     trigger_condition: 'always',
     trigger_condition_value: ''
@@ -69,9 +69,22 @@ const AddonsManagement = () => {
           .eq('id', selectedAddon.id);
         if (error) throw error;
       } else {
+        // Ensure required fields are present for insert
+        const insertData = {
+          addon_key: addonData.addon_key!,
+          label_key: addonData.label_key!,
+          description_key: addonData.description_key,
+          price: addonData.price || 0,
+          is_active: addonData.is_active !== undefined ? addonData.is_active : true,
+          trigger_field_type: addonData.trigger_field_type || null,
+          trigger_field_config: addonData.trigger_field_config || {},
+          trigger_condition: addonData.trigger_condition || 'always',
+          trigger_condition_value: addonData.trigger_condition_value || null
+        };
+        
         const { error } = await supabase
           .from('addons')
-          .insert(addonData);
+          .insert(insertData);
         if (error) throw error;
       }
     },
@@ -124,7 +137,7 @@ const AddonsManagement = () => {
       description_key: '',
       price: 0,
       is_active: true,
-      trigger_field_type: null,
+      trigger_field_type: undefined,
       trigger_field_config: {},
       trigger_condition: 'always',
       trigger_condition_value: ''
@@ -247,7 +260,7 @@ const AddonsManagement = () => {
                     value={formData.trigger_field_type || 'none'}
                     onValueChange={(value) => setFormData(prev => ({ 
                       ...prev, 
-                      trigger_field_type: value === 'none' ? null : value 
+                      trigger_field_type: value === 'none' ? undefined : value 
                     }))}
                   >
                     <SelectTrigger>
