@@ -1,7 +1,10 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { packages, addons } from '@/data/packages';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { packages } from '@/data/packages';
+import { addons } from '@/data/packages';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface OrderSummaryProps {
   selectedPackage: string;
@@ -9,71 +12,88 @@ interface OrderSummaryProps {
 }
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAddons }) => {
-  const getSelectedPackageDetails = () => {
-    return packages.find(pkg => pkg.value === selectedPackage);
-  };
-
-  const calculateTotal = () => {
-    const selectedPackageDetails = getSelectedPackageDetails();
-    const basePrice = selectedPackageDetails?.price || 0;
-    const addonsPrice = selectedAddons.reduce((total, addonId) => {
-      const addon = addons[addonId as keyof typeof addons];
-      return total + (addon?.price || 0);
-    }, 0);
-    return basePrice + addonsPrice;
-  };
-
-  const selectedPackageDetails = getSelectedPackageDetails();
-
-  if (!selectedPackageDetails) {
+  const { t } = useLanguage();
+  
+  const packageDetails = packages.find(pkg => pkg.value === selectedPackage);
+  
+  if (!selectedPackage || !packageDetails) {
     return null;
   }
 
-  return (
-    <Card className="border-purple-200">
-      <CardContent className="p-6">
-        <h3 className="font-semibold text-gray-900 mb-4">Order Summary</h3>
-        <div className="space-y-3">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Package:</span>
-            <span className="font-medium">{selectedPackageDetails.label}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Base Price:</span>
-            <span className="font-medium">{selectedPackageDetails.details.price}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Delivery Time:</span>
-            <span className="font-medium">{selectedPackageDetails.details.deliveryTime}</span>
-          </div>
-          
-          <div className="pt-2 border-t">
-            <div className="text-sm text-gray-600 mb-2">Package includes:</div>
-            <ul className="text-xs text-gray-500 space-y-1">
-              {selectedPackageDetails.details.includes.map((item, index) => (
-                <li key={index}>• {item}</li>
-              ))}
-            </ul>
-          </div>
+  const calculateTotal = () => {
+    let total = packageDetails.price;
+    selectedAddons.forEach(addonId => {
+      const addon = addons.find(a => a.value === addonId);
+      if (addon) {
+        total += addon.price;
+      }
+    });
+    return total;
+  };
 
-          {selectedAddons.length > 0 && (
-            <div className="pt-2 border-t">
-              <div className="text-sm text-gray-600 mb-2">Add-ons:</div>
+  return (
+    <Card className="sticky top-8">
+      <CardHeader>
+        <CardTitle className="text-lg">Order Summary</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Package Summary */}
+        <div className="border-b pb-4">
+          <h4 className="font-semibold mb-2">{t(packageDetails.labelKey)}</h4>
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-gray-600">Package</span>
+            <span className="font-semibold">{t(packageDetails.details.priceKey)}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-600">Delivery</span>
+            <span className="text-sm">{t(packageDetails.details.deliveryTimeKey)}</span>
+          </div>
+        </div>
+
+        {/* Package Includes */}
+        <div className="border-b pb-4">
+          <h5 className="font-medium mb-2 text-sm">What's included:</h5>
+          <ul className="space-y-1">
+            {packageDetails.details.includesKeys.map((includeKey, index) => (
+              <li key={index} className="text-xs text-gray-600 flex items-start">
+                <span className="w-1 h-1 bg-purple-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
+                <span>{t(includeKey)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Selected Addons */}
+        {selectedAddons.length > 0 && (
+          <div className="border-b pb-4">
+            <h5 className="font-medium mb-2 text-sm">Selected Addons:</h5>
+            <div className="space-y-2">
               {selectedAddons.map(addonId => {
-                const addon = addons[addonId as keyof typeof addons];
+                const addon = addons.find(a => a.value === addonId);
                 return addon ? (
-                  <div key={addonId} className="flex justify-between text-sm">
-                    <span>{addon.label}</span>
-                    <span>+{addon.price} RON</span>
+                  <div key={addonId} className="flex justify-between items-center">
+                    <span className="text-xs text-gray-600">{t(addon.labelKey)}</span>
+                    <span className="text-xs font-semibold">+{addon.price} RON</span>
                   </div>
                 ) : null;
               })}
             </div>
-          )}
-          <div className="flex justify-between pt-3 border-t font-semibold text-lg">
-            <span>Total:</span>
-            <span>{calculateTotal()} RON</span>
           </div>
+        )}
+
+        {/* Total */}
+        <div className="pt-2">
+          <div className="flex justify-between items-center">
+            <span className="font-semibold">Total:</span>
+            <span className="font-bold text-lg text-purple-600">{calculateTotal()} RON</span>
+          </div>
+        </div>
+
+        {/* Quality Badge */}
+        <div className="pt-2">
+          <Badge variant="secondary" className="w-full justify-center">
+            Professional Quality Guaranteed
+          </Badge>
         </div>
       </CardContent>
     </Card>

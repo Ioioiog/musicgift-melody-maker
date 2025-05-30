@@ -38,6 +38,7 @@ const translations = {
     continue: 'CONTINUE',
     completeOrder: 'COMPLETE ORDER',
     submitting: 'SUBMITTING...',
+    of: 'of',
     
     // Order Form Validation
     completeRequiredFields: 'Please complete all required fields',
@@ -79,6 +80,18 @@ const translations = {
     // Package Descriptions
     personalPackageDesc: 'A song written with soul – just for you and your loved ones.',
     personalPackageTagline: 'Ideal for birthdays, weddings or special occasions – we transform your story into a unique and emotional musical gift.',
+    businessPackageDesc: 'Professional commercial songs for brands and companies.',
+    businessPackageTagline: 'Perfect for advertising campaigns, brand anthems, or corporate events.',
+    premiumPackageDesc: 'Premium quality song with advanced production and distribution.',
+    premiumPackageTagline: 'Professional distribution on all platforms with promotional support.',
+    artistPackageDesc: 'Full artistic collaboration for aspiring musicians.',
+    artistPackageTagline: 'Complete music production with professional video and marketing.',
+    instrumentalPackageDesc: 'Custom instrumental music in your desired genre.',
+    instrumentalPackageTagline: 'Perfect for content creators, podcasts, or background music.',
+    remixPackageDesc: 'Professional remix of your existing song.',
+    remixPackageTagline: 'Transform your song with modern production techniques.',
+    giftPackageDesc: 'Personalized musical gift with beautiful presentation.',
+    giftPackageTagline: 'The perfect surprise for your loved ones with elegant delivery.',
     
     // Form Fields
     recipientName: 'Name of the person the song is for',
@@ -98,6 +111,30 @@ const translations = {
     email: 'Your email address',
     phone: 'Phone number (optional)',
     acceptMentionObligation: 'I accept that if I publish the song, I must mention "MusicGift.ro by Mango Records"',
+    
+    // Business Package Fields
+    brandName: 'Brand/Company name',
+    campaignPurpose: 'Campaign purpose and target audience',
+    brandValues: 'Brand values and desired message',
+    
+    // Artist Package Fields
+    artistName: 'Artist/Band name',
+    songStyle: 'Desired musical style',
+    artistBio: 'Artist bio and musical background',
+    linksReleases: 'Links to previous releases',
+    linksMedia: 'Links to social media/press',
+    
+    // Gift Package Fields
+    recipientEmail: 'Recipient email address',
+    giftMessage: 'Personal message for recipient',
+    
+    // Instrumental Package Fields
+    desiredStyle: 'Desired musical style/genre',
+    instrumentalReference: 'Reference track or description',
+    
+    // Remix Package Fields
+    originalTitle: 'Original song title',
+    originalArtist: 'Original artist',
     
     // Relationships
     partner: 'Partner/Wife/Husband',
@@ -174,6 +211,15 @@ const translations = {
     deliveryTime7to10: '7-10 days',
     deliveryTime14to21: '14-21 days',
     deliveryTimeVaries: 'Varies by selected package',
+    
+    // Package Prices
+    price599: '599 RON',
+    price1299: '1299 RON',
+    price2499: '2499 RON',
+    price3999: '3999 RON',
+    price799: '799 RON',
+    price999: '999 RON',
+    price699: '699 RON',
     
     // Package Includes
     originalSongFromStory: 'Original song created from your story',
@@ -343,6 +389,7 @@ const translations = {
     continue: 'CONTINUĂ',
     completeOrder: 'FINALIZEAZĂ COMANDA',
     submitting: 'SE TRIMITE...',
+    of: 'din',
     
     // Order Form Validation
     completeRequiredFields: 'Te rugăm să completezi toate câmpurile obligatorii',
@@ -381,9 +428,21 @@ const translations = {
     remixPackage: 'Pachet Remix',
     giftPackage: 'Pachet Cadou',
     
-    // Package Descriptions
+    // ... keep existing code (all other Romanian translations remain the same)
     personalPackageDesc: 'Un cântec scris cu suflet – doar pentru tine și cei dragi.',
     personalPackageTagline: 'Ideal pentru aniversări, nunți sau ocazii speciale – transformăm povestea ta într-un cadou muzical unic și emoționant.',
+    businessPackageDesc: 'Melodii comerciale profesionale pentru branduri și companii.',
+    businessPackageTagline: 'Perfect pentru campanii publicitare, imnuri de brand sau evenimente corporative.',
+    premiumPackageDesc: 'Melodie premium cu producție avansată și distribuție.',
+    premiumPackageTagline: 'Distribuție profesională pe toate platformele cu suport promoțional.',
+    artistPackageDesc: 'Colaborare artistică completă pentru muzicienii aspiranți.',
+    artistPackageTagline: 'Producție muzicală completă cu videoclip profesional și marketing.',
+    instrumentalPackageDesc: 'Muzică instrumentală personalizată în genul dorit.',
+    instrumentalPackageTagline: 'Perfect pentru creatorii de conținut, podcasturi sau muzică de fundal.',
+    remixPackageDesc: 'Remix profesional al piesei tale existente.',
+    remixPackageTagline: 'Transformă-ți piesa cu tehnici moderne de producție.',
+    giftPackageDesc: 'Cadou muzical personalizat cu prezentare frumoasă.',
+    giftPackageTagline: 'Surpriza perfectă pentru cei dragi cu livrare elegantă.',
     
     // Form Fields
     recipientName: 'Numele persoanei pentru care este melodia',
@@ -403,6 +462,30 @@ const translations = {
     email: 'Adresa ta de e-mail',
     phone: 'Număr de telefon (opțional)',
     acceptMentionObligation: 'Accept că dacă public piesa, trebuie să menționez "MusicGift.ro by Mango Records"',
+    
+    // Business Package Fields
+    brandName: 'Numele brandului/companiei',
+    campaignPurpose: 'Scopul campaniei și publicul țintă',
+    brandValues: 'Valorile brandului și mesajul dorit',
+    
+    // Artist Package Fields
+    artistName: 'Numele artistului/trupei',
+    songStyle: 'Stilul muzical dorit',
+    artistBio: 'Bio artistului și fundalul muzical',
+    linksReleases: 'Link-uri către lansările anterioare',
+    linksMedia: 'Link-uri către rețelele sociale/presă',
+    
+    // Gift Package Fields
+    recipientEmail: 'Adresa de email a destinatarului',
+    giftMessage: 'Mesaj personal pentru destinatar',
+    
+    // Instrumental Package Fields
+    desiredStyle: 'Stilul/genul muzical dorit',
+    instrumentalReference: 'Piesă de referință sau descriere',
+    
+    // Remix Package Fields
+    originalTitle: 'Titlul piesei originale',
+    originalArtist: 'Artistul original',
     
     // Relationships
     partner: 'Partener/Soție/Soț',
@@ -480,6 +563,15 @@ const translations = {
     deliveryTime14to21: '14-21 zile',
     deliveryTimeVaries: 'Conform pachetului ales',
     
+    // Package Prices
+    price599: '599 RON',
+    price1299: '1299 RON',
+    price2499: '2499 RON',
+    price3999: '3999 RON',
+    price799: '799 RON',
+    price999: '999 RON',
+    price699: '699 RON',
+    
     // Package Includes
     originalSongFromStory: 'Cântec original creat după povestea ta',
     professionalVoice: 'Voce profesionistă din echipa MusicGift',
@@ -515,7 +607,7 @@ const translations = {
     automaticDelivery: 'Trimitere automată la data dorită',
     allSelectedPackageBenefits: 'Toate beneficiile pachetului selectat',
 
-    // About Page
+    // About Page and other sections truncated for brevity - keeping same values as before
     aboutTitle: 'Despre MusicGift',
     aboutSubtitle: 'Creăm Amintiri Muzicale din 2020',
     aboutDescription1: 'MusicGift.ro a fost înființat cu o misiune simplă: să ajutăm oamenii să-și exprime cele mai profunde emoții prin muzică personalizată. Credem că fiecare poveste de dragoste, fiecare prietenie și fiecare moment special merită propriul soundtrack.',
@@ -575,8 +667,6 @@ const translations = {
     musicGift: 'Music Gift',
     signInSubtitle: 'Conectează-te pentru a continua',
     signUpSubtitle: 'Creează un cont nou',
-    fullName: 'Nume Complet',
-    email: 'Email',
     password: 'Parolă',
     signInBtn: 'Conectează-te',
     signUpBtn: 'Înregistrează-te',
@@ -622,7 +712,6 @@ const translations = {
     returnHome: 'Înapoi Acasă'
   },
   fr: {
-    // Navigation
     home: 'Accueil',
     about: 'À Propos',
     packages: 'Forfaits',
@@ -634,31 +723,24 @@ const translations = {
     user: 'Utilisateur',
     accountSettings: 'Paramètres du compte',
     signOut: 'Se déconnecter',
-    
-    // Order Page
     placeOrder: 'Passer Commande',
     orderSubtitle: 'Créons quelque chose de magique ensemble. Remplissez le formulaire ci-dessous pour commencer.',
     orderSent: 'Commande envoyée!',
     orderThankYou: 'Merci pour votre commande. Nous vous contacterons bientôt pour confirmer les détails.',
     orderError: 'Erreur',
     orderErrorMessage: 'Une erreur s\'est produite lors de l\'enregistrement de la commande. Veuillez réessayer.',
-    
-    // Order Form Navigation
     backToHome: 'Retour à l\'accueil',
     progress: 'Progrès',
     previous: 'PRÉCÉDENT',
     continue: 'CONTINUER',
     completeOrder: 'FINALISER LA COMMANDE',
     submitting: 'ENVOI EN COURS...',
-    
-    // Step Titles
+    of: 'de',
     stepPackage: 'Forfait',
     stepDetails: 'Détails',
     stepStory: 'Histoire',
     stepPreferences: 'Préférences',
     stepContact: 'Contact',
-    
-    // Packages
     personalPackage: 'Forfait Personnel',
     businessPackage: 'Forfait Entreprise',
     premiumPackage: 'Forfait Premium',
@@ -666,14 +748,56 @@ const translations = {
     instrumentalPackage: 'Forfait Instrumental',
     remixPackage: 'Forfait Remix',
     giftPackage: 'Forfait Cadeau',
-    
-    // Required Field Indicator
     required: '*',
-    
-    // ... truncated for brevity
+    completeRequiredFields: 'Veuillez remplir tous les champs obligatoires',
+    completeRequiredFieldsDesc: 'Assurez-vous de remplir toutes les informations nécessaires avant de continuer.',
+    orderSubmittedSuccess: 'Commande soumise avec succès!',
+    orderSubmittedDesc: 'Merci pour votre commande. Nous vous contactons bientôt avec les prochaines étapes.',
+    somethingWentWrong: 'Quelque chose s\'est mal passé',
+    tryAgainSupport: 'Veuillez réessayer ou contacter le support si le problème persiste.',
+    choosePackage: 'Choisir le forfait',
+    generalDetails: 'Détails généraux',
+    storyAndEmotionalDetails: 'Histoire et détails émotionnels',
+    musicalPreferences: 'Préférences musicales',
+    confirmation: 'Confirmation',
+    whatsIncluded: 'Ce qui est inclus:',
+    professionalQuality: 'Qualité professionnelle garantie',
+    tellUsAboutRecipient: 'Parlez-nous du destinataire',
+    helpUnderstand: 'Aidez-nous à comprendre pour qui est cette chanson spéciale et quelle occasion nous célébrons.',
+    price599: '599 RON',
+    price1299: '1299 RON',
+    price2499: '2499 RON',
+    price3999: '3999 RON',
+    price799: '799 RON',
+    price999: '999 RON',
+    price699: '699 RON',
+    deliveryTime3to5: '3-5 jours',
+    deliveryTime5to7: '5-7 jours',
+    deliveryTime7to10: '7-10 jours',
+    deliveryTime14to21: '14-21 jours',
+    deliveryTimeVaries: 'Selon le forfait sélectionné',
+    // Basic package info
+    personalPackageDesc: 'Une chanson écrite avec âme – juste pour vous et vos proches.',
+    personalPackageTagline: 'Idéal pour les anniversaires, mariages ou occasions spéciales.',
+    businessPackageDesc: 'Chansons commerciales professionnelles pour marques et entreprises.',
+    businessPackageTagline: 'Parfait pour les campagnes publicitaires ou événements corporatifs.',
+    premiumPackageDesc: 'Chanson premium avec production avancée et distribution.',
+    premiumPackageTagline: 'Distribution professionnelle sur toutes les plateformes.',
+    artistPackageDesc: 'Collaboration artistique complète pour musiciens aspirants.',
+    artistPackageTagline: 'Production musicale complète avec vidéo et marketing professionnels.',
+    instrumentalPackageDesc: 'Musique instrumentale personnalisée dans le genre désiré.',
+    instrumentalPackageTagline: 'Parfait pour créateurs de contenu ou musique de fond.',
+    remixPackageDesc: 'Remix professionnel de votre chanson existante.',
+    remixPackageTagline: 'Transformez votre chanson avec des techniques modernes.',
+    giftPackageDesc: 'Cadeau musical personnalisé avec belle présentation.',
+    giftPackageTagline: 'La surprise parfaite avec livraison élégante.',
+    originalSongFromStory: 'Chanson originale créée à partir de votre histoire',
+    professionalVoice: 'Voix professionnelle de l\'équipe MusicGift',
+    rapidDelivery: 'Livraison rapide en 3-5 jours',
+    personalRights: 'Droits d\'usage personnel (non-commercial)',
+    creativeConsultation: 'Consultation créative basée sur l\'histoire et les préférences musicales'
   },
   pl: {
-    // Navigation
     home: 'Strona Główna',
     about: 'O Nas',
     packages: 'Pakiety',
@@ -685,31 +809,24 @@ const translations = {
     user: 'Użytkownik',
     accountSettings: 'Ustawienia konta',
     signOut: 'Wyloguj się',
-    
-    // Order Page
     placeOrder: 'Złóż Zamówienie',
     orderSubtitle: 'Stwórzmy razem coś magicznego. Wypełnij formularz poniżej, aby rozpocząć.',
     orderSent: 'Zamówienie wysłane!',
     orderThankYou: 'Dziękujemy za zamówienie. Skontaktujemy się z Tobą wkrótce, aby potwierdzić szczegóły.',
     orderError: 'Błąd',
     orderErrorMessage: 'Wystąpił błąd podczas zapisywania zamówienia. Spróbuj ponownie.',
-    
-    // Order Form Navigation
     backToHome: 'Powrót do domu',
     progress: 'Postęp',
     previous: 'POPRZEDNI',
     continue: 'KONTYNUUJ',
     completeOrder: 'ZAKOŃCZ ZAMÓWIENIE',
     submitting: 'WYSYŁANIE...',
-    
-    // Step Titles
+    of: 'z',
     stepPackage: 'Pakiet',
     stepDetails: 'Szczegóły',
     stepStory: 'Historia',
     stepPreferences: 'Preferencje',
     stepContact: 'Kontakt',
-    
-    // Packages
     personalPackage: 'Pakiet Osobisty',
     businessPackage: 'Pakiet Biznesowy',
     premiumPackage: 'Pakiet Premium',
@@ -717,14 +834,55 @@ const translations = {
     instrumentalPackage: 'Pakiet Instrumentalny',
     remixPackage: 'Pakiet Remix',
     giftPackage: 'Pakiet Prezentowy',
-    
-    // Required Field Indicator
     required: '*',
-    
-    // ... truncated for brevity
+    completeRequiredFields: 'Proszę wypełnić wszystkie wymagane pola',
+    completeRequiredFieldsDesc: 'Upewnij się, że wypełniłeś wszystkie niezbędne informacje przed kontynuowaniem.',
+    orderSubmittedSuccess: 'Zamówienie zostało złożone pomyślnie!',
+    orderSubmittedDesc: 'Dziękujemy za zamówienie. Skontaktujemy się z Tobą wkrótce z następnymi krokami.',
+    somethingWentWrong: 'Coś poszło nie tak',
+    tryAgainSupport: 'Spróbuj ponownie lub skontaktuj się z pomocą techniczną, jeśli problem będzie się powtarzał.',
+    choosePackage: 'Wybierz pakiet',
+    generalDetails: 'Szczegóły ogólne',
+    storyAndEmotionalDetails: 'Historia i szczegóły emocjonalne',
+    musicalPreferences: 'Preferencje muzyczne',
+    confirmation: 'Potwierdzenie',
+    whatsIncluded: 'Co jest zawarte:',
+    professionalQuality: 'Gwarantowana jakość profesjonalna',
+    tellUsAboutRecipient: 'Opowiedz nam o odbiorcy',
+    helpUnderstand: 'Pomóż nam zrozumieć, dla kogo jest ta specjalna piosenka i jaką okazję świętujemy.',
+    price599: '599 RON',
+    price1299: '1299 RON',
+    price2499: '2499 RON',
+    price3999: '3999 RON',
+    price799: '799 RON',
+    price999: '999 RON',
+    price699: '699 RON',
+    deliveryTime3to5: '3-5 dni',
+    deliveryTime5to7: '5-7 dni',
+    deliveryTime7to10: '7-10 dni',
+    deliveryTime14to21: '14-21 dni',
+    deliveryTimeVaries: 'Zgodnie z wybranym pakietem',
+    personalPackageDesc: 'Piosenka napisana z duszą – tylko dla Ciebie i Twoich bliskich.',
+    personalPackageTagline: 'Idealna na urodziny, wesela lub specjalne okazje.',
+    businessPackageDesc: 'Profesjonalne piosenki komercyjne dla marek i firm.',
+    businessPackageTagline: 'Idealne do kampanii reklamowych lub wydarzeń korporacyjnych.',
+    premiumPackageDesc: 'Piosenka premium z zaawansowaną produkcją i dystrybucją.',
+    premiumPackageTagline: 'Profesjonalna dystrybucja na wszystkich platformach.',
+    artistPackageDesc: 'Pełna współpraca artystyczna dla aspirujących muzyków.',
+    artistPackageTagline: 'Kompletna produkcja muzyczna z profesjonalnym wideo i marketingiem.',
+    instrumentalPackageDesc: 'Spersonalizowana muzyka instrumentalna w pożądanym gatunku.',
+    instrumentalPackageTagline: 'Idealna dla twórców treści lub muzyki tła.',
+    remixPackageDesc: 'Profesjonalny remix Twojej istniejącej piosenki.',
+    remixPackageTagline: 'Przekształć swoją piosenkę nowoczesnymi technikami.',
+    giftPackageDesc: 'Spersonalizowany prezent muzyczny z piękną prezentacją.',
+    giftPackageTagline: 'Idealna niespodzianka z elegancką dostawą.',
+    originalSongFromStory: 'Oryginalna piosenka stworzona z Twojej historii',
+    professionalVoice: 'Profesjonalny głos z zespołu MusicGift',
+    rapidDelivery: 'Szybka dostawa w 3-5 dni',
+    personalRights: 'Prawa do użytku osobistego (niekomercyjne)',
+    creativeConsultation: 'Konsultacja kreatywna oparta na historii i preferencjach muzycznych'
   },
   de: {
-    // Navigation
     home: 'Startseite',
     about: 'Über Uns',
     packages: 'Pakete',
@@ -736,31 +894,24 @@ const translations = {
     user: 'Benutzer',
     accountSettings: 'Kontoeinstellungen',
     signOut: 'Abmelden',
-    
-    // Order Page
     placeOrder: 'Bestellung Aufgeben',
     orderSubtitle: 'Lassen Sie uns gemeinsam etwas Magisches schaffen. Füllen Sie das untenstehende Formular aus, um zu beginnen.',
     orderSent: 'Bestellung gesendet!',
     orderThankYou: 'Vielen Dank für Ihre Bestellung. Wir werden Sie bald kontaktieren, um die Details zu bestätigen.',
     orderError: 'Fehler',
     orderErrorMessage: 'Beim Speichern der Bestellung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.',
-    
-    // Order Form Navigation
     backToHome: 'Zurück zur Startseite',
     progress: 'Fortschritt',
     previous: 'ZURÜCK',
     continue: 'WEITER',
     completeOrder: 'BESTELLUNG ABSCHLIESSEN',
     submitting: 'WIRD GESENDET...',
-    
-    // Step Titles
+    of: 'von',
     stepPackage: 'Paket',
     stepDetails: 'Details',
     stepStory: 'Geschichte',
     stepPreferences: 'Präferenzen',
     stepContact: 'Kontakt',
-    
-    // Packages
     personalPackage: 'Persönliches Paket',
     businessPackage: 'Business Paket',
     premiumPackage: 'Premium Paket',
@@ -768,11 +919,53 @@ const translations = {
     instrumentalPackage: 'Instrumental Paket',
     remixPackage: 'Remix Paket',
     giftPackage: 'Geschenk Paket',
-    
-    // Required Field Indicator
     required: '*',
-    
-    // ... truncated for brevity
+    completeRequiredFields: 'Bitte füllen Sie alle Pflichtfelder aus',
+    completeRequiredFieldsDesc: 'Stellen Sie sicher, dass Sie alle erforderlichen Informationen eingeben, bevor Sie fortfahren.',
+    orderSubmittedSuccess: 'Bestellung erfolgreich übermittelt!',
+    orderSubmittedDesc: 'Vielen Dank für Ihre Bestellung. Wir werden Sie bald mit den nächsten Schritten kontaktieren.',
+    somethingWentWrong: 'Etwas ist schiefgelaufen',
+    tryAgainSupport: 'Bitte versuchen Sie es erneut oder kontaktieren Sie den Support, wenn das Problem weiterhin besteht.',
+    choosePackage: 'Paket wählen',
+    generalDetails: 'Allgemeine Details',
+    storyAndEmotionalDetails: 'Geschichte und emotionale Details',
+    musicalPreferences: 'Musikalische Präferenzen',
+    confirmation: 'Bestätigung',
+    whatsIncluded: 'Was ist enthalten:',
+    professionalQuality: 'Professionelle Qualität garantiert',
+    tellUsAboutRecipient: 'Erzählen Sie uns über den Empfänger',
+    helpUnderstand: 'Helfen Sie uns zu verstehen, für wen dieses besondere Lied ist und welchen Anlass wir feiern.',
+    price599: '599 RON',
+    price1299: '1299 RON',
+    price2499: '2499 RON',
+    price3999: '3999 RON',
+    price799: '799 RON',
+    price999: '999 RON',
+    price699: '699 RON',
+    deliveryTime3to5: '3-5 Tage',
+    deliveryTime5to7: '5-7 Tage',
+    deliveryTime7to10: '7-10 Tage',
+    deliveryTime14to21: '14-21 Tage',
+    deliveryTimeVaries: 'Je nach gewähltem Paket',
+    personalPackageDesc: 'Ein Lied mit Seele geschrieben – nur für Sie und Ihre Lieben.',
+    personalPackageTagline: 'Ideal für Geburtstage, Hochzeiten oder besondere Anlässe.',
+    businessPackageDesc: 'Professionelle kommerzielle Lieder für Marken und Unternehmen.',
+    businessPackageTagline: 'Perfekt für Werbekampagnen oder Unternehmensveranstaltungen.',
+    premiumPackageDesc: 'Premium-Lied mit fortschrittlicher Produktion und Vertrieb.',
+    premiumPackageTagline: 'Professioneller Vertrieb auf allen Plattformen.',
+    artistPackageDesc: 'Vollständige künstlerische Zusammenarbeit für aufstrebende Musiker.',
+    artistPackageTagline: 'Komplette Musikproduktion mit professionellem Video und Marketing.',
+    instrumentalPackageDesc: 'Maßgeschneiderte Instrumentalmusik im gewünschten Genre.',
+    instrumentalPackageTagline: 'Perfekt für Content-Ersteller oder Hintergrundmusik.',
+    remixPackageDesc: 'Professioneller Remix Ihres bestehenden Liedes.',
+    remixPackageTagline: 'Verwandeln Sie Ihr Lied mit modernen Produktionstechniken.',
+    giftPackageDesc: 'Personalisiertes Musikgeschenk mit schöner Präsentation.',
+    giftPackageTagline: 'Die perfekte Überraschung mit eleganter Lieferung.',
+    originalSongFromStory: 'Originallied aus Ihrer Geschichte erstellt',
+    professionalVoice: 'Professionelle Stimme vom MusicGift-Team',
+    rapidDelivery: 'Schnelle Lieferung in 3-5 Tagen',
+    personalRights: 'Persönliche Nutzungsrechte (nicht-kommerziell)',
+    creativeConsultation: 'Kreative Beratung basierend auf Geschichte und musikalischen Präferenzen'
   }
 };
 
