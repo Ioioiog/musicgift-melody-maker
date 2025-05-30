@@ -2,176 +2,176 @@
 export const packages = [
   { 
     value: 'personal', 
-    label: 'Pachet Personal',
+    labelKey: 'personalPackage',
     price: 300,
-    tagline: 'Un cântec scris cu suflet – doar pentru tine și cei dragi.',
-    description: 'Ideal pentru aniversări, nunți sau ocazii speciale – transformăm povestea ta într-un cadou muzical unic și emoționant.',
+    taglineKey: 'personalPackageDesc',
+    descriptionKey: 'personalPackageTagline',
     details: {
-      price: '300 RON',
-      deliveryTime: '3-5 zile',
-      includes: [
-        'Cântec original creat după povestea ta',
-        'Voce profesionistă din echipa MusicGift',
-        'Livrare rapidă în 3–5 zile',
-        'Drepturi de utilizare personală (non-comercial)',
-        'Consultare creativă bazată pe poveste și preferințe muzicale'
+      priceKey: '300 RON',
+      deliveryTimeKey: 'deliveryTime3to5',
+      includesKeys: [
+        'originalSongFromStory',
+        'professionalVoice',
+        'rapidDelivery',
+        'personalRights',
+        'creativeConsultation'
       ]
     }
   },
   { 
     value: 'business', 
-    label: 'Pachet Business',
+    labelKey: 'businessPackage',
     price: 500,
     details: {
-      price: '500 RON',
-      deliveryTime: '5-7 zile',
-      includes: [
-        'Melodie comercială pentru brand/companie',
-        'Producție audio profesională',
-        'Voce înregistrată de artist profesionist',
-        'Mix și master final',
-        'Drepturi comerciale de bază incluse',
-        'Fișiere audio multiple (WAV, MP3, instrumental)'
+      priceKey: '500 RON',
+      deliveryTimeKey: 'deliveryTime5to7',
+      includesKeys: [
+        'commercialSong',
+        'professionalAudioProduction',
+        'professionalArtistVoice',
+        'finalMixMaster',
+        'basicCommercialRights',
+        'multipleAudioFiles'
       ]
     }
   },
   { 
     value: 'premium', 
-    label: 'Premium Package',
+    labelKey: 'premiumPackage',
     price: 1000,
     details: {
-      price: '1000 RON',
-      deliveryTime: '7-10 zile',
-      includes: [
-        'Melodie premium cu producție avansată',
-        'Distribuție automată pe platforme digitale',
-        'Videoclip lyric inclus',
-        'Mix și master profesional',
-        'Promovare pe rețelele sociale Mango Records'
+      priceKey: '1000 RON',
+      deliveryTimeKey: 'deliveryTime7to10',
+      includesKeys: [
+        'premiumAdvancedProduction',
+        'automaticDigitalDistribution',
+        'lyricVideoIncluded',
+        'professionalMixMaster',
+        'socialMediaPromotion'
       ]
     }
   },
   { 
     value: 'artist', 
-    label: 'Pachet Artist',
+    labelKey: 'artistPackage',
     price: 8000,
     details: {
-      price: '8000 RON',
-      deliveryTime: '14-21 zile',
-      includes: [
-        'Colaborare artistică completă',
-        'Producția unei melodii originale',
-        'Înregistrare vocală profesională',
-        'Videoclip muzical profesional',
-        'Distribuție pe toate platformele',
-        'Contract 50/50 cu Mango Records',
-        'Promovare și marketing profesional'
+      priceKey: '8000 RON',
+      deliveryTimeKey: 'deliveryTime14to21',
+      includesKeys: [
+        'fullArtisticCollaboration',
+        'originalSongProduction',
+        'professionalVocalRecording',
+        'professionalMusicVideo',
+        'distributionAllPlatforms',
+        'contract5050',
+        'professionalMarketing'
       ]
     }
   },
   { 
     value: 'instrumental', 
-    label: 'Pachet Instrumental',
+    labelKey: 'instrumentalPackage',
     price: 500,
     details: {
-      price: '500 RON',
-      deliveryTime: '5-7 zile',
-      includes: [
-        'Instrumental personalizat în genul dorit',
-        'Producție audio profesională',
-        'Mix și master final',
-        'Fișiere audio multiple (WAV, MP3)',
-        'Stems separate pentru mixing'
+      priceKey: '500 RON',
+      deliveryTimeKey: 'deliveryTime5to7',
+      includesKeys: [
+        'customInstrumental',
+        'professionalAudioProduction',
+        'finalMixMaster',
+        'multipleAudioFiles',
+        'separateStems'
       ]
     }
   },
   { 
     value: 'remix', 
-    label: 'Pachet Remix',
+    labelKey: 'remixPackage',
     price: 500,
     details: {
-      price: '500 RON',
-      deliveryTime: '5-7 zile',
-      includes: [
-        'Remix profesional al piesei tale',
-        'Producție în stilul dorit',
-        'Mix și master final',
-        'Versiune extended și radio edit',
-        'Fișiere audio de înaltă calitate'
+      priceKey: '500 RON',
+      deliveryTimeKey: 'deliveryTime5to7',
+      includesKeys: [
+        'professionalRemix',
+        'productionDesiredStyle',
+        'finalMixMaster',
+        'extendedRadioEdit',
+        'highQualityAudioFiles'
       ]
     }
   },
   { 
     value: 'gift', 
-    label: 'Pachet Cadou',
+    labelKey: 'giftPackage',
     price: 0,
     details: {
-      price: 'Variabil',
-      deliveryTime: 'Conform pachetului ales',
-      includes: [
-        'Card cadou digital personalizat',
-        'Mesaj personalizat pentru destinatar',
-        'Trimitere automată la data dorită',
-        'Toate beneficiile pachetului selectat'
+      priceKey: 'Variabil',
+      deliveryTimeKey: 'deliveryTimeVaries',
+      includesKeys: [
+        'personalizedDigitalCard',
+        'personalizedMessage',
+        'automaticDelivery',
+        'allSelectedPackageBenefits'
       ]
     }
   },
 ];
 
 export const languages = [
-  { value: 'ro', label: 'Română', flag: '🇷🇴' },
-  { value: 'en', label: 'English', flag: '🇺🇸' },
-  { value: 'fr', label: 'Français', flag: '🇫🇷' },
-  { value: 'de', label: 'Deutsch', flag: '🇩🇪' },
-  { value: 'pl', label: 'Polski', flag: '🇵🇱' },
+  { value: 'ro', labelKey: 'romanian', flag: '🇷🇴' },
+  { value: 'en', labelKey: 'english', flag: '🇺🇸' },
+  { value: 'fr', labelKey: 'french', flag: '🇫🇷' },
+  { value: 'de', labelKey: 'german', flag: '🇩🇪' },
+  { value: 'pl', labelKey: 'polish', flag: '🇵🇱' },
 ];
 
 export const relationships = [
-  { value: 'partner', label: 'Partener/Soție/Soț' },
-  { value: 'child', label: 'Copil' },
-  { value: 'parent', label: 'Părinte' },
-  { value: 'sibling', label: 'Frate/Soră' },
-  { value: 'friend', label: 'Prieten(ă)' },
-  { value: 'grandparent', label: 'Bunic/Bunică' },
-  { value: 'other', label: 'Altă relație' }
+  { value: 'partner', labelKey: 'partner' },
+  { value: 'child', labelKey: 'child' },
+  { value: 'parent', labelKey: 'parent' },
+  { value: 'sibling', labelKey: 'sibling' },
+  { value: 'friend', labelKey: 'friend' },
+  { value: 'grandparent', labelKey: 'grandparent' },
+  { value: 'other', labelKey: 'otherRelation' }
 ];
 
 export const occasions = [
-  { value: 'birthday', label: 'Zi de naștere', emoji: '🎂' },
-  { value: 'wedding', label: 'Nuntă', emoji: '💒' },
-  { value: 'anniversary', label: 'Aniversare', emoji: '💕' },
-  { value: 'valentine', label: 'Ziua Îndrăgostiților', emoji: '💝' },
-  { value: 'graduation', label: 'Absolvire', emoji: '🎓' },
-  { value: 'christmas', label: 'Crăciun', emoji: '🎄' },
-  { value: 'other', label: 'Altă ocazie', emoji: '🎉' }
+  { value: 'birthday', labelKey: 'birthday', emoji: '🎂' },
+  { value: 'wedding', labelKey: 'wedding', emoji: '💒' },
+  { value: 'anniversary', labelKey: 'anniversary', emoji: '💕' },
+  { value: 'valentine', labelKey: 'valentine', emoji: '💝' },
+  { value: 'graduation', labelKey: 'graduation', emoji: '🎓' },
+  { value: 'christmas', labelKey: 'christmas', emoji: '🎄' },
+  { value: 'other', labelKey: 'otherOccasion', emoji: '🎉' }
 ];
 
 export const emotionalTones = [
-  { value: 'romantic', label: 'Romantic' },
-  { value: 'happy', label: 'Vesel/Bucuros' },
-  { value: 'nostalgic', label: 'Nostalgic' },
-  { value: 'emotional', label: 'Emoționant' },
-  { value: 'energetic', label: 'Energic' },
-  { value: 'peaceful', label: 'Liniștit/Calm' }
+  { value: 'romantic', labelKey: 'romantic' },
+  { value: 'happy', labelKey: 'happy' },
+  { value: 'nostalgic', labelKey: 'nostalgic' },
+  { value: 'emotional', labelKey: 'emotional' },
+  { value: 'energetic', labelKey: 'energetic' },
+  { value: 'peaceful', labelKey: 'peaceful' }
 ];
 
 export const musicStyles = [
-  { value: 'pop', label: 'Pop' },
-  { value: 'acoustic', label: 'Acustic' },
-  { value: 'rock', label: 'Rock' },
-  { value: 'jazz', label: 'Jazz' },
-  { value: 'folk', label: 'Folk' },
-  { value: 'electronic', label: 'Electronic' },
-  { value: 'classical', label: 'Clasic' },
-  { value: 'reggae', label: 'Reggae' },
-  { value: 'country', label: 'Country' }
+  { value: 'pop', labelKey: 'pop' },
+  { value: 'acoustic', labelKey: 'acoustic' },
+  { value: 'rock', labelKey: 'rock' },
+  { value: 'jazz', labelKey: 'jazz' },
+  { value: 'folk', labelKey: 'folk' },
+  { value: 'electronic', labelKey: 'electronic' },
+  { value: 'classical', labelKey: 'classical' },
+  { value: 'reggae', labelKey: 'reggae' },
+  { value: 'country', labelKey: 'country' }
 ];
 
 export const addons = {
-  rushDelivery: { label: 'Livrare prioritară în 24–48h', price: 100 },
-  commercialRights: { label: 'Drepturi comerciale pentru YouTube, Spotify etc.', price: 100 },
-  distributieMangoRecords: { label: 'Distribuție oficială prin Mango Records', price: 200 },
-  customVideo: { label: 'Videoclip personalizat cu pozele tale', price: 149 },
-  audioMessageFromSender: { label: 'Mesaj audio personalizat încorporat în piesă', price: 100 },
-  extendedSong: { label: 'Melodie extinsă cu 3 strofe în loc de 2', price: 49 },
+  rushDelivery: { labelKey: 'rushDelivery', price: 100 },
+  commercialRights: { labelKey: 'commercialRights', price: 100 },
+  distributionMangoRecords: { labelKey: 'distributionMangoRecords', price: 200 },
+  customVideo: { labelKey: 'customVideo', price: 149 },
+  audioMessageFromSender: { labelKey: 'audioMessageFromSender', price: 100 },
+  extendedSong: { labelKey: 'extendedSong', price: 49 },
 };

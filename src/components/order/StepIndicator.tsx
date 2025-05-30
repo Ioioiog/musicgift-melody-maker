@@ -1,18 +1,21 @@
 
 import React from 'react';
 import { Check } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface StepIndicatorProps {
   currentStep: number;
 }
 
 const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
+  const { t } = useLanguage();
+  
   const steps = [
-    { number: 1, label: 'Package' },
-    { number: 2, label: 'Details' },
-    { number: 3, label: 'Story' },
-    { number: 4, label: 'Preferences' },
-    { number: 5, label: 'Contact' }
+    { number: 1, label: t('stepPackage') },
+    { number: 2, label: t('stepDetails') },
+    { number: 3, label: t('stepStory') },
+    { number: 4, label: t('stepPreferences') },
+    { number: 5, label: t('stepContact') }
   ];
 
   return (

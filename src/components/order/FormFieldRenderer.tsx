@@ -7,6 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Mic, Square, Play, Pause, RotateCcw } from 'lucide-react';
 import { packages, languages, addons, relationships, occasions, emotionalTones, musicStyles } from '@/data/packages';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface FormFieldRendererProps {
   field: any;
@@ -23,6 +24,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   updateFormData,
   handleAddonChange
 }) => {
+  const { t } = useLanguage();
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -261,10 +263,10 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   const handleAddonChangeWithMutualExclusion = (addonId: string, checked: boolean) => {
     // Handle mutual exclusion between commercialRights and distributieMangoRecords
     if (checked) {
-      if (addonId === 'commercialRights' && selectedAddons.includes('distributieMangoRecords')) {
+      if (addonId === 'commercialRights' && selectedAddons.includes('distributionMangoRecords')) {
         // Remove distributieMangoRecords if commercialRights is selected
-        handleAddonChange('distributieMangoRecords', false);
-      } else if (addonId === 'distributieMangoRecords' && selectedAddons.includes('commercialRights')) {
+        handleAddonChange('distributionMangoRecords', false);
+      } else if (addonId === 'distributionMangoRecords' && selectedAddons.includes('commercialRights')) {
         // Remove commercialRights if distributieMangoRecords is selected
         handleAddonChange('commercialRights', false);
       }
@@ -276,11 +278,11 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
 
   const isAddonDisabled = (addonId: string) => {
     // Disable commercialRights if distributieMangoRecords is selected
-    if (addonId === 'commercialRights' && selectedAddons.includes('distributieMangoRecords')) {
+    if (addonId === 'commercialRights' && selectedAddons.includes('distributionMangoRecords')) {
       return true;
     }
     // Disable distributieMangoRecords if commercialRights is selected
-    if (addonId === 'distributieMangoRecords' && selectedAddons.includes('commercialRights')) {
+    if (addonId === 'distributionMangoRecords' && selectedAddons.includes('commercialRights')) {
       return true;
     }
     return false;
@@ -295,7 +297,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-600">
-              Timp: {formatTime(state.recordingTime)} / {formatTime(maxTime)}
+              {t('time')}: {formatTime(state.recordingTime)} / {formatTime(maxTime)}
             </span>
             <div className="w-32 bg-gray-200 rounded-full h-2">
               <div 
@@ -313,7 +315,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                 className="bg-red-500 hover:bg-red-600 text-white"
               >
                 <Mic className="w-4 h-4 mr-2" />
-                Începe înregistrarea
+                {t('startRecording')}
               </Button>
             )}
 
@@ -324,7 +326,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                 className="bg-gray-500 hover:bg-gray-600 text-white"
               >
                 <Square className="w-4 h-4 mr-2" />
-                Oprește înregistrarea
+                {t('stopRecording')}
               </Button>
             )}
 
@@ -338,12 +340,12 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                   {state.isPlaying ? (
                     <>
                       <Pause className="w-4 h-4 mr-2" />
-                      Pauză
+                      {t('pause')}
                     </>
                   ) : (
                     <>
                       <Play className="w-4 h-4 mr-2" />
-                      Redă
+                      {t('play')}
                     </>
                   )}
                 </Button>
@@ -355,7 +357,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                   className="border-red-300 text-red-600 hover:bg-red-50"
                 >
                   <RotateCcw className="w-4 h-4 mr-2" />
-                  Înregistrează din nou
+                  {t('reRecord')}
                 </Button>
               </>
             )}
@@ -363,12 +365,12 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
 
           {state.audioBlob && (
             <p className="text-xs text-green-600 mt-2 flex items-center">
-              ✓ Înregistrarea audio a fost salvată cu succes
+              ✓ {t('recordingSuccessfullySaved')}
             </p>
           )}
 
           <p className="text-xs text-gray-500 mt-2">
-            Limita de timp: {maxTime} secunde. Înregistrează pronunția corectă.
+            {t('recordingTimeLimit').replace('{time}', maxTime.toString())}
           </p>
         </div>
       </div>
@@ -382,7 +384,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
           return (
             <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
               <SelectTrigger className="h-14 bg-white border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md">
-                <SelectValue placeholder={field.placeholder} className="text-gray-700" />
+                <SelectValue placeholder={t(field.placeholder)} className="text-gray-700" />
               </SelectTrigger>
               <SelectContent className="bg-white border-2 border-gray-200 shadow-xl rounded-xl z-50">
                 {packages.map((pkg) => (
@@ -400,7 +402,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                          pkg.value === 'instrumental' ? '🎶' : 
                          pkg.value === 'remix' ? '🔁' : '🎁'}
                       </span>
-                      <span className="font-medium text-gray-800">{pkg.label}</span>
+                      <span className="font-medium text-gray-800">{t(pkg.labelKey)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -412,7 +414,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
           return (
             <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
               <SelectTrigger className="h-14 bg-white border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md">
-                <SelectValue placeholder={field.placeholder} className="text-gray-700" />
+                <SelectValue placeholder={t(field.placeholder)} className="text-gray-700" />
               </SelectTrigger>
               <SelectContent className="bg-white border-2 border-gray-200 shadow-xl rounded-xl z-50">
                 {languages.map((lang) => (
@@ -423,7 +425,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                   >
                     <div className="flex items-center space-x-3">
                       <span className="text-lg">{lang.flag}</span>
-                      <span className="font-medium text-gray-800">{lang.label}</span>
+                      <span className="font-medium text-gray-800">{t(lang.labelKey)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -435,7 +437,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
           return (
             <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
               <SelectTrigger className="h-14 bg-white border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md">
-                <SelectValue placeholder={field.placeholder} className="text-gray-700" />
+                <SelectValue placeholder={t(field.placeholder)} className="text-gray-700" />
               </SelectTrigger>
               <SelectContent className="bg-white border-2 border-gray-200 shadow-xl rounded-xl z-50">
                 {relationships.map((rel) => (
@@ -444,7 +446,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                     value={rel.value}
                     className="hover:bg-purple-50 focus:bg-purple-50 cursor-pointer py-3 px-4 transition-colors duration-150"
                   >
-                    <span className="font-medium text-gray-800">{rel.label}</span>
+                    <span className="font-medium text-gray-800">{t(rel.labelKey)}</span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -455,7 +457,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
           return (
             <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
               <SelectTrigger className="h-14 bg-white border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md">
-                <SelectValue placeholder={field.placeholder} className="text-gray-700" />
+                <SelectValue placeholder={t(field.placeholder)} className="text-gray-700" />
               </SelectTrigger>
               <SelectContent className="bg-white border-2 border-gray-200 shadow-xl rounded-xl z-50">
                 {occasions.map((occasion) => (
@@ -466,7 +468,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                   >
                     <div className="flex items-center space-x-3">
                       <span className="text-lg">{occasion.emoji}</span>
-                      <span className="font-medium text-gray-800">{occasion.label}</span>
+                      <span className="font-medium text-gray-800">{t(occasion.labelKey)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -478,7 +480,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
           return (
             <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
               <SelectTrigger className="h-14 bg-white border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md">
-                <SelectValue placeholder={field.placeholder} className="text-gray-700" />
+                <SelectValue placeholder={t(field.placeholder)} className="text-gray-700" />
               </SelectTrigger>
               <SelectContent className="bg-white border-2 border-gray-200 shadow-xl rounded-xl z-50">
                 {emotionalTones.map((tone) => (
@@ -487,7 +489,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                     value={tone.value}
                     className="hover:bg-purple-50 focus:bg-purple-50 cursor-pointer py-3 px-4 transition-colors duration-150"
                   >
-                    <span className="font-medium text-gray-800">{tone.label}</span>
+                    <span className="font-medium text-gray-800">{t(tone.labelKey)}</span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -498,7 +500,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
           return (
             <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
               <SelectTrigger className="h-14 bg-white border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md">
-                <SelectValue placeholder={field.placeholder} className="text-gray-700" />
+                <SelectValue placeholder={t(field.placeholder)} className="text-gray-700" />
               </SelectTrigger>
               <SelectContent className="bg-white border-2 border-gray-200 shadow-xl rounded-xl z-50">
                 {musicStyles.map((style) => (
@@ -507,7 +509,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                     value={style.value}
                     className="hover:bg-purple-50 focus:bg-purple-50 cursor-pointer py-3 px-4 transition-colors duration-150"
                   >
-                    <span className="font-medium text-gray-800">{style.label}</span>
+                    <span className="font-medium text-gray-800">{t(style.labelKey)}</span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -519,7 +521,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       case 'textarea':
         return (
           <Textarea
-            placeholder={field.placeholder}
+            placeholder={t(field.placeholder)}
             value={formData[field.name]}
             onChange={(e) => updateFormData(field.name, e.target.value)}
             className="min-h-[120px] resize-none border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200"
@@ -545,7 +547,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         return (
           <Input
             type="url"
-            placeholder={field.placeholder}
+            placeholder={t(field.placeholder)}
             value={formData[field.name]}
             onChange={(e) => updateFormData(field.name, e.target.value)}
             className="h-12 border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200"
@@ -556,7 +558,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         return (
           <Input
             type="date"
-            placeholder={field.placeholder}
+            placeholder={t(field.placeholder)}
             value={formData[field.name]}
             onChange={(e) => updateFormData(field.name, e.target.value)}
             className="h-12 border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200"
@@ -585,13 +587,13 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                       className="border-2"
                     />
                     <Label htmlFor={addonId} className={`flex-1 ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-                      <span className="font-medium">{addon.label}</span>
+                      <span className="font-medium">{t(addon.labelKey)}</span>
                       <span className="text-purple-600 ml-2 font-semibold">+{addon.price} RON</span>
                       {isDisabled && (
                         <span className="block text-xs text-gray-500 mt-1">
-                          {addonId === 'commercialRights' 
-                            ? 'Nu poate fi selectat cu Distribuție Mango Records' 
-                            : 'Nu poate fi selectat cu Drepturi comerciale'}
+                          {t('cannotSelectWith')} {addonId === 'commercialRights' 
+                            ? t('distributionMangoRecords') 
+                            : t('commercialRights')}
                         </span>
                       )}
                     </Label>
@@ -601,7 +603,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                   {addonId === 'customVideo' && selectedAddons.includes('customVideo') && (
                     <div className="mt-3 ml-8 space-y-2">
                       <Label className="text-sm font-medium text-gray-700">
-                        Încarcă imagini sau video pentru videoclipul personalizat
+                        {t('uploadImagesVideo')}
                       </Label>
                       <Input
                         type="file"
@@ -611,7 +613,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                         className="h-12 border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200"
                       />
                       <p className="text-xs text-gray-500">
-                        Acceptăm imagini (JPG, PNG) și video (MP4, MOV). Poți selecta mai multe fișiere.
+                        {t('acceptImagesVideo')}
                       </p>
                     </div>
                   )}
@@ -620,13 +622,13 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                   {addonId === 'audioMessageFromSender' && selectedAddons.includes('audioMessageFromSender') && (
                     <div className="mt-3 ml-8 space-y-4">
                       <Label className="text-sm font-medium text-gray-700">
-                        Înregistrează mesajul tău audio personal
+                        {t('recordPersonalMessage')}
                       </Label>
                       
                       <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200">
                         <div className="flex items-center justify-between mb-3">
                           <span className="text-sm text-gray-600">
-                            Timp: {formatTime(recordingTime)} / {formatTime(MAX_RECORDING_TIME)}
+                            {t('time')}: {formatTime(recordingTime)} / {formatTime(MAX_RECORDING_TIME)}
                           </span>
                           <div className="w-32 bg-gray-200 rounded-full h-2">
                             <div 
@@ -644,7 +646,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                               className="bg-red-500 hover:bg-red-600 text-white"
                             >
                               <Mic className="w-4 h-4 mr-2" />
-                              Începe înregistrarea
+                              {t('startRecording')}
                             </Button>
                           )}
 
@@ -655,7 +657,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                               className="bg-gray-500 hover:bg-gray-600 text-white"
                             >
                               <Square className="w-4 h-4 mr-2" />
-                              Oprește înregistrarea
+                              {t('stopRecording')}
                             </Button>
                           )}
 
@@ -669,12 +671,12 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                                 {isPlaying ? (
                                   <>
                                     <Pause className="w-4 h-4 mr-2" />
-                                    Pauză
+                                    {t('pause')}
                                   </>
                                 ) : (
                                   <>
                                     <Play className="w-4 h-4 mr-2" />
-                                    Redă
+                                    {t('play')}
                                   </>
                                 )}
                               </Button>
@@ -686,7 +688,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                                 className="border-red-300 text-red-600 hover:bg-red-50"
                               >
                                 <RotateCcw className="w-4 h-4 mr-2" />
-                                Înregistrează din nou
+                                {t('reRecord')}
                               </Button>
                             </>
                           )}
@@ -694,12 +696,12 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
 
                         {audioBlob && (
                           <p className="text-xs text-green-600 mt-2 flex items-center">
-                            ✓ Mesajul audio a fost înregistrat cu succes
+                            ✓ {t('recordingSuccessfullySaved')}
                           </p>
                         )}
 
                         <p className="text-xs text-gray-500 mt-2">
-                          Limita de timp: 45 secunde. Mesajul tău va fi incorporat în piesa finală.
+                          {t('personalMessageLimit')}
                         </p>
                       </div>
                     </div>
@@ -720,7 +722,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
               className="mt-1 border-2"
             />
             <Label htmlFor={field.name} className="text-sm leading-relaxed cursor-pointer">
-              {field.placeholder}
+              {t(field.placeholder)}
             </Label>
           </div>
         );
@@ -729,7 +731,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         return (
           <Input
             type={field.type}
-            placeholder={field.placeholder}
+            placeholder={t(field.placeholder)}
             value={formData[field.name]}
             onChange={(e) => updateFormData(field.name, e.target.value)}
             className="h-12 border-2 border-gray-200 hover:border-purple-300 focus:border-purple-500 transition-all duration-200"
@@ -741,7 +743,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   return (
     <div className="space-y-2">
       <Label className="text-sm font-medium text-gray-700">
-        {field.placeholder} {field.required && <span className="text-red-500">*</span>}
+        {t(field.placeholder)} {field.required && <span className="text-red-500">{t('required')}</span>}
       </Label>
       {renderField()}
     </div>
