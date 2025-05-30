@@ -27,9 +27,19 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [recordingStates, setRecordingStates] = useState<{[key: string]: {
+    isRecording: boolean;
+    audioBlob: Blob | null;
+    isPlaying: boolean;
+    recordingTime: number;
+  }}>({});
+  
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const mediaRecorderRefs = useRef<{[key: string]: MediaRecorder | null}>({});
+  const audioRefs = useRef<{[key: string]: HTMLAudioElement | null}>({});
+  const recordingTimerRefs = useRef<{[key: string]: NodeJS.Timeout | null}>({});
 
   const MAX_RECORDING_TIME = 45; // 45 seconds
 
@@ -38,14 +48,33 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       if (recordingTimerRef.current) {
         clearInterval(recordingTimerRef.current);
       }
+      Object.values(recordingTimerRefs.current).forEach(timer => {
+        if (timer) clearInterval(timer);
+      });
     };
   }, []);
 
-  const startRecording = async () => {
+  const getRecordingState = (fieldName: string) => {
+    return recordingStates[fieldName] || {
+      isRecording: false,
+      audioBlob: null,
+      isPlaying: false,
+      recordingTime: 0
+    };
+  };
+
+  const updateRecordingState = (fieldName: string, updates: Partial<typeof recordingStates[string]>) => {
+    setRecordingStates(prev => ({
+      ...prev,
+      [fieldName]: { ...getRecordingState(fieldName), ...updates }
+    }));
+  };
+
+  const startRecordingForField = async (fieldName: string) => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorderRefs.current[fieldName] = mediaRecorder;
 
       const chunks: BlobPart[] = [];
       mediaRecorder.ondataavailable = (event) => {
@@ -54,24 +83,23 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
 
       mediaRecorder.onstop = () => {
         const blob = new Blob(chunks, { type: 'audio/wav' });
-        setAudioBlob(blob);
-        updateFormData('audioMessage', blob);
+        updateRecordingState(fieldName, { audioBlob: blob });
+        updateFormData(fieldName, blob);
         stream.getTracks().forEach(track => track.stop());
       };
 
       mediaRecorder.start();
-      setIsRecording(true);
-      setRecordingTime(0);
+      updateRecordingState(fieldName, { isRecording: true, recordingTime: 0 });
 
       // Start timer
-      recordingTimerRef.current = setInterval(() => {
-        setRecordingTime(prev => {
-          if (prev >= MAX_RECORDING_TIME - 1) {
-            stopRecording();
-            return MAX_RECORDING_TIME;
-          }
-          return prev + 1;
-        });
+      recordingTimerRefs.current[fieldName] = setInterval(() => {
+        const currentState = getRecordingState(fieldName);
+        if (currentState.recordingTime >= MAX_RECORDING_TIME - 1) {
+          stopRecordingForField(fieldName);
+          updateRecordingState(fieldName, { recordingTime: MAX_RECORDING_TIME });
+        } else {
+          updateRecordingState(fieldName, { recordingTime: currentState.recordingTime + 1 });
+        }
       }, 1000);
 
     } catch (error) {
@@ -79,44 +107,56 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
     }
   };
 
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      if (recordingTimerRef.current) {
-        clearInterval(recordingTimerRef.current);
+  const stopRecordingForField = (fieldName: string) => {
+    const mediaRecorder = mediaRecorderRefs.current[fieldName];
+    const state = getRecordingState(fieldName);
+    
+    if (mediaRecorder && state.isRecording) {
+      mediaRecorder.stop();
+      updateRecordingState(fieldName, { isRecording: false });
+      
+      const timer = recordingTimerRefs.current[fieldName];
+      if (timer) {
+        clearInterval(timer);
+        recordingTimerRefs.current[fieldName] = null;
       }
     }
   };
 
-  const playAudio = () => {
-    if (audioBlob) {
-      const audioUrl = URL.createObjectURL(audioBlob);
-      audioRef.current = new Audio(audioUrl);
-      audioRef.current.play();
-      setIsPlaying(true);
+  const playAudioForField = (fieldName: string) => {
+    const state = getRecordingState(fieldName);
+    if (state.audioBlob) {
+      const audioUrl = URL.createObjectURL(state.audioBlob);
+      audioRefs.current[fieldName] = new Audio(audioUrl);
+      audioRefs.current[fieldName]!.play();
+      updateRecordingState(fieldName, { isPlaying: true });
 
-      audioRef.current.onended = () => {
-        setIsPlaying(false);
+      audioRefs.current[fieldName]!.onended = () => {
+        updateRecordingState(fieldName, { isPlaying: false });
         URL.revokeObjectURL(audioUrl);
       };
     }
   };
 
-  const pauseAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlaying(false);
+  const pauseAudioForField = (fieldName: string) => {
+    const audio = audioRefs.current[fieldName];
+    if (audio) {
+      audio.pause();
+      updateRecordingState(fieldName, { isPlaying: false });
     }
   };
 
-  const reRecord = () => {
-    setAudioBlob(null);
-    setRecordingTime(0);
-    updateFormData('audioMessage', null);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlaying(false);
+  const reRecordForField = (fieldName: string) => {
+    updateRecordingState(fieldName, {
+      audioBlob: null,
+      recordingTime: 0,
+      isPlaying: false
+    });
+    updateFormData(fieldName, null);
+    
+    const audio = audioRefs.current[fieldName];
+    if (audio) {
+      audio.pause();
     }
   };
 
@@ -152,6 +192,94 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       return true;
     }
     return false;
+  };
+
+  const renderAudioRecordingField = (fieldName: string) => {
+    const state = getRecordingState(fieldName);
+    
+    return (
+      <div className="space-y-4">
+        <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm text-gray-600">
+              Timp: {formatTime(state.recordingTime)} / {formatTime(MAX_RECORDING_TIME)}
+            </span>
+            <div className="w-32 bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-purple-500 h-2 rounded-full transition-all duration-300" 
+                style={{ width: `${(state.recordingTime / MAX_RECORDING_TIME) * 100}%` }} 
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            {!state.isRecording && !state.audioBlob && (
+              <Button
+                type="button"
+                onClick={() => startRecordingForField(fieldName)}
+                className="bg-red-500 hover:bg-red-600 text-white"
+              >
+                <Mic className="w-4 h-4 mr-2" />
+                Începe înregistrarea
+              </Button>
+            )}
+
+            {state.isRecording && (
+              <Button
+                type="button"
+                onClick={() => stopRecordingForField(fieldName)}
+                className="bg-gray-500 hover:bg-gray-600 text-white"
+              >
+                <Square className="w-4 h-4 mr-2" />
+                Oprește înregistrarea
+              </Button>
+            )}
+
+            {state.audioBlob && !state.isRecording && (
+              <>
+                <Button
+                  type="button"
+                  onClick={state.isPlaying ? () => pauseAudioForField(fieldName) : () => playAudioForField(fieldName)}
+                  className="bg-green-500 hover:bg-green-600 text-white"
+                >
+                  {state.isPlaying ? (
+                    <>
+                      <Pause className="w-4 h-4 mr-2" />
+                      Pauză
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-4 h-4 mr-2" />
+                      Redă
+                    </>
+                  )}
+                </Button>
+
+                <Button
+                  type="button"
+                  onClick={() => reRecordForField(fieldName)}
+                  variant="outline"
+                  className="border-red-300 text-red-600 hover:bg-red-50"
+                >
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Înregistrează din nou
+                </Button>
+              </>
+            )}
+          </div>
+
+          {state.audioBlob && (
+            <p className="text-xs text-green-600 mt-2 flex items-center">
+              ✓ Înregistrarea audio a fost salvată cu succes
+            </p>
+          )}
+
+          <p className="text-xs text-gray-500 mt-2">
+            Limita de timp: 45 secunde. Înregistrează pronunția corectă.
+          </p>
+        </div>
+      </div>
+    );
   };
 
   const renderField = () => {
@@ -306,6 +434,11 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         );
 
       case 'file':
+        // Handle audio recording for pronunciation fields
+        if (field.name === 'pronunciationAudio_recipient' || field.name === 'pronunciationAudio_keywords') {
+          return renderAudioRecordingField(field.name);
+        }
+        
         return (
           <Input
             type="file"
