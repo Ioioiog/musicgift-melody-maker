@@ -4,15 +4,17 @@ export const packages = [
     value: 'personal', 
     label: 'Pachet Personal',
     price: 300,
+    tagline: 'Un cântec scris cu suflet – doar pentru tine și cei dragi.',
+    description: 'Ideal pentru aniversări, nunți sau ocazii speciale – transformăm povestea ta într-un cadou muzical unic și emoționant.',
     details: {
       price: '300 RON',
-      deliveryTime: '7-10 zile',
+      deliveryTime: '3-5 zile',
       includes: [
-        'Melodie personalizată compusă special pentru tine',
-        'Producție audio profesională',
-        'Voce înregistrată de artist profesionist',
-        'Mix și master final',
-        'Fișier audio de înaltă calitate (WAV + MP3)'
+        'Cântec original creat după povestea ta',
+        'Voce profesionistă din echipa MusicGift',
+        'Livrare rapidă în 3–5 zile',
+        'Drepturi de utilizare personală (non-comercial)',
+        'Consultare creativă bazată pe poveste și preferințe muzicale'
       ]
     }
   },
@@ -124,12 +126,52 @@ export const languages = [
   { value: 'pl', label: 'Polski', flag: '🇵🇱' },
 ];
 
+export const relationships = [
+  { value: 'partner', label: 'Partener/Soție/Soț' },
+  { value: 'child', label: 'Copil' },
+  { value: 'parent', label: 'Părinte' },
+  { value: 'sibling', label: 'Frate/Soră' },
+  { value: 'friend', label: 'Prieten(ă)' },
+  { value: 'grandparent', label: 'Bunic/Bunică' },
+  { value: 'other', label: 'Altă relație' }
+];
+
+export const occasions = [
+  { value: 'birthday', label: 'Zi de naștere', emoji: '🎂' },
+  { value: 'wedding', label: 'Nuntă', emoji: '💒' },
+  { value: 'anniversary', label: 'Aniversare', emoji: '💕' },
+  { value: 'valentine', label: 'Ziua Îndrăgostiților', emoji: '💝' },
+  { value: 'graduation', label: 'Absolvire', emoji: '🎓' },
+  { value: 'christmas', label: 'Crăciun', emoji: '🎄' },
+  { value: 'other', label: 'Altă ocazie', emoji: '🎉' }
+];
+
+export const emotionalTones = [
+  { value: 'romantic', label: 'Romantic' },
+  { value: 'happy', label: 'Vesel/Bucuros' },
+  { value: 'nostalgic', label: 'Nostalgic' },
+  { value: 'emotional', label: 'Emoționant' },
+  { value: 'energetic', label: 'Energic' },
+  { value: 'peaceful', label: 'Liniștit/Calm' }
+];
+
+export const musicStyles = [
+  { value: 'pop', label: 'Pop' },
+  { value: 'acoustic', label: 'Acustic' },
+  { value: 'rock', label: 'Rock' },
+  { value: 'jazz', label: 'Jazz' },
+  { value: 'folk', label: 'Folk' },
+  { value: 'electronic', label: 'Electronic' },
+  { value: 'classical', label: 'Clasic' },
+  { value: 'reggae', label: 'Reggae' },
+  { value: 'country', label: 'Country' }
+];
+
 export const addons = {
-  rushDelivery: { label: 'Livrare rapidă (24–48h)', price: 100 },
-  commercialRights: { label: 'Drepturi comerciale', price: 100 },
-  distributieMangoRecords: { label: 'Distribuție Mango Records', price: 200 },
-  customVideo: { label: 'Videoclip personalizat', price: 149 },
-  audioMessageFromSender: { label: 'Mesaj audio de la expeditor', price: 100 },
-  commercialRightsUpgrade: { label: 'Upgrade drepturi comerciale', price: 400 },
-  extendedSong: { label: 'Melodie extinsă (3 strofe)', price: 49 },
+  rushDelivery: { label: 'Livrare prioritară în 24–48h', price: 100 },
+  commercialRights: { label: 'Drepturi comerciale pentru YouTube, Spotify etc.', price: 100 },
+  distributieMangoRecords: { label: 'Distribuție oficială prin Mango Records', price: 200 },
+  customVideo: { label: 'Videoclip personalizat cu pozele tale', price: 149 },
+  audioMessageFromSender: { label: 'Mesaj audio personalizat încorporat în piesă', price: 100 },
+  extendedSong: { label: 'Melodie extinsă cu 3 strofe în loc de 2', price: 49 },
 };
