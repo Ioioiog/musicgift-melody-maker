@@ -40,6 +40,8 @@ export const usePackages = () => {
   return useQuery({
     queryKey: ['packages'],
     queryFn: async () => {
+      console.log('Fetching packages...');
+      
       const { data: packages, error } = await supabase
         .from('package_info')
         .select(`
@@ -50,7 +52,12 @@ export const usePackages = () => {
         .eq('is_active', true)
         .order('value');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching packages:', error);
+        throw error;
+      }
+      
+      console.log('Fetched packages:', packages);
       return packages as PackageData[];
     }
   });
@@ -62,13 +69,18 @@ export const usePackageSteps = (packageValue: string) => {
     queryFn: async () => {
       if (!packageValue) return [];
 
+      console.log('Fetching steps for package:', packageValue);
+
       const { data: packageInfo, error: packageError } = await supabase
         .from('package_info')
         .select('id')
         .eq('value', packageValue)
         .single();
 
-      if (packageError) throw packageError;
+      if (packageError) {
+        console.error('Error fetching package info:', packageError);
+        throw packageError;
+      }
 
       const { data: steps, error: stepsError } = await supabase
         .from('steps')
@@ -80,7 +92,12 @@ export const usePackageSteps = (packageValue: string) => {
         .eq('is_active', true)
         .order('step_order');
 
-      if (stepsError) throw stepsError;
+      if (stepsError) {
+        console.error('Error fetching steps:', stepsError);
+        throw stepsError;
+      }
+
+      console.log('Fetched steps:', steps);
 
       return steps.map(step => ({
         ...step,
@@ -100,13 +117,20 @@ export const useAddons = () => {
   return useQuery({
     queryKey: ['addons'],
     queryFn: async () => {
+      console.log('Fetching addons...');
+      
       const { data, error } = await supabase
         .from('addons')
         .select('*')
         .eq('is_active', true)
         .order('addon_key');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching addons:', error);
+        throw error;
+      }
+      
+      console.log('Fetched addons:', data);
       return data;
     }
   });
