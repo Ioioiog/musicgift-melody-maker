@@ -103,6 +103,11 @@ const renderSelectField = (
 ) => {
   const hasError = errors.length > 0;
 
+  // Filter out options with invalid values (null, undefined, empty string)
+  const validOptions = field.options?.filter(option => 
+    option.value && option.value.trim() !== ''
+  ) || [];
+
   return (
     <div className="space-y-2">
       <Select onValueChange={onChange} value={value || ''}>
@@ -110,10 +115,10 @@ const renderSelectField = (
           <SelectValue placeholder={field.placeholder_key ? t(field.placeholder_key) : field.field_name} />
         </SelectTrigger>
         <SelectContent className="bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
-          {field.options?.map((option, index) => (
+          {validOptions.map((option, index) => (
             <SelectItem 
-              key={`${field.field_name}-${option.value || 'empty'}-${index}`}
-              value={option.value || ''}
+              key={`${field.field_name}-${option.value}-${index}`}
+              value={option.value}
               className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
             >
               {option.label_key ? t(option.label_key) : option.value}
@@ -141,6 +146,11 @@ const renderMultiselectField = (
   const hasError = errors.length > 0;
   const selectedValues = Array.isArray(value) ? value : [];
 
+  // Filter out options with invalid values
+  const validOptions = field.options?.filter(option => 
+    option.value && option.value.trim() !== ''
+  ) || [];
+
   const handleCheckboxChange = (optionValue: string) => {
     if (selectedValues.includes(optionValue)) {
       onChange(selectedValues.filter((v) => v !== optionValue));
@@ -152,14 +162,14 @@ const renderMultiselectField = (
   return (
     <div className="space-y-2">
       <div className={cn("grid gap-2 grid-cols-2 md:grid-cols-3", hasError && 'border border-red-500 rounded-md p-2')}>
-        {field.options?.map((option, index) => (
-          <div key={`${field.field_name}-multiselect-${option.value || 'empty'}-${index}`} className="flex items-center space-x-2">
+        {validOptions.map((option, index) => (
+          <div key={`${field.field_name}-multiselect-${option.value}-${index}`} className="flex items-center space-x-2">
             <Checkbox
-              id={`${field.field_name}-${option.value || 'empty'}-${index}`}
-              checked={selectedValues.includes(option.value || '')}
-              onCheckedChange={() => handleCheckboxChange(option.value || '')}
+              id={`${field.field_name}-${option.value}-${index}`}
+              checked={selectedValues.includes(option.value)}
+              onCheckedChange={() => handleCheckboxChange(option.value)}
             />
-            <Label htmlFor={`${field.field_name}-${option.value || 'empty'}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <Label htmlFor={`${field.field_name}-${option.value}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               {option.label_key}
             </Label>
           </div>
@@ -215,13 +225,18 @@ const renderRadioField = (
 ) => {
   const hasError = errors.length > 0;
 
+  // Filter out options with invalid values
+  const validOptions = field.options?.filter(option => 
+    option.value && option.value.trim() !== ''
+  ) || [];
+
   return (
     <div className="space-y-2">
       <RadioGroup defaultValue={value} onValueChange={onChange} className="flex flex-col space-y-1">
-        {field.options?.map((option, index) => (
-          <div key={`${field.field_name}-radio-${option.value || 'empty'}-${index}`} className="flex items-center space-x-2">
-            <RadioGroupItem value={option.value || ''} id={`${field.field_name}-${option.value || 'empty'}-${index}`} />
-            <Label htmlFor={`${field.field_name}-${option.value || 'empty'}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        {validOptions.map((option, index) => (
+          <div key={`${field.field_name}-radio-${option.value}-${index}`} className="flex items-center space-x-2">
+            <RadioGroupItem value={option.value} id={`${field.field_name}-${option.value}-${index}`} />
+            <Label htmlFor={`${field.field_name}-${option.value}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               {option.label_key}
             </Label>
           </div>
