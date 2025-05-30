@@ -82,6 +82,17 @@ const OrdersManagement = () => {
       case 'in_progress': return 'bg-blue-100 text-blue-800';
       case 'completed': return 'bg-green-100 text-green-800';
       case 'cancelled': return 'bg-red-100 text-red-800';
+      case 'paid': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getPaymentStatusColor = (paymentStatus: string) => {
+    switch (paymentStatus) {
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'completed': return 'bg-green-100 text-green-800';
+      case 'failed': return 'bg-red-100 text-red-800';
+      case 'cancelled': return 'bg-gray-100 text-gray-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -123,6 +134,9 @@ const OrdersManagement = () => {
                       <Badge className={getStatusColor(order.status)}>
                         {order.status}
                       </Badge>
+                      <Badge className={getPaymentStatusColor(order.payment_status)}>
+                        Payment: {order.payment_status}
+                      </Badge>
                       <span className="text-lg font-bold text-purple-600">
                         {order.total_price} RON
                       </span>
@@ -133,11 +147,13 @@ const OrdersManagement = () => {
                         <p><strong>Package:</strong> {order.package?.label_key || 'N/A'}</p>
                         <p><strong>Customer:</strong> {formData?.fullName || 'N/A'}</p>
                         <p><strong>Email:</strong> {formData?.email || 'N/A'}</p>
+                        <p><strong>Payment ID:</strong> {order.payment_id || 'N/A'}</p>
                       </div>
                       <div>
                         <p><strong>Created:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
                         <p><strong>Recipient:</strong> {formData?.recipientName || 'N/A'}</p>
                         <p><strong>Occasion:</strong> {formData?.occasion || 'N/A'}</p>
+                        <p><strong>NETOPIA Order:</strong> {order.netopia_order_id || 'N/A'}</p>
                       </div>
                     </div>
                   </div>

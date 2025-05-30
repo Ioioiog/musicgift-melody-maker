@@ -14,15 +14,37 @@ const Order = () => {
     try {
       console.log("Order completed:", orderData);
 
-      toast({
-        title: t('orderSent'),
-        description: t('orderThankYou')
+      // Create NETOPIA payment session
+      const response = await fetch('/functions/v1/create-netopia-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
+        },
+        body: JSON.stringify({
+          orderId: orderData.orderId,
+          amount: orderData.totalPrice,
+          currency: 'RON',
+          customerEmail: orderData.email || orderData.recipientEmail,
+          customerName: orderData.fullName || orderData.recipientName,
+          description: `Order for ${orderData.package} package`
+        })
       });
+
+      const result = await response.json();
+
+      if (result.success && result.paymentUrl) {
+        // Redirect to NETOPIA payment page
+        window.location.href = result.paymentUrl;
+      } else {
+        throw new Error(result.error || 'Failed to create payment session');
+      }
+
     } catch (error) {
       console.error("Error processing order:", error);
       toast({
         title: t('orderError'),
-        description: t('orderErrorMessage'),
+        description: error.message || t('orderErrorMessage'),
         variant: "destructive"
       });
     }

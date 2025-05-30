@@ -1,85 +1,51 @@
-
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { LanguageProvider } from "./contexts/LanguageContext";
 import { AuthProvider } from "./contexts/AuthContext";
-import AuthGuard from "./components/AuthGuard";
-import RoleGuard from "./components/RoleGuard";
-import Index from "./pages/Index";
-import About from "./pages/About";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
 import Packages from "./pages/Packages";
-import HowItWorks from "./pages/HowItWorks";
-import Testimonials from "./pages/Testimonials";
-import Contact from "./pages/Contact";
 import Order from "./pages/Order";
+import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
-import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
-import AccessDenied from "./pages/AccessDenied";
-import NotFound from "./pages/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import { Toaster } from "@/components/ui/sonner";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentCancel from "./pages/PaymentCancel";
+import PaymentError from "./pages/PaymentError";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <LanguageProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <LanguageProvider>
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/packages" element={<Packages />} />
-              <Route path="/how-it-works" element={<HowItWorks />} />
-              <Route path="/testimonials" element={<Testimonials />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route 
-                path="/order" 
-                element={
-                  <AuthGuard requireAuth={true}>
-                    <Order />
-                  </AuthGuard>
-                } 
-              />
-              <Route 
-                path="/settings" 
-                element={
-                  <AuthGuard requireAuth={true}>
-                    <Settings />
-                  </AuthGuard>
-                } 
-              />
-              <Route 
-                path="/auth" 
-                element={
-                  <AuthGuard requireAuth={false}>
-                    <Auth />
-                  </AuthGuard>
-                } 
-              />
-              <Route 
-                path="/admin" 
-                element={
-                  <AuthGuard requireAuth={true}>
-                    <RoleGuard requiredRole="super_admin">
-                      <Admin />
-                    </RoleGuard>
-                  </AuthGuard>
-                } 
-              />
-              <Route path="/access-denied" element={<AccessDenied />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <div className="min-h-screen bg-background font-sans antialiased">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/packages" element={<Packages />} />
+                <Route path="/order" element={<Order />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
+                <Route path="/payment/success" element={<PaymentSuccess />} />
+                <Route path="/payment/cancel" element={<PaymentCancel />} />
+                <Route path="/payment/error" element={<PaymentError />} />
+              </Routes>
+              <Toaster />
+            </div>
           </BrowserRouter>
-        </TooltipProvider>
-      </LanguageProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+        </LanguageProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;

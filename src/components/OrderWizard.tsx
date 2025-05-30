@@ -240,12 +240,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .insert({
-          user_id: user.id, // Add user_id to satisfy RLS policy
+          user_id: user.id,
           package_id: selectedPackageData?.id,
           form_data: finalData,
           selected_addons: selectedAddons,
           total_price: calculateTotalPrice(),
-          status: 'pending'
+          status: 'pending',
+          payment_status: 'pending'
         })
         .select()
         .single();
@@ -266,7 +267,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
             addon_key: addonKey,
             field_type: addon?.trigger_field_type || 'unknown',
             field_data: fieldValue instanceof File ? { fileName: fieldValue.name } : (fieldValue as any),
-            file_url: fieldValue instanceof File ? null : null // File upload handling would go here
+            file_url: fieldValue instanceof File ? null : null
           };
         });
 
@@ -281,11 +282,15 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         }
       }
 
-      onComplete(finalData);
-      toast({
-        title: t('orderSubmittedSuccess', 'Order submitted successfully!'),
-        description: t('orderSubmittedDesc', 'We have received your order and will get back to you soon.')
-      });
+      // Pass order data with payment info to parent component
+      const orderPaymentData = {
+        ...finalData,
+        orderId: orderData.id,
+        totalPrice: calculateTotalPrice()
+      };
+
+      onComplete(orderPaymentData);
+
     } catch (error) {
       console.error('Order submission error:', error);
       toast({
