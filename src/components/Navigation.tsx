@@ -30,12 +30,12 @@ const Navigation = () => {
     <header className="fixed top-0 w-full bg-white z-50 border-b border-gray-100">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
-          {/* Logo positioned on the left */}
-          <Link to="/" className="flex items-center">
+          {/* Logo positioned on the left and breaking out of bounds */}
+          <Link to="/" className="flex items-center relative z-60">
             <img 
               src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
               alt="MusicGift" 
-              className="h-16 w-auto"
+              className="h-24 w-auto relative -top-2 drop-shadow-lg"
             />
           </Link>
 
