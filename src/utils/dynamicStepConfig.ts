@@ -6,9 +6,10 @@ export const transformStepsForWizard = (steps: StepData[]) => {
     step: step.step_number,
     title: step.title_key,
     fields: step.fields.map(field => ({
-      name: field.field_name,
-      type: field.field_type,
-      placeholder: field.placeholder_key,
+      id: field.id,
+      field_name: field.field_name,
+      field_type: field.field_type,
+      placeholder_key: field.placeholder_key,
       required: field.required,
       options: field.options
     }))
