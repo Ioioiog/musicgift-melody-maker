@@ -1,8 +1,10 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,6 +13,7 @@ const Navigation = () => {
     setCurrentLanguage,
     t
   } = useLanguage();
+
   const navItems = [{
     path: "/",
     label: t("home")
@@ -30,12 +33,19 @@ const Navigation = () => {
     path: "/contact",
     label: t("contact")
   }];
+
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
-  return <>
-      {/* Floating Logo - positioned absolutely and centered */}
-      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[100]">
+
+  return (
+    <>
+      {/* Floating Logo - positioned on the left side */}
+      <div className="fixed top-4 left-4 z-[100]">
         <Link to="/" className="block">
-          <img src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" alt="MusicGift Logo" className="h-60 w-40 transition-transform duration-100 ease-in-out hover:scale-200\n" />
+          <img 
+            src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
+            alt="MusicGift Logo" 
+            className="h-60 w-40 transition-transform duration-100 ease-in-out hover:scale-105" 
+          />
         </Link>
       </div>
 
@@ -47,9 +57,17 @@ const Navigation = () => {
             {/* Desktop Nav - centered */}
             <nav className="hidden lg:flex items-center justify-center flex-1">
               <div className="flex items-center space-x-8">
-                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-sm font-medium transition-colors hover:text-purple-600 ${location.pathname === item.path ? "text-purple-600" : "text-gray-700"}`}>
+                {navItems.map(item => (
+                  <Link 
+                    key={item.path + item.label} 
+                    to={item.path} 
+                    className={`text-sm font-medium transition-colors hover:text-purple-600 ${
+                      location.pathname === item.path ? "text-purple-600" : "text-gray-700"
+                    }`}
+                  >
                     {item.label}
-                  </Link>)}
+                  </Link>
+                ))}
               </div>
             </nav>
 
@@ -62,18 +80,30 @@ const Navigation = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {languages.map(lang => <DropdownMenuItem key={lang} onClick={() => setCurrentLanguage(lang)} className={currentLanguage === lang ? "bg-purple-50" : ""}>
+                  {languages.map(lang => (
+                    <DropdownMenuItem 
+                      key={lang} 
+                      onClick={() => setCurrentLanguage(lang)} 
+                      className={currentLanguage === lang ? "bg-purple-50" : ""}
+                    >
                       {languageNames[lang]}
-                    </DropdownMenuItem>)}
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Link to="/packages" className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+              <Link 
+                to="/packages" 
+                className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
+              >
                 {t("orderNow")}
               </Link>
             </div>
 
             {/* Mobile Menu Toggle */}
-            <button className="lg:hidden ml-auto" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <button 
+              className="lg:hidden ml-auto" 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
               <div className="w-6 h-6 flex flex-col justify-center items-center">
                 <div className={`w-4 h-0.5 bg-gray-600 transition-all ${isMenuOpen ? "rotate-45 translate-y-0.5" : ""}`} />
                 <div className={`w-4 h-0.5 bg-gray-600 my-0.5 transition-all ${isMenuOpen ? "opacity-0" : ""}`} />
@@ -83,11 +113,21 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu */}
-          {isMenuOpen && <div className="lg:hidden py-4 border-t">
+          {isMenuOpen && (
+            <div className="lg:hidden py-4 border-t">
               <nav className="flex flex-col space-y-4">
-                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-sm font-medium transition-colors hover:text-purple-600 ${location.pathname === item.path ? "text-purple-600" : "text-gray-600"}`} onClick={() => setIsMenuOpen(false)}>
+                {navItems.map(item => (
+                  <Link 
+                    key={item.path + item.label} 
+                    to={item.path} 
+                    className={`text-sm font-medium transition-colors hover:text-purple-600 ${
+                      location.pathname === item.path ? "text-purple-600" : "text-gray-600"
+                    }`} 
+                    onClick={() => setIsMenuOpen(false)}
+                  >
                     {item.label}
-                  </Link>)}
+                  </Link>
+                ))}
                 <div className="flex items-center pt-4 space-x-4">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -96,19 +136,32 @@ const Navigation = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      {languages.map(lang => <DropdownMenuItem key={lang} onClick={() => setCurrentLanguage(lang)} className={currentLanguage === lang ? "bg-purple-50" : ""}>
+                      {languages.map(lang => (
+                        <DropdownMenuItem 
+                          key={lang} 
+                          onClick={() => setCurrentLanguage(lang)} 
+                          className={currentLanguage === lang ? "bg-purple-50" : ""}
+                        >
                           {languageNames[lang]}
-                        </DropdownMenuItem>)}
+                        </DropdownMenuItem>
+                      ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <Link to="/packages" className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors" onClick={() => setIsMenuOpen(false)}>
+                  <Link 
+                    to="/packages" 
+                    className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors" 
+                    onClick={() => setIsMenuOpen(false)}
+                  >
                     {t("orderNow")}
                   </Link>
                 </div>
               </nav>
-            </div>}
+            </div>
+          )}
         </div>
       </header>
-    </>;
+    </>
+  );
 };
+
 export default Navigation;
