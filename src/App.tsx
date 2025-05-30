@@ -66,7 +66,7 @@ const App = () => (
                 path="/admin" 
                 element={
                   <AuthGuard requireAuth={true}>
-                    <RoleGuard requiredRole="admin">
+                    <RoleGuard requiredRole="super_admin">
                       <Admin />
                     </RoleGuard>
                   </AuthGuard>
