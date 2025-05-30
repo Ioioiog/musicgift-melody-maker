@@ -1,10 +1,11 @@
-
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+import { Mic, Square, Play, Pause, RotateCcw } from 'lucide-react';
 import { packages, languages, addons, relationships, occasions, emotionalTones, musicStyles } from '@/data/packages';
 
 interface FormFieldRendererProps {
@@ -22,6 +23,109 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   updateFormData,
   handleAddonChange
 }) => {
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const MAX_RECORDING_TIME = 45; // 45 seconds
+
+  useEffect(() => {
+    return () => {
+      if (recordingTimerRef.current) {
+        clearInterval(recordingTimerRef.current);
+      }
+    };
+  }, []);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      const chunks: BlobPart[] = [];
+      mediaRecorder.ondataavailable = (event) => {
+        chunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/wav' });
+        setAudioBlob(blob);
+        updateFormData('audioMessage', blob);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+
+      // Start timer
+      recordingTimerRef.current = setInterval(() => {
+        setRecordingTime(prev => {
+          if (prev >= MAX_RECORDING_TIME - 1) {
+            stopRecording();
+            return MAX_RECORDING_TIME;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      if (recordingTimerRef.current) {
+        clearInterval(recordingTimerRef.current);
+      }
+    }
+  };
+
+  const playAudio = () => {
+    if (audioBlob) {
+      const audioUrl = URL.createObjectURL(audioBlob);
+      audioRef.current = new Audio(audioUrl);
+      audioRef.current.play();
+      setIsPlaying(true);
+
+      audioRef.current.onended = () => {
+        setIsPlaying(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+    }
+  };
+
+  const pauseAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const reRecord = () => {
+    setAudioBlob(null);
+    setRecordingTime(0);
+    updateFormData('audioMessage', null);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const renderField = () => {
     switch (field.type) {
       case 'select':
@@ -241,6 +345,95 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                       <p className="text-xs text-gray-500">
                         Acceptăm imagini (JPG, PNG) și video (MP4, MOV). Poți selecta mai multe fișiere.
                       </p>
+                    </div>
+                  )}
+
+                  {/* Show audio recording field when audioMessageFromSender addon is selected */}
+                  {addonId === 'audioMessageFromSender' && selectedAddons.includes('audioMessageFromSender') && (
+                    <div className="mt-3 ml-8 space-y-4">
+                      <Label className="text-sm font-medium text-gray-700">
+                        Înregistrează mesajul tău audio personal
+                      </Label>
+                      
+                      <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-sm text-gray-600">
+                            Timp: {formatTime(recordingTime)} / {formatTime(MAX_RECORDING_TIME)}
+                          </span>
+                          <div className="w-32 bg-gray-200 rounded-full h-2">
+                            <div 
+                              className="bg-purple-500 h-2 rounded-full transition-all duration-300" 
+                              style={{ width: `${(recordingTime / MAX_RECORDING_TIME) * 100}%` }} 
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex items-center space-x-3">
+                          {!isRecording && !audioBlob && (
+                            <Button
+                              type="button"
+                              onClick={startRecording}
+                              className="bg-red-500 hover:bg-red-600 text-white"
+                            >
+                              <Mic className="w-4 h-4 mr-2" />
+                              Începe înregistrarea
+                            </Button>
+                          )}
+
+                          {isRecording && (
+                            <Button
+                              type="button"
+                              onClick={stopRecording}
+                              className="bg-gray-500 hover:bg-gray-600 text-white"
+                            >
+                              <Square className="w-4 h-4 mr-2" />
+                              Oprește înregistrarea
+                            </Button>
+                          )}
+
+                          {audioBlob && !isRecording && (
+                            <>
+                              <Button
+                                type="button"
+                                onClick={isPlaying ? pauseAudio : playAudio}
+                                className="bg-green-500 hover:bg-green-600 text-white"
+                              >
+                                {isPlaying ? (
+                                  <>
+                                    <Pause className="w-4 h-4 mr-2" />
+                                    Pauză
+                                  </>
+                                ) : (
+                                  <>
+                                    <Play className="w-4 h-4 mr-2" />
+                                    Redă
+                                  </>
+                                )}
+                              </Button>
+
+                              <Button
+                                type="button"
+                                onClick={reRecord}
+                                variant="outline"
+                                className="border-red-300 text-red-600 hover:bg-red-50"
+                              >
+                                <RotateCcw className="w-4 h-4 mr-2" />
+                                Înregistrează din nou
+                              </Button>
+                            </>
+                          )}
+                        </div>
+
+                        {audioBlob && (
+                          <p className="text-xs text-green-600 mt-2 flex items-center">
+                            ✓ Mesajul audio a fost înregistrat cu succes
+                          </p>
+                        )}
+
+                        <p className="text-xs text-gray-500 mt-2">
+                          Limita de timp: 45 secunde. Mesajul tău va fi incorporat în piesa finală.
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
