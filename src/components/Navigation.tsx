@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -39,7 +38,7 @@ const Navigation = () => {
   return (
     <>
       {/* Floating Logo - positioned on the left */}
-      <div className="fixed top-2 left-80 z-[100]">
+      <div className="fixed top-1 left-80 z-[100]">
         <Link to="/" className="block">
           <img 
             src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
