@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Edit, Trash2 } from 'lucide-react';
-import type { Tables, Enums } from '@/integrations/supabase/types';
+import type { Tables, TablesInsert, TablesUpdate, Enums } from '@/integrations/supabase/types';
 
 type StepField = Tables<'step_fields'> & {
   step?: {
@@ -82,7 +81,7 @@ const FieldsManagement = () => {
 
   // Create field mutation
   const createFieldMutation = useMutation({
-    mutationFn: async (fieldData: Tables<'step_fields'>['Insert']) => {
+    mutationFn: async (fieldData: TablesInsert<'step_fields'>) => {
       const { data, error } = await supabase
         .from('step_fields')
         .insert(fieldData)
@@ -105,7 +104,7 @@ const FieldsManagement = () => {
 
   // Update field mutation
   const updateFieldMutation = useMutation({
-    mutationFn: async ({ id, ...fieldData }: { id: string } & Tables<'step_fields'>['Update']) => {
+    mutationFn: async ({ id, ...fieldData }: { id: string } & TablesUpdate<'step_fields'>) => {
       const { data, error } = await supabase
         .from('step_fields')
         .update(fieldData)
@@ -159,7 +158,7 @@ const FieldsManagement = () => {
       }
     }
 
-    const fieldData: Tables<'step_fields'>['Insert'] = {
+    const fieldData: TablesInsert<'step_fields'> = {
       step_id: selectedStep,
       field_name: formData.get('field_name') as string,
       field_type: formData.get('field_type') as Enums<'field_type'>,

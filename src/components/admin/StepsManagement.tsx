@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Edit, Trash2 } from 'lucide-react';
-import type { Tables } from '@/integrations/supabase/types';
+import type { Tables, TablesInsert, TablesUpdate } from '@/integrations/supabase/types';
 
 type Step = Tables<'steps'> & {
   package_info?: {
@@ -65,7 +64,7 @@ const StepsManagement = () => {
 
   // Create step mutation
   const createStepMutation = useMutation({
-    mutationFn: async (stepData: Tables<'steps'>['Insert']) => {
+    mutationFn: async (stepData: TablesInsert<'steps'>) => {
       const { data, error } = await supabase
         .from('steps')
         .insert(stepData)
@@ -87,7 +86,7 @@ const StepsManagement = () => {
 
   // Update step mutation
   const updateStepMutation = useMutation({
-    mutationFn: async ({ id, ...stepData }: { id: string } & Tables<'steps'>['Update']) => {
+    mutationFn: async ({ id, ...stepData }: { id: string } & TablesUpdate<'steps'>) => {
       const { data, error } = await supabase
         .from('steps')
         .update(stepData)
@@ -130,7 +129,7 @@ const StepsManagement = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
-    const stepData: Tables<'steps'>['Insert'] = {
+    const stepData: TablesInsert<'steps'> = {
       package_id: selectedPackage,
       step_number: parseInt(formData.get('step_number') as string),
       title_key: formData.get('title_key') as string,

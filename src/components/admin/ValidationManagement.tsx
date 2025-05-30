@@ -12,7 +12,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Edit, Trash2 } from 'lucide-react';
-import type { Tables, Enums } from '@/integrations/supabase/types';
+import type { Tables, TablesInsert, TablesUpdate, Enums } from '@/integrations/supabase/types';
 
 type FieldValidation = Tables<'field_validation'> & {
   field?: {
@@ -24,10 +24,15 @@ type FieldValidation = Tables<'field_validation'> & {
   };
 };
 
-type FieldData = Tables<'step_fields'> & {
+type FieldData = {
+  id: string;
+  field_name: string;
   step?: {
     title_key: string;
     step_number: number;
+    package_info?: {
+      label_key: string;
+    };
   };
 };
 
@@ -83,7 +88,7 @@ const ValidationManagement = () => {
 
   // Create validation mutation
   const createValidationMutation = useMutation({
-    mutationFn: async (validationData: Tables<'field_validation'>['Insert']) => {
+    mutationFn: async (validationData: TablesInsert<'field_validation'>) => {
       const { data, error } = await supabase
         .from('field_validation')
         .insert(validationData)
@@ -105,7 +110,7 @@ const ValidationManagement = () => {
 
   // Update validation mutation
   const updateValidationMutation = useMutation({
-    mutationFn: async ({ id, ...validationData }: { id: string } & Tables<'field_validation'>['Update']) => {
+    mutationFn: async ({ id, ...validationData }: { id: string } & TablesUpdate<'field_validation'>) => {
       const { data, error } = await supabase
         .from('field_validation')
         .update(validationData)
@@ -148,7 +153,7 @@ const ValidationManagement = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
-    const validationData: Tables<'field_validation'>['Insert'] = {
+    const validationData: TablesInsert<'field_validation'> = {
       field_id: selectedField,
       validation_type: formData.get('validation_type') as Enums<'validation_rule_type'>,
       validation_value: formData.get('validation_value') as string || null,
