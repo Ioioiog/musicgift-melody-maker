@@ -209,21 +209,42 @@ const JsonPackageEditor = () => {
 
       // Clear existing related data if updating
       if (!isCreating && packageId) {
+        // Delete tags and includes first
         await supabase.from('package_tags').delete().eq('package_id', packageId);
         await supabase.from('package_includes').delete().eq('package_id', packageId);
-        await supabase.from('field_validation').delete().in('field_id', 
-          await supabase.from('step_fields').select('id').eq('step_id', 
-            await supabase.from('steps').select('id').eq('package_id', packageId)
-          )
-        );
-        await supabase.from('field_dependencies').delete().in('field_id', 
-          await supabase.from('step_fields').select('id').eq('step_id', 
-            await supabase.from('steps').select('id').eq('package_id', packageId)
-          )
-        );
-        await supabase.from('step_fields').delete().in('step_id', 
-          await supabase.from('steps').select('id').eq('package_id', packageId)
-        );
+
+        // Get step IDs for this package
+        const { data: stepIds, error: stepIdsError } = await supabase
+          .from('steps')
+          .select('id')
+          .eq('package_id', packageId);
+
+        if (stepIdsError) throw stepIdsError;
+
+        if (stepIds && stepIds.length > 0) {
+          const stepIdArray = stepIds.map(step => step.id);
+
+          // Get field IDs for these steps
+          const { data: fieldIds, error: fieldIdsError } = await supabase
+            .from('step_fields')
+            .select('id')
+            .in('step_id', stepIdArray);
+
+          if (fieldIdsError) throw fieldIdsError;
+
+          if (fieldIds && fieldIds.length > 0) {
+            const fieldIdArray = fieldIds.map(field => field.id);
+
+            // Delete field validations and dependencies
+            await supabase.from('field_validation').delete().in('field_id', fieldIdArray);
+            await supabase.from('field_dependencies').delete().in('field_id', fieldIdArray);
+          }
+
+          // Delete fields
+          await supabase.from('step_fields').delete().in('step_id', stepIdArray);
+        }
+
+        // Delete steps
         await supabase.from('steps').delete().eq('package_id', packageId);
       }
 
