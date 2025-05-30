@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -98,8 +97,12 @@ const Index = () => {
             {/* Personal Package */}
             <Card className="relative hover:shadow-lg transition-shadow">
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Personal</h3>
-                <div className="text-4xl font-bold text-purple-600 mb-6">
+                <div className="text-center mb-6">
+                  <div className="text-4xl mb-3">🎁</div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Pachet Personal</h3>
+                  <p className="text-sm text-purple-600 font-medium mb-3">Un cântec creat special pentru tine și cei dragi.</p>
+                </div>
+                <div className="text-4xl font-bold text-purple-600 mb-6 text-center">
                   300 <span className="text-lg text-gray-500">RON</span>
                 </div>
                 <ul className="space-y-3 mb-8">
@@ -107,52 +110,19 @@ const Index = () => {
                     <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
                       <span className="text-green-600 text-xs">✓</span>
                     </span>
-                    Custom lyrics based on your story
+                    Cântec complet personalizat
                   </li>
                   <li className="flex items-center text-gray-600">
                     <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
                       <span className="text-green-600 text-xs">✓</span>
                     </span>
-                    Professional recording
+                    Voce profesionistă
                   </li>
                   <li className="flex items-center text-gray-600">
                     <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
                       <span className="text-green-600 text-xs">✓</span>
                     </span>
-                    7-10 days delivery
-                  </li>
-                </ul>
-                <Button className="w-full bg-gradient-purple hover:opacity-90">
-                  Order Now
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Business Package */}
-            <Card className="relative hover:shadow-lg transition-shadow">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Business</h3>
-                <div className="text-4xl font-bold text-purple-600 mb-6">
-                  900 <span className="text-lg text-gray-500">RON</span>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    Custom jingle for your business
-                  </li>
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    Commercial license included
-                  </li>
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    Unlimited revisions
+                    3-5 zile livrare
                   </li>
                 </ul>
                 <Button className="w-full bg-gradient-purple hover:opacity-90">
@@ -169,28 +139,69 @@ const Index = () => {
                 </span>
               </div>
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Premium</h3>
-                <div className="text-4xl font-bold text-purple-600 mb-6">
-                  1000 <span className="text-lg text-gray-500">RON</span>
+                <div className="text-center mb-6">
+                  <div className="text-4xl mb-3">🌟</div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Pachet Premium</h3>
+                  <p className="text-sm text-purple-600 font-medium mb-3">Creează un impact. Lasă muzica să vorbească pentru tine.</p>
+                </div>
+                <div className="text-4xl font-bold text-purple-600 mb-6 text-center">
+                  500 <span className="text-lg text-gray-500">RON</span>
                 </div>
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-center text-gray-600">
                     <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
                       <span className="text-green-600 text-xs">✓</span>
                     </span>
-                    Custom lyrics based on your story
+                    Cântec original cu producție completă
                   </li>
                   <li className="flex items-center text-gray-600">
                     <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
                       <span className="text-green-600 text-xs">✓</span>
                     </span>
-                    Lyric video included
+                    Videoclip animat inclus
                   </li>
                   <li className="flex items-center text-gray-600">
                     <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
                       <span className="text-green-600 text-xs">✓</span>
                     </span>
-                    5-7 days delivery
+                    5-7 zile livrare
+                  </li>
+                </ul>
+                <Button className="w-full bg-gradient-purple hover:opacity-90">
+                  Order Now
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Business Package */}
+            <Card className="relative hover:shadow-lg transition-shadow">
+              <CardContent className="p-8">
+                <div className="text-center mb-6">
+                  <div className="text-4xl mb-3">💼</div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Pachet Business</h3>
+                  <p className="text-sm text-purple-600 font-medium mb-3">Oferă brandului tău vocea pe care o merită.</p>
+                </div>
+                <div className="text-4xl font-bold text-purple-600 mb-6 text-center">
+                  500 <span className="text-lg text-gray-500">RON</span>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center text-gray-600">
+                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-green-600 text-xs">✓</span>
+                    </span>
+                    Cântec compus pentru afacerea ta
+                  </li>
+                  <li className="flex items-center text-gray-600">
+                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-green-600 text-xs">✓</span>
+                    </span>
+                    Producție premium
+                  </li>
+                  <li className="flex items-center text-gray-600">
+                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-green-600 text-xs">✓</span>
+                    </span>
+                    Licență comercială limitată
                   </li>
                 </ul>
                 <Button className="w-full bg-gradient-purple hover:opacity-90">
