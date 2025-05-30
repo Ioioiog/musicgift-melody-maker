@@ -39,15 +39,15 @@ const Navigation = () => {
   return (
     <>
       {/* Floating Logo - positioned absolutely and centered */}
-        <div className="fixed top-4 sm:top-2 left-1/2 transform -translate-x-1/2 z-[100]">
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[100]">
         <Link to="/" className="block">
-            <img 
+          <img 
             src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
             alt="MusicGift Logo" 
-            className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto transition-transform duration-300 ease-in-out hover:scale-105"
-            />
-            </Link>
-        </div>
+            className="h-24 w-auto transition-transform duration-300 ease-in-out hover:scale-105"
+          />
+        </Link>
+      </div>
 
       {/* Navigation Bar */}
       <header className="fixed top-0 w-full bg-white z-50 border-b border-gray-100">
