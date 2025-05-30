@@ -31,17 +31,17 @@ const Navigation = () => {
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo positioned on the left and breaking out of bounds */}
-           {/* Floating Logo */}
+           {/* Floating Logo - Enhanced positioning */}
           <Link to="/" className="flex items-center relative z-60">
             <img 
               src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
               alt="MusicGift" 
-              className="h-40 w-auto transition-transform duration-300 ease-in-out hover:scale-105 absolute top-[-40px] left-0"
+              className="h-48 w-auto transition-transform duration-300 ease-in-out hover:scale-105 absolute top-[-60px] left-[-20px] drop-shadow-lg"
             />
           </Link>
 
           {/* Desktop Navigation - centered */}
-          <nav className="hidden lg:flex items-center justify-center flex-1">
+          <nav className="hidden lg:flex items-center justify-center flex-1 ml-40">
             <div className="flex items-center space-x-12">
               {navItems.map((item) => (
                 <Link
@@ -89,7 +89,7 @@ const Navigation = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden"
+            className="lg:hidden ml-auto"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <div className="w-6 h-6 flex flex-col justify-center items-center">
