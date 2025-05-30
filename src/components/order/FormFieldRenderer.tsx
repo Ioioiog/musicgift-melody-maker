@@ -126,6 +126,34 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const handleAddonChangeWithMutualExclusion = (addonId: string, checked: boolean) => {
+    // Handle mutual exclusion between commercialRights and distributieMangoRecords
+    if (checked) {
+      if (addonId === 'commercialRights' && selectedAddons.includes('distributieMangoRecords')) {
+        // Remove distributieMangoRecords if commercialRights is selected
+        handleAddonChange('distributieMangoRecords', false);
+      } else if (addonId === 'distributieMangoRecords' && selectedAddons.includes('commercialRights')) {
+        // Remove commercialRights if distributieMangoRecords is selected
+        handleAddonChange('commercialRights', false);
+      }
+    }
+    
+    // Apply the original change
+    handleAddonChange(addonId, checked);
+  };
+
+  const isAddonDisabled = (addonId: string) => {
+    // Disable commercialRights if distributieMangoRecords is selected
+    if (addonId === 'commercialRights' && selectedAddons.includes('distributieMangoRecords')) {
+      return true;
+    }
+    // Disable distributieMangoRecords if commercialRights is selected
+    if (addonId === 'distributieMangoRecords' && selectedAddons.includes('commercialRights')) {
+      return true;
+    }
+    return false;
+  };
+
   const renderField = () => {
     switch (field.type) {
       case 'select':
@@ -314,18 +342,32 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
           <div className="space-y-4">
             {field.options?.map((addonId: string) => {
               const addon = addons[addonId as keyof typeof addons];
+              const isDisabled = isAddonDisabled(addonId);
+              
               return addon ? (
                 <div key={addonId}>
-                  <div className="flex items-center space-x-3 p-4 border-2 border-gray-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-all duration-200">
+                  <div className={`flex items-center space-x-3 p-4 border-2 rounded-lg transition-all duration-200 ${
+                    isDisabled 
+                      ? 'border-gray-300 bg-gray-50 opacity-60' 
+                      : 'border-gray-200 hover:bg-purple-50 hover:border-purple-300'
+                  }`}>
                     <Checkbox
                       id={addonId}
                       checked={selectedAddons.includes(addonId)}
-                      onCheckedChange={(checked) => handleAddonChange(addonId, checked as boolean)}
+                      onCheckedChange={(checked) => handleAddonChangeWithMutualExclusion(addonId, checked as boolean)}
+                      disabled={isDisabled}
                       className="border-2"
                     />
-                    <Label htmlFor={addonId} className="flex-1 cursor-pointer">
+                    <Label htmlFor={addonId} className={`flex-1 ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                       <span className="font-medium">{addon.label}</span>
                       <span className="text-purple-600 ml-2 font-semibold">+{addon.price} RON</span>
+                      {isDisabled && (
+                        <span className="block text-xs text-gray-500 mt-1">
+                          {addonId === 'commercialRights' 
+                            ? 'Nu poate fi selectat cu Distribuție Mango Records' 
+                            : 'Nu poate fi selectat cu Drepturi comerciale'}
+                        </span>
+                      )}
                     </Label>
                   </div>
                   
