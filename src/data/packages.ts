@@ -38,16 +38,16 @@ export const packages = [
   { 
     value: 'premium', 
     labelKey: 'premiumPackage',
-    price: 1000,
+    price: 500,
+    taglineKey: 'premiumPackageTagline',
+    descriptionKey: 'premiumPackageDescription',
     details: {
-      priceKey: '1000 RON',
-      deliveryTimeKey: 'deliveryTime7to10',
+      priceKey: '500 RON',
+      deliveryTimeKey: 'deliveryTime5to7',
       includesKeys: [
-        'premiumAdvancedProduction',
-        'automaticDigitalDistribution',
-        'lyricVideoIncluded',
-        'professionalMixMaster',
-        'socialMediaPromotion'
+        'originalSongWithCompleteProduction',
+        'animatedVideoDOMG',
+        'officialDigitalDistributionMangoRecords'
       ]
     }
   },
