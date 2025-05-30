@@ -232,7 +232,8 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                                   Record Audio Message
                                 </Label>
                                 <AudioRecorder
-                                  onRecordingComplete={(audioBlob) => handleAudioRecording(audioBlob, addon.addon_key)}
+                                  value={addonFieldValues[addon.addon_key] || null}
+                                  onChange={(audioFile) => onAddonFieldChange(addon.addon_key, audioFile)}
                                   maxDuration={addon.trigger_field_config?.maxDuration || 30}
                                 />
                               </div>
