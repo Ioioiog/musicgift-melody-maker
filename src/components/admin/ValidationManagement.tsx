@@ -12,14 +12,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Edit, Trash2 } from 'lucide-react';
+import type { Tables, Enums } from '@/integrations/supabase/types';
 
-interface FieldValidation {
-  id: string;
-  field_id: string;
-  validation_type: string;
-  validation_value?: string;
-  error_message_key?: string;
-  is_active: boolean;
+type FieldValidation = Tables<'field_validation'> & {
   field?: {
     field_name: string;
     step?: {
@@ -27,9 +22,16 @@ interface FieldValidation {
       step_number: number;
     };
   };
-}
+};
 
-const validationTypes = [
+type FieldData = Tables<'step_fields'> & {
+  step?: {
+    title_key: string;
+    step_number: number;
+  };
+};
+
+const validationTypes: Enums<'validation_rule_type'>[] = [
   'required', 'min_length', 'max_length', 'pattern', 'custom'
 ];
 
@@ -53,7 +55,7 @@ const ValidationManagement = () => {
         `)
         .order('field_name');
       if (error) throw error;
-      return data;
+      return data as FieldData[];
     }
   });
 
@@ -81,7 +83,7 @@ const ValidationManagement = () => {
 
   // Create validation mutation
   const createValidationMutation = useMutation({
-    mutationFn: async (validationData: Omit<FieldValidation, 'id' | 'field'>) => {
+    mutationFn: async (validationData: Tables<'field_validation'>['Insert']) => {
       const { data, error } = await supabase
         .from('field_validation')
         .insert(validationData)
@@ -103,7 +105,7 @@ const ValidationManagement = () => {
 
   // Update validation mutation
   const updateValidationMutation = useMutation({
-    mutationFn: async ({ id, ...validationData }: Partial<FieldValidation>) => {
+    mutationFn: async ({ id, ...validationData }: { id: string } & Tables<'field_validation'>['Update']) => {
       const { data, error } = await supabase
         .from('field_validation')
         .update(validationData)
@@ -146,9 +148,9 @@ const ValidationManagement = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
-    const validationData = {
+    const validationData: Tables<'field_validation'>['Insert'] = {
       field_id: selectedField,
-      validation_type: formData.get('validation_type') as string,
+      validation_type: formData.get('validation_type') as Enums<'validation_rule_type'>,
       validation_value: formData.get('validation_value') as string || null,
       error_message_key: formData.get('error_message_key') as string || null,
       is_active: formData.get('is_active') === 'on'

@@ -13,23 +13,23 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Edit, Trash2 } from 'lucide-react';
+import type { Tables, Enums } from '@/integrations/supabase/types';
 
-interface StepField {
-  id: string;
-  step_id: string;
-  field_name: string;
-  field_type: string;
-  placeholder_key?: string;
-  required: boolean;
-  field_order: number;
-  options?: any;
+type StepField = Tables<'step_fields'> & {
   step?: {
     title_key: string;
     step_number: number;
   };
-}
+};
 
-const fieldTypes = [
+type StepData = Tables<'steps'> & {
+  package_info?: {
+    label_key: string;
+    value: string;
+  };
+};
+
+const fieldTypes: Enums<'field_type'>[] = [
   'text', 'email', 'tel', 'textarea', 'select', 
   'checkbox', 'checkbox-group', 'date', 'url', 'file'
 ];
@@ -57,7 +57,7 @@ const FieldsManagement = () => {
         .eq('is_active', true)
         .order('step_number');
       if (error) throw error;
-      return data;
+      return data as StepData[];
     }
   });
 
@@ -82,7 +82,7 @@ const FieldsManagement = () => {
 
   // Create field mutation
   const createFieldMutation = useMutation({
-    mutationFn: async (fieldData: Omit<StepField, 'id' | 'step'>) => {
+    mutationFn: async (fieldData: Tables<'step_fields'>['Insert']) => {
       const { data, error } = await supabase
         .from('step_fields')
         .insert(fieldData)
@@ -105,7 +105,7 @@ const FieldsManagement = () => {
 
   // Update field mutation
   const updateFieldMutation = useMutation({
-    mutationFn: async ({ id, ...fieldData }: Partial<StepField>) => {
+    mutationFn: async ({ id, ...fieldData }: { id: string } & Tables<'step_fields'>['Update']) => {
       const { data, error } = await supabase
         .from('step_fields')
         .update(fieldData)
@@ -159,10 +159,10 @@ const FieldsManagement = () => {
       }
     }
 
-    const fieldData = {
+    const fieldData: Tables<'step_fields'>['Insert'] = {
       step_id: selectedStep,
       field_name: formData.get('field_name') as string,
-      field_type: formData.get('field_type') as string,
+      field_type: formData.get('field_type') as Enums<'field_type'>,
       placeholder_key: formData.get('placeholder_key') as string || null,
       required: formData.get('required') === 'on',
       field_order: parseInt(formData.get('field_order') as string),
