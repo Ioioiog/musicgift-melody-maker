@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,8 @@ const Packages = () => {
         'audioMessageFromSender',
         'extendedSong'
       ],
-      popular: false
+      popular: false,
+      isGiftCard: false
     },
     business: {
       name: 'Pachet Business',
@@ -52,7 +52,8 @@ const Packages = () => {
         'commercialRightsUpgrade',
         'extendedSong'
       ],
-      popular: false
+      popular: false,
+      isGiftCard: false
     },
     premium: {
       name: 'Pachet Premium',
@@ -74,7 +75,8 @@ const Packages = () => {
         'audioMessageFromSender',
         'extendedSong'
       ],
-      popular: true
+      popular: true,
+      isGiftCard: false
     },
     artist: {
       name: 'Pachet Artist',
@@ -91,7 +93,8 @@ const Packages = () => {
         'Distribuție completă prin Mango Records pe toate platformele majore'
       ],
       availableAddons: [],
-      popular: false
+      popular: false,
+      isGiftCard: false
     },
     instrumental: {
       name: 'Pachet Instrumental',
@@ -112,7 +115,8 @@ const Packages = () => {
         'customVideo',
         'distributieMangoRecords'
       ],
-      popular: false
+      popular: false,
+      isGiftCard: false
     },
     remix: {
       name: 'Pachet Remix',
@@ -135,7 +139,8 @@ const Packages = () => {
         'customVideo',
         'distributieMangoRecords'
       ],
-      popular: false
+      popular: false,
+      isGiftCard: false
     },
     gift: {
       name: 'Pachet Cadou',
