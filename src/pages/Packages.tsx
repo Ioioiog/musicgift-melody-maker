@@ -4,6 +4,51 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 const Packages = () => {
+  const addons = {
+    rushDelivery: { 
+      price: 100, 
+      label: 'Livrare rapidă (24–48h)',
+      description: 'Procesare prioritară pentru livrare mai rapidă.',
+      availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
+    },
+    commercialRights: { 
+      price: 100, 
+      label: 'Drepturi comerciale (YouTube, Spotify etc.)',
+      description: 'Drept de a folosi melodia pe Youtube, Tik-Tok, Spotify.',
+      availableFor: ['personal']
+    },
+    distributieMangoRecords: {
+      price: 200, 
+      label: 'Distribuție exclusivă pe Mango Records',
+      description: 'Distribuție prin canalul nostru cu vizibilitate maximă.',
+      availableFor: ['personal', 'remix', 'instrumental']
+    },				 
+    customVideo: { 
+      price: 149, 
+      label: 'Videoclip personalizat (cu pozele tale)',
+      description: 'Videoclip realizat cu materialele vizuale oferite de tine (foto/video).',
+      availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
+    },
+    audioMessageFromSender: { 
+      price: 100, 
+      label: 'Mesaj audio de la expeditor',
+      description: 'Include un mesaj audio personalizat de la tine.',
+      availableFor: ['personal', 'business', 'premium']
+    },
+    commercialRightsUpgrade: {
+      price: 400,
+      label: 'Upgrade drepturi comerciale',
+      description: 'Transfer complet de drepturi comerciale – permite utilizarea nelimitată inclusiv online, TV sau pentru vânzare.',
+      availableFor: ['business']
+    },
+    extendedSong: {
+      price: 49,
+      label: 'Melodie extinsă (3 strofe)',
+      description: 'Melodie mai lungă – 3 strofe în loc de 2. Ideal pentru povești mai detaliate.',
+      availableFor: ['personal', 'premium', 'business']
+    }
+  };
+
   const packages = {
     personal: {
       name: 'Pachet Personal',
@@ -157,8 +202,7 @@ const Packages = () => {
         'Destinatarul alege pachetul preferat'
       ],
       isGiftCard: true,
-      availableAddons: [],
-      popular: false
+      availableAddons: []
     }
   };
 
