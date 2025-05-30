@@ -36,75 +36,108 @@ serve(async (req) => {
 
     // Get NETOPIA credentials from environment
     const netopiaMerchantId = Deno.env.get('NETOPIA_MERCHANT_ID')
-    const netopiaApiKey = Deno.env.get('NETOPIA_API_KEY')
     const netopiaSignature = Deno.env.get('NETOPIA_SIGNATURE')
     const netopiaTestMode = Deno.env.get('NETOPIA_TEST_MODE') === 'true'
+    const siteUrl = Deno.env.get('SITE_URL') || 'http://localhost:5173'
 
-    if (!netopiaMerchantId || !netopiaApiKey || !netopiaSignature) {
-      throw new Error('NETOPIA credentials not configured')
+    console.log('NETOPIA credentials check:', {
+      hasMerchantId: !!netopiaMerchantId,
+      hasSignature: !!netopiaSignature,
+      testMode: netopiaTestMode,
+      siteUrl
+    })
+
+    if (!netopiaMerchantId || !netopiaSignature) {
+      throw new Error('NETOPIA credentials not configured - missing NETOPIA_MERCHANT_ID or NETOPIA_SIGNATURE')
     }
 
-    // Generate unique NETOPIA order ID
+    // Generate unique order ID for NETOPIA
     const netopiaOrderId = `ORDER_${orderId}_${Date.now()}`
+    const timestamp = Date.now()
 
-    // NETOPIA payment data
+    // Split customer name into first and last name
+    const nameParts = customerName.split(' ')
+    const firstName = nameParts[0] || customerName
+    const lastName = nameParts.slice(1).join(' ') || 'Customer'
+
+    // NETOPIA payment data structure according to documentation
     const paymentData = {
       order: {
-        ntpID: netopiaOrderId,
-        posSignature: netopiaSignature,
-        dateTime: new Date().toISOString(),
-        description: description,
-        orderID: orderId,
-        amount: amount,
-        currency: currency,
-        billing: {
-          email: customerEmail,
-          firstName: customerName.split(' ')[0] || customerName,
-          lastName: customerName.split(' ').slice(1).join(' ') || '',
+        $: {
+          id: netopiaOrderId,
+          timestamp: timestamp,
+          type: "card",
         },
-        shipping: {
-          email: customerEmail,
-          firstName: customerName.split(' ')[0] || customerName,
-          lastName: customerName.split(' ').slice(1).join(' ') || '',
-        }
+        signature: netopiaSignature,
+        url: {
+          return: `${siteUrl}/payment/success?orderId=${orderId}`,
+          confirm: `${Deno.env.get('SUPABASE_URL')}/functions/v1/netopia-webhook`,
+        },
+        invoice: {
+          $: {
+            currency: currency,
+            amount: amount,
+          },
+          details: description,
+          contact_info: {
+            billing: {
+              $: {
+                type: "person",
+              },
+              first_name: firstName,
+              last_name: lastName,
+              address: "Address",
+              email: customerEmail,
+              mobile_phone: "0000000000",
+            },
+            shipping: {
+              $: {
+                type: "person",
+              },
+              first_name: firstName,
+              last_name: lastName,
+              address: "Address", 
+              email: customerEmail,
+              mobile_phone: "0000000000",
+            },
+          },
+        },
+        ipn_cipher: "aes-256-cbc",
       },
-      config: {
-        emailTemplate: netopiaTestMode ? 'default' : 'custom',
-        emailSubject: 'Payment Confirmation',
-        landing: 'none',
-        notifyUrl: `${Deno.env.get('SUPABASE_URL')}/functions/v1/netopia-webhook`,
-        redirectUrl: `${Deno.env.get('SITE_URL') || 'http://localhost:5173'}/payment/success`,
-        language: 'ro'
-      }
     }
 
-    // Create payment session with NETOPIA
+    console.log('Payment data to send to NETOPIA:', JSON.stringify(paymentData, null, 2))
+
+    // Use correct NETOPIA API endpoint
     const netopiaUrl = netopiaTestMode 
-      ? 'https://secure.sandbox.netopia-payments.com/payment/card'
-      : 'https://secure.netopia-payments.com/payment/card'
+      ? 'https://sandboxsecure.mobilpay.ro'
+      : 'https://secure.mobilpay.ro'
+
+    console.log('Making request to NETOPIA URL:', netopiaUrl)
 
     const netopiaResponse = await fetch(netopiaUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${netopiaApiKey}`,
       },
       body: JSON.stringify(paymentData)
     })
 
+    console.log('NETOPIA response status:', netopiaResponse.status)
+    console.log('NETOPIA response headers:', Object.fromEntries(netopiaResponse.headers.entries()))
+
     if (!netopiaResponse.ok) {
       const errorText = await netopiaResponse.text()
-      console.error('NETOPIA API Error:', errorText)
-      throw new Error(`NETOPIA API failed: ${netopiaResponse.status}`)
+      console.error('NETOPIA API Error Response:', errorText)
+      throw new Error(`NETOPIA API failed with status ${netopiaResponse.status}: ${errorText}`)
     }
 
-    const netopiaResult = await netopiaResponse.json()
-    const paymentUrl = netopiaResult.paymentURL || netopiaResult.payment_url
+    const netopiaResult = await netopiaResponse.text() // NETOPIA might return HTML or text instead of JSON
+    console.log('NETOPIA result:', netopiaResult)
 
-    if (!paymentUrl) {
-      console.error('No payment URL in NETOPIA response:', netopiaResult)
-      throw new Error('No payment URL received from NETOPIA')
-    }
+    // For now, we'll construct a payment URL since NETOPIA documentation doesn't specify the exact response format
+    // This might need adjustment based on actual NETOPIA response
+    const paymentUrl = `${netopiaUrl}?data=${encodeURIComponent(JSON.stringify(paymentData))}`
 
     // Update order with payment information
     const { error: updateError } = await supabaseClient
@@ -113,7 +146,7 @@ serve(async (req) => {
         payment_status: 'pending',
         payment_url: paymentUrl,
         netopia_order_id: netopiaOrderId,
-        payment_id: netopiaResult.paymentId || netopiaResult.payment_id
+        payment_id: netopiaOrderId
       })
       .eq('id', orderId)
 
@@ -121,6 +154,8 @@ serve(async (req) => {
       console.error('Error updating order:', updateError)
       throw updateError
     }
+
+    console.log('Order updated successfully, returning payment URL')
 
     return new Response(
       JSON.stringify({ 
