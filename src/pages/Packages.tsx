@@ -2,6 +2,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 const Packages = () => {
   const addons = {
@@ -291,18 +292,20 @@ const Packages = () => {
                     ))}
                   </ul>
 
-                  <Button 
-                    className={`w-full ${
-                      pkg.popular 
-                        ? 'bg-gradient-purple hover:opacity-90 text-white' 
-                        : pkg.isGiftCard
-                        ? 'bg-gradient-to-r from-yellow-400 to-orange-500 hover:opacity-90 text-white'
-                        : 'bg-gradient-purple hover:opacity-90'
-                    }`}
-                    size="lg"
-                  >
-                    {pkg.isGiftCard ? 'Get Gift Card' : 'Order Now'}
-                  </Button>
+                  <Link to="/order">
+                    <Button 
+                      className={`w-full ${
+                        pkg.popular 
+                          ? 'bg-gradient-purple hover:opacity-90 text-white' 
+                          : pkg.isGiftCard
+                          ? 'bg-gradient-to-r from-yellow-400 to-orange-500 hover:opacity-90 text-white'
+                          : 'bg-gradient-purple hover:opacity-90'
+                      }`}
+                      size="lg"
+                    >
+                      {pkg.isGiftCard ? 'Get Gift Card' : 'Order Now'}
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
