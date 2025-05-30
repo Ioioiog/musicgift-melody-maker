@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,13 +11,15 @@ import OrderSummary from './order/OrderSummary';
 import { getStepsForPackage } from '@/utils/stepConfig';
 import { packages } from '@/data/packages';
 import { useLanguage } from '@/contexts/LanguageContext';
-
 interface OrderWizardProps {
   onComplete: (data: any) => void;
 }
-
-const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
-  const { t } = useLanguage();
+const OrderWizard: React.FC<OrderWizardProps> = ({
+  onComplete
+}) => {
+  const {
+    t
+  } = useLanguage();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPackage, setSelectedPackage] = useState('');
   const [formData, setFormData] = useState<any>({
@@ -53,11 +54,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   });
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
-  
+  const {
+    toast
+  } = useToast();
   const allSteps = getStepsForPackage(selectedPackage);
   const maxSteps = Math.max(5, allSteps.length);
-  
   const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({
       ...prev,
@@ -67,7 +68,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       setSelectedPackage(value);
     }
   };
-  
   const handleAddonChange = (addonId: string, checked: boolean) => {
     if (checked) {
       setSelectedAddons(prev => [...prev, addonId]);
@@ -75,7 +75,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       setSelectedAddons(prev => prev.filter(id => id !== addonId));
     }
   };
-  
   const canProceed = () => {
     const currentStepData = allSteps.find(step => step.step === currentStep);
     if (!currentStepData) return false;
@@ -86,7 +85,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       return fieldValue && fieldValue !== '';
     });
   };
-  
   const handleNext = () => {
     if (canProceed() && currentStep < maxSteps) {
       setCurrentStep(currentStep + 1);
@@ -102,7 +100,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       });
     }
   };
-  
   const handlePrevious = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
@@ -112,7 +109,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       });
     }
   };
-  
   const handleSubmit = async () => {
     if (!canProceed()) {
       toast({
@@ -147,19 +143,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       setIsSubmitting(false);
     }
   };
-  
   const currentStepData = allSteps.find(step => step.step === currentStep);
   const completionPercentage = currentStep / maxSteps * 100;
   const selectedPackageDetails = packages.find(pkg => pkg.value === selectedPackage);
-
   return <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
-      <div className="max-w-7xl py-[5px] my-0 mx-0 px-[21px]">
+      <div className="max-w-7xl mx-0 my-[6px] py-0 px-[4px]">
         {/* Enhanced Header */}
         <div className="mb-12">
-          <button className="flex items-center text-purple-600 hover:text-purple-700 mb-6 transition-colors group">
-            <ArrowLeft className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
-            {t('backToHome')}
-          </button>
+          
           
         </div>
 
@@ -171,8 +162,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
             {/* Enhanced Form Content */}
             <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
               <CardContent className="p-8 lg:p-10">
-                {currentStepData && (
-                  <>
+                {currentStepData && <>
                     <div className="mb-8">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-3">
@@ -191,25 +181,21 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                         <div className="hidden lg:flex items-center space-x-2 text-sm text-gray-500">
                           <span>{t('progress')}:</span>
                           <div className="w-24 bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-500" 
-                              style={{ width: `${completionPercentage}%` }} 
-                            />
+                            <div className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-500" style={{
+                          width: `${completionPercentage}%`
+                        }} />
                           </div>
                           <span>{Math.round(completionPercentage)}%</span>
                         </div>
                       </div>
                       
-                      {currentStep === 3 && (
-                        <p className="text-lg text-gray-600 leading-relaxed">
+                      {currentStep === 3 && <p className="text-lg text-gray-600 leading-relaxed">
                           {t('helpUnderstand')}
-                        </p>
-                      )}
+                        </p>}
                     </div>
 
                     {/* Package Details Section - Show when package is selected */}
-                    {selectedPackageDetails && currentStep === 1 && (
-                      <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
+                    {selectedPackageDetails && currentStep === 1 && <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
                         <div className="flex items-start space-x-4">
                           <div className="text-4xl">{selectedPackageDetails.value === 'personal' ? '🎁' : selectedPackageDetails.value === 'business' ? '💼' : selectedPackageDetails.value === 'premium' ? '🌟' : selectedPackageDetails.value === 'artist' ? '🎤' : selectedPackageDetails.value === 'instrumental' ? '🎶' : selectedPackageDetails.value === 'remix' ? '🔁' : '🎁'}</div>
                           <div className="flex-1">
@@ -230,12 +216,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                                 {t('whatsIncluded')}
                               </h4>
                               <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                {selectedPackageDetails.details.includesKeys.map((includeKey, index) => (
-                                  <li key={index} className="flex items-start space-x-2 text-sm text-gray-700">
+                                {selectedPackageDetails.details.includesKeys.map((includeKey, index) => <li key={index} className="flex items-start space-x-2 text-sm text-gray-700">
                                     <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
                                     <span>{t(includeKey)}</span>
-                                  </li>
-                                ))}
+                                  </li>)}
                               </ul>
                             </div>
 
@@ -245,77 +229,41 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                             </div>
                           </div>
                         </div>
-                      </div>
-                    )}
+                      </div>}
 
                     <div className="space-y-8">
-                      {currentStepData.fields.map((field, index) => (
-                        <div key={index} className="transform transition-all duration-200 hover:scale-[1.02]">
-                          <FormFieldRenderer 
-                            field={field} 
-                            formData={formData} 
-                            selectedAddons={selectedAddons} 
-                            updateFormData={updateFormData} 
-                            handleAddonChange={handleAddonChange} 
-                          />
-                        </div>
-                      ))}
+                      {currentStepData.fields.map((field, index) => <div key={index} className="transform transition-all duration-200 hover:scale-[1.02]">
+                          <FormFieldRenderer field={field} formData={formData} selectedAddons={selectedAddons} updateFormData={updateFormData} handleAddonChange={handleAddonChange} />
+                        </div>)}
                     </div>
 
                     {/* Enhanced Navigation Buttons */}
                     <div className="flex justify-between items-center pt-10 border-t mt-10">
-                      <Button 
-                        variant="outline" 
-                        onClick={handlePrevious} 
-                        disabled={currentStep === 1}
-                        className="px-8 py-3 font-semibold border-2 hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
-                      >
+                      <Button variant="outline" onClick={handlePrevious} disabled={currentStep === 1} className="px-8 py-3 font-semibold border-2 hover:bg-gray-50 disabled:opacity-50 transition-all duration-200">
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         {t('previous')}
                       </Button>
 
                       <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500">
-                        {Array.from({ length: maxSteps }, (_, i) => (
-                          <div 
-                            key={i} 
-                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                              i + 1 <= currentStep ? 'bg-purple-500' : 'bg-gray-300'
-                            }`} 
-                          />
-                        ))}
+                        {Array.from({
+                      length: maxSteps
+                    }, (_, i) => <div key={i} className={`w-2 h-2 rounded-full transition-all duration-300 ${i + 1 <= currentStep ? 'bg-purple-500' : 'bg-gray-300'}`} />)}
                       </div>
 
-                      {currentStep === maxSteps ? (
-                        <Button 
-                          onClick={handleSubmit} 
-                          disabled={!canProceed() || isSubmitting}
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
-                        >
-                          {isSubmitting ? (
-                            <>
+                      {currentStep === maxSteps ? <Button onClick={handleSubmit} disabled={!canProceed() || isSubmitting} className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50">
+                          {isSubmitting ? <>
                               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                               {t('submitting')}
-                            </>
-                          ) : (
-                            <>
+                            </> : <>
                               <CheckCircle className="w-4 h-4 mr-2" />
                               {t('completeOrder')}
-                            </>
-                          )}
-                        </Button>
-                      ) : (
-                        <Button 
-                          onClick={handleNext} 
-                          disabled={!canProceed()}
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
-                        >
+                            </>}
+                        </Button> : <Button onClick={handleNext} disabled={!canProceed()} className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50">
                           {t('continue')}
                           <ChevronRight className="w-4 h-4 ml-2" />
-                        </Button>
-                      )}
+                        </Button>}
                     </div>
-                  </>
-                )}
+                  </>}
               </CardContent>
             </Card>
           </div>
@@ -332,5 +280,4 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       </div>
     </div>;
 };
-
 export default OrderWizard;
