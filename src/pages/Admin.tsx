@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -13,9 +12,10 @@ import DependenciesManagement from '@/components/admin/DependenciesManagement';
 import ValidationManagement from '@/components/admin/ValidationManagement';
 import UserManagement from '@/components/admin/UserManagement';
 import AIPackageGenerator from '@/components/admin/AIPackageGenerator';
+import PackageCreationWizard from '@/components/admin/PackageCreationWizard';
 
 const Admin = () => {
-  const [activeTab, setActiveTab] = useState('packages');
+  const [activeTab, setActiveTab] = useState('ai-generator');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -28,30 +28,18 @@ const Admin = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-8">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="ai-generator" className="flex items-center space-x-2">
               <Wand2 className="w-4 h-4" />
               <span>AI Generator</span>
             </TabsTrigger>
-            <TabsTrigger value="packages" className="flex items-center space-x-2">
+            <TabsTrigger value="package-wizard" className="flex items-center space-x-2">
               <Package className="w-4 h-4" />
-              <span>Packages</span>
+              <span>Package Wizard</span>
             </TabsTrigger>
-            <TabsTrigger value="steps" className="flex items-center space-x-2">
+            <TabsTrigger value="manage-packages" className="flex items-center space-x-2">
               <Settings className="w-4 h-4" />
-              <span>Steps</span>
-            </TabsTrigger>
-            <TabsTrigger value="fields" className="flex items-center space-x-2">
-              <FileText className="w-4 h-4" />
-              <span>Fields</span>
-            </TabsTrigger>
-            <TabsTrigger value="dependencies" className="flex items-center space-x-2">
-              <GitBranch className="w-4 h-4" />
-              <span>Dependencies</span>
-            </TabsTrigger>
-            <TabsTrigger value="validation" className="flex items-center space-x-2">
-              <CheckSquare className="w-4 h-4" />
-              <span>Validation</span>
+              <span>Manage Packages</span>
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center space-x-2">
               <Users className="w-4 h-4" />
@@ -67,24 +55,55 @@ const Admin = () => {
             <AIPackageGenerator />
           </TabsContent>
 
-          <TabsContent value="packages">
-            <PackageManagement />
+          <TabsContent value="package-wizard">
+            <PackageCreationWizard />
           </TabsContent>
 
-          <TabsContent value="steps">
-            <StepsManagement />
-          </TabsContent>
+          <TabsContent value="manage-packages">
+            <Tabs defaultValue="packages" className="space-y-4">
+              <TabsList className="grid w-full grid-cols-5">
+                <TabsTrigger value="packages" className="flex items-center space-x-2">
+                  <Package className="w-4 h-4" />
+                  <span>Packages</span>
+                </TabsTrigger>
+                <TabsTrigger value="steps" className="flex items-center space-x-2">
+                  <Settings className="w-4 h-4" />
+                  <span>Steps</span>
+                </TabsTrigger>
+                <TabsTrigger value="fields" className="flex items-center space-x-2">
+                  <FileText className="w-4 h-4" />
+                  <span>Fields</span>
+                </TabsTrigger>
+                <TabsTrigger value="dependencies" className="flex items-center space-x-2">
+                  <GitBranch className="w-4 h-4" />
+                  <span>Dependencies</span>
+                </TabsTrigger>
+                <TabsTrigger value="validation" className="flex items-center space-x-2">
+                  <CheckSquare className="w-4 h-4" />
+                  <span>Validation</span>
+                </TabsTrigger>
+              </TabsList>
 
-          <TabsContent value="fields">
-            <FieldsManagement />
-          </TabsContent>
+              <TabsContent value="packages">
+                <PackageManagement />
+              </TabsContent>
 
-          <TabsContent value="dependencies">
-            <DependenciesManagement />
-          </TabsContent>
+              <TabsContent value="steps">
+                <StepsManagement />
+              </TabsContent>
 
-          <TabsContent value="validation">
-            <ValidationManagement />
+              <TabsContent value="fields">
+                <FieldsManagement />
+              </TabsContent>
+
+              <TabsContent value="dependencies">
+                <DependenciesManagement />
+              </TabsContent>
+
+              <TabsContent value="validation">
+                <ValidationManagement />
+              </TabsContent>
+            </Tabs>
           </TabsContent>
 
           <TabsContent value="users">
