@@ -112,7 +112,7 @@ export const migratePackageData = async () => {
             fields: [
               { field_name: 'musicStyle', field_type: 'select' as const, placeholder_key: 'musicStyle', required: true },
               { field_name: 'referenceSong', field_type: 'url' as const, placeholder_key: 'referenceSong', required: false },
-              { field_name: 'addons', field_type: 'checkbox-group' as const, options: ['rushDelivery', 'commercialRights', 'distributionMangoRecords', 'customVideo', 'audioMessageFromSender', 'extendedSong'] }
+              { field_name: 'addons', field_type: 'checkbox-group' as const, placeholder_key: 'addons', required: false, options: ['rushDelivery', 'commercialRights', 'distributionMangoRecords', 'customVideo', 'audioMessageFromSender', 'extendedSong'] }
             ]
           },
           {
@@ -167,7 +167,7 @@ export const migratePackageData = async () => {
             fields: [
               { field_name: 'musicStyle', field_type: 'select' as const, placeholder_key: 'musicStyle', required: true },
               { field_name: 'referenceSong', field_type: 'url' as const, placeholder_key: 'referenceSong', required: false },
-              { field_name: 'addons', field_type: 'checkbox-group' as const, options: ['rushDelivery', 'customVideo', 'audioMessageFromSender', 'extendedSong'] }
+              { field_name: 'addons', field_type: 'checkbox-group' as const, placeholder_key: 'addons', required: false, options: ['rushDelivery', 'customVideo', 'audioMessageFromSender', 'extendedSong'] }
             ]
           },
           {
@@ -216,7 +216,7 @@ export const migratePackageData = async () => {
               placeholder_key: field.placeholder_key,
               required: field.required,
               field_order: index,
-              options: field.options ? JSON.stringify(field.options) : null
+              options: 'options' in field ? JSON.stringify(field.options) : null
             });
         }
       }
