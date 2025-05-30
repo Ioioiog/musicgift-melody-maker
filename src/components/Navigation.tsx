@@ -61,7 +61,7 @@ const Navigation = () => {
                   <Link 
                     key={item.path + item.label} 
                     to={item.path} 
-                    className={`text-sm font-medium transition-colors hover:text-purple-600 ${
+                    className={`text-lg font-bold uppercase transition-colors hover:text-purple-600 ${
                       location.pathname === item.path ? "text-purple-600" : "text-gray-700"
                     }`}
                   >
@@ -120,7 +120,7 @@ const Navigation = () => {
                   <Link 
                     key={item.path + item.label} 
                     to={item.path} 
-                    className={`text-sm font-medium transition-colors hover:text-purple-600 ${
+                    className={`text-lg font-bold uppercase transition-colors hover:text-purple-600 ${
                       location.pathname === item.path ? "text-purple-600" : "text-gray-600"
                     }`} 
                     onClick={() => setIsMenuOpen(false)}
