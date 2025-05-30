@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { ArrowLeft, Phone, Mail, Clock, Check } from 'lucide-react';
 
 interface OrderWizardProps {
   onComplete: (data: any) => void;
@@ -52,7 +52,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const packages = [
     { 
       value: 'personal', 
-      label: 'Pachet Personal - 300 RON',
+      label: 'Pachet Personal',
+      price: 300,
       details: {
         price: '300 RON',
         deliveryTime: '7-10 zile',
@@ -67,7 +68,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     },
     { 
       value: 'business', 
-      label: 'Pachet Business - 500 RON',
+      label: 'Pachet Business',
+      price: 500,
       details: {
         price: '500 RON',
         deliveryTime: '5-7 zile',
@@ -83,9 +85,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     },
     { 
       value: 'premium', 
-      label: 'Pachet Premium - 500 RON',
+      label: 'Premium Package',
+      price: 1000,
       details: {
-        price: '500 RON',
+        price: '1000 RON',
         deliveryTime: '7-10 zile',
         includes: [
           'Melodie premium cu producție avansată',
@@ -98,7 +101,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     },
     { 
       value: 'artist', 
-      label: 'Pachet Artist - 8000 RON',
+      label: 'Pachet Artist',
+      price: 8000,
       details: {
         price: '8000 RON',
         deliveryTime: '14-21 zile',
@@ -115,7 +119,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     },
     { 
       value: 'instrumental', 
-      label: 'Pachet Instrumental - 500 RON',
+      label: 'Pachet Instrumental',
+      price: 500,
       details: {
         price: '500 RON',
         deliveryTime: '5-7 zile',
@@ -130,7 +135,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     },
     { 
       value: 'remix', 
-      label: 'Pachet Remix - 500 RON',
+      label: 'Pachet Remix',
+      price: 500,
       details: {
         price: '500 RON',
         deliveryTime: '5-7 zile',
@@ -146,6 +152,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     { 
       value: 'gift', 
       label: 'Pachet Cadou',
+      price: 0,
       details: {
         price: 'Variabil',
         deliveryTime: 'Conform pachetului ales',
@@ -178,22 +185,30 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   };
 
   const getStepsForPackage = () => {
+    const stepTitles = {
+      1: "Package",
+      2: "Details", 
+      3: "Story",
+      4: "Preferences",
+      5: "Contact"
+    };
+
     const commonSteps = [
       {
         step: 1,
-        title: "Selectează pachetul",
+        title: stepTitles[1],
         fields: [
           { name: "package", type: "select", placeholder: "Alege un pachet", required: true }
         ]
       },
       {
         step: 2,
-        title: "Date despre client",
+        title: stepTitles[2],
         fields: [
           { name: "fullName", type: "text", placeholder: "Nume complet", required: true },
           { name: "email", type: "email", placeholder: "Email", required: true },
           { name: "phone", type: "tel", placeholder: "Telefon", required: true },
-          { name: "language", type: "select", placeholder: "Limba piesei (RO, EN, FR etc.)", required: true }
+          { name: "language", type: "select", placeholder: "Limba piesei", required: true }
         ]
       }
     ];
@@ -202,148 +217,25 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       personal: [
         {
           step: 3,
-          title: "Detalii despre destinatar",
+          title: stepTitles[3],
           fields: [
-            { name: "recipientName", type: "text", placeholder: "Numele destinatarului", required: true },
-            { name: "occasion", type: "text", placeholder: "Ocazia (ex: aniversare, nuntă)", required: true },
-            { name: "story", type: "textarea", placeholder: "Spune-ne povestea", required: true },
-            { name: "keywords", type: "text", placeholder: "Cuvinte cheie importante", required: false },
-            { name: "pronunciationAudio", type: "file", placeholder: "Încarcă pronunția (opțional)", required: false }
+            { name: "recipientName", type: "text", placeholder: "Recipient's Name", required: true },
+            { name: "occasion", type: "select", placeholder: "Occasion", required: true, options: ["Birthday", "Anniversary", "Wedding", "Valentine's Day", "Graduation", "Other"] },
+            { name: "story", type: "textarea", placeholder: "Tell us your story...", required: true }
           ]
         },
         {
           step: 4,
-          title: "Alege Add-ons",
+          title: stepTitles[4],
           fields: [
             { name: "addons", type: "checkbox-group", options: ["rushDelivery", "commercialRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"] }
           ]
         },
         {
           step: 5,
-          title: "Confirmări",
+          title: stepTitles[5],
           fields: [
             { name: "acceptMention", type: "checkbox", placeholder: "Accept să menționez MusicGift.ro by Mango Records dacă public melodia", required: true }
-          ]
-        }
-      ],
-      remix: [
-        {
-          step: 3,
-          title: "Date despre piesa originală",
-          fields: [
-            { name: "originalTitle", type: "text", placeholder: "Numele piesei originale", required: true },
-            { name: "originalWav", type: "file", placeholder: "Link sau fișier WAV", required: true },
-            { name: "style", type: "text", placeholder: "Stil dorit pentru remix (ex: deep house)", required: true },
-            { name: "label", type: "select", placeholder: "Alege eticheta: Mango Records / Mihai Gruia", required: true }
-          ]
-        },
-        {
-          step: 4,
-          title: "Alege Add-ons",
-          fields: [
-            { name: "addons", type: "checkbox-group", options: ["rushDelivery", "customVideo", "distributieMangoRecords"] }
-          ]
-        },
-        {
-          step: 5,
-          title: "Confirmări",
-          fields: [
-            { name: "acceptRights", type: "checkbox", placeholder: "Declar că dețin drepturile asupra piesei originale", required: true }
-          ]
-        }
-      ],
-      business: [
-        {
-          step: 3,
-          title: "Detalii despre brand",
-          fields: [
-            { name: "brandName", type: "text", placeholder: "Nume companie / brand", required: true },
-            { name: "campaignPurpose", type: "textarea", placeholder: "Scopul piesei (ex: branding, campanie promoțională)", required: true },
-            { name: "story", type: "textarea", placeholder: "Povestea brandului / valori", required: false },
-            { name: "keywords", type: "text", placeholder: "Cuvinte cheie importante", required: false },
-            { name: "pronunciationAudio", type: "file", placeholder: "Încarcă pronunția (dacă este relevant)", required: false }
-          ]
-        },
-        {
-          step: 4,
-          title: "Alege Add-ons",
-          fields: [
-            { name: "addons", type: "checkbox-group", options: ["rushDelivery", "customVideo", "audioMessageFromSender", "commercialRightsUpgrade", "extendedSong"] }
-          ]
-        },
-        {
-          step: 5,
-          title: "Confirmări",
-          fields: [
-            { name: "acceptContact", type: "checkbox", placeholder: "Accept să fiu contactat în 24–48h pentru validare", required: true }
-          ]
-        }
-      ],
-      artist: [
-        {
-          step: 3,
-          title: "Date despre cariera artistică",
-          fields: [
-            { name: "artistName", type: "text", placeholder: "Nume de scenă", required: true },
-            { name: "songStyle", type: "text", placeholder: "Gen muzical dorit", required: true },
-            { name: "artistBio", type: "textarea", placeholder: "Biografie / poveste artistică", required: false },
-            { name: "linksReleases", type: "text", placeholder: "Linkuri către melodii lansate", required: false },
-            { name: "linksMedia", type: "text", placeholder: "Linkuri apariții media / YouTube", required: false }
-          ]
-        },
-        {
-          step: 4,
-          title: "Confirmări lansare",
-          fields: [
-            { name: "acceptContact", type: "checkbox", placeholder: "Accept să fiu contactat în 24–48h", required: true },
-            { name: "acceptFlow", type: "checkbox", placeholder: "Am înțeles și accept procesul: 7 zile pentru piesa + instrumental → înregistrez vocea → în 5 zile primesc piesa finală → semnez acord 50/50 cu Mango Records", required: true }
-          ]
-        }
-      ],
-      premium: [
-        {
-          step: 3,
-          title: "Informații pentru piesă și lansare",
-          fields: [
-            { name: "message", type: "textarea", placeholder: "Mesajul principal / povestea care vrei să fie transmisă", required: true },
-            { name: "visualMaterial", type: "file", placeholder: "Încarcă poze/video pentru videoclip (opțional)", required: false }
-          ]
-        },
-        {
-          step: 4,
-          title: "Alege Add-ons",
-          fields: [
-            { name: "addons", type: "checkbox-group", options: ["rushDelivery", "customVideo", "audioMessageFromSender", "extendedSong"] }
-          ]
-        }
-      ],
-      gift: [
-        {
-          step: 3,
-          title: "Detalii pentru cadou",
-          fields: [
-            { name: "recipientName", type: "text", placeholder: "Prenume destinatar", required: true },
-            { name: "recipientEmail", type: "email", placeholder: "Email destinatar", required: true },
-            { name: "giftMessage", type: "textarea", placeholder: "Mesaj personalizat pentru cardul cadou", required: false }
-          ]
-        }
-      ],
-      instrumental: [
-        {
-          step: 3,
-          title: "Detalii despre instrumental",
-          fields: [
-            { name: "artistName", type: "text", placeholder: "Numele artistului", required: true },
-            { name: "desiredStyle", type: "text", placeholder: "Gen muzical dorit (ex: pop, trap, baladă)", required: true },
-            { name: "instrumentalReference", type: "text", placeholder: "Link către o piesă de referință (opțional)", required: false },
-            { name: "keywords", type: "text", placeholder: "Cuvinte cheie pentru mood/versuri (opțional)", required: false }
-          ]
-        },
-        {
-          step: 4,
-          title: "Alege Add-ons",
-          fields: [
-            { name: "addons", type: "checkbox-group", options: ["rushDelivery", "customVideo", "distributieMangoRecords"] }
           ]
         }
       ]
@@ -353,16 +245,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   };
 
   const allSteps = getStepsForPackage();
-  const maxSteps = allSteps.length;
-  const currentStepData = allSteps.find(step => step.step === currentStep);
+  const maxSteps = Math.max(5, allSteps.length);
 
   const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (field === 'package') {
       setSelectedPackage(value);
-      if (currentStep > 2) {
-        setCurrentStep(3);
-      }
     }
   };
 
@@ -378,13 +266,23 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     return packages.find(pkg => pkg.value === selectedPackage);
   };
 
+  const calculateTotal = () => {
+    const selectedPackageDetails = getSelectedPackageDetails();
+    const basePrice = selectedPackageDetails?.price || 0;
+    const addonsPrice = selectedAddons.reduce((total, addonId) => {
+      const addon = addons[addonId as keyof typeof addons];
+      return total + (addon?.price || 0);
+    }, 0);
+    return basePrice + addonsPrice;
+  };
+
   const renderField = (field: any) => {
     switch (field.type) {
       case 'select':
         if (field.name === 'package') {
           return (
             <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
-              <SelectTrigger>
+              <SelectTrigger className="h-12">
                 <SelectValue placeholder={field.placeholder} />
               </SelectTrigger>
               <SelectContent>
@@ -400,7 +298,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         if (field.name === 'language') {
           return (
             <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
-              <SelectTrigger>
+              <SelectTrigger className="h-12">
                 <SelectValue placeholder={field.placeholder} />
               </SelectTrigger>
               <SelectContent>
@@ -413,15 +311,18 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
             </Select>
           );
         }
-        if (field.name === 'label') {
+        if (field.name === 'occasion') {
           return (
             <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
-              <SelectTrigger>
+              <SelectTrigger className="h-12">
                 <SelectValue placeholder={field.placeholder} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="mango">Mango Records</SelectItem>
-                <SelectItem value="mihai">Mihai Gruia</SelectItem>
+                {field.options?.map((option: string) => (
+                  <SelectItem key={option} value={option.toLowerCase()}>
+                    {option}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           );
@@ -434,51 +335,44 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
             placeholder={field.placeholder}
             value={formData[field.name]}
             onChange={(e) => updateFormData(field.name, e.target.value)}
-            className="min-h-[100px]"
+            className="min-h-[120px] resize-none"
           />
-        );
-
-      case 'file':
-        return (
-          <Input
-            type="file"
-            onChange={(e) => updateFormData(field.name, e.target.files?.[0])}
-            accept={field.name === 'pronunciationAudio' ? 'audio/*' : field.name === 'visualMaterial' ? 'image/*,video/*' : '*/*'}
-          />
-        );
-
-      case 'checkbox':
-        return (
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id={field.name}
-              checked={formData[field.name]}
-              onCheckedChange={(checked) => updateFormData(field.name, checked)}
-            />
-            <Label htmlFor={field.name} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              {field.placeholder}
-            </Label>
-          </div>
         );
 
       case 'checkbox-group':
         return (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {field.options?.map((addonId: string) => {
               const addon = addons[addonId as keyof typeof addons];
               return addon ? (
-                <div key={addonId} className="flex items-center space-x-2">
+                <div key={addonId} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50">
                   <Checkbox
                     id={addonId}
                     checked={selectedAddons.includes(addonId)}
                     onCheckedChange={(checked) => handleAddonChange(addonId, checked as boolean)}
                   />
-                  <Label htmlFor={addonId} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    {addon.label} (+{addon.price} RON)
+                  <Label htmlFor={addonId} className="flex-1 cursor-pointer">
+                    <span className="font-medium">{addon.label}</span>
+                    <span className="text-gray-600 ml-2">+{addon.price} RON</span>
                   </Label>
                 </div>
               ) : null;
             })}
+          </div>
+        );
+
+      case 'checkbox':
+        return (
+          <div className="flex items-start space-x-3">
+            <Checkbox
+              id={field.name}
+              checked={formData[field.name]}
+              onCheckedChange={(checked) => updateFormData(field.name, checked)}
+              className="mt-1"
+            />
+            <Label htmlFor={field.name} className="text-sm leading-relaxed cursor-pointer">
+              {field.placeholder}
+            </Label>
           </div>
         );
 
@@ -489,23 +383,21 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
             placeholder={field.placeholder}
             value={formData[field.name]}
             onChange={(e) => updateFormData(field.name, e.target.value)}
+            className="h-12"
           />
         );
     }
   };
 
   const canProceed = () => {
+    const currentStepData = allSteps.find(step => step.step === currentStep);
     if (!currentStepData) return false;
-    
-    console.log('Checking if can proceed:', currentStepData.fields);
     
     return currentStepData.fields.every(field => {
       if (!field.required) return true;
       if (field.type === 'checkbox-group') return true;
       
       const fieldValue = formData[field.name];
-      console.log(`Field ${field.name}: value="${fieldValue}", required=${field.required}`);
-      
       return fieldValue && fieldValue !== '';
     });
   };
@@ -531,102 +423,189 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     onComplete(finalData);
   };
 
-  if (!currentStepData) {
-    return <div>Loading...</div>;
-  }
-
+  const currentStepData = allSteps.find(step => step.step === currentStep);
   const selectedPackageDetails = getSelectedPackageDetails();
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <div className="flex items-center justify-between mb-4">
-          <CardTitle className="text-2xl">
-            Pasul {currentStep} din {maxSteps}: {currentStepData.title}
-          </CardTitle>
-          <div className="text-sm text-gray-500">
-            {Math.round((currentStep / maxSteps) * 100)}%
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <button className="flex items-center text-purple-600 hover:text-purple-700 mb-4">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Home
+          </button>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Create Your Musical Gift</h1>
+          <p className="text-gray-600">Transform your emotions into a personalized song with our simple step-by-step process</p>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
-            className="bg-purple-600 h-2 rounded-full transition-all duration-300" 
-            style={{ width: `${(currentStep / maxSteps) * 100}%` }}
-          ></div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {currentStepData.fields.map((field, index) => (
-          <div key={index} className="space-y-2">
-            <Label className="text-sm font-medium">
-              {field.placeholder} {field.required && <span className="text-red-500">*</span>}
-            </Label>
-            {renderField(field)}
-          </div>
-        ))}
 
-        {/* Package Details Display */}
-        {selectedPackage && selectedPackageDetails && (
-          <div className="mt-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
-            <h3 className="text-lg font-semibold text-purple-800 mb-3">
-              Detalii {selectedPackageDetails.label}
-            </h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Preț:</p>
-                <p className="font-semibold text-purple-600">{selectedPackageDetails.details.price}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Timp de livrare:</p>
-                <p className="font-semibold text-purple-600">{selectedPackageDetails.details.deliveryTime}</p>
-              </div>
-            </div>
-            <div className="mt-4">
-              <p className="text-sm text-gray-600 mb-2">Pachetul include:</p>
-              <ul className="space-y-1">
-                {selectedPackageDetails.details.includes.map((item, index) => (
-                  <li key={index} className="flex items-start space-x-2 text-sm">
-                    <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                    <span>{item}</span>
-                  </li>
+        <div className="grid lg:grid-cols-4 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            {/* Progress Steps */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                {[1, 2, 3, 4, 5].map((step) => (
+                  <div key={step} className="flex items-center">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
+                      step < currentStep ? 'bg-green-500 text-white' :
+                      step === currentStep ? 'bg-purple-600 text-white' :
+                      'bg-gray-300 text-gray-600'
+                    }`}>
+                      {step < currentStep ? <Check className="w-5 h-5" /> : step}
+                    </div>
+                    {step < 5 && (
+                      <div className={`h-1 w-16 mx-2 ${
+                        step < currentStep ? 'bg-green-500' :
+                        step === currentStep ? 'bg-purple-200' :
+                        'bg-gray-300'
+                      }`} />
+                    )}
+                  </div>
                 ))}
-              </ul>
+              </div>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Package</span>
+                <span>Details</span>
+                <span>Story</span>
+                <span>Preferences</span>
+                <span>Contact</span>
+              </div>
             </div>
+
+            {/* Form Content */}
+            <Card className="border-0 shadow-lg">
+              <CardContent className="p-8">
+                {currentStepData && (
+                  <>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      {currentStep === 3 ? "Tell Us About the Recipient" : currentStepData.title}
+                    </h2>
+                    {currentStep === 3 && (
+                      <p className="text-gray-600 mb-8">Help us understand who this special song is for and what occasion we're celebrating.</p>
+                    )}
+
+                    <div className="space-y-6">
+                      {currentStepData.fields.map((field, index) => (
+                        <div key={index} className="space-y-2">
+                          <Label className="text-sm font-medium text-gray-700">
+                            {field.placeholder} {field.required && <span className="text-red-500">*</span>}
+                          </Label>
+                          {renderField(field)}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Navigation Buttons */}
+                    <div className="flex justify-between pt-8 border-t mt-8">
+                      <Button
+                        variant="outline"
+                        onClick={handlePrevious}
+                        disabled={currentStep === 1}
+                        className="px-8"
+                      >
+                        PREVIOUS
+                      </Button>
+
+                      {currentStep === maxSteps ? (
+                        <Button
+                          onClick={handleSubmit}
+                          disabled={!canProceed()}
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8"
+                        >
+                          COMPLETE ORDER
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={handleNext}
+                          disabled={!canProceed()}
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8"
+                        >
+                          CONTINUE
+                        </Button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
           </div>
-        )}
 
-        <div className="flex justify-between pt-6">
-          <Button
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={currentStep === 1}
-            className="flex items-center space-x-2"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            <span>Înapoi</span>
-          </Button>
+          {/* Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Help Section */}
+            <Card className="border-purple-200 bg-purple-50">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-purple-900">Need Help?</h3>
+                </div>
+                <div className="space-y-3 text-sm text-purple-700">
+                  <div className="flex items-center">
+                    <Phone className="w-4 h-4 mr-2" />
+                    +40 721 234 567
+                  </div>
+                  <div className="flex items-center">
+                    <Mail className="w-4 h-4 mr-2" />
+                    info@musicgift.ro
+                  </div>
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-2" />
+                    Mon-Fri: 9AM-6PM
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          {currentStep === maxSteps ? (
-            <Button
-              onClick={handleSubmit}
-              disabled={!canProceed()}
-              className="bg-purple-600 hover:bg-purple-700 text-white flex items-center space-x-2"
-            >
-              <span>Finalizează Comanda</span>
-            </Button>
-          ) : (
-            <Button
-              onClick={handleNext}
-              disabled={!canProceed()}
-              className="bg-purple-600 hover:bg-purple-700 text-white flex items-center space-x-2"
-            >
-              <span>Următorul</span>
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          )}
+            {/* Testimonial */}
+            <Card className="border-purple-200">
+              <CardContent className="p-6">
+                <blockquote className="text-sm text-gray-600 italic mb-4">
+                  "Working with MusicGift was amazing. They understood our story perfectly and created something magical!"
+                </blockquote>
+                <cite className="text-purple-600 font-medium">— Radu & Elena</cite>
+              </CardContent>
+            </Card>
+
+            {/* Order Summary */}
+            {selectedPackageDetails && (
+              <Card className="border-purple-200">
+                <CardContent className="p-6">
+                  <h3 className="font-semibold text-gray-900 mb-4">Order Summary</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Package:</span>
+                      <span className="font-medium">{selectedPackageDetails.label}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Base Price:</span>
+                      <span className="font-medium">{selectedPackageDetails.details.price}</span>
+                    </div>
+                    {selectedAddons.length > 0 && (
+                      <div className="pt-2 border-t">
+                        <div className="text-sm text-gray-600 mb-2">Add-ons:</div>
+                        {selectedAddons.map(addonId => {
+                          const addon = addons[addonId as keyof typeof addons];
+                          return addon ? (
+                            <div key={addonId} className="flex justify-between text-sm">
+                              <span>{addon.label}</span>
+                              <span>+{addon.price} RON</span>
+                            </div>
+                          ) : null;
+                        })}
+                      </div>
+                    )}
+                    <div className="flex justify-between pt-3 border-t font-semibold text-lg">
+                      <span>Total:</span>
+                      <span>{calculateTotal()} RON</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 
