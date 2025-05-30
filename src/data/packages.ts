@@ -117,11 +117,11 @@ export const packages = [
 ];
 
 export const languages = [
-  { value: 'ro', label: 'Română' },
-  { value: 'en', label: 'English' },
-  { value: 'fr', label: 'Français' },
-  { value: 'de', label: 'Deutsch' },
-  { value: 'pl', label: 'Polski' },
+  { value: 'ro', label: 'Română', flag: '🇷🇴' },
+  { value: 'en', label: 'English', flag: '🇺🇸' },
+  { value: 'fr', label: 'Français', flag: '🇫🇷' },
+  { value: 'de', label: 'Deutsch', flag: '🇩🇪' },
+  { value: 'pl', label: 'Polski', flag: '🇵🇱' },
 ];
 
 export const addons = {
