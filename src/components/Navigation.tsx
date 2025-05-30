@@ -36,7 +36,7 @@ const Navigation = () => {
             <img 
               src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
               alt="MusicGift" 
-              className="h-28 w-auto transition-transform duration-300 ease-in-out hover:scale-105"
+              className="h-40 w-auto transition-transform duration-300 ease-in-out hover:scale-105 absolute top-[-40px] left-0"
             />
           </Link>
 
