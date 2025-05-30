@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -109,10 +110,10 @@ const renderSelectField = (
           <SelectValue placeholder={field.placeholder_key ? t(field.placeholder_key) : field.field_name} />
         </SelectTrigger>
         <SelectContent className="bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
-          {field.options?.map((option) => (
+          {field.options?.map((option, index) => (
             <SelectItem 
-              key={option.value} 
-              value={option.value}
+              key={`${field.field_name}-${option.value || 'empty'}-${index}`}
+              value={option.value || ''}
               className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
             >
               {option.label_key ? t(option.label_key) : option.value}
@@ -151,14 +152,14 @@ const renderMultiselectField = (
   return (
     <div className="space-y-2">
       <div className={cn("grid gap-2 grid-cols-2 md:grid-cols-3", hasError && 'border border-red-500 rounded-md p-2')}>
-        {field.options?.map((option) => (
-          <div key={option.value} className="flex items-center space-x-2">
+        {field.options?.map((option, index) => (
+          <div key={`${field.field_name}-multiselect-${option.value || 'empty'}-${index}`} className="flex items-center space-x-2">
             <Checkbox
-              id={option.value}
-              checked={selectedValues.includes(option.value)}
-              onCheckedChange={() => handleCheckboxChange(option.value)}
+              id={`${field.field_name}-${option.value || 'empty'}-${index}`}
+              checked={selectedValues.includes(option.value || '')}
+              onCheckedChange={() => handleCheckboxChange(option.value || '')}
             />
-            <Label htmlFor={option.value} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <Label htmlFor={`${field.field_name}-${option.value || 'empty'}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               {option.label_key}
             </Label>
           </div>
@@ -217,10 +218,10 @@ const renderRadioField = (
   return (
     <div className="space-y-2">
       <RadioGroup defaultValue={value} onValueChange={onChange} className="flex flex-col space-y-1">
-        {field.options?.map((option) => (
-          <div key={option.value} className="flex items-center space-x-2">
-            <RadioGroupItem value={option.value} id={option.value} />
-            <Label htmlFor={option.value} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        {field.options?.map((option, index) => (
+          <div key={`${field.field_name}-radio-${option.value || 'empty'}-${index}`} className="flex items-center space-x-2">
+            <RadioGroupItem value={option.value || ''} id={`${field.field_name}-${option.value || 'empty'}-${index}`} />
+            <Label htmlFor={`${field.field_name}-${option.value || 'empty'}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               {option.label_key}
             </Label>
           </div>
