@@ -273,7 +273,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         },
         {
           step: 5,
-8 title: "Confirmări",
+          title: "Confirmări",
           fields: [
             { name: "acceptContact", type: "checkbox", placeholder: "Accept să fiu contactat în 24–48h pentru validare", required: true }
           ]
