@@ -15,6 +15,7 @@ import Testimonials from "./pages/Testimonials";
 import Contact from "./pages/Contact";
 import Order from "./pages/Order";
 import Auth from "./pages/Auth";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,14 @@ const App = () => (
                 element={
                   <AuthGuard requireAuth={true}>
                     <Order />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <Settings />
                   </AuthGuard>
                 } 
               />

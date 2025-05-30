@@ -44,9 +44,11 @@ const UserMenu = () => {
           {user.email}
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Settings className="w-4 h-4 mr-2" />
-          Setări cont
+        <DropdownMenuItem asChild>
+          <Link to="/settings" className="flex items-center cursor-pointer">
+            <Settings className="w-4 h-4 mr-2" />
+            Setări cont
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
