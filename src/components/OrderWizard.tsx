@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -8,18 +9,17 @@ import FormFieldRenderer from './order/FormFieldRenderer';
 import HelpSection from './order/HelpSection';
 import TestimonialSection from './order/TestimonialSection';
 import OrderSummary from './order/OrderSummary';
-import { getStepsForPackage } from '@/utils/stepConfig';
-import { packages } from '@/data/packages';
+import { usePackages, usePackageSteps, useAddons } from '@/hooks/usePackageData';
+import { getStepsForPackage } from '@/utils/dynamicStepConfig';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { supabase } from '@/integrations/supabase/client';
+
 interface OrderWizardProps {
   onComplete: (data: any) => void;
 }
-const OrderWizard: React.FC<OrderWizardProps> = ({
-  onComplete
-}) => {
-  const {
-    t
-  } = useLanguage();
+
+const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPackage, setSelectedPackage] = useState('');
   const [formData, setFormData] = useState<any>({
@@ -54,20 +54,28 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   });
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const {
-    toast
-  } = useToast();
-  const allSteps = getStepsForPackage(selectedPackage);
+  const { toast } = useToast();
+
+  // Fetch dynamic data
+  const { data: packages = [], isLoading: packagesLoading } = usePackages();
+  const { data: packageSteps = [], isLoading: stepsLoading } = usePackageSteps(selectedPackage);
+  const { data: addons = [] } = useAddons();
+
+  // Transform steps for wizard usage
+  const allSteps = getStepsForPackage(packageSteps);
   const maxSteps = Math.max(5, allSteps.length);
+
   const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+
     if (field === 'package') {
       setSelectedPackage(value);
     }
   };
+
   const handleAddonChange = (addonId: string, checked: boolean) => {
     if (checked) {
       setSelectedAddons(prev => [...prev, addonId]);
@@ -75,9 +83,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       setSelectedAddons(prev => prev.filter(id => id !== addonId));
     }
   };
+
   const canProceed = () => {
     const currentStepData = allSteps.find(step => step.step === currentStep);
     if (!currentStepData) return false;
+
     return currentStepData.fields.every(field => {
       if (!field.required) return true;
       if (field.type === 'checkbox-group') return true;
@@ -85,13 +95,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       return fieldValue && fieldValue !== '';
     });
   };
+
   const handleNext = () => {
     if (canProceed() && currentStep < maxSteps) {
       setCurrentStep(currentStep + 1);
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       toast({
         title: t('completeRequiredFields'),
@@ -100,15 +108,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       });
     }
   };
+
   const handlePrevious = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
   const handleSubmit = async () => {
     if (!canProceed()) {
       toast({
@@ -118,22 +125,38 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       });
       return;
     }
+
     setIsSubmitting(true);
     try {
+      // Get package ID for database storage
+      const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+      
       const finalData = {
         ...formData,
         addons: selectedAddons,
         package: selectedPackage
       };
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Save order to database
+      const { error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          package_id: selectedPackageData?.id,
+          form_data: finalData,
+          selected_addons: selectedAddons,
+          total_price: calculateTotalPrice(),
+          status: 'pending'
+        });
+
+      if (orderError) throw orderError;
+
       onComplete(finalData);
       toast({
         title: t('orderSubmittedSuccess'),
         description: t('orderSubmittedDesc')
       });
     } catch (error) {
+      console.error('Order submission error:', error);
       toast({
         title: t('somethingWentWrong'),
         description: t('tryAgainSupport'),
@@ -143,26 +166,45 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       setIsSubmitting(false);
     }
   };
+
+  const calculateTotalPrice = () => {
+    const packagePrice = packages.find(pkg => pkg.value === selectedPackage)?.price || 0;
+    const addonsPrice = selectedAddons.reduce((total, addonKey) => {
+      const addon = addons.find(a => a.addon_key === addonKey);
+      return total + (addon?.price || 0);
+    }, 0);
+    return packagePrice + addonsPrice;
+  };
+
   const currentStepData = allSteps.find(step => step.step === currentStep);
-  const completionPercentage = currentStep / maxSteps * 100;
+  const completionPercentage = (currentStep / maxSteps) * 100;
   const selectedPackageDetails = packages.find(pkg => pkg.value === selectedPackage);
-  return <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
-      <div className="max-w-7xl mx-0 my-[6px] py-0 px-[4px]">
-        {/* Enhanced Header */}
-        <div className="mb-12">
-          
-          
+
+  // Show loading state
+  if (packagesLoading || stepsLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">{t('loadingPackages')}</p>
         </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
+      <div className="max-w-7xl mx-0 my-[6px] py-0 px-[4px]">
+        <div className="mb-12"></div>
 
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Enhanced Main Content */}
           <div className="lg:col-span-3">
             <StepIndicator currentStep={currentStep} />
 
-            {/* Enhanced Form Content */}
             <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
               <CardContent className="p-8 lg:p-10">
-                {currentStepData && <>
+                {currentStepData && (
+                  <>
                     <div className="mb-8">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-3">
@@ -181,33 +223,50 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                         <div className="hidden lg:flex items-center space-x-2 text-sm text-gray-500">
                           <span>{t('progress')}:</span>
                           <div className="w-24 bg-gray-200 rounded-full h-2">
-                            <div className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-500" style={{
-                          width: `${completionPercentage}%`
-                        }} />
+                            <div 
+                              className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-500" 
+                              style={{ width: `${completionPercentage}%` }} 
+                            />
                           </div>
                           <span>{Math.round(completionPercentage)}%</span>
                         </div>
                       </div>
                       
-                      {currentStep === 3 && <p className="text-lg text-gray-600 leading-relaxed">
+                      {currentStep === 3 && (
+                        <p className="text-lg text-gray-600 leading-relaxed">
                           {t('helpUnderstand')}
-                        </p>}
+                        </p>
+                      )}
                     </div>
 
-                    {/* Package Details Section - Show when package is selected */}
-                    {selectedPackageDetails && currentStep === 1 && <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
+                    {/* Package Details Section */}
+                    {selectedPackageDetails && currentStep === 1 && (
+                      <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
                         <div className="flex items-start space-x-4">
-                          <div className="text-4xl">{selectedPackageDetails.value === 'personal' ? '🎁' : selectedPackageDetails.value === 'business' ? '💼' : selectedPackageDetails.value === 'premium' ? '🌟' : selectedPackageDetails.value === 'artist' ? '🎤' : selectedPackageDetails.value === 'instrumental' ? '🎶' : selectedPackageDetails.value === 'remix' ? '🔁' : '🎁'}</div>
+                          <div className="text-4xl">
+                            {selectedPackageDetails.value === 'personal' ? '🎁' : 
+                             selectedPackageDetails.value === 'business' ? '💼' : 
+                             selectedPackageDetails.value === 'premium' ? '🌟' : 
+                             selectedPackageDetails.value === 'artist' ? '🎤' : 
+                             selectedPackageDetails.value === 'instrumental' ? '🎶' : 
+                             selectedPackageDetails.value === 'remix' ? '🔁' : '🎁'}
+                          </div>
                           <div className="flex-1">
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">{t(selectedPackageDetails.labelKey)}</h3>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                              {t(selectedPackageDetails.label_key)}
+                            </h3>
                             <div className="flex items-center space-x-4 mb-4">
                               <div className="flex items-center space-x-2">
-                                <span className="text-3xl font-bold text-purple-600">{selectedPackageDetails.details.priceKey}</span>
+                                <span className="text-3xl font-bold text-purple-600">
+                                  {selectedPackageDetails.price} RON
+                                </span>
                               </div>
-                              <div className="flex items-center space-x-1 text-gray-600">
-                                <Clock className="w-4 h-4" />
-                                <span className="text-sm">{t(selectedPackageDetails.details.deliveryTimeKey)}</span>
-                              </div>
+                              {selectedPackageDetails.delivery_time_key && (
+                                <div className="flex items-center space-x-1 text-gray-600">
+                                  <Clock className="w-4 h-4" />
+                                  <span className="text-sm">{t(selectedPackageDetails.delivery_time_key)}</span>
+                                </div>
+                              )}
                             </div>
                             
                             <div className="mb-4">
@@ -216,10 +275,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                                 {t('whatsIncluded')}
                               </h4>
                               <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                {selectedPackageDetails.details.includesKeys.map((includeKey, index) => <li key={index} className="flex items-start space-x-2 text-sm text-gray-700">
+                                {selectedPackageDetails.includes.map((include, index) => (
+                                  <li key={index} className="flex items-start space-x-2 text-sm text-gray-700">
                                     <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
-                                    <span>{t(includeKey)}</span>
-                                  </li>)}
+                                    <span>{t(include.include_key)}</span>
+                                  </li>
+                                ))}
                               </ul>
                             </div>
 
@@ -229,46 +290,80 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                             </div>
                           </div>
                         </div>
-                      </div>}
+                      </div>
+                    )}
 
                     <div className="space-y-8">
-                      {currentStepData.fields.map((field, index) => <div key={index} className="transform transition-all duration-200 hover:scale-[1.02]">
-                          <FormFieldRenderer field={field} formData={formData} selectedAddons={selectedAddons} updateFormData={updateFormData} handleAddonChange={handleAddonChange} />
-                        </div>)}
+                      {currentStepData.fields.map((field, index) => (
+                        <div key={index} className="transform transition-all duration-200 hover:scale-[1.02]">
+                          <FormFieldRenderer 
+                            field={field} 
+                            formData={formData} 
+                            selectedAddons={selectedAddons} 
+                            updateFormData={updateFormData} 
+                            handleAddonChange={handleAddonChange} 
+                          />
+                        </div>
+                      ))}
                     </div>
 
-                    {/* Enhanced Navigation Buttons */}
                     <div className="flex justify-between items-center pt-10 border-t mt-10">
-                      <Button variant="outline" onClick={handlePrevious} disabled={currentStep === 1} className="px-8 py-3 font-semibold border-2 hover:bg-gray-50 disabled:opacity-50 transition-all duration-200">
+                      <Button 
+                        variant="outline" 
+                        onClick={handlePrevious} 
+                        disabled={currentStep === 1} 
+                        className="px-8 py-3 font-semibold border-2 hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
+                      >
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         {t('previous')}
                       </Button>
 
                       <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500">
-                        {Array.from({
-                      length: maxSteps
-                    }, (_, i) => <div key={i} className={`w-2 h-2 rounded-full transition-all duration-300 ${i + 1 <= currentStep ? 'bg-purple-500' : 'bg-gray-300'}`} />)}
+                        {Array.from({ length: maxSteps }, (_, i) => (
+                          <div 
+                            key={i} 
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                              i + 1 <= currentStep ? 'bg-purple-500' : 'bg-gray-300'
+                            }`} 
+                          />
+                        ))}
                       </div>
 
-                      {currentStep === maxSteps ? <Button onClick={handleSubmit} disabled={!canProceed() || isSubmitting} className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50">
-                          {isSubmitting ? <>
+                      {currentStep === maxSteps ? (
+                        <Button 
+                          onClick={handleSubmit} 
+                          disabled={!canProceed() || isSubmitting} 
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
+                        >
+                          {isSubmitting ? (
+                            <>
                               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                               {t('submitting')}
-                            </> : <>
+                            </>
+                          ) : (
+                            <>
                               <CheckCircle className="w-4 h-4 mr-2" />
                               {t('completeOrder')}
-                            </>}
-                        </Button> : <Button onClick={handleNext} disabled={!canProceed()} className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50">
+                            </>
+                          )}
+                        </Button>
+                      ) : (
+                        <Button 
+                          onClick={handleNext} 
+                          disabled={!canProceed()} 
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
+                        >
                           {t('continue')}
                           <ChevronRight className="w-4 h-4 ml-2" />
-                        </Button>}
+                        </Button>
+                      )}
                     </div>
-                  </>}
+                  </>
+                )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Enhanced Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             <div className="sticky top-8 space-y-6">
               <HelpSection />
@@ -278,6 +373,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default OrderWizard;

@@ -1,6 +1,8 @@
-
+// This file is now deprecated in favor of dynamic configuration from Supabase
+// Keeping for fallback purposes during migration
 
 export const getStepsForPackage = (selectedPackage: string) => {
+  // Fallback configuration - this will be replaced by dynamic data from Supabase
   const commonSteps = [
     {
       step: 1,
@@ -106,4 +108,3 @@ export const getStepsForPackage = (selectedPackage: string) => {
 
   return [...commonSteps, ...(packageSpecificSteps[selectedPackage] || [])];
 };
-

@@ -9,6 +9,307 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      addons: {
+        Row: {
+          addon_key: string
+          created_at: string | null
+          description_key: string | null
+          id: string
+          is_active: boolean | null
+          label_key: string
+          price: number
+          updated_at: string | null
+        }
+        Insert: {
+          addon_key: string
+          created_at?: string | null
+          description_key?: string | null
+          id?: string
+          is_active?: boolean | null
+          label_key: string
+          price?: number
+          updated_at?: string | null
+        }
+        Update: {
+          addon_key?: string
+          created_at?: string | null
+          description_key?: string | null
+          id?: string
+          is_active?: boolean | null
+          label_key?: string
+          price?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      field_dependencies: {
+        Row: {
+          condition: Database["public"]["Enums"]["dependency_condition"]
+          condition_value: string
+          created_at: string | null
+          depends_on_field: string
+          field_id: string | null
+          id: string
+          is_active: boolean | null
+        }
+        Insert: {
+          condition: Database["public"]["Enums"]["dependency_condition"]
+          condition_value: string
+          created_at?: string | null
+          depends_on_field: string
+          field_id?: string | null
+          id?: string
+          is_active?: boolean | null
+        }
+        Update: {
+          condition?: Database["public"]["Enums"]["dependency_condition"]
+          condition_value?: string
+          created_at?: string | null
+          depends_on_field?: string
+          field_id?: string | null
+          id?: string
+          is_active?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_dependencies_field_id_fkey"
+            columns: ["field_id"]
+            isOneToOne: false
+            referencedRelation: "step_fields"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      field_validation: {
+        Row: {
+          created_at: string | null
+          error_message_key: string | null
+          field_id: string | null
+          id: string
+          is_active: boolean | null
+          validation_type: Database["public"]["Enums"]["validation_rule_type"]
+          validation_value: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message_key?: string | null
+          field_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          validation_type: Database["public"]["Enums"]["validation_rule_type"]
+          validation_value?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message_key?: string | null
+          field_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          validation_type?: Database["public"]["Enums"]["validation_rule_type"]
+          validation_value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_validation_field_id_fkey"
+            columns: ["field_id"]
+            isOneToOne: false
+            referencedRelation: "step_fields"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string | null
+          form_data: Json
+          id: string
+          package_id: string | null
+          selected_addons: Json | null
+          status: string | null
+          total_price: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          form_data: Json
+          id?: string
+          package_id?: string | null
+          selected_addons?: Json | null
+          status?: string | null
+          total_price?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          form_data?: Json
+          id?: string
+          package_id?: string | null
+          selected_addons?: Json | null
+          status?: string | null
+          total_price?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "package_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      package_addons: {
+        Row: {
+          addon_id: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          package_id: string | null
+        }
+        Insert: {
+          addon_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          package_id?: string | null
+        }
+        Update: {
+          addon_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          package_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "package_addons_addon_id_fkey"
+            columns: ["addon_id"]
+            isOneToOne: false
+            referencedRelation: "addons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "package_addons_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "package_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      package_includes: {
+        Row: {
+          created_at: string | null
+          id: string
+          include_key: string
+          include_order: number | null
+          package_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          include_key: string
+          include_order?: number | null
+          package_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          include_key?: string
+          include_order?: number | null
+          package_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "package_includes_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "package_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      package_info: {
+        Row: {
+          created_at: string | null
+          delivery_time_key: string | null
+          description_key: string | null
+          id: string
+          is_active: boolean | null
+          label_key: string
+          price: number
+          tagline_key: string | null
+          updated_at: string | null
+          value: string
+        }
+        Insert: {
+          created_at?: string | null
+          delivery_time_key?: string | null
+          description_key?: string | null
+          id?: string
+          is_active?: boolean | null
+          label_key: string
+          price?: number
+          tagline_key?: string | null
+          updated_at?: string | null
+          value: string
+        }
+        Update: {
+          created_at?: string | null
+          delivery_time_key?: string | null
+          description_key?: string | null
+          id?: string
+          is_active?: boolean | null
+          label_key?: string
+          price?: number
+          tagline_key?: string | null
+          updated_at?: string | null
+          value?: string
+        }
+        Relationships: []
+      }
+      package_tags: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          package_id: string | null
+          styling_class: string | null
+          tag_label_key: string | null
+          tag_type: Database["public"]["Enums"]["package_tag_type"]
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          package_id?: string | null
+          styling_class?: string | null
+          tag_label_key?: string | null
+          tag_type: Database["public"]["Enums"]["package_tag_type"]
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          package_id?: string | null
+          styling_class?: string | null
+          tag_label_key?: string | null
+          tag_type?: Database["public"]["Enums"]["package_tag_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "package_tags_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "package_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -33,6 +334,88 @@ export type Database = {
         }
         Relationships: []
       }
+      step_fields: {
+        Row: {
+          created_at: string | null
+          field_name: string
+          field_order: number | null
+          field_type: Database["public"]["Enums"]["field_type"]
+          id: string
+          options: Json | null
+          placeholder_key: string | null
+          required: boolean | null
+          step_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          field_name: string
+          field_order?: number | null
+          field_type: Database["public"]["Enums"]["field_type"]
+          id?: string
+          options?: Json | null
+          placeholder_key?: string | null
+          required?: boolean | null
+          step_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          field_name?: string
+          field_order?: number | null
+          field_type?: Database["public"]["Enums"]["field_type"]
+          id?: string
+          options?: Json | null
+          placeholder_key?: string | null
+          required?: boolean | null
+          step_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "step_fields_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      steps: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          package_id: string | null
+          step_number: number
+          step_order: number | null
+          title_key: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          package_id?: string | null
+          step_number: number
+          step_order?: number | null
+          title_key: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          package_id?: string | null
+          step_number?: number
+          step_order?: number | null
+          title_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "steps_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "package_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -41,7 +424,29 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      dependency_condition:
+        | "equals"
+        | "not_equals"
+        | "contains"
+        | "not_contains"
+      field_type:
+        | "text"
+        | "email"
+        | "tel"
+        | "textarea"
+        | "select"
+        | "checkbox"
+        | "checkbox-group"
+        | "date"
+        | "url"
+        | "file"
+      package_tag_type: "popular" | "hot" | "discount" | "new" | "limited"
+      validation_rule_type:
+        | "required"
+        | "min_length"
+        | "max_length"
+        | "pattern"
+        | "custom"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -156,6 +561,33 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      dependency_condition: [
+        "equals",
+        "not_equals",
+        "contains",
+        "not_contains",
+      ],
+      field_type: [
+        "text",
+        "email",
+        "tel",
+        "textarea",
+        "select",
+        "checkbox",
+        "checkbox-group",
+        "date",
+        "url",
+        "file",
+      ],
+      package_tag_type: ["popular", "hot", "discount", "new", "limited"],
+      validation_rule_type: [
+        "required",
+        "min_length",
+        "max_length",
+        "pattern",
+        "custom",
+      ],
+    },
   },
 } as const
