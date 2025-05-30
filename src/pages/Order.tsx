@@ -5,6 +5,7 @@ import OrderWizard from "@/components/OrderWizard";
 import AuthGuard from "@/components/AuthGuard";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const Order = () => {
   const { toast } = useToast();
