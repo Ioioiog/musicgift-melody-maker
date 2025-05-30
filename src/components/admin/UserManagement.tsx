@@ -18,7 +18,7 @@ type UserRole = Tables<'user_roles'> & {
   profiles?: {
     email: string;
     full_name: string;
-  };
+  } | null;
 };
 
 type Profile = Tables<'profiles'>;
@@ -40,10 +40,13 @@ const UserManagement = () => {
         .from('user_roles')
         .select(`
           *,
-          profiles:user_id(email, full_name)
+          profiles!user_roles_user_id_fkey(email, full_name)
         `)
         .order('created_at', { ascending: false });
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching user roles:', error);
+        throw error;
+      }
       return data as UserRole[];
     }
   });
@@ -261,7 +264,7 @@ const UserManagement = () => {
                     <TableCell>
                       {userRole.profiles?.full_name || 'Unknown User'}
                     </TableCell>
-                    <TableCell>{userRole.profiles?.email}</TableCell>
+                    <TableCell>{userRole.profiles?.email || 'No email'}</TableCell>
                     <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRoleBadge(userRole.role)}`}>
                         {userRole.role.replace('_', ' ').toUpperCase()}
