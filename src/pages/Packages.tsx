@@ -202,7 +202,8 @@ const Packages = () => {
         'Destinatarul alege pachetul preferat'
       ],
       isGiftCard: true,
-      availableAddons: []
+      availableAddons: [],
+      popular: false
     }
   };
 
