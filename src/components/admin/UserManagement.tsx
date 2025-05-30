@@ -36,18 +36,40 @@ const UserManagement = () => {
   const { data: userRoles = [], isLoading } = useQuery({
     queryKey: ['admin-user-roles'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // First get user roles
+      const { data: rolesData, error: rolesError } = await supabase
         .from('user_roles')
-        .select(`
-          *,
-          profiles!user_roles_user_id_fkey(email, full_name)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
-      if (error) {
-        console.error('Error fetching user roles:', error);
-        throw error;
+      
+      if (rolesError) {
+        console.error('Error fetching user roles:', rolesError);
+        throw rolesError;
       }
-      return data as UserRole[];
+
+      if (!rolesData || rolesData.length === 0) {
+        return [];
+      }
+
+      // Then get profiles for these users
+      const userIds = rolesData.map(role => role.user_id);
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, email, full_name')
+        .in('id', userIds);
+
+      if (profilesError) {
+        console.error('Error fetching profiles:', profilesError);
+        throw profilesError;
+      }
+
+      // Combine the data
+      const combinedData = rolesData.map(role => ({
+        ...role,
+        profiles: profilesData?.find(profile => profile.id === role.user_id) || null
+      }));
+
+      return combinedData as UserRole[];
     }
   });
 
