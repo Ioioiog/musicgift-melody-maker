@@ -38,8 +38,8 @@ const Navigation = () => {
 
   return (
     <>
-      {/* Floating Logo - positioned closer to the navigation */}
-      <div className="fixed top-4 left-20 z-[100]">
+      {/* Floating Logo - positioned on the left */}
+      <div className="fixed top-4 left-40 z-[100]">
         <Link to="/" className="block">
           <img 
             src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
