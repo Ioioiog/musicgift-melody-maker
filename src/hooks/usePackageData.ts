@@ -1,6 +1,6 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useTranslation } from './useTranslations';
 
 export interface PackageData {
   id: string;
@@ -37,6 +37,8 @@ export interface StepData {
 }
 
 export const usePackages = () => {
+  const { t } = useTranslation();
+  
   return useQuery({
     queryKey: ['packages'],
     queryFn: async () => {
@@ -58,7 +60,15 @@ export const usePackages = () => {
       }
       
       console.log('Fetched packages:', packages);
-      return packages as PackageData[];
+      
+      // Transform packages to include translated labels where available
+      const transformedPackages = packages?.map(pkg => ({
+        ...pkg,
+        // Keep original structure but allow translations to be used in components
+        includes: pkg.includes?.sort((a: any, b: any) => a.include_order - b.include_order) || []
+      }));
+      
+      return transformedPackages as PackageData[];
     }
   });
 };

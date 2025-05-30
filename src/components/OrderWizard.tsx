@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,7 +10,7 @@ import HelpSection from './order/HelpSection';
 import TestimonialSection from './order/TestimonialSection';
 import OrderSummary from './order/OrderSummary';
 import { usePackages, usePackageSteps, useAddons } from '@/hooks/usePackageData';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslation } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
 
 interface OrderWizardProps {
@@ -17,7 +18,7 @@ interface OrderWizardProps {
 }
 
 const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPackage, setSelectedPackage] = useState('');
   const [formData, setFormData] = useState<any>({
@@ -119,8 +120,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       toast({
-        title: t('completeRequiredFields'),
-        description: t('completeRequiredFieldsDesc'),
+        title: t('completeRequiredFields', 'Please complete all required fields'),
+        description: t('completeRequiredFieldsDesc', 'Make sure all required fields are filled out before proceeding.'),
         variant: "destructive"
       });
     }
@@ -136,8 +137,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const handleSubmit = async () => {
     if (!canProceed()) {
       toast({
-        title: t('completeRequiredFields'),
-        description: t('completeRequiredFieldsDesc'),
+        title: t('completeRequiredFields', 'Please complete all required fields'),
+        description: t('completeRequiredFieldsDesc', 'Make sure all required fields are filled out before proceeding.'),
         variant: "destructive"
       });
       return;
@@ -196,14 +197,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
 
       onComplete(finalData);
       toast({
-        title: t('orderSubmittedSuccess'),
-        description: t('orderSubmittedDesc')
+        title: t('orderSubmittedSuccess', 'Order submitted successfully!'),
+        description: t('orderSubmittedDesc', 'We have received your order and will get back to you soon.')
       });
     } catch (error) {
       console.error('Order submission error:', error);
       toast({
-        title: t('somethingWentWrong'),
-        description: t('tryAgainSupport'),
+        title: t('somethingWentWrong', 'Something went wrong'),
+        description: t('tryAgainSupport', 'Please try again or contact support if the problem persists.'),
         variant: "destructive"
       });
     } finally {
@@ -256,7 +257,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">{t('loadingPackages')}</p>
+          <p className="text-gray-600">{t('loadingPackages', 'Loading packages...')}</p>
         </div>
       </div>
     );
@@ -283,15 +284,15 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                           </div>
                           <div>
                             <h2 className="text-3xl font-bold text-gray-900">
-                              {currentStep === 1 ? t('selectYourPackage') : t(currentStepData.title_key)}
+                              {currentStep === 1 ? t('selectYourPackage', 'Select Your Package') : t(currentStepData.title_key)}
                             </h2>
                             <p className="text-purple-600 font-medium">
-                              {t('stepPackage')} {currentStep} {t('of')} {maxSteps}
+                              {t('stepPackage', 'Step')} {currentStep} {t('of', 'of')} {maxSteps}
                             </p>
                           </div>
                         </div>
                         <div className="hidden lg:flex items-center space-x-2 text-sm text-gray-500">
-                          <span>{t('progress')}:</span>
+                          <span>{t('progress', 'Progress')}:</span>
                           <div className="w-24 bg-gray-200 rounded-full h-2">
                             <div 
                               className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-500" 
@@ -313,7 +314,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                              selectedPackageDetails.value === 'premium' ? '🌟' : 
                              selectedPackageDetails.value === 'artist' ? '🎤' : 
                              selectedPackageDetails.value === 'instrumental' ? '🎶' : 
-                             selectedPackageDetails.value === 'remix' ? '🔁' : '🎁'}
+                             selectedPackageDetails.value === 'remix' ? '🔁' : 
+                             selectedPackageDetails.value === 'pachet-personal' ? '🎁' : '🎁'}
                           </div>
                           <div className="flex-1">
                             <h3 className="text-2xl font-bold text-gray-900 mb-2">
@@ -328,7 +330,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                               {selectedPackageDetails.delivery_time_key && (
                                 <div className="flex items-center space-x-1 text-gray-600">
                                   <Clock className="w-4 h-4" />
-                                  <span className="text-sm">{selectedPackageDetails.delivery_time_key}</span>
+                                  <span className="text-sm">{t(selectedPackageDetails.delivery_time_key)}</span>
                                 </div>
                               )}
                             </div>
@@ -337,7 +339,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                               <div className="mb-4">
                                 <h4 className="font-semibold text-gray-800 mb-2 flex items-center">
                                   <Star className="w-4 h-4 mr-2 text-yellow-500" />
-                                  {t('whatsIncluded')}
+                                  {t('whatsIncluded', "What's Included")}
                                 </h4>
                                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                   {selectedPackageDetails.includes.map((include, index) => (
@@ -352,7 +354,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
 
                             <div className="flex items-center space-x-2 text-sm text-green-600 font-medium">
                               <Shield className="w-4 h-4" />
-                              <span>{t('professionalQuality')}</span>
+                              <span>{t('professionalQuality', 'Professional Quality')}</span>
                             </div>
                           </div>
                         </div>
@@ -385,7 +387,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                         className="px-8 py-3 font-semibold border-2 hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
                       >
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        {t('previous')}
+                        {t('previous', 'Previous')}
                       </Button>
 
                       <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500">
@@ -408,12 +410,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                           {isSubmitting ? (
                             <>
                               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                              {t('submitting')}
+                              {t('submitting', 'Submitting...')}
                             </>
                           ) : (
                             <>
                               <CheckCircle className="w-4 h-4 mr-2" />
-                              {t('completeOrder')}
+                              {t('completeOrder', 'Complete Order')}
                             </>
                           )}
                         </Button>
@@ -423,7 +425,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                           disabled={!canProceed()} 
                           className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
                         >
-                          {t('continue')}
+                          {t('continue', 'Continue')}
                           <ChevronRight className="w-4 h-4 ml-2" />
                         </Button>
                       )}
