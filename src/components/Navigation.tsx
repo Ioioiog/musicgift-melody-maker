@@ -22,7 +22,7 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center space-x-2">
             <img 
-              src="/lovable-uploads/c0b2c3e4-3b48-4b70-8e59-8b0f7b7a8e9b.png" 
+              src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
               alt="MusicGift by Mango Records" 
               className="h-12 w-auto"
             />
