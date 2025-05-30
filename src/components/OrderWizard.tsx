@@ -265,15 +265,21 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
           };
         }
         
-        // Handle other fields with options - transform string[] to FieldOption[]
+        // For ALL other fields with options, ensure they're in FieldOption format
         if (field.options && Array.isArray(field.options)) {
           return {
             ...field,
-            options: field.options.map(option => {
+            options: field.options.map((option: any) => {
+              // If it's already a FieldOption object, return as is
+              if (typeof option === 'object' && option.value && option.label_key) {
+                return option;
+              }
+              // If it's a string, transform to FieldOption
               if (typeof option === 'string') {
                 return { value: option, label_key: option };
               }
-              return option;
+              // Fallback for any other format
+              return { value: String(option), label_key: String(option) };
             })
           };
         }
