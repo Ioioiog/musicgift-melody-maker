@@ -1,7 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ChevronDown } from 'lucide-react';
 import { packages } from '@/data/packages';
 import { addons } from '@/data/packages';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -13,6 +15,7 @@ interface OrderSummaryProps {
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAddons }) => {
   const { t } = useLanguage();
+  const [isIncludesOpen, setIsIncludesOpen] = useState(false);
   
   const packageDetails = packages.find(pkg => pkg.value === selectedPackage);
   
@@ -50,18 +53,25 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
           </div>
         </div>
 
-        {/* Package Includes */}
-        <div className="border-b pb-4">
-          <h5 className="font-medium mb-2 text-sm">{t('whatsIncluded')}:</h5>
-          <ul className="space-y-1">
-            {packageDetails.details.includesKeys.map((includeKey, index) => (
-              <li key={index} className="text-xs text-gray-600 flex items-start">
-                <span className="w-1 h-1 bg-purple-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
-                <span>{t(includeKey)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {/* Package Includes - Collapsible */}
+        <Collapsible open={isIncludesOpen} onOpenChange={setIsIncludesOpen}>
+          <div className="border-b pb-4">
+            <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
+              <h5 className="font-medium text-sm">{t('whatsIncluded')}:</h5>
+              <ChevronDown className={`h-4 w-4 transition-transform ${isIncludesOpen ? 'rotate-180' : ''}`} />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-2">
+              <ul className="space-y-1">
+                {packageDetails.details.includesKeys.map((includeKey, index) => (
+                  <li key={index} className="text-xs text-gray-600 flex items-start">
+                    <span className="w-1 h-1 bg-purple-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
+                    <span>{t(includeKey)}</span>
+                  </li>
+                ))}
+              </ul>
+            </CollapsibleContent>
+          </div>
+        </Collapsible>
 
         {/* Selected Addons */}
         {selectedAddons.length > 0 && (
