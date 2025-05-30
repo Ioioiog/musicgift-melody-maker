@@ -16,7 +16,36 @@ interface OrderWizardProps {
 const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPackage, setSelectedPackage] = useState('');
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<any>({
+    package: '',
+    fullName: '',
+    email: '',
+    phone: '',
+    language: '',
+    recipientName: '',
+    occasion: '',
+    story: '',
+    keywords: '',
+    originalTitle: '',
+    style: '',
+    label: '',
+    brandName: '',
+    campaignPurpose: '',
+    artistName: '',
+    songStyle: '',
+    artistBio: '',
+    linksReleases: '',
+    linksMedia: '',
+    message: '',
+    recipientEmail: '',
+    giftMessage: '',
+    desiredStyle: '',
+    instrumentalReference: '',
+    acceptMention: false,
+    acceptRights: false,
+    acceptContact: false,
+    acceptFlow: false
+  });
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const { toast } = useToast();
 
@@ -244,7 +273,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         },
         {
           step: 5,
-          title: "Confirmări",
+8 title: "Confirmări",
           fields: [
             { name: "acceptContact", type: "checkbox", placeholder: "Accept să fiu contactat în 24–48h pentru validare", required: true }
           ]
@@ -354,7 +383,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       case 'select':
         if (field.name === 'package') {
           return (
-            <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name] || ''}>
+            <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
               <SelectTrigger>
                 <SelectValue placeholder={field.placeholder} />
               </SelectTrigger>
@@ -370,7 +399,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         }
         if (field.name === 'language') {
           return (
-            <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name] || ''}>
+            <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
               <SelectTrigger>
                 <SelectValue placeholder={field.placeholder} />
               </SelectTrigger>
@@ -386,7 +415,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         }
         if (field.name === 'label') {
           return (
-            <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name] || ''}>
+            <Select onValueChange={(value) => updateFormData(field.name, value)} value={formData[field.name]}>
               <SelectTrigger>
                 <SelectValue placeholder={field.placeholder} />
               </SelectTrigger>
@@ -403,7 +432,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         return (
           <Textarea
             placeholder={field.placeholder}
-            value={formData[field.name] || ''}
+            value={formData[field.name]}
             onChange={(e) => updateFormData(field.name, e.target.value)}
             className="min-h-[100px]"
           />
@@ -423,7 +452,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
           <div className="flex items-center space-x-2">
             <Checkbox
               id={field.name}
-              checked={formData[field.name] || false}
+              checked={formData[field.name]}
               onCheckedChange={(checked) => updateFormData(field.name, checked)}
             />
             <Label htmlFor={field.name} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -458,7 +487,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
           <Input
             type={field.type}
             placeholder={field.placeholder}
-            value={formData[field.name] || ''}
+            value={formData[field.name]}
             onChange={(e) => updateFormData(field.name, e.target.value)}
           />
         );
@@ -468,10 +497,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const canProceed = () => {
     if (!currentStepData) return false;
     
+    console.log('Checking if can proceed:', currentStepData.fields);
+    
     return currentStepData.fields.every(field => {
       if (!field.required) return true;
       if (field.type === 'checkbox-group') return true;
-      return formData[field.name];
+      
+      const fieldValue = formData[field.name];
+      console.log(`Field ${field.name}: value="${fieldValue}", required=${field.required}`);
+      
+      return fieldValue && fieldValue !== '';
     });
   };
 
