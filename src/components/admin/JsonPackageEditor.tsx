@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Save, Download, Upload, Eye, Edit, Trash2, Copy } from 'lucide-react';
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle, 
+  AlertDialogTrigger 
+} from '@/components/ui/alert-dialog';
 import { usePackages } from '@/hooks/usePackageData';
+import { useUserRole } from '@/hooks/useUserRole';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -62,12 +73,17 @@ interface CompletePackageData {
 
 const JsonPackageEditor = () => {
   const { data: packages = [], refetch } = usePackages();
+  const { data: userRole } = useUserRole();
   const [selectedPackage, setSelectedPackage] = useState<CompletePackageData | null>(null);
   const [jsonData, setJsonData] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [jsonError, setJsonError] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const { toast } = useToast();
+
+  const isSuperAdmin = userRole === 'super_admin';
 
   const loadCompletePackageData = async (packageId: string) => {
     try {
@@ -162,6 +178,89 @@ const JsonPackageEditor = () => {
   const handleJsonChange = (value: string) => {
     setJsonData(value);
     validateJson(value);
+  };
+
+  const deletePackage = async () => {
+    if (!selectedPackage?.id || !isSuperAdmin) {
+      toast({ title: 'Not authorized to delete packages', variant: 'destructive' });
+      return;
+    }
+
+    if (deleteConfirmation !== selectedPackage.value) {
+      toast({ title: 'Package name confirmation does not match', variant: 'destructive' });
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      const packageId = selectedPackage.id;
+
+      // Get step IDs for this package
+      const { data: stepIds, error: stepIdsError } = await supabase
+        .from('steps')
+        .select('id')
+        .eq('package_id', packageId);
+
+      if (stepIdsError) throw stepIdsError;
+
+      if (stepIds && stepIds.length > 0) {
+        const stepIdArray = stepIds.map(step => step.id);
+
+        // Get field IDs for these steps
+        const { data: fieldIds, error: fieldIdsError } = await supabase
+          .from('step_fields')
+          .select('id')
+          .in('step_id', stepIdArray);
+
+        if (fieldIdsError) throw fieldIdsError;
+
+        if (fieldIds && fieldIds.length > 0) {
+          const fieldIdArray = fieldIds.map(field => field.id);
+
+          // Delete field validations and dependencies
+          await supabase.from('field_validation').delete().in('field_id', fieldIdArray);
+          await supabase.from('field_dependencies').delete().in('field_id', fieldIdArray);
+        }
+
+        // Delete fields
+        await supabase.from('step_fields').delete().in('step_id', stepIdArray);
+      }
+
+      // Delete steps
+      await supabase.from('steps').delete().eq('package_id', packageId);
+
+      // Delete package tags and includes
+      await supabase.from('package_tags').delete().eq('package_id', packageId);
+      await supabase.from('package_includes').delete().eq('package_id', packageId);
+
+      // Delete package addons associations
+      await supabase.from('package_addons').delete().eq('package_id', packageId);
+
+      // Delete any orders related to this package
+      await supabase.from('orders').delete().eq('package_id', packageId);
+
+      // Finally, delete the package itself
+      const { error: packageDeleteError } = await supabase
+        .from('package_info')
+        .delete()
+        .eq('id', packageId);
+
+      if (packageDeleteError) throw packageDeleteError;
+
+      toast({ title: 'Package deleted successfully' });
+      
+      // Clear the selected package and refresh the list
+      setSelectedPackage(null);
+      setJsonData('');
+      setDeleteConfirmation('');
+      refetch();
+    } catch (error) {
+      console.error('Error deleting package:', error);
+      toast({ title: 'Error deleting package', variant: 'destructive' });
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const savePackageFromJson = async () => {
@@ -463,6 +562,61 @@ const JsonPackageEditor = () => {
                     <Download className="w-4 h-4 mr-2" />
                     Export
                   </Button>
+                  
+                  {/* Delete Button - Only for Super Admins */}
+                  {isSuperAdmin && selectedPackage?.id && (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button size="sm" variant="destructive">
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Package</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the package 
+                            "{selectedPackage.value}" and all its associated data including steps, 
+                            fields, validations, dependencies, tags, includes, and any orders.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="delete-confirmation">
+                              Type the package name "{selectedPackage.value}" to confirm deletion:
+                            </Label>
+                            <Input
+                              id="delete-confirmation"
+                              value={deleteConfirmation}
+                              onChange={(e) => setDeleteConfirmation(e.target.value)}
+                              placeholder="Enter package name to confirm"
+                            />
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            <p><strong>Package Details:</strong></p>
+                            <p>• Name: {selectedPackage.value}</p>
+                            <p>• Price: {selectedPackage.price} RON</p>
+                            <p>• Steps: {selectedPackage.steps?.length || 0}</p>
+                            <p>• Tags: {selectedPackage.tags?.length || 0}</p>
+                            <p>• Includes: {selectedPackage.includes?.length || 0}</p>
+                          </div>
+                        </div>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel onClick={() => setDeleteConfirmation('')}>
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={deletePackage}
+                            disabled={deleteConfirmation !== selectedPackage.value || isDeleting}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            {isDeleting ? 'Deleting...' : 'Delete Package'}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
                 </div>
               )}
             </CardTitle>
