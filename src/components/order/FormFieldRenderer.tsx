@@ -41,7 +41,8 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   const audioRefs = useRef<{[key: string]: HTMLAudioElement | null}>({});
   const recordingTimerRefs = useRef<{[key: string]: NodeJS.Timeout | null}>({});
 
-  const MAX_RECORDING_TIME = 45; // 45 seconds
+  const MAX_RECORDING_TIME = 45; // 45 seconds for general recording
+  const PRONUNCIATION_MAX_TIME = 20; // 20 seconds for pronunciation fields
 
   useEffect(() => {
     return () => {
@@ -70,6 +71,13 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
     }));
   };
 
+  const getMaxRecordingTime = (fieldName: string) => {
+    if (fieldName === 'pronunciationAudio_recipient' || fieldName === 'pronunciationAudio_keywords') {
+      return PRONUNCIATION_MAX_TIME;
+    }
+    return MAX_RECORDING_TIME;
+  };
+
   const startRecordingForField = async (fieldName: string) => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -91,12 +99,14 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       mediaRecorder.start();
       updateRecordingState(fieldName, { isRecording: true, recordingTime: 0 });
 
+      const maxTime = getMaxRecordingTime(fieldName);
+      
       // Start timer
       recordingTimerRefs.current[fieldName] = setInterval(() => {
         const currentState = getRecordingState(fieldName);
-        if (currentState.recordingTime >= MAX_RECORDING_TIME - 1) {
+        if (currentState.recordingTime >= maxTime - 1) {
           stopRecordingForField(fieldName);
-          updateRecordingState(fieldName, { recordingTime: MAX_RECORDING_TIME });
+          updateRecordingState(fieldName, { recordingTime: maxTime });
         } else {
           updateRecordingState(fieldName, { recordingTime: currentState.recordingTime + 1 });
         }
@@ -166,6 +176,88 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Audio recording functions for the addon field
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+
+      const chunks: BlobPart[] = [];
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        chunks.push(event.data);
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/wav' });
+        setAudioBlob(blob);
+        updateFormData('audioMessageFromSender', blob);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+
+      // Start timer
+      recordingTimerRef.current = setInterval(() => {
+        setRecordingTime(prev => {
+          if (prev >= MAX_RECORDING_TIME - 1) {
+            stopRecording();
+            return MAX_RECORDING_TIME;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      
+      if (recordingTimerRef.current) {
+        clearInterval(recordingTimerRef.current);
+        recordingTimerRef.current = null;
+      }
+    }
+  };
+
+  const playAudio = () => {
+    if (audioBlob) {
+      const audioUrl = URL.createObjectURL(audioBlob);
+      audioRef.current = new Audio(audioUrl);
+      audioRef.current.play();
+      setIsPlaying(true);
+
+      audioRef.current.onended = () => {
+        setIsPlaying(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+    }
+  };
+
+  const pauseAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const reRecord = () => {
+    setAudioBlob(null);
+    setRecordingTime(0);
+    setIsPlaying(false);
+    updateFormData('audioMessageFromSender', null);
+    
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+  };
+
   const handleAddonChangeWithMutualExclusion = (addonId: string, checked: boolean) => {
     // Handle mutual exclusion between commercialRights and distributieMangoRecords
     if (checked) {
@@ -196,18 +288,19 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
 
   const renderAudioRecordingField = (fieldName: string) => {
     const state = getRecordingState(fieldName);
+    const maxTime = getMaxRecordingTime(fieldName);
     
     return (
       <div className="space-y-4">
         <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-600">
-              Timp: {formatTime(state.recordingTime)} / {formatTime(MAX_RECORDING_TIME)}
+              Timp: {formatTime(state.recordingTime)} / {formatTime(maxTime)}
             </span>
             <div className="w-32 bg-gray-200 rounded-full h-2">
               <div 
                 className="bg-purple-500 h-2 rounded-full transition-all duration-300" 
-                style={{ width: `${(state.recordingTime / MAX_RECORDING_TIME) * 100}%` }} 
+                style={{ width: `${(state.recordingTime / maxTime) * 100}%` }} 
               />
             </div>
           </div>
@@ -275,7 +368,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
           )}
 
           <p className="text-xs text-gray-500 mt-2">
-            Limita de timp: 45 secunde. Înregistrează pronunția corectă.
+            Limita de timp: {maxTime} secunde. Înregistrează pronunția corectă.
           </p>
         </div>
       </div>
