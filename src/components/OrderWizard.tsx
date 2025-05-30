@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -337,15 +336,116 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     );
   }
 
+  // If no package is selected yet, show the first step with package selection
+  if (!selectedPackage && !stepsLoading) {
+    // Create a mock first step for package selection
+    const packageSelectionStep = {
+      id: 'package-selection',
+      step_number: 1,
+      title_key: 'choosePackage',
+      fields: [{
+        id: 'package-field',
+        field_name: 'package',
+        field_type: 'select',
+        placeholder_key: 'selectPackage',
+        required: true,
+        field_order: 1,
+        options: packages.map(pkg => ({
+          value: pkg.value,
+          label_key: pkg.label_key
+        }))
+      }]
+    };
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
+        <div className="max-w-7xl mx-0 my-[6px] py-0 px-[4px]">
+          <div className="mb-12"></div>
+
+          <div className="grid lg:grid-cols-4 gap-8">
+            <div className="lg:col-span-3">
+              <StepIndicator currentStep={1} />
+
+              <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
+                <CardContent className="p-8 lg:p-10">
+                  <div className="mb-8">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                          1
+                        </div>
+                        <div>
+                          <h2 className="text-3xl font-bold text-gray-900">
+                            {t('choosePackage', 'Choose Your Package')}
+                          </h2>
+                          <p className="text-purple-600 font-medium">
+                            {t('stepPackage', 'Step')} 1
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div className="transform transition-all duration-200 hover:scale-[1.02]">
+                      <FormFieldRenderer 
+                        field={packageSelectionStep.fields[0] as Field}
+                        value={formData.package} 
+                        onChange={(value) => updateFormData('package', value)}
+                        selectedAddons={selectedAddons}
+                        onAddonChange={handleAddonChange}
+                        availableAddons={addons}
+                        addonFieldValues={addonFieldValues}
+                        onAddonFieldChange={handleAddonFieldChange}
+                        selectedPackage={selectedPackage}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center pt-10 border-t mt-10">
+                    <Button 
+                      variant="outline" 
+                      disabled={true}
+                      className="px-8 py-3 font-semibold border-2 hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
+                    >
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                      {t('previous', 'Previous')}
+                    </Button>
+
+                    <Button 
+                      onClick={handleNext} 
+                      disabled={!formData.package} 
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
+                    >
+                      {t('continue', 'Continue')}
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="lg:col-span-1 space-y-6">
+              <div className="sticky top-8 space-y-6">
+                <HelpSection />
+                <TestimonialSection />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // If we don't have step data and not loading, show error
-  if (!currentStepData && !stepsLoading && totalSteps === 0) {
-    console.error('No step data available and no steps configured');
+  if (!currentStepData && !stepsLoading && totalSteps === 0 && selectedPackage) {
+    console.error('No step data available for selected package:', selectedPackage);
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600">No steps configured. Please select a package first or contact support.</p>
-          <Button onClick={() => window.location.reload()} className="mt-4">
-            Reload Page
+          <p className="text-red-600">No steps configured for this package. Please contact support.</p>
+          <Button onClick={() => setSelectedPackage('')} className="mt-4">
+            Choose Different Package
           </Button>
         </div>
       </div>
