@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import UserMenu from "@/components/UserMenu";
 
 const Navigation = () => {
   const location = useLocation();
@@ -71,7 +72,7 @@ const Navigation = () => {
               </div>
             </nav>
 
-            {/* Right Side: Language + Order */}
+            {/* Right Side: Language + User Menu + Order */}
             <div className="hidden lg:flex items-center space-x-4 ml-auto">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -91,6 +92,9 @@ const Navigation = () => {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
+              
+              <UserMenu />
+              
               <Link 
                 to="/order" 
                 className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
@@ -147,6 +151,9 @@ const Navigation = () => {
                       ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  
+                  <UserMenu />
+                  
                   <Link 
                     to="/order" 
                     className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors" 
