@@ -91,8 +91,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
 
     return currentStepData.fields.every(field => {
       if (!field.required) return true;
-      if (field.type === 'checkbox-group') return true;
-      const fieldValue = formData[field.name];
+      if (field.field_type === 'checkbox-group') return true;
+      const fieldValue = formData[field.field_name];
       return fieldValue && fieldValue !== '';
     });
   };
@@ -299,10 +299,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                         <div key={index} className="transform transition-all duration-200 hover:scale-[1.02]">
                           <FormFieldRenderer 
                             field={field} 
-                            formData={formData} 
-                            selectedAddons={selectedAddons} 
-                            updateFormData={updateFormData} 
-                            handleAddonChange={handleAddonChange} 
+                            value={formData[field.field_name]} 
+                            onChange={(value) => updateFormData(field.field_name, value)} 
                           />
                         </div>
                       ))}

@@ -11,7 +11,12 @@ export const transformStepsForWizard = (steps: StepData[]) => {
       field_type: field.field_type,
       placeholder_key: field.placeholder_key,
       required: field.required,
-      options: field.options
+      options: field.options ? field.options.map(option => {
+        if (typeof option === 'string') {
+          return { value: option, label_key: option };
+        }
+        return option;
+      }) : undefined
     }))
   }));
 };
