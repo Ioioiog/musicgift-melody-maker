@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -16,31 +15,32 @@ const Navigation = () => {
   const { currentLanguage, setCurrentLanguage, t } = useLanguage();
 
   const navItems = [
-    { path: "/", label: t('home') },
-    { path: "/about", label: t('about') },
-    { path: "/packages", label: t('packages') },
-    { path: "/how-it-works", label: t('howItWorks') },
-    { path: "/testimonials", label: t('testimonials') },
-    { path: "/contact", label: t('contact') },
+    { path: "/", label: t("home") },
+    { path: "/about", label: t("about") },
+    { path: "/packages", label: t("packages") },
+    { path: "/how-it-works", label: t("howItWorks") },
+    { path: "/testimonials", label: t("testimonials") },
+    { path: "/contact", label: t("contact") },
   ];
 
-  const languages: Language[] = ['en', 'ro', 'fr', 'pl', 'de'];
+  const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
 
   return (
-    <header className="fixed top-0 w-full bg-white z-50 border-b border-gray-100 relative">
-      <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-20">
-          {/* Floating Logo - Breaking out of navbar bounds */}
-          <Link to="/" className="absolute top-0 left-8 z-[70]">
-            <img 
-              src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
-              alt="MusicGift" 
-              className="h-32 w-auto transition-transform duration-300 ease-in-out hover:scale-105 transform -translate-y-6"
+    <header className="fixed top-0 w-full bg-white z-50 border-b border-gray-100">
+      <div className="container mx-auto px-6 relative">
+        <div className="flex items-center justify-between h-20 relative">
+
+          {/* Floating Logo */}
+          <Link to="/" className="absolute -top-10 left-4 z-[70]">
+            <img
+              src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png"
+              alt="MusicGift Logo"
+              className="h-28 sm:h-24 md:h-28 lg:h-32 w-auto transition-transform duration-300 ease-in-out hover:scale-105 transform -translate-y-6"
             />
           </Link>
 
-          {/* Desktop Navigation - centered with left margin for logo space */}
-          <nav className="hidden lg:flex items-center justify-center flex-1 ml-48">
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center justify-center flex-1 ml-28 md:ml-36 lg:ml-44 xl:ml-52">
             <div className="flex items-center space-x-12">
               {navItems.map((item) => (
                 <Link
@@ -58,7 +58,7 @@ const Navigation = () => {
             </div>
           </nav>
 
-          {/* Language selector and Order button on the right */}
+          {/* Right Side: Language + Order */}
           <div className="hidden lg:flex items-center space-x-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -82,19 +82,31 @@ const Navigation = () => {
               to="/packages"
               className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
             >
-              {t('orderNow')}
+              {t("orderNow")}
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Toggle */}
           <button
             className="lg:hidden ml-auto"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <div className="w-6 h-6 flex flex-col justify-center items-center">
-              <div className={`w-4 h-0.5 bg-gray-600 transition-all ${isMenuOpen ? 'rotate-45 translate-y-0.5' : ''}`} />
-              <div className={`w-4 h-0.5 bg-gray-600 my-0.5 transition-all ${isMenuOpen ? 'opacity-0' : ''}`} />
-              <div className={`w-4 h-0.5 bg-gray-600 transition-all ${isMenuOpen ? '-rotate-45 -translate-y-0.5' : ''}`} />
+              <div
+                className={`w-4 h-0.5 bg-gray-600 transition-all ${
+                  isMenuOpen ? "rotate-45 translate-y-0.5" : ""
+                }`}
+              />
+              <div
+                className={`w-4 h-0.5 bg-gray-600 my-0.5 transition-all ${
+                  isMenuOpen ? "opacity-0" : ""
+                }`}
+              />
+              <div
+                className={`w-4 h-0.5 bg-gray-600 transition-all ${
+                  isMenuOpen ? "-rotate-45 -translate-y-0.5" : ""
+                }`}
+              />
             </div>
           </button>
         </div>
@@ -141,7 +153,7 @@ const Navigation = () => {
                   className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {t('orderNow')}
+                  {t("orderNow")}
                 </Link>
               </div>
             </nav>
