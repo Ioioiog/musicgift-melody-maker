@@ -14,6 +14,7 @@ const Navigation = () => {
     { path: "/how-it-works", label: "How It Works" },
     { path: "/testimonials", label: "Testimonials" },
     { path: "/contact", label: "Contact" },
+    { path: "/packages", label: "Order" },
   ];
 
   return (
@@ -34,7 +35,7 @@ const Navigation = () => {
             <div className="flex items-center space-x-12">
               {navItems.map((item) => (
                 <Link
-                  key={item.path}
+                  key={item.path + item.label}
                   to={item.path}
                   className={`text-base font-medium transition-colors hover:text-purple-600 ${
                     location.pathname === item.path
@@ -45,12 +46,6 @@ const Navigation = () => {
                   {item.label}
                 </Link>
               ))}
-              <Link
-                to="/packages"
-                className="text-base font-medium transition-colors hover:text-purple-600 text-gray-700"
-              >
-                Order
-              </Link>
             </div>
           </nav>
 
@@ -85,7 +80,7 @@ const Navigation = () => {
             <nav className="flex flex-col space-y-4">
               {navItems.map((item) => (
                 <Link
-                  key={item.path}
+                  key={item.path + item.label}
                   to={item.path}
                   className={`text-sm font-medium transition-colors hover:text-purple-600 ${
                     location.pathname === item.path
@@ -97,13 +92,6 @@ const Navigation = () => {
                   {item.label}
                 </Link>
               ))}
-              <Link
-                to="/packages"
-                className="text-sm font-medium transition-colors hover:text-purple-600 text-gray-600"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Order
-              </Link>
               <div className="flex items-center pt-4">
                 <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                   <Button variant="ghost" size="sm" className="text-sm font-medium px-3 py-1 h-8 rounded-none bg-gray-100">
