@@ -1,605 +1,300 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarIcon, Upload, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { CalendarIcon, Upload, Mic } from 'lucide-react';
 import { format } from 'date-fns';
-import { validateField } from '@/hooks/useFieldValidation';
+import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AudioRecorder from './AudioRecorder';
 
-interface FormField {
+interface FieldOption {
+  value: string;
+  label_key: string;
+}
+
+interface Field {
   id: string;
   field_name: string;
   field_type: string;
   placeholder_key?: string;
-  required?: boolean;
-  options?: { value: string; label_key: string }[] | string[];
-  styling_class?: string;
+  required: boolean;
+  field_order: number;
+  options?: FieldOption[];
 }
 
-interface DateValue {
-  from?: Date;
-  to?: Date;
+interface Addon {
+  id: string;
+  addon_key: string;
+  label_key: string;
+  description_key?: string;
+  price: number;
+  is_active: boolean;
+  trigger_field_type?: string;
+  trigger_field_config: any;
+  trigger_condition: string;
+  trigger_condition_value?: string;
 }
-
-// Helper function to normalize options data
-const normalizeOptions = (options: { value: string; label_key: string }[] | string[] | undefined) => {
-  if (!options) return [];
-  
-  return options
-    .map((option) => {
-      // Handle string format (e.g., ["RO", "EN", "FR"])
-      if (typeof option === 'string') {
-        return option.trim() !== '' ? { value: option, label_key: option } : null;
-      }
-      // Handle object format (e.g., [{ value: "RO", label_key: "Romanian" }])
-      if (typeof option === 'object' && option.value) {
-        return option.value.trim() !== '' ? option : null;
-      }
-      return null;
-    })
-    .filter((option): option is { value: string; label_key: string } => option !== null);
-};
-
-const formatDate = (date: Date | undefined): string => {
-  return date ? format(date, 'yyyy-MM-dd') : '';
-};
-
-const renderInputField = (
-  field: FormField,
-  value: any,
-  onChange: (value: any) => void,
-  errors: string[] = [],
-  t: (key: string) => string
-) => {
-  const hasError = errors.length > 0;
-  
-  return (
-    <div className="space-y-2">
-      <Input
-        type={field.field_type === 'email' ? 'email' : 
-              field.field_type === 'url' ? 'url' : 
-              field.field_type === 'number' ? 'number' : 'text'}
-        placeholder={field.placeholder_key ? t(field.placeholder_key) : field.field_name}
-        value={value || ''}
-        onChange={(e) => onChange(e.target.value)}
-        className={cn(hasError && 'border-red-500')}
-      />
-      {hasError && (
-        <div className="text-red-500 text-sm">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const renderTextareaField = (
-  field: FormField,
-  value: any,
-  onChange: (value: any) => void,
-  errors: string[] = [],
-  t: (key: string) => string
-) => {
-  const hasError = errors.length > 0;
-
-  return (
-    <div className="space-y-2">
-      <Textarea
-        placeholder={field.placeholder_key ? t(field.placeholder_key) : field.field_name}
-        value={value || ''}
-        onChange={(e) => onChange(e.target.value)}
-        className={cn(hasError && 'border-red-500')}
-      />
-      {hasError && (
-        <div className="text-red-500 text-sm">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const renderSelectField = (
-  field: FormField,
-  value: any,
-  onChange: (value: any) => void,
-  errors: string[] = [],
-  t: (key: string) => string
-) => {
-  const hasError = errors.length > 0;
-  const validOptions = normalizeOptions(field.options);
-
-  return (
-    <div className="space-y-2">
-      <Select onValueChange={onChange} value={value || ''}>
-        <SelectTrigger className={cn('w-full bg-white border border-gray-300 shadow-sm', hasError && 'border-red-500')}>
-          <SelectValue placeholder={field.placeholder_key ? t(field.placeholder_key) : field.field_name} />
-        </SelectTrigger>
-        <SelectContent className="bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
-          {validOptions.map((option, index) => (
-            <SelectItem 
-              key={`${field.field_name}-${option.value}-${index}`}
-              value={option.value}
-              className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
-            >
-              {option.label_key ? t(option.label_key) : option.value}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      {hasError && (
-        <div className="text-red-500 text-sm">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const renderMultiselectField = (
-  field: FormField,
-  value: any[],
-  onChange: (value: any[]) => void,
-  errors: string[] = [],
-  selectedAddons?: string[],
-  onAddonChange?: (addonId: string, checked: boolean) => void,
-  availableAddons?: any[],
-  addonFieldValues?: any,
-  onAddonFieldChange?: (addonKey: string, fieldValue: any) => void
-) => {
-  const { t } = useLanguage();
-  const hasError = errors.length > 0;
-  const selectedValues = Array.isArray(value) ? value : [];
-  const validOptions = normalizeOptions(field.options);
-
-  // Check if this is an addons field
-  const isAddonsField = field.field_name === 'addons' || field.field_name.includes('addon');
-
-  const handleCheckboxChange = (optionValue: string) => {
-    if (isAddonsField && onAddonChange) {
-      const isSelected = selectedAddons?.includes(optionValue) || false;
-      onAddonChange(optionValue, !isSelected);
-    } else {
-      if (selectedValues.includes(optionValue)) {
-        onChange(selectedValues.filter((v) => v !== optionValue));
-      } else {
-        onChange([...selectedValues, optionValue]);
-      }
-    }
-  };
-
-  const getAddonDetails = (optionValue: string) => {
-    if (isAddonsField && availableAddons) {
-      return availableAddons.find(a => a.addon_key === optionValue);
-    }
-    return null;
-  };
-
-  const currentlySelected = isAddonsField ? selectedAddons || [] : selectedValues;
-
-  return (
-    <div className="space-y-2">
-      <div className={cn("grid gap-2 grid-cols-1", hasError && 'border border-red-500 rounded-md p-2')}>
-        {validOptions.map((option, index) => {
-          const addonDetails = getAddonDetails(option.value);
-          const isSelected = currentlySelected.includes(option.value);
-          
-          return (
-            <div key={`${field.field_name}-multiselect-${option.value}-${index}`} className="space-y-2">
-              <div className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
-                <div className="flex items-center space-x-3">
-                  <Checkbox
-                    id={`${field.field_name}-${option.value}-${index}`}
-                    checked={isSelected}
-                    onCheckedChange={() => handleCheckboxChange(option.value)}
-                  />
-                  <div className="flex-1">
-                    <Label htmlFor={`${field.field_name}-${option.value}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                      {option.label_key}
-                    </Label>
-                    {addonDetails?.description_key && (
-                      <p className="text-xs text-gray-500 mt-1">{addonDetails.description_key}</p>
-                    )}
-                  </div>
-                </div>
-                {addonDetails?.price && (
-                  <span className="text-sm font-semibold text-purple-600">
-                    +{addonDetails.price} RON
-                  </span>
-                )}
-              </div>
-              
-              {/* Conditional field rendering for selected addons */}
-              {isSelected && addonDetails?.trigger_field_type && onAddonFieldChange && (
-                <div className="ml-6">
-                  {renderConditionalAddonField(
-                    addonDetails,
-                    addonFieldValues?.[option.value],
-                    (fieldValue) => onAddonFieldChange(option.value, fieldValue),
-                    [],
-                    t
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-      {hasError && (
-        <div className="text-red-500 text-sm">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const renderConditionalAddonField = (
-  addon: any,
-  value: any,
-  onChange: (value: any) => void,
-  errors: string[] = [],
-  t: (key: string) => string
-) => {
-  const hasError = errors.length > 0;
-  const config = addon.trigger_field_config || {};
-
-  if (addon.trigger_field_type === 'audio-recorder') {
-    return (
-      <div className="space-y-2 mt-4 p-4 border rounded-lg bg-gray-50">
-        <Label className="text-sm font-medium text-gray-700">
-          {t('recordVoiceMessage')} - {t(addon.label_key)}
-        </Label>
-        <AudioRecorder
-          value={value}
-          onChange={onChange}
-          maxDuration={config.maxDuration || 30}
-          className={cn(hasError && 'border-red-500')}
-        />
-        {hasError && (
-          <div className="text-red-500 text-sm">
-            {errors.map((error, index) => (
-              <div key={index}>{error}</div>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  if (addon.trigger_field_type === 'file') {
-    return (
-      <div className="space-y-2 mt-4 p-4 border rounded-lg bg-gray-50">
-        <Label className="text-sm font-medium text-gray-700">
-          {t('uploadFile')} - {t(addon.label_key)}
-        </Label>
-        {value ? (
-          <div className="flex items-center justify-between p-4 border rounded-md">
-            <span className="text-sm">{value.name}</span>
-            <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}>
-              <X className="h-4 w-4" />
-              <span className="sr-only">Remove</span>
-            </Button>
-          </div>
-        ) : (
-          <Label htmlFor={`addon-${addon.addon_key}`} className="cursor-pointer flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-md hover:bg-gray-100">
-            <div className="space-y-1 text-center">
-              <Upload className="mx-auto h-6 w-6 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                {config.allowedTypes ? 
-                  `Upload ${config.allowedTypes.join(', ')} file` : 
-                  'Upload file'}
-              </p>
-            </div>
-            <Input
-              id={`addon-${addon.addon_key}`}
-              type="file"
-              className="hidden"
-              accept={config.allowedTypes?.join(',')}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) onChange(file);
-              }}
-            />
-          </Label>
-        )}
-        {hasError && (
-          <div className="text-red-500 text-sm">
-            {errors.map((error, index) => (
-              <div key={index}>{error}</div>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  return null;
-};
-
-const renderCheckboxField = (
-  field: FormField,
-  value: boolean,
-  onChange: (value: boolean) => void,
-  errors: string[] = []
-) => {
-  const hasError = errors.length > 0;
-
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center space-x-2">
-        <Checkbox
-          id={field.field_name}
-          checked={!!value}
-          onCheckedChange={onChange}
-        />
-        <Label htmlFor={field.field_name} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          {field.placeholder_key || field.field_name}
-        </Label>
-      </div>
-      {hasError && (
-        <div className="text-red-500 text-sm">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const renderRadioField = (
-  field: FormField,
-  value: any,
-  onChange: (value: any) => void,
-  errors: string[] = []
-) => {
-  const hasError = errors.length > 0;
-  const validOptions = normalizeOptions(field.options);
-
-  return (
-    <div className="space-y-2">
-      <RadioGroup defaultValue={value} onValueChange={onChange} className="flex flex-col space-y-1">
-        {validOptions.map((option, index) => (
-          <div key={`${field.field_name}-radio-${option.value}-${index}`} className="flex items-center space-x-2">
-            <RadioGroupItem value={option.value} id={`${field.field_name}-${option.value}-${index}`} />
-            <Label htmlFor={`${field.field_name}-${option.value}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              {option.label_key}
-            </Label>
-          </div>
-        ))}
-      </RadioGroup>
-      {hasError && (
-        <div className="text-red-500 text-sm">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const renderDateField = (
-  field: FormField,
-  value: DateValue,
-  onChange: (value: DateValue) => void,
-  errors: string[] = []
-) => {
-  const hasError = errors.length > 0;
-  const selectedDate = value?.from ? new Date(value.from) : undefined;
-
-  return (
-    <div className="space-y-2">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={'outline'}
-            className={cn(
-              'w-[280px] justify-start text-left font-normal',
-              !selectedDate && 'text-muted-foreground',
-              hasError && 'border-red-500'
-            )}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {selectedDate ? formatDate(selectedDate) : <span>Pick a date</span>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={(date) => onChange({ from: date })}
-            initialFocus
-          />
-        </PopoverContent>
-      </Popover>
-      {hasError && (
-        <div className="text-red-500 text-sm">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const renderFileField = (
-  field: FormField,
-  value: any,
-  onChange: (value: any) => void,
-  errors: string[] = []
-) => {
-  const hasError = errors.length > 0;
-  const [file, setFile] = React.useState<File | null>(null);
-
-  React.useEffect(() => {
-    if (value instanceof File) {
-      setFile(value);
-    } else {
-      setFile(null);
-    }
-  }, [value]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      onChange(selectedFile);
-    } else {
-      setFile(null);
-      onChange(null);
-    }
-  };
-
-  const handleRemoveFile = () => {
-    setFile(null);
-    onChange(null);
-  };
-
-  return (
-    <div className="space-y-2">
-      {file ? (
-        <div className="flex items-center justify-between p-4 border rounded-md">
-          <span className="text-sm">{file.name}</span>
-          <Button type="button" variant="ghost" size="sm" onClick={handleRemoveFile}>
-            <X className="h-4 w-4" />
-            <span className="sr-only">Remove</span>
-          </Button>
-        </div>
-      ) : (
-        <Label htmlFor={field.field_name} className="cursor-pointer flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-md hover:bg-gray-50">
-          <div className="space-y-1 text-center">
-            <Upload className="mx-auto h-6 w-6 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">
-              Drag and drop a file here or click to browse.
-            </p>
-          </div>
-          <Input
-            id={field.field_name}
-            type="file"
-            className="hidden"
-            onChange={handleFileChange}
-          />
-        </Label>
-      )}
-      {hasError && (
-        <div className="text-red-500 text-sm">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const renderAudioRecorderField = (
-  field: FormField,
-  value: any,
-  onChange: (value: any) => void,
-  errors: string[] = []
-) => {
-  const hasError = errors.length > 0;
-
-  return (
-    <div className="space-y-2">
-      <AudioRecorder
-        value={value}
-        onChange={onChange}
-        maxDuration={30}
-        className={cn(hasError && 'border-red-500')}
-      />
-      {hasError && (
-        <div className="text-red-500 text-sm">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
 
 interface FormFieldRendererProps {
-  field: FormField;
+  field: Field;
   value: any;
   onChange: (value: any) => void;
-  validationErrors?: string[];
-  selectedAddons?: string[];
-  onAddonChange?: (addonId: string, checked: boolean) => void;
-  availableAddons?: any[];
-  addonFieldValues?: any;
-  onAddonFieldChange?: (addonKey: string, fieldValue: any) => void;
+  selectedAddons: string[];
+  onAddonChange: (addonId: string, checked: boolean) => void;
+  availableAddons: Addon[];
+  addonFieldValues: any;
+  onAddonFieldChange: (addonKey: string, fieldValue: any) => void;
+  selectedPackage?: string;
 }
 
-const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({ 
-  field, 
-  value, 
+const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
+  field,
+  value,
   onChange,
-  validationErrors = [],
   selectedAddons,
   onAddonChange,
   availableAddons,
   addonFieldValues,
-  onAddonFieldChange
+  onAddonFieldChange,
+  selectedPackage = ''
 }) => {
   const { t } = useLanguage();
+  const [date, setDate] = useState<Date>();
+
+  // Helper function to check if addon should be shown based on trigger condition
+  const shouldShowAddon = (addon: Addon, selectedPackage: string) => {
+    if (!addon.is_active) return false;
+    
+    if (addon.trigger_condition === 'always') return true;
+    
+    if (addon.trigger_condition === 'package_equals') {
+      return addon.trigger_condition_value === selectedPackage;
+    }
+    
+    if (addon.trigger_condition === 'package_in') {
+      const allowedPackages = addon.trigger_condition_value?.split(',') || [];
+      return allowedPackages.includes(selectedPackage);
+    }
+    
+    return false;
+  };
+
+  // Updated getSelectedPackage function
+  const getSelectedPackage = () => {
+    // Use the selectedPackage prop first, then fall back to field value
+    if (selectedPackage) return selectedPackage;
+    return field.field_name === 'package' ? value : '';
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>, addonKey: string) => {
+    const files = event.target.files;
+    if (files) {
+      onAddonFieldChange(addonKey, Array.from(files));
+    }
+  };
+
+  const handleAudioRecording = (audioBlob: Blob, addonKey: string) => {
+    onAddonFieldChange(addonKey, audioBlob);
+  };
 
   const renderField = () => {
     switch (field.field_type) {
       case 'text':
       case 'email':
+      case 'tel':
       case 'url':
-      case 'number':
-        return renderInputField(field, value, onChange, validationErrors, t);
+        return (
+          <Input
+            type={field.field_type}
+            value={value || ''}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
+            required={field.required}
+            className="w-full"
+          />
+        );
+
       case 'textarea':
-        return renderTextareaField(field, value, onChange, validationErrors, t);
+        return (
+          <Textarea
+            value={value || ''}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
+            required={field.required}
+            className="min-h-[100px] w-full"
+          />
+        );
+
       case 'select':
-        return renderSelectField(field, value, onChange, validationErrors, t);
-      case 'multiselect':
-        return renderMultiselectField(field, value, onChange, validationErrors, selectedAddons, onAddonChange, availableAddons, addonFieldValues, onAddonFieldChange);
+        return (
+          <Select value={value || ''} onValueChange={onChange}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={field.placeholder_key ? t(field.placeholder_key) : t('selectOption')} />
+            </SelectTrigger>
+            <SelectContent>
+              {field.options?.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {t(option.label_key)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+
       case 'checkbox':
-        return renderCheckboxField(field, value, onChange, validationErrors);
-      case 'radio':
-        return renderRadioField(field, value, onChange, validationErrors);
+        return (
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              checked={value || false}
+              onCheckedChange={onChange}
+              required={field.required}
+            />
+            <Label className="text-sm">
+              {field.placeholder_key ? t(field.placeholder_key) : ''}
+            </Label>
+          </div>
+        );
+
+      case 'checkbox-group':
+        const selectedPackage = getSelectedPackage();
+        const filteredAddons = availableAddons.filter(addon => shouldShowAddon(addon, selectedPackage));
+        
+        return (
+          <div className="space-y-4">
+            {filteredAddons.map((addon) => (
+              <Card key={addon.id} className="border-2 hover:border-purple-200 transition-colors">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3 flex-1">
+                      <Checkbox
+                        checked={selectedAddons.includes(addon.addon_key)}
+                        onCheckedChange={(checked) => onAddonChange(addon.addon_key, checked as boolean)}
+                        className="mt-1"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Label className="font-semibold text-base cursor-pointer">
+                            {addon.label_key}
+                          </Label>
+                          <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+                            +{addon.price} RON
+                          </Badge>
+                        </div>
+                        {addon.description_key && (
+                          <p className="text-sm text-gray-600 mb-3">
+                            {addon.description_key}
+                          </p>
+                        )}
+                        
+                        {/* Render addon-specific fields when selected */}
+                        {selectedAddons.includes(addon.addon_key) && addon.trigger_field_type && (
+                          <div className="mt-3 p-3 bg-gray-50 rounded-md">
+                            {addon.trigger_field_type === 'file' && (
+                              <div>
+                                <Label className="text-sm font-medium mb-2 block">
+                                  Upload Files
+                                </Label>
+                                <div className="border-2 border-dashed border-gray-300 rounded-md p-4 text-center">
+                                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                                  <Input
+                                    type="file"
+                                    multiple
+                                    accept={addon.trigger_field_config?.allowedTypes?.join(',')}
+                                    onChange={(e) => handleFileUpload(e, addon.addon_key)}
+                                    className="hidden"
+                                    id={`file-${addon.addon_key}`}
+                                  />
+                                  <label
+                                    htmlFor={`file-${addon.addon_key}`}
+                                    className="cursor-pointer text-sm text-purple-600 hover:text-purple-700"
+                                  >
+                                    Click to upload files
+                                  </label>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Max {addon.trigger_field_config?.maxFiles || 10} files, 
+                                    {addon.trigger_field_config?.maxTotalSizeMb || 150}MB total
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {addon.trigger_field_type === 'audio-recorder' && (
+                              <div>
+                                <Label className="text-sm font-medium mb-2 block">
+                                  Record Audio Message
+                                </Label>
+                                <AudioRecorder
+                                  onRecordingComplete={(audioBlob) => handleAudioRecording(audioBlob, addon.addon_key)}
+                                  maxDuration={addon.trigger_field_config?.maxDuration || 30}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        );
+
       case 'date':
-        return renderDateField(field, value, onChange, validationErrors);
-      case 'file':
-        return renderFileField(field, value, onChange, validationErrors);
-      case 'audio-recorder':
-        return renderAudioRecorderField(field, value, onChange, validationErrors);
+        return (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full justify-start text-left font-normal",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {date ? format(date, "PPP") : <span>{field.placeholder_key ? t(field.placeholder_key) : t('pickDate')}</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(selectedDate) => {
+                  setDate(selectedDate);
+                  onChange(selectedDate);
+                }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+        );
+
       default:
-        return renderInputField(field, value, onChange, validationErrors, t);
+        return (
+          <Input
+            value={value || ''}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
+            required={field.required}
+            className="w-full"
+          />
+        );
     }
   };
 
   return (
-    <div className="space-y-2">
-      <Label htmlFor={field.field_name} className={cn(
-        "text-sm font-medium",
-        field.required && "after:content-['*'] after:text-red-500 after:ml-1"
-      )}>
-        {field.field_name}
+    <div className="space-y-3">
+      <Label className="text-sm font-medium text-gray-700">
+        {field.field_name === 'package' ? t('selectYourPackage') : field.placeholder_key ? t(field.placeholder_key) : field.field_name}
+        {field.required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       {renderField()}
     </div>

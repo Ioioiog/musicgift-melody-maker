@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -221,7 +220,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     return packagePrice + addonsPrice;
   };
 
-  // Get current step data - either from database or fallback for package selection
+  // Modified getCurrentStepData to pass selected package context
   const getCurrentStepData = () => {
     if (currentStep === 1) {
       // Package selection step
@@ -372,6 +371,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                             availableAddons={addons}
                             addonFieldValues={addonFieldValues}
                             onAddonFieldChange={handleAddonFieldChange}
+                            selectedPackage={selectedPackage}
                           />
                         </div>
                       ))}
