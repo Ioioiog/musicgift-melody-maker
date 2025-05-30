@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { validateField } from '@/hooks/useFieldValidation';
 import { useLanguage } from '@/contexts/LanguageContext';
+import AudioRecorder from './AudioRecorder';
 
 interface FormField {
   id: string;
@@ -374,6 +375,33 @@ const renderFileField = (
   );
 };
 
+const renderAudioRecorderField = (
+  field: FormField,
+  value: any,
+  onChange: (value: any) => void,
+  errors: string[] = []
+) => {
+  const hasError = errors.length > 0;
+
+  return (
+    <div className="space-y-2">
+      <AudioRecorder
+        value={value}
+        onChange={onChange}
+        maxDuration={30}
+        className={cn(hasError && 'border-red-500')}
+      />
+      {hasError && (
+        <div className="text-red-500 text-sm">
+          {errors.map((error, index) => (
+            <div key={index}>{error}</div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 interface FormFieldRendererProps {
   field: FormField;
   value: any;
@@ -410,6 +438,8 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         return renderDateField(field, value, onChange, validationErrors);
       case 'file':
         return renderFileField(field, value, onChange, validationErrors);
+      case 'audio-recorder':
+        return renderAudioRecorderField(field, value, onChange, validationErrors);
       default:
         return renderInputField(field, value, onChange, validationErrors, t);
     }
