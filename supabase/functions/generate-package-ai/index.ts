@@ -132,10 +132,19 @@ Respond with ONLY the JSON object, no additional text.`;
 
     console.log('Generated text:', generatedText);
 
-    // Parse the JSON response
+    // Parse the JSON response, handling markdown code blocks
     let generatedData;
     try {
-      generatedData = JSON.parse(generatedText);
+      let cleanedText = generatedText.trim();
+      
+      // Remove markdown code block formatting if present
+      if (cleanedText.startsWith('```json')) {
+        cleanedText = cleanedText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+      } else if (cleanedText.startsWith('```')) {
+        cleanedText = cleanedText.replace(/^```\n?/, '').replace(/\n?```$/, '');
+      }
+      
+      generatedData = JSON.parse(cleanedText.trim());
     } catch (parseError) {
       console.error('Failed to parse AI response:', generatedText);
       throw new Error('Invalid JSON response from AI');
