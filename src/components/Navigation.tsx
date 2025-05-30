@@ -27,21 +27,20 @@ const Navigation = () => {
   const languages: Language[] = ['en', 'ro', 'fr', 'pl', 'de'];
 
   return (
-    <header className="fixed top-0 w-full bg-white z-50 border-b border-gray-100">
+    <header className="fixed top-0 w-full bg-white z-50 border-b border-gray-100 relative">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
-          {/* Logo positioned on the left and breaking out of bounds */}
-           {/* Floating Logo - Enhanced positioning */}
-          <Link to="/" className="flex items-center relative z-60">
+          {/* Floating Logo - Breaking out of navbar bounds */}
+          <Link to="/" className="absolute top-0 left-8 z-[70]">
             <img 
               src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
               alt="MusicGift" 
-              className="h-48 w-auto transition-transform duration-300 ease-in-out hover:scale-105 absolute top-[-60px] left-[-20px] drop-shadow-lg"
+              className="h-32 w-auto transition-transform duration-300 ease-in-out hover:scale-105 transform -translate-y-6"
             />
           </Link>
 
-          {/* Desktop Navigation - centered */}
-          <nav className="hidden lg:flex items-center justify-center flex-1 ml-40">
+          {/* Desktop Navigation - centered with left margin for logo space */}
+          <nav className="hidden lg:flex items-center justify-center flex-1 ml-48">
             <div className="flex items-center space-x-12">
               {navItems.map((item) => (
                 <Link
