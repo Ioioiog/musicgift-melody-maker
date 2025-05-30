@@ -15,6 +15,13 @@ interface FormFieldRendererProps {
   selectedAddons: string[];
   updateFormData: (field: string, value: any) => void;
   handleAddonChange: (addonId: string, checked: boolean) => void;
+  validations?: Array<{
+    target_field: string;
+    validation_type: string;
+    validation_value?: string;
+    error_message_key?: string;
+    is_active: boolean;
+  }>;
 }
 
 const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
@@ -22,7 +29,8 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   formData,
   selectedAddons,
   updateFormData,
-  handleAddonChange
+  handleAddonChange,
+  validations = []
 }) => {
   const { t } = useLanguage();
   const [isRecording, setIsRecording] = useState(false);
@@ -740,12 +748,23 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
     }
   };
 
+  // Add validation logic
+  const fieldValidation = validations ? validateField(field.name, formData[field.name], validations) : { isValid: true, errors: [] };
+  const hasErrors = !fieldValidation.isValid;
+
   return (
     <div className="space-y-2">
       <Label className="text-sm font-medium text-gray-700">
         {t(field.placeholder)} {field.required && <span className="text-red-500">{t('required')}</span>}
       </Label>
       {renderField()}
+      {hasErrors && (
+        <div className="text-red-500 text-xs space-y-1">
+          {fieldValidation.errors.map((error, index) => (
+            <p key={index}>{t(error)}</p>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

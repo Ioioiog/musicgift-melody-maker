@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +15,7 @@ import Contact from "./pages/Contact";
 import Order from "./pages/Order";
 import Auth from "./pages/Auth";
 import Settings from "./pages/Settings";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,6 +56,14 @@ const App = () => (
                 element={
                   <AuthGuard requireAuth={false}>
                     <Auth />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/admin" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <Admin />
                   </AuthGuard>
                 } 
               />
