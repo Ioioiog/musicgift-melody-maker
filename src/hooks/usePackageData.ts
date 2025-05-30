@@ -1,3 +1,4 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from './useTranslations';
@@ -32,7 +33,7 @@ export interface StepData {
     placeholder_key?: string;
     required: boolean;
     field_order: number;
-    options?: string[];
+    options?: string[] | Array<{ value: string; label_key: string; }>;
   }>;
 }
 
@@ -115,7 +116,8 @@ export const usePackageSteps = (packageValue: string) => {
           .sort((a: any, b: any) => a.field_order - b.field_order)
           .map((field: any) => ({
             ...field,
-            options: field.options ? JSON.parse(field.options) : undefined
+            // Handle options properly - the database returns arrays or null, not JSON strings
+            options: field.options || undefined
           }))
       })) as StepData[];
     },
