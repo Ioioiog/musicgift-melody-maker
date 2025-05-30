@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -22,7 +21,7 @@ interface FormField {
   field_type: string;
   placeholder_key?: string;
   required?: boolean;
-  options?: { value: string; label_key: string }[];
+  options?: { value: string; label_key: string }[] | string[];
   styling_class?: string;
 }
 
@@ -30,6 +29,25 @@ interface DateValue {
   from?: Date;
   to?: Date;
 }
+
+// Helper function to normalize options data
+const normalizeOptions = (options: { value: string; label_key: string }[] | string[] | undefined) => {
+  if (!options) return [];
+  
+  return options
+    .map((option) => {
+      // Handle string format (e.g., ["RO", "EN", "FR"])
+      if (typeof option === 'string') {
+        return option.trim() !== '' ? { value: option, label_key: option } : null;
+      }
+      // Handle object format (e.g., [{ value: "RO", label_key: "Romanian" }])
+      if (typeof option === 'object' && option.value) {
+        return option.value.trim() !== '' ? option : null;
+      }
+      return null;
+    })
+    .filter((option): option is { value: string; label_key: string } => option !== null);
+};
 
 const formatDate = (date: Date | undefined): string => {
   return date ? format(date, 'yyyy-MM-dd') : '';
@@ -102,11 +120,7 @@ const renderSelectField = (
   t: (key: string) => string
 ) => {
   const hasError = errors.length > 0;
-
-  // Filter out options with invalid values (null, undefined, empty string)
-  const validOptions = field.options?.filter(option => 
-    option.value && option.value.trim() !== ''
-  ) || [];
+  const validOptions = normalizeOptions(field.options);
 
   return (
     <div className="space-y-2">
@@ -145,11 +159,7 @@ const renderMultiselectField = (
 ) => {
   const hasError = errors.length > 0;
   const selectedValues = Array.isArray(value) ? value : [];
-
-  // Filter out options with invalid values
-  const validOptions = field.options?.filter(option => 
-    option.value && option.value.trim() !== ''
-  ) || [];
+  const validOptions = normalizeOptions(field.options);
 
   const handleCheckboxChange = (optionValue: string) => {
     if (selectedValues.includes(optionValue)) {
@@ -224,11 +234,7 @@ const renderRadioField = (
   errors: string[] = []
 ) => {
   const hasError = errors.length > 0;
-
-  // Filter out options with invalid values
-  const validOptions = field.options?.filter(option => 
-    option.value && option.value.trim() !== ''
-  ) || [];
+  const validOptions = normalizeOptions(field.options);
 
   return (
     <div className="space-y-2">
