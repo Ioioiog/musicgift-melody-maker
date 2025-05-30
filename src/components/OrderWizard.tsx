@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 
 interface OrderWizardProps {
   onComplete: (data: any) => void;
@@ -22,13 +21,113 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const { toast } = useToast();
 
   const packages = [
-    { value: 'personal', label: 'Pachet Personal - 300 RON' },
-    { value: 'business', label: 'Pachet Business - 500 RON' },
-    { value: 'premium', label: 'Pachet Premium - 500 RON' },
-    { value: 'artist', label: 'Pachet Artist - 8000 RON' },
-    { value: 'instrumental', label: 'Pachet Instrumental - 500 RON' },
-    { value: 'remix', label: 'Pachet Remix - 500 RON' },
-    { value: 'gift', label: 'Pachet Cadou' },
+    { 
+      value: 'personal', 
+      label: 'Pachet Personal - 300 RON',
+      details: {
+        price: '300 RON',
+        deliveryTime: '7-10 zile',
+        includes: [
+          'Melodie personalizată compusă special pentru tine',
+          'Producție audio profesională',
+          'Voce înregistrată de artist profesionist',
+          'Mix și master final',
+          'Fișier audio de înaltă calitate (WAV + MP3)'
+        ]
+      }
+    },
+    { 
+      value: 'business', 
+      label: 'Pachet Business - 500 RON',
+      details: {
+        price: '500 RON',
+        deliveryTime: '5-7 zile',
+        includes: [
+          'Melodie comercială pentru brand/companie',
+          'Producție audio profesională',
+          'Voce înregistrată de artist profesionist',
+          'Mix și master final',
+          'Drepturi comerciale de bază incluse',
+          'Fișiere audio multiple (WAV, MP3, instrumental)'
+        ]
+      }
+    },
+    { 
+      value: 'premium', 
+      label: 'Pachet Premium - 500 RON',
+      details: {
+        price: '500 RON',
+        deliveryTime: '7-10 zile',
+        includes: [
+          'Melodie premium cu producție avansată',
+          'Distribuție automată pe platforme digitale',
+          'Videoclip lyric inclus',
+          'Mix și master profesional',
+          'Promovare pe rețelele sociale Mango Records'
+        ]
+      }
+    },
+    { 
+      value: 'artist', 
+      label: 'Pachet Artist - 8000 RON',
+      details: {
+        price: '8000 RON',
+        deliveryTime: '14-21 zile',
+        includes: [
+          'Colaborare artistică completă',
+          'Producția unei melodii originale',
+          'Înregistrare vocală profesională',
+          'Videoclip muzical profesional',
+          'Distribuție pe toate platformele',
+          'Contract 50/50 cu Mango Records',
+          'Promovare și marketing profesional'
+        ]
+      }
+    },
+    { 
+      value: 'instrumental', 
+      label: 'Pachet Instrumental - 500 RON',
+      details: {
+        price: '500 RON',
+        deliveryTime: '5-7 zile',
+        includes: [
+          'Instrumental personalizat în genul dorit',
+          'Producție audio profesională',
+          'Mix și master final',
+          'Fișiere audio multiple (WAV, MP3)',
+          'Stems separate pentru mixing'
+        ]
+      }
+    },
+    { 
+      value: 'remix', 
+      label: 'Pachet Remix - 500 RON',
+      details: {
+        price: '500 RON',
+        deliveryTime: '5-7 zile',
+        includes: [
+          'Remix profesional al piesei tale',
+          'Producție în stilul dorit',
+          'Mix și master final',
+          'Versiune extended și radio edit',
+          'Fișiere audio de înaltă calitate'
+        ]
+      }
+    },
+    { 
+      value: 'gift', 
+      label: 'Pachet Cadou',
+      details: {
+        price: 'Variabil',
+        deliveryTime: 'Conform pachetului ales',
+        includes: [
+          'Card cadou digital personalizat',
+          'Mesaj personalizat pentru destinatar',
+          'Trimitere automată la data dorită',
+          'Toate beneficiile pachetului selectat'
+        ]
+      }
+    },
   ];
 
   const languages = [
@@ -246,6 +345,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     }
   };
 
+  const getSelectedPackageDetails = () => {
+    return packages.find(pkg => pkg.value === selectedPackage);
+  };
+
   const renderField = (field: any) => {
     switch (field.type) {
       case 'select':
@@ -397,6 +500,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     return <div>Loading...</div>;
   }
 
+  const selectedPackageDetails = getSelectedPackageDetails();
+
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
@@ -424,6 +529,36 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
             {renderField(field)}
           </div>
         ))}
+
+        {/* Package Details Display */}
+        {selectedPackage && selectedPackageDetails && (
+          <div className="mt-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <h3 className="text-lg font-semibold text-purple-800 mb-3">
+              Detalii {selectedPackageDetails.label}
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Preț:</p>
+                <p className="font-semibold text-purple-600">{selectedPackageDetails.details.price}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Timp de livrare:</p>
+                <p className="font-semibold text-purple-600">{selectedPackageDetails.details.deliveryTime}</p>
+              </div>
+            </div>
+            <div className="mt-4">
+              <p className="text-sm text-gray-600 mb-2">Pachetul include:</p>
+              <ul className="space-y-1">
+                {selectedPackageDetails.details.includes.map((item, index) => (
+                  <li key={index} className="flex items-start space-x-2 text-sm">
+                    <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
 
         <div className="flex justify-between pt-6">
           <Button
