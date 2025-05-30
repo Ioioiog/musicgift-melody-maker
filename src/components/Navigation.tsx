@@ -49,7 +49,7 @@ const Navigation = () => {
       </div>
 
       {/* Navigation Bar */}
-      <header className="fixed top-0 w-full bg-white z-50 border-b border-gray-100">
+      <header className="fixed top-4 w-full bg-white z-50 border-b border-gray-100">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between h-20">
             
