@@ -23,6 +23,12 @@ const translations = {
     accountSettings: 'Account Settings',
     signOut: 'Sign Out',
     
+    // Common
+    selectLanguage: 'Select language',
+    selectOption: 'Select an option',
+    selectYourPackage: 'Select Your Package',
+    loadingPackages: 'Loading packages...',
+    
     // Order Page
     placeOrder: 'Place Order',
     orderSubtitle: 'Let\'s create something magical together. Fill out the form below to get started.',
@@ -109,168 +115,12 @@ const translations = {
     giftPackageDesc: 'Personalized musical gift with beautiful presentation.',
     giftPackageTagline: 'The perfect surprise for your loved ones with elegant delivery.',
     
-    // Form Fields
-    recipientName: 'Name of the person the song is for',
-    relationship: 'Your relationship with this person',
-    occasion: 'Occasion (birthday, wedding, etc.)',
-    eventDate: 'Event date',
-    songLanguage: 'Language you want the song written in',
-    pronunciationAudioRecipient: 'Audio recording (if the name has special pronunciation)',
-    story: 'The story you want us to transform into a song',
-    emotionalTone: 'Song tone (romantic, cheerful, nostalgic, etc.)',
-    keyMoments: 'Essential moments from your relationship',
-    specialWords: 'Words/expressions that should appear',
-    pronunciationAudioKeywords: 'Audio recording for difficult words',
-    musicStyle: 'What music style do you prefer',
-    referenceSong: 'Example song with similar vibe',
-    fullName: 'Your full name',
-    email: 'Your email address',
-    phone: 'Phone number (optional)',
-    acceptMentionObligation: 'I accept that if I publish the song, I must mention "MusicGift.ro by Mango Records"',
-    
-    // Business Package Fields
-    brandName: 'Brand/Company name',
-    campaignPurpose: 'Campaign purpose and target audience',
-    brandValues: 'Brand values and desired message',
-    
-    // Artist Package Fields
-    artistName: 'Artist/Band name',
-    songStyle: 'Desired musical style',
-    artistBio: 'Artist bio and musical background',
-    linksReleases: 'Links to previous releases',
-    linksMedia: 'Links to social media/press',
-    
-    // Gift Package Fields
-    recipientEmail: 'Recipient email address',
-    giftMessage: 'Personal message for recipient',
-    
-    // Instrumental Package Fields
-    desiredStyle: 'Desired musical style/genre',
-    instrumentalReference: 'Reference track or description',
-    
-    // Remix Package Fields
-    originalTitle: 'Original song title',
-    originalArtist: 'Original artist',
-    
-    // Relationships
-    partner: 'Partner/Wife/Husband',
-    child: 'Child',
-    parent: 'Parent',
-    sibling: 'Brother/Sister',
-    friend: 'Friend',
-    grandparent: 'Grandparent',
-    otherRelation: 'Other relationship',
-    
-    // Occasions
-    birthday: 'Birthday',
-    wedding: 'Wedding',
-    anniversary: 'Anniversary',
-    valentine: 'Valentine\'s Day',
-    graduation: 'Graduation',
-    christmas: 'Christmas',
-    otherOccasion: 'Other occasion',
-    
-    // Emotional Tones
-    romantic: 'Romantic',
-    happy: 'Happy/Joyful',
-    nostalgic: 'Nostalgic',
-    emotional: 'Emotional',
-    energetic: 'Energetic',
-    peaceful: 'Peaceful/Calm',
-    
-    // Music Styles
-    pop: 'Pop',
-    acoustic: 'Acoustic',
-    rock: 'Rock',
-    jazz: 'Jazz',
-    folk: 'Folk',
-    electronic: 'Electronic',
-    classical: 'Classical',
-    reggae: 'Reggae',
-    country: 'Country',
-    
     // Languages
     romanian: 'Romanian',
     english: 'English',
     french: 'French',
     german: 'German',
     polish: 'Polish',
-    
-    // Addons
-    rushDelivery: 'Priority delivery in 24-48h',
-    commercialRights: 'Commercial rights for YouTube, Spotify etc.',
-    distributionMangoRecords: 'Official distribution through Mango Records',
-    customVideo: 'Custom video with your photos',
-    audioMessageFromSender: 'Personal audio message incorporated into the song',
-    extendedSong: 'Extended song with 3 verses instead of 2',
-    
-    // Audio Recording
-    startRecording: 'Start recording',
-    stopRecording: 'Stop recording',
-    play: 'Play',
-    pause: 'Pause',
-    reRecord: 'Record again',
-    recordingSuccessfullySaved: 'Audio recording saved successfully',
-    recordingTimeLimit: 'Time limit: {time} seconds. Record the correct pronunciation.',
-    recordPersonalMessage: 'Record your personal audio message',
-    personalMessageLimit: 'Time limit: 45 seconds. Your message will be incorporated into the final song.',
-    uploadImagesVideo: 'Upload images or video for the custom video',
-    acceptImagesVideo: 'We accept images (JPG, PNG) and video (MP4, MOV). You can select multiple files.',
-    cannotSelectWith: 'Cannot be selected with',
-    
-    // Required Field Indicator
-    required: '*',
-    
-    // Delivery Times
-    deliveryTime3to5: '3-5 days',
-    deliveryTime5to7: '5-7 days',
-    deliveryTime7to10: '7-10 days',
-    deliveryTime14to21: '14-21 days',
-    deliveryTimeVaries: 'Varies by selected package',
-    
-    // Package Prices
-    price599: '599 RON',
-    price1299: '1299 RON',
-    price2499: '2499 RON',
-    price3999: '3999 RON',
-    price799: '799 RON',
-    price999: '999 RON',
-    price699: '699 RON',
-    
-    // Package Includes
-    originalSongFromStory: 'Original song created from your story',
-    professionalVoice: 'Professional voice from MusicGift team',
-    rapidDelivery: 'Rapid delivery in 3-5 days',
-    personalRights: 'Personal use rights (non-commercial)',
-    creativeConsultation: 'Creative consultation based on story and musical preferences',
-    commercialSong: 'Commercial song for brand/company',
-    professionalAudioProduction: 'Professional audio production',
-    professionalArtistVoice: 'Voice recorded by professional artist',
-    finalMixMaster: 'Final mix and master',
-    basicCommercialRights: 'Basic commercial rights included',
-    multipleAudioFiles: 'Multiple audio files (WAV, MP3, instrumental)',
-    premiumAdvancedProduction: 'Premium song with advanced production',
-    automaticDigitalDistribution: 'Automatic distribution on digital platforms',
-    lyricVideoIncluded: 'Lyric video included',
-    professionalMixMaster: 'Professional mix and master',
-    socialMediaPromotion: 'Social media promotion on Mango Records',
-    fullArtisticCollaboration: 'Full artistic collaboration',
-    originalSongProduction: 'Original song production',
-    professionalVocalRecording: 'Professional vocal recording',
-    professionalMusicVideo: 'Professional music video',
-    distributionAllPlatforms: 'Distribution on all platforms',
-    contract5050: '50/50 contract with Mango Records',
-    professionalMarketing: 'Professional promotion and marketing',
-    customInstrumental: 'Custom instrumental in desired genre',
-    separateStems: 'Separate stems for mixing',
-    professionalRemix: 'Professional remix of your song',
-    productionDesiredStyle: 'Production in desired style',
-    extendedRadioEdit: 'Extended version and radio edit',
-    highQualityAudioFiles: 'High quality audio files',
-    personalizedDigitalCard: 'Personalized digital gift card',
-    personalizedMessage: 'Personalized message for recipient',
-    automaticDelivery: 'Automatic delivery at desired date',
-    allSelectedPackageBenefits: 'All benefits of selected package'
   },
   ro: {
     // Navigation
@@ -285,6 +135,12 @@ const translations = {
     user: 'Utilizator',
     accountSettings: 'Setări cont',
     signOut: 'Deconectează-te',
+    
+    // Common
+    selectLanguage: 'Selectează limba',
+    selectOption: 'Selectează o opțiune',
+    selectYourPackage: 'Selectează Pachetul',
+    loadingPackages: 'Se încarcă pachetele...',
     
     // Order Page
     placeOrder: 'Plasează Comanda',
@@ -372,168 +228,12 @@ const translations = {
     giftPackageDesc: 'Cadou muzical personalizat cu prezentare frumoasă.',
     giftPackageTagline: 'Surpriza perfectă pentru cei dragi cu livrare elegantă.',
     
-    // Form Fields
-    recipientName: 'Numele persoanei pentru care este melodia',
-    relationship: 'Relația ta cu această persoană',
-    occasion: 'Ocazie (zi de naștere, nuntă etc.)',
-    eventDate: 'Data evenimentului',
-    songLanguage: 'Limba în care vrei să fie scrisă piesa',
-    pronunciationAudioRecipient: 'Înregistrare audio (dacă numele are pronunție specială)',
-    story: 'Povestea pe care vrei să o transformăm în cântec',
-    emotionalTone: 'Tonul piesei (romantic, vesel, nostalgic etc.)',
-    keyMoments: 'Momente esențiale din relația voastră',
-    specialWords: 'Cuvinte/expresii care ar trebui să apară',
-    pronunciationAudioKeywords: 'Înregistrare audio pentru cuvinte dificile',
-    musicStyle: 'Ce stil muzical preferi',
-    referenceSong: 'Exemplu de piesă cu vibe similar',
-    fullName: 'Numele tău complet',
-    email: 'Adresa ta de e-mail',
-    phone: 'Număr de telefon (opțional)',
-    acceptMentionObligation: 'Accept că dacă public piesa, trebuie să menționez "MusicGift.ro by Mango Records"',
-    
-    // Business Package Fields
-    brandName: 'Numele brandului/companiei',
-    campaignPurpose: 'Scopul campaniei și publicul țintă',
-    brandValues: 'Valorile brandului și mesajul dorit',
-    
-    // Artist Package Fields
-    artistName: 'Numele artistului/trupei',
-    songStyle: 'Stilul muzical dorit',
-    artistBio: 'Bio artistului și fundalul muzical',
-    linksReleases: 'Link-uri către lansările anterioare',
-    linksMedia: 'Link-uri către rețelele sociale/presă',
-    
-    // Gift Package Fields
-    recipientEmail: 'Adresa de email a destinatarului',
-    giftMessage: 'Mesaj personal pentru destinatar',
-    
-    // Instrumental Package Fields
-    desiredStyle: 'Stilul/genul muzical dorit',
-    instrumentalReference: 'Piesă de referință sau descriere',
-    
-    // Remix Package Fields
-    originalTitle: 'Titlul piesei originale',
-    originalArtist: 'Artistul original',
-    
-    // Relationships
-    partner: 'Partener/Soție/Soț',
-    child: 'Copil',
-    parent: 'Părinte',
-    sibling: 'Frate/Soră',
-    friend: 'Prieten(ă)',
-    grandparent: 'Bunic/Bunică',
-    otherRelation: 'Altă relație',
-    
-    // Occasions
-    birthday: 'Zi de naștere',
-    wedding: 'Nuntă',
-    anniversary: 'Aniversare',
-    valentine: 'Ziua Îndrăgostiților',
-    graduation: 'Absolvire',
-    christmas: 'Crăciun',
-    otherOccasion: 'Altă ocazie',
-    
-    // Emotional Tones
-    romantic: 'Romantic',
-    happy: 'Vesel/Bucuros',
-    nostalgic: 'Nostalgic',
-    emotional: 'Emoționant',
-    energetic: 'Energic',
-    peaceful: 'Liniștit/Calm',
-    
-    // Music Styles
-    pop: 'Pop',
-    acoustic: 'Acustic',
-    rock: 'Rock',
-    jazz: 'Jazz',
-    folk: 'Folk',
-    electronic: 'Electronic',
-    classical: 'Clasic',
-    reggae: 'Reggae',
-    country: 'Country',
-    
     // Languages
     romanian: 'Română',
     english: 'English',
     french: 'Français',
     german: 'Deutsch',
     polish: 'Polski',
-    
-    // Addons
-    rushDelivery: 'Livrare prioritară în 24–48h',
-    commercialRights: 'Drepturi comerciale pentru YouTube, Spotify etc.',
-    distributionMangoRecords: 'Distribuție oficială prin Mango Records',
-    customVideo: 'Videoclip personalizat cu pozele tale',
-    audioMessageFromSender: 'Mesaj audio personalizat încorporat în piesă',
-    extendedSong: 'Melodie extinsă cu 3 strofe în loc de 2',
-    
-    // Audio Recording
-    startRecording: 'Începe înregistrarea',
-    stopRecording: 'Oprește înregistrarea',
-    play: 'Redă',
-    pause: 'Pauză',
-    reRecord: 'Înregistrează din nou',
-    recordingSuccessfullySaved: 'Înregistrarea audio a fost salvată cu succes',
-    recordingTimeLimit: 'Limita de timp: {time} secunde. Înregistrează pronunția corectă.',
-    recordPersonalMessage: 'Înregistrează mesajul tău audio personal',
-    personalMessageLimit: 'Limita de timp: 45 secunde. Mesajul tău va fi incorporat în piesa finală.',
-    uploadImagesVideo: 'Încarcă imagini sau video pentru videoclipul personalizat',
-    acceptImagesVideo: 'Acceptăm imagini (JPG, PNG) și video (MP4, MOV). Poți selecta mai multe fișiere.',
-    cannotSelectWith: 'Nu poate fi selectat cu',
-    
-    // Required Field Indicator
-    required: '*',
-    
-    // Delivery Times
-    deliveryTime3to5: '3-5 zile',
-    deliveryTime5to7: '5-7 zile',
-    deliveryTime7to10: '7-10 zile',
-    deliveryTime14to21: '14-21 zile',
-    deliveryTimeVaries: 'Conform pachetului ales',
-    
-    // Package Prices
-    price599: '599 RON',
-    price1299: '1299 RON',
-    price2499: '2499 RON',
-    price3999: '3999 RON',
-    price799: '799 RON',
-    price999: '999 RON',
-    price699: '699 RON',
-    
-    // Package Includes
-    originalSongFromStory: 'Cântec original creat după povestea ta',
-    professionalVoice: 'Voce profesionistă din echipa MusicGift',
-    rapidDelivery: 'Livrare rapidă în 3–5 zile',
-    personalRights: 'Drepturi de utilizare personală (non-comercial)',
-    creativeConsultation: 'Consultare creativă bazată pe poveste și preferințe muzicale',
-    commercialSong: 'Melodie comercială pentru brand/companie',
-    professionalAudioProduction: 'Producție audio profesională',
-    professionalArtistVoice: 'Voce înregistrată de artist profesionist',
-    finalMixMaster: 'Mix și master final',
-    basicCommercialRights: 'Drepturi comerciale de bază incluse',
-    multipleAudioFiles: 'Fișiere audio multiple (WAV, MP3, instrumental)',
-    premiumAdvancedProduction: 'Melodie premium cu producție avansată',
-    automaticDigitalDistribution: 'Distribuție automată pe platforme digitale',
-    lyricVideoIncluded: 'Videoclip lyric inclus',
-    professionalMixMaster: 'Mix și master profesional',
-    socialMediaPromotion: 'Promovare pe rețelele sociale Mango Records',
-    fullArtisticCollaboration: 'Colaborare artistică completă',
-    originalSongProduction: 'Producția unei melodii originale',
-    professionalVocalRecording: 'Înregistrare vocală profesională',
-    professionalMusicVideo: 'Videoclip muzical profesional',
-    distributionAllPlatforms: 'Distribuție pe toate platformele',
-    contract5050: 'Contract 50/50 cu Mango Records',
-    professionalMarketing: 'Promovare și marketing profesional',
-    customInstrumental: 'Instrumental personalizat în genul dorit',
-    separateStems: 'Stems separate pentru mixing',
-    professionalRemix: 'Remix profesional al piesei tale',
-    productionDesiredStyle: 'Producție în stilul dorit',
-    extendedRadioEdit: 'Versiune extended și radio edit',
-    highQualityAudioFiles: 'Fișiere audio de înaltă calitate',
-    personalizedDigitalCard: 'Card cadou digital personalizat',
-    personalizedMessage: 'Mesaj personalizat pentru destinatar',
-    automaticDelivery: 'Trimitere automată la data dorită',
-    allSelectedPackageBenefits: 'Toate beneficiile pachetului selectat'
   },
   fr: {
     home: 'Accueil',

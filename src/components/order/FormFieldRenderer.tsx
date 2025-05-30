@@ -13,6 +13,8 @@ import { Calendar as CalendarIcon, Upload, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { validateField } from '@/hooks/useFieldValidation';
+import { useLanguage } from '@/contexts/LanguageContext';
+import LanguageSelector from './LanguageSelector';
 
 interface FormField {
   id: string;
@@ -37,7 +39,8 @@ const renderInputField = (
   field: FormField,
   value: any,
   onChange: (value: any) => void,
-  errors: string[] = []
+  errors: string[] = [],
+  t: (key: string) => string
 ) => {
   const hasError = errors.length > 0;
   
@@ -47,7 +50,7 @@ const renderInputField = (
         type={field.field_type === 'email' ? 'email' : 
               field.field_type === 'url' ? 'url' : 
               field.field_type === 'number' ? 'number' : 'text'}
-        placeholder={field.placeholder_key || field.field_name}
+        placeholder={field.placeholder_key ? t(field.placeholder_key) : field.field_name}
         value={value || ''}
         onChange={(e) => onChange(e.target.value)}
         className={cn(hasError && 'border-red-500')}
@@ -67,14 +70,15 @@ const renderTextareaField = (
   field: FormField,
   value: any,
   onChange: (value: any) => void,
-  errors: string[] = []
+  errors: string[] = [],
+  t: (key: string) => string
 ) => {
   const hasError = errors.length > 0;
 
   return (
     <div className="space-y-2">
       <Textarea
-        placeholder={field.placeholder_key || field.field_name}
+        placeholder={field.placeholder_key ? t(field.placeholder_key) : field.field_name}
         value={value || ''}
         onChange={(e) => onChange(e.target.value)}
         className={cn(hasError && 'border-red-500')}
@@ -94,20 +98,33 @@ const renderSelectField = (
   field: FormField,
   value: any,
   onChange: (value: any) => void,
-  errors: string[] = []
+  errors: string[] = [],
+  t: (key: string) => string
 ) => {
   const hasError = errors.length > 0;
+
+  // Special handling for language selection
+  if (field.field_name === 'songLanguage' || field.field_name === 'language') {
+    return (
+      <LanguageSelector
+        value={value || ''}
+        onChange={onChange}
+        placeholder={field.placeholder_key ? t(field.placeholder_key) : t('selectLanguage')}
+        required={field.required}
+      />
+    );
+  }
 
   return (
     <div className="space-y-2">
       <Select onValueChange={onChange} defaultValue={value}>
-        <SelectTrigger className={cn(hasError && 'border-red-500')}>
-          <SelectValue placeholder={field.placeholder_key || field.field_name} />
+        <SelectTrigger className={cn('bg-white border border-gray-300 shadow-sm', hasError && 'border-red-500')}>
+          <SelectValue placeholder={field.placeholder_key ? t(field.placeholder_key) : field.field_name} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white border border-gray-200 rounded-md shadow-lg z-50">
           {field.options?.map((option) => (
             <SelectItem key={option.value} value={option.value}>
-              {option.label_key}
+              {option.label_key ? t(option.label_key) : option.value}
             </SelectItem>
           ))}
         </SelectContent>
@@ -357,17 +374,19 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   onChange,
   validationErrors = []
 }) => {
+  const { t } = useLanguage();
+
   const renderField = () => {
     switch (field.field_type) {
       case 'text':
       case 'email':
       case 'url':
       case 'number':
-        return renderInputField(field, value, onChange, validationErrors);
+        return renderInputField(field, value, onChange, validationErrors, t);
       case 'textarea':
-        return renderTextareaField(field, value, onChange, validationErrors);
+        return renderTextareaField(field, value, onChange, validationErrors, t);
       case 'select':
-        return renderSelectField(field, value, onChange, validationErrors);
+        return renderSelectField(field, value, onChange, validationErrors, t);
       case 'multiselect':
         return renderMultiselectField(field, value, onChange, validationErrors);
       case 'checkbox':
@@ -379,7 +398,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       case 'file':
         return renderFileField(field, value, onChange, validationErrors);
       default:
-        return renderInputField(field, value, onChange, validationErrors);
+        return renderInputField(field, value, onChange, validationErrors, t);
     }
   };
 
