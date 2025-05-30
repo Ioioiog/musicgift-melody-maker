@@ -9,6 +9,47 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      addon_form_data: {
+        Row: {
+          addon_key: string
+          created_at: string
+          field_data: Json
+          field_type: string
+          file_url: string | null
+          id: string
+          order_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          addon_key: string
+          created_at?: string
+          field_data?: Json
+          field_type: string
+          file_url?: string | null
+          id?: string
+          order_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          addon_key?: string
+          created_at?: string
+          field_data?: Json
+          field_type?: string
+          file_url?: string | null
+          id?: string
+          order_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "addon_form_data_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       addons: {
         Row: {
           addon_key: string
@@ -18,6 +59,10 @@ export type Database = {
           is_active: boolean | null
           label_key: string
           price: number
+          trigger_condition: string | null
+          trigger_condition_value: string | null
+          trigger_field_config: Json | null
+          trigger_field_type: string | null
           updated_at: string | null
         }
         Insert: {
@@ -28,6 +73,10 @@ export type Database = {
           is_active?: boolean | null
           label_key: string
           price?: number
+          trigger_condition?: string | null
+          trigger_condition_value?: string | null
+          trigger_field_config?: Json | null
+          trigger_field_type?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -38,6 +87,10 @@ export type Database = {
           is_active?: boolean | null
           label_key?: string
           price?: number
+          trigger_condition?: string | null
+          trigger_condition_value?: string | null
+          trigger_field_config?: Json | null
+          trigger_field_type?: string | null
           updated_at?: string | null
         }
         Relationships: []

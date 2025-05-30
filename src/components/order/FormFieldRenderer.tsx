@@ -159,8 +159,11 @@ const renderMultiselectField = (
   errors: string[] = [],
   selectedAddons?: string[],
   onAddonChange?: (addonId: string, checked: boolean) => void,
-  availableAddons?: any[]
+  availableAddons?: any[],
+  addonFieldValues?: any,
+  onAddonFieldChange?: (addonKey: string, fieldValue: any) => void
 ) => {
+  const { t } = useLanguage();
   const hasError = errors.length > 0;
   const selectedValues = Array.isArray(value) ? value : [];
   const validOptions = normalizeOptions(field.options);
@@ -181,10 +184,9 @@ const renderMultiselectField = (
     }
   };
 
-  const getAddonPrice = (optionValue: string) => {
+  const getAddonDetails = (optionValue: string) => {
     if (isAddonsField && availableAddons) {
-      const addon = availableAddons.find(a => a.addon_key === optionValue);
-      return addon?.price || 0;
+      return availableAddons.find(a => a.addon_key === optionValue);
     }
     return null;
   };
@@ -195,23 +197,45 @@ const renderMultiselectField = (
     <div className="space-y-2">
       <div className={cn("grid gap-2 grid-cols-1", hasError && 'border border-red-500 rounded-md p-2')}>
         {validOptions.map((option, index) => {
-          const addonPrice = getAddonPrice(option.value);
+          const addonDetails = getAddonDetails(option.value);
+          const isSelected = currentlySelected.includes(option.value);
+          
           return (
-            <div key={`${field.field_name}-multiselect-${option.value}-${index}`} className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
-              <div className="flex items-center space-x-3">
-                <Checkbox
-                  id={`${field.field_name}-${option.value}-${index}`}
-                  checked={currentlySelected.includes(option.value)}
-                  onCheckedChange={() => handleCheckboxChange(option.value)}
-                />
-                <Label htmlFor={`${field.field_name}-${option.value}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  {option.label_key}
-                </Label>
+            <div key={`${field.field_name}-multiselect-${option.value}-${index}`} className="space-y-2">
+              <div className="flex items-center justify-between p-3 border rounded-md hover:bg-gray-50">
+                <div className="flex items-center space-x-3">
+                  <Checkbox
+                    id={`${field.field_name}-${option.value}-${index}`}
+                    checked={isSelected}
+                    onCheckedChange={() => handleCheckboxChange(option.value)}
+                  />
+                  <div className="flex-1">
+                    <Label htmlFor={`${field.field_name}-${option.value}-${index}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      {option.label_key}
+                    </Label>
+                    {addonDetails?.description_key && (
+                      <p className="text-xs text-gray-500 mt-1">{addonDetails.description_key}</p>
+                    )}
+                  </div>
+                </div>
+                {addonDetails?.price && (
+                  <span className="text-sm font-semibold text-purple-600">
+                    +{addonDetails.price} RON
+                  </span>
+                )}
               </div>
-              {addonPrice !== null && (
-                <span className="text-sm font-semibold text-purple-600">
-                  +{addonPrice} RON
-                </span>
+              
+              {/* Conditional field rendering for selected addons */}
+              {isSelected && addonDetails?.trigger_field_type && onAddonFieldChange && (
+                <div className="ml-6">
+                  {renderConditionalAddonField(
+                    addonDetails,
+                    addonFieldValues?.[option.value],
+                    (fieldValue) => onAddonFieldChange(option.value, fieldValue),
+                    [],
+                    t
+                  )}
+                </div>
               )}
             </div>
           );
@@ -226,6 +250,89 @@ const renderMultiselectField = (
       )}
     </div>
   );
+};
+
+const renderConditionalAddonField = (
+  addon: any,
+  value: any,
+  onChange: (value: any) => void,
+  errors: string[] = [],
+  t: (key: string) => string
+) => {
+  const hasError = errors.length > 0;
+  const config = addon.trigger_field_config || {};
+
+  if (addon.trigger_field_type === 'audio-recorder') {
+    return (
+      <div className="space-y-2 mt-4 p-4 border rounded-lg bg-gray-50">
+        <Label className="text-sm font-medium text-gray-700">
+          {t('recordVoiceMessage')} - {t(addon.label_key)}
+        </Label>
+        <AudioRecorder
+          value={value}
+          onChange={onChange}
+          maxDuration={config.maxDuration || 30}
+          className={cn(hasError && 'border-red-500')}
+        />
+        {hasError && (
+          <div className="text-red-500 text-sm">
+            {errors.map((error, index) => (
+              <div key={index}>{error}</div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (addon.trigger_field_type === 'file') {
+    return (
+      <div className="space-y-2 mt-4 p-4 border rounded-lg bg-gray-50">
+        <Label className="text-sm font-medium text-gray-700">
+          {t('uploadFile')} - {t(addon.label_key)}
+        </Label>
+        {value ? (
+          <div className="flex items-center justify-between p-4 border rounded-md">
+            <span className="text-sm">{value.name}</span>
+            <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}>
+              <X className="h-4 w-4" />
+              <span className="sr-only">Remove</span>
+            </Button>
+          </div>
+        ) : (
+          <Label htmlFor={`addon-${addon.addon_key}`} className="cursor-pointer flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-md hover:bg-gray-100">
+            <div className="space-y-1 text-center">
+              <Upload className="mx-auto h-6 w-6 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
+                {config.allowedTypes ? 
+                  `Upload ${config.allowedTypes.join(', ')} file` : 
+                  'Upload file'}
+              </p>
+            </div>
+            <Input
+              id={`addon-${addon.addon_key}`}
+              type="file"
+              className="hidden"
+              accept={config.allowedTypes?.join(',')}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) onChange(file);
+              }}
+            />
+          </Label>
+        )}
+        {hasError && (
+          <div className="text-red-500 text-sm">
+            {errors.map((error, index) => (
+              <div key={index}>{error}</div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return null;
 };
 
 const renderCheckboxField = (
@@ -441,6 +548,8 @@ interface FormFieldRendererProps {
   selectedAddons?: string[];
   onAddonChange?: (addonId: string, checked: boolean) => void;
   availableAddons?: any[];
+  addonFieldValues?: any;
+  onAddonFieldChange?: (addonKey: string, fieldValue: any) => void;
 }
 
 const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({ 
@@ -450,7 +559,9 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   validationErrors = [],
   selectedAddons,
   onAddonChange,
-  availableAddons
+  availableAddons,
+  addonFieldValues,
+  onAddonFieldChange
 }) => {
   const { t } = useLanguage();
 
@@ -466,7 +577,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       case 'select':
         return renderSelectField(field, value, onChange, validationErrors, t);
       case 'multiselect':
-        return renderMultiselectField(field, value, onChange, validationErrors, selectedAddons, onAddonChange, availableAddons);
+        return renderMultiselectField(field, value, onChange, validationErrors, selectedAddons, onAddonChange, availableAddons, addonFieldValues, onAddonFieldChange);
       case 'checkbox':
         return renderCheckboxField(field, value, onChange, validationErrors);
       case 'radio':

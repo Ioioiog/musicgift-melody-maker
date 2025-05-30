@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -52,6 +51,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     acceptFlow: false
   });
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [addonFieldValues, setAddonFieldValues] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -79,7 +79,20 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       setSelectedAddons(prev => [...prev, addonId]);
     } else {
       setSelectedAddons(prev => prev.filter(id => id !== addonId));
+      // Clear addon field value when unchecked
+      setAddonFieldValues(prev => {
+        const updated = { ...prev };
+        delete updated[addonId];
+        return updated;
+      });
     }
+  };
+
+  const handleAddonFieldChange = (addonKey: string, fieldValue: any) => {
+    setAddonFieldValues(prev => ({
+      ...prev,
+      [addonKey]: fieldValue
+    }));
   };
 
   const canProceed = () => {
@@ -138,11 +151,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       const finalData = {
         ...formData,
         addons: selectedAddons,
+        addonFieldValues,
         package: selectedPackage
       };
 
       // Save order to database
-      const { error: orderError } = await supabase
+      const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .insert({
           package_id: selectedPackageData?.id,
@@ -150,9 +164,33 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
           selected_addons: selectedAddons,
           total_price: calculateTotalPrice(),
           status: 'pending'
-        });
+        })
+        .select()
+        .single();
 
       if (orderError) throw orderError;
+
+      // Save addon field data if any
+      if (Object.keys(addonFieldValues).length > 0) {
+        const addonFormData = Object.entries(addonFieldValues).map(([addonKey, fieldValue]) => {
+          const addon = addons.find(a => a.addon_key === addonKey);
+          return {
+            order_id: orderData.id,
+            addon_key: addonKey,
+            field_type: addon?.trigger_field_type || 'unknown',
+            field_data: fieldValue instanceof File ? { fileName: fieldValue.name } : fieldValue,
+            file_url: fieldValue instanceof File ? null : null // File upload handling would go here
+          };
+        });
+
+        const { error: addonDataError } = await supabase
+          .from('addon_form_data')
+          .insert(addonFormData);
+
+        if (addonDataError) {
+          console.error('Addon data save error:', addonDataError);
+        }
+      }
 
       onComplete(finalData);
       toast({
@@ -329,6 +367,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                             selectedAddons={selectedAddons}
                             onAddonChange={handleAddonChange}
                             availableAddons={addons}
+                            addonFieldValues={addonFieldValues}
+                            onAddonFieldChange={handleAddonFieldChange}
                           />
                         </div>
                       ))}

@@ -15,6 +15,7 @@ interface OrderSummaryProps {
 const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAddons }) => {
   const { t } = useLanguage();
   const [isIncludesOpen, setIsIncludesOpen] = useState(false);
+  const [isAddonsOpen, setIsAddonsOpen] = useState(true);
   
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
@@ -86,20 +87,41 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
 
         {/* Selected Addons */}
         {selectedAddons.length > 0 && (
-          <div className="border-b pb-4">
-            <h5 className="font-medium mb-2 text-sm">{t('selectedAddons')}:</h5>
-            <div className="space-y-2">
-              {selectedAddons.map(addonKey => {
-                const addon = addons.find(a => a.addon_key === addonKey);
-                return addon ? (
-                  <div key={addonKey} className="flex justify-between items-center">
-                    <span className="text-xs text-gray-600">{t(addon.label_key)}</span>
-                    <span className="text-xs font-semibold">+{addon.price} RON</span>
-                  </div>
-                ) : null;
-              })}
+          <Collapsible open={isAddonsOpen} onOpenChange={setIsAddonsOpen}>
+            <div className="border-b pb-4">
+              <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
+                <h5 className="font-medium mb-2 text-sm">{t('selectedAddons')} ({selectedAddons.length}):</h5>
+                <ChevronDown className={`h-4 w-4 transition-transform ${isAddonsOpen ? 'rotate-180' : ''}`} />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="mt-2">
+                <div className="space-y-3">
+                  {selectedAddons.map(addonKey => {
+                    const addon = addons.find(a => a.addon_key === addonKey);
+                    return addon ? (
+                      <div key={addonKey} className="space-y-1">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <span className="text-sm font-medium text-gray-800">{addon.label_key}</span>
+                            {addon.description_key && (
+                              <p className="text-xs text-gray-500 mt-1">{addon.description_key}</p>
+                            )}
+                            {addon.trigger_field_type && (
+                              <Badge variant="outline" className="text-xs mt-1">
+                                {addon.trigger_field_type === 'audio-recorder' ? '🎤 Audio' : 
+                                 addon.trigger_field_type === 'file' ? '📁 File' : 
+                                 addon.trigger_field_type}
+                              </Badge>
+                            )}
+                          </div>
+                          <span className="text-sm font-semibold text-purple-600">+{addon.price} RON</span>
+                        </div>
+                      </div>
+                    ) : null;
+                  })}
+                </div>
+              </CollapsibleContent>
             </div>
-          </div>
+          </Collapsible>
         )}
 
         {/* Total */}
