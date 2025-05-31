@@ -1,7 +1,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, PanInfo } from "framer-motion";
-import { FaChevronLeft, FaChevronRight, FaPlay, FaStar, FaCheckCircle } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaPlay, FaStar, FaCheckCircle, FaPause } from "react-icons/fa";
 
 const rawTestimonials = [
   {
@@ -44,55 +44,87 @@ const getClonedTestimonials = () => {
 
 export default function TestimonialSlider() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(3); // account for cloned head
+  const [currentIndex, setCurrentIndex] = useState(3);
   const [cardsPerView, setCardsPerView] = useState(3);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
+  const [autoplaySpeed, setAutoplaySpeed] = useState(3000);
 
   const testimonials = getClonedTestimonials();
 
-  // Responsive detection
+  // Responsive detection with improved breakpoints
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      setCardsPerView(width < 576 ? 1 : width < 992 ? 2 : 3);
+      if (width < 640) {
+        setCardsPerView(1);
+        setAutoplaySpeed(4000); // Slower on mobile
+      } else if (width < 1024) {
+        setCardsPerView(2);
+        setAutoplaySpeed(3500);
+      } else {
+        setCardsPerView(3);
+        setAutoplaySpeed(3000);
+      }
     };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Autoplay functionality
+  // Enhanced autoplay with user interaction awareness
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || isUserInteracting) return;
     
     const interval = setInterval(() => {
       handleNext();
-    }, 4000);
+    }, autoplaySpeed);
 
     return () => clearInterval(interval);
-  }, [isPaused, currentIndex]);
+  }, [isPaused, isUserInteracting, currentIndex, autoplaySpeed]);
+
+  // Reset user interaction flag after a delay
+  useEffect(() => {
+    if (!isUserInteracting) return;
+    
+    const timeout = setTimeout(() => {
+      setIsUserInteracting(false);
+    }, 8000); // Resume autoplay after 8 seconds of no interaction
+
+    return () => clearTimeout(timeout);
+  }, [isUserInteracting]);
 
   const handleNext = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentIndex((prev) => prev + 1);
+    setIsUserInteracting(true);
   };
 
   const handlePrev = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentIndex((prev) => prev - 1);
+    setIsUserInteracting(true);
   };
 
   const handleDotClick = (index: number) => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setCurrentIndex(index + 3); // account for cloned head
+    setCurrentIndex(index + 3);
+    setIsUserInteracting(true);
+  };
+
+  const toggleAutoplay = () => {
+    setIsPaused(!isPaused);
+    setIsUserInteracting(true);
   };
 
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const threshold = 50;
+    setIsUserInteracting(true);
+    
     if (info.offset.x > threshold) {
       handlePrev();
     } else if (info.offset.x < -threshold) {
@@ -100,6 +132,7 @@ export default function TestimonialSlider() {
     }
   };
 
+  // Infinite loop logic with smoother transitions
   useEffect(() => {
     const total = rawTestimonials.length;
     const timeout = setTimeout(() => {
@@ -112,7 +145,7 @@ export default function TestimonialSlider() {
       } else {
         setIsAnimating(false);
       }
-    }, 600);
+    }, 500); // Slightly faster transition
     return () => clearTimeout(timeout);
   }, [currentIndex]);
 
@@ -121,27 +154,59 @@ export default function TestimonialSlider() {
 
   return (
     <section 
-      className="py-16 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden"
+      className="py-16 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-8 text-purple-800">
-          What Our Customers Say
-        </h2>
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold mb-4 text-purple-800">
+            What Our Customers Say
+          </h2>
+          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+            Real testimonials from satisfied customers who love their personalized songs
+          </p>
+          
+          {/* Autoplay Controls */}
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <button
+              onClick={toggleAutoplay}
+              className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-300 text-purple-700 hover:text-purple-800"
+              aria-label={isPaused ? "Resume autoplay" : "Pause autoplay"}
+            >
+              {isPaused ? <FaPlay className="text-sm" /> : <FaPause className="text-sm" />}
+              <span className="text-sm font-medium">
+                {isPaused ? 'Resume' : 'Pause'} Autoplay
+              </span>
+            </button>
+            
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className={`w-2 h-2 rounded-full ${isUserInteracting ? 'bg-orange-400' : isPaused ? 'bg-red-400' : 'bg-green-400'} animate-pulse`}></div>
+              <span>
+                {isUserInteracting ? 'User Control' : isPaused ? 'Paused' : 'Auto-playing'}
+              </span>
+            </div>
+          </div>
+        </div>
+
         <div className="relative overflow-hidden">
           <motion.div
-            className="flex gap-6 cursor-grab active:cursor-grabbing"
+            className="flex gap-4 lg:gap-6 cursor-grab active:cursor-grabbing"
             ref={containerRef}
             style={{
               width: `${testimonials.length * slideWidth}%`,
             }}
             animate={{ x: `-${currentIndex * slideWidth}%` }}
-            transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ 
+              duration: 0.5, 
+              ease: [0.25, 0.46, 0.45, 0.94],
+              type: "tween"
+            }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             onDragEnd={handleDragEnd}
-            dragElastic={0.1}
+            dragElastic={0.2}
+            whileDrag={{ scale: 0.98 }}
           >
             {testimonials.map((t, i) => (
               <div
@@ -150,80 +215,91 @@ export default function TestimonialSlider() {
                 style={{ width: `${100 / testimonials.length}%`, flexShrink: 0 }}
               >
                 <motion.div
-                  className="bg-white shadow-xl rounded-2xl overflow-hidden transition-transform duration-300 hover:scale-[1.03]"
+                  className="bg-white shadow-lg rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-[1.02] mx-2"
+                  whileHover={{ y: -5 }}
                 >
-                  <div className="relative pb-[56.25%]">
+                  <div className="relative pb-[56.25%] group">
                     <iframe
                       className="absolute top-0 left-0 w-full h-full"
                       src={t.videoUrl}
                       allowFullScreen
                       loading="lazy"
+                      title={`Video testimonial from ${t.name}`}
                     ></iframe>
-                    <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-white opacity-0 hover:opacity-100 transition">
-                      <FaPlay className="text-4xl mb-2" />
-                      <span className="text-xs font-bold tracking-widest">CHECK THIS SONG</span>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-center items-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <FaPlay className="text-3xl lg:text-4xl mb-2 transform group-hover:scale-110 transition-transform" />
+                      <span className="text-xs font-bold tracking-widest px-2 py-1 bg-purple-600 rounded">
+                        WATCH TESTIMONIAL
+                      </span>
                     </div>
                   </div>
-                  <div className="p-4 text-center">
-                    <div className="flex items-center justify-center gap-2 mb-2 text-purple-600 font-semibold">
-                      <h4 className="text-md">{t.name}</h4>
-                      <FaCheckCircle className="text-purple-500" />
+                  <div className="p-4 lg:p-6 text-center">
+                    <div className="flex items-center justify-center gap-2 mb-3 text-purple-600 font-semibold">
+                      <h4 className="text-lg">{t.name}</h4>
+                      <FaCheckCircle className="text-purple-500 text-sm" />
                     </div>
-                    <div className="flex justify-center text-yellow-400 mb-2">
+                    <div className="flex justify-center text-yellow-400 mb-3">
                       {[...Array(5)].map((_, i) => (
-                        <FaStar key={i} />
+                        <FaStar key={i} className="text-sm" />
                       ))}
                     </div>
-                    <p className="text-sm italic text-gray-700">"{t.review}"</p>
-                    <span className="block text-xs mt-2 text-gray-500">{t.location}</span>
+                    <p className="text-sm italic text-gray-700 mb-2 leading-relaxed">"{t.review}"</p>
+                    <span className="block text-xs text-gray-500 font-medium">{t.location}</span>
                   </div>
                 </motion.div>
               </div>
             ))}
           </motion.div>
 
-          {/* Navigation Arrows */}
-          <div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10">
+          {/* Enhanced Navigation Arrows */}
+          <div className="absolute top-1/2 left-2 lg:left-4 transform -translate-y-1/2 z-10">
             <button
               onClick={handlePrev}
-              className="bg-white p-3 rounded-full shadow hover:bg-purple-100 transition opacity-80 hover:opacity-100"
+              className="bg-white/90 backdrop-blur-sm p-3 lg:p-4 rounded-full shadow-lg hover:bg-white hover:shadow-xl transition-all duration-300 opacity-80 hover:opacity-100 group"
               aria-label="Previous testimonial"
             >
-              <FaChevronLeft className="text-purple-700" />
+              <FaChevronLeft className="text-purple-700 group-hover:text-purple-800 transition-colors" />
             </button>
           </div>
-          <div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10">
+          <div className="absolute top-1/2 right-2 lg:right-4 transform -translate-y-1/2 z-10">
             <button
               onClick={handleNext}
-              className="bg-white p-3 rounded-full shadow hover:bg-purple-100 transition opacity-80 hover:opacity-100"
+              className="bg-white/90 backdrop-blur-sm p-3 lg:p-4 rounded-full shadow-lg hover:bg-white hover:shadow-xl transition-all duration-300 opacity-80 hover:opacity-100 group"
               aria-label="Next testimonial"
             >
-              <FaChevronRight className="text-purple-700" />
+              <FaChevronRight className="text-purple-700 group-hover:text-purple-800 transition-colors" />
             </button>
           </div>
         </div>
 
-        {/* Dot Pagination */}
-        <div className="flex justify-center mt-6 gap-2">
+        {/* Enhanced Dot Pagination */}
+        <div className="flex justify-center mt-8 gap-3">
           {rawTestimonials.map((_, index) => (
             <button
               key={index}
               onClick={() => handleDotClick(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`transition-all duration-300 rounded-full ${
                 realCurrentIndex === index
-                  ? 'bg-purple-600 scale-125'
-                  : 'bg-purple-300 hover:bg-purple-400'
+                  ? 'w-8 h-3 bg-purple-600 shadow-lg' 
+                  : 'w-3 h-3 bg-purple-300 hover:bg-purple-400 hover:scale-110'
               }`}
               aria-label={`Go to testimonial ${index + 1}`}
             />
           ))}
         </div>
 
-        {/* Autoplay indicator */}
-        <div className="flex justify-center mt-4">
-          <div className="text-xs text-gray-500 flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${isPaused ? 'bg-red-400' : 'bg-green-400'} animate-pulse`}></span>
-            {isPaused ? 'Paused' : 'Auto-playing'}
+        {/* Progress Indicator */}
+        <div className="flex justify-center mt-6">
+          <div className="text-center">
+            <div className="text-sm text-gray-600 mb-2">
+              Testimonial {realCurrentIndex + 1} of {rawTestimonials.length}
+            </div>
+            <div className="w-48 h-1 bg-gray-200 rounded-full mx-auto">
+              <div 
+                className="h-full bg-purple-600 rounded-full transition-all duration-300"
+                style={{ width: `${((realCurrentIndex + 1) / rawTestimonials.length) * 100}%` }}
+              ></div>
+            </div>
           </div>
         </div>
       </div>
