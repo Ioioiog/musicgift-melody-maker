@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 /* -------------------------------------------------
-   Custom Global Styles for MusicGift
+   Custom Global Styles for MusicGift - Mobile Optimized
 --------------------------------------------------- */
 
 /* Root Variables */
@@ -33,7 +33,26 @@ body {
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--light-color);
-  padding-top: 100px;
+  padding-top: 70px; /* Reduced for mobile */
+}
+
+/* Mobile-first responsive padding */
+@media (min-width: 640px) {
+  body {
+    padding-top: 80px;
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-top: 90px;
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    padding-top: 100px;
+  }
 }
 
 a {
@@ -54,20 +73,35 @@ img {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 16px; /* More mobile-friendly padding */
 }
 
-/* Custom Buttons */
+/* Mobile-first responsive container padding */
+@media (min-width: 640px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+/* Custom Buttons - Mobile optimized */
 .btn {
   display: inline-block;
-  padding: 12px 24px;
+  padding: 10px 20px; /* Slightly smaller for mobile */
   border-radius: 30px;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
   border: none;
-  font-size: 16px;
+  font-size: 14px; /* Smaller base font size */
   text-align: center;
+  touch-action: manipulation; /* Better touch interaction */
+}
+
+@media (min-width: 640px) {
+  .btn {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
 }
 
 .primary-btn {
@@ -92,28 +126,83 @@ img {
   transform: translateY(-2px);
 }
 
-/* Section Titles */
+/* Section Titles - Mobile responsive */
 .section-title {
   font-family: 'Playfair Display', serif;
-  font-size: 36px;
-  margin-bottom: 16px;
+  font-size: 24px; /* Smaller for mobile */
+  margin-bottom: 12px;
   text-align: center;
   color: var(--dark-color);
+}
+
+@media (min-width: 640px) {
+  .section-title {
+    font-size: 28px;
+    margin-bottom: 14px;
+  }
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-title {
+    font-size: 36px;
+    margin-bottom: 16px;
+  }
 }
 
 .section-description {
   text-align: center;
   max-width: 700px;
-  margin: 0 auto 40px;
-  font-size: 18px;
+  margin: 0 auto 30px; /* Reduced margin for mobile */
+  font-size: 16px; /* Smaller base size */
   color: #666;
+  padding: 0 16px; /* Add horizontal padding */
 }
 
-/* Video Background Hero */
+@media (min-width: 640px) {
+  .section-description {
+    margin: 0 auto 35px;
+    font-size: 17px;
+    padding: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .section-description {
+    margin: 0 auto 40px;
+    font-size: 18px;
+  }
+}
+
+/* Video Background Hero - Mobile optimized */
 .video-hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 60vh; /* Reduced for mobile */
   overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .video-hero {
+    min-height: 70vh;
+  }
+}
+
+@media (min-width: 768px) {
+  .video-hero {
+    min-height: 80vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .video-hero {
+    min-height: 100vh;
+  }
 }
 
 .video-hero video {
@@ -133,11 +222,24 @@ img {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px); /* Reduced movement for mobile */
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (min-width: 768px) {
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
@@ -146,7 +248,18 @@ img {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-15px); /* Reduced float distance for mobile */
+  }
+}
+
+@media (min-width: 768px) {
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
   }
 }
 
@@ -164,10 +277,24 @@ img {
     transform: translateY(0);
   }
   40% {
-    transform: translateY(-10px);
+    transform: translateY(-8px); /* Reduced for mobile */
   }
   60% {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
+  }
+}
+
+@media (min-width: 768px) {
+  @keyframes scrollBounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
   }
 }
 
@@ -175,44 +302,53 @@ img {
   animation: scrollBounce 2s infinite;
 }
 
-/* Responsive Visibility */
-@media (max-width: 992px) {
-  .hide-lg { display: none; }
+/* Mobile-specific utilities */
+.touch-manipulation {
+  touch-action: manipulation;
 }
 
-@media (max-width: 768px) {
-  .hide-md { display: none; }
-  
-  /* Adjust video background for mobile */
-  .video-hero {
-    min-height: 80vh;
-  }
-  
-  .video-hero video {
-    /* Ensure video covers on mobile */
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.tap-highlight-transparent {
+  -webkit-tap-highlight-color: transparent;
 }
 
-@media (max-width: 576px) {
-  .hide-sm { display: none; }
-  .section-title { font-size: 28px; }
+/* Better mobile button spacing */
+.mobile-button-spacing > * + * {
+  margin-top: 12px;
+}
+
+@media (min-width: 640px) {
+  .mobile-button-spacing {
+    display: flex;
+    gap: 16px;
+  }
   
-  .video-hero {
-    min-height: 70vh;
+  .mobile-button-spacing > * + * {
+    margin-top: 0;
   }
 }
 
-/* Form Styles */
+/* Form Styles - Mobile optimized */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 16px; /* Reduced for mobile */
+}
+
+@media (min-width: 768px) {
+  .form-group {
+    margin-bottom: 20px;
+  }
 }
 
 .form-row {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .form-row {
+    flex-direction: row;
+    gap: 20px;
+  }
 }
 
 .form-group.half {
@@ -221,21 +357,39 @@ img {
 
 label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px; /* Reduced for mobile */
   font-weight: 500;
   color: #555;
+  font-size: 14px;
+}
+
+@media (min-width: 640px) {
+  label {
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
 }
 
 input,
 textarea,
 select {
   width: 100%;
-  padding: 12px 15px;
+  padding: 10px 12px; /* Adjusted for mobile */
   border: 1px solid var(--border-color);
   border-radius: 5px;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 16px; /* 16px to prevent zoom on iOS */
   transition: var(--transition);
+  -webkit-appearance: none; /* Remove iOS styling */
+  appearance: none;
+}
+
+@media (min-width: 768px) {
+  input,
+  textarea,
+  select {
+    padding: 12px 15px;
+  }
 }
 
 input:focus,
@@ -248,12 +402,43 @@ select:focus {
 
 textarea {
   resize: vertical;
+  min-height: 100px; /* Minimum height for mobile */
 }
 
-/* Responsive Utilities */
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-    gap: 0;
+@media (min-width: 768px) {
+  textarea {
+    min-height: 120px;
+  }
+}
+
+/* Improved mobile interactions */
+button, .btn, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Better mobile spacing utilities */
+.mobile-px-4 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.mobile-py-2 {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.mobile-mt-4 {
+  margin-top: 16px;
+}
+
+.mobile-mb-4 {
+  margin-bottom: 16px;
+}
+
+/* Hide elements on mobile when needed */
+@media (max-width: 639px) {
+  .hide-mobile {
+    display: none !important;
   }
 }
