@@ -18,13 +18,11 @@ serve(async (req) => {
   }
 
   try {
-    // Get the authorization header
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       throw new Error('No authorization header');
     }
 
-    // Create supabase client with the user's session
     const supabase = createClient(supabaseUrl, supabaseServiceKey, {
       auth: { persistSession: false },
       global: {
@@ -34,7 +32,6 @@ serve(async (req) => {
       },
     });
 
-    // Verify the user is authenticated
     const token = authHeader.replace('Bearer ', '');
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     
@@ -42,27 +39,34 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { description, price, deliveryTime, additionalRequirements } = await req.json();
+    const { description } = await req.json();
 
     if (!description) {
       throw new Error('Description is required');
     }
 
-    console.log('Generating package for:', { description, price, deliveryTime });
+    console.log('Generating package for:', description);
 
-    const prompt = `You are an expert package designer for a service business. Based on the following description, generate a complete package structure with 5-6 steps and appropriate fields for each step.
+    const prompt = `You are an expert package designer for MusicGift.ro, a Romanian service that creates personalized songs as gifts. 
 
-Package Description: ${description}
-Price: ${price ? `${price} RON` : 'Not specified'}
-Delivery Time: ${deliveryTime || 'Not specified'}
-Additional Requirements: ${additionalRequirements || 'None'}
+Based on this description, create a complete package structure: "${description}"
 
-Generate a JSON response with the following structure:
+Context about MusicGift.ro:
+- Creates personalized songs based on customer stories
+- Serves Romanian customers
+- Offers packages like Personal (basic), Premium (with video), and Corporate (for businesses)
+- Typical price ranges: Personal (300-500 RON), Premium (700-1200 RON), Corporate (1500+ RON)
+- Delivery times: 3-7 days for basic, 7-14 days for premium services
+- Common services: song creation, professional recording, music video, Spotify distribution
+
+Create a professional package with 4-6 logical steps and appropriate fields. Use Romanian business context and realistic pricing.
+
+Generate ONLY this JSON structure:
 {
   "package": {
     "value": "kebab-case-name",
     "label_key": "packageDisplayName",
-    "price": ${price || 0},
+    "price": 500,
     "tagline_key": "shortTagline",
     "description_key": "detailedDescription",
     "delivery_time_key": "deliveryTimeText"
@@ -75,11 +79,11 @@ Generate a JSON response with the following structure:
       "fields": [
         {
           "field_name": "fieldName",
-          "field_type": "text|textarea|select|checkbox|radio|email|phone|number|date",
+          "field_type": "text|textarea|select|checkbox|email|tel|date|url|file",
           "placeholder_key": "placeholderText",
           "required": true|false,
           "field_order": 1,
-          "options": ["option1", "option2"] // only for select/radio fields
+          "options": ["option1", "option2"]
         }
       ]
     }
@@ -92,7 +96,7 @@ Generate a JSON response with the following structure:
   ],
   "tags": [
     {
-      "tag_type": "popular|new|recommended",
+      "tag_type": "popular|hot|new|discount|limited",
       "tag_label_key": "tagText",
       "styling_class": "bg-blue-100 text-blue-800"
     }
@@ -100,15 +104,32 @@ Generate a JSON response with the following structure:
 }
 
 Guidelines:
-- Create 5-6 logical steps for the service
-- Each step should have 3-6 relevant fields
-- Use appropriate field types (text, email, select, etc.)
-- Make required fields logical for the service
-- Include 4-6 package features in includes
-- Add 1-2 appropriate tags
-- Use professional, clear naming conventions
-- Ensure field names are camelCase and unique
-- Make the package value URL-friendly (kebab-case)
+- Package value: Use kebab-case (ex: "pachet-personal", "premium-video", "corporate-song")
+- Price: Set realistic Romanian prices (300-2000 RON range)
+- Steps: Create 4-6 logical steps (Personal Info → Story Details → Music Preferences → Delivery → Addons → Contact)
+- Field types: Use appropriate types (text, email, textarea for stories, select for choices, tel for phone)
+- Field names: Use camelCase Romanian field names (numeComplet, poveste, stilMuzical, etc.)
+- Required fields: Mark essential fields as required (name, email, basic story info)
+- Options: For select fields, provide 3-5 relevant Romanian options
+- Includes: List 4-6 package features customers get
+- Tags: Add 1-2 appropriate tags with proper styling classes
+
+Field type examples:
+- "text": names, short inputs
+- "email": email addresses  
+- "tel": phone numbers
+- "textarea": stories, descriptions, special requests
+- "select": predefined choices (music style, occasion, etc.)
+- "date": event dates, deadlines
+- "url": reference links (YouTube songs, etc.)
+- "file": uploaded files (photos, audio recordings)
+
+Example field names in Romanian context:
+- "numeComplet", "email", "telefon"
+- "numeDestinatar", "relatia", "ocazia"
+- "poveste", "momenteCheie", "cuvinteSpeciale"
+- "stilMuzical", "cantecReferinta", "limbaCantec"
+- "dataEveniment", "timpLivrare", "mesajSpecial"
 
 Respond with ONLY the JSON object, no additional text.`;
 
@@ -119,13 +140,13 @@ Respond with ONLY the JSON object, no additional text.`;
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o',
         messages: [
-          { role: 'system', content: 'You are an expert package designer. Respond only with valid JSON.' },
+          { role: 'system', content: 'You are an expert Romanian package designer for music gift services. Respond only with valid JSON.' },
           { role: 'user', content: prompt }
         ],
-        temperature: 0.7,
-        max_tokens: 2000,
+        temperature: 0.4,
+        max_tokens: 3000,
       }),
     });
 
@@ -138,12 +159,10 @@ Respond with ONLY the JSON object, no additional text.`;
 
     console.log('Generated text:', generatedText);
 
-    // Parse the JSON response, handling markdown code blocks
     let generatedData;
     try {
       let cleanedText = generatedText.trim();
       
-      // Remove markdown code block formatting if present
       if (cleanedText.startsWith('```json')) {
         cleanedText = cleanedText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
       } else if (cleanedText.startsWith('```')) {
@@ -156,17 +175,18 @@ Respond with ONLY the JSON object, no additional text.`;
       throw new Error('Invalid JSON response from AI');
     }
 
-    // Create a new supabase client with service role key for the insert
+    // Validate the generated data structure
+    if (!generatedData.package || !generatedData.steps || !Array.isArray(generatedData.steps)) {
+      throw new Error('Invalid package structure generated');
+    }
+
     const adminSupabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Store the generation request in the database
     const { data: generation, error: insertError } = await adminSupabase
       .from('ai_package_generations')
       .insert({
         user_id: user.id,
         input_description: description,
-        input_price: price,
-        input_delivery_time: deliveryTime,
         generated_data: generatedData,
         status: 'generated'
       })

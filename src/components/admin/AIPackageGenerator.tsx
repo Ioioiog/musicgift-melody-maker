@@ -1,14 +1,12 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Wand2, Eye, Check, X, Loader2, Mic, Calendar, FileText, CheckSquare } from 'lucide-react';
+import { Wand2, Eye, Check, X, Loader2, Mic, Calendar, FileText, CheckSquare, Languages } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -54,14 +52,10 @@ interface GeneratedPackage {
 }
 
 const AIPackageGenerator = () => {
-  const [formData, setFormData] = useState({
-    description: '',
-    price: '',
-    deliveryTime: '',
-    additionalRequirements: ''
-  });
+  const [description, setDescription] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [isGeneratingTranslations, setIsGeneratingTranslations] = useState(false);
   const [generatedPackage, setGeneratedPackage] = useState<GeneratedPackage | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const { toast } = useToast();
@@ -196,8 +190,65 @@ const AIPackageGenerator = () => {
     return typeMap[tagType] || 'new';
   };
 
+  const extractTranslationKeys = (packageData: GeneratedPackage['generatedData']): string[] => {
+    const keys = new Set<string>();
+    
+    // Package keys
+    keys.add(packageData.package.label_key);
+    if (packageData.package.tagline_key) keys.add(packageData.package.tagline_key);
+    if (packageData.package.description_key) keys.add(packageData.package.description_key);
+    if (packageData.package.delivery_time_key) keys.add(packageData.package.delivery_time_key);
+    
+    // Steps and fields keys
+    packageData.steps.forEach(step => {
+      keys.add(step.title_key);
+      step.fields.forEach(field => {
+        if (field.placeholder_key) keys.add(field.placeholder_key);
+      });
+    });
+    
+    // Includes keys
+    packageData.includes.forEach(include => {
+      keys.add(include.include_key);
+    });
+    
+    // Tags keys
+    packageData.tags.forEach(tag => {
+      if (tag.tag_label_key) keys.add(tag.tag_label_key);
+    });
+    
+    return Array.from(keys);
+  };
+
+  const generateTranslations = async (translationKeys: string[]) => {
+    try {
+      setIsGeneratingTranslations(true);
+      
+      const { data, error } = await supabase.functions.invoke('generate-translations', {
+        body: { translationKeys }
+      });
+
+      if (error) throw error;
+
+      console.log('Generated translations:', data);
+      toast({ title: 'Traducerile au fost generate cu succes!' });
+      
+      return true;
+    } catch (error) {
+      console.error('Error generating translations:', error);
+      toast({ 
+        title: 'Eroare la generarea traducerilor', 
+        description: error.message, 
+        variant: 'destructive' 
+      });
+      return false;
+    } finally {
+      setIsGeneratingTranslations(false);
+    }
+  };
+
   const handleGenerate = async () => {
-    if (!formData.description.trim()) {
+    if (!description.trim()) {
       toast({ title: 'Descrierea este obligatorie', variant: 'destructive' });
       return;
     }
@@ -205,12 +256,7 @@ const AIPackageGenerator = () => {
     setIsGenerating(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-package-ai', {
-        body: {
-          description: formData.description,
-          price: formData.price ? parseInt(formData.price) : null,
-          deliveryTime: formData.deliveryTime,
-          additionalRequirements: formData.additionalRequirements
-        }
+        body: { description }
       });
 
       if (error) throw error;
@@ -232,6 +278,15 @@ const AIPackageGenerator = () => {
     setIsCreating(true);
     try {
       const { generatedData } = generatedPackage;
+
+      // First, generate and save translations
+      const translationKeys = extractTranslationKeys(generatedData);
+      console.log('Generating translations for keys:', translationKeys);
+      
+      const translationsSuccess = await generateTranslations(translationKeys);
+      if (!translationsSuccess) {
+        throw new Error('Failed to generate translations');
+      }
 
       // Create package
       const { data: packageData, error: packageError } = await supabase
@@ -312,15 +367,10 @@ const AIPackageGenerator = () => {
         })
         .eq('id', generatedPackage.generationId);
 
-      toast({ title: 'Pachetul a fost creat cu succes!' });
+      toast({ title: 'Pachetul și traducerile au fost create cu succes!' });
       
       // Reset form
-      setFormData({
-        description: '',
-        price: '',
-        deliveryTime: '',
-        additionalRequirements: ''
-      });
+      setDescription('');
       setGeneratedPackage(null);
       setShowPreview(false);
 
@@ -347,55 +397,29 @@ const AIPackageGenerator = () => {
       <Card>
         <CardHeader>
           <CardTitle>Generează Pachet cu AI</CardTitle>
+          <p className="text-sm text-gray-600">
+            Descrie pachetul pe care vrei să îl creezi și AI-ul va genera automat structura completă cu traduceri în română.
+          </p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
             <Label htmlFor="description">Descrierea Pachetului *</Label>
             <Textarea
               id="description"
-              placeholder="Descrieți pachetul/serviciul pe care doriți să îl creați. Includeți ce conține, pentru cine este destinat și cum ar trebui să arate procesul..."
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={4}
+              placeholder="Descrie pachetul/serviciul pe care dorești să îl creezi. De exemplu: 'Un pachet premium pentru nunți care include cântec personalizat, videoclip profesional și distribuție pe Spotify, cu preț de 1200 RON și livrare în 10 zile'"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={6}
+              className="resize-none"
             />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="price">Preț (RON)</Label>
-              <Input
-                id="price"
-                type="number"
-                placeholder="ex. 500"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label htmlFor="deliveryTime">Timpul de Livrare</Label>
-              <Input
-                id="deliveryTime"
-                placeholder="ex. 7-10 zile lucrătoare"
-                value={formData.deliveryTime}
-                onChange={(e) => setFormData({ ...formData, deliveryTime: e.target.value })}
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="additionalRequirements">Cerințe Adiționale</Label>
-            <Textarea
-              id="additionalRequirements"
-              placeholder="Orice câmpuri specifice, pași sau cerințe pentru acest pachet..."
-              value={formData.additionalRequirements}
-              onChange={(e) => setFormData({ ...formData, additionalRequirements: e.target.value })}
-              rows={2}
-            />
+            <p className="text-xs text-gray-500 mt-1">
+              Includeți detalii despre: tipul serviciului, prețul aproximativ, timpul de livrare, și orice cerințe speciale.
+            </p>
           </div>
 
           <Button 
             onClick={handleGenerate} 
-            disabled={isGenerating || !formData.description.trim()}
+            disabled={isGenerating || !description.trim()}
             className="w-full"
           >
             {isGenerating ? (
@@ -419,6 +443,12 @@ const AIPackageGenerator = () => {
             <CardTitle className="flex items-center space-x-2">
               <Eye className="w-5 h-5" />
               <span>Previzualizare Pachet Generat</span>
+              {isGeneratingTranslations && (
+                <div className="flex items-center space-x-2 text-blue-600">
+                  <Languages className="w-4 h-4" />
+                  <span className="text-sm">Generez traduceri...</span>
+                </div>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -556,7 +586,11 @@ const AIPackageGenerator = () => {
             </ScrollArea>
 
             <div className="flex space-x-3 pt-4 border-t">
-              <Button onClick={handleCreatePackage} disabled={isCreating} className="flex-1 bg-green-600 hover:bg-green-700">
+              <Button 
+                onClick={handleCreatePackage} 
+                disabled={isCreating || isGeneratingTranslations} 
+                className="flex-1 bg-green-600 hover:bg-green-700"
+              >
                 {isCreating ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -565,11 +599,16 @@ const AIPackageGenerator = () => {
                 ) : (
                   <>
                     <Check className="w-4 h-4 mr-2" />
-                    Creează Pachetul
+                    Creează Pachetul + Traduceri
                   </>
                 )}
               </Button>
-              <Button variant="outline" onClick={handleReject} disabled={isCreating} className="border-red-300 text-red-600 hover:bg-red-50">
+              <Button 
+                variant="outline" 
+                onClick={handleReject} 
+                disabled={isCreating || isGeneratingTranslations} 
+                className="border-red-300 text-red-600 hover:bg-red-50"
+              >
                 <X className="w-4 h-4 mr-2" />
                 Respinge & Încearcă Din Nou
               </Button>
