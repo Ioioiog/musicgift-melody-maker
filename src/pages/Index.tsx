@@ -20,97 +20,64 @@ const Index = () => {
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section - Compact Modern Layout */}
-      <section className="pt-20 pb-12 bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden">
+      {/* Hero Section */}
+      <section className="pt-24 pb-16 bg-gradient-to-br from-purple-50 via-blue-50 to-purple-100 relative overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
-          {/* Main Hero Content - More Compact */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl lg:text-6xl font-bold leading-tight text-gray-900 mb-4">
-              {t('heroTitle') || 'Give the Gift of Music'}
-            </h1>
-            <p className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-6">
-              {t('heroSubtitle') || 'A personalized song, created just for your special someone. The most unique gift they\'ll ever receive.'}
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8 animate-fade-in">
+              <h1 className="text-5xl lg:text-6xl font-bold leading-tight text-gray-800">
+                {t('heroTitle') || 'Give the Gift of Music'}
+              </h1>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                {t('heroSubtitle') || 'A personalized song, created just for your special someone. The most unique gift they\'ll ever receive.'}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/packages">
+                  <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 rounded-full">
+                    {t('seePackages') || 'See Packages'}
+                  </Button>
+                </Link>
+                <Link to="/testimonials">
+                  <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-3 rounded-full">
+                    {t('listenToSamples') || 'Listen to Samples'}
+                  </Button>
+                </Link>
+              </div>
+            </div>
             
-            {/* CTA Buttons - Smaller and More Modern */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
-              <Link to="/packages">
-                <Button size="lg" className="bg-gray-900 hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-lg">
-                  {t('seePackages') || 'See Packages'}
-                </Button>
-              </Link>
-              <Link to="/testimonials">
-                <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-lg">
-                  {t('listenToSamples') || 'Listen to Samples'}
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Video Section - More Compact and Modern */}
-          <div className="flex justify-center mb-10">
-            <div className="relative max-w-3xl w-full">
-              {/* Simplified Video Container */}
-              <div className="relative bg-white rounded-2xl p-4 shadow-lg border border-gray-200">
-                <div className="aspect-video w-full overflow-hidden rounded-xl">
-                  <video 
-                    className="w-full h-full object-cover"
-                    autoPlay 
-                    muted 
-                    loop 
-                    playsInline
-                  >
-                    <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
-                    <img src="/lovable-uploads/65518432-abfe-42fc-acc5-25014d321134.png" alt="Music Gift Box" className="w-full h-full object-cover" />
-                  </video>
-                </div>
+            <div className="relative lg:pl-12">
+              <div className="w-80 h-80 mx-auto flex items-center justify-center animate-float">
+                <video 
+                  className="w-full h-full object-cover rounded-2xl shadow-lg"
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline
+                >
+                  <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
+                  {/* Fallback image if video doesn't load */}
+                  <img src="/lovable-uploads/65518432-abfe-42fc-acc5-25014d321134.png" alt="Music Gift Box" className="w-full h-full object-contain" />
+                </video>
               </div>
-
-              {/* Compact Info Cards */}
-              <div className="absolute -top-4 -right-4 hidden lg:block">
-                <div className="bg-white rounded-lg p-4 shadow-lg max-w-xs border border-gray-100">
-                  <h3 className="font-semibold text-gray-900 mb-1 text-sm">{t('whatIsMusicGiftFor') || 'What is MusicGift for?'}</h3>
-                  <p className="text-purple-600 font-medium mb-2 text-sm">{t('marriageProposals') || 'Marriage Proposals'}</p>
-                  <Link to="/testimonials">
-                    <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white rounded-md text-xs">
-                      {t('seeExamples') || 'See examples'}
-                    </Button>
-                  </Link>
-                </div>
+              
+              {/* Floating music notes */}
+              <div className="absolute top-10 right-10 text-4xl animate-bounce delay-75">🎵</div>
+              <div className="absolute bottom-20 left-0 text-3xl animate-bounce delay-150">🎶</div>
+              <div className="absolute top-32 left-10 text-2xl animate-bounce delay-300">♪</div>
+              
+              {/* Info Card */}
+              <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg max-w-xs border border-purple-100">
+                <h3 className="font-semibold text-gray-900 mb-2">{t('whatIsMusicGiftFor') || 'What is MusicGift for?'}</h3>
+                <p className="text-purple-600 font-medium">{t('marriageProposals') || 'Cereri în căsătorie'}</p>
+                <Link to="/testimonials">
+                  <Button size="sm" className="mt-3 bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                    {t('seeExamples') || 'See examples'}
+                  </Button>
+                </Link>
               </div>
-
-              <div className="absolute -bottom-4 -left-4 hidden lg:block">
-                <div className="bg-white rounded-lg p-4 shadow-lg max-w-xs border border-gray-100">
-                  <h3 className="font-semibold text-gray-900 mb-1 text-sm">🎤 Professional Quality</h3>
-                  <p className="text-orange-600 font-medium text-sm">Studio-recorded with professional musicians</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Compact Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            <div className="text-center p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
-              <div className="text-3xl mb-3">🎁</div>
-              <h3 className="font-semibold text-base mb-2">Personalized</h3>
-              <p className="text-gray-600 text-sm">Custom lyrics written just for them</p>
-            </div>
-            <div className="text-center p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
-              <div className="text-3xl mb-3">🎵</div>
-              <h3 className="font-semibold text-base mb-2">Professional</h3>
-              <p className="text-gray-600 text-sm">Studio quality with talented musicians</p>
-            </div>
-            <div className="text-center p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
-              <div className="text-3xl mb-3">💝</div>
-              <h3 className="font-semibold text-base mb-2">Memorable</h3>
-              <p className="text-gray-600 text-sm">A unique gift they'll treasure forever</p>
             </div>
           </div>
         </div>
-
-        {/* Subtle Background Elements */}
-        <div className="absolute top-20 left-10 text-4xl text-gray-200 opacity-30">🎼</div>
-        <div className="absolute bottom-20 right-10 text-3xl text-gray-200 opacity-30">🎹</div>
       </section>
 
       {/* Packages Preview */}
