@@ -4,6 +4,9 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import About from "./pages/About";
+import HowItWorks from "./pages/HowItWorks";
+import Testimonials from "./pages/Testimonials";
 import Packages from "./pages/Packages";
 import Order from "./pages/Order";
 import Contact from "./pages/Contact";
@@ -30,6 +33,9 @@ function App() {
               <div className="min-h-screen bg-background font-sans antialiased">
                 <Routes>
                   <Route path="/" element={<Index />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/how-it-works" element={<HowItWorks />} />
+                  <Route path="/testimonials" element={<Testimonials />} />
                   <Route path="/packages" element={<Packages />} />
                   <Route path="/order" element={<Order />} />
                   <Route path="/contact" element={<Contact />} />
