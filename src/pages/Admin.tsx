@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +23,27 @@ const Admin = () => {
   const { user } = useAuth();
   const { data: userRole, isLoading: roleLoading } = useUserRole();
 
-  console.log('Admin page - User:', user?.email, 'Role:', userRole, 'Loading:', roleLoading);
+  useEffect(() => {
+    // Add detailed logging for debugging
+    console.log('Admin page mounted');
+    console.log('Current URL:', window.location.href);
+    console.log('User:', user?.email);
+    console.log('Role:', userRole);
+    console.log('Role loading:', roleLoading);
+    
+    // Check for any 404 errors in console
+    const originalError = console.error;
+    console.error = function(...args) {
+      if (args[0]?.includes('404') || args[0]?.includes('Failed to load')) {
+        console.log('Detected 404 error:', args);
+      }
+      originalError.apply(console, args);
+    };
+
+    return () => {
+      console.error = originalError;
+    };
+  }, [user, userRole, roleLoading]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -34,14 +54,15 @@ const Admin = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
           <p className="text-gray-600">Manage packages, fields, dependencies, users, and orders</p>
           
-          {/* Debug info for development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
-              <p className="text-sm text-blue-700">
-                Debug: User role is "{userRole}", authenticated as {user?.email}
-              </p>
-            </div>
-          )}
+          {/* Debug info for development and production */}
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+            <p className="text-sm text-blue-700">
+              Status: User role is "{userRole}", authenticated as {user?.email}
+            </p>
+            <p className="text-xs text-blue-600 mt-1">
+              Environment: {window.location.hostname}, Path: {window.location.pathname}
+            </p>
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -132,12 +153,10 @@ const Admin = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Debug section - only show in development or if there are issues */}
-        {(process.env.NODE_ENV === 'development' || !userRole) && (
-          <div className="mt-8">
-            <AdminDebug />
-          </div>
-        )}
+        {/* Always show debug section for troubleshooting */}
+        <div className="mt-8">
+          <AdminDebug />
+        </div>
       </div>
 
       <Footer />
