@@ -223,7 +223,6 @@ export type Database = {
           created_at: string | null
           form_data: Json
           id: string
-          netopia_order_id: string | null
           package_id: string | null
           payment_id: string | null
           payment_status: string | null
@@ -238,7 +237,6 @@ export type Database = {
           created_at?: string | null
           form_data: Json
           id?: string
-          netopia_order_id?: string | null
           package_id?: string | null
           payment_id?: string | null
           payment_status?: string | null
@@ -253,7 +251,6 @@ export type Database = {
           created_at?: string | null
           form_data?: Json
           id?: string
-          netopia_order_id?: string | null
           package_id?: string | null
           payment_id?: string | null
           payment_status?: string | null

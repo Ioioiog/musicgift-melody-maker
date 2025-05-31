@@ -16,28 +16,23 @@ const PaymentSuccess = () => {
   const { toast } = useToast();
 
   const orderId = searchParams.get('orderId');
-  const netopiaOrderId = searchParams.get('ntpID');
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
-      if (!orderId && !netopiaOrderId) {
+      if (!orderId) {
         setLoading(false);
         return;
       }
 
       try {
-        let query = supabase.from('orders').select(`
-          *,
-          package:package_info(*)
-        `);
-
-        if (orderId) {
-          query = query.eq('id', orderId);
-        } else if (netopiaOrderId) {
-          query = query.eq('netopia_order_id', netopiaOrderId);
-        }
-
-        const { data, error } = await query.single();
+        const { data, error } = await supabase
+          .from('orders')
+          .select(`
+            *,
+            package:package_info(*)
+          `)
+          .eq('id', orderId)
+          .single();
 
         if (error) {
           console.error('Error fetching order:', error);
@@ -57,7 +52,7 @@ const PaymentSuccess = () => {
     };
 
     fetchOrderDetails();
-  }, [orderId, netopiaOrderId, toast]);
+  }, [orderId, toast]);
 
   if (loading) {
     return (

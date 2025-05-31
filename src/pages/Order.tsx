@@ -5,7 +5,6 @@ import OrderWizard from "@/components/OrderWizard";
 import AuthGuard from "@/components/AuthGuard";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/integrations/supabase/client";
 
 const Order = () => {
   const { toast } = useToast();
@@ -15,28 +14,12 @@ const Order = () => {
     try {
       console.log("Order completed:", orderData);
 
-      // Create NETOPIA payment session using Supabase function invoke
-      const { data: result, error } = await supabase.functions.invoke('create-netopia-payment', {
-        body: {
-          orderId: orderData.orderId,
-          amount: orderData.totalPrice,
-          currency: 'RON',
-          customerEmail: orderData.email || orderData.recipientEmail,
-          customerName: orderData.fullName || orderData.recipientName,
-          description: `Order for ${orderData.package} package`
-        }
+      // TODO: Integrate with SmartBill payment system
+      toast({
+        title: t('orderSuccess') || 'Order Created',
+        description: t('orderSuccessMessage') || 'Your order has been created successfully. Payment integration will be available soon.',
+        variant: "default"
       });
-
-      if (error) {
-        throw new Error(error.message || 'Failed to create payment session');
-      }
-
-      if (result?.success && result?.paymentUrl) {
-        // Redirect to NETOPIA payment page
-        window.location.href = result.paymentUrl;
-      } else {
-        throw new Error(result?.error || 'Failed to create payment session');
-      }
 
     } catch (error) {
       console.error("Error processing order:", error);

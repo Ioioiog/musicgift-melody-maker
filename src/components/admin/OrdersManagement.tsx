@@ -153,7 +153,6 @@ const OrdersManagement = () => {
                         <p><strong>Created:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
                         <p><strong>Recipient:</strong> {formData?.recipientName || 'N/A'}</p>
                         <p><strong>Occasion:</strong> {formData?.occasion || 'N/A'}</p>
-                        <p><strong>NETOPIA Order:</strong> {order.netopia_order_id || 'N/A'}</p>
                       </div>
                     </div>
                   </div>
