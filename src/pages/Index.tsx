@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -6,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { usePackages } from "@/hooks/usePackageData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
+
 const Index = () => {
   const {
     data: packages = [],
@@ -21,6 +23,7 @@ const Index = () => {
 
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
+  
   return <div className="min-h-screen">
       <Navigation />
       
@@ -50,7 +53,7 @@ const Index = () => {
             </div>
             
             <div className="relative lg:pl-12">
-              <div className="w-96 h-96 mx-auto flex items-center justify-center animate-float">
+              <div className="w-[576px] h-[576px] mx-auto flex items-center justify-center animate-float">
                 <video className="w-full h-full object-cover rounded-2xl shadow-lg" autoPlay muted loop playsInline>
                   <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
                   {/* Fallback image if video doesn't load */}
@@ -172,4 +175,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
