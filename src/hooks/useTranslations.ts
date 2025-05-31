@@ -56,6 +56,6 @@ export const useTranslation = () => {
     translations: dbTranslations,
     isLoading,
     error,
-    currentLanguage: language
+    language
   };
 };
