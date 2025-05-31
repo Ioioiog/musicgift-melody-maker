@@ -46,7 +46,7 @@ const Index = () => {
             </div>
             
             <div className="relative lg:pl-12">
-              <div className="w-80 h-80 mx-auto flex items-center justify-center animate-float">
+              <div className="w-96 h-96 mx-auto flex items-center justify-center animate-float">
                 <video 
                   className="w-full h-full object-cover rounded-2xl shadow-lg"
                   autoPlay 
