@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePackages } from "@/hooks/usePackageData";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/hooks/useTranslations";
 
 const Index = () => {
   const { data: packages = [], isLoading, error } = usePackages();
-  const { t } = useLanguage();
+  const { t } = useLanguage(); // Frontend translations for static UI
+  const { t: tDb } = useTranslation(); // Database translations for package content
 
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
@@ -24,21 +26,20 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8 animate-fade-in">
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight text-gray-800">
-                Give the Gift of Music
+                {t('heroTitle') || 'Give the Gift of Music'}
               </h1>
               <p className="text-xl text-gray-600 leading-relaxed">
-                A personalized song, created just for your special someone. 
-                The most unique gift they'll ever receive.
+                {t('heroSubtitle') || 'A personalized song, created just for your special someone. The most unique gift they\'ll ever receive.'}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/packages">
                   <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 rounded-full">
-                    See Packages
+                    {t('seePackages') || 'See Packages'}
                   </Button>
                 </Link>
                 <Link to="/testimonials">
                   <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-3 rounded-full">
-                    Listen to Samples
+                    {t('listenToSamples') || 'Listen to Samples'}
                   </Button>
                 </Link>
               </div>
@@ -56,11 +57,11 @@ const Index = () => {
               
               {/* Info Card */}
               <div className="absolute top-8 right-8 bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg max-w-xs border border-purple-100">
-                <h3 className="font-semibold text-gray-900 mb-2">What is MusicGift for?</h3>
-                <p className="text-purple-600 font-medium">Cereri în căsătorie</p>
+                <h3 className="font-semibold text-gray-900 mb-2">{t('whatIsMusicGiftFor') || 'What is MusicGift for?'}</h3>
+                <p className="text-purple-600 font-medium">{t('marriageProposals') || 'Cereri în căsătorie'}</p>
                 <Link to="/testimonials">
                   <Button size="sm" className="mt-3 bg-purple-600 hover:bg-purple-700 text-white rounded-full">
-                    See examples
+                    {t('seeExamples') || 'See examples'}
                   </Button>
                 </Link>
               </div>
@@ -73,8 +74,8 @@ const Index = () => {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Package</h2>
-            <p className="text-xl text-gray-600">Select the perfect music package that fits your needs and budget</p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">{t('chooseYourPackage') || 'Choose Your Package'}</h2>
+            <p className="text-xl text-gray-600">{t('selectPerfectPackage') || 'Select the perfect music package that fits your needs and budget'}</p>
           </div>
           
           {/* Loading State */}
@@ -82,7 +83,7 @@ const Index = () => {
             <div className="flex items-center justify-center min-h-[400px]">
               <div className="text-center">
                 <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading packages...</p>
+                <p className="text-gray-600">{t('loadingPackages') || 'Loading packages...'}</p>
               </div>
             </div>
           )}
@@ -90,9 +91,9 @@ const Index = () => {
           {/* Error State */}
           {error && (
             <div className="text-center py-12">
-              <p className="text-red-600 mb-4">Failed to load packages. Please try again later.</p>
+              <p className="text-red-600 mb-4">{t('failedToLoadPackages') || 'Failed to load packages. Please try again later.'}</p>
               <Button onClick={() => window.location.reload()} variant="outline">
-                Reload
+                {t('reload') || 'Reload'}
               </Button>
             </div>
           )}
@@ -126,9 +127,9 @@ const Index = () => {
                          pkg.value === 'instrumental' ? '🎶' : 
                          pkg.value === 'remix' ? '🔁' : '🎁'}
                       </div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">{t(pkg.label_key)}</h3>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">{tDb(pkg.label_key)}</h3>
                       {pkg.tagline_key && (
-                        <p className="text-sm text-purple-600 font-medium mb-3">{t(pkg.tagline_key)}</p>
+                        <p className="text-sm text-purple-600 font-medium mb-3">{tDb(pkg.tagline_key)}</p>
                       )}
                     </div>
 
@@ -145,7 +146,7 @@ const Index = () => {
                             <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
                               <span className="text-green-600 text-xs">✓</span>
                             </span>
-                            {t(include.include_key)}
+                            {tDb(include.include_key)}
                           </li>
                         ))}
                       </ul>
@@ -153,7 +154,7 @@ const Index = () => {
 
                     <Link to="/order">
                       <Button className="w-full bg-gradient-purple hover:opacity-90">
-                        Order Now
+                        {t('orderNow')}
                       </Button>
                     </Link>
                   </CardContent>
@@ -165,8 +166,8 @@ const Index = () => {
           {/* No Packages State */}
           {!isLoading && !error && previewPackages.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-600 mb-4">No packages available at the moment.</p>
-              <p className="text-gray-500">Please check back later.</p>
+              <p className="text-gray-600 mb-4">{t('noPackagesAvailable') || 'No packages available at the moment.'}</p>
+              <p className="text-gray-500">{t('checkBackLater') || 'Please check back later.'}</p>
             </div>
           )}
           
@@ -175,7 +176,7 @@ const Index = () => {
             <div className="text-center mt-12">
               <Link to="/packages">
                 <Button size="lg" variant="outline" className="border-purple-200 text-purple-600 hover:bg-purple-50">
-                  View All Packages
+                  {t('viewAllPackages') || 'View All Packages'}
                 </Button>
               </Link>
             </div>
@@ -186,13 +187,13 @@ const Index = () => {
       {/* CTA Section */}
       <section className="py-16 bg-gradient-purple text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-4">Ready to Create Something Special?</h2>
+          <h2 className="text-4xl font-bold mb-4">{t('readyToCreateSpecial') || 'Ready to Create Something Special?'}</h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Let us help you create a personalized musical gift that will be treasured forever.
+            {t('helpCreatePersonalized') || 'Let us help you create a personalized musical gift that will be treasured forever.'}
           </p>
           <Link to="/packages">
             <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold">
-              Start Your Order
+              {t('startYourOrder') || 'Start Your Order'}
             </Button>
           </Link>
         </div>

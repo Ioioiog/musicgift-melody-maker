@@ -6,10 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { usePackages } from "@/hooks/usePackageData";
 import { useTranslation } from "@/hooks/useTranslations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Packages = () => {
   const { data: packages = [], isLoading } = usePackages();
-  const { t } = useTranslation();
+  const { t: tDb } = useTranslation(); // Database translations for package content
+  const { t } = useLanguage(); // Frontend translations for static UI
 
   if (isLoading) {
     return (
@@ -80,9 +82,9 @@ const Packages = () => {
                        pkg.value === 'instrumental' ? '🎶' : 
                        pkg.value === 'remix' ? '🔁' : '🎁'}
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors duration-300">{t(pkg.label_key)}</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors duration-300">{tDb(pkg.label_key)}</h3>
                     {pkg.tagline_key && (
-                      <p className="text-sm text-purple-600 font-semibold mb-4 bg-purple-50 px-3 py-1 rounded-full inline-block">{t(pkg.tagline_key)}</p>
+                      <p className="text-sm text-purple-600 font-semibold mb-4 bg-purple-50 px-3 py-1 rounded-full inline-block">{tDb(pkg.tagline_key)}</p>
                     )}
                     
                     {/* Enhanced Price Display */}
@@ -93,7 +95,7 @@ const Packages = () => {
                       </div>
                       {pkg.delivery_time_key && (
                         <div className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full inline-block">
-                          ⏱️ {t(pkg.delivery_time_key)}
+                          ⏱️ {tDb(pkg.delivery_time_key)}
                         </div>
                       )}
                     </div>
@@ -103,7 +105,7 @@ const Packages = () => {
                   {pkg.description_key && (
                     <div className="mb-8 p-4 bg-gray-50 rounded-lg border-l-4 border-purple-200">
                       <p className="text-sm text-gray-700 leading-relaxed italic">
-                        {t(pkg.description_key)}
+                        {tDb(pkg.description_key)}
                       </p>
                     </div>
                   )}
@@ -123,7 +125,7 @@ const Packages = () => {
                             <span className="w-6 h-6 rounded-full bg-gradient-to-r from-green-400 to-green-500 text-white flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 shadow-md">
                               <span className="text-xs font-bold">✓</span>
                             </span>
-                            <span className="text-sm text-gray-700 leading-relaxed">{t(include.include_key)}</span>
+                            <span className="text-sm text-gray-700 leading-relaxed">{tDb(include.include_key)}</span>
                           </li>
                         ))}
                       </ul>
