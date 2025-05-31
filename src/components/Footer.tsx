@@ -1,9 +1,12 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
+
 const Footer = () => {
-  return <footer className="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white relative overflow-hidden">
+  return (
+    <footer className="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-64 h-64 bg-purple-500 rounded-full filter blur-3xl"></div>
@@ -41,9 +44,11 @@ const Footer = () => {
               icon: Icon,
               href,
               label
-            }) => <a key={label} href={href} className="w-10 h-10 bg-white/10 hover:bg-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group" aria-label={label}>
-                  <Icon className="w-5 h-5 group-hover:text-white" />
-                </a>)}
+            }) => (
+              <a key={label} href={href} className="w-10 h-10 bg-white/10 hover:bg-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group" aria-label={label}>
+                <Icon className="w-5 h-5 group-hover:text-white" />
+              </a>
+            ))}
             </div>
           </div>
 
@@ -69,15 +74,20 @@ const Footer = () => {
             }, {
               to: "/testimonials",
               label: "Testimonials"
+            }, {
+              to: "/admin",
+              label: "Admin"
             }].map(({
               to,
               label
-            }) => <li key={to}>
-                  <Link to={to} className="text-gray-300 hover:text-purple-400 transition-all duration-300 hover:translate-x-2 inline-block relative group">
-                    {label}
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-400 transition-all duration-300 group-hover:w-full"></span>
-                  </Link>
-                </li>)}
+            }) => (
+              <li key={to}>
+                <Link to={to} className="text-gray-300 hover:text-purple-400 transition-all duration-300 hover:translate-x-2 inline-block relative group">
+                  {label}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-400 transition-all duration-300 group-hover:w-full"></span>
+                </Link>
+              </li>
+            ))}
             </ul>
           </div>
 
@@ -104,23 +114,27 @@ const Footer = () => {
               icon: Icon,
               text,
               href
-            }) => <a key={text} href={href} className="flex items-center space-x-3 text-gray-300 hover:text-purple-400 transition-colors duration-300 group">
-                  <div className="w-8 h-8 bg-purple-600/20 rounded-lg flex items-center justify-center group-hover:bg-purple-600/40 transition-colors duration-300">
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <span>{text}</span>
-                </a>)}
+            }) => (
+              <a key={text} href={href} className="flex items-center space-x-3 text-gray-300 hover:text-purple-400 transition-colors duration-300 group">
+                <div className="w-8 h-8 bg-purple-600/20 rounded-lg flex items-center justify-center group-hover:bg-purple-600/40 transition-colors duration-300">
+                  <Icon className="w-4 h-4" />
+                </div>
+                <span>{text}</span>
+              </a>
+            ))}
             </div>
 
             {/* Legal Links */}
             <div className="pt-4">
               <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Legal</h4>
               <ul className="space-y-2 text-sm">
-                {["Terms & Conditions", "Privacy Policy", "Refund Policy", "Cookie Policy"].map(item => <li key={item}>
+                {["Terms & Conditions", "Privacy Policy", "Refund Policy", "Cookie Policy"].map(item => (
+                  <li key={item}>
                     <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors duration-300">
                       {item}
                     </a>
-                  </li>)}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -162,6 +176,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;
