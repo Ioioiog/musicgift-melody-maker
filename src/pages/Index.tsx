@@ -47,7 +47,17 @@ const Index = () => {
             
             <div className="relative lg:pl-12">
               <div className="w-80 h-80 mx-auto flex items-center justify-center animate-float">
-                <img src="/lovable-uploads/65518432-abfe-42fc-acc5-25014d321134.png" alt="Music Gift Box" className="w-full h-full object-contain" />
+                <video 
+                  className="w-full h-full object-cover rounded-2xl shadow-lg"
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline
+                >
+                  <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
+                  {/* Fallback image if video doesn't load */}
+                  <img src="/lovable-uploads/65518432-abfe-42fc-acc5-25014d321134.png" alt="Music Gift Box" className="w-full h-full object-contain" />
+                </video>
               </div>
               
               {/* Floating music notes */}
