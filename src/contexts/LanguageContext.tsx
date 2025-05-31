@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from 'react';
 
 export type Language = "en" | "ro" | "fr" | "pl" | "de";
@@ -80,6 +79,10 @@ const translations = {
     sendMessageBtn: "Trimite Mesajul",
     messageSent: "Mesaj trimis!",
     messageThankYou: "Mulțumim pentru mesajul tău. Vom reveni cu un răspuns în cel mai scurt timp.",
+    
+    // Testimonials Page
+    testimonialsTitle: "Ce Spun Clienții Noștri",
+    testimonialsSubtitle: "Testimoniale reale de la clienți mulțumiți care și-au iubit cântecele personalizate",
     
     // Testimonials
     testimonialQuote: "Am comandat un cântec pentru soția mea la aniversarea noastră și a fost cel mai frumos cadou pe care l-am putut oferi. Calitatea muzicii și emoția din versuri ne-au emoționat până la lacrimi.",
@@ -249,6 +252,10 @@ const translations = {
     messageSent: "Message sent!",
     messageThankYou: "Thank you for your message. We will get back to you soon.",
     
+    // Testimonials Page
+    testimonialsTitle: "What Our Customers Say",
+    testimonialsSubtitle: "Real testimonials from satisfied customers who love their personalized songs",
+    
     // Testimonials
     testimonialQuote: "I ordered a song for my wife on our anniversary and it was the most beautiful gift I could offer. The quality of the music and emotion in the lyrics moved us to tears.",
     testimonialAuthor: "Alexandru M., Bucharest",
@@ -416,6 +423,10 @@ const translations = {
     sendMessageBtn: "Envoyer le message",
     messageSent: "Message envoyé !",
     messageThankYou: "Merci pour votre message. Nous vous répondrons bientôt.",
+    
+    // Testimonials Page
+    testimonialsTitle: "Ce que disent nos clients",
+    testimonialsSubtitle: "Témoignages réels de clients satisfaits qui adorent leurs chansons personnalisées",
     
     // Testimonials
     testimonialQuote: "J'ai commandé une chanson pour ma femme à notre anniversaire et c'était le plus beau cadeau que je pouvais offrir. La qualité de la musique et l'émotion dans les paroles nous ont émus aux larmes.",
@@ -585,6 +596,10 @@ const translations = {
     messageSent: "Wiadomość wysłana!",
     messageThankYou: "Dziękujemy za Twoją wiadomość. Wkrótce się z Tobą skontaktujemy.",
     
+    // Testimonials Page
+    testimonialsTitle: "Co mówią nasi klienci",
+    testimonialsSubtitle: "Prawdziwe opinie zadowolonych klientów, którzy pokochali swoje spersonalizowane piosenki",
+    
     // Testimonials
     testimonialQuote: "Zamówiłem piosenkę dla mojej żony na naszą rocznicę i to był najpiękniejszy prezent, jaki mogłem zaoferować. Jakość muzyki i emocje w tekstach wzruszyły nas do łez.",
     testimonialAuthor: "Alexandru M., Bukareszt",
@@ -752,6 +767,10 @@ const translations = {
     sendMessageBtn: "Nachricht senden",
     messageSent: "Nachricht gesendet!",
     messageThankYou: "Danke für deine Nachricht. Wir melden uns bald bei dir.",
+    
+    // Testimonials Page
+    testimonialsTitle: "Was unsere Kunden sagen",
+    testimonialsSubtitle: "Echte Testimonials von zufriedenen Kunden, die ihre personalisierten Songs lieben",
     
     // Testimonials
     testimonialQuote: "Ich habe ein Lied für meine Frau zu unserem Jahrestag bestellt und es war das schönste Geschenk, das ich bieten konnte. Die Qualität der Musik und die Emotionen in den Texten rührten uns zu Tränen.",
