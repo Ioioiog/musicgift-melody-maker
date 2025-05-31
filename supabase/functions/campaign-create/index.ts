@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { name, subject, content = '', html_content = '', target_list_ids = [] } = await req.json()
+    const { name, subject, content = '', html_content = '', target_list_ids = [], sender_email, sender_name } = await req.json()
 
     if (!name || !subject) {
       return new Response(
@@ -85,6 +85,39 @@ serve(async (req) => {
           }
         }
 
+        // Get verified senders to use a valid one
+        let senderInfo = {
+          name: sender_name || 'MusicGift',
+          email: sender_email || 'noreply@musicgift.com'
+        }
+
+        // Try to get verified senders from Brevo
+        const sendersResponse = await fetch('https://api.brevo.com/v3/senders', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'api-key': brevoApiKey
+          }
+        })
+
+        if (sendersResponse.ok) {
+          const sendersData = await sendersResponse.json()
+          const verifiedSenders = sendersData.senders?.filter((sender: any) => sender.active)
+          
+          if (verifiedSenders && verifiedSenders.length > 0) {
+            // Use the first verified sender if no custom sender provided
+            if (!sender_email) {
+              senderInfo = {
+                name: verifiedSenders[0].name || 'MusicGift',
+                email: verifiedSenders[0].email
+              }
+              console.log('Using verified sender:', senderInfo)
+            }
+          } else {
+            console.log('No verified senders found in Brevo')
+          }
+        }
+
         const brevoResponse = await fetch('https://api.brevo.com/v3/emailCampaigns', {
           method: 'POST',
           headers: {
@@ -100,21 +133,26 @@ serve(async (req) => {
             recipients: {
               listIds: finalListIds
             },
-            sender: {
-              name: 'MusicGift',
-              email: 'noreply@musicgift.com'
-            }
+            sender: senderInfo
           })
         })
 
         if (brevoResponse.ok) {
           const brevoData = await brevoResponse.json()
           brevo_campaign_id = brevoData.id?.toString()
-          console.log('Successfully created Brevo campaign:', brevo_campaign_id, 'with lists:', finalListIds)
+          console.log('Successfully created Brevo campaign:', brevo_campaign_id, 'with lists:', finalListIds, 'and sender:', senderInfo)
         } else {
           const errorText = await brevoResponse.text()
           console.log('Brevo API error:', errorText)
-          brevoError = `Brevo API error: ${errorText}`
+          
+          // Provide specific error messages for common issues
+          if (errorText.includes('Sender is invalid') || errorText.includes('inactive')) {
+            brevoError = `Sender email "${senderInfo.email}" is not verified in Brevo. Please verify your sender email in your Brevo account under Senders & IP → Senders.`
+          } else if (errorText.includes('list ids are not valid')) {
+            brevoError = `Invalid list IDs: ${finalListIds.join(', ')}. Please check your Brevo contact lists.`
+          } else {
+            brevoError = `Brevo API error: ${errorText}`
+          }
           // Continue even if Brevo fails - we still want to store locally
         }
       } catch (error) {

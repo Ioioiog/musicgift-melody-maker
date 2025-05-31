@@ -42,6 +42,17 @@ export interface BrevoList {
   updatedAt: string;
 }
 
+export interface BrevoSender {
+  id: number;
+  name: string;
+  email: string;
+  active: boolean;
+  ips?: Array<{
+    ip: string;
+    domain: string;
+  }>;
+}
+
 export const useCampaigns = () => {
   return useQuery({
     queryKey: ['campaigns'],
@@ -88,6 +99,18 @@ export const useBrevoLists = () => {
   });
 };
 
+export const useBrevoSenders = () => {
+  return useQuery({
+    queryKey: ['brevo-senders'],
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke('brevo-senders');
+
+      if (error) throw error;
+      return data as { senders: BrevoSender[]; count: number };
+    },
+  });
+};
+
 export const useCreateCampaign = () => {
   const queryClient = useQueryClient();
 
@@ -98,6 +121,8 @@ export const useCreateCampaign = () => {
       content?: string;
       html_content?: string;
       target_list_ids?: number[];
+      sender_email?: string;
+      sender_name?: string;
     }) => {
       const { data, error } = await supabase.functions.invoke('campaign-create', {
         body: campaignData
