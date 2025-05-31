@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Shield, ArrowLeft, Mail } from 'lucide-react';
+import AdminDebug from '@/components/AdminDebug';
 
 const AccessDenied = () => {
   return (
@@ -13,8 +14,8 @@ const AccessDenied = () => {
       <Navigation />
       
       <div className="container mx-auto px-4 py-16">
-        <div className="max-w-md mx-auto">
-          <Card>
+        <div className="max-w-2xl mx-auto">
+          <Card className="mb-6">
             <CardHeader className="text-center">
               <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
                 <Shield className="w-8 h-8 text-red-600" />
@@ -49,6 +50,8 @@ const AccessDenied = () => {
               </div>
             </CardContent>
           </Card>
+
+          <AdminDebug />
         </div>
       </div>
 

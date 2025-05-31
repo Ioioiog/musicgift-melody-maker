@@ -14,9 +14,16 @@ import UserManagement from '@/components/admin/UserManagement';
 import AIPackageGenerator from '@/components/admin/AIPackageGenerator';
 import PackageCreationWizard from '@/components/admin/PackageCreationWizard';
 import JsonPackageEditor from '@/components/admin/JsonPackageEditor';
+import AdminDebug from '@/components/AdminDebug';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUserRole } from '@/hooks/useUserRole';
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState('ai-generator');
+  const { user } = useAuth();
+  const { data: userRole, isLoading: roleLoading } = useUserRole();
+
+  console.log('Admin page - User:', user?.email, 'Role:', userRole, 'Loading:', roleLoading);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -26,6 +33,15 @@ const Admin = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
           <p className="text-gray-600">Manage packages, fields, dependencies, users, and orders</p>
+          
+          {/* Debug info for development */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+              <p className="text-sm text-blue-700">
+                Debug: User role is "{userRole}", authenticated as {user?.email}
+              </p>
+            </div>
+          )}
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -115,6 +131,13 @@ const Admin = () => {
             <OrdersManagement />
           </TabsContent>
         </Tabs>
+
+        {/* Debug section - only show in development or if there are issues */}
+        {(process.env.NODE_ENV === 'development' || !userRole) && (
+          <div className="mt-8">
+            <AdminDebug />
+          </div>
+        )}
       </div>
 
       <Footer />

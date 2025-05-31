@@ -9,10 +9,13 @@ import Order from "./pages/Order";
 import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
+import AccessDenied from "./pages/AccessDenied";
 import { Toaster } from "@/components/ui/sonner";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
 import PaymentError from "./pages/PaymentError";
+import AuthGuard from "./components/AuthGuard";
+import RoleGuard from "./components/RoleGuard";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +32,14 @@ function App() {
                 <Route path="/order" element={<Order />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/admin" element={<Admin />} />
+                <Route path="/admin" element={
+                  <AuthGuard requireAuth={true}>
+                    <RoleGuard requiredRole="admin" fallbackPath="/access-denied">
+                      <Admin />
+                    </RoleGuard>
+                  </AuthGuard>
+                } />
+                <Route path="/access-denied" element={<AccessDenied />} />
                 <Route path="/payment/success" element={<PaymentSuccess />} />
                 <Route path="/payment/cancel" element={<PaymentCancel />} />
                 <Route path="/payment/error" element={<PaymentError />} />
