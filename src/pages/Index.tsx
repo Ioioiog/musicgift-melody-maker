@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { usePackages } from "@/hooks/usePackageData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
+
 const Index = () => {
   const {
     data: packages = [],
@@ -21,18 +22,25 @@ const Index = () => {
 
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
+  
   return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Video Background */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Video Background */}
-        <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline>
+        <video 
+          className="absolute top-0 left-0 w-full h-full object-cover z-0" 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+        >
           <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
         </video>
         
         {/* Overlay for better text readability */}
-        <div className="absolute top-0 left-0 w-full h-full bg-black/40 z-10 py-0 my-[86px]"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-black/40 z-10"></div>
         
         {/* Floating musical notes */}
         <div className="absolute top-10 right-10 text-4xl animate-bounce delay-75 z-20">🎵</div>
@@ -175,4 +183,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
