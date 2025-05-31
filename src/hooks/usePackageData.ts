@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from './useTranslations';
@@ -37,6 +36,26 @@ export interface StepData {
   }>;
 }
 
+// Mapping between simplified values and database values
+const PACKAGE_VALUE_MAPPING: Record<string, string> = {
+  'business': 'pachet-business',
+  'personal': 'pachet-personal',
+  'premium': 'premium',
+  'artist': 'artist',
+  'instrumental': 'instrumental',
+  'remix': 'remix'
+};
+
+// Reverse mapping for database values to simplified values
+const DATABASE_TO_SIMPLE_MAPPING: Record<string, string> = {
+  'pachet-business': 'business',
+  'pachet-personal': 'personal',
+  'premium': 'premium',
+  'artist': 'artist',
+  'instrumental': 'instrumental',
+  'remix': 'remix'
+};
+
 export const usePackages = () => {
   const { t } = useTranslation();
   
@@ -60,15 +79,19 @@ export const usePackages = () => {
         throw error;
       }
       
-      console.log('Fetched packages:', packages);
+      console.log('Fetched packages from database:', packages);
       
-      // Transform packages to include translated labels where available
+      // Transform packages to use simplified values for UI
       const transformedPackages = packages?.map(pkg => ({
         ...pkg,
-        // Keep original structure but allow translations to be used in components
+        // Convert database value to simplified value for UI consistency
+        value: DATABASE_TO_SIMPLE_MAPPING[pkg.value] || pkg.value,
+        // Keep original database value for internal use
+        originalValue: pkg.value,
         includes: pkg.includes?.sort((a: any, b: any) => a.include_order - b.include_order) || []
       }));
       
+      console.log('Transformed packages with simplified values:', transformedPackages);
       return transformedPackages as PackageData[];
     }
   });
@@ -83,23 +106,25 @@ export const usePackageSteps = (packageValue: string) => {
         return [];
       }
 
-      console.log('Fetching steps for package:', packageValue);
+      // Convert simplified value back to database value for querying
+      const databaseValue = PACKAGE_VALUE_MAPPING[packageValue] || packageValue;
+      console.log('Fetching steps for package:', packageValue, '-> database value:', databaseValue);
 
       try {
-        // First get the package info
+        // First get the package info using the database value
         const { data: packageInfo, error: packageError } = await supabase
           .from('package_info')
           .select('id')
-          .eq('value', packageValue)
+          .eq('value', databaseValue)
           .single();
 
         if (packageError) {
           console.error('Error fetching package info:', packageError);
-          throw new Error(`Package not found: ${packageValue}`);
+          throw new Error(`Package not found: ${packageValue} (database: ${databaseValue})`);
         }
 
         if (!packageInfo) {
-          console.error('Package info not found for value:', packageValue);
+          console.error('Package info not found for value:', packageValue, 'database value:', databaseValue);
           throw new Error(`Package not found: ${packageValue}`);
         }
 

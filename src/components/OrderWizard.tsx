@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -116,8 +115,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     console.log('Steps error:', stepsError);
     console.log('Auth user:', user);
     console.log('Auth loading:', authLoading);
+    console.log('Available packages:', packages.map(p => ({ value: p.value, originalValue: (p as any).originalValue })));
     console.log('================================');
-  }, [currentStep, selectedPackage, packageSteps, stepsLoading, stepsSuccess, stepsFetched, stepsError, user, authLoading]);
+  }, [currentStep, selectedPackage, packageSteps, stepsLoading, stepsSuccess, stepsFetched, stepsError, user, authLoading, packages]);
 
   // Calculate total steps from database steps only
   const totalSteps = packageSteps?.length || 0;
@@ -170,9 +170,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const canProceed = () => {
     console.log('Checking if can proceed from step:', currentStep);
     
-    // Special handling for package selection when no steps exist yet
-    if (!selectedPackage) {
-      console.log('No package selected yet');
+    // Special handling for package selection step
+    if (currentStep === 1 && !selectedPackage) {
+      console.log('Package selection step - checking formData.package:', formData.package);
       return !!formData.package;
     }
     
@@ -200,6 +200,20 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
 
   const handleNext = () => {
     console.log('Attempting to go to next step from:', currentStep);
+    
+    // Special handling for package selection step
+    if (currentStep === 1 && !selectedPackage && formData.package) {
+      console.log('Setting selected package from form data:', formData.package);
+      setSelectedPackage(formData.package);
+      // Allow time for the usePackageSteps hook to fetch data
+      setTimeout(() => {
+        if (totalSteps > 1) {
+          setCurrentStep(2);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 100);
+      return;
+    }
     
     if (canProceed() && currentStep < totalSteps) {
       const nextStep = currentStep + 1;
@@ -245,7 +259,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
 
     setIsSubmitting(true);
     try {
-      // Get package ID for database storage
+      // Get package ID for database storage - use originalValue for database operations
       const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
       
       const finalData = {
@@ -462,8 +476,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     );
   }
 
-  // If no package is selected yet, show the first step with package selection
-  if (!selectedPackage && !stepsLoading) {
+  // If no package is selected yet or we're still waiting for steps to load, show package selection
+  if (!selectedPackage || (selectedPackage && !stepsFetched)) {
     // Create a mock first step for package selection
     const packageSelectionStep = {
       id: 'package-selection',
@@ -665,9 +679,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                              selectedPackageDetails.value === 'premium' ? '🌟' : 
                              selectedPackageDetails.value === 'artist' ? '🎤' : 
                              selectedPackageDetails.value === 'instrumental' ? '🎶' : 
-                             selectedPackageDetails.value === 'remix' ? '🔁' : 
-                             selectedPackageDetails.value === 'pachet-personal' ? '🎁' : 
-                             selectedPackageDetails.value === 'pachet-business' ? '💼' : '🎁'}
+                             selectedPackageDetails.value === 'remix' ? '🔁' : '🎁'}
                           </div>
                           <div className="flex-1">
                             <h3 className="text-2xl font-bold text-gray-900 mb-2">
