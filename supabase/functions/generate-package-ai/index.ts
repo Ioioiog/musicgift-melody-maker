@@ -70,6 +70,11 @@ FOARTE IMPORTANT pentru placeholder-uri:
 - Pentru textarea: oferă exemple concrete de ce să scrie clientul
 - Pentru URL-uri: "ex. https://www.youtube.com/watch?v=..."
 
+IMPORTANT - NU CREA CÂMP "package" în pași:
+- Câmpul "package" este gestionat automat de sistem
+- Nu include field_name: "package" în niciun pas
+- Pașii trebuie să conțină doar câmpurile specifice pachetului
+
 Creează un pachet profesional cu 4-6 pași logici și câmpuri adecvate. Folosește contextul de afaceri românesc și prețuri realiste.
 
 Generează DOAR această structură JSON:
@@ -119,7 +124,7 @@ Instrucțiuni specifice:
 - Preț: Stabilește prețuri realiste românești (300-2000 RON)
 - Pași: Creează 4-6 pași logici (Info Personale → Detalii Poveste → Preferințe Muzicale → Livrare → Contact)
 - Tipuri câmpuri: Folosește tipuri adecvate (text, email, textarea pentru povești, select pentru alegeri, tel pentru telefon)
-- Nume câmpuri: Folosește camelCase românesc (numeComplet, poveste, stilMuzical, etc.)
+- Nume câmpuri: Folosește camelCase românesc (numeComplet, poveste, stilMuzical, etc.) - FĂRĂ "package"
 - Câmpuri obligatorii: Marchează câmpurile esențiale ca required (nume, email, informații de bază)
 - Opțiuni: Pentru câmpurile select, oferă 3-5 opțiuni românești relevante
 - Include-uri: Listează 4-6 beneficii concrete ale pachetului
@@ -151,7 +156,7 @@ Răspunde DOAR cu obiectul JSON, fără text suplimentar.`;
       body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
-          { role: 'system', content: 'Ești un expert designer de pachete pentru servicii de muzică personalizată din România. Răspunde doar cu JSON valid și placeholder-uri foarte utile și concrete.' },
+          { role: 'system', content: 'Ești un expert designer de pachete pentru servicii de muzică personalizată din România. Răspunde doar cu JSON valid și placeholder-uri foarte utile și concrete. NU crea câmpuri "package" în pași.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.4,
@@ -188,6 +193,16 @@ Răspunde DOAR cu obiectul JSON, fără text suplimentar.`;
     if (!generatedData.package || !generatedData.steps || !Array.isArray(generatedData.steps)) {
       throw new Error('Invalid package structure generated');
     }
+
+    // Additional validation: ensure no "package" fields in steps
+    generatedData.steps.forEach((step, stepIndex) => {
+      if (step.fields && Array.isArray(step.fields)) {
+        step.fields = step.fields.filter(field => field.field_name !== 'package');
+        if (step.fields.length === 0) {
+          console.warn(`Step ${stepIndex + 1} has no fields after filtering out package field`);
+        }
+      }
+    });
 
     const adminSupabase = createClient(supabaseUrl, supabaseServiceKey);
 
