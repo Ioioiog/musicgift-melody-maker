@@ -7,11 +7,12 @@ import { Link } from "react-router-dom";
 import { usePackages } from "@/hooks/usePackageData";
 import { useTranslation } from "@/hooks/useTranslations";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ArrowRight } from "lucide-react";
 
 const Packages = () => {
   const { data: packages = [], isLoading } = usePackages();
-  const { t: tDb } = useTranslation(); // Database translations for package content
-  const { t } = useLanguage(); // Frontend translations for static UI
+  const { t: tDb } = useTranslation();
+  const { t } = useLanguage();
 
   if (isLoading) {
     return (
@@ -104,13 +105,13 @@ const Packages = () => {
                   {/* Description */}
                   {pkg.description_key && (
                     <div className="mb-8 p-4 bg-gray-50 rounded-lg border-l-4 border-purple-200">
-                      <p className="text-sm text-gray-700 leading-relaxed italic">
+                      <p className="text-sm text-gray-700 leading-relaxed italic line-clamp-3">
                         {tDb(pkg.description_key)}
                       </p>
                     </div>
                   )}
 
-                  {/* Enhanced Features */}
+                  {/* Enhanced Features Preview */}
                   {pkg.includes && pkg.includes.length > 0 && (
                     <div className="mb-8">
                       <h4 className="text-sm font-bold text-gray-900 mb-4 flex items-center">
@@ -119,32 +120,48 @@ const Packages = () => {
                         </span>
                         {t('whatsIncluded')}
                       </h4>
-                      <ul className="space-y-3">
-                        {pkg.includes.map((include, featureIndex) => (
-                          <li key={featureIndex} className="flex items-start group-hover:translate-x-1 transition-transform duration-300">
-                            <span className="w-6 h-6 rounded-full bg-gradient-to-r from-green-400 to-green-500 text-white flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 shadow-md">
-                              <span className="text-xs font-bold">✓</span>
-                            </span>
-                            <span className="text-sm text-gray-700 leading-relaxed">{tDb(include.include_key)}</span>
+                      <ul className="space-y-2">
+                        {pkg.includes.slice(0, 3).map((include, featureIndex) => (
+                          <li key={featureIndex} className="flex items-start text-sm text-gray-600">
+                            <span className="w-4 h-4 rounded-full bg-green-500 text-white flex items-center justify-center mr-2 mt-1 flex-shrink-0 text-xs">✓</span>
+                            <span className="line-clamp-2">{tDb(include.include_key)}</span>
                           </li>
                         ))}
+                        {pkg.includes.length > 3 && (
+                          <li className="text-sm text-purple-600 font-medium">
+                            +{pkg.includes.length - 3} {t('moreFeatures') || 'more features'}
+                          </li>
+                        )}
                       </ul>
                     </div>
                   )}
 
-                  <Link to="/order">
-                    <Button 
-                      className={`w-full text-lg py-4 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg ${
-                        pkg.tags?.some(tag => tag.tag_type === 'popular')
-                          ? 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 text-white shadow-purple-200' 
-                          : 'bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white'
-                      }`}
-                      size="lg"
-                    >
-                      <span className="mr-2">🚀</span>
-                      {t('orderNow')}
-                    </Button>
-                  </Link>
+                  <div className="space-y-3">
+                    <Link to={`/packages/${pkg.value}`}>
+                      <Button 
+                        variant="outline"
+                        className="w-full text-purple-600 border-purple-600 hover:bg-purple-50 transition-all duration-300"
+                        size="lg"
+                      >
+                        {t('learnMore') || 'Learn More'}
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
+                    
+                    <Link to="/order">
+                      <Button 
+                        className={`w-full text-lg py-4 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                          pkg.tags?.some(tag => tag.tag_type === 'popular')
+                            ? 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 text-white shadow-purple-200' 
+                            : 'bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white'
+                        }`}
+                        size="lg"
+                      >
+                        <span className="mr-2">🚀</span>
+                        {t('orderNow')}
+                      </Button>
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
             ))}

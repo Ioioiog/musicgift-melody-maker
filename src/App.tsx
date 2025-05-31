@@ -8,6 +8,7 @@ import About from "./pages/About";
 import HowItWorks from "./pages/HowItWorks";
 import Testimonials from "./pages/Testimonials";
 import Packages from "./pages/Packages";
+import PackageDetails from "./pages/PackageDetails";
 import Order from "./pages/Order";
 import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
@@ -38,6 +39,7 @@ function App() {
                   <Route path="/how-it-works" element={<HowItWorks />} />
                   <Route path="/testimonials" element={<Testimonials />} />
                   <Route path="/packages" element={<Packages />} />
+                  <Route path="/packages/:packageValue" element={<PackageDetails />} />
                   <Route path="/order" element={<Order />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/auth" element={<Auth />} />
