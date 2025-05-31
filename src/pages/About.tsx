@@ -1,45 +1,33 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
-
 const About = () => {
-  const { t } = useLanguage();
-  
-  const entities = [
-    {
-      title: t('mihaiGruiaTitle'),
-      description: t('mihaiGruiaDescription'),
-      color: "bg-purple-500"
-    },
-    {
-      title: t('mangoRecordsTitle'),
-      description: t('mangoRecordsDescription'),
-      color: "bg-blue-500"
-    },
-    {
-      title: t('domgStudioTitle'),
-      description: t('domgStudioDescription'),
-      color: "bg-green-500"
-    },
-    {
-      title: t('doMusicForGoodTitle'),
-      description: t('doMusicForGoodDescription'),
-      color: "bg-orange-500"
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-gray-50">
+  const {
+    t
+  } = useLanguage();
+  const entities = [{
+    title: t('mihaiGruiaTitle'),
+    description: t('mihaiGruiaDescription'),
+    color: "bg-purple-500"
+  }, {
+    title: t('mangoRecordsTitle'),
+    description: t('mangoRecordsDescription'),
+    color: "bg-blue-500"
+  }, {
+    title: t('domgStudioTitle'),
+    description: t('domgStudioDescription'),
+    color: "bg-green-500"
+  }, {
+    title: t('doMusicForGoodTitle'),
+    description: t('doMusicForGoodDescription'),
+    color: "bg-orange-500"
+  }];
+  return <div className="min-h-screen bg-gray-50">
       <Navigation />
       
       {/* Page Title */}
-      <section className="pt-24 pb-8 bg-white">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">{t('aboutTitle')}</h1>
-        </div>
-      </section>
+      
 
       {/* Main Content */}
       <section className="py-16 bg-gray-50">
@@ -83,8 +71,7 @@ const About = () => {
             <div>
               <h3 className="text-3xl font-bold text-gray-900 mb-8">{t('whoWeAre')}</h3>
               <div className="space-y-8">
-                {entities.map((entity, index) => (
-                  <div key={index} className="bg-white p-8 rounded-lg shadow-sm border-l-4 border-purple-500">
+                {entities.map((entity, index) => <div key={index} className="bg-white p-8 rounded-lg shadow-sm border-l-4 border-purple-500">
                     <div className="flex items-start space-x-4">
                       <div className={`w-12 h-12 ${entity.color} rounded-full flex items-center justify-center flex-shrink-0`}>
                         <span className="text-white font-bold text-lg">
@@ -96,8 +83,7 @@ const About = () => {
                         <p className="text-gray-600 leading-relaxed text-sm">{entity.description}</p>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  </div>)}
               </div>
             </div>
           </div>
@@ -105,8 +91,6 @@ const About = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
