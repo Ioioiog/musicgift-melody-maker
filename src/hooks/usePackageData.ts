@@ -1,3 +1,4 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from './useTranslations';
@@ -159,8 +160,8 @@ export const usePackageSteps = (packageValue: string) => {
             .sort((a: any, b: any) => a.field_order - b.field_order)
             .map((field: any) => ({
               ...field,
-              // Transform options to proper FieldOption format
-              options: field.options ? field.options.map((option: any) => {
+              // Safe transformation of options - only process if options exists and is an array
+              options: field.options && Array.isArray(field.options) ? field.options.map((option: any) => {
                 // If it's already a FieldOption object, return as is
                 if (typeof option === 'object' && option.value && option.label_key) {
                   return option;
