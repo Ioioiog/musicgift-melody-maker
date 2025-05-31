@@ -33,25 +33,25 @@ body {
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--light-color);
-  padding-top: 80px; /* Adjusted for new navigation height */
+  padding-top: 70px; /* Reduced for mobile */
 }
 
-/* Mobile-first responsive padding - updated for new nav height */
+/* Mobile-first responsive padding */
 @media (min-width: 640px) {
   body {
-    padding-top: 95px;
+    padding-top: 80px;
   }
 }
 
 @media (min-width: 768px) {
   body {
-    padding-top: 110px;
+    padding-top: 90px;
   }
 }
 
 @media (min-width: 1024px) {
   body {
-    padding-top: 120px;
+    padding-top: 100px;
   }
 }
 
