@@ -254,9 +254,9 @@ const translations = {
     loadingPackages: 'Se încarcă pachetele...',
     mostPopular: 'Cel Mai Popular',
     
-    // Home Page
-    heroTitle: 'Oferă Cadoul Muzicii',
-    heroSubtitle: 'Un cântec personalizat, creat special pentru persoana ta dragă. Cel mai unic cadou pe care îl va primi vreodată.',
+    // Home Page - Updated content
+    heroTitle: 'Transformă Emoțiile Tale în Muzică',
+    heroSubtitle: 'Cel mai frumos cadou: o melodie creată special pentru cineva drag.',
     seePackages: 'Vezi Pachetele',
     listenToSamples: 'Ascultă Mostre',
     whatIsMusicGiftFor: 'Pentru ce este MusicGift?',

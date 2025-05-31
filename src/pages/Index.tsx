@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -91,10 +92,10 @@ const Index = () => {
         <div className="container mx-auto px-4 relative z-30 text-white">
           <div className="max-w-4xl space-y-6 animate-fade-in">
             <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-              {t('heroTitle') || 'Give the Gift of Music'}
+              {t('heroTitle') || 'Transformă Emoțiile Tale în Muzică'}
             </h1>
             <p className="text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl">
-              {t('heroSubtitle') || 'A personalized song, created just for your special someone. The most unique gift they\'ll ever receive.'}
+              {t('heroSubtitle') || 'Cel mai frumos cadou: o melodie creată special pentru cineva drag.'}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
