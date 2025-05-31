@@ -1,10 +1,21 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { usePackages } from "@/hooks/usePackageData";
+import { useLanguage } from "@/contexts/LanguageContext";
+
 const Index = () => {
-  return <div className="min-h-screen">
+  const { data: packages = [], isLoading, error } = usePackages();
+  const { t } = useLanguage();
+
+  // Limit to first 3 packages for homepage preview
+  const previewPackages = packages.slice(0, 3);
+
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section */}
@@ -58,9 +69,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      
-
       {/* Packages Preview */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
@@ -69,131 +77,109 @@ const Index = () => {
             <p className="text-xl text-gray-600">Select the perfect music package that fits your needs and budget</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Personal Package */}
-            <Card className="relative hover:shadow-lg transition-shadow">
-              <CardContent className="p-8">
-                <div className="text-center mb-6">
-                  <div className="text-4xl mb-3">🎁</div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Pachet Personal</h3>
-                  <p className="text-sm text-purple-600 font-medium mb-3">Un cântec creat special pentru tine și cei dragi.</p>
-                </div>
-                <div className="text-4xl font-bold text-purple-600 mb-6 text-center">
-                  300 <span className="text-lg text-gray-500">RON</span>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    Cântec complet personalizat
-                  </li>
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    Voce profesionistă
-                  </li>
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    3-5 zile livrare
-                  </li>
-                </ul>
-                <Button className="w-full bg-gradient-purple hover:opacity-90">
-                  Order Now
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Premium Package */}
-            <Card className="relative hover:shadow-lg transition-shadow border-2 border-purple-200">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-gradient-purple text-white px-4 py-1 rounded-full text-sm font-semibold">
-                  Most Popular
-                </span>
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading packages...</p>
               </div>
-              <CardContent className="p-8">
-                <div className="text-center mb-6">
-                  <div className="text-4xl mb-3">🌟</div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Pachet Premium</h3>
-                  <p className="text-sm text-purple-600 font-medium mb-3">Creează un impact. Lasă muzica să vorbească pentru tine.</p>
-                </div>
-                <div className="text-4xl font-bold text-purple-600 mb-6 text-center">
-                  500 <span className="text-lg text-gray-500">RON</span>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    Cântec original cu producție completă
-                  </li>
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    Videoclip animat inclus
-                  </li>
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    5-7 zile livrare
-                  </li>
-                </ul>
-                <Button className="w-full bg-gradient-purple hover:opacity-90">
-                  Order Now
-                </Button>
-              </CardContent>
-            </Card>
+            </div>
+          )}
 
-            {/* Business Package */}
-            <Card className="relative hover:shadow-lg transition-shadow">
-              <CardContent className="p-8">
-                <div className="text-center mb-6">
-                  <div className="text-4xl mb-3">💼</div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Pachet Business</h3>
-                  <p className="text-sm text-purple-600 font-medium mb-3">Oferă brandului tău vocea pe care o merită.</p>
-                </div>
-                <div className="text-4xl font-bold text-purple-600 mb-6 text-center">
-                  500 <span className="text-lg text-gray-500">RON</span>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    Cântec compus pentru afacerea ta
-                  </li>
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    Producție premium
-                  </li>
-                  <li className="flex items-center text-gray-600">
-                    <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-green-600 text-xs">✓</span>
-                    </span>
-                    Licență comercială limitată
-                  </li>
-                </ul>
-                <Button className="w-full bg-gradient-purple hover:opacity-90">
-                  Order Now
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-          
-          <div className="text-center mt-12">
-            <Link to="/packages">
-              <Button size="lg" variant="outline" className="border-purple-200 text-purple-600 hover:bg-purple-50">
-                View All Packages
+          {/* Error State */}
+          {error && (
+            <div className="text-center py-12">
+              <p className="text-red-600 mb-4">Failed to load packages. Please try again later.</p>
+              <Button onClick={() => window.location.reload()} variant="outline">
+                Reload
               </Button>
-            </Link>
-          </div>
+            </div>
+          )}
+
+          {/* Packages Grid */}
+          {!isLoading && !error && previewPackages.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {previewPackages.map((pkg) => (
+                <Card 
+                  key={pkg.id} 
+                  className={`relative hover:shadow-xl transition-all duration-300 ${
+                    pkg.tags?.some(tag => tag.tag_type === 'popular') ? 'border-2 border-purple-200 scale-105' : ''
+                  }`}
+                >
+                  {pkg.tags?.some(tag => tag.tag_type === 'popular') && (
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                      <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
+                        {t('mostPopular')}
+                      </span>
+                    </div>
+                  )}
+                  
+                  <CardContent className="p-8">
+                    {/* Icon and Title */}
+                    <div className="text-center mb-6">
+                      <div className="text-4xl mb-3">
+                        {pkg.value === 'personal' ? '🎁' : 
+                         pkg.value === 'business' ? '💼' : 
+                         pkg.value === 'premium' ? '🌟' : 
+                         pkg.value === 'artist' ? '🎤' : 
+                         pkg.value === 'instrumental' ? '🎶' : 
+                         pkg.value === 'remix' ? '🔁' : '🎁'}
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">{t(pkg.label_key)}</h3>
+                      {pkg.tagline_key && (
+                        <p className="text-sm text-purple-600 font-medium mb-3">{t(pkg.tagline_key)}</p>
+                      )}
+                    </div>
+
+                    {/* Price */}
+                    <div className="text-4xl font-bold text-purple-600 mb-6 text-center">
+                      {pkg.price} <span className="text-lg text-gray-500">RON</span>
+                    </div>
+
+                    {/* Features */}
+                    {pkg.includes && pkg.includes.length > 0 && (
+                      <ul className="space-y-3 mb-8">
+                        {pkg.includes.map((include, featureIndex) => (
+                          <li key={featureIndex} className="flex items-center text-gray-600">
+                            <span className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                              <span className="text-green-600 text-xs">✓</span>
+                            </span>
+                            {t(include.include_key)}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <Link to="/order">
+                      <Button className="w-full bg-gradient-purple hover:opacity-90">
+                        Order Now
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {/* No Packages State */}
+          {!isLoading && !error && previewPackages.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-600 mb-4">No packages available at the moment.</p>
+              <p className="text-gray-500">Please check back later.</p>
+            </div>
+          )}
+          
+          {/* View All Packages Button */}
+          {!isLoading && !error && previewPackages.length > 0 && (
+            <div className="text-center mt-12">
+              <Link to="/packages">
+                <Button size="lg" variant="outline" className="border-purple-200 text-purple-600 hover:bg-purple-50">
+                  View All Packages
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -213,6 +199,8 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
