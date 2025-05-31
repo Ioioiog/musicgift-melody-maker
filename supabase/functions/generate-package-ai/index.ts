@@ -47,91 +47,100 @@ serve(async (req) => {
 
     console.log('Generating package for:', description);
 
-    const prompt = `You are an expert package designer for MusicGift.ro, a Romanian service that creates personalized songs as gifts. 
+    const prompt = `Ești un expert în crearea de pachete pentru MusicGift.ro, un serviciu românesc care creează cântece personalizate ca și cadouri.
 
-Based on this description, create a complete package structure: "${description}"
+Bazat pe această descriere, creează o structură completă de pachet: "${description}"
 
-Context about MusicGift.ro:
-- Creates personalized songs based on customer stories
-- Serves Romanian customers
-- Offers packages like Personal (basic), Premium (with video), and Corporate (for businesses)
-- Typical price ranges: Personal (300-500 RON), Premium (700-1200 RON), Corporate (1500+ RON)
-- Delivery times: 3-7 days for basic, 7-14 days for premium services
-- Common services: song creation, professional recording, music video, Spotify distribution
+Context despre MusicGift.ro:
+- Creează cântece personalizate bazate pe poveștile clienților
+- Servește clienți din România
+- Oferă pachete precum Personal (de bază), Premium (cu video), și Corporate (pentru afaceri)
+- Preturi tipice: Personal (300-500 RON), Premium (700-1200 RON), Corporate (1500+ RON)
+- Timpi de livrare: 3-7 zile pentru servicii de bază, 7-14 zile pentru servicii premium
+- Servicii comune: crearea cântecului, înregistrare profesională, videoclip muzical, distribuție Spotify
 
-Create a professional package with 4-6 logical steps and appropriate fields. Use Romanian business context and realistic pricing.
+FOARTE IMPORTANT pentru placeholder-uri:
+- Creează placeholder-uri concrete și utile în română
+- Pentru nume: "ex. Maria Popescu" sau "ex. Ion Georgescu"
+- Pentru email: "ex. maria.popescu@email.com"
+- Pentru telefon: "ex. +40712345678" 
+- Pentru povești: "Povestiți-ne despre relația voastră, momentele speciale împărțite, ce îl/o face unică..."
+- Pentru date: "Selectați data evenimentului"
+- Pentru select-uri: pune opțiuni concrete românești
+- Pentru textarea: oferă exemple concrete de ce să scrie clientul
+- Pentru URL-uri: "ex. https://www.youtube.com/watch?v=..."
 
-Generate ONLY this JSON structure:
+Creează un pachet profesional cu 4-6 pași logici și câmpuri adecvate. Folosește contextul de afaceri românesc și prețuri realiste.
+
+Generează DOAR această structură JSON:
 {
   "package": {
     "value": "kebab-case-name",
-    "label_key": "packageDisplayName",
+    "label_key": "Nume Pachet Profesional",
     "price": 500,
-    "tagline_key": "shortTagline",
-    "description_key": "detailedDescription",
-    "delivery_time_key": "deliveryTimeText"
+    "tagline_key": "Slogan scurt și atractiv",
+    "description_key": "Descriere detaliată a pachetului",
+    "delivery_time_key": "Text timp livrare"
   },
   "steps": [
     {
       "step_number": 1,
-      "title_key": "stepTitle",
+      "title_key": "Titlu Pas",
       "step_order": 1,
       "fields": [
         {
           "field_name": "fieldName",
           "field_type": "text|textarea|select|checkbox|email|tel|date|url|file",
-          "placeholder_key": "placeholderText",
+          "placeholder_key": "Placeholder concret și util",
           "required": true|false,
           "field_order": 1,
-          "options": ["option1", "option2"]
+          "options": ["Opțiunea 1", "Opțiunea 2"]
         }
       ]
     }
   ],
   "includes": [
     {
-      "include_key": "featureDescription",
+      "include_key": "Descriere clară a beneficiului",
       "include_order": 1
     }
   ],
   "tags": [
     {
       "tag_type": "popular|hot|new|discount|limited",
-      "tag_label_key": "tagText",
+      "tag_label_key": "Text Tag",
       "styling_class": "bg-blue-100 text-blue-800"
     }
   ]
 }
 
-Guidelines:
-- Package value: Use kebab-case (ex: "pachet-personal", "premium-video", "corporate-song")
-- Price: Set realistic Romanian prices (300-2000 RON range)
-- Steps: Create 4-6 logical steps (Personal Info → Story Details → Music Preferences → Delivery → Addons → Contact)
-- Field types: Use appropriate types (text, email, textarea for stories, select for choices, tel for phone)
-- Field names: Use camelCase Romanian field names (numeComplet, poveste, stilMuzical, etc.)
-- Required fields: Mark essential fields as required (name, email, basic story info)
-- Options: For select fields, provide 3-5 relevant Romanian options
-- Includes: List 4-6 package features customers get
-- Tags: Add 1-2 appropriate tags with proper styling classes
+Instrucțiuni specifice:
+- Package value: Folosește kebab-case românesc (ex: "pachet-nunta", "premium-corporate", "cadou-aniversare")
+- Preț: Stabilește prețuri realiste românești (300-2000 RON)
+- Pași: Creează 4-6 pași logici (Info Personale → Detalii Poveste → Preferințe Muzicale → Livrare → Contact)
+- Tipuri câmpuri: Folosește tipuri adecvate (text, email, textarea pentru povești, select pentru alegeri, tel pentru telefon)
+- Nume câmpuri: Folosește camelCase românesc (numeComplet, poveste, stilMuzical, etc.)
+- Câmpuri obligatorii: Marchează câmpurile esențiale ca required (nume, email, informații de bază)
+- Opțiuni: Pentru câmpurile select, oferă 3-5 opțiuni românești relevante
+- Include-uri: Listează 4-6 beneficii concrete ale pachetului
+- Tag-uri: Adaugă 1-2 tag-uri potrivite cu clase de styling corecte
 
-Field type examples:
-- "text": names, short inputs
-- "email": email addresses  
-- "tel": phone numbers
-- "textarea": stories, descriptions, special requests
-- "select": predefined choices (music style, occasion, etc.)
-- "date": event dates, deadlines
-- "url": reference links (YouTube songs, etc.)
-- "file": uploaded files (photos, audio recordings)
+Exemple de placeholder-uri bune:
+- "numeComplet": "ex. Maria Popescu"
+- "email": "ex. maria.popescu@gmail.com"
+- "telefon": "ex. +40712345678"
+- "poveste": "Povestiți-ne despre relația voastră, momentele speciale împărțite, ce vă face unici..."
+- "stilMuzical": "Alegeți stilul preferat..."
+- "dataEveniment": "Selectați data evenimentului special"
+- "cantecReferinta": "ex. https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
-Example field names in Romanian context:
-- "numeComplet", "email", "telefon"
-- "numeDestinatar", "relatia", "ocazia"
-- "poveste", "momenteCheie", "cuvinteSpeciale"
-- "stilMuzical", "cantecReferinta", "limbaCantec"
-- "dataEveniment", "timpLivrare", "mesajSpecial"
+Pentru select-uri, opțiuni românești concrete:
+- Relații: ["Soț/Soție", "Iubit/Iubită", "Prieten/Prietenă", "Familie", "Altele"]
+- Ocazii: ["Nuntă", "Aniversare", "Ziua Îndrăgostiților", "Sărbători", "Altele"]
+- Stiluri muzicale: ["Pop Românesc", "Rock", "Manele", "Folk", "Jazz", "Clasic"]
+- Limba: ["Română", "Engleză", "Maghiară", "Germană"]
 
-Respond with ONLY the JSON object, no additional text.`;
+Răspunde DOAR cu obiectul JSON, fără text suplimentar.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -142,7 +151,7 @@ Respond with ONLY the JSON object, no additional text.`;
       body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
-          { role: 'system', content: 'You are an expert Romanian package designer for music gift services. Respond only with valid JSON.' },
+          { role: 'system', content: 'Ești un expert designer de pachete pentru servicii de muzică personalizată din România. Răspunde doar cu JSON valid și placeholder-uri foarte utile și concrete.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.4,

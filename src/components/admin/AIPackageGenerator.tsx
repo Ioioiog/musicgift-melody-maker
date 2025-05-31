@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,10 +7,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Wand2, Eye, Check, X, Loader2, Mic, Calendar, FileText, CheckSquare, Languages } from 'lucide-react';
+import { Wand2, Eye, Check, X, Loader2, Mic, Calendar, FileText, CheckSquare, Languages, Edit3 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import AITextEditor from './AITextEditor';
 import type { Database } from '@/integrations/supabase/types';
 
 type FieldType = Database['public']['Enums']['field_type'];
@@ -58,6 +60,7 @@ const AIPackageGenerator = () => {
   const [isGeneratingTranslations, setIsGeneratingTranslations] = useState(false);
   const [generatedPackage, setGeneratedPackage] = useState<GeneratedPackage | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -89,36 +92,21 @@ const AIPackageGenerator = () => {
     return fieldNameMap[fieldName] || fieldName;
   };
 
-  // Helper function to get user-friendly placeholders in Romanian
-  const getUserFriendlyPlaceholder = (fieldName: string, fieldType: string): string => {
-    const placeholderMap: Record<string, string> = {
-      'recipientName': 'ex. Maria Popescu',
-      'relationship': 'Alegeți relația...',
-      'occasion': 'Alegeți ocazia...',
-      'eventDate': 'Selectați data evenimentului',
-      'songLanguage': 'Alegeți limba...',
-      'pronunciationAudioRecipient': 'Înregistrează pronunția corectă a numelui (maxim 30 secunde)',
-      'story': 'Povestiți-ne despre relația voastră, momentele speciale împărțite, ce îl/o face unică...',
-      'emotionalTone': 'Alegeți tonul emoțional...',
-      'keyMoments': 'Descrieți momentele importante din relația voastră...',
-      'specialWords': 'Cuvinte, expresii sau glume interne care au sens special pentru voi...',
-      'pronunciationAudioKeywords': 'Înregistrează pronunția cuvintelor speciale (maxim 30 secunde)',
-      'musicStyle': 'Alegeți stilul muzical...',
-      'referenceSong': 'ex. https://www.youtube.com/watch?v=...',
-      'fullName': 'ex. Ion Popescu',
-      'email': 'ex. ion.popescu@email.com',
-      'phone': 'ex. +40712345678',
-      'message': 'Scrieți mesajul dumneavoastră aici...',
-      'artistName': 'ex. Maria Ionescu',
-      'brandName': 'ex. Compania Mea SRL',
-      'campaignPurpose': 'Descrieți scopul și obiectivele campaniei...'
-    };
-    
-    if (fieldType === 'audio-recorder') {
-      return 'Înregistrează audio (maxim 30 secunde)';
+  // Helper function to get field type icon
+  const getFieldTypeIcon = (fieldType: string) => {
+    switch (fieldType) {
+      case 'audio-recorder':
+        return <Mic className="w-4 h-4" />;
+      case 'date':
+        return <Calendar className="w-4 h-4" />;
+      case 'textarea':
+        return <FileText className="w-4 h-4" />;
+      case 'checkbox':
+      case 'checkbox-group':
+        return <CheckSquare className="w-4 h-4" />;
+      default:
+        return <FileText className="w-4 h-4" />;
     }
-    
-    return placeholderMap[fieldName] || 'Introduceți informația solicitată...';
   };
 
   // Helper function to get user-friendly field type names in Romanian
@@ -137,23 +125,6 @@ const AIPackageGenerator = () => {
       'audio-recorder': 'Înregistrare audio'
     };
     return typeMap[fieldType] || fieldType;
-  };
-
-  // Helper function to get field type icon
-  const getFieldTypeIcon = (fieldType: string) => {
-    switch (fieldType) {
-      case 'audio-recorder':
-        return <Mic className="w-4 h-4" />;
-      case 'date':
-        return <Calendar className="w-4 h-4" />;
-      case 'textarea':
-        return <FileText className="w-4 h-4" />;
-      case 'checkbox':
-      case 'checkbox-group':
-        return <CheckSquare className="w-4 h-4" />;
-      default:
-        return <FileText className="w-4 h-4" />;
-    }
   };
 
   // Helper function to map field types to valid database enums
@@ -263,6 +234,7 @@ const AIPackageGenerator = () => {
 
       setGeneratedPackage(data);
       setShowPreview(true);
+      setShowEditor(false);
       toast({ title: 'Pachetul a fost generat cu succes!' });
     } catch (error) {
       console.error('Error generating package:', error);
@@ -270,6 +242,20 @@ const AIPackageGenerator = () => {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleEditText = () => {
+    setShowEditor(true);
+  };
+
+  const handleSaveEdited = (editedPackage: GeneratedPackage) => {
+    setGeneratedPackage(editedPackage);
+    setShowEditor(false);
+    toast({ title: 'Textele au fost actualizate cu succes!' });
+  };
+
+  const handleCancelEdit = () => {
+    setShowEditor(false);
   };
 
   const handleCreatePackage = async () => {
@@ -373,6 +359,7 @@ const AIPackageGenerator = () => {
       setDescription('');
       setGeneratedPackage(null);
       setShowPreview(false);
+      setShowEditor(false);
 
     } catch (error) {
       console.error('Error creating package:', error);
@@ -385,6 +372,7 @@ const AIPackageGenerator = () => {
   const handleReject = () => {
     setGeneratedPackage(null);
     setShowPreview(false);
+    setShowEditor(false);
   };
 
   return (
@@ -398,7 +386,7 @@ const AIPackageGenerator = () => {
         <CardHeader>
           <CardTitle>Generează Pachet cu AI</CardTitle>
           <p className="text-sm text-gray-600">
-            Descrie pachetul pe care vrei să îl creezi și AI-ul va genera automat structura completă cu traduceri în română.
+            Descrie pachetul pe care vrei să îl creezi și AI-ul va genera automat structura completă cu placeholder-uri utile și traduceri în română.
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -406,14 +394,14 @@ const AIPackageGenerator = () => {
             <Label htmlFor="description">Descrierea Pachetului *</Label>
             <Textarea
               id="description"
-              placeholder="Descrie pachetul/serviciul pe care dorești să îl creezi. De exemplu: 'Un pachet premium pentru nunți care include cântec personalizat, videoclip profesional și distribuție pe Spotify, cu preț de 1200 RON și livrare în 10 zile'"
+              placeholder="Descrie pachetul/serviciul pe care dorești să îl creezi. De exemplu: 'Un pachet pentru nunți care include cântec personalizat, videoclip profesional și distribuție pe Spotify'"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              rows={6}
+              rows={4}
               className="resize-none"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Includeți detalii despre: tipul serviciului, prețul aproximativ, timpul de livrare, și orice cerințe speciale.
+              Descrie serviciul pe care îl dorești. AI-ul va crea automat structura completă cu placeholder-uri utile.
             </p>
           </div>
 
@@ -425,7 +413,7 @@ const AIPackageGenerator = () => {
             {isGenerating ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Se generează pachetul...
+                Se generează pachetul cu AI...
               </>
             ) : (
               <>
@@ -437,7 +425,15 @@ const AIPackageGenerator = () => {
         </CardContent>
       </Card>
 
-      {showPreview && generatedPackage && (
+      {showEditor && generatedPackage && (
+        <AITextEditor
+          generatedPackage={generatedPackage}
+          onSave={handleSaveEdited}
+          onCancel={handleCancelEdit}
+        />
+      )}
+
+      {showPreview && generatedPackage && !showEditor && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -516,14 +512,10 @@ const AIPackageGenerator = () => {
                                   {field.required && <Badge variant="destructive" className="text-xs">Obligatoriu</Badge>}
                                 </div>
                               </div>
-                              <p className="text-sm text-gray-600 italic">
-                                "{getUserFriendlyPlaceholder(field.field_name, field.field_type)}"
-                              </p>
-                              {field.field_type === 'audio-recorder' && (
-                                <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-700">
-                                  <Mic className="w-3 h-3 inline mr-1" />
-                                  Înregistrare audio cu durată maximă de 30 secunde
-                                </div>
+                              {field.placeholder_key && (
+                                <p className="text-sm text-gray-600 italic bg-white p-2 rounded border">
+                                  "{field.placeholder_key}"
+                                </p>
                               )}
                               {field.options && field.options.length > 0 && (
                                 <div className="mt-2">
@@ -603,6 +595,17 @@ const AIPackageGenerator = () => {
                   </>
                 )}
               </Button>
+              
+              <Button 
+                onClick={handleEditText}
+                disabled={isCreating || isGeneratingTranslations}
+                variant="outline"
+                className="border-blue-300 text-blue-600 hover:bg-blue-50"
+              >
+                <Edit3 className="w-4 h-4 mr-2" />
+                Editează Textul primit de la AI
+              </Button>
+              
               <Button 
                 variant="outline" 
                 onClick={handleReject} 
@@ -610,7 +613,7 @@ const AIPackageGenerator = () => {
                 className="border-red-300 text-red-600 hover:bg-red-50"
               >
                 <X className="w-4 h-4 mr-2" />
-                Respinge & Încearcă Din Nou
+                Respinge
               </Button>
             </div>
           </CardContent>
