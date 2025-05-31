@@ -142,6 +142,107 @@ export type Database = {
           },
         ]
       }
+      campaign_metrics: {
+        Row: {
+          bounces: number | null
+          campaign_id: string
+          clicks: number | null
+          created_at: string
+          delivered: number | null
+          hard_bounces: number | null
+          id: string
+          last_updated: string | null
+          opens: number | null
+          soft_bounces: number | null
+          spam_reports: number | null
+          unsubscribes: number | null
+        }
+        Insert: {
+          bounces?: number | null
+          campaign_id: string
+          clicks?: number | null
+          created_at?: string
+          delivered?: number | null
+          hard_bounces?: number | null
+          id?: string
+          last_updated?: string | null
+          opens?: number | null
+          soft_bounces?: number | null
+          spam_reports?: number | null
+          unsubscribes?: number | null
+        }
+        Update: {
+          bounces?: number | null
+          campaign_id?: string
+          clicks?: number | null
+          created_at?: string
+          delivered?: number | null
+          hard_bounces?: number | null
+          id?: string
+          last_updated?: string | null
+          opens?: number | null
+          soft_bounces?: number | null
+          spam_reports?: number | null
+          unsubscribes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_metrics_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          brevo_campaign_id: string | null
+          content: string | null
+          created_at: string
+          created_by: string | null
+          html_content: string | null
+          id: string
+          name: string
+          scheduled_at: string | null
+          sent_at: string | null
+          status: string
+          subject: string
+          target_list_ids: Json | null
+          updated_at: string
+        }
+        Insert: {
+          brevo_campaign_id?: string | null
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          html_content?: string | null
+          id?: string
+          name: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          subject: string
+          target_list_ids?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          brevo_campaign_id?: string | null
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          html_content?: string | null
+          id?: string
+          name?: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          target_list_ids?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       field_dependencies: {
         Row: {
           condition: Database["public"]["Enums"]["dependency_condition"]
