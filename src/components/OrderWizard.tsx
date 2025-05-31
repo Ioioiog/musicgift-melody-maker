@@ -170,6 +170,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const canProceed = () => {
     console.log('Checking if can proceed from step:', currentStep);
     
+    // Special handling for package selection when no steps exist yet
+    if (!selectedPackage) {
+      console.log('No package selected yet');
+      return !!formData.package;
+    }
+    
     // Get current step data from database
     const currentStepData = packageSteps.find(step => step.step_number === currentStep);
     console.log('Current step data for validation:', currentStepData);
