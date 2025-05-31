@@ -221,6 +221,17 @@ const translations = {
     french: 'French',
     german: 'German',
     polish: 'Polish',
+
+    // Who We Are Section
+    whoWeAre: 'Who We Are',
+    mihaiGruiaTitle: 'Mihai Gruia',
+    mihaiGruiaDescription: 'Music producer and composer, founding member of Akcent – one of the most successful Romanian pop bands internationally, with famous hits like \'That\'s My Name\', \'Kylie\' and \'Stay with Me\'. After Akcent\'s success, Mihai continued his artistic career through the TWO project and got involved in music production for top artists. Today, he coordinates the MusicGift and DOMG Studio team, bringing his expertise to every delivered project.',
+    mangoRecordsTitle: 'Mango Records',
+    mangoRecordsDescription: 'Mango Records, founded and coordinated by Mihai Gruia, is an independent record label from Romania, specialized in launching and distributing original music internationally. It has promoted successful artists like TWO (ex-Akcent), DOMG, Mellina, Red Blonde, Pitt Leffer, Katerina and Vulgaris. With over 1000 tracks distributed globally on Spotify, Apple Music and YouTube, Mango Records actively contributes to the contemporary music scene. It has also achieved successful commercial collaborations with international brands.',
+    domgStudioTitle: 'DOMG Studio',
+    domgStudioDescription: 'Premium music creation studio, with compositions for top Romanian and international artists: Akcent, Andra, Lora, Alina Eremia and others. Offers impeccable audio quality and professional composition, recording and mix-master processes.',
+    doMusicForGoodTitle: 'Do Music for Good Band',
+    doMusicForGoodDescription: 'A team of professional performers who collaborate to bring MusicGift melodies to life. Each voice and each note are carefully chosen to authentically express the emotion conveyed by the client.',
   },
   ro: {
     // Navigation
@@ -434,6 +445,17 @@ const translations = {
     french: 'Français',
     german: 'Deutsch',
     polish: 'Polski',
+
+    // Who We Are Section
+    whoWeAre: 'Cine Suntem',
+    mihaiGruiaTitle: 'Mihai Gruia',
+    mihaiGruiaDescription: 'Producător muzical și compozitor, membru fondator al trupei Akcent – una dintre cele mai de succes trupe pop românești la nivel internațional, cu hituri celebre precum \'That\'s My Name\', \'Kylie\' și \'Stay with Me\'. După succesul Akcent, Mihai și-a continuat cariera artistică prin proiectul TWO și s-a implicat în producția muzicală pentru artiști de top. Astăzi, coordonează echipa MusicGift și DOMG Studio, aducându-și expertiza în fiecare proiect livrat.',
+    mangoRecordsTitle: 'Mango Records',
+    mangoRecordsDescription: 'Mango Records, fondat și coordonat de Mihai Gruia, este o casă de discuri independentă din România, specializată în lansarea și distribuirea muzicii originale la nivel internațional. A promovat artiști de succes precum TWO (ex-Akcent), DOMG, Mellina, Red Blonde, Pitt Leffer, Katerina și Vulgaris. Cu peste 1000 de piese distribuite global pe Spotify, Apple Music și YouTube, Mango Records contribuie activ la scena muzicală contemporană. A realizat și colaborări comerciale de succes cu branduri internaționale.',
+    domgStudioTitle: 'DOMG Studio',
+    domgStudioDescription: 'Studio premium de creație muzicală, cu compoziții pentru artiști de top români și internaționali: Akcent, Andra, Lora, Alina Eremia și alții. Oferă calitate audio impecabilă și procese profesionale de compoziție, înregistrare și mix-master.',
+    doMusicForGoodTitle: 'Do Music for Good Band',
+    doMusicForGoodDescription: 'O echipă de interpreți profesioniști care colaborează pentru a da viață melodiilor MusicGift. Fiecare voce și fiecare notă sunt alese cu grijă pentru a exprima autentic emoția transmisă de client.',
   },
   fr: {
     // Navigation
@@ -606,6 +628,17 @@ const translations = {
     admin: 'Admin',
     selectLanguage: 'Sélectionner la langue',
     selectOption: 'Sélectionner une option',
+
+    // Who We Are Section
+    whoWeAre: 'Qui Nous Sommes',
+    mihaiGruiaTitle: 'Mihai Gruia',
+    mihaiGruiaDescription: 'Producteur de musique et compositeur, membre fondateur d\'Akcent – l\'un des groupes pop roumains les plus réussis internationalement, avec des hits célèbres comme \'That\'s My Name\', \'Kylie\' et \'Stay with Me\'. Après le succès d\'Akcent, Mihai a continué sa carrière artistique à travers le projet TWO et s\'est impliqué dans la production musicale pour des artistes de premier plan. Aujourd\'hui, il coordonne l\'équipe MusicGift et DOMG Studio, apportant son expertise à chaque projet livré.',
+    mangoRecordsTitle: 'Mango Records',
+    mangoRecordsDescription: 'Mango Records, fondé et coordonné par Mihai Gruia, est un label indépendant de Roumanie, spécialisé dans le lancement et la distribution de musique originale internationalement. Il a promu des artistes à succès comme TWO (ex-Akcent), DOMG, Mellina, Red Blonde, Pitt Leffer, Katerina et Vulgaris. Avec plus de 1000 morceaux distribués mondialement sur Spotify, Apple Music et YouTube, Mango Records contribue activement à la scène musicale contemporaine. Il a également réalisé des collaborations commerciales réussies avec des marques internationales.',
+    domgStudioTitle: 'DOMG Studio',
+    domgStudioDescription: 'Studio de création musicale premium, avec des compositions pour des artistes roumains et internationaux de premier plan : Akcent, Andra, Lora, Alina Eremia et autres. Offre une qualité audio impeccable et des processus professionnels de composition, d\'enregistrement et de mix-master.',
+    doMusicForGoodTitle: 'Do Music for Good Band',
+    doMusicForGoodDescription: 'Une équipe d\'interprètes professionnels qui collaborent pour donner vie aux mélodies MusicGift. Chaque voix et chaque note sont soigneusement choisies pour exprimer authentiquement l\'émotion transmise par le client.',
   },
   pl: {
     // Navigation
@@ -778,6 +811,17 @@ const translations = {
     admin: 'Admin',
     selectLanguage: 'Wybierz język',
     selectOption: 'Wybierz opcję',
+
+    // Who We Are Section
+    whoWeAre: 'Kim Jesteśmy',
+    mihaiGruiaTitle: 'Mihai Gruia',
+    mihaiGruiaDescription: 'Producent muzyczny i kompozytor, członek założyciel Akcent – jednego z najbardziej udanych rumuńskich zespołów popowych na arenie międzynarodowej, ze słynnymi hitami jak \'That\'s My Name\', \'Kylie\' i \'Stay with Me\'. Po sukcesie Akcent, Mihai kontynuował swoją karierę artystyczną przez projekt TWO i zaangażował się w produkcję muzyczną dla najlepszych artystów. Dziś koordynuje zespół MusicGift i DOMG Studio, wnosząc swoją wiedzę do każdego realizowanego projektu.',
+    mangoRecordsTitle: 'Mango Records',
+    mangoRecordsDescription: 'Mango Records, założone i koordynowane przez Mihai Gruia, to niezależna wytwórnia płytowa z Rumunii, specjalizująca się w lansowaniu i dystrybucji oryginalnej muzyki na arenie międzynarodowej. Promowała udanych artystów jak TWO (ex-Akcent), DOMG, Mellina, Red Blonde, Pitt Leffer, Katerina i Vulgaris. Z ponad 1000 utworów dystrybuowanych globalnie na Spotify, Apple Music i YouTube, Mango Records aktywnie przyczynia się do współczesnej sceny muzycznej. Osiągnęła również udane współprace komercyjne z międzynarodowymi markami.',
+    domgStudioTitle: 'DOMG Studio',
+    domgStudioDescription: 'Premium studio tworzenia muzyki, z kompozycjami dla najlepszych rumuńskich i międzynarodowych artystów: Akcent, Andra, Lora, Alina Eremia i innych. Oferuje nienaganną jakość dźwięku i profesjonalne procesy kompozycji, nagrywania i mix-master.',
+    doMusicForGoodTitle: 'Do Music for Good Band',
+    doMusicForGoodDescription: 'Zespół profesjonalnych wykonawców, którzy współpracują, aby ożywić melodie MusicGift. Każdy głos i każda nuta są starannie wybrane, aby autentycznie wyrazić emocję przekazaną przez klienta.',
   },
   de: {
     // Navigation
@@ -950,6 +994,17 @@ const translations = {
     admin: 'Admin',
     selectLanguage: 'Sprache auswählen',
     selectOption: 'Option auswählen',
+
+    // Who We Are Section
+    whoWeAre: 'Wer Wir Sind',
+    mihaiGruiaTitle: 'Mihai Gruia',
+    mihaiGruiaDescription: 'Musikproduzent und Komponist, Gründungsmitglied von Akcent – einer der erfolgreichsten rumänischen Popbands international, mit berühmten Hits wie \'That\'s My Name\', \'Kylie\' und \'Stay with Me\'. Nach Akcents Erfolg setzte Mihai seine künstlerische Laufbahn durch das TWO-Projekt fort und engagierte sich in der Musikproduktion für Top-Künstler. Heute koordiniert er das MusicGift- und DOMG Studio-Team und bringt seine Expertise in jedes gelieferte Projekt ein.',
+    mangoRecordsTitle: 'Mango Records',
+    mangoRecordsDescription: 'Mango Records, gegründet und koordiniert von Mihai Gruia, ist ein unabhängiges Plattenlabel aus Rumänien, spezialisiert auf die internationale Veröffentlichung und Vertrieb von Originalmusik. Es hat erfolgreiche Künstler wie TWO (ex-Akcent), DOMG, Mellina, Red Blonde, Pitt Leffer, Katerina und Vulgaris gefördert. Mit über 1000 global auf Spotify, Apple Music und YouTube vertriebenen Tracks trägt Mango Records aktiv zur zeitgenössischen Musikszene bei. Es hat auch erfolgreiche kommerzielle Kooperationen mit internationalen Marken erreicht.',
+    domgStudioTitle: 'DOMG Studio',
+    domgStudioDescription: 'Premium-Musikstudio mit Kompositionen für top rumänische und internationale Künstler: Akcent, Andra, Lora, Alina Eremia und andere. Bietet tadellose Audioqualität und professionelle Kompositions-, Aufnahme- und Mix-Master-Prozesse.',
+    doMusicForGoodTitle: 'Do Music for Good Band',
+    doMusicForGoodDescription: 'Ein Team professioneller Interpreten, die zusammenarbeiten, um MusicGift-Melodien zum Leben zu erwecken. Jede Stimme und jede Note werden sorgfältig ausgewählt, um die vom Kunden übermittelte Emotion authentisch auszudrücken.',
   }
 };
 

@@ -7,21 +7,26 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const About = () => {
   const { t } = useLanguage();
   
-  const teamMembers = [
+  const entities = [
     {
-      name: "Mihai Gruia",
-      role: t('leadComposer'),
+      title: t('mihaiGruiaTitle'),
+      description: t('mihaiGruiaDescription'),
       color: "bg-purple-500"
     },
     {
-      name: "Ionela Mirunescu", 
-      role: t('leadVocalist'),
-      color: "bg-purple-500"
+      title: t('mangoRecordsTitle'),
+      description: t('mangoRecordsDescription'),
+      color: "bg-blue-500"
     },
     {
-      name: "Radu Popescu",
-      role: t('soundEngineer'), 
-      color: "bg-purple-500"
+      title: t('domgStudioTitle'),
+      description: t('domgStudioDescription'),
+      color: "bg-green-500"
+    },
+    {
+      title: t('doMusicForGoodTitle'),
+      description: t('doMusicForGoodDescription'),
+      color: "bg-orange-500"
     }
   ];
 
@@ -74,20 +79,22 @@ const About = () => {
               </div>
             </div>
 
-            {/* Right Content - Team */}
+            {/* Right Content - Who We Are */}
             <div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-8">{t('ourTeam')}</h3>
-              <div className="space-y-6">
-                {teamMembers.map((member, index) => (
-                  <div key={index} className="flex items-center space-x-4 bg-white p-6 rounded-lg shadow-sm">
-                    <div className={`w-16 h-16 ${member.color} rounded-full flex items-center justify-center`}>
-                      <span className="text-white font-bold text-xl">
-                        {member.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-semibold text-gray-900">{member.name}</h4>
-                      <p className="text-gray-600">{member.role}</p>
+              <h3 className="text-3xl font-bold text-gray-900 mb-8">{t('whoWeAre')}</h3>
+              <div className="space-y-8">
+                {entities.map((entity, index) => (
+                  <div key={index} className="bg-white p-8 rounded-lg shadow-sm border-l-4 border-purple-500">
+                    <div className="flex items-start space-x-4">
+                      <div className={`w-12 h-12 ${entity.color} rounded-full flex items-center justify-center flex-shrink-0`}>
+                        <span className="text-white font-bold text-lg">
+                          {index + 1}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-xl font-semibold text-gray-900 mb-3">{entity.title}</h4>
+                        <p className="text-gray-600 leading-relaxed text-sm">{entity.description}</p>
+                      </div>
                     </div>
                   </div>
                 ))}
