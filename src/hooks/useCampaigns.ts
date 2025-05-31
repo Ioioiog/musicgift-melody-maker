@@ -111,6 +111,36 @@ export const useBrevoSenders = () => {
   });
 };
 
+export const useSyncCampaignMetrics = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ campaignId }: { campaignId: string }) => {
+      const { data, error } = await supabase.functions.invoke('brevo-campaign-metrics', {
+        body: { campaignId }
+      });
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['campaign-metrics'] });
+      toast({
+        title: "Metrics synced",
+        description: "Campaign metrics have been updated from Brevo.",
+      });
+    },
+    onError: (error: any) => {
+      console.error('Metrics sync error:', error);
+      toast({
+        title: "Metrics sync failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
+};
+
 export const useCreateCampaign = () => {
   const queryClient = useQueryClient();
 

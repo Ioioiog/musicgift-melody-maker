@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,10 +10,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useCampaigns, useCreateCampaign, useSendCampaign, useDeleteCampaign, useCampaignMetrics, useBrevoLists, useResyncCampaign } from '@/hooks/useCampaigns';
+import { useCampaigns, useCreateCampaign, useSendCampaign, useDeleteCampaign, useCampaignMetrics, useBrevoLists, useResyncCampaign, useSyncCampaignMetrics } from '@/hooks/useCampaigns';
 import { Plus, Send, Trash2, BarChart3, Mail, Users, Loader2, Eye, RefreshCw, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from '@/hooks/use-toast';
+import CampaignMetricsCard from '@/components/admin/CampaignMetricsCard';
 
 const CampaignsManagement = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -34,6 +34,7 @@ const CampaignsManagement = () => {
   const sendCampaign = useSendCampaign();
   const deleteCampaign = useDeleteCampaign();
   const resyncCampaign = useResyncCampaign();
+  const syncMetrics = useSyncCampaignMetrics();
 
   const handleCreateCampaign = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,6 +87,10 @@ const CampaignsManagement = () => {
         ? [...prev.target_list_ids, listId]
         : prev.target_list_ids.filter(id => id !== listId)
     }));
+  };
+
+  const handleSyncMetrics = (campaignId: string) => {
+    syncMetrics.mutate({ campaignId });
   };
 
   const getStatusColor = (status: string) => {
@@ -394,44 +399,18 @@ const CampaignsManagement = () => {
 
             <TabsContent value="metrics" className="space-y-4">
               {selectedCampaignId && selectedCampaignMetrics ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Card>
-                    <CardContent className="pt-4">
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-blue-600">{selectedCampaignMetrics.delivered}</p>
-                        <p className="text-sm text-gray-600">Delivered</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-4">
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-green-600">{selectedCampaignMetrics.opens}</p>
-                        <p className="text-sm text-gray-600">Opens</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-4">
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-purple-600">{selectedCampaignMetrics.clicks}</p>
-                        <p className="text-sm text-gray-600">Clicks</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-4">
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-red-600">{selectedCampaignMetrics.bounces}</p>
-                        <p className="text-sm text-gray-600">Bounces</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                <CampaignMetricsCard
+                  metrics={selectedCampaignMetrics}
+                  onRefresh={() => handleSyncMetrics(selectedCampaignId)}
+                  isRefreshing={syncMetrics.isPending}
+                />
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p>Select a sent campaign to view metrics</p>
+                  <p className="text-sm text-gray-400 mt-2">
+                    Click the metrics icon next to a sent campaign to load its performance data
+                  </p>
                 </div>
               )}
             </TabsContent>
