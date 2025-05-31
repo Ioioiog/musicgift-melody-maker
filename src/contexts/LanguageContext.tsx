@@ -1,4 +1,15 @@
+
 import React, { createContext, useContext, useState } from 'react';
+
+export type Language = 'ro' | 'en' | 'fr' | 'pl' | 'de';
+
+export const languageNames: Record<Language, string> = {
+  ro: 'Română',
+  en: 'English', 
+  fr: 'Français',
+  pl: 'Polski',
+  de: 'Deutsch'
+};
 
 interface LanguageContextType {
   language: string;
