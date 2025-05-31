@@ -1,9 +1,8 @@
 
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import NewsletterForm from "@/components/NewsletterForm";
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -145,20 +144,7 @@ const Footer = () => {
             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
               {t('newsletterDescription') || 'Subscribe to get special offers, new packages, and exclusive musical content delivered to your inbox.'}
             </p>
-            <div className="space-y-3 sm:space-y-4">
-              <div className="flex flex-col space-y-3">
-                <Input
-                  placeholder={t('enterEmail') || 'Enter your email address'}
-                  className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20 text-sm sm:text-base"
-                />
-                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-4 sm:px-6 transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
-                  {t('subscribe') || 'Subscribe'}
-                </Button>
-              </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                {t('subscribeDisclaimer') || 'By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.'}
-              </p>
-            </div>
+            <NewsletterForm />
           </div>
         </div>
 

@@ -4,7 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Package, Settings, FileText, ShoppingCart, GitBranch, CheckSquare, Users, Wand2, Database } from 'lucide-react';
+import { Package, Settings, FileText, ShoppingCart, GitBranch, CheckSquare, Users, Wand2, Database, Mail } from 'lucide-react';
 import StepsManagement from '@/components/admin/StepsManagement';
 import FieldsManagement from '@/components/admin/FieldsManagement';
 import OrdersManagement from '@/components/admin/OrdersManagement';
@@ -14,6 +14,7 @@ import UserManagement from '@/components/admin/UserManagement';
 import AIPackageGenerator from '@/components/admin/AIPackageGenerator';
 import PackageCreationWizard from '@/components/admin/PackageCreationWizard';
 import JsonPackageEditor from '@/components/admin/JsonPackageEditor';
+import NewsletterManagement from '@/components/admin/NewsletterManagement';
 import AdminDebug from '@/components/AdminDebug';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -52,7 +53,7 @@ const Admin = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-          <p className="text-gray-600">Manage packages, fields, dependencies, users, and orders</p>
+          <p className="text-gray-600">Manage packages, fields, dependencies, users, orders, and newsletter</p>
           
           {/* Debug info for development and production */}
           <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
@@ -66,7 +67,7 @@ const Admin = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="ai-generator" className="flex items-center space-x-2">
               <Wand2 className="w-4 h-4" />
               <span>AI Generator</span>
@@ -78,6 +79,10 @@ const Admin = () => {
             <TabsTrigger value="json-editor" className="flex items-center space-x-2">
               <Database className="w-4 h-4" />
               <span>JSON Editor</span>
+            </TabsTrigger>
+            <TabsTrigger value="newsletter" className="flex items-center space-x-2">
+              <Mail className="w-4 h-4" />
+              <span>Newsletter</span>
             </TabsTrigger>
             <TabsTrigger value="manage-components" className="flex items-center space-x-2">
               <Settings className="w-4 h-4" />
@@ -103,6 +108,10 @@ const Admin = () => {
 
           <TabsContent value="json-editor">
             <JsonPackageEditor />
+          </TabsContent>
+
+          <TabsContent value="newsletter">
+            <NewsletterManagement />
           </TabsContent>
 
           <TabsContent value="manage-components">

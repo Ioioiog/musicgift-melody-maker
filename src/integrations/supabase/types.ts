@@ -218,6 +218,45 @@ export type Database = {
           },
         ]
       }
+      newsletter_subscribers: {
+        Row: {
+          brevo_contact_id: string | null
+          created_at: string
+          email: string
+          id: string
+          is_active: boolean
+          name: string | null
+          source: string | null
+          subscribed_at: string
+          unsubscribe_token: string
+          updated_at: string
+        }
+        Insert: {
+          brevo_contact_id?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          is_active?: boolean
+          name?: string | null
+          source?: string | null
+          subscribed_at?: string
+          unsubscribe_token?: string
+          updated_at?: string
+        }
+        Update: {
+          brevo_contact_id?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          is_active?: boolean
+          name?: string | null
+          source?: string | null
+          subscribed_at?: string
+          unsubscribe_token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           created_at: string | null
