@@ -10,8 +10,8 @@ const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
-    language,
-    setLanguage,
+    currentLanguage,
+    setCurrentLanguage,
     t
   } = useLanguage();
 
@@ -77,15 +77,15 @@ const Navigation = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="text-sm font-medium bg-white hover:bg-gray-50">
-                    {languageNames[language as Language]}
+                    {languageNames[currentLanguage]}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-white border shadow-lg z-50">
                   {languages.map(lang => (
                     <DropdownMenuItem 
                       key={lang} 
-                      onClick={() => setLanguage(lang)} 
-                      className={`hover:bg-gray-100 ${language === lang ? "bg-violet-50" : ""}`}
+                      onClick={() => setCurrentLanguage(lang)} 
+                      className={`hover:bg-gray-100 ${currentLanguage === lang ? "bg-violet-50" : ""}`}
                     >
                       {languageNames[lang]}
                     </DropdownMenuItem>
@@ -136,15 +136,15 @@ const Navigation = () => {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm" className="text-sm font-medium w-full sm:w-auto bg-white hover:bg-gray-50">
-                        {languageNames[language as Language]}
+                        {languageNames[currentLanguage]}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="bg-white border shadow-lg z-50">
                       {languages.map(lang => (
                         <DropdownMenuItem 
                           key={lang} 
-                          onClick={() => setLanguage(lang)} 
-                          className={`hover:bg-gray-100 ${language === lang ? "bg-violet-50" : ""}`}
+                          onClick={() => setCurrentLanguage(lang)} 
+                          className={`hover:bg-gray-100 ${currentLanguage === lang ? "bg-violet-50" : ""}`}
                         >
                           {languageNames[lang]}
                         </DropdownMenuItem>

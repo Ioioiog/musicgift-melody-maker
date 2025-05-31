@@ -4,17 +4,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export const useTranslations = () => {
-  const { language } = useLanguage();
+  const { currentLanguage } = useLanguage();
   
   return useQuery({
-    queryKey: ['translations', language],
+    queryKey: ['translations', currentLanguage],
     queryFn: async () => {
-      console.log('Fetching translations for language:', language);
+      console.log('Fetching translations for language:', currentLanguage);
       
       const { data, error } = await supabase
         .from('translations')
         .select('key_name, translation')
-        .eq('language_code', language);
+        .eq('language_code', currentLanguage);
 
       if (error) {
         console.error('Error fetching translations:', error);
@@ -31,41 +31,19 @@ export const useTranslations = () => {
       return translations;
     },
     staleTime: 1000 * 60 * 10, // Cache for 10 minutes
-    retry: 3,
-    retryDelay: 1000,
   });
 };
 
 export const useTranslation = () => {
-  const { data: translations = {}, isLoading, error } = useTranslations();
-  const { t: contextT, language } = useLanguage();
+  const { data: translations = {} } = useTranslations();
   
   const t = (key: string, fallback?: string) => {
-    // First try database translation
-    const dbTranslation = translations[key];
-    if (dbTranslation) return dbTranslation;
+    const translation = translations[key];
+    if (translation) return translation;
     
-    // Then try context translation (local translations)
-    const contextTranslation = contextT(key);
-    if (contextTranslation !== key) return contextTranslation;
-    
-    // Return provided fallback
-    if (fallback) return fallback;
-    
-    // Log missing translation for debugging
-    if (!isLoading && !error) {
-      console.warn(`Translation missing for key: ${key} in language: ${language}`);
-    }
-    
-    // Return the key itself as last resort
-    return key;
+    // Return fallback or the key itself if no translation found
+    return fallback || key;
   };
   
-  return { 
-    t, 
-    translations, 
-    isLoading, 
-    error,
-    language 
-  };
+  return { t, translations };
 };
