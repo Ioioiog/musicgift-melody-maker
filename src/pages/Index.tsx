@@ -1,13 +1,10 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section */}
@@ -38,11 +35,7 @@ const Index = () => {
             
             <div className="relative lg:pl-12">
               <div className="w-80 h-80 mx-auto flex items-center justify-center animate-float">
-                <img 
-                  src="/lovable-uploads/65518432-abfe-42fc-acc5-25014d321134.png" 
-                  alt="Music Gift Box" 
-                  className="w-full h-full object-contain"
-                />
+                <img src="/lovable-uploads/65518432-abfe-42fc-acc5-25014d321134.png" alt="Music Gift Box" className="w-full h-full object-contain" />
               </div>
               
               {/* Floating music notes */}
@@ -66,24 +59,7 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="space-y-2">
-              <h3 className="text-4xl font-bold gradient-text">1,000+</h3>
-              <p className="text-gray-600">Songs Created</p>
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-4xl font-bold gradient-text">5+</h3>
-              <p className="text-gray-600">Years Experience</p>
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-4xl font-bold gradient-text">98%</h3>
-              <p className="text-gray-600">Client Satisfaction</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Packages Preview */}
       <section className="py-16 bg-gray-50">
@@ -237,8 +213,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
