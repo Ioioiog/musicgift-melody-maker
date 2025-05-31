@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { usePackages } from "@/hooks/usePackageData";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/hooks/useTranslations";
 
 const Packages = () => {
   const { data: packages = [], isLoading } = usePackages();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return (
