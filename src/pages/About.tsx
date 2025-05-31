@@ -29,10 +29,10 @@ const About = () => {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       
-      {/* Hero Section with centered title */}
-      <section className="pt-24 pb-16 bg-white">
+      {/* Page Title */}
+      <section className="pt-24 pb-8 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">{t('aboutTitle')}</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">{t('aboutTitle')}</h1>
         </div>
       </section>
 

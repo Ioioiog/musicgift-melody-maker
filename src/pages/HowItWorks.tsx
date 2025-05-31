@@ -38,11 +38,11 @@ const HowItWorks = () => {
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-24 pb-16 bg-gradient-purple text-white">
+      {/* Page Title */}
+      <section className="pt-24 pb-8 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl lg:text-6xl font-bold mb-6">{t('howItWorksTitle')}</h1>
-          <p className="text-xl text-white/90 max-w-3xl mx-auto">
+          <h1 className="text-4xl lg:text-5xl font-bold mb-4 text-gray-900">{t('howItWorksTitle')}</h1>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             {t('howItWorksSubtitle')}
           </p>
         </div>

@@ -36,7 +36,7 @@ const Order = () => {
       <div className="min-h-screen">
         <Navigation />
         
-        <section className="py-8 bg-gray-80">
+        <section className="pt-24 py-8 bg-gray-50">
           <div className="container mx-auto px-4">
             <OrderWizard onComplete={handleOrderComplete} />
           </div>
