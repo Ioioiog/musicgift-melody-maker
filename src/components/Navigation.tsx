@@ -17,22 +17,22 @@ const Navigation = () => {
 
   const navItems = [{
     path: "/",
-    label: t("home")
+    label: t("home") || "Home"
   }, {
     path: "/about",
-    label: t("about")
+    label: t("about") || "About"
   }, {
     path: "/packages",
-    label: t("packages")
+    label: t("packages") || "Packages"
   }, {
     path: "/how-it-works",
-    label: t("howItWorks")
+    label: t("howItWorks") || "How It Works"
   }, {
     path: "/testimonials",
-    label: t("testimonials")
+    label: t("testimonials") || "Testimonials"
   }, {
     path: "/contact",
-    label: t("contact")
+    label: t("contact") || "Contact"
   }];
 
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
@@ -99,7 +99,7 @@ const Navigation = () => {
                 to="/order" 
                 className="bg-violet-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-violet-700 transition-colors"
               >
-                {t("orderNow")}
+                {t("orderNow") || "Order Now"}
               </Link>
             </div>
 
@@ -159,7 +159,7 @@ const Navigation = () => {
                     className="bg-violet-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors" 
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {t("orderNow")}
+                    {t("orderNow") || "Order Now"}
                   </Link>
                 </div>
               </nav>

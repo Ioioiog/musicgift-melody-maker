@@ -22,8 +22,8 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
-      title: t('messageSent'),
-      description: t('messageThankYou'),
+      title: t('messageSent') || 'Message sent!',
+      description: t('messageThankYou') || 'Thank you for your message. We will get back to you soon.',
     });
     setFormData({ name: "", email: "", phone: "", message: "" });
   };
@@ -38,17 +38,17 @@ const Contact = () => {
   const contactMethods = [
     {
       icon: "📧",
-      title: t('emailUs'),
+      title: t('emailUs') || 'Email Us',
       details: "info@musicgift.ro"
     },
     {
       icon: "📞", 
-      title: t('callUs'),
+      title: t('callUs') || 'Call Us',
       details: "+40 721 234 567"
     },
     {
       icon: "📍",
-      title: t('visitUs'), 
+      title: t('visitUs') || 'Visit Us', 
       details: "Strada Muzicii 42, București"
     }
   ];
@@ -60,9 +60,9 @@ const Contact = () => {
       {/* Page Title */}
       <section className="pt-24 pb-8 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-4 text-gray-900">{t('contactTitle')}</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-4 text-gray-900">{t('contactTitle') || 'Contact Us'}</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            {t('contactSubtitle')}
+            {t('contactSubtitle') || 'Get in touch with us for any questions or to start your musical journey'}
           </p>
         </div>
       </section>
@@ -74,9 +74,9 @@ const Contact = () => {
             {/* Contact Info */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('getInTouch')}</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('getInTouch') || 'Get In Touch'}</h2>
                 <p className="text-gray-600 text-lg leading-relaxed">
-                  {t('contactDescription')}
+                  {t('contactDescription') || 'We\'d love to hear from you. Send us a message and we\'ll respond as soon as possible.'}
                 </p>
               </div>
 
@@ -98,7 +98,7 @@ const Contact = () => {
 
               {/* Social Links */}
               <div className="pt-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('followUs')}</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('followUs') || 'Follow Us'}</h3>
                 <div className="flex space-x-4">
                   {["📘", "📷", "📺", "🎵"].map((icon, index) => (
                     <button 
@@ -115,12 +115,12 @@ const Contact = () => {
             {/* Contact Form */}
             <Card className="shadow-xl">
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('sendMessage')}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('sendMessage') || 'Send Message'}</h3>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('yourName')}
+                      {t('yourName') || 'Your Name'}
                     </label>
                     <Input
                       type="text"
@@ -135,7 +135,7 @@ const Contact = () => {
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('yourEmail')}
+                      {t('yourEmail') || 'Your Email'}
                     </label>
                     <Input
                       type="email"
@@ -150,7 +150,7 @@ const Contact = () => {
 
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('phoneNumber')}
+                      {t('phoneNumber') || 'Phone Number'}
                     </label>
                     <Input
                       type="tel"
@@ -164,7 +164,7 @@ const Contact = () => {
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('yourMessage')}
+                      {t('yourMessage') || 'Your Message'}
                     </label>
                     <Textarea
                       id="message"
@@ -182,7 +182,7 @@ const Contact = () => {
                     className="w-full bg-gradient-purple hover:opacity-90"
                     size="lg"
                   >
-                    {t('sendMessageBtn')}
+                    {t('sendMessageBtn') || 'Send Message'}
                   </Button>
                 </form>
               </CardContent>
