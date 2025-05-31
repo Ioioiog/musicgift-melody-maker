@@ -195,6 +195,56 @@ export type Database = {
           },
         ]
       }
+      campaign_recipient_activity: {
+        Row: {
+          action_timestamp: string | null
+          action_type: string
+          bounce_reason: string | null
+          campaign_id: string
+          created_at: string
+          email: string
+          id: string
+          ip_address: string | null
+          link_url: string | null
+          updated_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          action_timestamp?: string | null
+          action_type: string
+          bounce_reason?: string | null
+          campaign_id: string
+          created_at?: string
+          email: string
+          id?: string
+          ip_address?: string | null
+          link_url?: string | null
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          action_timestamp?: string | null
+          action_type?: string
+          bounce_reason?: string | null
+          campaign_id?: string
+          created_at?: string
+          email?: string
+          id?: string
+          ip_address?: string | null
+          link_url?: string | null
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_recipient_activity_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaigns: {
         Row: {
           brevo_campaign_id: string | null
