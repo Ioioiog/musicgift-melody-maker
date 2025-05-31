@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -54,7 +53,7 @@ const Index = () => {
             </div>
             
             <div className="relative lg:pl-12">
-              <div className="w-full max-w-lg mx-auto animate-float">
+              <div className="w-full max-w-md mx-auto animate-float">
                 <AspectRatio ratio={16 / 9}>
                   <video className="w-full h-full object-cover rounded-2xl shadow-lg" autoPlay muted loop playsInline>
                     <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
