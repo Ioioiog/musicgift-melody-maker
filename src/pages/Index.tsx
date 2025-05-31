@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { usePackages } from "@/hooks/usePackageData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
@@ -27,49 +26,56 @@ const Index = () => {
   return <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="pt-24 pb-16 bg-gradient-to-br from-purple-50 via-blue-50 to-purple-100 relative overflow-hidden">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8 animate-fade-in">
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight text-gray-800">
-                {t('heroTitle') || 'Give the Gift of Music'}
-              </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
-                {t('heroSubtitle') || 'A personalized song, created just for your special someone. The most unique gift they\'ll ever receive.'}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/packages">
-                  <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 rounded-full">
-                    {t('seePackages') || 'See Packages'}
-                  </Button>
-                </Link>
-                <Link to="/testimonials">
-                  <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-3 rounded-full">
-                    {t('listenToSamples') || 'Listen to Samples'}
-                  </Button>
-                </Link>
-              </div>
+      {/* Hero Section with Video Background */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Video Background */}
+        <video 
+          className="absolute top-0 left-0 w-full h-full object-cover z-0" 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+        >
+          <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Overlay for better text readability */}
+        <div className="absolute top-0 left-0 w-full h-full bg-black/40 z-10"></div>
+        
+        {/* Floating musical notes */}
+        <div className="absolute top-10 right-10 text-4xl animate-bounce delay-75 z-20">🎵</div>
+        <div className="absolute bottom-20 left-0 text-3xl animate-bounce delay-150 z-20">🎶</div>
+        <div className="absolute top-32 left-10 text-2xl animate-bounce delay-300 z-20">♪</div>
+        
+        {/* Hero Content */}
+        <div className="container mx-auto px-4 relative z-30 text-center text-white">
+          <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
+            <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
+              {t('heroTitle') || 'Give the Gift of Music'}
+            </h1>
+            <p className="text-xl lg:text-2xl leading-relaxed text-white/90 max-w-3xl mx-auto">
+              {t('heroSubtitle') || 'A personalized song, created just for your special someone. The most unique gift they\'ll ever receive.'}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/packages">
+                <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-4 rounded-full text-lg backdrop-blur-sm">
+                  {t('seePackages') || 'See Packages'}
+                </Button>
+              </Link>
+              <Link to="/testimonials">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 px-8 py-4 rounded-full text-lg backdrop-blur-sm">
+                  {t('listenToSamples') || 'Listen to Samples'}
+                </Button>
+              </Link>
             </div>
-            
-            <div className="relative lg:pl-12">
-              <div className="w-full max-w-md mx-auto animate-float">
-                <AspectRatio ratio={16 / 9}>
-                  <video className="w-full h-full object-cover rounded-2xl shadow-lg" autoPlay muted loop playsInline>
-                    <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
-                    {/* Fallback image if video doesn't load */}
-                    <img src="/lovable-uploads/65518432-abfe-42fc-acc5-25014d321134.png" alt="Music Gift Box" className="w-full h-full object-contain" />
-                  </video>
-                </AspectRatio>
-              </div>
-              
-              {/* Floating music notes */}
-              <div className="absolute top-10 right-10 text-4xl animate-bounce delay-75">🎵</div>
-              <div className="absolute bottom-20 left-0 text-3xl animate-bounce delay-150">🎶</div>
-              <div className="absolute top-32 left-10 text-2xl animate-bounce delay-300">♪</div>
-              
-              {/* Info Card */}
-              
+          </div>
+        </div>
+        
+        {/* Scroll down indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30">
+          <div className="animate-bounce">
+            <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+              <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
             </div>
           </div>
         </div>
