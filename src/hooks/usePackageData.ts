@@ -1,3 +1,4 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from './useTranslations';
@@ -77,61 +78,96 @@ export const usePackageSteps = (packageValue: string) => {
   return useQuery({
     queryKey: ['package-steps', packageValue],
     queryFn: async () => {
-      if (!packageValue) return [];
+      if (!packageValue) {
+        console.log('No package value provided, returning empty array');
+        return [];
+      }
 
       console.log('Fetching steps for package:', packageValue);
 
-      const { data: packageInfo, error: packageError } = await supabase
-        .from('package_info')
-        .select('id')
-        .eq('value', packageValue)
-        .single();
+      try {
+        // First get the package info
+        const { data: packageInfo, error: packageError } = await supabase
+          .from('package_info')
+          .select('id')
+          .eq('value', packageValue)
+          .single();
 
-      if (packageError) {
-        console.error('Error fetching package info:', packageError);
-        throw packageError;
+        if (packageError) {
+          console.error('Error fetching package info:', packageError);
+          throw new Error(`Package not found: ${packageValue}`);
+        }
+
+        if (!packageInfo) {
+          console.error('Package info not found for value:', packageValue);
+          throw new Error(`Package not found: ${packageValue}`);
+        }
+
+        console.log('Found package info:', packageInfo);
+
+        // Then get the steps with fields
+        const { data: steps, error: stepsError } = await supabase
+          .from('steps')
+          .select(`
+            *,
+            fields:step_fields(*)
+          `)
+          .eq('package_id', packageInfo.id)
+          .eq('is_active', true)
+          .order('step_order');
+
+        if (stepsError) {
+          console.error('Error fetching steps:', stepsError);
+          throw stepsError;
+        }
+
+        console.log('Raw steps data from database:', steps);
+
+        if (!steps || steps.length === 0) {
+          console.warn('No steps found for package:', packageValue, 'with package_id:', packageInfo.id);
+          return [];
+        }
+
+        // Transform and validate the data
+        const transformedSteps = steps.map(step => {
+          const transformedFields = (step.fields || [])
+            .sort((a: any, b: any) => a.field_order - b.field_order)
+            .map((field: any) => ({
+              ...field,
+              // Transform options to proper FieldOption format
+              options: field.options ? field.options.map((option: any) => {
+                // If it's already a FieldOption object, return as is
+                if (typeof option === 'object' && option.value && option.label_key) {
+                  return option;
+                }
+                // If it's a string, transform to FieldOption
+                if (typeof option === 'string') {
+                  return { value: option, label_key: option };
+                }
+                // Fallback for any other format
+                return { value: String(option), label_key: String(option) };
+              }) : undefined
+            }));
+
+          return {
+            ...step,
+            fields: transformedFields
+          };
+        });
+
+        console.log('Transformed steps ready for component:', transformedSteps);
+        return transformedSteps as StepData[];
+
+      } catch (error) {
+        console.error('Error in usePackageSteps:', error);
+        throw error;
       }
-
-      const { data: steps, error: stepsError } = await supabase
-        .from('steps')
-        .select(`
-          *,
-          fields:step_fields(*)
-        `)
-        .eq('package_id', packageInfo.id)
-        .eq('is_active', true)
-        .order('step_order');
-
-      if (stepsError) {
-        console.error('Error fetching steps:', stepsError);
-        throw stepsError;
-      }
-
-      console.log('Fetched steps:', steps);
-
-      return steps.map(step => ({
-        ...step,
-        fields: step.fields
-          .sort((a: any, b: any) => a.field_order - b.field_order)
-          .map((field: any) => ({
-            ...field,
-            // Transform options to proper FieldOption format
-            options: field.options ? field.options.map((option: any) => {
-              // If it's already a FieldOption object, return as is
-              if (typeof option === 'object' && option.value && option.label_key) {
-                return option;
-              }
-              // If it's a string, transform to FieldOption
-              if (typeof option === 'string') {
-                return { value: option, label_key: option };
-              }
-              // Fallback for any other format
-              return { value: String(option), label_key: String(option) };
-            }) : undefined
-          }))
-      })) as StepData[];
     },
-    enabled: !!packageValue
+    enabled: !!packageValue,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    retry: 2,
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 };
 

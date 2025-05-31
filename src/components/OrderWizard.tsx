@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -93,19 +94,33 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
 
   // Fetch dynamic data
   const { data: packages = [], isLoading: packagesLoading } = usePackages();
-  const { data: packageSteps = [], isLoading: stepsLoading } = usePackageSteps(selectedPackage);
+  const { 
+    data: packageSteps = [], 
+    isLoading: stepsLoading, 
+    error: stepsError,
+    isSuccess: stepsSuccess,
+    isFetched: stepsFetched 
+  } = usePackageSteps(selectedPackage);
   const { data: addons = [] } = useAddons();
 
-  // Calculate total steps from database steps only
-  const totalSteps = packageSteps.length;
+  // Enhanced logging for debugging
+  useEffect(() => {
+    console.log('=== OrderWizard Debug Info ===');
+    console.log('Current step:', currentStep);
+    console.log('Selected package:', selectedPackage);
+    console.log('Package steps data:', packageSteps);
+    console.log('Package steps length:', packageSteps?.length || 0);
+    console.log('Steps loading:', stepsLoading);
+    console.log('Steps success:', stepsSuccess);
+    console.log('Steps fetched:', stepsFetched);
+    console.log('Steps error:', stepsError);
+    console.log('Auth user:', user);
+    console.log('Auth loading:', authLoading);
+    console.log('================================');
+  }, [currentStep, selectedPackage, packageSteps, stepsLoading, stepsSuccess, stepsFetched, stepsError, user, authLoading]);
 
-  console.log('Current step:', currentStep);
-  console.log('Selected package:', selectedPackage);
-  console.log('Package steps:', packageSteps);
-  console.log('Total steps:', totalSteps);
-  console.log('Steps loading:', stepsLoading);
-  console.log('Auth user:', user);
-  console.log('Auth loading:', authLoading);
+  // Calculate total steps from database steps only
+  const totalSteps = packageSteps?.length || 0;
 
   // Check authentication on component mount
   useEffect(() => {
@@ -350,6 +365,141 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const completionPercentage = totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0;
   const selectedPackageDetails = packages.find(pkg => pkg.value === selectedPackage);
 
+  const handleNext = () => {
+    console.log('Attempting to go to next step from:', currentStep);
+    
+    if (canProceed() && currentStep < totalSteps) {
+      const nextStep = currentStep + 1;
+      console.log('Moving to step:', nextStep);
+      setCurrentStep(nextStep);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      console.log('Cannot proceed - validation failed or at last step');
+      toast({
+        title: t('completeRequiredFields', 'Please complete all required fields'),
+        description: t('completeRequiredFieldsDesc', 'Make sure all required fields are filled out before proceeding.'),
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleSubmit = async () => {
+    // Check authentication first
+    if (!user) {
+      toast({
+        title: t('authRequired', 'Authentication Required'),
+        description: t('authRequiredDesc', 'You must be logged in to place an order.'),
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!canProceed()) {
+      toast({
+        title: t('completeRequiredFields', 'Please complete all required fields'),
+        description: t('completeRequiredFieldsDesc', 'Make sure all required fields are filled out before proceeding.'),
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Get package ID for database storage
+      const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+      
+      const finalData = {
+        ...formData,
+        addons: selectedAddons,
+        addonFieldValues,
+        package: selectedPackage
+      };
+
+      console.log('Submitting order with user_id:', user.id);
+
+      // Save order to database with user_id
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          user_id: user.id,
+          package_id: selectedPackageData?.id,
+          form_data: finalData,
+          selected_addons: selectedAddons,
+          total_price: calculateTotalPrice(),
+          status: 'pending',
+          payment_status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('Order insert error:', orderError);
+        throw orderError;
+      }
+
+      console.log('Order created successfully:', orderData);
+
+      // Save addon field data if any
+      if (Object.keys(addonFieldValues).length > 0) {
+        const addonFormData = Object.entries(addonFieldValues).map(([addonKey, fieldValue]) => {
+          const addon = addons.find(a => a.addon_key === addonKey);
+          return {
+            order_id: orderData.id,
+            addon_key: addonKey,
+            field_type: addon?.trigger_field_type || 'unknown',
+            field_data: fieldValue instanceof File ? { fileName: fieldValue.name } : (fieldValue as any),
+            file_url: fieldValue instanceof File ? null : null
+          };
+        });
+
+        if (addonFormData.length > 0) {
+          const { error: addonDataError } = await supabase
+            .from('addon_form_data')
+            .insert(addonFormData);
+
+          if (addonDataError) {
+            console.error('Addon data save error:', addonDataError);
+          }
+        }
+      }
+
+      // Pass order data with payment info to parent component
+      const orderPaymentData = {
+        ...finalData,
+        orderId: orderData.id,
+        totalPrice: calculateTotalPrice()
+      };
+
+      onComplete(orderPaymentData);
+
+    } catch (error) {
+      console.error('Order submission error:', error);
+      toast({
+        title: t('somethingWentWrong', 'Something went wrong'),
+        description: t('tryAgainSupport', 'Please try again or contact support if the problem persists.'),
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const calculateTotalPrice = () => {
+    const packagePrice = packages.find(pkg => pkg.value === selectedPackage)?.price || 0;
+    const addonsPrice = selectedAddons.reduce((total, addonKey) => {
+      const addon = addons.find(a => a.addon_key === addonKey);
+      return total + (addon?.price || 0);
+    }, 0);
+    return packagePrice + addonsPrice;
+  };
+
   // Show loading state for auth
   if (authLoading) {
     return (
@@ -404,6 +554,38 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600">{t('loadingSteps', 'Loading steps...')}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if steps failed to load
+  if (selectedPackage && stepsError && !stepsLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            {t('errorLoadingSteps', 'Error Loading Steps')}
+          </h2>
+          <p className="text-gray-600 mb-6">
+            {t('errorLoadingStepsDesc', 'Unable to load the configuration for this package. Please try again or contact support.')}
+          </p>
+          <div className="flex space-x-4 justify-center">
+            <Button 
+              onClick={() => setSelectedPackage('')}
+              variant="outline"
+              className="px-6 py-3"
+            >
+              {t('chooseAnotherPackage', 'Choose Another Package')}
+            </Button>
+            <Button 
+              onClick={() => window.location.reload()}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3"
+            >
+              {t('tryAgain', 'Try Again')}
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -510,15 +692,24 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     );
   }
 
-  // If we don't have step data and not loading, show error
-  if (!currentStepData && !stepsLoading && totalSteps === 0 && selectedPackage) {
-    console.error('No step data available for selected package:', selectedPackage);
+  // If we don't have step data but steps are successfully fetched, show no steps message
+  if (selectedPackage && stepsFetched && (!packageSteps || packageSteps.length === 0) && !stepsLoading) {
+    console.error('No steps configured for package:', selectedPackage);
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600">No steps configured for this package. Please contact support.</p>
-          <Button onClick={() => setSelectedPackage('')} className="mt-4">
-            Choose Different Package
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="text-6xl mb-4">⚙️</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            {t('noStepsConfigured', 'No Steps Configured')}
+          </h2>
+          <p className="text-gray-600 mb-6">
+            {t('noStepsConfiguredDesc', 'This package doesn\'t have any steps configured yet. Please contact support or choose a different package.')}
+          </p>
+          <Button 
+            onClick={() => setSelectedPackage('')}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3"
+          >
+            {t('chooseAnotherPackage', 'Choose Another Package')}
           </Button>
         </div>
       </div>
@@ -604,7 +795,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                              selectedPackageDetails.value === 'artist' ? '🎤' : 
                              selectedPackageDetails.value === 'instrumental' ? '🎶' : 
                              selectedPackageDetails.value === 'remix' ? '🔁' : 
-                             selectedPackageDetails.value === 'pachet-personal' ? '🎁' : '🎁'}
+                             selectedPackageDetails.value === 'pachet-personal' ? '🎁' : 
+                             selectedPackageDetails.value === 'pachet-business' ? '💼' : '🎁'}
                           </div>
                           <div className="flex-1">
                             <h3 className="text-2xl font-bold text-gray-900 mb-2">
