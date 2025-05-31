@@ -2,54 +2,54 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useLanguage } from "@/contexts/LanguageContext";
-
-const testimonials = [
-  {
-    name: "Ana M.",
-    location: "București",
-    videoUrl: "https://www.youtube.com/embed/Abk3kceKgP4",
-    review: "Am primit o melodie personalizată pentru ziua mea de naștere și a fost absolut perfectă! Emoția pe care am simțit-o când am ascultat-o prima dată a fost de nedescris.",
-  },
-  {
-    name: "Nati G.",
-    location: "Cluj-Napoca",
-    videoUrl: "https://www.youtube.com/embed/guBBAoM-dZQ",
-    review: "Serviciu excepțional! Melodia creată pentru nunta noastră a fost exact ce ne-am dorit. Toți invitații au fost impresionați de originalitatea și calitatea piesei.",
-  },
-  {
-    name: "TechCorp",
-    location: "Timișoara",
-    videoUrl: "https://www.youtube.com/embed/b_2CFQztmww",
-    review: "Am comandat o melodie pentru campania noastră de marketing și rezultatul a depășit toate așteptările. Profesionalism și creativitate la cel mai înalt nivel!",
-  },
-  {
-    name: "Maria P.",
-    location: "Iași",
-    videoUrl: "https://www.youtube.com/embed/b-NYGzKSBiE",
-    review: "Cea mai frumoasă surpriză pe care am putut-o face soțului meu! Melodia personalizată pentru aniversarea noastră a fost emoționantă și memorabilă.",
-  },
-  {
-    name: "Alex R.",
-    location: "Brașov",
-    videoUrl: "https://www.youtube.com/embed/aZMaYjnKLHA",
-    review: "Calitate impecabilă și atenție la detalii! Echipa a reușit să surprindă perfect povestea noastră în melodie. Recomand cu încredere!",
-  },
-];
+import { useTranslation } from "@/hooks/useTranslations";
 
 export default function TestimonialSlider() {
   const isMobile = useIsMobile();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
+
+  const testimonials = [
+    {
+      name: t("testimonial1Name"),
+      location: t("testimonial1Location"),
+      videoUrl: "https://www.youtube.com/embed/Abk3kceKgP4",
+      review: t("testimonial1Review"),
+    },
+    {
+      name: t("testimonial2Name"),
+      location: t("testimonial2Location"),
+      videoUrl: "https://www.youtube.com/embed/guBBAoM-dZQ",
+      review: t("testimonial2Review"),
+    },
+    {
+      name: t("testimonial3Name"),
+      location: t("testimonial3Location"),
+      videoUrl: "https://www.youtube.com/embed/b_2CFQztmww",
+      review: t("testimonial3Review"),
+    },
+    {
+      name: t("testimonial4Name"),
+      location: t("testimonial4Location"),
+      videoUrl: "https://www.youtube.com/embed/b-NYGzKSBiE",
+      review: t("testimonial4Review"),
+    },
+    {
+      name: t("testimonial5Name"),
+      location: t("testimonial5Location"),
+      videoUrl: "https://www.youtube.com/embed/aZMaYjnKLHA",
+      review: t("testimonial5Review"),
+    },
+  ];
 
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-purple-800">
-            {t("testimonialsTitle") || "What Our Customers Say"}
+            {t("testimonialsTitle")}
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            {t("testimonialsSubtitle") || "Real testimonials from satisfied customers who love their personalized songs"}
+            {t("testimonialsSubtitle")}
           </p>
         </div>
 

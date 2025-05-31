@@ -84,6 +84,27 @@ const translations = {
     testimonialsTitle: "Ce Spun Clienții Noștri",
     testimonialsSubtitle: "Testimoniale reale de la clienți mulțumiți care și-au iubit cântecele personalizate",
     
+    // Individual Testimonials
+    testimonial1Name: "Ana M.",
+    testimonial1Location: "București",
+    testimonial1Review: "Am primit o melodie personalizată pentru ziua mea de naștere și a fost absolut perfectă! Emoția pe care am simțit-o când am ascultat-o prima dată a fost de nedescris.",
+    
+    testimonial2Name: "Nati G.",
+    testimonial2Location: "Cluj-Napoca",
+    testimonial2Review: "Serviciu excepțional! Melodia creată pentru nunta noastră a fost exact ce ne-am dorit. Toți invitații au fost impresionați de originalitatea și calitatea piesei.",
+    
+    testimonial3Name: "TechCorp",
+    testimonial3Location: "Timișoara",
+    testimonial3Review: "Am comandat o melodie pentru campania noastră de marketing și rezultatul a depășit toate așteptările. Profesionalism și creativitate la cel mai înalt nivel!",
+    
+    testimonial4Name: "Maria P.",
+    testimonial4Location: "Iași",
+    testimonial4Review: "Cea mai frumoasă surpriză pe care am putut-o face soțului meu! Melodia personalizată pentru aniversarea noastră a fost emoționantă și memorabilă.",
+    
+    testimonial5Name: "Alex R.",
+    testimonial5Location: "Brașov",
+    testimonial5Review: "Calitate impecabilă și atenție la detalii! Echipa a reușit să surprindă perfect povestea noastră în melodie. Recomand cu încredere!",
+    
     // Testimonials
     testimonialQuote: "Am comandat un cântec pentru soția mea la aniversarea noastră și a fost cel mai frumos cadou pe care l-am putut oferi. Calitatea muzicii și emoția din versuri ne-au emoționat până la lacrimi.",
     testimonialAuthor: "Alexandru M., București",
@@ -255,6 +276,27 @@ const translations = {
     // Testimonials Page
     testimonialsTitle: "What Our Customers Say",
     testimonialsSubtitle: "Real testimonials from satisfied customers who love their personalized songs",
+    
+    // Individual Testimonials
+    testimonial1Name: "Ana M.",
+    testimonial1Location: "Bucharest",
+    testimonial1Review: "I received a personalized song for my birthday and it was absolutely perfect! The emotion I felt when I heard it for the first time was indescribable.",
+    
+    testimonial2Name: "Nati G.",
+    testimonial2Location: "Cluj-Napoca",
+    testimonial2Review: "Exceptional service! The song created for our wedding was exactly what we wanted. All guests were impressed by the originality and quality of the piece.",
+    
+    testimonial3Name: "TechCorp",
+    testimonial3Location: "Timișoara",
+    testimonial3Review: "We ordered a song for our marketing campaign and the result exceeded all expectations. Professionalism and creativity at the highest level!",
+    
+    testimonial4Name: "Maria P.",
+    testimonial4Location: "Iași",
+    testimonial4Review: "The most beautiful surprise I could give my husband! The personalized song for our anniversary was emotional and memorable.",
+    
+    testimonial5Name: "Alex R.",
+    testimonial5Location: "Brașov",
+    testimonial5Review: "Impeccable quality and attention to detail! The team managed to perfectly capture our story in the song. I recommend with confidence!",
     
     // Testimonials
     testimonialQuote: "I ordered a song for my wife on our anniversary and it was the most beautiful gift I could offer. The quality of the music and emotion in the lyrics moved us to tears.",
@@ -428,9 +470,26 @@ const translations = {
     testimonialsTitle: "Ce que disent nos clients",
     testimonialsSubtitle: "Témoignages réels de clients satisfaits qui adorent leurs chansons personnalisées",
     
-    // Testimonials
-    testimonialQuote: "J'ai commandé une chanson pour ma femme à notre anniversaire et c'était le plus beau cadeau que je pouvais offrir. La qualité de la musique et l'émotion dans les paroles nous ont émus aux larmes.",
-    testimonialAuthor: "Alexandru M., Bucarest",
+    // Individual Testimonials
+    testimonial1Name: "Ana M.",
+    testimonial1Location: "Bucarest",
+    testimonial1Review: "J'ai reçu une chanson personnalisée pour mon anniversaire et c'était absolument parfait ! L'émotion que j'ai ressentie en l'entendant pour la première fois était indescriptible.",
+    
+    testimonial2Name: "Nati G.",
+    testimonial2Location: "Cluj-Napoca",
+    testimonial2Review: "Service exceptionnel ! La chanson créée pour notre mariage était exactement ce que nous voulions. Tous les invités ont été impressionnés par l'originalité et la qualité de la pièce.",
+    
+    testimonial3Name: "TechCorp",
+    testimonial3Location: "Timișoara",
+    testimonial3Review: "Nous avons commandé une chanson pour notre campagne marketing et le résultat a dépassé toutes les attentes. Professionnalisme et créativité au plus haut niveau !",
+    
+    testimonial4Name: "Maria P.",
+    testimonial4Location: "Iași",
+    testimonial4Review: "La plus belle surprise que je pouvais faire à mon mari ! La chanson personnalisée pour notre anniversaire était émouvante et mémorable.",
+    
+    testimonial5Name: "Alex R.",
+    testimonial5Location: "Brașov",
+    testimonial5Review: "Qualité impeccable et attention aux détails ! L'équipe a réussi à capturer parfaitement notre histoire dans la chanson. Je recommande en toute confiance !",
     
     // Footer
     footerDescription: "Créer des cadeaux musicaux personnalisés. Transformez vos moments spéciaux en belles chansons personnalisées.",
@@ -600,9 +659,26 @@ const translations = {
     testimonialsTitle: "Co mówią nasi klienci",
     testimonialsSubtitle: "Prawdziwe opinie zadowolonych klientów, którzy pokochali swoje spersonalizowane piosenki",
     
-    // Testimonials
-    testimonialQuote: "Zamówiłem piosenkę dla mojej żony na naszą rocznicę i to był najpiękniejszy prezent, jaki mogłem zaoferować. Jakość muzyki i emocje w tekstach wzruszyły nas do łez.",
-    testimonialAuthor: "Alexandru M., Bukareszt",
+    // Individual Testimonials
+    testimonial1Name: "Ana M.",
+    testimonial1Location: "Bukareszt",
+    testimonial1Review: "Otrzymałam spersonalizowaną piosenkę na moje urodziny i była absolutnie idealna! Emocje, które poczułam, słysząc ją po raz pierwszy, były nie do opisania.",
+    
+    testimonial2Name: "Nati G.",
+    testimonial2Location: "Cluj-Napoca",
+    testimonial2Review: "Wyjątkowa obsługa! Piosenka stworzona na nasz ślub była dokładnie tym, czego chcieliśmy. Wszyscy goście byli pod wrażeniem oryginalności i jakości utworu.",
+    
+    testimonial3Name: "TechCorp",
+    testimonial3Location: "Timișoara",
+    testimonial3Review: "Zamówiliśmy piosenkę do naszej kampanii marketingowej, a rezultat przewyższył wszystkie oczekiwania. Profesjonalizm i kreatywność na najwyższym poziomie!",
+    
+    testimonial4Name: "Maria P.",
+    testimonial4Location: "Iași",
+    testimonial4Review: "Najpiękniejsza niespodzianka, jaką mogłam sprawić mężowi! Spersonalizowana piosenka na naszą rocznicę była wzruszająca i niezapomniana.",
+    
+    testimonial5Name: "Alex R.",
+    testimonial5Location: "Brașov",
+    testimonial5Review: "Nienagannej jakości i dbałość o szczegóły! Zespół zdołał doskonale uchwycić naszą historię w piosence. Polecam z pełnym zaufaniem!",
     
     // Footer
     footerDescription: "Tworzymy spersonalizowane prezenty muzyczne. Przekształć swoje wyjątkowe momenty w piękne, spersonalizowane piosenki.",
@@ -772,9 +848,26 @@ const translations = {
     testimonialsTitle: "Was unsere Kunden sagen",
     testimonialsSubtitle: "Echte Testimonials von zufriedenen Kunden, die ihre personalisierten Songs lieben",
     
-    // Testimonials
-    testimonialQuote: "Ich habe ein Lied für meine Frau zu unserem Jahrestag bestellt und es war das schönste Geschenk, das ich bieten konnte. Die Qualität der Musik und die Emotionen in den Texten rührten uns zu Tränen.",
-    testimonialAuthor: "Alexandru M., Bukarest",
+    // Individual Testimonials
+    testimonial1Name: "Ana M.",
+    testimonial1Location: "Bukarest",
+    testimonial1Review: "Ich habe ein personalisiertes Lied für meinen Geburtstag erhalten und es war absolut perfekt! Die Emotion, die ich beim ersten Hören gespürt habe, war unbeschreiblich.",
+    
+    testimonial2Name: "Nati G.",
+    testimonial2Location: "Cluj-Napoca",
+    testimonial2Review: "Außergewöhnlicher Service! Das Lied, das für unsere Hochzeit erstellt wurde, war genau das, was wir wollten. Alle Gäste waren von der Originalität und Qualität des Stücks beeindruckt.",
+    
+    testimonial3Name: "TechCorp",
+    testimonial3Location: "Timișoara",
+    testimonial3Review: "Wir haben ein Lied für unsere Marketingkampagne bestellt und das Ergebnis übertraf alle Erwartungen. Professionalität und Kreativität auf höchstem Niveau!",
+    
+    testimonial4Name: "Maria P.",
+    testimonial4Location: "Iași",
+    testimonial4Review: "Die schönste Überraschung, die ich meinem Mann machen konnte! Das personalisierte Lied für unseren Jahrestag war emotional und unvergesslich.",
+    
+    testimonial5Name: "Alex R.",
+    testimonial5Location: "Brașov",
+    testimonial5Review: "Tadellose Qualität und Liebe zum Detail! Das Team hat es geschafft, unsere Geschichte perfekt im Lied einzufangen. Ich empfehle mit vollem Vertrauen!",
     
     // Footer
     footerDescription: "Personalisierte Musikgeschenke erstellen. Verwandle deine besonderen Momente in schöne, maßgeschneiderte Songs.",
