@@ -47,6 +47,29 @@ interface AIPackageDataProcessorProps {
   onError: (error: string) => void;
 }
 
+// Valid enum values from the database
+const VALID_TAG_TYPES = ['popular', 'hot', 'discount', 'new', 'limited'] as const;
+const VALID_FIELD_TYPES = [
+  'text', 'email', 'tel', 'textarea', 'select', 'checkbox', 
+  'checkbox-group', 'date', 'url', 'file', 'audio-recorder'
+] as const;
+
+type ValidTagType = typeof VALID_TAG_TYPES[number];
+type ValidFieldType = typeof VALID_FIELD_TYPES[number];
+
+// Helper functions to validate and convert enum values
+const validateTagType = (tagType: string): ValidTagType => {
+  return VALID_TAG_TYPES.includes(tagType as ValidTagType) 
+    ? tagType as ValidTagType 
+    : 'popular';
+};
+
+const validateFieldType = (fieldType: string): ValidFieldType => {
+  return VALID_FIELD_TYPES.includes(fieldType as ValidFieldType) 
+    ? fieldType as ValidFieldType 
+    : 'text';
+};
+
 const AIPackageDataProcessor: React.FC<AIPackageDataProcessorProps> = ({
   generatedData,
   onSuccess,
@@ -89,7 +112,7 @@ const AIPackageDataProcessor: React.FC<AIPackageDataProcessorProps> = ({
       if (generatedData.tags && generatedData.tags.length > 0) {
         const tagInserts = generatedData.tags.map(tag => ({
           package_id: packageId,
-          tag_type: tag.tag_type,
+          tag_type: validateTagType(tag.tag_type),
           tag_label_key: tag.tag_label_key,
           styling_class: tag.styling_class,
         }));
@@ -146,7 +169,7 @@ const AIPackageDataProcessor: React.FC<AIPackageDataProcessorProps> = ({
             const fieldInserts = step.fields.map(field => ({
               step_id: stepData.id,
               field_name: field.field_name,
-              field_type: field.field_type,
+              field_type: validateFieldType(field.field_type),
               placeholder_key: field.placeholder_key,
               required: field.required,
               field_order: field.field_order,
