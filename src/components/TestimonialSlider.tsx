@@ -1,6 +1,6 @@
 
 import { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, PanInfo } from "framer-motion";
 import { FaChevronLeft, FaChevronRight, FaPlay, FaStar, FaCheckCircle } from "react-icons/fa";
 
 const rawTestimonials = [
@@ -47,6 +47,7 @@ export default function TestimonialSlider() {
   const [currentIndex, setCurrentIndex] = useState(3); // account for cloned head
   const [cardsPerView, setCardsPerView] = useState(3);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const testimonials = getClonedTestimonials();
 
@@ -61,6 +62,17 @@ export default function TestimonialSlider() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Autoplay functionality
+  useEffect(() => {
+    if (isPaused) return;
+    
+    const interval = setInterval(() => {
+      handleNext();
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isPaused, currentIndex]);
+
   const handleNext = () => {
     if (isAnimating) return;
     setIsAnimating(true);
@@ -71,6 +83,21 @@ export default function TestimonialSlider() {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentIndex((prev) => prev - 1);
+  };
+
+  const handleDotClick = (index: number) => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentIndex(index + 3); // account for cloned head
+  };
+
+  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const threshold = 50;
+    if (info.offset.x > threshold) {
+      handlePrev();
+    } else if (info.offset.x < -threshold) {
+      handleNext();
+    }
   };
 
   useEffect(() => {
@@ -90,22 +117,31 @@ export default function TestimonialSlider() {
   }, [currentIndex]);
 
   const slideWidth = 100 / cardsPerView;
+  const realCurrentIndex = ((currentIndex - 3) % rawTestimonials.length + rawTestimonials.length) % rawTestimonials.length;
 
   return (
-    <section className="py-16 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+    <section 
+      className="py-16 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-8 text-purple-800">
           What Our Customers Say
         </h2>
         <div className="relative overflow-hidden">
           <motion.div
-            className="flex gap-6"
+            className="flex gap-6 cursor-grab active:cursor-grabbing"
             ref={containerRef}
             style={{
               width: `${testimonials.length * slideWidth}%`,
             }}
             animate={{ x: `-${currentIndex * slideWidth}%` }}
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            onDragEnd={handleDragEnd}
+            dragElastic={0.1}
           >
             {testimonials.map((t, i) => (
               <div
@@ -146,21 +182,48 @@ export default function TestimonialSlider() {
             ))}
           </motion.div>
 
-          <div className="absolute top-1/2 left-0 transform -translate-y-1/2 z-10">
+          {/* Navigation Arrows */}
+          <div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10">
             <button
               onClick={handlePrev}
-              className="bg-white p-3 rounded-full shadow hover:bg-purple-100 transition"
+              className="bg-white p-3 rounded-full shadow hover:bg-purple-100 transition opacity-80 hover:opacity-100"
+              aria-label="Previous testimonial"
             >
               <FaChevronLeft className="text-purple-700" />
             </button>
           </div>
-          <div className="absolute top-1/2 right-0 transform -translate-y-1/2 z-10">
+          <div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10">
             <button
               onClick={handleNext}
-              className="bg-white p-3 rounded-full shadow hover:bg-purple-100 transition"
+              className="bg-white p-3 rounded-full shadow hover:bg-purple-100 transition opacity-80 hover:opacity-100"
+              aria-label="Next testimonial"
             >
               <FaChevronRight className="text-purple-700" />
             </button>
+          </div>
+        </div>
+
+        {/* Dot Pagination */}
+        <div className="flex justify-center mt-6 gap-2">
+          {rawTestimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handleDotClick(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                realCurrentIndex === index
+                  ? 'bg-purple-600 scale-125'
+                  : 'bg-purple-300 hover:bg-purple-400'
+              }`}
+              aria-label={`Go to testimonial ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Autoplay indicator */}
+        <div className="flex justify-center mt-4">
+          <div className="text-xs text-gray-500 flex items-center gap-2">
+            <span className={`w-2 h-2 rounded-full ${isPaused ? 'bg-red-400' : 'bg-green-400'} animate-pulse`}></span>
+            {isPaused ? 'Paused' : 'Auto-playing'}
           </div>
         </div>
       </div>
