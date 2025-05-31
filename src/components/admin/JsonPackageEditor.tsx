@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Save, Download, Upload, Eye, Edit, Trash2, Copy } from 'lucide-react';
+import { Plus, Save, Download, Upload, Eye, Edit, Trash2, Copy, Wrench, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -22,6 +22,7 @@ import { usePackages } from '@/hooks/usePackageData';
 import { useUserRole } from '@/hooks/useUserRole';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { validatePackageData, getIssueSummary } from '@/utils/packageValidation';
 
 interface CompletePackageData {
   id?: string;
@@ -81,6 +82,10 @@ const JsonPackageEditor = () => {
   const [jsonError, setJsonError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
+  const [isRepairing, setIsRepairing] = useState(false);
+  const [validationIssues, setValidationIssues] = useState<any[]>([]);
+  const [showRepairPreview, setShowRepairPreview] = useState(false);
+  const [repairPreviewData, setRepairPreviewData] = useState<any>(null);
   const { toast } = useToast();
 
   const isSuperAdmin = userRole === 'super_admin';
@@ -168,9 +173,15 @@ const JsonPackageEditor = () => {
     try {
       const parsed = JSON.parse(jsonString);
       setJsonError('');
+      
+      // Validate the parsed data
+      const issues = validatePackageData(parsed);
+      setValidationIssues(issues);
+      
       return parsed;
     } catch (error) {
       setJsonError('Invalid JSON format');
+      setValidationIssues([]);
       return null;
     }
   };
@@ -178,6 +189,75 @@ const JsonPackageEditor = () => {
   const handleJsonChange = (value: string) => {
     setJsonData(value);
     validateJson(value);
+  };
+
+  const repairPackageJson = async () => {
+    const packageData = validateJson(jsonData);
+    if (!packageData) {
+      toast({ title: 'Cannot repair invalid JSON', variant: 'destructive' });
+      return;
+    }
+
+    setIsRepairing(true);
+
+    try {
+      console.log('Calling AI repair function...');
+      
+      const { data, error } = await supabase.functions.invoke('repair-package-json', {
+        body: { packageData },
+      });
+
+      console.log('AI repair response:', data, error);
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message || 'Failed to repair package JSON');
+      }
+
+      if (!data?.success || !data?.repaired_data) {
+        console.error('Invalid response from AI repair:', data);
+        throw new Error(data?.error || 'Invalid response from AI repair');
+      }
+
+      console.log('Successfully repaired data:', data.repaired_data);
+      setRepairPreviewData(data.repaired_data);
+      setShowRepairPreview(true);
+
+      toast({
+        title: 'Package Repaired',
+        description: 'AI has analyzed and repaired the package data. Review the changes.',
+      });
+
+    } catch (error) {
+      console.error('Error repairing package:', error);
+      toast({
+        title: 'Repair Failed',
+        description: error.message || 'Failed to repair package with AI',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsRepairing(false);
+    }
+  };
+
+  const applyRepairChanges = () => {
+    if (repairPreviewData) {
+      setJsonData(JSON.stringify(repairPreviewData, null, 2));
+      setSelectedPackage(repairPreviewData);
+      setShowRepairPreview(false);
+      setRepairPreviewData(null);
+      validateJson(JSON.stringify(repairPreviewData, null, 2));
+      
+      toast({
+        title: 'Repair Applied',
+        description: 'The repaired package data has been applied to the editor.',
+      });
+    }
+  };
+
+  const cancelRepair = () => {
+    setShowRepairPreview(false);
+    setRepairPreviewData(null);
   };
 
   const deletePackage = async () => {
@@ -483,6 +563,8 @@ const JsonPackageEditor = () => {
     }
   };
 
+  const issuesSummary = getIssueSummary(validationIssues);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -536,6 +618,29 @@ const JsonPackageEditor = () => {
               JSON Editor
               {selectedPackage && (
                 <div className="flex space-x-2">
+                  {/* AI Repair Button */}
+                  {issuesSummary.hasIssues && (
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={repairPackageJson}
+                      disabled={isRepairing}
+                      className="bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100"
+                    >
+                      {isRepairing ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Repairing...
+                        </>
+                      ) : (
+                        <>
+                          <Wrench className="w-4 h-4 mr-2" />
+                          AI Repair
+                        </>
+                      )}
+                    </Button>
+                  )}
+                  
                   {!isEditing ? (
                     <Button size="sm" onClick={() => setIsEditing(true)}>
                       <Edit className="w-4 h-4 mr-2" />
@@ -624,9 +729,46 @@ const JsonPackageEditor = () => {
           <CardContent>
             {selectedPackage ? (
               <div className="space-y-4">
+                {/* Validation Issues Summary */}
+                {issuesSummary.hasIssues && (
+                  <div className={`flex items-center p-3 rounded-lg ${
+                    issuesSummary.errors > 0 
+                      ? 'bg-red-50 text-red-800 border border-red-200' 
+                      : 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+                  }`}>
+                    <AlertCircle className="w-5 h-5 mr-2" />
+                    <div className="flex-1">
+                      <span className="font-medium">
+                        {issuesSummary.errors > 0 ? 'Issues Detected' : 'Warnings'}: 
+                      </span>
+                      <span className="ml-2">
+                        {issuesSummary.errors > 0 && `${issuesSummary.errors} errors`}
+                        {issuesSummary.errors > 0 && issuesSummary.warnings > 0 && ', '}
+                        {issuesSummary.warnings > 0 && `${issuesSummary.warnings} warnings`}
+                      </span>
+                    </div>
+                    {issuesSummary.hasIssues && (
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={repairPackageJson}
+                        disabled={isRepairing}
+                        className="ml-2"
+                      >
+                        {isRepairing ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Wrench className="w-4 h-4" />
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                )}
+
                 {jsonError && (
                   <div className="text-red-500 text-sm">{jsonError}</div>
                 )}
+                
                 <Textarea
                   value={jsonData}
                   onChange={(e) => handleJsonChange(e.target.value)}
@@ -643,6 +785,92 @@ const JsonPackageEditor = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Repair Preview Dialog */}
+      {showRepairPreview && repairPreviewData && (
+        <AlertDialog open={showRepairPreview} onOpenChange={setShowRepairPreview}>
+          <AlertDialogContent className="max-w-4xl">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
+                AI Repair Complete
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                The AI has analyzed and repaired your package JSON. Review the changes below and apply them if they look correct.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            
+            <div className="space-y-4">
+              <div className="max-h-96 overflow-auto">
+                <Label htmlFor="repaired-json">Repaired JSON:</Label>
+                <Textarea
+                  id="repaired-json"
+                  value={JSON.stringify(repairPreviewData, null, 2)}
+                  readOnly
+                  className="mt-2 min-h-[300px] font-mono text-sm"
+                />
+              </div>
+              
+              <div className="text-sm text-gray-600">
+                <p><strong>Common fixes applied:</strong></p>
+                <ul className="list-disc list-inside mt-1 space-y-1">
+                  <li>Fixed field type inconsistencies (e.g., 'textare' → 'textarea')</li>
+                  <li>Corrected enum values to match database constraints</li>
+                  <li>Standardized options format for select fields</li>
+                  <li>Ensured proper sequential ordering</li>
+                  <li>Added missing required fields</li>
+                </ul>
+              </div>
+            </div>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={cancelRepair}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={applyRepairChanges}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                Apply Repairs
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
+      {/* Validation Issues Details */}
+      {validationIssues.length > 0 && selectedPackage && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Validation Issues</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {validationIssues.map((issue, index) => (
+                <div
+                  key={index}
+                  className={`p-3 rounded border ${
+                    issue.type === 'error' 
+                      ? 'bg-red-50 border-red-200 text-red-800' 
+                      : 'bg-yellow-50 border-yellow-200 text-yellow-800'
+                  }`}
+                >
+                  <div className="flex items-start">
+                    <AlertCircle className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <p className="font-medium">{issue.field}</p>
+                      <p className="text-sm">{issue.message}</p>
+                      {issue.suggestion && (
+                        <p className="text-xs mt-1 opacity-75">{issue.suggestion}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {selectedPackage && (
         <Card>
