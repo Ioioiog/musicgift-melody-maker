@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -6,6 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { usePackages } from "@/hooks/usePackageData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
+import { Play, Pause, Volume2 } from "lucide-react";
+import { useState, useRef } from "react";
 
 const Index = () => {
   const {
@@ -20,6 +23,21 @@ const Index = () => {
     t: tDb
   } = useTranslation(); // Database translations for package content
 
+  // Audio player state
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const toggleAudio = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
   
@@ -27,7 +45,7 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section with Video Background */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         {/* Video Background */}
         <video 
           className="absolute top-0 left-0 w-full h-full object-cover z-0" 
@@ -49,13 +67,39 @@ const Index = () => {
         
         {/* Hero Content */}
         <div className="container mx-auto px-4 relative z-30 text-center text-white">
-          <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
-            <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
+          <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
+            <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
               {t('heroTitle') || 'Give the Gift of Music'}
             </h1>
-            <p className="text-xl lg:text-2xl leading-relaxed text-white/90 max-w-3xl mx-auto">
+            <p className="text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
               {t('heroSubtitle') || 'A personalized song, created just for your special someone. The most unique gift they\'ll ever receive.'}
             </p>
+            
+            {/* Audio Player */}
+            <div className="flex justify-center mb-6">
+              <div className="bg-white/10 backdrop-blur-md rounded-full p-4 flex items-center space-x-4">
+                <Button
+                  onClick={toggleAudio}
+                  size="sm"
+                  className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0"
+                >
+                  {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                </Button>
+                <Volume2 className="w-4 h-4 text-white/80" />
+                <span className="text-sm text-white/80">
+                  {t('listenToSample') || 'Listen to Sample'}
+                </span>
+                <audio
+                  ref={audioRef}
+                  onEnded={() => setIsPlaying(false)}
+                  onPause={() => setIsPlaying(false)}
+                  onPlay={() => setIsPlaying(true)}
+                >
+                  <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="audio/mp4" />
+                </audio>
+              </div>
+            </div>
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/packages">
                 <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-4 rounded-full text-lg backdrop-blur-sm">
