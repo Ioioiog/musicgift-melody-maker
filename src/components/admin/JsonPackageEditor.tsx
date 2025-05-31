@@ -618,28 +618,32 @@ const JsonPackageEditor = () => {
               JSON Editor
               {selectedPackage && (
                 <div className="flex space-x-2">
-                  {/* AI Repair Button */}
-                  {issuesSummary.hasIssues && (
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      onClick={repairPackageJson}
-                      disabled={isRepairing}
-                      className="bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100"
-                    >
-                      {isRepairing ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Repairing...
-                        </>
-                      ) : (
-                        <>
-                          <Wrench className="w-4 h-4 mr-2" />
-                          AI Repair
-                        </>
-                      )}
-                    </Button>
-                  )}
+                  {/* AI Repair Button - Always visible when package is selected */}
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={repairPackageJson}
+                    disabled={isRepairing}
+                    className={`${
+                      issuesSummary.hasErrors 
+                        ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100'
+                        : issuesSummary.hasWarnings 
+                        ? 'bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100'
+                        : 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
+                    }`}
+                  >
+                    {isRepairing ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Repairing...
+                      </>
+                    ) : (
+                      <>
+                        <Wrench className="w-4 h-4 mr-2" />
+                        {issuesSummary.hasErrors ? 'Fix Issues' : issuesSummary.hasWarnings ? 'Improve' : 'AI Enhance'}
+                      </>
+                    )}
+                  </Button>
                   
                   {!isEditing ? (
                     <Button size="sm" onClick={() => setIsEditing(true)}>
@@ -729,39 +733,53 @@ const JsonPackageEditor = () => {
           <CardContent>
             {selectedPackage ? (
               <div className="space-y-4">
-                {/* Validation Issues Summary */}
+                {/* Enhanced Issues Summary */}
                 {issuesSummary.hasIssues && (
-                  <div className={`flex items-center p-3 rounded-lg ${
-                    issuesSummary.errors > 0 
-                      ? 'bg-red-50 text-red-800 border border-red-200' 
-                      : 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+                  <div className={`flex items-center p-3 rounded-lg border ${
+                    issuesSummary.hasErrors 
+                      ? 'bg-red-50 text-red-800 border-red-200' 
+                      : issuesSummary.hasWarnings 
+                      ? 'bg-orange-50 text-orange-800 border-orange-200'
+                      : 'bg-blue-50 text-blue-800 border-blue-200'
                   }`}>
                     <AlertCircle className="w-5 h-5 mr-2" />
                     <div className="flex-1">
                       <span className="font-medium">
-                        {issuesSummary.errors > 0 ? 'Issues Detected' : 'Warnings'}: 
+                        {issuesSummary.hasErrors ? 'Issues Detected' : 
+                         issuesSummary.hasWarnings ? 'Improvements Available' : 'Suggestions Available'}: 
                       </span>
                       <span className="ml-2">
                         {issuesSummary.errors > 0 && `${issuesSummary.errors} errors`}
-                        {issuesSummary.errors > 0 && issuesSummary.warnings > 0 && ', '}
+                        {issuesSummary.errors > 0 && (issuesSummary.warnings > 0 || issuesSummary.suggestions > 0) && ', '}
                         {issuesSummary.warnings > 0 && `${issuesSummary.warnings} warnings`}
+                        {issuesSummary.warnings > 0 && issuesSummary.suggestions > 0 && ', '}
+                        {issuesSummary.suggestions > 0 && `${issuesSummary.suggestions} suggestions`}
                       </span>
                     </div>
-                    {issuesSummary.hasIssues && (
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={repairPackageJson}
-                        disabled={isRepairing}
-                        className="ml-2"
-                      >
-                        {isRepairing ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Wrench className="w-4 h-4" />
-                        )}
-                      </Button>
-                    )}
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={repairPackageJson}
+                      disabled={isRepairing}
+                      className="ml-2"
+                    >
+                      {isRepairing ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Wrench className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+                {/* Show package status even without issues */}
+                {!issuesSummary.hasIssues && (
+                  <div className="flex items-center p-3 rounded-lg bg-green-50 text-green-800 border border-green-200">
+                    <CheckCircle className="w-5 h-5 mr-2" />
+                    <div className="flex-1">
+                      <span className="font-medium">Package looks good!</span>
+                      <span className="ml-2">No critical issues detected. Use AI Enhance for optimization suggestions.</span>
+                    </div>
                   </div>
                 )}
 
@@ -818,7 +836,8 @@ const JsonPackageEditor = () => {
                   <li>Corrected enum values to match database constraints</li>
                   <li>Standardized options format for select fields</li>
                   <li>Ensured proper sequential ordering</li>
-                  <li>Added missing required fields</li>
+                  <li>Added missing required fields and suggestions</li>
+                  <li>Improved naming consistency and translation keys</li>
                 </ul>
               </div>
             </div>
@@ -838,11 +857,11 @@ const JsonPackageEditor = () => {
         </AlertDialog>
       )}
 
-      {/* Validation Issues Details */}
+      {/* Enhanced Validation Issues Details */}
       {validationIssues.length > 0 && selectedPackage && (
         <Card>
           <CardHeader>
-            <CardTitle>Validation Issues</CardTitle>
+            <CardTitle>Analysis Results</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -852,13 +871,26 @@ const JsonPackageEditor = () => {
                   className={`p-3 rounded border ${
                     issue.type === 'error' 
                       ? 'bg-red-50 border-red-200 text-red-800' 
-                      : 'bg-yellow-50 border-yellow-200 text-yellow-800'
+                      : issue.type === 'warning'
+                      ? 'bg-yellow-50 border-yellow-200 text-yellow-800'
+                      : 'bg-blue-50 border-blue-200 text-blue-800'
                   }`}
                 >
                   <div className="flex items-start">
                     <AlertCircle className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
                     <div className="flex-1">
-                      <p className="font-medium">{issue.field}</p>
+                      <div className="flex items-center">
+                        <p className="font-medium">{issue.field}</p>
+                        <Badge 
+                          variant="outline" 
+                          className={`ml-2 text-xs ${
+                            issue.type === 'error' ? 'border-red-300' : 
+                            issue.type === 'warning' ? 'border-yellow-300' : 'border-blue-300'
+                          }`}
+                        >
+                          {issue.type}
+                        </Badge>
+                      </div>
                       <p className="text-sm">{issue.message}</p>
                       {issue.suggestion && (
                         <p className="text-xs mt-1 opacity-75">{issue.suggestion}</p>
