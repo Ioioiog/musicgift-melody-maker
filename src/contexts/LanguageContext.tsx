@@ -29,6 +29,18 @@ const translations = {
     contact: "Contact",
     testimonials: "Testimoniale",
     order: "Comandă",
+    orderNow: "Comandă Acum",
+    
+    // Common UI elements
+    loading: "Se încarcă...",
+    loadingPackages: "Se încarcă pachetele...",
+    learnMore: "Află mai multe",
+    backToPackages: "Înapoi la pachete",
+    whatsIncluded: "Ce include",
+    moreFeatures: "mai multe caracteristici",
+    aboutThisPackage: "Despre acest pachet",
+    readyToOrder: "Gata să comanzi?",
+    startYourJourney: "Începe călătoria ta muzicală astăzi!",
     
     // Premium Package translations
     premiumPackage: "Pachet Premium",
@@ -71,7 +83,7 @@ const translations = {
     fast: "Rapid",
     variable: "Variabil",
     
-    // Existing keys - keeping them as reference
+    // Package types
     personalPackage: "Pachet Personal",
     personalTagline: "Perfect pentru momentele speciale",
     personalDescription: "Un cadou muzical personalizat care va rămâne în inima destinatarului pentru totdeauna.",
@@ -89,6 +101,11 @@ const translations = {
     storyAndEmotionalDetails: "Povestea și detaliile emoționale",
     musicalPreferences: "Preferințe muzicale",
     addons: "Servicii suplimentare",
+    stepPackage: "Pachet",
+    stepDetails: "Detalii",
+    stepStory: "Poveste",
+    stepPreferences: "Preferințe",
+    stepContact: "Contact",
     
     // Field labels and placeholders
     recipientName: "Numele destinatarului",
@@ -156,7 +173,30 @@ const translations = {
     ron: "RON",
     includes: "Include",
     selectPackage: "Selectează pachetul",
-    startOrder: "Începe comanda"
+    startOrder: "Începe comanda",
+    
+    // About page
+    aboutSubtitle: "Despre MusicGift",
+    aboutNewDescription1: "MusicGift este o platformă inovatoare care transformă emoțiile și poveștile în muzică personalizată. Creăm cadouri muzicale unice care surprind esența momentelor speciale din viața ta.",
+    aboutNewDescription2: "Echipa noastră de profesioniști muzicali folosește cele mai avansate tehnologii pentru a produce cântece originale care rezonează cu fiecare poveste individuală.",
+    songsCreated: "Cântece create",
+    yearsExperience: "Ani experiență",
+    clientSatisfaction: "Satisfacție clienți",
+    whoWeAre: "Cine suntem",
+    mihaiGruiaTitle: "Mihai Gruia - Fondator și Producer Principal",
+    mihaiGruiaDescription: "Cu peste 10 ani de experiență în industria muzicală, Mihai Gruia este sufletul creativ din spatele MusicGift.",
+    mangoRecordsTitle: "Mango Records - Partener de Distribuție",
+    mangoRecordsDescription: "Platforma noastră de distribuție oficială care asigură că muzica ta ajunge pe toate platformele majore.",
+    domgStudioTitle: "DOMG Studio - Producție Profesională", 
+    domgStudioDescription: "Studioul nostru de înregistrări echipat cu tehnologia de ultimă generație.",
+    doMusicForGoodTitle: "DoMusicForGood - Misiunea Noastră",
+    doMusicForGoodDescription: "Credem că muzica poate schimba lumea și ne dedicăm să aducem bucurie prin fiecare cântec creat.",
+    
+    // Order success/error messages
+    orderSuccess: "Comandă creată",
+    orderSuccessMessage: "Comanda ta a fost creată cu succes. Integrarea cu plățile va fi disponibilă în curând.",
+    orderError: "Eroare comandă",
+    orderErrorMessage: "A apărut o eroare la procesarea comenzii. Te rugăm să încerci din nou."
   },
   
   en: {
@@ -168,6 +208,18 @@ const translations = {
     contact: "Contact",
     testimonials: "Testimonials",
     order: "Order",
+    orderNow: "Order Now",
+    
+    // Common UI elements
+    loading: "Loading...",
+    loadingPackages: "Loading packages...",
+    learnMore: "Learn More",
+    backToPackages: "Back to Packages",
+    whatsIncluded: "What's Included",
+    moreFeatures: "more features",
+    aboutThisPackage: "About This Package",
+    readyToOrder: "Ready to Order?",
+    startYourJourney: "Start your musical journey today!",
     
     // Premium Package translations
     premiumPackage: "Premium Package",
@@ -210,7 +262,7 @@ const translations = {
     fast: "Fast", 
     variable: "Variable",
     
-    // Existing keys - keeping them as reference
+    // Package types
     personalPackage: "Personal Package",
     personalTagline: "Perfect for special moments",
     personalDescription: "A personalized musical gift that will remain in the recipient's heart forever.",
@@ -228,6 +280,11 @@ const translations = {
     storyAndEmotionalDetails: "Story and emotional details", 
     musicalPreferences: "Musical preferences",
     addons: "Additional services",
+    stepPackage: "Package",
+    stepDetails: "Details",
+    stepStory: "Story",
+    stepPreferences: "Preferences",
+    stepContact: "Contact",
     
     // Field labels and placeholders
     recipientName: "Recipient's name",
@@ -295,7 +352,160 @@ const translations = {
     ron: "RON",
     includes: "Includes",
     selectPackage: "Select package",
-    startOrder: "Start order"
+    startOrder: "Start order",
+    
+    // About page
+    aboutSubtitle: "About MusicGift",
+    aboutNewDescription1: "MusicGift is an innovative platform that transforms emotions and stories into personalized music. We create unique musical gifts that capture the essence of special moments in your life.",
+    aboutNewDescription2: "Our team of music professionals uses the most advanced technologies to produce original songs that resonate with each individual story.",
+    songsCreated: "Songs created",
+    yearsExperience: "Years experience",
+    clientSatisfaction: "Client satisfaction",
+    whoWeAre: "Who we are",
+    mihaiGruiaTitle: "Mihai Gruia - Founder & Lead Producer",
+    mihaiGruiaDescription: "With over 10 years of experience in the music industry, Mihai Gruia is the creative soul behind MusicGift.",
+    mangoRecordsTitle: "Mango Records - Distribution Partner",
+    mangoRecordsDescription: "Our official distribution platform that ensures your music reaches all major platforms.",
+    domgStudioTitle: "DOMG Studio - Professional Production",
+    domgStudioDescription: "Our recording studio equipped with cutting-edge technology.",
+    doMusicForGoodTitle: "DoMusicForGood - Our Mission",
+    doMusicForGoodDescription: "We believe music can change the world and we're dedicated to bringing joy through every song we create.",
+    
+    // Order success/error messages
+    orderSuccess: "Order Created",
+    orderSuccessMessage: "Your order has been created successfully. Payment integration will be available soon.",
+    orderError: "Order Error",
+    orderErrorMessage: "An error occurred while processing your order. Please try again."
+  },
+  
+  // Adding basic translations for French, Polish, and German
+  fr: {
+    // Navigation
+    home: "Accueil",
+    about: "À propos",
+    packages: "Packages",
+    howItWorks: "Comment ça marche",
+    contact: "Contact",
+    testimonials: "Témoignages",
+    order: "Commander",
+    orderNow: "Commander maintenant",
+    
+    // Common UI elements
+    loading: "Chargement...",
+    loadingPackages: "Chargement des packages...",
+    learnMore: "En savoir plus",
+    backToPackages: "Retour aux packages",
+    whatsIncluded: "Ce qui est inclus",
+    moreFeatures: "plus de fonctionnalités",
+    aboutThisPackage: "À propos de ce package",
+    readyToOrder: "Prêt à commander?",
+    startYourJourney: "Commencez votre voyage musical aujourd'hui!",
+    
+    // Package types
+    personalPackage: "Package Personnel",
+    personalTagline: "Parfait pour les moments spéciaux",
+    personalDescription: "Un cadeau musical personnalisé qui restera dans le cœur du destinataire pour toujours.",
+    
+    // Common
+    price: "Prix",
+    ron: "RON",
+    includes: "Inclut",
+    selectPackage: "Sélectionner le package",
+    startOrder: "Commencer la commande",
+    mostPopular: "Le plus populaire",
+    
+    // Step titles
+    stepPackage: "Package",
+    stepDetails: "Détails",
+    stepStory: "Histoire",
+    stepPreferences: "Préférences",
+    stepContact: "Contact"
+  },
+  
+  pl: {
+    // Navigation
+    home: "Start",
+    about: "O nas",
+    packages: "Pakiety",
+    howItWorks: "Jak to działa",
+    contact: "Kontakt",
+    testimonials: "Opinie",
+    order: "Zamówienie",
+    orderNow: "Zamów teraz",
+    
+    // Common UI elements
+    loading: "Ładowanie...",
+    loadingPackages: "Ładowanie pakietów...",
+    learnMore: "Dowiedz się więcej",
+    backToPackages: "Powrót do pakietów",
+    whatsIncluded: "Co zawiera",
+    moreFeatures: "więcej funkcji",
+    aboutThisPackage: "O tym pakiecie",
+    readyToOrder: "Gotowy do zamówienia?",
+    startYourJourney: "Rozpocznij swoją muzyczną podróż już dziś!",
+    
+    // Package types
+    personalPackage: "Pakiet Osobisty",
+    personalTagline: "Idealny na wyjątkowe chwile",
+    personalDescription: "Spersonalizowany prezent muzyczny, który pozostanie w sercu odbiorcy na zawsze.",
+    
+    // Common
+    price: "Cena",
+    ron: "RON",
+    includes: "Zawiera",
+    selectPackage: "Wybierz pakiet",
+    startOrder: "Rozpocznij zamówienie",
+    mostPopular: "Najpopularniejszy",
+    
+    // Step titles
+    stepPackage: "Pakiet",
+    stepDetails: "Szczegóły",
+    stepStory: "Historia",
+    stepPreferences: "Preferencje",
+    stepContact: "Kontakt"
+  },
+  
+  de: {
+    // Navigation
+    home: "Startseite",
+    about: "Über uns",
+    packages: "Pakete",
+    howItWorks: "Wie es funktioniert",
+    contact: "Kontakt",
+    testimonials: "Testimonials",
+    order: "Bestellen",
+    orderNow: "Jetzt bestellen",
+    
+    // Common UI elements
+    loading: "Wird geladen...",
+    loadingPackages: "Pakete werden geladen...",
+    learnMore: "Mehr erfahren",
+    backToPackages: "Zurück zu Paketen",
+    whatsIncluded: "Was enthalten ist",
+    moreFeatures: "mehr Funktionen",
+    aboutThisPackage: "Über dieses Paket",
+    readyToOrder: "Bereit zu bestellen?",
+    startYourJourney: "Starten Sie heute Ihre musikalische Reise!",
+    
+    // Package types
+    personalPackage: "Persönliches Paket",
+    personalTagline: "Perfekt für besondere Momente",
+    personalDescription: "Ein personalisiertes musikalisches Geschenk, das für immer im Herzen des Empfängers bleiben wird.",
+    
+    // Common
+    price: "Preis",
+    ron: "RON",
+    includes: "Beinhaltet",
+    selectPackage: "Paket auswählen",
+    startOrder: "Bestellung starten",
+    mostPopular: "Am beliebtesten",
+    
+    // Step titles
+    stepPackage: "Paket",
+    stepDetails: "Details",
+    stepStory: "Geschichte",
+    stepPreferences: "Präferenzen",
+    stepContact: "Kontakt"
   }
 };
 
@@ -303,7 +513,16 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [language, setLanguage] = useState('ro');
 
   const t = (key: string): string => {
-    return translations[language as keyof typeof translations]?.[key] || key;
+    const translation = translations[language as keyof typeof translations]?.[key];
+    if (translation) return translation;
+    
+    // Fallback to English if not found in current language
+    const englishTranslation = translations.en?.[key];
+    if (englishTranslation) return englishTranslation;
+    
+    // Return the key itself if no translation found (for debugging)
+    console.warn(`Translation missing for key: ${key} in language: ${language}`);
+    return key;
   };
 
   return (

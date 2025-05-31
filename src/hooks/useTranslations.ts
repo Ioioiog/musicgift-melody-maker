@@ -31,19 +31,41 @@ export const useTranslations = () => {
       return translations;
     },
     staleTime: 1000 * 60 * 10, // Cache for 10 minutes
+    retry: 3,
+    retryDelay: 1000,
   });
 };
 
 export const useTranslation = () => {
-  const { data: translations = {} } = useTranslations();
+  const { data: translations = {}, isLoading, error } = useTranslations();
+  const { t: contextT, language } = useLanguage();
   
   const t = (key: string, fallback?: string) => {
-    const translation = translations[key];
-    if (translation) return translation;
+    // First try database translation
+    const dbTranslation = translations[key];
+    if (dbTranslation) return dbTranslation;
     
-    // Return fallback or the key itself if no translation found
-    return fallback || key;
+    // Then try context translation (local translations)
+    const contextTranslation = contextT(key);
+    if (contextTranslation !== key) return contextTranslation;
+    
+    // Return provided fallback
+    if (fallback) return fallback;
+    
+    // Log missing translation for debugging
+    if (!isLoading && !error) {
+      console.warn(`Translation missing for key: ${key} in language: ${language}`);
+    }
+    
+    // Return the key itself as last resort
+    return key;
   };
   
-  return { t, translations };
+  return { 
+    t, 
+    translations, 
+    isLoading, 
+    error,
+    language 
+  };
 };
