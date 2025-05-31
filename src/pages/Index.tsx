@@ -1,5 +1,4 @@
 
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -18,7 +17,8 @@ const Index = () => {
     error
   } = usePackages();
   const {
-    t
+    t,
+    language
   } = useLanguage(); // Frontend translations for static UI
   const {
     t: tDb
@@ -27,6 +27,13 @@ const Index = () => {
   // Audio player state
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Get video source based on language
+  const getVideoSource = () => {
+    return language === 'ro' 
+      ? "/lovable-uploads/Jingle Musicgift master.mp4"
+      : "/lovable-uploads/MusicGiftvideoENG.mp4";
+  };
 
   // Auto-play audio when component mounts
   useEffect(() => {
@@ -59,8 +66,9 @@ const Index = () => {
           muted 
           loop 
           playsInline
+          key={language}
         >
-          <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
+          <source src={getVideoSource()} type="video/mp4" />
         </video>
         
         {/* Overlay for better text readability */}
@@ -84,8 +92,9 @@ const Index = () => {
             ref={audioRef}
             loop
             muted={isMuted}
+            key={language}
           >
-            <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="audio/mp4" />
+            <source src={getVideoSource()} type="audio/mp4" />
           </audio>
         </div>
         
