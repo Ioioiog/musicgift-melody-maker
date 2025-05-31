@@ -2,622 +2,235 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Wand2, Eye, Check, X, Loader2, Mic, Calendar, FileText, CheckSquare, Languages, Edit3 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { Loader2, Wand2, CheckCircle, XCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
-import AITextEditor from './AITextEditor';
-import type { Database } from '@/integrations/supabase/types';
-
-type FieldType = Database['public']['Enums']['field_type'];
-type PackageTagType = Database['public']['Enums']['package_tag_type'];
-
-interface GeneratedPackage {
-  generationId: string;
-  generatedData: {
-    package: {
-      value: string;
-      label_key: string;
-      price: number;
-      tagline_key?: string;
-      description_key?: string;
-      delivery_time_key?: string;
-    };
-    steps: Array<{
-      step_number: number;
-      title_key: string;
-      step_order: number;
-      fields: Array<{
-        field_name: string;
-        field_type: string;
-        placeholder_key?: string;
-        required: boolean;
-        field_order: number;
-        options?: string[];
-      }>;
-    }>;
-    includes: Array<{
-      include_key: string;
-      include_order: number;
-    }>;
-    tags: Array<{
-      tag_type: string;
-      tag_label_key: string;
-      styling_class: string;
-    }>;
-  };
-}
+import { supabase } from '@/integrations/supabase/client';
+import AIPackageDataProcessor from './AIPackageDataProcessor';
 
 const AIPackageGenerator = () => {
   const [description, setDescription] = useState('');
+  const [price, setPrice] = useState<number | ''>('');
+  const [deliveryTime, setDeliveryTime] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
-  const [isGeneratingTranslations, setIsGeneratingTranslations] = useState(false);
-  const [generatedPackage, setGeneratedPackage] = useState<GeneratedPackage | null>(null);
-  const [showPreview, setShowPreview] = useState(false);
-  const [showEditor, setShowEditor] = useState(false);
+  const [generatedData, setGeneratedData] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingResult, setProcessingResult] = useState<{
+    success: boolean;
+    message: string;
+    packageId?: string;
+  } | null>(null);
   const { toast } = useToast();
-  const { user } = useAuth();
-
-  // Helper function to get user-friendly field names in Romanian
-  const getUserFriendlyFieldName = (fieldName: string): string => {
-    const fieldNameMap: Record<string, string> = {
-      'package': 'Pachetul selectat',
-      'recipientName': 'Numele destinatarului',
-      'relationship': 'Relația cu destinatarul',
-      'occasion': 'Ocazia specială',
-      'eventDate': 'Data evenimentului',
-      'songLanguage': 'Limba cântecului',
-      'pronunciationAudioRecipient': 'Pronunția numelui destinatarului',
-      'story': 'Povestea voastră',
-      'emotionalTone': 'Tonul emoțional dorit',
-      'keyMoments': 'Momentele cheie',
-      'specialWords': 'Cuvinte sau expresii speciale',
-      'pronunciationAudioKeywords': 'Pronunția cuvintelor speciale',
-      'musicStyle': 'Stilul muzical preferat',
-      'referenceSong': 'Cântec de referință',
-      'fullName': 'Numele complet',
-      'email': 'Adresa de email',
-      'phone': 'Numărul de telefon',
-      'message': 'Mesajul dumneavoastră',
-      'artistName': 'Numele artistului',
-      'brandName': 'Numele brandului',
-      'campaignPurpose': 'Scopul campaniei'
-    };
-    return fieldNameMap[fieldName] || fieldName;
-  };
-
-  // Helper function to get field type icon
-  const getFieldTypeIcon = (fieldType: string) => {
-    switch (fieldType) {
-      case 'audio-recorder':
-        return <Mic className="w-4 h-4" />;
-      case 'date':
-        return <Calendar className="w-4 h-4" />;
-      case 'textarea':
-        return <FileText className="w-4 h-4" />;
-      case 'checkbox':
-      case 'checkbox-group':
-        return <CheckSquare className="w-4 h-4" />;
-      default:
-        return <FileText className="w-4 h-4" />;
-    }
-  };
-
-  // Helper function to get user-friendly field type names in Romanian
-  const getUserFriendlyFieldType = (fieldType: string): string => {
-    const typeMap: Record<string, string> = {
-      'text': 'Text scurt',
-      'textarea': 'Text lung',
-      'email': 'Adresă email',
-      'tel': 'Număr telefon',
-      'select': 'Alegere din listă',
-      'checkbox': 'Bifă',
-      'checkbox-group': 'Opțiuni multiple',
-      'date': 'Dată',
-      'url': 'Link web',
-      'file': 'Fișier',
-      'audio-recorder': 'Înregistrare audio'
-    };
-    return typeMap[fieldType] || fieldType;
-  };
-
-  // Helper function to map field types to valid database enums
-  const mapFieldType = (fieldType: string): FieldType => {
-    const typeMap: Record<string, FieldType> = {
-      'text': 'text',
-      'textarea': 'textarea',
-      'email': 'email',
-      'tel': 'tel',
-      'phone': 'tel',
-      'select': 'select',
-      'checkbox': 'checkbox',
-      'checkbox-group': 'checkbox-group',
-      'radio': 'checkbox',
-      'number': 'text',
-      'date': 'date',
-      'url': 'url',
-      'file': 'file',
-      'audio-recorder': 'file' // Map audio-recorder to file in database
-    };
-    return typeMap[fieldType] || 'text';
-  };
-
-  // Helper function to map tag types to valid database enums
-  const mapTagType = (tagType: string): PackageTagType => {
-    const typeMap: Record<string, PackageTagType> = {
-      'popular': 'popular',
-      'hot': 'hot',
-      'discount': 'discount',
-      'new': 'new',
-      'limited': 'limited',
-      'recommended': 'popular'
-    };
-    return typeMap[tagType] || 'new';
-  };
-
-  const extractTranslationKeys = (packageData: GeneratedPackage['generatedData']): string[] => {
-    const keys = new Set<string>();
-    
-    // Package keys
-    keys.add(packageData.package.label_key);
-    if (packageData.package.tagline_key) keys.add(packageData.package.tagline_key);
-    if (packageData.package.description_key) keys.add(packageData.package.description_key);
-    if (packageData.package.delivery_time_key) keys.add(packageData.package.delivery_time_key);
-    
-    // Steps and fields keys
-    packageData.steps.forEach(step => {
-      keys.add(step.title_key);
-      step.fields.forEach(field => {
-        if (field.placeholder_key) keys.add(field.placeholder_key);
-      });
-    });
-    
-    // Includes keys
-    packageData.includes.forEach(include => {
-      keys.add(include.include_key);
-    });
-    
-    // Tags keys
-    packageData.tags.forEach(tag => {
-      if (tag.tag_label_key) keys.add(tag.tag_label_key);
-    });
-    
-    return Array.from(keys);
-  };
-
-  const generateTranslations = async (translationKeys: string[]) => {
-    try {
-      setIsGeneratingTranslations(true);
-      
-      const { data, error } = await supabase.functions.invoke('generate-translations', {
-        body: { translationKeys }
-      });
-
-      if (error) throw error;
-
-      console.log('Generated translations:', data);
-      toast({ title: 'Traducerile au fost generate cu succes!' });
-      
-      return true;
-    } catch (error) {
-      console.error('Error generating translations:', error);
-      toast({ 
-        title: 'Eroare la generarea traducerilor', 
-        description: error.message, 
-        variant: 'destructive' 
-      });
-      return false;
-    } finally {
-      setIsGeneratingTranslations(false);
-    }
-  };
 
   const handleGenerate = async () => {
     if (!description.trim()) {
-      toast({ title: 'Descrierea este obligatorie', variant: 'destructive' });
+      toast({
+        title: 'Description Required',
+        description: 'Please provide a package description.',
+        variant: 'destructive',
+      });
       return;
     }
 
     setIsGenerating(true);
+    setGeneratedData(null);
+    setProcessingResult(null);
+
     try {
+      console.log('Calling AI generation function...');
+      
       const { data, error } = await supabase.functions.invoke('generate-package-ai', {
-        body: { description }
+        body: {
+          input_description: description,
+          input_price: price || null,
+          input_delivery_time: deliveryTime || null,
+        },
       });
 
-      if (error) throw error;
+      console.log('AI generation response:', data, error);
 
-      setGeneratedPackage(data);
-      setShowPreview(true);
-      setShowEditor(false);
-      toast({ title: 'Pachetul a fost generat cu succes!' });
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message || 'Failed to generate package');
+      }
+
+      if (!data?.success || !data?.generated_data) {
+        console.error('Invalid response from AI generation:', data);
+        throw new Error(data?.error || 'Invalid response from AI generation');
+      }
+
+      console.log('Successfully generated data:', data.generated_data);
+      setGeneratedData(data.generated_data);
+      setIsProcessing(true);
+
+      toast({
+        title: 'Package Generated',
+        description: 'AI has generated the package structure. Processing data...',
+      });
+
     } catch (error) {
       console.error('Error generating package:', error);
-      toast({ title: 'Eroare la generarea pachetului', description: error.message, variant: 'destructive' });
+      toast({
+        title: 'Generation Failed',
+        description: error.message || 'Failed to generate package with AI',
+        variant: 'destructive',
+      });
     } finally {
       setIsGenerating(false);
     }
   };
 
-  const handleEditText = () => {
-    setShowEditor(true);
+  const handleProcessingSuccess = (packageId: string) => {
+    setIsProcessing(false);
+    setProcessingResult({
+      success: true,
+      message: 'Package created successfully!',
+      packageId,
+    });
   };
 
-  const handleSaveEdited = (editedPackage: GeneratedPackage) => {
-    setGeneratedPackage(editedPackage);
-    setShowEditor(false);
-    toast({ title: 'Textele au fost actualizate cu succes!' });
+  const handleProcessingError = (error: string) => {
+    setIsProcessing(false);
+    setProcessingResult({
+      success: false,
+      message: error,
+    });
   };
 
-  const handleCancelEdit = () => {
-    setShowEditor(false);
-  };
-
-  const handleCreatePackage = async () => {
-    if (!generatedPackage) return;
-
-    setIsCreating(true);
-    try {
-      const { generatedData } = generatedPackage;
-
-      // First, generate and save translations
-      const translationKeys = extractTranslationKeys(generatedData);
-      console.log('Generating translations for keys:', translationKeys);
-      
-      const translationsSuccess = await generateTranslations(translationKeys);
-      if (!translationsSuccess) {
-        throw new Error('Failed to generate translations');
-      }
-
-      // Create package
-      const { data: packageData, error: packageError } = await supabase
-        .from('package_info')
-        .insert(generatedData.package)
-        .select()
-        .single();
-
-      if (packageError) throw packageError;
-
-      // Create steps and fields
-      for (const step of generatedData.steps) {
-        const { data: stepData, error: stepError } = await supabase
-          .from('steps')
-          .insert({
-            package_id: packageData.id,
-            step_number: step.step_number,
-            title_key: step.title_key,
-            step_order: step.step_order,
-            is_active: true
-          })
-          .select()
-          .single();
-
-        if (stepError) throw stepError;
-
-        // Create fields for this step
-        for (const field of step.fields) {
-          const { error: fieldError } = await supabase
-            .from('step_fields')
-            .insert({
-              step_id: stepData.id,
-              field_name: field.field_name,
-              field_type: mapFieldType(field.field_type),
-              placeholder_key: field.placeholder_key,
-              required: field.required,
-              field_order: field.field_order,
-              options: field.options ? JSON.stringify(field.options) : null
-            });
-
-          if (fieldError) throw fieldError;
-        }
-      }
-
-      // Create package includes
-      for (const include of generatedData.includes) {
-        const { error: includeError } = await supabase
-          .from('package_includes')
-          .insert({
-            package_id: packageData.id,
-            include_key: include.include_key,
-            include_order: include.include_order
-          });
-
-        if (includeError) throw includeError;
-      }
-
-      // Create package tags
-      for (const tag of generatedData.tags) {
-        const { error: tagError } = await supabase
-          .from('package_tags')
-          .insert({
-            package_id: packageData.id,
-            tag_type: mapTagType(tag.tag_type),
-            tag_label_key: tag.tag_label_key,
-            styling_class: tag.styling_class
-          });
-
-        if (tagError) throw tagError;
-      }
-
-      // Update generation status
-      await supabase
-        .from('ai_package_generations')
-        .update({ 
-          status: 'created',
-          package_id: packageData.id
-        })
-        .eq('id', generatedPackage.generationId);
-
-      toast({ title: 'Pachetul și traducerile au fost create cu succes!' });
-      
-      // Reset form
-      setDescription('');
-      setGeneratedPackage(null);
-      setShowPreview(false);
-      setShowEditor(false);
-
-    } catch (error) {
-      console.error('Error creating package:', error);
-      toast({ title: 'Eroare la crearea pachetului', description: error.message, variant: 'destructive' });
-    } finally {
-      setIsCreating(false);
-    }
-  };
-
-  const handleReject = () => {
-    setGeneratedPackage(null);
-    setShowPreview(false);
-    setShowEditor(false);
+  const resetForm = () => {
+    setDescription('');
+    setPrice('');
+    setDeliveryTime('');
+    setGeneratedData(null);
+    setProcessingResult(null);
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-2">
-        <Wand2 className="w-6 h-6 text-purple-600" />
-        <h2 className="text-2xl font-bold">Generator AI pentru Pachete</h2>
-      </div>
-
       <Card>
         <CardHeader>
-          <CardTitle>Generează Pachet cu AI</CardTitle>
-          <p className="text-sm text-gray-600">
-            Descrie pachetul pe care vrei să îl creezi și AI-ul va genera automat structura completă cu placeholder-uri utile și traduceri în română.
-          </p>
+          <CardTitle className="flex items-center space-x-2">
+            <Wand2 className="w-5 h-5" />
+            <span>AI Package Generator</span>
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="description">Descrierea Pachetului *</Label>
+            <Label htmlFor="description">Package Description</Label>
             <Textarea
               id="description"
-              placeholder="Descrie pachetul/serviciul pe care dorești să îl creezi. De exemplu: 'Un pachet pentru nunți care include cântec personalizat, videoclip profesional și distribuție pe Spotify'"
+              placeholder="Describe the music package you want to create (e.g., 'A professional mixing and mastering service for artists')"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              className="mt-1"
               rows={4}
-              className="resize-none"
             />
-            <p className="text-xs text-gray-500 mt-1">
-              Descrie serviciul pe care îl dorești. AI-ul va crea automat structura completă cu placeholder-uri utile.
-            </p>
           </div>
 
-          <Button 
-            onClick={handleGenerate} 
-            disabled={isGenerating || !description.trim()}
-            className="w-full"
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Se generează pachetul cu AI...
-              </>
-            ) : (
-              <>
-                <Wand2 className="w-4 h-4 mr-2" />
-                Generează Pachet cu AI
-              </>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="price">Price (RON) - Optional</Label>
+              <Input
+                id="price"
+                type="number"
+                placeholder="e.g., 150"
+                value={price}
+                onChange={(e) => setPrice(e.target.value ? parseInt(e.target.value) : '')}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="deliveryTime">Delivery Time - Optional</Label>
+              <Input
+                id="deliveryTime"
+                placeholder="e.g., 3-5 days"
+                value={deliveryTime}
+                onChange={(e) => setDeliveryTime(e.target.value)}
+                className="mt-1"
+              />
+            </div>
+          </div>
+
+          <div className="flex space-x-3">
+            <Button
+              onClick={handleGenerate}
+              disabled={isGenerating || isProcessing || !description.trim()}
+              className="flex-1"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Wand2 className="w-4 h-4 mr-2" />
+                  Generate Package
+                </>
+              )}
+            </Button>
+            
+            {(generatedData || processingResult) && (
+              <Button variant="outline" onClick={resetForm}>
+                Reset
+              </Button>
             )}
-          </Button>
+          </div>
+
+          {/* Processing Status */}
+          {isProcessing && (
+            <div className="flex items-center justify-center p-4 bg-blue-50 rounded-lg">
+              <Loader2 className="w-5 h-5 mr-2 animate-spin text-blue-600" />
+              <span className="text-blue-800">Processing generated data...</span>
+            </div>
+          )}
+
+          {/* Processing Result */}
+          {processingResult && (
+            <div className={`flex items-center p-4 rounded-lg ${
+              processingResult.success 
+                ? 'bg-green-50 text-green-800' 
+                : 'bg-red-50 text-red-800'
+            }`}>
+              {processingResult.success ? (
+                <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
+              ) : (
+                <XCircle className="w-5 h-5 mr-2 text-red-600" />
+              )}
+              <span>{processingResult.message}</span>
+              {processingResult.packageId && (
+                <span className="ml-2 text-sm opacity-75">
+                  (ID: {processingResult.packageId})
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Generated Data Preview */}
+          {generatedData && !isProcessing && !processingResult && (
+            <Card className="bg-gray-50">
+              <CardHeader>
+                <CardTitle className="text-sm">Generated Package Structure</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <pre className="text-xs bg-white p-3 rounded border overflow-auto max-h-40">
+                  {JSON.stringify(generatedData, null, 2)}
+                </pre>
+              </CardContent>
+            </Card>
+          )}
         </CardContent>
       </Card>
 
-      {showEditor && generatedPackage && (
-        <AITextEditor
-          generatedPackage={generatedPackage}
-          onSave={handleSaveEdited}
-          onCancel={handleCancelEdit}
+      {/* Data Processor Component */}
+      {generatedData && isProcessing && (
+        <AIPackageDataProcessor
+          generatedData={generatedData}
+          onSuccess={handleProcessingSuccess}
+          onError={handleProcessingError}
         />
-      )}
-
-      {showPreview && generatedPackage && !showEditor && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Eye className="w-5 h-5" />
-              <span>Previzualizare Pachet Generat</span>
-              {isGeneratingTranslations && (
-                <div className="flex items-center space-x-2 text-blue-600">
-                  <Languages className="w-4 h-4" />
-                  <span className="text-sm">Generez traduceri...</span>
-                </div>
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <ScrollArea className="h-96">
-              <div className="space-y-4">
-                {/* Package Info */}
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border border-purple-200">
-                  <h3 className="font-semibold text-lg mb-3 text-purple-800">📦 Informații Pachet</h3>
-                  <div className="grid grid-cols-1 gap-3 text-sm">
-                    <div className="flex justify-between">
-                      <strong>Nume Pachet:</strong> 
-                      <span className="text-purple-600">{generatedPackage.generatedData.package.label_key}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <strong>Preț:</strong> 
-                      <span className="text-green-600 font-bold">{generatedPackage.generatedData.package.price} RON</span>
-                    </div>
-                    {generatedPackage.generatedData.package.tagline_key && (
-                      <div>
-                        <strong>Slogan:</strong> 
-                        <p className="text-gray-700 italic mt-1">{generatedPackage.generatedData.package.tagline_key}</p>
-                      </div>
-                    )}
-                    {generatedPackage.generatedData.package.delivery_time_key && (
-                      <div className="flex justify-between">
-                        <strong>Timp Livrare:</strong> 
-                        <span className="text-blue-600">{generatedPackage.generatedData.package.delivery_time_key}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <Separator />
-
-                {/* Steps */}
-                <div>
-                  <h3 className="font-semibold text-lg mb-3 flex items-center">
-                    🚀 Pași de Completare ({generatedPackage.generatedData.steps.length})
-                  </h3>
-                  {generatedPackage.generatedData.steps.map((step, idx) => (
-                    <Card key={idx} className="mb-4 border-l-4 border-l-purple-500">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-base flex items-center space-x-2">
-                          <span className="bg-purple-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">
-                            {step.step_number}
-                          </span>
-                          <span>{step.title_key}</span>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          {step.fields.map((field, fieldIdx) => (
-                            <div key={fieldIdx} className="bg-gray-50 p-3 rounded-md">
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center space-x-2">
-                                  {getFieldTypeIcon(field.field_type)}
-                                  <span className="font-medium text-gray-800">
-                                    {getUserFriendlyFieldName(field.field_name)}
-                                  </span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                  <Badge variant="outline" className="text-xs">
-                                    {getUserFriendlyFieldType(field.field_type)}
-                                  </Badge>
-                                  {field.required && <Badge variant="destructive" className="text-xs">Obligatoriu</Badge>}
-                                </div>
-                              </div>
-                              {field.placeholder_key && (
-                                <p className="text-sm text-gray-600 italic bg-white p-2 rounded border">
-                                  "{field.placeholder_key}"
-                                </p>
-                              )}
-                              {field.options && field.options.length > 0 && (
-                                <div className="mt-2">
-                                  <span className="text-xs text-gray-500">Opțiuni disponibile:</span>
-                                  <div className="flex flex-wrap gap-1 mt-1">
-                                    {field.options.slice(0, 3).map((option, optIdx) => (
-                                      <Badge key={optIdx} variant="secondary" className="text-xs">
-                                        {option}
-                                      </Badge>
-                                    ))}
-                                    {field.options.length > 3 && (
-                                      <Badge variant="secondary" className="text-xs">
-                                        +{field.options.length - 3} mai multe
-                                      </Badge>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-
-                <Separator />
-
-                {/* Includes */}
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <h3 className="font-semibold text-lg mb-3 text-green-800 flex items-center">
-                    ✨ Ce Include Pachetul
-                  </h3>
-                  <ul className="list-none space-y-2">
-                    {generatedPackage.generatedData.includes.map((include, idx) => (
-                      <li key={idx} className="flex items-start space-x-2 text-sm">
-                        <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                        <span className="text-green-700">{include.include_key}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <Separator />
-
-                {/* Tags */}
-                <div>
-                  <h3 className="font-semibold text-lg mb-3 flex items-center">
-                    🏷️ Etichete Pachet
-                  </h3>
-                  <div className="flex space-x-2 flex-wrap">
-                    {generatedPackage.generatedData.tags.map((tag, idx) => (
-                      <Badge key={idx} className={`${tag.styling_class} mb-2`}>
-                        {tag.tag_label_key}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </ScrollArea>
-
-            <div className="flex space-x-3 pt-4 border-t">
-              <Button 
-                onClick={handleCreatePackage} 
-                disabled={isCreating || isGeneratingTranslations} 
-                className="flex-1 bg-green-600 hover:bg-green-700"
-              >
-                {isCreating ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Se creează pachetul...
-                  </>
-                ) : (
-                  <>
-                    <Check className="w-4 h-4 mr-2" />
-                    Creează Pachetul + Traduceri
-                  </>
-                )}
-              </Button>
-              
-              <Button 
-                onClick={handleEditText}
-                disabled={isCreating || isGeneratingTranslations}
-                variant="outline"
-                className="border-blue-300 text-blue-600 hover:bg-blue-50"
-              >
-                <Edit3 className="w-4 h-4 mr-2" />
-                Editează Textul primit de la AI
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                onClick={handleReject} 
-                disabled={isCreating || isGeneratingTranslations} 
-                className="border-red-300 text-red-600 hover:bg-red-50"
-              >
-                <X className="w-4 h-4 mr-2" />
-                Respinge
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       )}
     </div>
   );

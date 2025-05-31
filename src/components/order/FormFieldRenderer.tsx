@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { CalendarIcon, Upload, Mic } from 'lucide-react';
+import { CalendarIcon, Upload, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/hooks/useTranslations';
@@ -135,17 +135,34 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         );
 
       case 'select':
+        // Validate that options exist and are properly formatted
+        if (!field.options || !Array.isArray(field.options)) {
+          console.warn('Select field missing valid options:', field);
+          return (
+            <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md">
+              <AlertCircle className="w-4 h-4" />
+              <span className="text-sm">Field configuration error: No options available</span>
+            </div>
+          );
+        }
+
         return (
           <Select value={value || ''} onValueChange={onChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder={field.placeholder_key ? t(field.placeholder_key) : t('selectOption')} />
             </SelectTrigger>
             <SelectContent>
-              {field.options?.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {t(option.label_key)}
-                </SelectItem>
-              ))}
+              {field.options.map((option, index) => {
+                // Ensure option has proper structure
+                const optionValue = typeof option === 'string' ? option : option.value;
+                const optionLabel = typeof option === 'string' ? option : option.label_key;
+                
+                return (
+                  <SelectItem key={`${optionValue}-${index}`} value={optionValue}>
+                    {t(optionLabel) || optionLabel}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
         );
@@ -167,6 +184,14 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       case 'checkbox-group':
         const selectedPackage = getSelectedPackage();
         const filteredAddons = availableAddons.filter(addon => shouldShowAddon(addon, selectedPackage));
+        
+        if (filteredAddons.length === 0) {
+          return (
+            <div className="text-sm text-gray-500 italic">
+              No addons available for the selected package.
+            </div>
+          );
+        }
         
         return (
           <div className="space-y-4">
@@ -280,14 +305,12 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         );
 
       default:
+        console.warn('Unknown field type:', field.field_type);
         return (
-          <Input
-            value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
-            required={field.required}
-            className="w-full"
-          />
+          <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md">
+            <AlertCircle className="w-4 h-4" />
+            <span className="text-sm">Unknown field type: {field.field_type}</span>
+          </div>
         );
     }
   };
