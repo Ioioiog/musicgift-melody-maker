@@ -78,6 +78,10 @@ const translations = {
     testimonialsSubtitle: 'Real stories from satisfied customers who turned their memories into music',
     packagesSubtitle: 'Select the perfect music package that fits your needs and budget',
     
+    // Testimonials Page
+    testimonials_page_title: 'Customer Testimonials',
+    testimonials_page_description: 'Discover what our customers say about their personalized music experience',
+
     // Step Process
     choosePackage: 'Choose Your Package',
     choosePackageDesc: 'Select from our range of personalized music packages',
@@ -302,6 +306,10 @@ const translations = {
     testimonialsSubtitle: 'Povești reale de la clienți mulțumiți care și-au transformat amintirile în muzică',
     packagesSubtitle: 'Selectează pachetul muzical perfect care se potrivește nevoilor și bugetului tău',
     
+    // Testimonials Page
+    testimonials_page_title: 'Testimoniale Clienți',
+    testimonials_page_description: 'Descoperă ce spun clienții noștri despre experiența lor cu muzica personalizată',
+
     // Step Process
     choosePackage: 'Alege Pachetul',
     choosePackageDesc: 'Selectează din gama noastră de pachete muzicale personalizate',
@@ -449,9 +457,9 @@ const translations = {
     // Who We Are Section
     whoWeAre: 'Cine Suntem',
     mihaiGruiaTitle: 'Mihai Gruia',
-    mihaiGruiaDescription: 'Producător muzical și compozitor, membru fondator al trupei Akcent – una dintre cele mai de succes trupe pop românești la nivel internațional, cu hituri celebre precum \'That\'s My Name\', \'Kylie\' și \'Stay with Me\'. După succesul Akcent, Mihai și-a continuat cariera artistică prin proiectul TWO și s-a implicat în producția muzicală pentru artiști de top. Astăzi, coordonează echipa MusicGift și DOMG Studio, aducându-și expertiza în fiecare proiect livrat.',
+    mihaiGruiaDescription: 'Producător muzical și compozitor, membru fondator al trupei Akcent – una dintre cele mai de succes trupe pop românești la nivel internațional, cu hituri celebre precum \'That\'s My Name\', \'Kylie\' și \'Stay with Me\'. După succesul Akcent, Mihai a continuat sa cariera artistică prin proiectul TWO și s-a implicat în producția muzicală pentru artiști de top. Astăzi, coordonează echipa MusicGift și DOMG Studio, aducându-și expertiza în fiecare proiect livrat.',
     mangoRecordsTitle: 'Mango Records',
-    mangoRecordsDescription: 'Mango Records, fondat și coordonat de Mihai Gruia, este o casă de discuri independentă din România, specializată în lansarea și distribuirea muzicii originale la nivel internațional. A promovat artiști de succes precum TWO (ex-Akcent), DOMG, Mellina, Red Blonde, Pitt Leffer, Katerina și Vulgaris. Cu peste 1000 de piese distribuite global pe Spotify, Apple Music și YouTube, Mango Records contribuie activ la scena muzicală contemporană. A realizat și colaborări comerciale de succes cu branduri internaționale.',
+    mangoRecordsDescription: 'Mango Records, fondat și coordonat de Mihai Gruia, este o casă de discuri independentă din România, specializată în lansarea și distribuirea muzicii originale internațional. A promovat artiști de succes precum TWO (ex-Akcent), DOMG, Mellina, Red Blonde, Pitt Leffer, Katerina și Vulgaris. Cu peste 1000 de piese distribuite global pe Spotify, Apple Music și YouTube, Mango Records contribuie activ la scena muzicală contemporană. A realizat și colaborări comerciale de succes cu branduri internaționale.',
     domgStudioTitle: 'DOMG Studio',
     domgStudioDescription: 'Studio premium de creație muzicală, cu compoziții pentru artiști de top români și internaționali: Akcent, Andra, Lora, Alina Eremia și alții. Oferă calitate audio impecabilă și procese profesionale de compoziție, înregistrare și mix-master.',
     doMusicForGoodTitle: 'Do Music for Good Band',
@@ -557,6 +565,8 @@ const translations = {
     total: 'Total',
     needHelp: 'Besoin d\'aide?',
     mondayToFriday: 'Lun-Ven: 9h-18h',
+    testimonials_page_title: 'Témoignages Clients',
+    testimonials_page_description: 'Découvrez ce que nos clients disent de leur expérience musicale personnalisée',
     testimonialQuote: '"Travailler avec MusicGift était incroyable. Ils ont parfaitement compris notre histoire et ont créé quelque chose de magique!"',
     testimonialAuthor: '— Radu & Elena',
     personalPackageDesc: 'Une chanson écrite avec âme – juste pour vous et vos proches.',
@@ -740,6 +750,8 @@ const translations = {
     total: 'Razem',
     needHelp: 'Potrzebujesz pomocy?',
     mondayToFriday: 'Pon-Pt: 9:00-18:00',
+    testimonials_page_title: 'Opinie Klientów',
+    testimonials_page_description: 'Odkryj, co nasi klienci mówią o swoim spersonalizowanym doświadczeniu muzycznym',
     testimonialQuote: '"Praca z MusicGift była niesamowita. Doskonale zrozumieli naszą historię i stworzyli coś magicznego!"',
     testimonialAuthor: '— Radu & Elena',
     personalPackageDesc: 'Piosenka napisana z duszą – tylko dla Ciebie i Twoich bliskich.',
@@ -923,6 +935,8 @@ const translations = {
     total: 'Gesamt',
     needHelp: 'Brauchen Sie Hilfe?',
     mondayToFriday: 'Mo-Fr: 9:00-18:00',
+    testimonials_page_title: 'Kundenbewertungen',
+    testimonials_page_description: 'Entdecken Sie, was unsere Kunden über ihre personalisierte Musikerfahrung sagen',
     testimonialQuote: '"Mit MusicGift zu arbeiten war erstaunlich. Sie haben unsere Geschichte perfekt verstanden und etwas Magisches geschaffen!"',
     testimonialAuthor: '— Radu & Elena',
     personalPackageDesc: 'Ein Lied mit Seele geschrieben – nur für Sie und Ihre Lieben.',
