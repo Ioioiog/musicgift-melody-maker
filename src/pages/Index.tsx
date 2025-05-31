@@ -1,9 +1,9 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { usePackages } from "@/hooks/usePackageData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
@@ -53,12 +53,14 @@ const Index = () => {
             </div>
             
             <div className="relative lg:pl-12">
-              <div className="w-[576px] h-[576px] mx-auto flex items-center justify-center animate-float">
-                <video className="w-full h-full object-cover rounded-2xl shadow-lg" autoPlay muted loop playsInline>
-                  <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
-                  {/* Fallback image if video doesn't load */}
-                  <img src="/lovable-uploads/65518432-abfe-42fc-acc5-25014d321134.png" alt="Music Gift Box" className="w-full h-full object-contain" />
-                </video>
+              <div className="w-full max-w-md mx-auto animate-float">
+                <AspectRatio ratio={16 / 9}>
+                  <video className="w-full h-full object-cover rounded-2xl shadow-lg" autoPlay muted loop playsInline>
+                    <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="video/mp4" />
+                    {/* Fallback image if video doesn't load */}
+                    <img src="/lovable-uploads/65518432-abfe-42fc-acc5-25014d321134.png" alt="Music Gift Box" className="w-full h-full object-contain" />
+                  </video>
+                </AspectRatio>
               </div>
               
               {/* Floating music notes */}
