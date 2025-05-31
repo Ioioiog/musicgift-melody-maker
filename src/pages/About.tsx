@@ -48,11 +48,11 @@ const About = () => {
                 </h2>
                 <div className="space-y-6 text-gray-600 leading-relaxed">
                   <p>
-                    {t('aboutDescription1')}
+                    {t('aboutNewDescription1')}
                   </p>
                   
                   <p>
-                    {t('aboutDescription2')}
+                    {t('aboutNewDescription2')}
                   </p>
                 </div>
               </div>
