@@ -34,119 +34,48 @@ serve(async (req) => {
 
     const { orderId, amount, currency = 'RON', customerEmail, customerName, description }: PaymentRequest = await req.json()
 
-    // Get NETOPIA credentials from environment
-    const netopiaMerchantId = Deno.env.get('NETOPIA_MERCHANT_ID')
-    const netopiaSignature = Deno.env.get('NETOPIA_SIGNATURE')
-    const netopiaTestMode = Deno.env.get('NETOPIA_TEST_MODE') === 'true'
-    const siteUrl = Deno.env.get('SITE_URL') || 'http://localhost:5173'
+    console.log('Creating payment for order:', orderId, 'amount:', amount);
 
-    console.log('NETOPIA credentials check:', {
-      hasMerchantId: !!netopiaMerchantId,
-      hasSignature: !!netopiaSignature,
-      testMode: netopiaTestMode,
-      siteUrl
-    })
-
-    if (!netopiaMerchantId || !netopiaSignature) {
-      throw new Error('NETOPIA credentials not configured - missing NETOPIA_MERCHANT_ID or NETOPIA_SIGNATURE')
-    }
-
-    // Generate unique order ID for NETOPIA
-    const netopiaOrderId = `ORDER_${orderId}_${Date.now()}`
-    const timestamp = Date.now()
-
-    // Split customer name into first and last name
-    const nameParts = customerName.split(' ')
-    const firstName = nameParts[0] || customerName
-    const lastName = nameParts.slice(1).join(' ') || 'Customer'
-
-    // NETOPIA payment data structure according to documentation
-    const paymentData = {
-      order: {
-        $: {
-          id: netopiaOrderId,
-          timestamp: timestamp,
-          type: "card",
-        },
-        signature: netopiaSignature,
-        url: {
-          return: `${siteUrl}/payment/success?orderId=${orderId}`,
-          confirm: `${Deno.env.get('SUPABASE_URL')}/functions/v1/netopia-webhook`,
-        },
-        invoice: {
-          $: {
-            currency: currency,
-            amount: amount,
-          },
-          details: description,
-          contact_info: {
-            billing: {
-              $: {
-                type: "person",
-              },
-              first_name: firstName,
-              last_name: lastName,
-              address: "Address",
-              email: customerEmail,
-              mobile_phone: "0000000000",
-            },
-            shipping: {
-              $: {
-                type: "person",
-              },
-              first_name: firstName,
-              last_name: lastName,
-              address: "Address", 
-              email: customerEmail,
-              mobile_phone: "0000000000",
-            },
-          },
-        },
-        ipn_cipher: "aes-256-cbc",
-      },
-    }
-
-    console.log('Payment data to send to NETOPIA:', JSON.stringify(paymentData, null, 2))
-
-    // Use correct NETOPIA API endpoint
-    const netopiaUrl = netopiaTestMode 
-      ? 'https://sandboxsecure.mobilpay.ro'
-      : 'https://secure.mobilpay.ro'
-
-    console.log('Making request to NETOPIA URL:', netopiaUrl)
-
-    const netopiaResponse = await fetch(netopiaUrl, {
+    // Call the deployed Node.js API on Vercel
+    const apiResponse = await fetch('https://netopia-payment-api.vercel.app/api/create-payment', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(paymentData)
-    })
+      body: JSON.stringify({
+        orderId,
+        amount,
+        currency,
+        customerEmail,
+        customerName,
+        description
+      })
+    });
 
-    console.log('NETOPIA response status:', netopiaResponse.status)
-    console.log('NETOPIA response headers:', Object.fromEntries(netopiaResponse.headers.entries()))
+    console.log('Node.js API response status:', apiResponse.status);
 
-    if (!netopiaResponse.ok) {
-      const errorText = await netopiaResponse.text()
-      console.error('NETOPIA API Error Response:', errorText)
-      throw new Error(`NETOPIA API failed with status ${netopiaResponse.status}: ${errorText}`)
+    if (!apiResponse.ok) {
+      const errorText = await apiResponse.text();
+      console.error('Node.js API Error:', errorText);
+      throw new Error(`Payment API failed with status ${apiResponse.status}: ${errorText}`);
     }
 
-    const netopiaResult = await netopiaResponse.text() // NETOPIA might return HTML or text instead of JSON
-    console.log('NETOPIA result:', netopiaResult)
+    const apiResult = await apiResponse.json();
+    console.log('Node.js API result:', apiResult);
 
-    // For now, we'll construct a payment URL since NETOPIA documentation doesn't specify the exact response format
-    // This might need adjustment based on actual NETOPIA response
-    const paymentUrl = `${netopiaUrl}?data=${encodeURIComponent(JSON.stringify(paymentData))}`
+    if (!apiResult.success) {
+      throw new Error(apiResult.error || 'Failed to create payment session');
+    }
 
-    // Update order with payment information
+    // Update order with payment information from Node.js API response
     const { error: updateError } = await supabaseClient
       .from('orders')
       .update({
         payment_status: 'pending',
-        payment_url: paymentUrl,
-        netopia_order_id: netopiaOrderId,
-        payment_id: netopiaOrderId
+        payment_url: apiResult.paymentUrl,
+        netopia_order_id: apiResult.netopiaOrderId,
+        payment_id: apiResult.netopiaOrderId,
+        updated_at: new Date().toISOString()
       })
       .eq('id', orderId)
 
@@ -155,13 +84,15 @@ serve(async (req) => {
       throw updateError
     }
 
-    console.log('Order updated successfully, returning payment URL')
+    console.log('Order updated successfully, returning payment data')
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        paymentUrl,
-        netopiaOrderId 
+        paymentUrl: apiResult.paymentUrl,
+        formData: apiResult.formData,
+        netopiaOrderId: apiResult.netopiaOrderId,
+        signature: apiResult.signature
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
