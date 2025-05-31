@@ -78,7 +78,60 @@ serve(async (req) => {
     const campaignData = await brevoResponse.json()
     const stats = campaignData.statistics || {}
 
-    console.log('Fetched Brevo campaign stats:', stats)
+    console.log('Full Brevo campaign response:', JSON.stringify(campaignData, null, 2))
+    console.log('Campaign statistics object:', JSON.stringify(stats, null, 2))
+
+    // Aggregate data from campaignStats array if available, otherwise use globalStats
+    let aggregatedStats = {
+      opens: 0,
+      clicks: 0,
+      delivered: 0,
+      sent: 0,
+      softBounces: 0,
+      hardBounces: 0,
+      unsubscriptions: 0,
+      complaints: 0
+    }
+
+    if (stats.campaignStats && Array.isArray(stats.campaignStats)) {
+      console.log('Using campaignStats array for aggregation')
+      stats.campaignStats.forEach((listStat: any) => {
+        aggregatedStats.opens += listStat.uniqueViews || listStat.viewed || 0
+        aggregatedStats.clicks += listStat.uniqueClicks || listStat.clickers || 0
+        aggregatedStats.delivered += listStat.delivered || 0
+        aggregatedStats.sent += listStat.sent || 0
+        aggregatedStats.softBounces += listStat.softBounces || 0
+        aggregatedStats.hardBounces += listStat.hardBounces || 0
+        aggregatedStats.unsubscriptions += listStat.unsubscriptions || 0
+        aggregatedStats.complaints += listStat.complaints || 0
+      })
+    } else if (stats.globalStats) {
+      console.log('Using globalStats as fallback')
+      aggregatedStats = {
+        opens: stats.globalStats.uniqueViews || stats.globalStats.viewed || 0,
+        clicks: stats.globalStats.uniqueClicks || stats.globalStats.clickers || 0,
+        delivered: stats.globalStats.delivered || 0,
+        sent: stats.globalStats.sent || 0,
+        softBounces: stats.globalStats.softBounces || 0,
+        hardBounces: stats.globalStats.hardBounces || 0,
+        unsubscriptions: stats.globalStats.unsubscriptions || 0,
+        complaints: stats.globalStats.complaints || 0
+      }
+    } else {
+      console.log('Using direct stats object')
+      aggregatedStats = {
+        opens: stats.uniqueViews || stats.viewed || stats.opens || 0,
+        clicks: stats.uniqueClicks || stats.clickers || stats.clicks || 0,
+        delivered: stats.delivered || 0,
+        sent: stats.sent || 0,
+        softBounces: stats.softBounces || 0,
+        hardBounces: stats.hardBounces || 0,
+        unsubscriptions: stats.unsubscriptions || 0,
+        complaints: stats.complaints || 0
+      }
+    }
+
+    console.log('Aggregated stats:', aggregatedStats)
 
     // Update or insert campaign metrics
     const { data: existingMetrics } = await supabase
@@ -89,16 +142,18 @@ serve(async (req) => {
 
     const metricsData = {
       campaign_id: campaignId,
-      opens: stats.uniqueOpens || stats.opens || 0,
-      clicks: stats.uniqueClicks || stats.clicks || 0,
-      bounces: (stats.hardBounces || 0) + (stats.softBounces || 0),
-      unsubscribes: stats.unsubscriptions || 0,
-      delivered: stats.delivered || 0,
-      soft_bounces: stats.softBounces || 0,
-      hard_bounces: stats.hardBounces || 0,
-      spam_reports: stats.complaints || stats.spamReports || 0,
+      opens: aggregatedStats.opens,
+      clicks: aggregatedStats.clicks,
+      bounces: aggregatedStats.hardBounces + aggregatedStats.softBounces,
+      unsubscribes: aggregatedStats.unsubscriptions,
+      delivered: aggregatedStats.delivered,
+      soft_bounces: aggregatedStats.softBounces,
+      hard_bounces: aggregatedStats.hardBounces,
+      spam_reports: aggregatedStats.complaints,
       last_updated: new Date().toISOString()
     }
+
+    console.log('Metrics data to save:', metricsData)
 
     let result
     if (existingMetrics) {
@@ -127,7 +182,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         message: 'Campaign metrics synced successfully',
-        metrics: result
+        metrics: result,
+        source: stats.campaignStats ? 'campaignStats' : stats.globalStats ? 'globalStats' : 'direct'
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
