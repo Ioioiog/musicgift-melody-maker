@@ -2,44 +2,44 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useTranslation } from "@/hooks/useTranslations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const testimonials = [
   {
     name: "Ana M.",
     location: "București",
     videoUrl: "https://www.youtube.com/embed/Abk3kceKgP4",
-    reviewKey: "testimonial_ana_review",
+    review: "Am primit o melodie personalizată pentru ziua mea de naștere și a fost absolut perfectă! Emoția pe care am simțit-o când am ascultat-o prima dată a fost de nedescris.",
   },
   {
     name: "Nati G.",
     location: "Cluj-Napoca",
     videoUrl: "https://www.youtube.com/embed/guBBAoM-dZQ",
-    reviewKey: "testimonial_nati_review",
+    review: "Serviciu excepțional! Melodia creată pentru nunta noastră a fost exact ce ne-am dorit. Toți invitații au fost impresionați de originalitatea și calitatea piesei.",
   },
   {
     name: "TechCorp",
     location: "Timișoara",
     videoUrl: "https://www.youtube.com/embed/b_2CFQztmww",
-    reviewKey: "testimonial_techcorp_review",
+    review: "Am comandat o melodie pentru campania noastră de marketing și rezultatul a depășit toate așteptările. Profesionalism și creativitate la cel mai înalt nivel!",
   },
   {
     name: "Maria P.",
     location: "Iași",
     videoUrl: "https://www.youtube.com/embed/b-NYGzKSBiE",
-    reviewKey: "testimonial_maria_review",
+    review: "Cea mai frumoasă surpriză pe care am putut-o face soțului meu! Melodia personalizată pentru aniversarea noastră a fost emoționantă și memorabilă.",
   },
   {
     name: "Alex R.",
     location: "Brașov",
     videoUrl: "https://www.youtube.com/embed/aZMaYjnKLHA",
-    reviewKey: "testimonial_alex_review",
+    review: "Calitate impecabilă și atenție la detalii! Echipa a reușit să surprindă perfect povestea noastră în melodie. Recomand cu încredere!",
   },
 ];
 
 export default function TestimonialSlider() {
   const isMobile = useIsMobile();
-  const { t } = useTranslation();
+  const { t } = useLanguage();
 
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
@@ -70,7 +70,7 @@ export default function TestimonialSlider() {
                       src={testimonial.videoUrl}
                       allowFullScreen
                       loading="lazy"
-                      title={t("video_testimonial_title", `Video testimonial from ${testimonial.name}`)}
+                      title={`Video testimonial from ${testimonial.name}`}
                     />
                   </div>
                   <div className="p-4 md:p-6 text-center">
@@ -84,7 +84,7 @@ export default function TestimonialSlider() {
                       ))}
                     </div>
                     <p className="text-sm italic text-gray-700 mb-2 leading-relaxed">
-                      "{t(testimonial.reviewKey, `Review from ${testimonial.name}`)}"
+                      "{testimonial.review}"
                     </p>
                     <span className="block text-xs text-gray-500 font-medium">
                       {testimonial.location}
