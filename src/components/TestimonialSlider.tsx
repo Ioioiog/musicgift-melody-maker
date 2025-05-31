@@ -70,7 +70,7 @@ export default function TestimonialSlider() {
                       src={testimonial.videoUrl}
                       allowFullScreen
                       loading="lazy"
-                      title={t("video_testimonial_title", `Video testimonial from ${testimonial.name}`, { name: testimonial.name })}
+                      title={t("video_testimonial_title", `Video testimonial from ${testimonial.name}`)}
                     />
                   </div>
                   <div className="p-4 md:p-6 text-center">
