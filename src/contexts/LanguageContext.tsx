@@ -1,8 +1,19 @@
+
 import React, { createContext, useContext, useState } from 'react';
 
+export type Language = "en" | "ro" | "fr" | "pl" | "de";
+
+export const languageNames: Record<Language, string> = {
+  en: "English",
+  ro: "Română", 
+  fr: "Français",
+  pl: "Polski",
+  de: "Deutsch"
+};
+
 interface LanguageContextType {
-  language: string;
-  setLanguage: (lang: string) => void;
+  currentLanguage: Language;
+  setCurrentLanguage: (lang: Language) => void;
   t: (key: string) => string;
 }
 
@@ -17,69 +28,40 @@ const translations = {
     howItWorks: "Cum funcționează",
     contact: "Contact",
     testimonials: "Testimoniale",
-    order: "Comandă",
+    orderNow: "Comandă acum",
     
-    // Premium Package translations
-    premiumPackage: "Pachet Premium",
-    premiumTagline: "Experiența completă cu distribuție oficială",
-    premiumDescription: "Pachetul nostru premium include totul: cântec original, video animat, distribuție oficială prin Mango Records și consultanță creativă detaliată.",
-    deliveryTime5To7Days: "5-7 zile lucrătoare",
+    // Hero Section
+    heroTitle: "Transformă Emoțiile Tale în Muzică",
+    heroSubtitle: "Cel mai frumos cadou: o melodie creată special pentru cineva drag.",
+    seePackages: "Vezi Pachetele",
+    listenToSamples: "Ascultă Mostre",
     
-    // Premium Package includes
-    originalSongFullProduction: "Cântec original cu producție completă",
-    animatedMusicVideo: "Video muzical animat profesional",
-    officialDistributionMangoRecords: "Distribuție oficială prin Mango Records",
-    detailedCreativeConsultation: "Consultanță creativă detaliată",
-    professionalMixingMastering: "Mixing și mastering profesional",
-    coverArtwork: "Artwork pentru copertă",
+    // Packages Section
+    chooseYourPackage: "Alege Pachetul Tău",
+    selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
+    loadingPackages: "Se încarcă pachetele...",
+    failedToLoadPackages: "Nu s-au putut încărca pachetele. Te rugăm să încerci din nou mai târziu.",
+    reload: "Reîncarcă",
+    mostPopular: "Cel mai popular",
+    whatsIncluded: "Ce include",
+    moreFeatures: "mai multe funcții",
+    learnMore: "Află mai multe",
+    viewAllPackages: "Vezi toate pachetele",
+    noPackagesAvailable: "Nu sunt pachete disponibile momentan.",
+    checkBackLater: "Te rugăm să revii mai târziu.",
     
-    // Premium step titles
-    targetAudienceDistribution: "Public țintă și distribuție",
-    confirmations: "Confirmări finale",
+    // CTA Section
+    readyToCreateSpecial: "Gata să Creezi Ceva Special?",
+    helpCreatePersonalized: "Să te ajutăm să creezi un cadou muzical personalizat care va fi prețuit pentru totdeauna.",
+    startYourOrder: "Începe Comanda",
     
-    // Premium field placeholders and labels
-    targetAudience: "Descrieți publicul țintă pentru această melodie",
-    distributionPlatforms: "Platformele de distribuție dorite",
-    artistName: "Numele artistului pentru distribuție",
-    acceptDistribution: "Accept distribuția oficială prin Mango Records",
-    acceptRights: "Accept termenii și condițiile pentru drepturile comerciale",
-    acceptContact: "Accept să fiu contactat pentru detalii suplimentare",
-    tempo: "Tempoul melodiei",
+    // Order related
+    orderSuccess: "Comanda Creată",
+    orderSuccessMessage: "Comanda ta a fost creată cu succes. Integrarea plății va fi disponibilă în curând.",
+    orderError: "Eroare Comandă",
+    orderErrorMessage: "A apărut o eroare la procesarea comenzii.",
     
-    // Distribution platform options
-    spotify: "Spotify",
-    youtube: "YouTube",
-    appleMusic: "Apple Music", 
-    instagram: "Instagram",
-    tiktok: "TikTok",
-    allPlatforms: "Toate platformele",
-    
-    // Tempo options
-    slow: "Lent",
-    medium: "Mediu",
-    fast: "Rapid",
-    variable: "Variabil",
-    
-    // Existing keys - keeping them as reference
-    personalPackage: "Pachet Personal",
-    personalTagline: "Perfect pentru momentele speciale",
-    personalDescription: "Un cadou muzical personalizat care va rămâne în inima destinatarului pentru totdeauna.",
-    deliveryTime7Days: "7 zile lucrătoare",
-    
-    // Package includes
-    originalSong: "Cântec original personalizat",
-    professionalRecording: "Înregistrare profesională",
-    basicMixing: "Mixing de bază",
-    mp3Delivery: "Livrare în format MP3",
-    
-    // Step titles
-    choosePackage: "Alegeți pachetul",
-    generalDetails: "Detalii generale",
-    storyAndEmotionalDetails: "Povestea și detaliile emoționale",
-    musicalPreferences: "Preferințe muzicale",
-    addons: "Servicii suplimentare",
-    
-    // Field labels and placeholders
+    // Form fields
     recipientName: "Numele destinatarului",
     relationship: "Relația cu destinatarul",
     occasion: "Ocazia",
@@ -95,7 +77,7 @@ const translations = {
     // Options
     partner: "Partener/ă",
     family: "Familie",
-    friend: "Prieten/ă", 
+    friend: "Prieten/ă",
     colleague: "Coleg/ă",
     other: "Altul",
     
@@ -128,97 +110,62 @@ const translations = {
     hiphop: "Hip-Hop",
     country: "Country",
     
-    // Addons
-    rushDelivery: "Livrare rapidă (3 zile)",
-    commercialRights: "Drepturi comerciale",
-    distributionMangoRecords: "Distribuție prin Mango Records",
-    customVideo: "Video personalizat",
-    audioMessageFromSender: "Mesaj audio de la expeditor",
-    extendedSong: "Cântec extins (4-5 minute)",
-    
-    // Tags
-    mostPopular: "Cel mai popular",
-    premium: "Premium",
-    
     // Common
     price: "Preț",
     ron: "RON",
     includes: "Include",
     selectPackage: "Selectează pachetul",
-    startOrder: "Începe comanda"
+    startOrder: "Începe comanda",
+    
+    // Footer
+    quickLinks: "Link-uri Rapide",
+    followUs: "Urmărește-ne",
+    allRightsReserved: "Toate drepturile rezervate",
+    madeWithLove: "Făcut cu ❤️ pentru muzică"
   },
   
   en: {
     // Navigation
     home: "Home",
     about: "About",
-    packages: "Packages", 
+    packages: "Packages",
     howItWorks: "How it Works",
     contact: "Contact",
     testimonials: "Testimonials",
-    order: "Order",
+    orderNow: "Order Now",
     
-    // Premium Package translations
-    premiumPackage: "Premium Package",
-    premiumTagline: "Complete experience with official distribution",
-    premiumDescription: "Our premium package includes everything: original song, animated video, official distribution through Mango Records and detailed creative consultation.",
-    deliveryTime5To7Days: "5-7 working days",
+    // Hero Section
+    heroTitle: "Transform Your Emotions into Music",
+    heroSubtitle: "The most beautiful gift: a song created especially for someone dear.",
+    seePackages: "See Packages",
+    listenToSamples: "Listen to Samples",
     
-    // Premium Package includes
-    originalSongFullProduction: "Original song with full production",
-    animatedMusicVideo: "Professional animated music video",
-    officialDistributionMangoRecords: "Official distribution through Mango Records",
-    detailedCreativeConsultation: "Detailed creative consultation",
-    professionalMixingMastering: "Professional mixing and mastering",
-    coverArtwork: "Cover artwork",
+    // Packages Section
+    chooseYourPackage: "Choose Your Package",
+    selectPerfectPackage: "Select the perfect music package that fits your needs and budget",
+    loadingPackages: "Loading packages...",
+    failedToLoadPackages: "Failed to load packages. Please try again later.",
+    reload: "Reload",
+    mostPopular: "Most Popular",
+    whatsIncluded: "What's Included",
+    moreFeatures: "more features",
+    learnMore: "Learn More",
+    viewAllPackages: "View All Packages",
+    noPackagesAvailable: "No packages available at the moment.",
+    checkBackLater: "Please check back later.",
     
-    // Premium step titles
-    targetAudienceDistribution: "Target audience and distribution",
-    confirmations: "Final confirmations",
+    // CTA Section
+    readyToCreateSpecial: "Ready to Create Something Special?",
+    helpCreatePersonalized: "Let us help you create a personalized musical gift that will be treasured forever.",
+    startYourOrder: "Start Your Order",
     
-    // Premium field placeholders and labels
-    targetAudience: "Describe the target audience for this song",
-    distributionPlatforms: "Desired distribution platforms", 
-    artistName: "Artist name for distribution",
-    acceptDistribution: "I accept official distribution through Mango Records",
-    acceptRights: "I accept the terms and conditions for commercial rights",
-    acceptContact: "I accept to be contacted for additional details",
-    tempo: "Song tempo",
+    // Order related
+    orderSuccess: "Order Created",
+    orderSuccessMessage: "Your order has been created successfully. Payment integration will be available soon.",
+    orderError: "Order Error",
+    orderErrorMessage: "There was an error processing your order.",
     
-    // Distribution platform options
-    spotify: "Spotify",
-    youtube: "YouTube", 
-    appleMusic: "Apple Music",
-    instagram: "Instagram",
-    tiktok: "TikTok",
-    allPlatforms: "All platforms",
-    
-    // Tempo options
-    slow: "Slow",
-    medium: "Medium",
-    fast: "Fast", 
-    variable: "Variable",
-    
-    // Existing keys - keeping them as reference
-    personalPackage: "Personal Package",
-    personalTagline: "Perfect for special moments",
-    personalDescription: "A personalized musical gift that will remain in the recipient's heart forever.",
-    deliveryTime7Days: "7 working days",
-    
-    // Package includes
-    originalSong: "Personalized original song",
-    professionalRecording: "Professional recording",
-    basicMixing: "Basic mixing",
-    mp3Delivery: "MP3 format delivery",
-    
-    // Step titles
-    choosePackage: "Choose package",
-    generalDetails: "General details",
-    storyAndEmotionalDetails: "Story and emotional details", 
-    musicalPreferences: "Musical preferences",
-    addons: "Additional services",
-    
-    // Field labels and placeholders
+    // Form fields
     recipientName: "Recipient's name",
     relationship: "Relationship with recipient",
     occasion: "Occasion",
@@ -235,7 +182,7 @@ const translations = {
     partner: "Partner",
     family: "Family",
     friend: "Friend",
-    colleague: "Colleague", 
+    colleague: "Colleague",
     other: "Other",
     
     birthday: "Birthday",
@@ -267,36 +214,159 @@ const translations = {
     hiphop: "Hip-Hop",
     country: "Country",
     
-    // Addons
-    rushDelivery: "Rush delivery (3 days)",
-    commercialRights: "Commercial rights",
-    distributionMangoRecords: "Distribution through Mango Records",
-    customVideo: "Custom video",
-    audioMessageFromSender: "Audio message from sender",
-    extendedSong: "Extended song (4-5 minutes)",
-    
-    // Tags
-    mostPopular: "Most popular",
-    premium: "Premium",
-    
     // Common
     price: "Price",
     ron: "RON",
     includes: "Includes",
     selectPackage: "Select package",
-    startOrder: "Start order"
+    startOrder: "Start order",
+    
+    // Footer
+    quickLinks: "Quick Links",
+    followUs: "Follow Us",
+    allRightsReserved: "All rights reserved",
+    madeWithLove: "Made with ❤️ for music"
+  },
+  
+  fr: {
+    // Navigation
+    home: "Accueil",
+    about: "À propos",
+    packages: "Forfaits",
+    howItWorks: "Comment ça marche",
+    contact: "Contact",
+    testimonials: "Témoignages",
+    orderNow: "Commander maintenant",
+    
+    // Hero Section
+    heroTitle: "Transformez vos émotions en musique",
+    heroSubtitle: "Le plus beau cadeau : une chanson créée spécialement pour quelqu'un de cher.",
+    seePackages: "Voir les forfaits",
+    listenToSamples: "Écouter les échantillons",
+    
+    // Packages Section
+    chooseYourPackage: "Choisissez votre forfait",
+    selectPerfectPackage: "Sélectionnez le forfait musical parfait qui correspond à vos besoins et votre budget",
+    loadingPackages: "Chargement des forfaits...",
+    failedToLoadPackages: "Échec du chargement des forfaits. Veuillez réessayer plus tard.",
+    reload: "Recharger",
+    mostPopular: "Le plus populaire",
+    whatsIncluded: "Ce qui est inclus",
+    moreFeatures: "plus de fonctionnalités",
+    learnMore: "En savoir plus",
+    viewAllPackages: "Voir tous les forfaits",
+    noPackagesAvailable: "Aucun forfait disponible pour le moment.",
+    checkBackLater: "Veuillez revenir plus tard.",
+    
+    // CTA Section
+    readyToCreateSpecial: "Prêt à créer quelque chose de spécial ?",
+    helpCreatePersonalized: "Laissez-nous vous aider à créer un cadeau musical personnalisé qui sera chéri pour toujours.",
+    startYourOrder: "Commencer votre commande",
+    
+    // Common
+    price: "Prix",
+    ron: "RON",
+    includes: "Inclut",
+    selectPackage: "Sélectionner le forfait",
+    startOrder: "Commencer la commande"
+  },
+  
+  pl: {
+    // Navigation
+    home: "Strona główna",
+    about: "O nas",
+    packages: "Pakiety",
+    howItWorks: "Jak to działa",
+    contact: "Kontakt",
+    testimonials: "Opinie",
+    orderNow: "Zamów teraz",
+    
+    // Hero Section
+    heroTitle: "Przekształć swoje emocje w muzykę",
+    heroSubtitle: "Najpiękniejszy prezent: piosenka stworzona specjalnie dla kogoś bliskiego.",
+    seePackages: "Zobacz pakiety",
+    listenToSamples: "Posłuchaj próbek",
+    
+    // Packages Section
+    chooseYourPackage: "Wybierz swój pakiet",
+    selectPerfectPackage: "Wybierz idealny pakiet muzyczny, który odpowiada Twoim potrzebom i budżetowi",
+    loadingPackages: "Ładowanie pakietów...",
+    failedToLoadPackages: "Nie udało się załadować pakietów. Spróbuj ponownie później.",
+    reload: "Przeładuj",
+    mostPopular: "Najpopularniejszy",
+    whatsIncluded: "Co zawiera",
+    moreFeatures: "więcej funkcji",
+    learnMore: "Dowiedz się więcej",
+    viewAllPackages: "Zobacz wszystkie pakiety",
+    noPackagesAvailable: "Brak dostępnych pakietów w tej chwili.",
+    checkBackLater: "Sprawdź ponownie później.",
+    
+    // CTA Section
+    readyToCreateSpecial: "Gotowy stworzyć coś wyjątkowego?",
+    helpCreatePersonalized: "Pozwól nam pomóc Ci stworzyć spersonalizowany prezent muzyczny, który będzie ceniony na zawsze.",
+    startYourOrder: "Rozpocznij zamówienie",
+    
+    // Common
+    price: "Cena",
+    ron: "RON",
+    includes: "Zawiera",
+    selectPackage: "Wybierz pakiet",
+    startOrder: "Rozpocznij zamówienie"
+  },
+  
+  de: {
+    // Navigation
+    home: "Startseite",
+    about: "Über uns",
+    packages: "Pakete",
+    howItWorks: "Wie es funktioniert",
+    contact: "Kontakt",
+    testimonials: "Testimonials",
+    orderNow: "Jetzt bestellen",
+    
+    // Hero Section
+    heroTitle: "Verwandle deine Emotionen in Musik",
+    heroSubtitle: "Das schönste Geschenk: ein Lied, das speziell für jemand Besonderen geschrieben wurde.",
+    seePackages: "Pakete ansehen",
+    listenToSamples: "Hörproben anhören",
+    
+    // Packages Section
+    chooseYourPackage: "Wähle dein Paket",
+    selectPerfectPackage: "Wähle das perfekte Musikpaket, das deinen Bedürfnissen und deinem Budget entspricht",
+    loadingPackages: "Pakete werden geladen...",
+    failedToLoadPackages: "Pakete konnten nicht geladen werden. Bitte versuche es später erneut.",
+    reload: "Neu laden",
+    mostPopular: "Am beliebtesten",
+    whatsIncluded: "Was enthalten ist",
+    moreFeatures: "weitere Funktionen",
+    learnMore: "Mehr erfahren",
+    viewAllPackages: "Alle Pakete anzeigen",
+    noPackagesAvailable: "Momentan sind keine Pakete verfügbar.",
+    checkBackLater: "Bitte schaue später wieder vorbei.",
+    
+    // CTA Section
+    readyToCreateSpecial: "Bereit, etwas Besonderes zu schaffen?",
+    helpCreatePersonalized: "Lass uns dir helfen, ein personalisiertes Musikgeschenk zu erstellen, das für immer geschätzt wird.",
+    startYourOrder: "Bestellung starten",
+    
+    // Common
+    price: "Preis",
+    ron: "RON",
+    includes: "Beinhaltet",
+    selectPackage: "Paket auswählen",
+    startOrder: "Bestellung starten"
   }
 };
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState('ro');
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('ro');
 
   const t = (key: string): string => {
-    return translations[language as keyof typeof translations]?.[key] || key;
+    return translations[currentLanguage]?.[key] || translations['en']?.[key] || key;
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ currentLanguage, setCurrentLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );
