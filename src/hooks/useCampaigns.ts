@@ -1,4 +1,3 @@
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -32,6 +31,15 @@ export interface CampaignMetrics {
   spam_reports: number;
   last_updated: string;
   created_at: string;
+}
+
+export interface BrevoList {
+  id: number;
+  name: string;
+  totalBlacklisted: number;
+  totalSubscribers: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const useCampaigns = () => {
@@ -68,6 +76,18 @@ export const useCampaignMetrics = (campaignId?: string) => {
   });
 };
 
+export const useBrevoLists = () => {
+  return useQuery({
+    queryKey: ['brevo-lists'],
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke('brevo-lists');
+
+      if (error) throw error;
+      return data as { lists: BrevoList[]; count: number };
+    },
+  });
+};
+
 export const useCreateCampaign = () => {
   const queryClient = useQueryClient();
 
@@ -86,12 +106,21 @@ export const useCreateCampaign = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['campaigns'] });
-      toast({
-        title: "Campaign created",
-        description: "Your campaign has been created successfully.",
-      });
+      
+      if (data.warning) {
+        toast({
+          title: "Campaign created with warning",
+          description: data.warning,
+          variant: "default",
+        });
+      } else {
+        toast({
+          title: "Campaign created",
+          description: "Your campaign has been created successfully.",
+        });
+      }
     },
     onError: (error: any) => {
       console.error('Campaign creation error:', error);
@@ -128,6 +157,51 @@ export const useSendCampaign = () => {
       console.error('Campaign send error:', error);
       toast({
         title: "Campaign send failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
+};
+
+export const useResyncCampaign = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ campaignId }: { campaignId: string }) => {
+      // Re-create the campaign in Brevo by calling campaign-create with existing data
+      const { data: campaign } = await supabase
+        .from('campaigns')
+        .select('*')
+        .eq('id', campaignId)
+        .single();
+
+      if (!campaign) throw new Error('Campaign not found');
+
+      const { data, error } = await supabase.functions.invoke('campaign-create', {
+        body: {
+          name: campaign.name + ' (Resynced)',
+          subject: campaign.subject,
+          content: campaign.content || '',
+          html_content: campaign.html_content || '',
+          target_list_ids: campaign.target_list_ids || []
+        }
+      });
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['campaigns'] });
+      toast({
+        title: "Campaign resynced",
+        description: "Campaign has been recreated in Brevo.",
+      });
+    },
+    onError: (error: any) => {
+      console.error('Campaign resync error:', error);
+      toast({
+        title: "Campaign resync failed",
         description: error.message || "Please try again later.",
         variant: "destructive",
       });

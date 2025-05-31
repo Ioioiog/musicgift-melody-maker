@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { name, subject, content = '', html_content = '', target_list_ids = [1] } = await req.json()
+    const { name, subject, content = '', html_content = '', target_list_ids = [] } = await req.json()
 
     if (!name || !subject) {
       return new Response(
@@ -50,9 +50,41 @@ serve(async (req) => {
     // Create campaign in Brevo
     const brevoApiKey = Deno.env.get('BREVO_API_KEY')
     let brevo_campaign_id = null
+    let brevoError = null
 
     if (brevoApiKey) {
       try {
+        // If no list IDs provided, try to get the "identified_contacts" list
+        let finalListIds = target_list_ids
+        
+        if (finalListIds.length === 0) {
+          // Fetch available lists from Brevo to find "identified_contacts"
+          const listsResponse = await fetch('https://api.brevo.com/v3/contacts/lists', {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'api-key': brevoApiKey
+            }
+          })
+
+          if (listsResponse.ok) {
+            const listsData = await listsResponse.json()
+            const identifiedContactsList = listsData.lists?.find((list: any) => 
+              list.name === 'identified_contacts' || list.name.toLowerCase().includes('identified')
+            )
+            
+            if (identifiedContactsList) {
+              finalListIds = [identifiedContactsList.id]
+              console.log('Found identified_contacts list with ID:', identifiedContactsList.id)
+            } else {
+              console.log('Available lists:', listsData.lists?.map((l: any) => ({ id: l.id, name: l.name })))
+              throw new Error('No "identified_contacts" list found. Please specify target_list_ids.')
+            }
+          } else {
+            throw new Error('Failed to fetch Brevo lists')
+          }
+        }
+
         const brevoResponse = await fetch('https://api.brevo.com/v3/emailCampaigns', {
           method: 'POST',
           headers: {
@@ -66,11 +98,11 @@ serve(async (req) => {
             type: 'classic',
             htmlContent: html_content || `<html><body>${content}</body></html>`,
             recipients: {
-              listIds: target_list_ids
+              listIds: finalListIds
             },
             sender: {
               name: 'MusicGift',
-              email: 'noreply@musicgift.com' // Replace with your sender email
+              email: 'noreply@musicgift.com'
             }
           })
         })
@@ -78,14 +110,16 @@ serve(async (req) => {
         if (brevoResponse.ok) {
           const brevoData = await brevoResponse.json()
           brevo_campaign_id = brevoData.id?.toString()
-          console.log('Successfully created Brevo campaign:', brevo_campaign_id)
+          console.log('Successfully created Brevo campaign:', brevo_campaign_id, 'with lists:', finalListIds)
         } else {
           const errorText = await brevoResponse.text()
           console.log('Brevo API error:', errorText)
+          brevoError = `Brevo API error: ${errorText}`
           // Continue even if Brevo fails - we still want to store locally
         }
-      } catch (brevoError) {
-        console.error('Brevo integration error:', brevoError)
+      } catch (error) {
+        console.error('Brevo integration error:', error)
+        brevoError = error.message
         // Continue even if Brevo fails
       }
     }
@@ -108,18 +142,25 @@ serve(async (req) => {
 
     if (error) throw error
 
+    const response = { 
+      message: 'Campaign created successfully',
+      campaign: data
+    }
+
+    // Add warning if Brevo failed
+    if (brevoError) {
+      response.warning = `Campaign created locally but Brevo sync failed: ${brevoError}`
+    }
+
     return new Response(
-      JSON.stringify({ 
-        message: 'Campaign created successfully',
-        campaign: data
-      }),
+      JSON.stringify(response),
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 
   } catch (error) {
     console.error('Campaign creation error:', error)
     return new Response(
-      JSON.stringify({ error: 'Failed to create campaign' }),
+      JSON.stringify({ error: 'Failed to create campaign: ' + error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }

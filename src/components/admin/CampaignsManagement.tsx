@@ -9,8 +9,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { useCampaigns, useCreateCampaign, useSendCampaign, useDeleteCampaign, useCampaignMetrics } from '@/hooks/useCampaigns';
-import { Plus, Send, Trash2, BarChart3, Mail, Users, Loader2, Eye } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useCampaigns, useCreateCampaign, useSendCampaign, useDeleteCampaign, useCampaignMetrics, useBrevoLists, useResyncCampaign } from '@/hooks/useCampaigns';
+import { Plus, Send, Trash2, BarChart3, Mail, Users, Loader2, Eye, RefreshCw, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from '@/hooks/use-toast';
 
@@ -20,15 +22,18 @@ const CampaignsManagement = () => {
     name: '',
     subject: '',
     content: '',
-    html_content: ''
+    html_content: '',
+    target_list_ids: [] as number[]
   });
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
 
   const { data: campaigns = [], isLoading, error } = useCampaigns();
+  const { data: brevoLists } = useBrevoLists();
   const { data: selectedCampaignMetrics } = useCampaignMetrics(selectedCampaignId || undefined);
   const createCampaign = useCreateCampaign();
   const sendCampaign = useSendCampaign();
   const deleteCampaign = useDeleteCampaign();
+  const resyncCampaign = useResyncCampaign();
 
   const handleCreateCampaign = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +49,13 @@ const CampaignsManagement = () => {
 
     createCampaign.mutate(newCampaign, {
       onSuccess: () => {
-        setNewCampaign({ name: '', subject: '', content: '', html_content: '' });
+        setNewCampaign({ 
+          name: '', 
+          subject: '', 
+          content: '', 
+          html_content: '', 
+          target_list_ids: [] 
+        });
         setIsCreateDialogOpen(false);
       }
     });
@@ -60,6 +71,21 @@ const CampaignsManagement = () => {
     if (window.confirm('Are you sure you want to delete this campaign? This action cannot be undone.')) {
       deleteCampaign.mutate(campaignId);
     }
+  };
+
+  const handleResyncCampaign = (campaignId: string) => {
+    if (window.confirm('This will create a new campaign in Brevo. Continue?')) {
+      resyncCampaign.mutate({ campaignId });
+    }
+  };
+
+  const handleListToggle = (listId: number, checked: boolean) => {
+    setNewCampaign(prev => ({
+      ...prev,
+      target_list_ids: checked 
+        ? [...prev.target_list_ids, listId]
+        : prev.target_list_ids.filter(id => id !== listId)
+    }));
   };
 
   const getStatusColor = (status: string) => {
@@ -168,7 +194,7 @@ const CampaignsManagement = () => {
                   Create Campaign
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Create New Campaign</DialogTitle>
                 </DialogHeader>
@@ -193,6 +219,28 @@ const CampaignsManagement = () => {
                       required
                     />
                   </div>
+                  
+                  {/* Target Lists Selection */}
+                  {brevoLists && brevoLists.lists.length > 0 && (
+                    <div>
+                      <Label>Target Lists (leave empty for auto-detection)</Label>
+                      <div className="mt-2 space-y-2 max-h-32 overflow-y-auto border rounded p-2">
+                        {brevoLists.lists.map((list) => (
+                          <div key={list.id} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`list-${list.id}`}
+                              checked={newCampaign.target_list_ids.includes(list.id)}
+                              onCheckedChange={(checked) => handleListToggle(list.id, checked as boolean)}
+                            />
+                            <Label htmlFor={`list-${list.id}`} className="text-sm">
+                              {list.name} ({list.totalSubscribers} subscribers)
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
                   <div>
                     <Label htmlFor="campaign-content">Plain Text Content</Label>
                     <Textarea
@@ -248,6 +296,7 @@ const CampaignsManagement = () => {
                       <TableHead>Name</TableHead>
                       <TableHead>Subject</TableHead>
                       <TableHead>Status</TableHead>
+                      <TableHead>Brevo Sync</TableHead>
                       <TableHead>Created</TableHead>
                       <TableHead>Sent</TableHead>
                       <TableHead>Actions</TableHead>
@@ -256,7 +305,7 @@ const CampaignsManagement = () => {
                   <TableBody>
                     {campaigns.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                        <TableCell colSpan={7} className="text-center py-8 text-gray-500">
                           No campaigns yet. Create your first campaign to get started.
                         </TableCell>
                       </TableRow>
@@ -270,6 +319,18 @@ const CampaignsManagement = () => {
                               {getStatusIcon(campaign.status)}
                               {campaign.status}
                             </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {campaign.brevo_campaign_id ? (
+                              <Badge variant="default" className="bg-green-100 text-green-800">
+                                Synced
+                              </Badge>
+                            ) : (
+                              <Badge variant="destructive" className="flex items-center gap-1 w-fit">
+                                <AlertTriangle className="w-3 h-3" />
+                                Not Synced
+                              </Badge>
+                            )}
                           </TableCell>
                           <TableCell>
                             {format(new Date(campaign.created_at), 'MMM dd, yyyy')}
@@ -288,6 +349,18 @@ const CampaignsManagement = () => {
                                   className="text-green-600 hover:text-green-700"
                                 >
                                   <Send className="w-4 h-4" />
+                                </Button>
+                              )}
+                              {!campaign.brevo_campaign_id && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleResyncCampaign(campaign.id)}
+                                  disabled={resyncCampaign.isPending}
+                                  className="text-orange-600 hover:text-orange-700"
+                                  title="Resync with Brevo"
+                                >
+                                  <RefreshCw className="w-4 h-4" />
                                 </Button>
                               )}
                               {campaign.status === 'sent' && (
