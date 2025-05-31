@@ -39,24 +39,24 @@ const Navigation = () => {
 
   return (
     <>
-      {/* Floating Logo - responsive positioning */}
-      <div className="fixed -top-4 left-2 sm:left-4 md:left-6 lg:left-10 z-[100]">
-        <Link to="/" className="block">
-          <img 
-            src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
-            alt="MusicGift Logo" 
-            className="h-40 w-24 sm:h-48 sm:w-28 md:h-56 md:w-36 lg:h-60 lg:w-40 transition-transform duration-100 ease-in-out hover:scale-105" 
-          />
-        </Link>
-      </div>
-
-      {/* Navigation Bar */}
+      {/* Navigation Bar with integrated logo */}
       <header className="fixed top-2 sm:top-4 w-full bg-white z-50 border-b border-gray-100">
         <div className="container mx-auto px-2 sm:px-4 md:px-6">
-          <div className="flex items-center justify-between h-16 sm:h-18 md:h-20">
+          <div className="flex items-center justify-between h-20 sm:h-24 md:h-28">
             
-            {/* Desktop Nav - centered, hidden on mobile */}
-            <nav className="hidden lg:flex items-center justify-center flex-1">
+            {/* Logo - now part of the navigation flow */}
+            <div className="flex-shrink-0 -mt-4 sm:-mt-6 md:-mt-8">
+              <Link to="/" className="block">
+                <img 
+                  src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" 
+                  alt="MusicGift Logo" 
+                  className="h-28 w-16 sm:h-32 sm:w-20 md:h-36 md:w-24 lg:h-40 lg:w-28 transition-transform duration-100 ease-in-out hover:scale-105" 
+                />
+              </Link>
+            </div>
+
+            {/* Desktop Nav - centered with proper logo spacing */}
+            <nav className="hidden lg:flex items-center justify-center flex-1 mx-8">
               <div className="flex items-center space-x-6 xl:space-x-8">
                 {navItems.map(item => (
                   <Link 
@@ -72,8 +72,8 @@ const Navigation = () => {
               </div>
             </nav>
 
-            {/* Right Side: Language + User Menu + Order - responsive */}
-            <div className="hidden lg:flex items-center space-x-3 xl:space-x-4 ml-auto">
+            {/* Right Side: Language + User Menu + Order */}
+            <div className="hidden lg:flex items-center space-x-3 xl:space-x-4 flex-shrink-0">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="text-sm font-medium bg-white hover:bg-gray-50">
@@ -103,9 +103,9 @@ const Navigation = () => {
               </Link>
             </div>
 
-            {/* Mobile Menu Toggle - adjusted for smaller screens */}
+            {/* Mobile Menu Toggle */}
             <button 
-              className="lg:hidden ml-auto p-2" 
+              className="lg:hidden flex-shrink-0 p-2" 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <div className="w-6 h-6 flex flex-col justify-center items-center">
@@ -116,7 +116,7 @@ const Navigation = () => {
             </button>
           </div>
 
-          {/* Mobile Menu - improved mobile layout */}
+          {/* Mobile Menu */}
           {isMenuOpen && (
             <div className="lg:hidden py-4 border-t bg-white">
               <nav className="flex flex-col space-y-3">
