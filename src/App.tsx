@@ -13,6 +13,7 @@ import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import AccessDenied from "./pages/AccessDenied";
+import NotFound from "./pages/NotFound";
 import { Toaster } from "@/components/ui/sonner";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
@@ -53,6 +54,7 @@ function App() {
                   <Route path="/payment/success" element={<PaymentSuccess />} />
                   <Route path="/payment/cancel" element={<PaymentCancel />} />
                   <Route path="/payment/error" element={<PaymentError />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
                 <Toaster />
               </div>

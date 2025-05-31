@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { usePackages } from "@/hooks/usePackageData";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Packages = () => {
   const { data: packages = [], isLoading } = usePackages();
+  const { t } = useLanguage();
 
   if (isLoading) {
     return (
@@ -16,7 +18,7 @@ const Packages = () => {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading packages...</p>
+            <p className="text-gray-600">{t('loadingPackages')}</p>
           </div>
         </div>
         <Footer />
@@ -31,9 +33,9 @@ const Packages = () => {
       {/* Page Title */}
       <section className="pt-24 pb-8 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-4 text-gray-900">Choose Your Package</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-4 text-gray-900">{t('selectYourPackage')}</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Select the perfect music package that fits your needs and budget
+            {t('packagesSubtitle')}
           </p>
         </div>
       </section>
@@ -52,7 +54,7 @@ const Packages = () => {
                 {pkg.tags?.some(tag => tag.tag_type === 'popular') && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
-                      Most Popular
+                      {t('mostPopular')}
                     </span>
                   </div>
                 )}
@@ -68,9 +70,9 @@ const Packages = () => {
                        pkg.value === 'instrumental' ? '🎶' : 
                        pkg.value === 'remix' ? '🔁' : '🎁'}
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{pkg.label_key}</h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{t(pkg.label_key)}</h3>
                     {pkg.tagline_key && (
-                      <p className="text-sm text-purple-600 font-medium mb-3">{pkg.tagline_key}</p>
+                      <p className="text-sm text-purple-600 font-medium mb-3">{t(pkg.tagline_key)}</p>
                     )}
                     
                     {/* Price */}
@@ -80,7 +82,7 @@ const Packages = () => {
                         <span className="text-lg text-gray-500 ml-1">RON</span>
                       </div>
                       {pkg.delivery_time_key && (
-                        <div className="text-sm text-gray-500 mt-1">{pkg.delivery_time_key}</div>
+                        <div className="text-sm text-gray-500 mt-1">{t(pkg.delivery_time_key)}</div>
                       )}
                     </div>
                   </div>
@@ -88,22 +90,25 @@ const Packages = () => {
                   {/* Description */}
                   {pkg.description_key && (
                     <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                      {pkg.description_key}
+                      {t(pkg.description_key)}
                     </p>
                   )}
 
                   {/* Features */}
                   {pkg.includes && pkg.includes.length > 0 && (
-                    <ul className="space-y-3 mb-8">
-                      {pkg.includes.map((include, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start">
-                          <span className="w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                            <span className="text-xs font-bold">✓</span>
-                          </span>
-                          <span className="text-sm text-gray-700">{include.include_key}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="mb-8">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3">{t('whatsIncluded')}</h4>
+                      <ul className="space-y-3">
+                        {pkg.includes.map((include, featureIndex) => (
+                          <li key={featureIndex} className="flex items-start">
+                            <span className="w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                              <span className="text-xs font-bold">✓</span>
+                            </span>
+                            <span className="text-sm text-gray-700">{t(include.include_key)}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
 
                   <Link to="/order">
@@ -115,7 +120,7 @@ const Packages = () => {
                       }`}
                       size="lg"
                     >
-                      Order Now
+                      {t('orderNow')}
                     </Button>
                   </Link>
                 </CardContent>
