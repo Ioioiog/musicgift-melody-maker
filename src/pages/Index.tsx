@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -7,8 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { usePackages } from "@/hooks/usePackageData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
-import { Play, Pause, Volume2 } from "lucide-react";
-import { useState, useRef } from "react";
+import { VolumeX, Volume2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 
 const Index = () => {
   const {
@@ -24,17 +23,22 @@ const Index = () => {
   } = useTranslation(); // Database translations for package content
 
   // Audio player state
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const toggleAudio = () => {
+  // Auto-play audio when component mounts
+  useEffect(() => {
     if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+      audioRef.current.play().catch(error => {
+        console.log("Auto-play failed:", error);
+      });
+    }
+  }, []);
+
+  const toggleMute = () => {
+    if (audioRef.current) {
+      audioRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
     }
   };
 
@@ -65,6 +69,24 @@ const Index = () => {
         <div className="absolute bottom-20 left-0 text-3xl animate-bounce delay-150 z-20">🎶</div>
         <div className="absolute top-32 left-10 text-2xl animate-bounce delay-300 z-20">♪</div>
         
+        {/* Mute/Unmute Button - Bottom Right */}
+        <div className="absolute bottom-8 right-8 z-30">
+          <Button
+            onClick={toggleMute}
+            size="icon"
+            className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md"
+          >
+            {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+          </Button>
+          <audio
+            ref={audioRef}
+            loop
+            muted={isMuted}
+          >
+            <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="audio/mp4" />
+          </audio>
+        </div>
+        
         {/* Hero Content - Left Aligned */}
         <div className="container mx-auto px-4 relative z-30 text-white">
           <div className="max-w-4xl space-y-6 animate-fade-in">
@@ -74,31 +96,6 @@ const Index = () => {
             <p className="text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl">
               {t('heroSubtitle') || 'A personalized song, created just for your special someone. The most unique gift they\'ll ever receive.'}
             </p>
-            
-            {/* Audio Player */}
-            <div className="flex mb-6">
-              <div className="bg-white/10 backdrop-blur-md rounded-full p-4 flex items-center space-x-4">
-                <Button
-                  onClick={toggleAudio}
-                  size="sm"
-                  className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0"
-                >
-                  {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                </Button>
-                <Volume2 className="w-4 h-4 text-white/80" />
-                <span className="text-sm text-white/80">
-                  {t('listenToSample') || 'Listen to Sample'}
-                </span>
-                <audio
-                  ref={audioRef}
-                  onEnded={() => setIsPlaying(false)}
-                  onPause={() => setIsPlaying(false)}
-                  onPlay={() => setIsPlaying(true)}
-                >
-                  <source src="/lovable-uploads/Jingle Musicgift master.mp4" type="audio/mp4" />
-                </audio>
-              </div>
-            </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/packages">
