@@ -45,7 +45,7 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section with Video Background */}
-      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[70vh] flex items-center overflow-hidden">
         {/* Video Background */}
         <video 
           className="absolute top-0 left-0 w-full h-full object-cover z-0" 
@@ -65,18 +65,18 @@ const Index = () => {
         <div className="absolute bottom-20 left-0 text-3xl animate-bounce delay-150 z-20">🎶</div>
         <div className="absolute top-32 left-10 text-2xl animate-bounce delay-300 z-20">♪</div>
         
-        {/* Hero Content */}
-        <div className="container mx-auto px-4 relative z-30 text-center text-white">
-          <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
+        {/* Hero Content - Left Aligned */}
+        <div className="container mx-auto px-4 relative z-30 text-white">
+          <div className="max-w-4xl space-y-6 animate-fade-in">
             <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
               {t('heroTitle') || 'Give the Gift of Music'}
             </h1>
-            <p className="text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
+            <p className="text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl">
               {t('heroSubtitle') || 'A personalized song, created just for your special someone. The most unique gift they\'ll ever receive.'}
             </p>
             
             {/* Audio Player */}
-            <div className="flex justify-center mb-6">
+            <div className="flex mb-6">
               <div className="bg-white/10 backdrop-blur-md rounded-full p-4 flex items-center space-x-4">
                 <Button
                   onClick={toggleAudio}
@@ -100,7 +100,7 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/packages">
                 <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-4 rounded-full text-lg backdrop-blur-sm">
                   {t('seePackages') || 'See Packages'}
