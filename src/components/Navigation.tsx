@@ -55,8 +55,8 @@ const Navigation = () => {
         <div className="container mx-auto px-2 sm:px-4 md:px-6">
           <div className="flex items-center justify-between h-16 sm:h-18 md:h-20">
             
-            {/* Desktop Nav - centered, hidden on mobile */}
-            <nav className="hidden lg:flex items-center justify-center flex-1">
+            {/* Desktop Nav - positioned after logo */}
+            <nav className="hidden lg:flex items-center ml-32 sm:ml-36 md:ml-48 lg:ml-56 xl:ml-60">
               <div className="flex items-center space-x-6 xl:space-x-8">
                 {navItems.map(item => (
                   <Link 
