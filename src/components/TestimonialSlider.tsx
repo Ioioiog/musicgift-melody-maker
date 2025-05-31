@@ -2,52 +2,54 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTranslation } from "@/hooks/useTranslations";
 
 const testimonials = [
   {
     name: "Ana M.",
     location: "București",
     videoUrl: "https://www.youtube.com/embed/Abk3kceKgP4",
-    review: "Cea mai frumoasă surpriză de aniversare.",
+    reviewKey: "testimonial_ana_review",
   },
   {
     name: "Nati G.",
     location: "Cluj-Napoca",
     videoUrl: "https://www.youtube.com/embed/guBBAoM-dZQ",
-    review: "Un cadou emoționant pentru ziua de naștere.",
+    reviewKey: "testimonial_nati_review",
   },
   {
     name: "TechCorp",
     location: "Timișoara",
     videoUrl: "https://www.youtube.com/embed/b_2CFQztmww",
-    review: "Jingle-ul perfect pentru brandul nostru.",
+    reviewKey: "testimonial_techcorp_review",
   },
   {
     name: "Maria P.",
     location: "Iași",
     videoUrl: "https://www.youtube.com/embed/b-NYGzKSBiE",
-    review: "Melodie perfectă pentru copilul nostru.",
+    reviewKey: "testimonial_maria_review",
   },
   {
     name: "Alex R.",
     location: "Brașov",
     videoUrl: "https://www.youtube.com/embed/aZMaYjnKLHA",
-    review: "Serviciu profesionist și rezultat excelent.",
+    reviewKey: "testimonial_alex_review",
   },
 ];
 
 export default function TestimonialSlider() {
   const isMobile = useIsMobile();
+  const { t } = useTranslation();
 
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-purple-800">
-            What Our Customers Say
+            {t("testimonials_title", "What Our Customers Say")}
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Real testimonials from satisfied customers who love their personalized songs
+            {t("testimonials_subtitle", "Real testimonials from satisfied customers who love their personalized songs")}
           </p>
         </div>
 
@@ -68,7 +70,7 @@ export default function TestimonialSlider() {
                       src={testimonial.videoUrl}
                       allowFullScreen
                       loading="lazy"
-                      title={`Video testimonial from ${testimonial.name}`}
+                      title={t("video_testimonial_title", `Video testimonial from ${testimonial.name}`, { name: testimonial.name })}
                     />
                   </div>
                   <div className="p-4 md:p-6 text-center">
@@ -82,7 +84,7 @@ export default function TestimonialSlider() {
                       ))}
                     </div>
                     <p className="text-sm italic text-gray-700 mb-2 leading-relaxed">
-                      "{testimonial.review}"
+                      "{t(testimonial.reviewKey, `Review from ${testimonial.name}`)}"
                     </p>
                     <span className="block text-xs text-gray-500 font-medium">
                       {testimonial.location}
