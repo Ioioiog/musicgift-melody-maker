@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import UserMenu from "@/components/UserMenu";
-
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,8 +43,8 @@ const Navigation = () => {
 
       {/* Navigation Bar */}
       <header className="fixed top-2 sm:top-4 w-full z-50 border-b border-white/10 bg-white/95 backdrop-blur-md shadow-lg">        
-        <div className="container mx-auto sm:px-6 md:px-8 my-0 relative z-10 py-0 px-[19px]">
-          <div className="flex items-center justify-between h-20 py-[12px]">
+        <div className="container mx-auto sm:px-6 md:px-8 my-0 relative z-10 px-[18px] py-[3px]">
+          <div className="flex items-center justify-between h-20 py-[4px]">
             
             {/* Logo - enhanced */}
             <div className="flex items-center">
@@ -127,5 +126,4 @@ const Navigation = () => {
       </header>
     </>;
 };
-
 export default Navigation;
