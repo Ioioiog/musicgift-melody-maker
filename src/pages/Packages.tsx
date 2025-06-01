@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,6 @@ import { useTranslation } from "@/hooks/useTranslations";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-
 const Packages = () => {
   const {
     data: packages = [],
@@ -21,7 +19,6 @@ const Packages = () => {
   const {
     t
   } = useLanguage();
-
   if (isLoading) {
     return <div className="min-h-screen">
         <Navigation />
@@ -34,37 +31,12 @@ const Packages = () => {
         <Footer />
       </div>;
   }
-
   return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section */}
       <section className="py-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <motion.h1 className="text-3xl md:text-5xl font-bold mb-4" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6
-        }}>
-            {t('packagesTitle')}
-          </motion.h1>
-          <motion.p className="text-lg md:text-xl opacity-90" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.2
-        }}>
-            {t('packagesSubtitle')}
-          </motion.p>
-        </div>
+        
       </section>
 
       {/* Enhanced Packages Section */}
@@ -156,5 +128,4 @@ const Packages = () => {
       <Footer />
     </div>;
 };
-
 export default Packages;
