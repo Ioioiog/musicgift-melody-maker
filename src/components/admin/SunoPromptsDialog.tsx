@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Copy, RefreshCw, Music, Edit, Save, Check, Globe, Database, Clock, User, AlertTriangle } from 'lucide-react';
+import { Copy, RefreshCw, Music, Edit, Save, Check, Globe, Database, Clock, User, AlertTriangle, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -62,6 +62,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
   const [savedPromptId, setSavedPromptId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [showingExisting, setShowingExisting] = useState(false);
+  const [isRegeneratingVersions, setIsRegeneratingVersions] = useState(false);
   const { toast } = useToast();
 
   const generateNewPrompts = async () => {
@@ -102,6 +103,49 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
       });
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const generateAdditionalVersions = async () => {
+    setIsRegeneratingVersions(true);
+    try {
+      console.log('Generating additional versions for order:', orderData?.id);
+      const { data, error } = await supabase.functions.invoke('generate-suno-prompts', {
+        body: { orderData }
+      });
+
+      if (error) throw error;
+
+      if (data.success && data.prompts) {
+        const newEditablePrompts = data.prompts.map((prompt: SunoPrompt) => ({
+          ...prompt,
+          isEditing: false,
+          editedTitle: prompt.title,
+          editedDescription: prompt.description,
+          editedLyrics: prompt.lyrics || '',
+          editedTechnicalTags: prompt.technicalTags || '',
+          editedPrompt: prompt.prompt
+        }));
+        
+        // Add new versions to existing prompts
+        setPrompts(prev => [...prev, ...newEditablePrompts]);
+        
+        toast({
+          title: 'Additional versions generated',
+          description: `Generated ${data.prompts.length} new versions. Original saved prompts remain unchanged.`
+        });
+      } else {
+        throw new Error('Failed to generate additional versions');
+      }
+    } catch (error) {
+      console.error('Error generating additional versions:', error);
+      toast({
+        title: 'Error generating additional versions',
+        description: 'Please try again later',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsRegeneratingVersions(false);
     }
   };
 
@@ -302,6 +346,16 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
     }
   };
 
+  const getVersionLabel = (index: number) => {
+    if (showingExisting && index < existingPrompts.length) {
+      return 'Saved';
+    }
+    if (showingExisting) {
+      return `New Version ${index - existingPrompts.length + 1}`;
+    }
+    return `Variation ${index + 1}`;
+  };
+
   // Updated useEffect to properly handle order changes
   React.useEffect(() => {
     if (isOpen && orderData?.id) {
@@ -314,6 +368,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
       setIsLoading(false);
       setIsGenerating(false);
       setIsSaving(false);
+      setIsRegeneratingVersions(false);
       
       // Load prompts for this specific order
       loadExistingPrompts();
@@ -353,7 +408,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
             {showingExisting && (
               <Badge className="bg-blue-100 text-blue-800 border-blue-300">
                 <Clock className="w-3 h-3 mr-1" />
-                Existing Prompts
+                {prompts.length > existingPrompts.length ? 'Mixed Versions' : 'Existing Prompts'}
               </Badge>
             )}
             {savedPromptId && (
@@ -377,7 +432,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                 <div className="space-y-1">
                   <p className="text-sm text-gray-600">
                     {showingExisting 
-                      ? `Showing existing saved prompts in ${getLanguage()}`
+                      ? `Showing ${existingPrompts.length} saved prompts${prompts.length > existingPrompts.length ? ` and ${prompts.length - existingPrompts.length} new versions` : ''} in ${getLanguage()}`
                       : `Generated prompts with complete lyrics in ${getLanguage()}, optimized for Suno.AI music generation`
                     }
                   </p>
@@ -389,36 +444,69 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                 </div>
                 <div className="flex space-x-2">
                   {showingExisting ? (
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={isGenerating}
-                        >
-                          <RefreshCw className="w-4 h-4 mr-2" />
-                          Generate New Prompts
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="flex items-center">
-                            <AlertTriangle className="w-5 h-5 text-orange-500 mr-2" />
-                            Generate New Prompts?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will generate completely new AI prompts and replace what you're currently viewing. 
-                            Your saved prompts in the database will remain unchanged. Are you sure you want to continue?
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={generateNewPrompts}>
-                            Generate New Prompts
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={isRegeneratingVersions}
+                          >
+                            <Plus className="w-4 h-4 mr-2" />
+                            {isRegeneratingVersions ? 'Generating...' : 'Generate 3 More Versions'}
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="flex items-center">
+                              <Plus className="w-5 h-5 text-blue-500 mr-2" />
+                              Generate Additional Versions?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This will generate 3 additional AI prompt versions while keeping your existing saved prompts unchanged. 
+                              You'll be able to compare all versions and choose which one to save as the optimized version.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={generateAdditionalVersions}>
+                              Generate More Versions
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                      
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={isGenerating}
+                          >
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Replace All with New
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="flex items-center">
+                              <AlertTriangle className="w-5 h-5 text-orange-500 mr-2" />
+                              Replace with Completely New Prompts?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This will generate completely new AI prompts and replace what you're currently viewing. 
+                              Your saved prompts in the database will remain unchanged. Are you sure you want to continue?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={generateNewPrompts}>
+                              Generate New Prompts
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </>
                   ) : (
                     <Button
                       variant="outline"
@@ -433,11 +521,25 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                 </div>
               </div>
 
+              {isRegeneratingVersions && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center space-x-2">
+                    <RefreshCw className="w-5 h-5 animate-spin text-blue-600" />
+                    <span className="font-medium text-blue-900">Generating 3 additional versions...</span>
+                  </div>
+                  <p className="text-sm text-blue-700 mt-1">
+                    Your existing saved prompts will remain unchanged. New versions will be added for comparison.
+                  </p>
+                </div>
+              )}
+
               {prompts.map((prompt, index) => {
                 const createdInfo = getCreatedByInfo(index);
+                const versionLabel = getVersionLabel(index);
+                const isNewVersion = showingExisting && index >= existingPrompts.length;
                 
                 return (
-                  <div key={index} className="border rounded-lg p-6 space-y-4">
+                  <div key={index} className={`border rounded-lg p-6 space-y-4 ${isNewVersion ? 'border-blue-300 bg-blue-50' : ''}`}>
                     <div className="flex justify-between items-start">
                       <div className="flex-1 space-y-2">
                         {prompt.isEditing ? (
@@ -463,9 +565,15 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                         )}
                       </div>
                       <div className="flex items-center space-x-2 ml-4">
-                        <Badge variant="outline">
-                          {showingExisting ? 'Saved' : 'Variation'} {index + 1}
+                        <Badge variant={isNewVersion ? "default" : "outline"} className={isNewVersion ? "bg-blue-100 text-blue-800 border-blue-300" : ""}>
+                          {versionLabel} {index + 1}
                         </Badge>
+                        {isNewVersion && (
+                          <Badge className="bg-green-100 text-green-800 border-green-300">
+                            <Plus className="w-3 h-3 mr-1" />
+                            New
+                          </Badge>
+                        )}
                         {createdInfo && (
                           <>
                             <Badge variant="outline" className="text-xs">
@@ -600,7 +708,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                       </div>
                     </div>
 
-                    {!prompt.isEditing && !showingExisting && (
+                    {!prompt.isEditing && (!showingExisting || isNewVersion) && (
                       <div className="flex justify-end pt-2">
                         <Button
                           variant={isPromptSavedInDatabase(index) ? "default" : "outline"}
@@ -621,7 +729,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                           ) : (
                             <>
                               <Database className="w-4 h-4 mr-2" />
-                              Save to Database
+                              Save as Optimized Version
                             </>
                           )}
                         </Button>
@@ -637,11 +745,11 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                   <ol className="text-sm text-blue-800 space-y-1">
                     <li>1. Review and edit the {showingExisting ? 'existing' : 'generated'} lyrics in <strong>{getLanguage()}</strong> as needed</li>
                     <li>2. Adjust technical tags to match your musical vision</li>
-                    {!showingExisting && <li>3. Save your preferred optimized version to the database</li>}
-                    <li>{showingExisting ? '3' : '4'}. Copy the complete prompt (lyrics + technical tags)</li>
-                    <li>{showingExisting ? '4' : '5'}. Go to Suno.AI and create a new song</li>
-                    <li>{showingExisting ? '5' : '6'}. Paste the complete prompt in Suno.AI</li>
-                    <li>{showingExisting ? '6' : '7'}. Generate your personalized multilingual song</li>
+                    {(!showingExisting || prompts.length > existingPrompts.length) && <li>3. Save your preferred version as the optimized version to the database</li>}
+                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '4' : '3'}. Copy the complete prompt (lyrics + technical tags)</li>
+                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '5' : '4'}. Go to Suno.AI and create a new song</li>
+                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '6' : '5'}. Paste the complete prompt in Suno.AI</li>
+                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '7' : '6'}. Generate your personalized multilingual song</li>
                   </ol>
                 </div>
               )}
