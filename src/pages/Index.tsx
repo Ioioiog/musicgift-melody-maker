@@ -1,5 +1,7 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import ScenarioHero from "@/components/ScenarioHero";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -55,6 +57,9 @@ const Index = () => {
   
   return <div className="min-h-screen">
       <Navigation />
+      
+      {/* ScenarioHero Banner */}
+      <ScenarioHero />
       
       {/* Hero Section with Video Background - Mobile Optimized */}
       <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-center overflow-hidden">
