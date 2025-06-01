@@ -221,6 +221,129 @@ const OrdersManagement = () => {
                         <p><strong>Occasion:</strong> {formData?.occasion || 'N/A'}</p>
                       </div>
                     </div>
+
+                    {/* Collapsible Saved Prompts Section */}
+                    {hasPrompts && savedPrompt && (
+                      <Collapsible 
+                        open={isPromptCardOpen} 
+                        onOpenChange={() => togglePromptCard(order.id)}
+                        className="mt-4"
+                      >
+                        <CollapsibleTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="w-full justify-between bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100"
+                          >
+                            <span className="flex items-center">
+                              <Database className="w-4 h-4 mr-2" />
+                              View Saved Prompts Details
+                            </span>
+                            {isPromptCardOpen ? (
+                              <ChevronUp className="w-4 h-4" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-3 space-y-3 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                          {/* Title */}
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-purple-900 mb-1">Title</h4>
+                              <p className="text-sm text-gray-700">{savedPrompt.title}</p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => copyToClipboard(savedPrompt.title, 'Title')}
+                              className="ml-2 h-8 w-8 p-0"
+                            >
+                              <Copy className="w-3 h-3" />
+                            </Button>
+                          </div>
+
+                          {/* Description */}
+                          {savedPrompt.description && (
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <h4 className="font-semibold text-purple-900 mb-1">Description</h4>
+                                <p className="text-sm text-gray-700">{savedPrompt.description}</p>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => copyToClipboard(savedPrompt.description, 'Description')}
+                                className="ml-2 h-8 w-8 p-0"
+                              >
+                                <Copy className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          )}
+
+                          {/* Lyrics Preview */}
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-purple-900 mb-1">Lyrics Preview</h4>
+                              <p className="text-sm text-gray-700">
+                                {savedPrompt.lyrics.length > 100 
+                                  ? `${savedPrompt.lyrics.slice(0, 100)}...` 
+                                  : savedPrompt.lyrics
+                                }
+                              </p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => copyToClipboard(savedPrompt.lyrics, 'Full Lyrics')}
+                              className="ml-2 h-8 w-8 p-0"
+                            >
+                              <Copy className="w-3 h-3" />
+                            </Button>
+                          </div>
+
+                          {/* Technical Tags */}
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-purple-900 mb-1">Technical Tags</h4>
+                              <p className="text-sm text-gray-700">{savedPrompt.technical_tags}</p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => copyToClipboard(savedPrompt.technical_tags, 'Technical Tags')}
+                              className="ml-2 h-8 w-8 p-0"
+                            >
+                              <Copy className="w-3 h-3" />
+                            </Button>
+                          </div>
+
+                          {/* Full Prompt */}
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-purple-900 mb-1">Complete Prompt</h4>
+                              <p className="text-sm text-gray-700 bg-white p-2 rounded border">
+                                {savedPrompt.prompt}
+                              </p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => copyToClipboard(savedPrompt.prompt, 'Complete Prompt')}
+                              className="ml-2 h-8 w-8 p-0"
+                            >
+                              <Copy className="w-3 h-3" />
+                            </Button>
+                          </div>
+
+                          {/* Metadata */}
+                          <div className="text-xs text-gray-500 pt-2 border-t border-purple-200">
+                            <p>Language: {savedPrompt.language}</p>
+                            <p>Created: {new Date(savedPrompt.created_at).toLocaleString()}</p>
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    )}
                   </div>
 
                   <div className="flex flex-col space-y-2">
