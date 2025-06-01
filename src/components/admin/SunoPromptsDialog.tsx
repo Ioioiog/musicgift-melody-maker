@@ -416,41 +416,45 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
-            <Music className="w-5 h-5 text-purple-600" />
-            <span>Suno.AI Song Prompts with Lyrics - Order #{orderData?.id?.slice(0, 8)}</span>
-            <Badge variant="outline" className="ml-2">
-              <Globe className="w-3 h-3 mr-1" />
-              {getLanguage()}
-            </Badge>
-            {showingExisting && (
-              <Badge className="bg-blue-100 text-blue-800 border-blue-300">
-                <Clock className="w-3 h-3 mr-1" />
-                {prompts.length > existingPrompts.length ? 'Mixed Versions' : 'Existing Prompts'}
+      <DialogContent className="w-[95vw] max-w-5xl h-[90vh] max-h-[90vh] overflow-hidden flex flex-col p-3 sm:p-6">
+        <DialogHeader className="flex-shrink-0 pb-3 sm:pb-4">
+          <DialogTitle className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 text-lg sm:text-xl">
+            <div className="flex items-center space-x-2">
+              <Music className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
+              <span className="text-sm sm:text-base">Suno.AI Song Prompts - Order #{orderData?.id?.slice(0, 8)}</span>
+            </div>
+            <div className="flex flex-wrap gap-1 sm:gap-2">
+              <Badge variant="outline" className="text-xs">
+                <Globe className="w-3 h-3 mr-1" />
+                {getLanguage()}
               </Badge>
-            )}
-            {savedPromptId && (
-              <Badge className="bg-green-100 text-green-800 border-green-300">
-                <Database className="w-3 h-3 mr-1" />
-                Saved in DB
-              </Badge>
-            )}
+              {showingExisting && (
+                <Badge className="bg-blue-100 text-blue-800 border-blue-300 text-xs">
+                  <Clock className="w-3 h-3 mr-1" />
+                  {prompts.length > existingPrompts.length ? 'Mixed Versions' : 'Existing Prompts'}
+                </Badge>
+              )}
+              {savedPromptId && (
+                <Badge className="bg-green-100 text-green-800 border-green-300 text-xs">
+                  <Database className="w-3 h-3 mr-1" />
+                  Saved in DB
+                </Badge>
+              )}
+            </div>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="flex-1 overflow-y-auto space-y-4 sm:space-y-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <RefreshCw className="w-6 h-6 animate-spin mr-2" />
-              <span>Loading prompts...</span>
+              <span className="text-sm sm:text-base">Loading prompts...</span>
             </div>
           ) : (
             <>
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:justify-between sm:items-start">
                 <div className="space-y-1">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs sm:text-sm text-gray-600">
                     {showingExisting 
                       ? `Showing ${existingPrompts.length} saved prompts${prompts.length > existingPrompts.length ? ` and ${prompts.length - existingPrompts.length} new versions` : ''} in ${getLanguage()}`
                       : `Generated prompts with complete lyrics in ${getLanguage()}, optimized for Suno.AI music generation`
@@ -462,13 +466,14 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                     </p>
                   )}
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                   {prompts.length > 1 && (
                     <>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={expandAllPrompts}
+                        className="text-xs sm:text-sm"
                       >
                         Expand All
                       </Button>
@@ -476,6 +481,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                         variant="outline"
                         size="sm"
                         onClick={collapseAllPrompts}
+                        className="text-xs sm:text-sm"
                       >
                         Collapse All
                       </Button>
@@ -489,25 +495,26 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                             variant="outline"
                             size="sm"
                             disabled={isRegeneratingVersions}
+                            className="text-xs sm:text-sm"
                           >
-                            <Plus className="w-4 h-4 mr-2" />
-                            {isRegeneratingVersions ? 'Generating...' : 'Generate 3 More Versions'}
+                            <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                            {isRegeneratingVersions ? 'Generating...' : 'Generate 3 More'}
                           </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
+                        <AlertDialogContent className="w-[90vw] max-w-md">
                           <AlertDialogHeader>
-                            <AlertDialogTitle className="flex items-center">
-                              <Plus className="w-5 h-5 text-blue-500 mr-2" />
+                            <AlertDialogTitle className="flex items-center text-sm sm:text-base">
+                              <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 mr-2" />
                               Generate Additional Versions?
                             </AlertDialogTitle>
-                            <AlertDialogDescription>
+                            <AlertDialogDescription className="text-xs sm:text-sm">
                               This will generate 3 additional AI prompt versions while keeping your existing saved prompts unchanged. 
                               You'll be able to compare all versions and choose which one to save as the optimized version.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={generateAdditionalVersions}>
+                          <AlertDialogFooter className="flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                            <AlertDialogCancel className="w-full sm:w-auto">Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={generateAdditionalVersions} className="w-full sm:w-auto">
                               Generate More Versions
                             </AlertDialogAction>
                           </AlertDialogFooter>
@@ -520,25 +527,26 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                             variant="outline"
                             size="sm"
                             disabled={isGenerating}
+                            className="text-xs sm:text-sm"
                           >
-                            <RefreshCw className="w-4 h-4 mr-2" />
-                            Replace All with New
+                            <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                            Replace All
                           </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
+                        <AlertDialogContent className="w-[90vw] max-w-md">
                           <AlertDialogHeader>
-                            <AlertDialogTitle className="flex items-center">
-                              <AlertTriangle className="w-5 h-5 text-orange-500 mr-2" />
-                              Replace with Completely New Prompts?
+                            <AlertDialogTitle className="flex items-center text-sm sm:text-base">
+                              <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500 mr-2" />
+                              Replace with New Prompts?
                             </AlertDialogTitle>
-                            <AlertDialogDescription>
+                            <AlertDialogDescription className="text-xs sm:text-sm">
                               This will generate completely new AI prompts and replace what you're currently viewing. 
                               Your saved prompts in the database will remain unchanged. Are you sure you want to continue?
                             </AlertDialogDescription>
                           </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={generateNewPrompts}>
+                          <AlertDialogFooter className="flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                            <AlertDialogCancel className="w-full sm:w-auto">Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={generateNewPrompts} className="w-full sm:w-auto">
                               Generate New Prompts
                             </AlertDialogAction>
                           </AlertDialogFooter>
@@ -551,8 +559,9 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                       size="sm"
                       onClick={generateNewPrompts}
                       disabled={isGenerating}
+                      className="text-xs sm:text-sm"
                     >
-                      <RefreshCw className="w-4 h-4 mr-2" />
+                      <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                       {isGenerating ? 'Generating...' : 'Regenerate'}
                     </Button>
                   )}
@@ -560,12 +569,12 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
               </div>
 
               {isRegeneratingVersions && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center space-x-2">
-                    <RefreshCw className="w-5 h-5 animate-spin text-blue-600" />
-                    <span className="font-medium text-blue-900">Generating 3 additional versions...</span>
+                    <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-blue-600" />
+                    <span className="font-medium text-blue-900 text-sm sm:text-base">Generating 3 additional versions...</span>
                   </div>
-                  <p className="text-sm text-blue-700 mt-1">
+                  <p className="text-xs sm:text-sm text-blue-700 mt-1">
                     Your existing saved prompts will remain unchanged. New versions will be added for comparison.
                   </p>
                 </div>
@@ -585,48 +594,50 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                   >
                     <div className={`border rounded-lg ${isNewVersion ? 'border-blue-300 bg-blue-50' : ''}`}>
                       <CollapsibleTrigger asChild>
-                        <div className="p-4 cursor-pointer hover:bg-gray-50 transition-colors">
-                          <div className="flex justify-between items-center">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-3">
-                                <h3 className="font-semibold text-lg">{prompt.title}</h3>
-                                <Badge variant={isNewVersion ? "default" : "outline"} className={isNewVersion ? "bg-blue-100 text-blue-800 border-blue-300" : ""}>
-                                  {versionLabel} {index + 1}
-                                </Badge>
-                                {isNewVersion && (
-                                  <Badge className="bg-green-100 text-green-800 border-green-300">
-                                    <Plus className="w-3 h-3 mr-1" />
-                                    New
+                        <div className="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 transition-colors">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:items-center sm:space-x-3">
+                                <h3 className="font-semibold text-base sm:text-lg truncate">{prompt.title}</h3>
+                                <div className="flex flex-wrap gap-1 sm:gap-2">
+                                  <Badge variant={isNewVersion ? "default" : "outline"} className={`text-xs ${isNewVersion ? "bg-blue-100 text-blue-800 border-blue-300" : ""}`}>
+                                    {versionLabel} {index + 1}
                                   </Badge>
-                                )}
-                                {createdInfo && (
-                                  <>
-                                    <Badge variant="outline" className="text-xs">
-                                      <Clock className="w-3 h-3 mr-1" />
-                                      {createdInfo.createdAt}
+                                  {isNewVersion && (
+                                    <Badge className="bg-green-100 text-green-800 border-green-300 text-xs">
+                                      <Plus className="w-3 h-3 mr-1" />
+                                      New
                                     </Badge>
-                                    {createdInfo.isOptimized && (
-                                      <Badge className="bg-green-100 text-green-800 border-green-300">
-                                        <Check className="w-3 h-3 mr-1" />
-                                        Optimized
+                                  )}
+                                  {createdInfo && (
+                                    <>
+                                      <Badge variant="outline" className="text-xs">
+                                        <Clock className="w-3 h-3 mr-1" />
+                                        {createdInfo.createdAt}
                                       </Badge>
-                                    )}
-                                  </>
-                                )}
-                                {isPromptSavedInDatabase(index) && !showingExisting && (
-                                  <Badge className="bg-green-100 text-green-800 border-green-300">
-                                    <Check className="w-3 h-3 mr-1" />
-                                    Saved in DB
-                                  </Badge>
-                                )}
+                                      {createdInfo.isOptimized && (
+                                        <Badge className="bg-green-100 text-green-800 border-green-300 text-xs">
+                                          <Check className="w-3 h-3 mr-1" />
+                                          Optimized
+                                        </Badge>
+                                      )}
+                                    </>
+                                  )}
+                                  {isPromptSavedInDatabase(index) && !showingExisting && (
+                                    <Badge className="bg-green-100 text-green-800 border-green-300 text-xs">
+                                      <Check className="w-3 h-3 mr-1" />
+                                      Saved in DB
+                                    </Badge>
+                                  )}
+                                </div>
                               </div>
-                              <p className="text-sm text-gray-600 mt-1">{prompt.description}</p>
+                              <p className="text-xs sm:text-sm text-gray-600 mt-1 line-clamp-2">{prompt.description}</p>
                             </div>
-                            <div className="flex items-center space-x-2 ml-4">
+                            <div className="flex items-center space-x-2 ml-2 flex-shrink-0">
                               {isExpanded ? (
-                                <ChevronUp className="w-5 h-5 text-gray-400" />
+                                <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                               ) : (
-                                <ChevronDown className="w-5 h-5 text-gray-400" />
+                                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                               )}
                             </div>
                           </div>
@@ -634,19 +645,19 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                       </CollapsibleTrigger>
 
                       <CollapsibleContent>
-                        <div className="px-4 pb-4 space-y-4">
+                        <div className="px-3 sm:px-4 pb-3 sm:pb-4 space-y-3 sm:space-y-4">
                           {prompt.isEditing && (
                             <div className="space-y-2">
                               <Input
                                 value={prompt.editedTitle}
                                 onChange={(e) => updateEditedField(index, 'editedTitle', e.target.value)}
-                                className="font-semibold text-lg"
+                                className="font-semibold text-sm sm:text-lg"
                                 placeholder="Song title"
                               />
                               <Input
                                 value={prompt.editedDescription}
                                 onChange={(e) => updateEditedField(index, 'editedDescription', e.target.value)}
-                                className="text-sm"
+                                className="text-xs sm:text-sm"
                                 placeholder="Description"
                               />
                             </div>
@@ -654,20 +665,20 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
 
                           {/* Lyrics Section */}
                           <div className="space-y-2">
-                            <h4 className="font-semibold text-sm text-purple-700 flex items-center">
-                              <Music className="w-4 h-4 mr-1" />
+                            <h4 className="font-semibold text-xs sm:text-sm text-purple-700 flex items-center">
+                              <Music className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                               Song Lyrics ({getLanguage()})
                             </h4>
-                            <div className="bg-purple-50 rounded-md p-4 relative">
+                            <div className="bg-purple-50 rounded-md p-3 sm:p-4 relative">
                               {prompt.isEditing ? (
                                 <Textarea
                                   value={prompt.editedLyrics}
                                   onChange={(e) => updateEditedField(index, 'editedLyrics', e.target.value)}
-                                  className="min-h-[150px] font-mono text-sm"
+                                  className="min-h-[120px] sm:min-h-[150px] font-mono text-xs sm:text-sm"
                                   placeholder="Complete song lyrics..."
                                 />
                               ) : (
-                                <pre className="text-sm whitespace-pre-wrap font-mono leading-relaxed">
+                                <pre className="text-xs sm:text-sm whitespace-pre-wrap font-mono leading-relaxed pr-8">
                                   {prompt.lyrics}
                                 </pre>
                               )}
@@ -676,10 +687,10 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  className="absolute top-2 right-2"
+                                  className="absolute top-2 right-2 h-6 w-6 sm:h-8 sm:w-8 p-1"
                                   onClick={() => copyToClipboard(prompt.lyrics)}
                                 >
-                                  <Copy className="w-4 h-4" />
+                                  <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
                                 </Button>
                               )}
                             </div>
@@ -687,17 +698,17 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
 
                           {/* Technical Tags Section */}
                           <div className="space-y-2">
-                            <h4 className="font-semibold text-sm text-blue-700">Technical Tags</h4>
+                            <h4 className="font-semibold text-xs sm:text-sm text-blue-700">Technical Tags</h4>
                             <div className="bg-blue-50 rounded-md p-3 relative">
                               {prompt.isEditing ? (
                                 <Textarea
                                   value={prompt.editedTechnicalTags}
                                   onChange={(e) => updateEditedField(index, 'editedTechnicalTags', e.target.value)}
-                                  className="min-h-[80px] font-mono text-sm"
+                                  className="min-h-[60px] sm:min-h-[80px] font-mono text-xs sm:text-sm"
                                   placeholder="Suno.AI technical tags..."
                                 />
                               ) : (
-                                <pre className="text-sm whitespace-pre-wrap font-mono">
+                                <pre className="text-xs sm:text-sm whitespace-pre-wrap font-mono pr-8">
                                   {prompt.technicalTags}
                                 </pre>
                               )}
@@ -706,10 +717,10 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  className="absolute top-2 right-2"
+                                  className="absolute top-2 right-2 h-6 w-6 sm:h-8 sm:w-8 p-1"
                                   onClick={() => copyToClipboard(prompt.technicalTags)}
                                 >
-                                  <Copy className="w-4 h-4" />
+                                  <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
                                 </Button>
                               )}
                             </div>
@@ -717,17 +728,17 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
 
                           {/* Complete Prompt Section */}
                           <div className="space-y-2">
-                            <h4 className="font-semibold text-sm text-gray-700">Complete Suno.AI Prompt</h4>
-                            <div className="bg-gray-50 rounded-md p-4 relative">
+                            <h4 className="font-semibold text-xs sm:text-sm text-gray-700">Complete Suno.AI Prompt</h4>
+                            <div className="bg-gray-50 rounded-md p-3 sm:p-4 relative">
                               {prompt.isEditing ? (
                                 <Textarea
                                   value={prompt.editedPrompt}
                                   onChange={(e) => updateEditedField(index, 'editedPrompt', e.target.value)}
-                                  className="min-h-[120px] font-mono text-sm"
+                                  className="min-h-[100px] sm:min-h-[120px] font-mono text-xs sm:text-sm"
                                   placeholder="Complete Suno.AI prompt combining lyrics and technical tags..."
                                 />
                               ) : (
-                                <pre className="text-sm whitespace-pre-wrap font-mono">
+                                <pre className="text-xs sm:text-sm whitespace-pre-wrap font-mono pr-16 sm:pr-20">
                                   {prompt.prompt}
                                 </pre>
                               )}
@@ -738,8 +749,9 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => saveEdit(index)}
+                                    className="h-6 w-6 sm:h-8 sm:w-8 p-1"
                                   >
-                                    <Save className="w-4 h-4" />
+                                    <Save className="w-3 h-3 sm:w-4 sm:h-4" />
                                   </Button>
                                 ) : (
                                   <>
@@ -747,15 +759,17 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                                       variant="ghost"
                                       size="sm"
                                       onClick={() => toggleEdit(index)}
+                                      className="h-6 w-6 sm:h-8 sm:w-8 p-1"
                                     >
-                                      <Edit className="w-4 h-4" />
+                                      <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                                     </Button>
                                     <Button
                                       variant="ghost"
                                       size="sm"
                                       onClick={() => copyToClipboard(prompt.prompt)}
+                                      className="h-6 w-6 sm:h-8 sm:w-8 p-1"
                                     >
-                                      <Copy className="w-4 h-4" />
+                                      <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
                                     </Button>
                                   </>
                                 )}
@@ -770,20 +784,21 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                                 size="sm"
                                 onClick={() => savePromptToDatabase(index)}
                                 disabled={isSaving}
+                                className="text-xs sm:text-sm"
                               >
                                 {isSaving ? (
                                   <>
-                                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                                    <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 animate-spin" />
                                     Saving...
                                   </>
                                 ) : isPromptSavedInDatabase(index) ? (
                                   <>
-                                    <Database className="w-4 h-4 mr-2" />
+                                    <Database className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                                     Saved to Database
                                   </>
                                 ) : (
                                   <>
-                                    <Database className="w-4 h-4 mr-2" />
+                                    <Database className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                                     Save as Optimized Version
                                   </>
                                 )}
@@ -798,9 +813,9 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
               })}
 
               {prompts.length > 0 && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-900 mb-2">How to use these prompts with lyrics:</h4>
-                  <ol className="text-sm text-blue-800 space-y-1">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                  <h4 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base">How to use these prompts with lyrics:</h4>
+                  <ol className="text-xs sm:text-sm text-blue-800 space-y-1">
                     <li>1. Click on any prompt above to expand and view its details</li>
                     <li>2. Review and edit the {showingExisting ? 'existing' : 'generated'} lyrics in <strong>{getLanguage()}</strong> as needed</li>
                     <li>3. Adjust technical tags to match your musical vision</li>
