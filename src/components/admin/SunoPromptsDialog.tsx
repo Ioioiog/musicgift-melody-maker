@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -68,6 +67,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
   const generateNewPrompts = async () => {
     setIsGenerating(true);
     try {
+      console.log('Generating new prompts for order:', orderData?.id);
       const { data, error } = await supabase.functions.invoke('generate-suno-prompts', {
         body: { orderData }
       });
@@ -106,10 +106,14 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
   };
 
   const loadExistingPrompts = async () => {
-    if (!orderData?.id) return;
+    if (!orderData?.id) {
+      console.log('No order ID provided, cannot load prompts');
+      return;
+    }
 
     setIsLoading(true);
     try {
+      console.log('Loading existing prompts for order:', orderData.id);
       const { data: existingPromptsData, error } = await supabase
         .from('suno_prompts')
         .select('*')
@@ -119,6 +123,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
       if (error) throw error;
 
       if (existingPromptsData && existingPromptsData.length > 0) {
+        console.log('Found existing prompts:', existingPromptsData.length);
         setExistingPrompts(existingPromptsData);
         
         // Convert existing prompts to editable format for display
@@ -150,6 +155,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
           description: `Found ${existingPromptsData.length} saved prompt${existingPromptsData.length > 1 ? 's' : ''}`
         });
       } else {
+        console.log('No existing prompts found, generating new ones');
         // No existing prompts, generate new ones
         await generateNewPrompts();
       }
@@ -296,11 +302,23 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
     }
   };
 
+  // Updated useEffect to properly handle order changes
   React.useEffect(() => {
-    if (isOpen && prompts.length === 0) {
+    if (isOpen && orderData?.id) {
+      console.log('Dialog opened for order:', orderData.id);
+      // Reset all state when order changes
+      setPrompts([]);
+      setExistingPrompts([]);
+      setSavedPromptId(null);
+      setShowingExisting(false);
+      setIsLoading(false);
+      setIsGenerating(false);
+      setIsSaving(false);
+      
+      // Load prompts for this specific order
       loadExistingPrompts();
     }
-  }, [isOpen]);
+  }, [isOpen, orderData?.id]);
 
   const getLanguage = () => {
     return orderData?.form_data?.language || 'English';
