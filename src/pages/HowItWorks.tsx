@@ -3,18 +3,17 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { CheckCircle, ArrowRight, ArrowLeft, Play, Pause, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const HowItWorks = () => {
   const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-  const [showDetails, setShowDetails] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
-  const steps = [
+  const steps = useMemo(() => [
     {
       title: t('choosePackage'),
       description: t('choosePackageDesc'),
@@ -39,44 +38,52 @@ const HowItWorks = () => {
       details: t('deliverDelightDetails') || 'Receive your custom song and watch as it brings joy and creates lasting memories.',
       icon: '✨'
     }
-  ];
+  ], [t]);
 
-  const progress = ((currentStep + 1) / steps.length) * 100;
+  const progress = useMemo(() => ((currentStep + 1) / steps.length) * 100, [currentStep, steps.length]);
 
+  const handleNextStep = useCallback(() => {
+    setCurrentStep(prev => {
+      const nextStep = (prev + 1) % steps.length;
+      if (nextStep === 0) {
+        // Completed full cycle
+        setCompletedSteps(new Set([0, 1, 2, 3]));
+        setTimeout(() => setCompletedSteps(new Set()), 2000);
+      }
+      return nextStep;
+    });
+  }, [steps.length]);
+
+  const handlePrevious = useCallback(() => {
+    setCurrentStep(prev => prev === 0 ? steps.length - 1 : prev - 1);
+  }, [steps.length]);
+
+  const handleNext = useCallback(() => {
+    handleNextStep();
+  }, [handleNextStep]);
+
+  const handleStepClick = useCallback((index: number) => {
+    setCurrentStep(index);
+    setCompletedSteps(prev => new Set([...prev, index]));
+  }, []);
+
+  const togglePlay = useCallback(() => {
+    setIsPlaying(prev => !prev);
+  }, []);
+
+  const resetAnimation = useCallback(() => {
+    setCurrentStep(0);
+    setCompletedSteps(new Set());
+    setIsPlaying(false);
+  }, []);
+
+  // Simplified auto-play effect
   useEffect(() => {
     if (!isPlaying) return;
     
-    const interval = setInterval(() => {
-      setCurrentStep(prev => {
-        const nextStep = (prev + 1) % steps.length;
-        if (nextStep === 0) {
-          setCompletedSteps([0, 1, 2, 3]);
-          setTimeout(() => setCompletedSteps([]), 1000);
-        }
-        return nextStep;
-      });
-    }, 4000);
-
+    const interval = setInterval(handleNextStep, 4000);
     return () => clearInterval(interval);
-  }, [isPlaying, steps.length]);
-
-  const handleStepClick = (index: number) => {
-    setCurrentStep(index);
-    setCompletedSteps(prev => [...new Set([...prev, index])]);
-  };
-
-  const handlePrevious = () => {
-    setCurrentStep(prev => prev === 0 ? steps.length - 1 : prev - 1);
-  };
-
-  const handleNext = () => {
-    setCurrentStep(prev => (prev + 1) % steps.length);
-  };
-
-  const resetAnimation = () => {
-    setCurrentStep(0);
-    setCompletedSteps([]);
-  };
+  }, [isPlaying, handleNextStep]);
 
   return (
     <div className="min-h-screen">
@@ -104,25 +111,25 @@ const HowItWorks = () => {
         </div>
       </section>
 
-      {/* Enhanced Animated Steps Section */}
+      {/* Enhanced Steps Section */}
       <section className="relative py-20 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-        {/* Floating Notes Top */}
-        <motion.div 
-          className="absolute top-10 left-[-10%] text-[60px] text-purple-300 opacity-10 whitespace-nowrap" 
-          animate={{ x: ["-100px", "110vw"] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        >
-          ♪ ♫ ♩ ♬
-        </motion.div>
-
-        {/* Floating Notes Bottom */}
-        <motion.div 
-          className="absolute bottom-10 right-[-10%] text-[40px] text-orange-300 opacity-15 whitespace-nowrap" 
-          animate={{ x: ["100px", "-110vw"] }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-        >
-          🎵 🎶 🎼 🎹
-        </motion.div>
+        {/* Simplified floating elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div 
+            className="absolute top-10 left-0 text-6xl text-purple-300 opacity-20" 
+            animate={{ x: [0, 100] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          >
+            ♪
+          </motion.div>
+          <motion.div 
+            className="absolute bottom-10 right-0 text-4xl text-orange-300 opacity-20" 
+            animate={{ x: [0, -100] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          >
+            🎵
+          </motion.div>
+        </div>
 
         <div className="max-w-6xl mx-auto px-4">
           {/* Progress Bar */}
@@ -136,10 +143,9 @@ const HowItWorks = () => {
               </div>
             </div>
             <div className="w-full bg-gray-300 rounded-full h-2">
-              <motion.div 
-                className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
+              <div 
+                className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
-                transition={{ duration: 0.5 }}
               />
             </div>
           </div>
@@ -147,7 +153,7 @@ const HowItWorks = () => {
           {/* Control Panel */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">
             <Button
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={togglePlay}
               variant="outline"
               className="flex items-center gap-2"
             >
@@ -172,54 +178,25 @@ const HowItWorks = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
               {steps.map((step, index) => {
                 const isActive = index === currentStep;
-                const isCompleted = completedSteps.includes(index);
+                const isCompleted = completedSteps.has(index);
                 
                 return (
-                  <motion.div
+                  <div
                     key={index}
-                    initial={{ opacity: 0.3, y: 40, scale: 0.85, rotateX: 15 }}
-                    animate={isActive ? {
-                      opacity: 1,
-                      y: -5,
-                      scale: 1.05,
-                      rotateX: 0,
-                      transition: { duration: 1.2, type: "spring", bounce: 0.4 }
-                    } : isCompleted ? {
-                      opacity: 0.8,
-                      y: 0,
-                      scale: 0.98,
-                      rotateX: -2
-                    } : {
-                      opacity: 0.3,
-                      y: 40,
-                      scale: 0.85,
-                      rotateX: 15
-                    }}
-                    whileHover={{ y: -15, scale: 1.08, rotateX: -5 }}
-                    className={`cursor-pointer p-4 text-center rounded-xl transform transition-all duration-300 relative ${
-                      isActive ? "z-10 ring-2 ring-purple-400" : "z-0"
+                    className={`cursor-pointer p-4 text-center rounded-xl transform transition-all duration-300 ${
+                      isActive ? "scale-105 ring-2 ring-purple-400" : "hover:scale-102"
                     }`}
                     onClick={() => handleStepClick(index)}
                   >
                     {/* Step Circle with Icon */}
-                    <motion.div
-                      className={`w-20 h-20 mx-auto rounded-full border-4 flex items-center justify-center text-white font-bold text-xl shadow-md mb-4 relative ${
+                    <div
+                      className={`w-20 h-20 mx-auto rounded-full border-4 flex items-center justify-center text-white font-bold text-xl shadow-md mb-4 relative transition-all duration-300 ${
                         isActive 
                           ? "bg-gradient-to-br from-purple-500 to-pink-500 shadow-purple-400" 
                           : isCompleted
                           ? "bg-gradient-to-br from-green-500 to-green-600 shadow-green-400"
-                          : "bg-gradient-to-br from-gray-300 to-gray-200"
+                          : "bg-gradient-to-br from-gray-300 to-gray-400"
                       }`}
-                      animate={isActive ? {
-                        scale: [1, 1.2, 1],
-                        rotateY: 360
-                      } : {}}
-                      transition={isActive ? {
-                        duration: 1,
-                        ease: "easeInOut",
-                        repeat: Infinity,
-                        repeatType: "loop"
-                      } : {}}
                     >
                       {isCompleted ? (
                         <CheckCircle className="w-8 h-8" />
@@ -231,7 +208,7 @@ const HowItWorks = () => {
                       <div className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center text-xs font-bold text-gray-600 shadow-md">
                         {index + 1}
                       </div>
-                    </motion.div>
+                    </div>
 
                     {/* Step Content */}
                     <div>
@@ -240,13 +217,14 @@ const HowItWorks = () => {
                       </h3>
                       <p className="text-gray-600 text-sm mb-3">{step.description}</p>
                       
-                      {/* Details Toggle */}
+                      {/* Details for active step */}
                       <AnimatePresence>
                         {isActive && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
                             className="text-xs text-gray-500 bg-gray-50 rounded-lg p-3 mt-2"
                           >
                             {step.details}
@@ -254,19 +232,13 @@ const HowItWorks = () => {
                         )}
                       </AnimatePresence>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
 
             {/* Current Step Details */}
-            <motion.div 
-              className="mt-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200"
-              key={currentStep}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+            <div className="mt-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
               <div className="flex items-center gap-4 mb-4">
                 <div className="text-4xl">{steps[currentStep].icon}</div>
                 <div>
@@ -279,7 +251,7 @@ const HowItWorks = () => {
               <p className="text-sm text-gray-700 leading-relaxed">
                 {steps[currentStep].details}
               </p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
