@@ -5,7 +5,6 @@ import { useTranslation } from '@/hooks/useTranslations';
 import { Gift, Heart, Users, Crown, Sparkles, Diamond, Car, Briefcase, Building, Mic, Music, RotateCcw, FileMusic, Star, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-
 const scenarios = [
 // Personal Package scenarios
 {
@@ -81,7 +80,6 @@ const scenarios = [
   text: "Stuck on gift ideas? Music never goes out of style! Give them something truly unique that shows you care. The gift that keeps on giving!",
   packageKey: 'giftPackage'
 }];
-
 const ScenarioHero = () => {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
@@ -91,7 +89,6 @@ const ScenarioHero = () => {
   const {
     t: tDb
   } = useTranslation();
-  
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false);
@@ -102,13 +99,11 @@ const ScenarioHero = () => {
     }, 4000);
     return () => clearInterval(interval);
   }, []);
-  
   const {
     icon: IconComponent,
     text,
     packageKey
   } = scenarios[index];
-  
   return <section className="relative h-30 overflow-hidden" style={{
     backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
@@ -119,7 +114,7 @@ const ScenarioHero = () => {
       <div className="absolute inset-0 bg-black/40"></div>
       
       {/* Content container with professional layout */}
-      <div className="relative z-10 h-full flex items-center justify-between max-w-7xl mx-auto px-8">
+      <div className="relative z-10 h-full flex items-center justify-between max-w-7xl mx-auto px-8 py-[6px]">
         
         {/* Left side - Icon and package name */}
         
@@ -139,26 +134,23 @@ const ScenarioHero = () => {
         </motion.div>
 
         {/* Action Buttons */}
-        <motion.div 
-          className="flex flex-col sm:flex-row gap-3 sm:gap-4 ml-8"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
+        <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4 ml-8" initial={{
+        opacity: 0,
+        x: 20
+      }} animate={{
+        opacity: 1,
+        x: 0
+      }} transition={{
+        duration: 0.6,
+        delay: 0.3
+      }}>
           <Link to="/packages">
-            <Button 
-              size="lg" 
-              className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 font-semibold px-6 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg"
-            >
+            <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 font-semibold px-6 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg">
               {t('seePackages') || 'See Packages'}
             </Button>
           </Link>
           <Link to="/testimonials">
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-2 border-purple-300 text-purple-100 hover:bg-purple-500/20 hover:text-white px-6 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg bg-transparent"
-            >
+            <Button size="lg" variant="outline" className="border-2 border-purple-300 text-purple-100 hover:bg-purple-500/20 hover:text-white px-6 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg bg-transparent">
               {t('listenToSamples') || 'Listen to Samples'}
             </Button>
           </Link>
@@ -196,5 +188,4 @@ const ScenarioHero = () => {
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
     </section>;
 };
-
 export default ScenarioHero;
