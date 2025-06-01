@@ -66,8 +66,8 @@ const Index = () => {
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
-        {/* Overlay for better text readability */}
-        <div className="absolute top-0 left-0 w-full h-full bg-black/30 sm:bg-black/20 z-10 py-0"></div>
+        {/* Transparent overlay */}
+        <div className="absolute top-0 left-0 w-full h-full z-10 py-0"></div>
         
         {/* Floating musical notes - responsive positioning */}
         <div className="absolute top-6 sm:top-10 right-6 sm:right-10 text-2xl sm:text-3xl md:text-4xl animate-bounce delay-75 z-20">🎵</div>
