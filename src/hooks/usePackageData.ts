@@ -1,7 +1,7 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from './useTranslations';
+import { samplePackages } from '@/data/samplePackages';
 
 export interface PackageData {
   id: string;
@@ -63,27 +63,10 @@ export const usePackages = () => {
   return useQuery({
     queryKey: ['packages'],
     queryFn: async () => {
-      console.log('Fetching packages...');
+      console.log('Using sample packages data directly...');
       
-      const { data: packages, error } = await supabase
-        .from('package_info')
-        .select(`
-          *,
-          tags:package_tags(*),
-          includes:package_includes(*)
-        `)
-        .eq('is_active', true)
-        .order('value');
-
-      if (error) {
-        console.error('Error fetching packages:', error);
-        throw error;
-      }
-      
-      console.log('Fetched packages from database:', packages);
-      
-      // Transform packages to use simplified values for UI
-      const transformedPackages = packages?.map(pkg => ({
+      // Transform sample packages to match the expected interface
+      const transformedPackages = samplePackages.map(pkg => ({
         ...pkg,
         // Convert database value to simplified value for UI consistency
         value: DATABASE_TO_SIMPLE_MAPPING[pkg.value] || pkg.value,
@@ -92,7 +75,7 @@ export const usePackages = () => {
         includes: pkg.includes?.sort((a: any, b: any) => a.include_order - b.include_order) || []
       }));
       
-      console.log('Transformed packages with simplified values:', transformedPackages);
+      console.log('Transformed sample packages:', transformedPackages);
       return transformedPackages as PackageData[];
     }
   });
@@ -107,59 +90,34 @@ export const usePackageSteps = (packageValue: string) => {
         return [];
       }
 
-      // Convert simplified value back to database value for querying
-      const databaseValue = PACKAGE_VALUE_MAPPING[packageValue] || packageValue;
-      console.log('Fetching steps for package:', packageValue, '-> database value:', databaseValue);
+      console.log('Getting steps for package from sample data:', packageValue);
 
       try {
-        // First get the package info using the database value
-        const { data: packageInfo, error: packageError } = await supabase
-          .from('package_info')
-          .select('id')
-          .eq('value', databaseValue)
-          .single();
+        // Find the package in sample data
+        const packageData = samplePackages.find(pkg => {
+          const simplifiedValue = DATABASE_TO_SIMPLE_MAPPING[pkg.value] || pkg.value;
+          return simplifiedValue === packageValue;
+        });
 
-        if (packageError) {
-          console.error('Error fetching package info:', packageError);
-          throw new Error(`Package not found: ${packageValue} (database: ${databaseValue})`);
-        }
-
-        if (!packageInfo) {
-          console.error('Package info not found for value:', packageValue, 'database value:', databaseValue);
+        if (!packageData) {
+          console.error('Package not found in sample data:', packageValue);
           throw new Error(`Package not found: ${packageValue}`);
         }
 
-        console.log('Found package info:', packageInfo);
+        console.log('Found package data:', packageData);
 
-        // Then get the steps with fields
-        const { data: steps, error: stepsError } = await supabase
-          .from('steps')
-          .select(`
-            *,
-            fields:step_fields(*)
-          `)
-          .eq('package_id', packageInfo.id)
-          .eq('is_active', true)
-          .order('step_order');
-
-        if (stepsError) {
-          console.error('Error fetching steps:', stepsError);
-          throw stepsError;
-        }
-
-        console.log('Raw steps data from database:', steps);
-
-        if (!steps || steps.length === 0) {
-          console.warn('No steps found for package:', packageValue, 'with package_id:', packageInfo.id);
+        if (!packageData.steps || packageData.steps.length === 0) {
+          console.warn('No steps found for package:', packageValue);
           return [];
         }
 
-        // Transform and validate the data
-        const transformedSteps = steps.map(step => {
+        // Transform the data to match the expected interface
+        const transformedSteps = packageData.steps.map(step => {
           const transformedFields = (step.fields || [])
             .sort((a: any, b: any) => a.field_order - b.field_order)
             .map((field: any) => ({
               ...field,
+              id: `${step.step_number}-${field.field_name}`,
               // Safe transformation of options - only process if options exists and is an array
               options: field.options && Array.isArray(field.options) ? field.options.map((option: any) => {
                 // If it's already a FieldOption object, return as is
@@ -177,6 +135,7 @@ export const usePackageSteps = (packageValue: string) => {
 
           return {
             ...step,
+            id: `step-${step.step_number}`,
             fields: transformedFields
           };
         });
@@ -201,21 +160,10 @@ export const useAddons = () => {
   return useQuery({
     queryKey: ['addons'],
     queryFn: async () => {
-      console.log('Fetching addons...');
+      console.log('Using sample addons (empty for now)...');
       
-      const { data, error } = await supabase
-        .from('addons')
-        .select('*')
-        .eq('is_active', true)
-        .order('addon_key');
-
-      if (error) {
-        console.error('Error fetching addons:', error);
-        throw error;
-      }
-      
-      console.log('Fetched addons:', data);
-      return data;
+      // Return empty array for now since sample packages don't have addons configured
+      return [];
     }
   });
 };

@@ -10,8 +10,6 @@ import TestimonialSection from './order/TestimonialSection';
 import OrderSummary from './order/OrderSummary';
 import { usePackages, usePackageSteps, useAddons } from '@/hooks/usePackageData';
 import { useTranslation } from '@/hooks/useTranslations';
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 
 interface OrderWizardProps {
   onComplete: (data: any) => void;
@@ -53,7 +51,6 @@ const ensureFieldOptionFormat = (field: any): Field => {
 
 const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const { t } = useTranslation();
-  const { user, loading: authLoading } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPackage, setSelectedPackage] = useState('');
   const [formData, setFormData] = useState<any>({
@@ -113,25 +110,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     console.log('Steps success:', stepsSuccess);
     console.log('Steps fetched:', stepsFetched);
     console.log('Steps error:', stepsError);
-    console.log('Auth user:', user);
-    console.log('Auth loading:', authLoading);
     console.log('Available packages:', packages.map(p => ({ value: p.value, originalValue: (p as any).originalValue })));
     console.log('================================');
-  }, [currentStep, selectedPackage, packageSteps, stepsLoading, stepsSuccess, stepsFetched, stepsError, user, authLoading, packages]);
+  }, [currentStep, selectedPackage, packageSteps, stepsLoading, stepsSuccess, stepsFetched, stepsError, packages]);
 
   // Calculate total steps from database steps only
   const totalSteps = packageSteps?.length || 0;
-
-  // Check authentication on component mount
-  useEffect(() => {
-    if (!authLoading && !user) {
-      toast({
-        title: t('authRequired', 'Authentication Required'),
-        description: t('authRequiredDesc', 'You must be logged in to place an order.'),
-        variant: "destructive"
-      });
-    }
-  }, [user, authLoading, toast, t]);
 
   const updateFormData = (field: string, value: any) => {
     console.log('Updating form data:', field, value);
@@ -176,7 +160,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       return !!formData.package;
     }
     
-    // Get current step data from database
+    // Get current step data from sample data
     const currentStepData = packageSteps.find(step => step.step_number === currentStep);
     console.log('Current step data for validation:', currentStepData);
     
@@ -238,16 +222,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   };
 
   const handleSubmit = async () => {
-    // Check authentication first
-    if (!user) {
-      toast({
-        title: t('authRequired', 'Authentication Required'),
-        description: t('authRequiredDesc', 'You must be logged in to place an order.'),
-        variant: "destructive"
-      });
-      return;
-    }
-
     if (!canProceed()) {
       toast({
         title: t('completeRequiredFields', 'Please complete all required fields'),
@@ -259,9 +233,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
 
     setIsSubmitting(true);
     try {
-      // Get package ID for database storage - use originalValue for database operations
-      const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
-      
       const finalData = {
         ...formData,
         addons: selectedAddons,
@@ -269,62 +240,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         package: selectedPackage
       };
 
-      console.log('Submitting order with user_id:', user.id);
+      console.log('Submitting order with sample data:', finalData);
 
-      // Save order to database with user_id
-      const { data: orderData, error: orderError } = await supabase
-        .from('orders')
-        .insert({
-          user_id: user.id,
-          package_id: selectedPackageData?.id,
-          form_data: finalData,
-          selected_addons: selectedAddons,
-          total_price: calculateTotalPrice(),
-          status: 'pending',
-          payment_status: 'pending'
-        })
-        .select()
-        .single();
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      if (orderError) {
-        console.error('Order insert error:', orderError);
-        throw orderError;
-      }
-
-      console.log('Order created successfully:', orderData);
-
-      // Save addon field data if any
-      if (Object.keys(addonFieldValues).length > 0) {
-        const addonFormData = Object.entries(addonFieldValues).map(([addonKey, fieldValue]) => {
-          const addon = addons.find(a => a.addon_key === addonKey);
-          return {
-            order_id: orderData.id,
-            addon_key: addonKey,
-            field_type: addon?.trigger_field_type || 'unknown',
-            field_data: fieldValue instanceof File ? { fileName: fieldValue.name } : (fieldValue as any),
-            file_url: fieldValue instanceof File ? null : null
-          };
-        });
-
-        if (addonFormData.length > 0) {
-          const { error: addonDataError } = await supabase
-            .from('addon_form_data')
-            .insert(addonFormData);
-
-          if (addonDataError) {
-            console.error('Addon data save error:', addonDataError);
-          }
-        }
-      }
-
-      // Pass order data with payment info to parent component
-      const orderPaymentData = {
+      // Pass order data to parent component
+      const orderData = {
         ...finalData,
-        orderId: orderData.id,
+        orderId: 'sample-' + Date.now(),
         totalPrice: calculateTotalPrice()
       };
 
-      onComplete(orderPaymentData);
+      onComplete(orderData);
 
     } catch (error) {
       console.error('Order submission error:', error);
@@ -347,12 +275,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     return packagePrice + addonsPrice;
   };
 
-  // Get current step data from database steps with proper type transformation
+  // Get current step data from sample data with proper type transformation
   const getCurrentStepData = () => {
     console.log('Getting current step data for step:', currentStep);
     
     const dbStep = packageSteps.find(step => step.step_number === currentStep);
-    console.log('Database step found:', dbStep);
+    console.log('Sample step found:', dbStep);
     
     if (!dbStep) return dbStep;
     
@@ -384,41 +312,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
   const currentStepData = getCurrentStepData();
   const completionPercentage = totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0;
   const selectedPackageDetails = packages.find(pkg => pkg.value === selectedPackage);
-
-  // Show loading state for auth
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">{t('loadingAuth', 'Checking authentication...')}</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show authentication required message
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-8">
-          <div className="text-6xl mb-4">🔐</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            {t('authRequired', 'Authentication Required')}
-          </h2>
-          <p className="text-gray-600 mb-6">
-            {t('authRequiredDesc', 'You must be logged in to place an order.')}
-          </p>
-          <Button 
-            onClick={() => window.location.href = '/auth'}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold"
-          >
-            {t('signIn', 'Sign In')}
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   // Show loading state for packages
   if (packagesLoading) {
