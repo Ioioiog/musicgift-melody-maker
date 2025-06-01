@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -56,15 +55,15 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section with Video Background - Mobile Optimized */}
-      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex flex-col justify-start pt-8 sm:pt-12 md:pt-16 overflow-hidden bg-black">
+      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex flex-col justify-center overflow-hidden bg-black">
         {/* Video Background */}
         <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline key={language}>
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
-        {/* Hero Content - Mobile optimized - moved to top */}
+        {/* Hero Content - Mobile optimized - moved down */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
-          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 py-[25px] px-[38px]">
+          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 py-[50px] px-[38px]">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight">
               {t('heroTitle') || 'Transformă Emoțiile Tale în Muzică'}
             </h1>
