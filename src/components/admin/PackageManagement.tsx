@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Plus, Edit, Trash2, Save, X, AlertCircle, Search, Package, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, AlertCircle, Search, Package as PackageIcon, ChevronDown, ChevronUp } from 'lucide-react';
 import { usePackages } from '@/hooks/usePackageData';
 import { useTranslation } from '@/hooks/useTranslations';
 import { useToast } from '@/hooks/use-toast';
@@ -146,7 +146,7 @@ const PackageManagement = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Package className="w-6 h-6" />
+            <PackageIcon className="w-6 h-6" />
             Package Management
           </h2>
           <p className="text-gray-600 text-sm">Manage and view package configurations</p>
