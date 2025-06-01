@@ -5,20 +5,21 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import AnimatedStepFlow from "@/components/AnimatedStepFlow";
+
 const HowItWorks = () => {
-  const {
-    t
-  } = useLanguage();
-  return <div className="min-h-screen">
+  const { t } = useLanguage();
+
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Purple Musical Background */}
-      <section className="py-20 text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+      <section className="py-30 text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/20 py-0"></div>
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           
@@ -95,6 +96,8 @@ const HowItWorks = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default HowItWorks;
