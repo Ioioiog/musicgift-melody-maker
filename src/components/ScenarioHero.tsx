@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -18,7 +17,17 @@ import {
   RotateCcw,
   FileMusic,
   Star,
-  Package
+  Package,
+  Cake,
+  Ring,
+  HeartHandshake,
+  UserCheck,
+  PartyPopper,
+  Award,
+  TrendingUp,
+  Headphones,
+  Volume2,
+  Shuffle
 } from 'lucide-react';
 
 const scenarios = [
@@ -74,8 +83,19 @@ const ScenarioHero = () => {
   const { icon: IconComponent, text, packageKey } = scenarios[index];
 
   return (
-    <section className="py-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
-      <div className="max-w-4xl mx-auto px-4 text-center">
+    <section 
+      className="py-12 text-white relative overflow-hidden"
+      style={{
+        backgroundImage: `url('/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/40"></div>
+      
+      <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
         <motion.div 
           className={`transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}
           initial={{ opacity: 0, y: 20 }}
