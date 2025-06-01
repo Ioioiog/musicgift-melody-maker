@@ -71,14 +71,14 @@ const AnimatedStepFlow = () => {
         </div>
 
         {/* Step Circles */}
-        <div className="relative flex justify-between items-center py-[2px]">
+        <div className="relative flex justify-between items-center py-[20px]">
           {steps.map((step, index) => {
           const StepIcon = step.icon;
           const isActive = index === activeStep;
           const isCompleted = index < activeStep;
-          return <motion.div key={index} className="flex flex-col items-center cursor-pointer group" onClick={() => handleStepClick(index)} whileHover={{
+          return <motion.div key={index} onClick={() => handleStepClick(index)} whileHover={{
             scale: 1.05
-          }} onHoverStart={() => setIsPaused(true)} onHoverEnd={() => setTimeout(() => setIsPaused(false), 2000)}>
+          }} onHoverStart={() => setIsPaused(true)} onHoverEnd={() => setTimeout(() => setIsPaused(false), 2000)} className="flex flex-col items-center cursor-pointer group py-0">
                 {/* Step Circle */}
                 <motion.div className={`relative w-16 h-16 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-500 ease-in-out ${isActive ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-xl ring-4 ring-purple-200' : isCompleted ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg' : 'bg-white border-2 border-gray-300 text-gray-500 hover:border-purple-300'}`} initial={{
               scale: 0.8,
@@ -138,7 +138,7 @@ const AnimatedStepFlow = () => {
         duration: 0.5,
         ease: "easeInOut"
       }} className="relative">
-          <div className="bg-white rounded-2xl shadow-xl border-2 border-purple-200 p-8 lg:p-12 px-[22px] py-[28px]">
+          <div className="bg-white rounded-2xl shadow-xl border-2 border-purple-200 p-8 lg:p-12 px-[22px] py-[3px]">
             {/* Decorative corner elements */}
             <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-purple-100 to-transparent rounded-full opacity-50" />
             <div className="absolute bottom-4 left-4 w-16 h-16 bg-gradient-to-tr from-blue-100 to-transparent rounded-full opacity-30" />

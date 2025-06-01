@@ -1,14 +1,12 @@
-
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import NewsletterForm from "@/components/NewsletterForm";
-
 const Footer = () => {
-  const { t } = useLanguage();
-
-  return (
-    <footer className="bg-gradient-to-br from-gray-800 via-gray-900 to-slate-900 text-white relative overflow-hidden">
+  const {
+    t
+  } = useLanguage();
+  return <footer className="bg-gradient-to-br from-gray-800 via-gray-900 to-slate-900 text-white relative overflow-hidden">
       {/* Glass effect overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-white/2 to-transparent backdrop-blur-sm"></div>
       
@@ -18,7 +16,7 @@ const Footer = () => {
         <div className="absolute bottom-0 right-0 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 bg-gray-400 rounded-full filter blur-3xl"></div>
       </div>
       
-      <div className="container mx-auto sm:px-6 sm:py-12 md:py-16 relative z-10 px-[20px] py-[36px] backdrop-blur-md bg-white/5 border-t border-white/10">
+      <div className="container mx-auto sm:px-6 sm:py-12 md:py-16 relative z-10 backdrop-blur-md bg-white/5 border-t border-white/10 px-[28px] py-[13px]">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
           {/* Brand */}
           <div className="space-y-4 sm:space-y-6 sm:col-span-2 lg:col-span-1">
@@ -154,14 +152,12 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-white/10 mt-8 sm:mt-12 md:mt-16 pt-6 sm:pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
-            <p className="text-xs sm:text-sm text-slate-50 text-center sm:text-left">
+            <p className="text-xs sm:text-sm text-slate-50 text-center py-[3px] px-[240px] sm:text-center">
               {t('copyright')}
             </p>
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
