@@ -2,18 +2,22 @@ import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import NewsletterForm from "@/components/NewsletterForm";
+
 const Footer = () => {
-  const {
-    t
-  } = useLanguage();
-  return <footer className="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 bg-purple-500 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 bg-blue-500 rounded-full filter blur-3xl"></div>
+  const { t } = useLanguage();
+
+  return (
+    <footer className="bg-gradient-to-br from-gray-800 via-gray-900 to-slate-900 text-white relative overflow-hidden">
+      {/* Glass effect overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-white/2 to-transparent backdrop-blur-sm"></div>
+      
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 bg-white rounded-full filter blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 bg-gray-400 rounded-full filter blur-3xl"></div>
       </div>
       
-      <div className="container mx-auto sm:px-6 sm:py-12 md:py-16 relative z-10 px-[20px] py-[36px]">
+      <div className="container mx-auto sm:px-6 sm:py-12 md:py-16 relative z-10 px-[20px] py-[36px] backdrop-blur-md bg-white/5 border-t border-white/10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
           {/* Brand */}
           <div className="space-y-4 sm:space-y-6 sm:col-span-2 lg:col-span-1">
@@ -155,6 +159,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;
