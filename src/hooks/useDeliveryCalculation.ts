@@ -2,6 +2,21 @@
 import { useMemo } from 'react';
 import { usePackages } from './usePackageData';
 
+// Mapping function to convert form package values to actual package values
+const mapPackageValue = (formPackageValue: string): string => {
+  const packageMapping: Record<string, string> = {
+    'pachet-personal': 'personal',
+    'pachet-premium': 'premium',
+    'pachet-business': 'business',
+    'pachet-artist': 'artist',
+    'pachet-remix': 'remix',
+    'pachet-instrumental': 'instrumental',
+    'pachet-gift': 'gift'
+  };
+  
+  return packageMapping[formPackageValue] || formPackageValue;
+};
+
 export const useDeliveryCalculation = (orderCreatedAt: string, packageValue?: string) => {
   const { data: packages = [] } = usePackages();
 
@@ -13,8 +28,16 @@ export const useDeliveryCalculation = (orderCreatedAt: string, packageValue?: st
       return { remainingDays: null, isOverdue: false, status: 'unknown', deliveryDate: null };
     }
 
-    // Find package by value
-    const packageData = packages.find(pkg => pkg.value === packageValue);
+    // First try to find package by the original value
+    let packageData = packages.find(pkg => pkg.value === packageValue);
+    
+    // If not found, try with mapped value
+    if (!packageData) {
+      const mappedValue = mapPackageValue(packageValue);
+      console.log('DeliveryCalculation - Trying mapped value:', mappedValue);
+      packageData = packages.find(pkg => pkg.value === mappedValue);
+    }
+    
     console.log('DeliveryCalculation - Found package:', packageData);
     
     if (!packageData) {
@@ -33,7 +56,7 @@ export const useDeliveryCalculation = (orderCreatedAt: string, packageValue?: st
       'gift': 7
     };
 
-    let deliveryDays = deliveryTimePatterns[packageValue as keyof typeof deliveryTimePatterns] || 7;
+    let deliveryDays = deliveryTimePatterns[packageData.value as keyof typeof deliveryTimePatterns] || 7;
     console.log('DeliveryCalculation - Using delivery days:', deliveryDays);
 
     // Try to extract delivery time from package delivery_time_key if available

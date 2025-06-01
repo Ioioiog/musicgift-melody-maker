@@ -198,9 +198,14 @@ const OrdersManagement = () => {
           const savedPrompt = getSavedPrompt(order.id);
           const isPromptCardOpen = openPromptCards.has(order.id);
           
+          // Try to get package value from multiple sources
+          const packageValue = order.package_id || (formData as any)?.packageType || (formData as any)?.package;
+          
           console.log('OrdersManagement - Rendering order:', { 
             orderId: order.id, 
             packageId: order.package_id, 
+            packageValue,
+            formDataPackage: (formData as any)?.packageType || (formData as any)?.package,
             createdAt: order.created_at,
             status: order.status 
           });
@@ -219,10 +224,10 @@ const OrdersManagement = () => {
                         Payment: {order.payment_status}
                       </Badge>
                       
-                      {/* Delivery Countdown Badge - This should be visible */}
+                      {/* Delivery Countdown Badge with improved package value */}
                       <DeliveryCountdownBadge 
                         orderCreatedAt={order.created_at}
-                        packageValue={order.package_id}
+                        packageValue={packageValue}
                         orderStatus={order.status}
                       />
                       

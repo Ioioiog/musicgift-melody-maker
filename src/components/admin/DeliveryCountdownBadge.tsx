@@ -34,11 +34,11 @@ const DeliveryCountdownBadge: React.FC<DeliveryCountdownBadgeProps> = ({
     );
   }
 
-  // If calculation failed, show a fallback badge
+  // If calculation failed, show a fallback badge with more info
   if (remainingDays === null) {
-    console.log('DeliveryCountdownBadge - No delivery calculation available');
+    console.log('DeliveryCountdownBadge - No delivery calculation available for package:', packageValue);
     return (
-      <Badge className="bg-gray-100 text-gray-800 border-gray-300">
+      <Badge className="bg-gray-100 text-gray-800 border-gray-300" title={`Package: ${packageValue || 'Unknown'}`}>
         <Clock className="w-3 h-3 mr-1" />
         Delivery pending
       </Badge>
