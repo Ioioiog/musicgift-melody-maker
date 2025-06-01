@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslations';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { Gift, Heart, Users, Crown, Sparkles, Diamond, Car, Briefcase, Building, Mic, Music, RotateCcw, FileMusic, Star, Package } from 'lucide-react';
-
 const scenarios = [
 // Personal Package scenarios
 {
@@ -134,8 +131,8 @@ const ScenarioHero = () => {
           
         </motion.div>
 
-        {/* Right side - Buttons */}
-        <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4" initial={{
+        {/* Right side - Professional accent */}
+        <motion.div className="hidden lg:flex items-center space-x-3" initial={{
         opacity: 0,
         x: 20
       }} animate={{
@@ -145,16 +142,20 @@ const ScenarioHero = () => {
         duration: 0.6,
         delay: 0.2
       }}>
-          <Link to="/packages">
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base lg:text-lg backdrop-blur-sm w-full sm:w-auto">
-              {t('seePackages') || 'See Packages'}
-            </Button>
-          </Link>
-          <Link to="/testimonials">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base lg:text-lg backdrop-blur-sm w-full sm:w-auto">
-              {t('listenToSamples') || 'Listen to Samples'}
-            </Button>
-          </Link>
+          <div className="text-right">
+            <div className="text-xs text-purple-200 font-medium uppercase tracking-wider">
+              Since 2024
+            </div>
+            <div className="text-xs text-gray-400">
+              Trusted by 1000+ clients
+            </div>
+          </div>
+          <div className="w-px h-8 bg-white/20"></div>
+          <div className="flex flex-col space-y-1">
+            {[...Array(3)].map((_, i) => <div key={i} className="w-1 h-1 bg-purple-400 rounded-full animate-pulse" style={{
+            animationDelay: `${i * 0.3}s`
+          }} />)}
+          </div>
         </motion.div>
       </div>
 

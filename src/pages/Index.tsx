@@ -9,11 +9,19 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
 import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-
 const Index = () => {
-  const { data: packages = [], isLoading, error } = usePackages();
-  const { t, language } = useLanguage(); // Frontend translations for static UI
-  const { t: tDb } = useTranslation(); // Database translations for package content
+  const {
+    data: packages = [],
+    isLoading,
+    error
+  } = usePackages();
+  const {
+    t,
+    language
+  } = useLanguage(); // Frontend translations for static UI
+  const {
+    t: tDb
+  } = useTranslation(); // Database translations for package content
 
   // Audio player state
   const [isMuted, setIsMuted] = useState(false);
@@ -21,9 +29,7 @@ const Index = () => {
 
   // Get video source based on language
   const getVideoSource = () => {
-    return language === 'ro' 
-      ? "/lovable-uploads/Jingle Musicgift master.mp4" 
-      : "/lovable-uploads/MusicGiftvideoENG.mp4";
+    return language === 'ro' ? "/lovable-uploads/Jingle Musicgift master.mp4" : "/lovable-uploads/MusicGiftvideoENG.mp4";
   };
 
   // Auto-play audio when component mounts
@@ -34,7 +40,6 @@ const Index = () => {
       });
     }
   }, []);
-
   const toggleMute = () => {
     if (audioRef.current) {
       audioRef.current.muted = !isMuted;
@@ -44,22 +49,13 @@ const Index = () => {
 
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Video Background - Mobile Optimized */}
       <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-center overflow-hidden bg-black">
         {/* Video Background */}
-        <video 
-          className="absolute top-0 left-0 w-full h-full object-cover z-0" 
-          autoPlay 
-          muted 
-          loop 
-          playsInline 
-          key={language}
-        >
+        <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline key={language}>
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
@@ -70,11 +66,7 @@ const Index = () => {
         
         {/* Mute/Unmute Button - Mobile responsive positioning */}
         <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 right-4 sm:right-6 md:right-8 z-30">
-          <Button 
-            onClick={toggleMute}
-            size="icon" 
-            className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md w-10 h-10 sm:w-12 sm:h-12"
-          >
+          <Button onClick={toggleMute} size="icon" className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md w-10 h-10 sm:w-12 sm:h-12">
             {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
           </Button>
           <audio ref={audioRef} loop muted={isMuted} key={language}>
@@ -91,6 +83,19 @@ const Index = () => {
             <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl">
               {t('heroSubtitle') || 'Cel mai frumos cadou: o melodie creată special pentru cineva drag.'}
             </p>
+            
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <Link to="/packages">
+                <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base lg:text-lg backdrop-blur-sm w-full sm:w-auto">
+                  {t('seePackages') || 'See Packages'}
+                </Button>
+              </Link>
+              <Link to="/testimonials">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base lg:text-lg backdrop-blur-sm w-full sm:w-auto">
+                  {t('listenToSamples') || 'Listen to Samples'}
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
         
@@ -211,8 +216,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
