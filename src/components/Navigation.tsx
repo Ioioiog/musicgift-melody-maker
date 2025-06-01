@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -41,14 +42,22 @@ const Navigation = () => {
       </div>
 
       {/* Navigation Bar */}
-      <header className="fixed top-2 sm:top-4 w-full bg-white z-50 border-b border-gray-100">
-        <div className="container mx-auto sm:px-4 md:px-6 px-[37px] my-0">
+      <header className="fixed top-2 sm:top-4 w-full z-50 border-b border-gray-100" style={{
+        backgroundImage: 'url(/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        {/* Overlay for better readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
+        
+        <div className="container mx-auto sm:px-4 md:px-6 px-[37px] my-0 relative z-10">
           <div className="flex items-center justify-between h-16 sm:h-18 md:h-20 py-0">
             
             {/* Desktop Nav - positioned after logo */}
             <nav className="hidden lg:flex items-center ml-32 sm:ml-36 md:ml-48 lg:ml-56 xl:ml-60">
               <div className="flex items-center space-x-6 xl:space-x-8">
-                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-sm font-medium transition-colors hover:text-violet-600 ${location.pathname === item.path ? "text-violet-600" : "text-gray-700"}`}>
+                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-sm font-medium transition-colors hover:text-violet-200 ${location.pathname === item.path ? "text-white" : "text-white/80"}`}>
                     {item.label}
                   </Link>)}
               </div>
@@ -58,7 +67,7 @@ const Navigation = () => {
             <div className="hidden lg:flex items-center space-x-3 xl:space-x-4 ml-auto">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="text-sm font-medium bg-white hover:bg-gray-50">
+                  <Button variant="outline" size="sm" className="text-sm font-medium bg-white/10 hover:bg-white/20 text-white border-white/30 hover:border-white/50 backdrop-blur-md">
                     {languageNames[language]}
                   </Button>
                 </DropdownMenuTrigger>
@@ -71,7 +80,7 @@ const Navigation = () => {
               
               <UserMenu />
               
-              <Link to="/order" className="bg-violet-600 text-white px-4 xl:px-6 py-2 rounded-lg font-medium hover:bg-violet-700 transition-colors text-sm">
+              <Link to="/order" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md px-4 xl:px-6 py-2 rounded-lg font-medium transition-colors text-sm">
                 {t("orderNow") || "Order Now"}
               </Link>
             </div>
@@ -79,23 +88,23 @@ const Navigation = () => {
             {/* Mobile Menu Toggle - adjusted for smaller screens */}
             <button className="lg:hidden ml-auto p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               <div className="w-6 h-6 flex flex-col justify-center items-center">
-                <div className={`w-5 h-0.5 bg-gray-600 transition-all ${isMenuOpen ? "rotate-45 translate-y-0.5" : ""}`} />
-                <div className={`w-5 h-0.5 bg-gray-600 my-0.5 transition-all ${isMenuOpen ? "opacity-0" : ""}`} />
-                <div className={`w-5 h-0.5 bg-gray-600 transition-all ${isMenuOpen ? "-rotate-45 -translate-y-0.5" : ""}`} />
+                <div className={`w-5 h-0.5 bg-white transition-all ${isMenuOpen ? "rotate-45 translate-y-0.5" : ""}`} />
+                <div className={`w-5 h-0.5 bg-white my-0.5 transition-all ${isMenuOpen ? "opacity-0" : ""}`} />
+                <div className={`w-5 h-0.5 bg-white transition-all ${isMenuOpen ? "-rotate-45 -translate-y-0.5" : ""}`} />
               </div>
             </button>
           </div>
 
           {/* Mobile Menu - improved mobile layout */}
-          {isMenuOpen && <div className="lg:hidden py-4 border-t bg-white">
+          {isMenuOpen && <div className="lg:hidden py-4 border-t bg-black/20 backdrop-blur-md">
               <nav className="flex flex-col space-y-3">
-                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-base font-medium transition-colors hover:text-violet-600 px-2 py-1 ${location.pathname === item.path ? "text-violet-600" : "text-gray-600"}`} onClick={() => setIsMenuOpen(false)}>
+                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-base font-medium transition-colors hover:text-white px-2 py-1 ${location.pathname === item.path ? "text-white" : "text-white/80"}`} onClick={() => setIsMenuOpen(false)}>
                     {item.label}
                   </Link>)}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center pt-3 space-y-3 sm:space-y-0 sm:space-x-3 px-2">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="text-sm font-medium w-full sm:w-auto bg-white hover:bg-gray-50">
+                      <Button variant="outline" size="sm" className="text-sm font-medium w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white/30 hover:border-white/50 backdrop-blur-md">
                         {languageNames[language]}
                       </Button>
                     </DropdownMenuTrigger>
@@ -108,7 +117,7 @@ const Navigation = () => {
                   
                   <UserMenu />
                   
-                  <Link to="/order" className="bg-violet-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors w-full sm:w-auto text-center" onClick={() => setIsMenuOpen(false)}>
+                  <Link to="/order" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto text-center" onClick={() => setIsMenuOpen(false)}>
                     {t("orderNow") || "Order Now"}
                   </Link>
                 </div>
