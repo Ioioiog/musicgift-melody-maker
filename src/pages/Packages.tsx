@@ -36,8 +36,8 @@ const Packages = () => {
       
       {/* Enhanced Packages Section */}
       <section className="bg-gradient-to-br from-gray-50 via-white to-purple-50 relative overflow-hidden py-0">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-12 my-0 py-0">
+        <div className="container mx-auto relative z-10 px-[22px]">
+          <div className="text-center mb-12 ">
             
             
             

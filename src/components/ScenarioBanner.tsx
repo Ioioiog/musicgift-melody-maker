@@ -1,6 +1,4 @@
-
 import { useEffect, useState } from 'react';
-
 const scenarios = [{
   emoji: '🎂',
   text: "Is it someone special's birthday? Celebrate with lyrics, not just cake!"
@@ -26,11 +24,9 @@ const scenarios = [{
   emoji: '✨',
   text: 'And for any other "wow!" moment in life – we put it to music.'
 }];
-
 const ScenarioBanner = () => {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false); // Start fade-out
@@ -40,14 +36,13 @@ const ScenarioBanner = () => {
         setFade(true); // Fade in new content
       }, 500);
     }, 4000);
-
     return () => clearInterval(interval);
   }, []);
-
-  const { emoji, text } = scenarios[index];
-
-  return (
-    <section className="py-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+  const {
+    emoji,
+    text
+  } = scenarios[index];
+  return <section className="bg-gradient-to-r from-purple-600 to-pink-600 text-white mx-0 px-0 py-[37px]">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <div className={`transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}>
           <div className="text-6xl md:text-8xl mb-6 scenario-emoji">{emoji}</div>
@@ -56,8 +51,6 @@ const ScenarioBanner = () => {
           </p>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default ScenarioBanner;
