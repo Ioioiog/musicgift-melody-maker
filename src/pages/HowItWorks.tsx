@@ -35,12 +35,28 @@ const HowItWorks = () => {
             {t('howItWorksTitle')}
           </motion.h1>
           <motion.p 
-            className="text-xl md:text-2xl opacity-90" 
+            className="text-xl md:text-2xl opacity-90 mb-8" 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             {t('howItWorksSubtitle')}
+          </motion.p>
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold mb-4" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            Our Simple Process
+          </motion.h2>
+          <motion.p 
+            className="text-lg md:text-xl opacity-90" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            Follow these easy steps to create your personalized musical gift
           </motion.p>
         </div>
       </section>
@@ -58,25 +74,6 @@ const HowItWorks = () => {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="relative z-10"
         >
-          <div className="text-center mb-16">
-            <motion.h2 
-              className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              Our Simple Process
-            </motion.h2>
-            <motion.p 
-              className="text-lg text-gray-600 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.6, delay: 0.5 }}
-            >
-              Follow these easy steps to create your personalized musical gift
-            </motion.p>
-          </div>
-          
           <AnimatedStepFlow />
         </motion.div>
       </section>
