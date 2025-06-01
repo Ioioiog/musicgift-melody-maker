@@ -9,11 +9,11 @@ export const migratePackageData = async () => {
     // 1. Migrate packages
     const packageInserts = packages.map(pkg => ({
       value: pkg.value,
-      label_key: pkg.labelKey,
+      label_key: pkg.label_key,
       price: pkg.price,
-      tagline_key: pkg.taglineKey,
-      description_key: pkg.descriptionKey,
-      delivery_time_key: pkg.details.deliveryTimeKey
+      tagline_key: pkg.tagline_key,
+      description_key: pkg.description_key,
+      delivery_time_key: pkg.delivery_time_key
     }));
 
     const { data: insertedPackages, error: packageError } = await supabase
@@ -27,11 +27,11 @@ export const migratePackageData = async () => {
     // 2. Migrate package includes
     for (const pkg of packages) {
       const packageRecord = insertedPackages?.find(p => p.value === pkg.value);
-      if (packageRecord && pkg.details?.includesKeys) {
-        const includeInserts = pkg.details.includesKeys.map((includeKey, index) => ({
+      if (packageRecord && pkg.includes) {
+        const includeInserts = pkg.includes.map((include) => ({
           package_id: packageRecord.id,
-          include_key: includeKey,
-          include_order: index
+          include_key: include.include_key,
+          include_order: include.include_order
         }));
 
         const { error: includesError } = await supabase

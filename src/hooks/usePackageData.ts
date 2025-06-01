@@ -122,4 +122,4 @@ export const useAddons = () => {
   });
 };
 
-export { PackageData };
+export type { PackageData };
