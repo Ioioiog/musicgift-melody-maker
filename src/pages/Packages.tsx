@@ -117,25 +117,6 @@ const Packages = () => {
                         </p>
                       </div>}
 
-                    {/* Enhanced Features Preview */}
-                    {pkg.includes && pkg.includes.length > 0 && <div className="mb-8">
-                        <h4 className="text-sm font-bold text-white mb-4 flex items-center">
-                          <span className="w-6 h-6 bg-green-400/20 rounded-full flex items-center justify-center mr-2 border border-green-400/30">
-                            <span className="text-green-300 text-xs">✨</span>
-                          </span>
-                          {t('whatsIncluded')}
-                        </h4>
-                        <ul className="space-y-2">
-                          {pkg.includes.slice(0, 3).map((include, featureIndex) => <li key={featureIndex} className="flex items-start text-sm text-white/90">
-                              <span className="w-4 h-4 rounded-full bg-green-400/20 text-green-300 flex items-center justify-center mr-2 mt-1 flex-shrink-0 text-xs border border-green-400/30">✓</span>
-                              <span className="line-clamp-2">{tDb(include.include_key)}</span>
-                            </li>)}
-                          {pkg.includes.length > 3 && <li className="text-sm text-purple-200 font-medium">
-                              +{pkg.includes.length - 3} {t('moreFeatures') || 'more features'}
-                            </li>}
-                        </ul>
-                      </div>}
-
                     <div className="space-y-3">
                       <Link to={`/packages/${pkg.value}`}>
                         <Button variant="outline" className="w-full text-white border-white/30 hover:bg-white/10 backdrop-blur-md transition-all duration-300" size="lg">
