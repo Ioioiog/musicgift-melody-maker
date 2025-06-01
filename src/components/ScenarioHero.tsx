@@ -114,75 +114,7 @@ const ScenarioHero = () => {
       <div className="absolute inset-0 bg-black/40"></div>
       
       {/* Content container with professional layout */}
-      <div className="relative z-10 h-full flex items-center justify-between max-w-7xl mx-auto px-8 py-[6px]">
-        
-        {/* Left side - Icon and package name */}
-        
-
-        {/* Center - Main message */}
-        <motion.div className={`flex-1 max-w-2xl mx-8 transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`} initial={{
-        opacity: 0,
-        y: 10
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} transition={{
-        duration: 0.6,
-        delay: 0.1
-      }}>
-          
-        </motion.div>
-
-        {/* Action Buttons */}
-        <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4 ml-8" initial={{
-        opacity: 0,
-        x: 20
-      }} animate={{
-        opacity: 1,
-        x: 0
-      }} transition={{
-        duration: 0.6,
-        delay: 0.3
-      }}>
-          <Link to="/packages">
-            <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 font-semibold px-6 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg">
-              {t('seePackages') || 'See Packages'}
-            </Button>
-          </Link>
-          <Link to="/testimonials">
-            <Button size="lg" variant="outline" className="border-2 border-purple-300 text-purple-100 hover:bg-purple-500/20 hover:text-white px-6 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg bg-transparent">
-              {t('listenToSamples') || 'Listen to Samples'}
-            </Button>
-          </Link>
-        </motion.div>
-
-        {/* Right side - Professional accent */}
-        <motion.div className="hidden lg:flex items-center space-x-3" initial={{
-        opacity: 0,
-        x: 20
-      }} animate={{
-        opacity: 1,
-        x: 0
-      }} transition={{
-        duration: 0.6,
-        delay: 0.2
-      }}>
-          <div className="text-right">
-            <div className="text-xs text-purple-200 font-medium uppercase tracking-wider">
-              Since 2024
-            </div>
-            <div className="text-xs text-gray-400">
-              Trusted by 1000+ clients
-            </div>
-          </div>
-          <div className="w-px h-8 bg-white/20"></div>
-          <div className="flex flex-col space-y-1">
-            {[...Array(3)].map((_, i) => <div key={i} className="w-1 h-1 bg-purple-400 rounded-full animate-pulse" style={{
-            animationDelay: `${i * 0.3}s`
-          }} />)}
-          </div>
-        </motion.div>
-      </div>
+      
 
       {/* Bottom border accent */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
