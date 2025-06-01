@@ -1,105 +1,23 @@
+
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Plus, Edit, Trash2, Save, X, AlertCircle, Search, Package as PackageIcon, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertCircle, Search, Package as PackageIcon, ChevronDown } from 'lucide-react';
 import { usePackages } from '@/hooks/usePackageData';
 import { useTranslation } from '@/hooks/useTranslations';
-import { useToast } from '@/hooks/use-toast';
-import type { Package } from '@/types';
 
 const PackageManagement = () => {
   const { data: packages = [], isLoading } = usePackages();
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
-  const [editingPackage, setEditingPackage] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    value: '',
-    label_key: '',
-    price: 0,
-    tagline_key: '',
-    description_key: '',
-    delivery_time_key: ''
-  });
-  const { toast } = useToast();
 
   const filteredPackages = packages.filter(pkg => 
     pkg.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
     t(pkg.label_key).toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const handleSave = async () => {
-    try {
-      if (!formData.value || !formData.label_key) {
-        toast({ 
-          title: 'Validation Error', 
-          description: 'Package value and label key are required',
-          variant: 'destructive' 
-        });
-        return;
-      }
-
-      if (editingPackage) {
-        toast({ title: 'Package updated successfully (Note: This is static data)' });
-      }
-      
-      setEditingPackage(null);
-      resetForm();
-    } catch (error) {
-      console.error('Error saving package:', error);
-      toast({ 
-        title: 'Error saving package', 
-        description: 'This is static data and cannot be modified',
-        variant: 'destructive' 
-      });
-    }
-  };
-
-  const handleEdit = (pkg: Package) => {
-    setEditingPackage(pkg.id || pkg.value);
-    setFormData({
-      value: pkg.value,
-      label_key: pkg.label_key,
-      price: pkg.price,
-      tagline_key: pkg.tagline_key || '',
-      description_key: pkg.description_key || '',
-      delivery_time_key: pkg.delivery_time_key || ''
-    });
-  };
-
-  const handleDelete = async (packageId: string) => {
-    if (!confirm('Are you sure you want to delete this package? Note: This is static data and cannot be actually deleted.')) return;
-    
-    try {
-      toast({ title: 'Package deleted successfully (Note: This is static data)' });
-    } catch (error) {
-      console.error('Error deleting package:', error);
-      toast({ 
-        title: 'Error deleting package', 
-        description: 'This is static data and cannot be modified',
-        variant: 'destructive' 
-      });
-    }
-  };
-
-  const resetForm = () => {
-    setFormData({
-      value: '',
-      label_key: '',
-      price: 0,
-      tagline_key: '',
-      description_key: '',
-      delivery_time_key: ''
-    });
-  };
-
-  const handleCancel = () => {
-    setEditingPackage(null);
-    resetForm();
-  };
 
   const getTagColor = (tag?: string) => {
     switch (tag) {
@@ -143,7 +61,7 @@ const PackageManagement = () => {
             <PackageIcon className="w-6 h-6" />
             Package Management
           </h2>
-          <p className="text-gray-600 text-sm">Manage and view package configurations</p>
+          <p className="text-gray-600 text-sm">View package configurations</p>
         </div>
         <div className="relative">
           <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -156,77 +74,18 @@ const PackageManagement = () => {
         </div>
       </div>
 
-      {/* Static Data Warning */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      {/* Static Data Info */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div className="flex items-center space-x-2">
-          <AlertCircle className="w-5 h-5 text-yellow-600" />
+          <AlertCircle className="w-5 h-5 text-blue-600" />
           <div>
-            <div className="font-medium text-yellow-800">Static Data Mode</div>
-            <div className="text-sm text-yellow-700">
-              Packages are managed via static data (packages.ts). Changes won't persist unless connected to a database.
+            <div className="font-medium text-blue-800">Static Package System</div>
+            <div className="text-sm text-blue-700">
+              Packages are managed via static data (packages.ts) for better type safety and deployment consistency.
             </div>
           </div>
         </div>
       </div>
-
-      {/* Editing Form */}
-      {editingPackage && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Edit Package</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Package Value *</label>
-                <Input
-                  value={formData.value}
-                  onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-                  placeholder="e.g., personal, premium"
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Price (RON) *</label>
-                <Input
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) || 0 })}
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Label Key *</label>
-                <Input
-                  value={formData.label_key}
-                  onChange={(e) => setFormData({ ...formData, label_key: e.target.value })}
-                  placeholder="e.g., personalPackage"
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Tagline Key</label>
-                <Input
-                  value={formData.tagline_key}
-                  onChange={(e) => setFormData({ ...formData, tagline_key: e.target.value })}
-                  placeholder="e.g., personalTagline"
-                />
-              </div>
-            </div>
-
-            <div className="flex space-x-2">
-              <Button onClick={handleSave}>
-                <Save className="w-4 h-4 mr-2" />
-                Save
-              </Button>
-              <Button variant="outline" onClick={handleCancel}>
-                <X className="w-4 h-4 mr-2" />
-                Cancel
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Packages List */}
       <div className="space-y-4">
@@ -258,30 +117,6 @@ const PackageManagement = () => {
                             ))}
                           </div>
                         </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEdit(pkg);
-                          }}
-                          disabled={!!editingPackage}
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(pkg.id || pkg.value);
-                          }}
-                          disabled={!!editingPackage}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
                       </div>
                     </div>
                   </AccordionTrigger>
