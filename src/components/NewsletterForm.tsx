@@ -36,7 +36,7 @@ const NewsletterForm = () => {
       <div className="flex flex-col space-y-3">
         <Input
           type="text"
-          placeholder={t('enterName') || 'Your name (optional)'}
+          placeholder={t('enterName')}
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-purple-400/20 text-sm sm:text-base"
@@ -44,7 +44,7 @@ const NewsletterForm = () => {
         />
         <Input
           type="email"
-          placeholder={t('enterEmail') || 'Enter your email address'}
+          placeholder={t('enterEmail')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -59,15 +59,15 @@ const NewsletterForm = () => {
           {subscribeMutation.isPending ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              {t('subscribing') || 'Subscribing...'}
+              {t('subscribing')}
             </>
           ) : (
-            t('subscribe') || 'Subscribe'
+            t('subscribe')
           )}
         </Button>
       </div>
       <p className="text-xs text-gray-400 leading-relaxed">
-        {t('subscribeDisclaimer') || 'By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.'}
+        {t('subscribeDisclaimer')}
       </p>
     </form>
   );

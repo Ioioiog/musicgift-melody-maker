@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -25,7 +26,7 @@ const Footer = () => {
               <img src="/lovable-uploads/61b6a361-9741-4d73-8075-0df2b2f8fb27.png" alt="MusicGift by Mango Records" className="h-10 sm:h-12 w-auto transition-transform duration-300 group-hover:scale-105" />
             </Link>
             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-              {t('footerDescription') || 'Creating personalized musical gifts. Transform your special moments into beautiful custom songs.'}
+              {t('footerDescription')}
             </p>
             <div className="flex space-x-3 sm:space-x-4">
               {[{
@@ -57,28 +58,28 @@ const Footer = () => {
           {/* Quick Links */}
           <div className="space-y-4 sm:space-y-6">
             <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 relative">
-              {t('quickLinks') || 'Quick Links'}
+              {t('quickLinks')}
               <div className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400"></div>
             </h3>
             <ul className="space-y-2 sm:space-y-3">
               {[{
               to: "/",
-              label: t('home') || 'Home'
+              label: t('home')
             }, {
               to: "/about",
-              label: t('about') || 'About Us'
+              label: t('about')
             }, {
               to: "/packages",
-              label: t('packages') || 'Packages'
+              label: t('packages')
             }, {
               to: "/how-it-works",
-              label: t('howItWorks') || 'How It Works'
+              label: t('howItWorks')
             }, {
               to: "/testimonials",
-              label: t('testimonials') || 'Testimonials'
+              label: t('testimonials')
             }, {
               to: "/admin",
-              label: t('admin') || 'Admin'
+              label: t('admin')
             }].map(({
               to,
               label
@@ -94,7 +95,7 @@ const Footer = () => {
           {/* Contact Info */}
           <div className="space-y-4 sm:space-y-6">
             <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 relative">
-              {t('contactInfo') || 'Contact Info'}
+              {t('contactInfo')}
               <div className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400"></div>
             </h3>
             <div className="space-y-3 sm:space-y-4">
@@ -125,10 +126,10 @@ const Footer = () => {
             {/* Legal Links */}
             <div className="pt-3 sm:pt-4">
               <h4 className="text-xs sm:text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2 sm:mb-3">
-                {t('legal') || 'Legal'}
+                {t('legal')}
               </h4>
               <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm">
-                {[t('termsConditions') || 'Terms & Conditions', t('privacyPolicy') || 'Privacy Policy', t('refundPolicy') || 'Refund Policy', t('cookiePolicy') || 'Cookie Policy'].map(item => <li key={item}>
+                {[t('termsConditions'), t('privacyPolicy'), t('refundPolicy'), t('cookiePolicy')].map(item => <li key={item}>
                     <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors duration-300">
                       {item}
                     </a>
@@ -140,11 +141,11 @@ const Footer = () => {
           {/* Newsletter */}
           <div className="space-y-4 sm:space-y-6 sm:col-span-2 lg:col-span-1">
             <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 relative">
-              {t('stayUpdated') || 'Stay Updated'}
+              {t('stayUpdated')}
               <div className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400"></div>
             </h3>
             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-              {t('newsletterDescription') || 'Subscribe to get special offers, new packages, and exclusive musical content delivered to your inbox.'}
+              {t('newsletterDescription')}
             </p>
             <NewsletterForm />
           </div>
@@ -154,7 +155,7 @@ const Footer = () => {
         <div className="border-t border-white/10 mt-8 sm:mt-12 md:mt-16 pt-6 sm:pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
             <p className="text-xs sm:text-sm text-slate-50 text-center sm:text-left">
-              {t('copyright') || '© 2025 MusicGift.ro. All rights reserved. Made by RED DOMAIN with ❤️ for music lovers.'}
+              {t('copyright')}
             </p>
           </div>
         </div>

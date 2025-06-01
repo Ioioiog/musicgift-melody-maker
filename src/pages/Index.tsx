@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -65,21 +66,21 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
           <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 py-[180px] px-[38px]">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight">
-              {t('heroTitle') || 'Transformă Emoțiile Tale în Muzică'}
+              {t('heroTitle')}
             </h1>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl">
-              {t('heroSubtitle') || 'Cel mai frumos cadou: o melodie creată special pentru cineva drag.'}
+              {t('heroSubtitle')}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Link to="/packages">
                 <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg w-full sm:w-auto">
-                  {t('seePackages') || 'See Packages'}
+                  {t('seePackages')}
                 </Button>
               </Link>
               <Link to="/testimonials">
                 <Button size="lg" variant="outline" className="border-2 border-purple-300 text-purple-100 hover:bg-purple-500/20 hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg bg-transparent w-full sm:w-auto">
-                  {t('listenToSamples') || 'Listen to Samples'}
+                  {t('listenToSamples')}
                 </Button>
               </Link>
             </div>
@@ -132,15 +133,15 @@ const Index = () => {
         }} transition={{
           duration: 0.6
         }}>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">{t('chooseYourPackage') || 'Choose Your Package'}</h2>
-            <p className="text-base sm:text-lg md:text-xl text-white/90 px-4">{t('selectPerfectPackage') || 'Select the perfect music package that fits your needs and budget'}</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">{t('chooseYourPackage')}</h2>
+            <p className="text-base sm:text-lg md:text-xl text-white/90 px-4">{t('selectPerfectPackage')}</p>
           </motion.div>
           
           {/* Loading State */}
           {isLoading && <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px]">
               <div className="text-center">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-white/20 border-t-white/60 rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-white/80 text-sm sm:text-base">{t('loadingPackages') || 'Loading packages...'}</p>
+                <p className="text-white/80 text-sm sm:text-base">{t('loadingPackages')}</p>
               </div>
             </div>}
 
@@ -234,7 +235,7 @@ const Index = () => {
         }}>
               <Link to="/packages">
                 <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
-                  {t('viewAllPackages') || 'View All Packages'}
+                  {t('viewAllPackages')}
                 </Button>
               </Link>
             </motion.div>}
@@ -253,13 +254,13 @@ const Index = () => {
     }}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container mx-auto px-4 sm:px-6 text-center relative z-10">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">{t('readyToCreateSpecial') || 'Ready to Create Something Special?'}</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">{t('readyToCreateSpecial')}</h2>
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
-            {t('helpCreatePersonalized') || 'Let us help you create a personalized musical gift that will be treasured forever.'}
+            {t('helpCreatePersonalized')}
           </p>
           <Link to="/packages">
             <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold text-sm sm:text-base">
-              {t('startYourOrder') || 'Start Your Order'}
+              {t('startYourOrder')}
             </Button>
           </Link>
         </div>

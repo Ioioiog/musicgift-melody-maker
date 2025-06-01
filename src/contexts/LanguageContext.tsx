@@ -30,6 +30,41 @@ const translations = {
     getStarted: "Începe acum",
     orderNow: "Comandă acum",
     
+    // Hero Section
+    heroTitle: "Transformă emoțiile tale în muzică",
+    heroSubtitle: "Cel mai frumos cadou: o melodie creată special pentru cineva drag",
+    seePackages: "Vezi pachetele",
+    listenToSamples: "Ascultă mostre",
+    
+    // Packages Section
+    chooseYourPackage: "Alege pachetul tău",
+    selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
+    viewAllPackages: "Vezi toate pachetele",
+    
+    // CTA Section
+    readyToCreateSpecial: "Gata să creezi ceva special?",
+    helpCreatePersonalized: "Lasă-ne să te ajutăm să creezi un cadou muzical personalizat care va fi prețuit pentru totdeauna",
+    
+    // Footer
+    footerDescription: "Creăm cadouri muzicale personalizate. Transformă momentele tale speciale în melodii frumoase personalizate",
+    quickLinks: "Link-uri rapide",
+    contactInfo: "Informații contact",
+    legal: "Legal",
+    termsConditions: "Termeni și condiții",
+    privacyPolicy: "Politica de confidențialitate",
+    refundPolicy: "Politica de rambursare",
+    cookiePolicy: "Politica cookie-urilor",
+    stayUpdated: "Rămâi la curent",
+    newsletterDescription: "Abonează-te pentru a primi oferte speciale, pachete noi și conținut muzical exclusiv direct în inbox",
+    copyright: "© 2025 MusicGift.ro. Toate drepturile rezervate. Realizat de RED DOMAIN cu ❤️ pentru iubitorii de muzică",
+    
+    // Newsletter Form
+    enterName: "Numele tău (opțional)",
+    enterEmail: "Introdu adresa de email",
+    subscribe: "Abonează-te",
+    subscribing: "Se abonează...",
+    subscribeDisclaimer: "Prin abonare, accepți Politica noastră de confidențialitate și consimți să primești actualizări de la compania noastră",
+    
     // How It Works Page
     howItWorksTitle: "Cum funcționează",
     howItWorksSubtitle: "Procesul nostru simplu de creare a cadourilor muzicale personalizate",
@@ -324,6 +359,41 @@ const translations = {
     contact: "Contact",
     getStarted: "Get Started",
     orderNow: "Order Now",
+    
+    // Hero Section
+    heroTitle: "Transform Your Emotions Into Music",
+    heroSubtitle: "The most beautiful gift: a song created especially for someone dear",
+    seePackages: "See Packages",
+    listenToSamples: "Listen to Samples",
+    
+    // Packages Section
+    chooseYourPackage: "Choose Your Package",
+    selectPerfectPackage: "Select the perfect package that fits your needs and budget",
+    viewAllPackages: "View All Packages",
+    
+    // CTA Section
+    readyToCreateSpecial: "Ready to Create Something Special?",
+    helpCreatePersonalized: "Let us help you create a personalized musical gift that will be treasured forever",
+    
+    // Footer
+    footerDescription: "Creating personalized musical gifts. Transform your special moments into beautiful custom songs",
+    quickLinks: "Quick Links",
+    contactInfo: "Contact Info",
+    legal: "Legal",
+    termsConditions: "Terms & Conditions",
+    privacyPolicy: "Privacy Policy",
+    refundPolicy: "Refund Policy",
+    cookiePolicy: "Cookie Policy",
+    stayUpdated: "Stay Updated",
+    newsletterDescription: "Subscribe to get special offers, new packages, and exclusive musical content delivered to your inbox",
+    copyright: "© 2025 MusicGift.ro. All rights reserved. Made by RED DOMAIN with ❤️ for music lovers",
+    
+    // Newsletter Form
+    enterName: "Your name (optional)",
+    enterEmail: "Enter your email address",
+    subscribe: "Subscribe",
+    subscribing: "Subscribing...",
+    subscribeDisclaimer: "By subscribing, you agree to our Privacy Policy and consent to receive updates from our company",
     
     // How It Works Page
     howItWorksTitle: "How It Works",
