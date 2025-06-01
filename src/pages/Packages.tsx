@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -8,6 +9,7 @@ import { usePackages } from "@/hooks/usePackageData";
 import { useTranslation } from "@/hooks/useTranslations";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Packages = () => {
   const {
@@ -40,90 +42,123 @@ const Packages = () => {
       {/* Dynamic Scenario Hero Section */}
       <ScenarioHero />
 
-      {/* Enhanced Packages Section */}
-      <section className="bg-gradient-to-br from-gray-50 via-white to-purple-50 relative overflow-hidden py-16">
+      {/* Enhanced Packages Section with Homepage Style */}
+      <section className="relative overflow-hidden py-16" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        {/* Overlay for better readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
+        
         <div className="container mx-auto relative z-10 px-[22px]">
+          {/* Section Title */}
+          <motion.div className="text-center mb-12" initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6
+          }}>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('chooseYourPackage')}</h2>
+            <p className="text-lg md:text-xl text-white/90">{t('selectPerfectPackage')}</p>
+          </motion.div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-8xl mx-auto">
-            {packages.map((pkg, index) => <Card key={pkg.id || pkg.value} className={`relative hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 backdrop-blur-sm bg-white/80 border-0 shadow-lg group ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-200 scale-105 shadow-purple-100' : ''}`}>
-                {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
-                    <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl animate-pulse">
-                      ⭐ {t('mostPopular')}
-                    </span>
-                  </div>}
-                
-                {/* Gradient overlay for popular packages */}
-                {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-yellow-500/5 rounded-lg"></div>}
-                
-                <CardContent className="p-8 relative z-10">
-                  {/* Icon and Title */}
-                  <div className="text-center mb-8">
-                    <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                      {pkg.value === 'personal' ? '🎁' : pkg.value === 'business' ? '💼' : pkg.value === 'premium' ? '🌟' : pkg.value === 'artist' ? '🎤' : pkg.value === 'instrumental' ? '🎶' : pkg.value === 'remix' ? '🔁' : '🎁'}
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors duration-300">
-                      {tDb(pkg.label_key)}
-                    </h3>
-                    {pkg.tagline_key && <p className="text-sm text-purple-600 font-semibold mb-4 bg-purple-50 px-3 py-1 rounded-full inline-block">
-                        {tDb(pkg.tagline_key)}
-                      </p>}
-                    
-                    {/* Enhanced Price Display */}
-                    <div className="mb-6">
-                      <div className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
-                        {pkg.price}
-                        <span className="text-xl text-gray-500 ml-2">RON</span>
+            {packages.map((pkg, index) => <motion.div key={pkg.id || pkg.value} initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 0.1 * index
+            }}>
+                <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
+                  {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
+                      <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl animate-pulse">
+                        ⭐ {t('mostPopular')}
+                      </span>
+                    </div>}
+                  
+                  <CardContent className="p-8 relative z-10 text-white">
+                    {/* Icon and Title */}
+                    <div className="text-center mb-8">
+                      <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                        {pkg.value === 'personal' ? '🎁' : pkg.value === 'business' ? '💼' : pkg.value === 'premium' ? '🌟' : pkg.value === 'artist' ? '🎤' : pkg.value === 'instrumental' ? '🎶' : pkg.value === 'remix' ? '🔁' : '🎁'}
                       </div>
-                      {pkg.delivery_time_key && <div className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full inline-block">
-                          ⏱️ {tDb(pkg.delivery_time_key)}
-                        </div>}
+                      <h3 className="text-2xl font-bold mb-3">
+                        {tDb(pkg.label_key)}
+                      </h3>
+                      {pkg.tagline_key && <p className="text-sm text-purple-200 font-semibold mb-4 bg-purple-500/20 px-3 py-1 rounded-full inline-block">
+                          {tDb(pkg.tagline_key)}
+                        </p>}
+                      
+                      {/* Enhanced Price Display */}
+                      <div className="mb-6">
+                        <div className="text-4xl font-bold text-white mb-2">
+                          {pkg.price}
+                          <span className="text-xl text-white/70 ml-2">RON</span>
+                        </div>
+                        {pkg.delivery_time_key && <div className="text-sm text-white/80 bg-white/10 px-3 py-1 rounded-full inline-block">
+                            ⏱️ {tDb(pkg.delivery_time_key)}
+                          </div>}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Description */}
-                  {pkg.description_key && <div className="mb-8 p-4 bg-gray-50 rounded-lg border-l-4 border-purple-200">
-                      <p className="text-sm text-gray-700 leading-relaxed italic line-clamp-3">
-                        {tDb(pkg.description_key)}
-                      </p>
-                    </div>}
+                    {/* Description */}
+                    {pkg.description_key && <div className="mb-8 p-4 bg-white/10 rounded-lg border-l-4 border-purple-300/50">
+                        <p className="text-sm text-white/90 leading-relaxed italic line-clamp-3">
+                          {tDb(pkg.description_key)}
+                        </p>
+                      </div>}
 
-                  {/* Enhanced Features Preview */}
-                  {pkg.includes && pkg.includes.length > 0 && <div className="mb-8">
-                      <h4 className="text-sm font-bold text-gray-900 mb-4 flex items-center">
-                        <span className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-2">
-                          <span className="text-green-600 text-xs">✨</span>
-                        </span>
-                        {t('whatsIncluded')}
-                      </h4>
-                      <ul className="space-y-2">
-                        {pkg.includes.slice(0, 3).map((include, featureIndex) => <li key={featureIndex} className="flex items-start text-sm text-gray-600">
-                            <span className="w-4 h-4 rounded-full bg-green-500 text-white flex items-center justify-center mr-2 mt-1 flex-shrink-0 text-xs">✓</span>
-                            <span className="line-clamp-2">{tDb(include.include_key)}</span>
-                          </li>)}
-                        {pkg.includes.length > 3 && <li className="text-sm text-purple-600 font-medium">
-                            +{pkg.includes.length - 3} {t('moreFeatures') || 'more features'}
-                          </li>}
-                      </ul>
-                    </div>}
+                    {/* Enhanced Features Preview */}
+                    {pkg.includes && pkg.includes.length > 0 && <div className="mb-8">
+                        <h4 className="text-sm font-bold text-white mb-4 flex items-center">
+                          <span className="w-6 h-6 bg-green-400/20 rounded-full flex items-center justify-center mr-2 border border-green-400/30">
+                            <span className="text-green-300 text-xs">✨</span>
+                          </span>
+                          {t('whatsIncluded')}
+                        </h4>
+                        <ul className="space-y-2">
+                          {pkg.includes.slice(0, 3).map((include, featureIndex) => <li key={featureIndex} className="flex items-start text-sm text-white/90">
+                              <span className="w-4 h-4 rounded-full bg-green-400/20 text-green-300 flex items-center justify-center mr-2 mt-1 flex-shrink-0 text-xs border border-green-400/30">✓</span>
+                              <span className="line-clamp-2">{tDb(include.include_key)}</span>
+                            </li>)}
+                          {pkg.includes.length > 3 && <li className="text-sm text-purple-200 font-medium">
+                              +{pkg.includes.length - 3} {t('moreFeatures') || 'more features'}
+                            </li>}
+                        </ul>
+                      </div>}
 
-                  <div className="space-y-3">
-                    <Link to={`/packages/${pkg.value}`}>
-                      <Button variant="outline" className="w-full text-purple-600 border-purple-600 hover:bg-purple-50 transition-all duration-300" size="lg">
-                        {t('learnMore') || 'Learn More'}
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </Link>
-                    
-                    <Link to="/order">
-                      <Button className={`w-full text-lg py-4 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 text-white shadow-purple-200' : 'bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white'}`} size="lg">
-                        <span className="mr-2">🚀</span>
-                        {t('orderNow')}
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>)}
+                    <div className="space-y-3">
+                      <Link to={`/packages/${pkg.value}`}>
+                        <Button variant="outline" className="w-full text-white border-white/30 hover:bg-white/10 backdrop-blur-md transition-all duration-300" size="lg">
+                          {t('learnMore') || 'Learn More'}
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                      </Link>
+                      
+                      <Link to="/order">
+                        <Button className={`w-full text-lg py-4 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md' : 'bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md'}`} size="lg">
+                          <span className="mr-2">🚀</span>
+                          {t('orderNow')}
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>)}
           </div>
         </div>
+
+        {/* Bottom border accent */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
       </section>
 
       <Footer />
