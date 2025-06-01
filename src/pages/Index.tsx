@@ -9,7 +9,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
 import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-
 const Index = () => {
   const {
     data: packages = [],
@@ -30,9 +29,7 @@ const Index = () => {
 
   // Get video source based on language
   const getVideoSource = () => {
-    return language === 'ro' 
-      ? "/lovable-uploads/Jingle Musicgift master.mp4"
-      : "/lovable-uploads/MusicGiftvideoENG.mp4";
+    return language === 'ro' ? "/lovable-uploads/Jingle Musicgift master.mp4" : "/lovable-uploads/MusicGiftvideoENG.mp4";
   };
 
   // Auto-play audio when component mounts
@@ -43,7 +40,6 @@ const Index = () => {
       });
     }
   }, []);
-
   const toggleMute = () => {
     if (audioRef.current) {
       audioRef.current.muted = !isMuted;
@@ -53,21 +49,13 @@ const Index = () => {
 
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
-  
   return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Video Background - Mobile Optimized */}
       <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-center overflow-hidden">
         {/* Video Background */}
-        <video 
-          className="absolute top-0 left-0 w-full h-full object-cover z-0" 
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-          key={language}
-        >
+        <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline key={language}>
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
@@ -81,26 +69,17 @@ const Index = () => {
         
         {/* Mute/Unmute Button - Mobile responsive positioning */}
         <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 right-4 sm:right-6 md:right-8 z-30">
-          <Button
-            onClick={toggleMute}
-            size="icon"
-            className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md w-10 h-10 sm:w-12 sm:h-12"
-          >
+          <Button onClick={toggleMute} size="icon" className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md w-10 h-10 sm:w-12 sm:h-12">
             {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
           </Button>
-          <audio
-            ref={audioRef}
-            loop
-            muted={isMuted}
-            key={language}
-          >
+          <audio ref={audioRef} loop muted={isMuted} key={language}>
             <source src={getVideoSource()} type="audio/mp4" />
           </audio>
         </div>
         
         {/* Hero Content - Mobile optimized */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
-          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in">
+          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in my-[15px] px-0 mx-0 py-[119px]">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight">
               {t('heroTitle') || 'Transformă Emoțiile Tale în Muzică'}
             </h1>
@@ -162,7 +141,7 @@ const Index = () => {
 
           {/* Packages Grid - Mobile responsive */}
           {!isLoading && !error && previewPackages.length > 0 && <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
-              {previewPackages.map(pkg => <Card key={pkg.id} className={`relative hover:shadow-xl transition-all duration-300 ${(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') ? 'border-2 border-purple-200 scale-105' : ''}`}>
+              {previewPackages.map(pkg => <Card key={pkg.id} className={`relative hover:shadow-xl transition-all duration-300 ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'border-2 border-purple-200 scale-105' : ''}`}>
                   {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
                       <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
                         {t('mostPopular')}
@@ -238,5 +217,4 @@ const Index = () => {
       <Footer />
     </div>;
 };
-
 export default Index;
