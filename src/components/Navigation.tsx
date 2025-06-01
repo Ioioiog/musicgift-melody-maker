@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -43,15 +42,15 @@ const Navigation = () => {
 
       {/* Navigation Bar */}
       <header className="fixed top-2 sm:top-4 w-full z-50 border-b border-gray-100" style={{
-        backgroundImage: 'url(/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         {/* Overlay for better readability */}
         <div className="absolute inset-0 bg-black/40"></div>
         
-        <div className="container mx-auto sm:px-4 md:px-6 px-[37px] my-0 relative z-10">
+        <div className="container mx-auto sm:px-0 md:px-0 my-0 relative z-10 px-[26px] py-0">
           <div className="flex items-center justify-between h-16 sm:h-18 md:h-20 py-0">
             
             {/* Desktop Nav - positioned after logo */}
