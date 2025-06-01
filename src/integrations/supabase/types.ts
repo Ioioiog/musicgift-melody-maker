@@ -268,6 +268,51 @@ export type Database = {
         }
         Relationships: []
       }
+      suno_prompts: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_optimized: boolean
+          language: string
+          lyrics: string
+          order_id: string
+          prompt: string
+          technical_tags: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_optimized?: boolean
+          language?: string
+          lyrics: string
+          order_id: string
+          prompt: string
+          technical_tags: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_optimized?: boolean
+          language?: string
+          lyrics?: string
+          order_id?: string
+          prompt?: string
+          technical_tags?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       translations: {
         Row: {
           created_at: string | null

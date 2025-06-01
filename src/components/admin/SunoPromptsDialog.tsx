@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Copy, RefreshCw, Music, Edit, Save, Check, Globe } from 'lucide-react';
+import { Copy, RefreshCw, Music, Edit, Save, Check, Globe, Database } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -35,7 +35,8 @@ interface SunoPromptsDialogProps {
 const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProps) => {
   const [prompts, setPrompts] = useState<EditablePrompt[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [savedPrompt, setSavedPrompt] = useState<string | null>(null);
+  const [savedPromptId, setSavedPromptId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
   const generatePrompts = async () => {
@@ -70,6 +71,29 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadExistingPrompts = async () => {
+    if (!orderData?.id) return;
+
+    try {
+      const { data: existingPrompts, error } = await supabase
+        .from('suno_prompts')
+        .select('*')
+        .eq('order_id', orderData.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      if (existingPrompts && existingPrompts.length > 0) {
+        const optimizedPrompt = existingPrompts.find(p => p.is_optimized);
+        if (optimizedPrompt) {
+          setSavedPromptId(optimizedPrompt.id);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading existing prompts:', error);
     }
   };
 
@@ -131,24 +155,91 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
     });
   };
 
-  const savePromptForOrder = (index: number) => {
+  const savePromptToDatabase = async (index: number) => {
+    if (!orderData?.id) {
+      toast({
+        title: 'Error',
+        description: 'Order ID is required to save prompt',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setIsSaving(true);
     const prompt = prompts[index];
-    setSavedPrompt(prompt.prompt);
-    
-    toast({
-      title: 'Prompt saved',
-      description: 'This prompt has been saved as the optimized version for this order'
-    });
+
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: 'Authentication required',
+          description: 'You must be logged in to save prompts',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // First, unmark any existing optimized prompts for this order
+      await supabase
+        .from('suno_prompts')
+        .update({ is_optimized: false })
+        .eq('order_id', orderData.id)
+        .eq('is_optimized', true);
+
+      // Save the new optimized prompt
+      const { data: newPrompt, error } = await supabase
+        .from('suno_prompts')
+        .insert({
+          order_id: orderData.id,
+          title: prompt.title,
+          description: prompt.description,
+          lyrics: prompt.lyrics,
+          technical_tags: prompt.technicalTags,
+          prompt: prompt.prompt,
+          language: getLanguage(),
+          is_optimized: true,
+          created_by: user.id
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setSavedPromptId(newPrompt.id);
+      
+      toast({
+        title: 'Prompt saved to database',
+        description: 'This prompt has been saved as the optimized version for this order',
+        duration: 5000
+      });
+
+    } catch (error) {
+      console.error('Error saving prompt to database:', error);
+      toast({
+        title: 'Error saving prompt',
+        description: 'Failed to save prompt to database. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   React.useEffect(() => {
     if (isOpen && prompts.length === 0) {
+      loadExistingPrompts();
       generatePrompts();
     }
   }, [isOpen]);
 
   const getLanguage = () => {
     return orderData?.form_data?.language || 'English';
+  };
+
+  const isPromptSavedInDatabase = (index: number) => {
+    return savedPromptId !== null;
   };
 
   return (
@@ -162,6 +253,12 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
               <Globe className="w-3 h-3 mr-1" />
               {getLanguage()}
             </Badge>
+            {savedPromptId && (
+              <Badge className="bg-green-100 text-green-800 border-green-300">
+                <Database className="w-3 h-3 mr-1" />
+                Saved in DB
+              </Badge>
+            )}
           </DialogTitle>
         </DialogHeader>
 
@@ -218,10 +315,10 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                       <Badge variant="outline">
                         Variation {index + 1}
                       </Badge>
-                      {savedPrompt === prompt.prompt && (
+                      {isPromptSavedInDatabase(index) && (
                         <Badge className="bg-green-100 text-green-800 border-green-300">
                           <Check className="w-3 h-3 mr-1" />
-                          Saved
+                          Saved in DB
                         </Badge>
                       )}
                     </div>
@@ -341,18 +438,26 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                   {!prompt.isEditing && (
                     <div className="flex justify-end pt-2">
                       <Button
-                        variant={savedPrompt === prompt.prompt ? "default" : "outline"}
+                        variant={isPromptSavedInDatabase(index) ? "default" : "outline"}
                         size="sm"
-                        onClick={() => savePromptForOrder(index)}
-                        disabled={savedPrompt === prompt.prompt}
+                        onClick={() => savePromptToDatabase(index)}
+                        disabled={isSaving}
                       >
-                        {savedPrompt === prompt.prompt ? (
+                        {isSaving ? (
                           <>
-                            <Check className="w-4 h-4 mr-2" />
-                            Saved as Optimized
+                            <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                            Saving...
+                          </>
+                        ) : isPromptSavedInDatabase(index) ? (
+                          <>
+                            <Database className="w-4 h-4 mr-2" />
+                            Saved to Database
                           </>
                         ) : (
-                          'Save as Optimized'
+                          <>
+                            <Database className="w-4 h-4 mr-2" />
+                            Save to Database
+                          </>
                         )}
                       </Button>
                     </div>
@@ -366,7 +471,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                   <ol className="text-sm text-blue-800 space-y-1">
                     <li>1. Review and edit the generated lyrics in <strong>{getLanguage()}</strong> as needed</li>
                     <li>2. Adjust technical tags to match your musical vision</li>
-                    <li>3. Save your preferred optimized version</li>
+                    <li>3. Save your preferred optimized version to the database</li>
                     <li>4. Copy the complete prompt (lyrics + technical tags)</li>
                     <li>5. Go to Suno.AI and create a new song</li>
                     <li>6. Paste the complete prompt in Suno.AI</li>
