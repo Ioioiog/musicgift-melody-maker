@@ -9,7 +9,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
 import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-
 const Index = () => {
   const {
     data: packages = [],
@@ -103,9 +102,7 @@ const Index = () => {
         {/* Scroll down indicator - hidden on very small screens */}
         <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-30 hidden sm:block">
           <div className="animate-bounce">
-            <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-white rounded-full flex justify-center">
-              <div className="w-1 h-2 sm:h-3 bg-white rounded-full mt-1.5 sm:mt-2 animate-pulse"></div>
-            </div>
+            
           </div>
         </div>
       </section>
@@ -199,11 +196,11 @@ const Index = () => {
 
       {/* CTA Section with Purple Musical Background - Mobile optimized */}
       <section className="py-8 sm:py-12 md:py-16 text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container mx-auto px-4 sm:px-6 text-center relative z-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">{t('readyToCreateSpecial') || 'Ready to Create Something Special?'}</h2>
@@ -221,5 +218,4 @@ const Index = () => {
       <Footer />
     </div>;
 };
-
 export default Index;
