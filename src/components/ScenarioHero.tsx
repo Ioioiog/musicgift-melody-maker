@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslations';
 import { Gift, Heart, Users, Crown, Sparkles, Diamond, Car, Briefcase, Building, Mic, Music, RotateCcw, FileMusic, Star, Package, Cake, HeartHandshake, UserCheck, PartyPopper, Award, TrendingUp, Headphones, Volume2, Shuffle } from 'lucide-react';
+
 const scenarios = [
 // Personal Package scenarios
 {
@@ -102,16 +103,17 @@ const ScenarioHero = () => {
     text,
     packageKey
   } = scenarios[index];
-  return <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+  return (
+    <section className="relative h-30 flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-      backgroundImage: `url('/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png')`
-    }} />
+        backgroundImage: `url('/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png')`
+      }} />
       
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-slate-800/75 to-slate-900/85"></div>
       
       <div style={{
-      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-    }} className="absolute inset-0 opacity-50 py-0"></div>
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }} className="absolute inset-0 opacity-50 py-0"></div>
 
       <div className="relative z-10 max-w-5xl text-center px-[73px] my-0 mx-0 py-[12px]">
         <motion.div className={`transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`} initial={{
@@ -175,6 +177,7 @@ const ScenarioHero = () => {
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-22 bg-gradient-to-t from-gray-50 to-transparent"></div>
-    </section>;
+    </section>
+  );
 };
 export default ScenarioHero;
