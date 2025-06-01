@@ -1,4 +1,3 @@
-
 import { useParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -53,7 +52,7 @@ const PackageDetails = () => {
     );
   }
 
-  const isPopular = packageData.tags?.some(tag => tag.tag_type === 'popular');
+  const isPopular = packageData.tags?.some(tag => tag.tag_type === 'popular') || packageData.tag === 'popular';
 
   return (
     <div className="min-h-screen">
@@ -132,7 +131,6 @@ const PackageDetails = () => {
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               
-              {/* Description */}
               {packageData.description_key && (
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 mb-4">
@@ -146,7 +144,6 @@ const PackageDetails = () => {
                 </div>
               )}
 
-              {/* Features */}
               {packageData.includes && packageData.includes.length > 0 && (
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 mb-4">

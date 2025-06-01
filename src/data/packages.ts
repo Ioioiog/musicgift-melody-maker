@@ -1,8 +1,8 @@
-
 import type { Package } from '@/types';
 
 export const packages: Package[] = [
   {
+    id: "personal-package",
     value: "personal",
     label_key: "personalPackage",
     tagline_key: "personalTagline",
@@ -247,6 +247,7 @@ export const packages: Package[] = [
     ]
   },
   {
+    id: "premium-package",
     value: "premium",
     label_key: "premiumPackage",
     tagline_key: "premiumTagline",
@@ -408,6 +409,7 @@ export const packages: Package[] = [
     ]
   },
   {
+    id: "business-package",
     value: "business",
     label_key: "businessPackage",
     tagline_key: "businessTagline",
@@ -518,6 +520,7 @@ export const packages: Package[] = [
     ]
   },
   {
+    id: "artist-package",
     value: "artist",
     label_key: "artistPackage",
     tagline_key: "artistTagline",
@@ -620,6 +623,7 @@ export const packages: Package[] = [
     ]
   },
   {
+    id: "remix-package",
     value: "remix",
     label_key: "remixPackage",
     tagline_key: "remixTagline",
@@ -709,6 +713,7 @@ export const packages: Package[] = [
     ]
   },
   {
+    id: "instrumental-package",
     value: "instrumental",
     label_key: "instrumentalPackage",
     tagline_key: "instrumentalTagline",
@@ -796,6 +801,7 @@ export const packages: Package[] = [
     ]
   },
   {
+    id: "gift-package",
     value: "gift",
     label_key: "giftPackage",
     tagline_key: "giftTagline",

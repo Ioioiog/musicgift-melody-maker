@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -159,8 +158,8 @@ const Index = () => {
 
           {/* Packages Grid - Mobile responsive */}
           {!isLoading && !error && previewPackages.length > 0 && <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
-              {previewPackages.map(pkg => <Card key={pkg.id} className={`relative hover:shadow-xl transition-all duration-300 ${pkg.tags?.some(tag => tag.tag_type === 'popular') ? 'border-2 border-purple-200 scale-105' : ''}`}>
-                  {pkg.tags?.some(tag => tag.tag_type === 'popular') && <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
+              {previewPackages.map(pkg => <Card key={pkg.id} className={`relative hover:shadow-xl transition-all duration-300 ${(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') ? 'border-2 border-purple-200 scale-105' : ''}`}>
+                  {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
                       <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
                         {t('mostPopular')}
                       </span>

@@ -53,14 +53,14 @@ const Packages = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-8xl mx-auto">
             {packages.map((pkg, index) => (
               <Card 
-                key={pkg.id} 
+                key={pkg.id || pkg.value} 
                 className={`relative hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 backdrop-blur-sm bg-white/80 border-0 shadow-lg group ${
-                  pkg.tags?.some(tag => tag.tag_type === 'popular') 
+                  (pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular')
                     ? 'ring-2 ring-purple-200 scale-105 shadow-purple-100' 
                     : ''
                 }`}
               >
-                {pkg.tags?.some(tag => tag.tag_type === 'popular') && (
+                {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
                     <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl animate-pulse">
                       ⭐ {t('mostPopular')}
@@ -69,7 +69,7 @@ const Packages = () => {
                 )}
                 
                 {/* Gradient overlay for popular packages */}
-                {pkg.tags?.some(tag => tag.tag_type === 'popular') && (
+                {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && (
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-yellow-500/5 rounded-lg"></div>
                 )}
                 
@@ -156,7 +156,7 @@ const Packages = () => {
                     <Link to="/order">
                       <Button 
                         className={`w-full text-lg py-4 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg ${
-                          pkg.tags?.some(tag => tag.tag_type === 'popular') 
+                          (pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular')
                             ? 'bg-gradient-to-r from-purple-600 via-purple-700 to-blue-600 hover:from-purple-700 hover:via-purple-800 hover:to-blue-700 text-white shadow-purple-200' 
                             : 'bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white'
                         }`} 

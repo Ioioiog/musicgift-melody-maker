@@ -27,14 +27,23 @@ export interface Step {
   fields: Field[];
 }
 
+export interface PackageTag {
+  id: string;
+  tag_type: string;
+  tag_label_key?: string;
+  styling_class?: string;
+}
+
 export interface Package {
+  id?: string; // Add id field for database packages
   value: string;
   label_key: string;
   tagline_key: string;
   description_key: string;
   price: number;
   delivery_time_key: string;
-  tag?: string;
+  tag?: string; // Keep existing tag field
+  tags?: PackageTag[]; // Add tags array for database packages
   includes?: PackageInclude[];
   steps: Step[];
 }
