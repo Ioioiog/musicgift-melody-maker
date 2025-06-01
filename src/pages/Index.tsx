@@ -9,6 +9,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
 import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+
 const Index = () => {
   const {
     data: packages = [],
@@ -79,7 +80,7 @@ const Index = () => {
         
         {/* Hero Content - Mobile optimized */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
-          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 py-[62px] my-0 px-[36px]">
+          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 py-[120px] my-0 px-[36px]">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight">
               {t('heroTitle') || 'Transformă Emoțiile Tale în Muzică'}
             </h1>
@@ -217,4 +218,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
