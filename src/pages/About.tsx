@@ -208,7 +208,7 @@ const About = () => {
       <Navigation />
       
       {/* Dynamic Motion Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-purple-600 to-pink-600 text-white overflow-hidden">
+      <section className="relative bg-gradient-to-r from-purple-600 to-pink-600 text-white overflow-hidden my-0 px-0 py-0">
         {/* Floating animations */}
         <div className="absolute inset-0 pointer-events-none">
           <motion.div className="absolute top-10 left-10 text-4xl opacity-30" animate={{
@@ -240,72 +240,13 @@ const About = () => {
           
 
           {/* Featured Stats Display */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            {featuredStats.map((statIndex, index) => {
-            const stat = stats[statIndex];
-            const title = stat.title[language as keyof typeof stat.title] || stat.title.ro;
-            const subtitle = stat.subtitle[language as keyof typeof stat.subtitle] || stat.subtitle.ro;
-            const desc = stat.desc[language as keyof typeof stat.desc] || stat.desc.ro;
-            return <AnimatePresence key={`${statIndex}-${index}`} mode="wait">
-                  <motion.div initial={{
-                opacity: 0,
-                scale: 0.8,
-                y: 20
-              }} animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0
-              }} exit={{
-                opacity: 0,
-                scale: 0.8,
-                y: -20
-              }} transition={{
-                duration: 0.6,
-                delay: index * 0.1
-              }} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center border border-white/20">
-                    <motion.div className="text-4xl mb-3" animate={{
-                  rotate: [0, 10, -10, 0]
-                }} transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  repeatDelay: 1
-                }}>
-                      {stat.icon}
-                    </motion.div>
-                    <motion.h3 className="text-3xl font-extrabold mb-2" initial={{
-                  scale: 0
-                }} animate={{
-                  scale: 1
-                }} transition={{
-                  duration: 0.5,
-                  delay: 0.2
-                }}>
-                      {title}
-                    </motion.h3>
-                    <p className="text-lg font-semibold mb-1 opacity-90">{subtitle}</p>
-                    <p className="text-sm opacity-75">{desc}</p>
-                  </motion.div>
-                </AnimatePresence>;
-          })}
-          </div>
+          
 
           {/* Animated Stats Ticker */}
-          <motion.div className="flex justify-center space-x-4 mb-8" initial={{
-          opacity: 0
-        }} animate={{
-          opacity: 1
-        }} transition={{
-          duration: 1,
-          delay: 0.5
-        }}>
-            {stats.map((_, index) => <motion.div key={index} className={`w-3 h-3 rounded-full transition-all duration-300 ${featuredStats.includes(index) ? 'bg-white scale-125' : 'bg-white/40'}`} animate={{
-            scale: featuredStats.includes(index) ? 1.25 : 1,
-            opacity: featuredStats.includes(index) ? 1 : 0.4
-          }} />)}
-          </motion.div>
+          
 
           {/* Scrolling Stats Banner */}
-          <motion.div className="overflow-hidden bg-white/10 rounded-full py-4 mb-8" initial={{
+          <motion.div initial={{
           opacity: 0,
           y: 20
         }} animate={{
@@ -314,7 +255,7 @@ const About = () => {
         }} transition={{
           duration: 0.8,
           delay: 0.8
-        }}>
+        }} className="overflow-hidden bg-white/10 rounded-full mb-8 my-[48px] py-[62px]">
             <motion.div className="flex space-x-12 whitespace-nowrap" animate={{
             x: ["0%", "-100%"]
           }} transition={{
@@ -326,9 +267,9 @@ const About = () => {
               const title = stat.title[language as keyof typeof stat.title] || stat.title.ro;
               const subtitle = stat.subtitle[language as keyof typeof stat.subtitle] || stat.subtitle.ro;
               return <div key={index} className="flex items-center space-x-3 text-lg font-semibold">
-                    <span className="text-2xl">{stat.icon}</span>
+                    <span className="text-4xl">{stat.icon}</span>
                     <span>{title}</span>
-                    <span className="opacity-75">{subtitle}</span>
+                    <span className="opacity-75 text-3xl">{subtitle}</span>
                   </div>;
             })}
             </motion.div>
