@@ -204,7 +204,12 @@ export type Database = {
           created_at: string | null
           form_data: Json
           id: string
+          package_delivery_time: string | null
           package_id: string | null
+          package_includes: Json | null
+          package_name: string | null
+          package_price: number | null
+          package_value: string | null
           payment_id: string | null
           payment_status: string | null
           payment_url: string | null
@@ -218,7 +223,12 @@ export type Database = {
           created_at?: string | null
           form_data: Json
           id?: string
+          package_delivery_time?: string | null
           package_id?: string | null
+          package_includes?: Json | null
+          package_name?: string | null
+          package_price?: number | null
+          package_value?: string | null
           payment_id?: string | null
           payment_status?: string | null
           payment_url?: string | null
@@ -232,7 +242,12 @@ export type Database = {
           created_at?: string | null
           form_data?: Json
           id?: string
+          package_delivery_time?: string | null
           package_id?: string | null
+          package_includes?: Json | null
+          package_name?: string | null
+          package_price?: number | null
+          package_value?: string | null
           payment_id?: string | null
           payment_status?: string | null
           payment_url?: string | null

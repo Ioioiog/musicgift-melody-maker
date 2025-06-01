@@ -28,10 +28,16 @@ const Order = () => {
     try {
       console.log("Processing order:", orderData);
 
+      // Find the selected package details
+      const selectedPackage = packages.find(pkg => pkg.value === orderData.package);
+      if (!selectedPackage) {
+        throw new Error(`Package not found: ${orderData.package}`);
+      }
+
       // Calculate total price
       const totalPrice = calculateTotalPrice(orderData.package, orderData.addons || []);
 
-      // Prepare order data for database
+      // Prepare order data for database with package details
       const orderPayload = {
         user_id: user?.id || null,
         form_data: {
@@ -42,7 +48,13 @@ const Order = () => {
         selected_addons: orderData.addons || [],
         total_price: totalPrice,
         status: 'pending',
-        payment_status: 'pending'
+        payment_status: 'pending',
+        // New package detail columns
+        package_value: selectedPackage.value,
+        package_name: selectedPackage.name_key,
+        package_price: selectedPackage.price,
+        package_delivery_time: selectedPackage.delivery_time_key,
+        package_includes: selectedPackage.includes || []
       };
 
       console.log("Saving order to database:", orderPayload);

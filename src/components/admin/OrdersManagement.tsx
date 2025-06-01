@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -79,10 +80,10 @@ const OrdersManagement = () => {
 
   const exportOrders = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
-      + "ID,Package ID,Total Price,Status,Created At,Customer Email\n"
+      + "ID,Package Value,Package Name,Total Price,Status,Created At,Customer Email\n"
       + orders.map(order => {
           const formData = order.form_data as OrderFormData;
-          return `${order.id},${order.package_id || 'N/A'},${order.total_price},${order.status},${order.created_at},${formData?.email || 'N/A'}`;
+          return `${order.id},${order.package_value || 'N/A'},${order.package_name || 'N/A'},${order.total_price},${order.status},${order.created_at},${formData?.email || 'N/A'}`;
         }).join("\n");
 
     const encodedUri = encodeURI(csvContent);
@@ -198,14 +199,14 @@ const OrdersManagement = () => {
           const savedPrompt = getSavedPrompt(order.id);
           const isPromptCardOpen = openPromptCards.has(order.id);
           
-          // Try to get package value from multiple sources
-          const packageValue = order.package_id || (formData as any)?.packageType || (formData as any)?.package;
+          // Use package_value from the new column, fallback to form_data if needed
+          const packageValue = order.package_value || (formData as any)?.package || (formData as any)?.packageType;
           
           console.log('OrdersManagement - Rendering order:', { 
             orderId: order.id, 
-            packageId: order.package_id, 
-            packageValue,
-            formDataPackage: (formData as any)?.packageType || (formData as any)?.package,
+            packageValue: order.package_value,
+            packageName: order.package_name,
+            packagePrice: order.package_price,
             createdAt: order.created_at,
             status: order.status 
           });
@@ -224,7 +225,7 @@ const OrdersManagement = () => {
                         Payment: {order.payment_status}
                       </Badge>
                       
-                      {/* Delivery Countdown Badge with improved package value */}
+                      {/* Delivery Countdown Badge using package_value */}
                       <DeliveryCountdownBadge 
                         orderCreatedAt={order.created_at}
                         packageValue={packageValue}
@@ -244,7 +245,9 @@ const OrdersManagement = () => {
                     
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p><strong>Package ID:</strong> {order.package_id || 'N/A'}</p>
+                        <p><strong>Package:</strong> {order.package_value || 'N/A'}</p>
+                        <p><strong>Package Name:</strong> {order.package_name || 'N/A'}</p>
+                        <p><strong>Package Price:</strong> {order.package_price ? `${order.package_price} RON` : 'N/A'}</p>
                         <p><strong>Customer:</strong> {formData?.fullName || 'N/A'}</p>
                         <p><strong>Email:</strong> {formData?.email || 'N/A'}</p>
                         <p><strong>Payment ID:</strong> {order.payment_id || 'N/A'}</p>
@@ -253,6 +256,7 @@ const OrdersManagement = () => {
                         <p><strong>Created:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
                         <p><strong>Recipient:</strong> {formData?.recipientName || 'N/A'}</p>
                         <p><strong>Occasion:</strong> {formData?.occasion || 'N/A'}</p>
+                        <p><strong>Delivery Time:</strong> {order.package_delivery_time || 'N/A'}</p>
                       </div>
                     </div>
 
@@ -505,6 +509,25 @@ const OrdersManagement = () => {
                             <DialogTitle>Order Details #{order.id.slice(0, 8)}</DialogTitle>
                           </DialogHeader>
                           <div className="space-y-4">
+                            <div>
+                              <h4 className="font-semibold mb-2">Package Information:</h4>
+                              <div className="bg-gray-100 p-4 rounded text-sm">
+                                <p><strong>Package Value:</strong> {order.package_value}</p>
+                                <p><strong>Package Name:</strong> {order.package_name}</p>
+                                <p><strong>Package Price:</strong> {order.package_price} RON</p>
+                                <p><strong>Delivery Time:</strong> {order.package_delivery_time}</p>
+                                {order.package_includes && order.package_includes.length > 0 && (
+                                  <div>
+                                    <p><strong>Includes:</strong></p>
+                                    <ul className="list-disc list-inside ml-4">
+                                      {order.package_includes.map((include: any, index: number) => (
+                                        <li key={index}>{include.item_key || include}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                             <div>
                               <h4 className="font-semibold mb-2">Form Data:</h4>
                               <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">

@@ -2,21 +2,6 @@
 import { useMemo } from 'react';
 import { usePackages } from './usePackageData';
 
-// Mapping function to convert form package values to actual package values
-const mapPackageValue = (formPackageValue: string): string => {
-  const packageMapping: Record<string, string> = {
-    'pachet-personal': 'personal',
-    'pachet-premium': 'premium',
-    'pachet-business': 'business',
-    'pachet-artist': 'artist',
-    'pachet-remix': 'remix',
-    'pachet-instrumental': 'instrumental',
-    'pachet-gift': 'gift'
-  };
-  
-  return packageMapping[formPackageValue] || formPackageValue;
-};
-
 export const useDeliveryCalculation = (orderCreatedAt: string, packageValue?: string) => {
   const { data: packages = [] } = usePackages();
 
@@ -28,36 +13,58 @@ export const useDeliveryCalculation = (orderCreatedAt: string, packageValue?: st
       return { remainingDays: null, isOverdue: false, status: 'unknown', deliveryDate: null };
     }
 
-    // First try to find package by the original value
+    // Find package by value (direct match first)
     let packageData = packages.find(pkg => pkg.value === packageValue);
-    
-    // If not found, try with mapped value
-    if (!packageData) {
-      const mappedValue = mapPackageValue(packageValue);
-      console.log('DeliveryCalculation - Trying mapped value:', mappedValue);
-      packageData = packages.find(pkg => pkg.value === mappedValue);
-    }
     
     console.log('DeliveryCalculation - Found package:', packageData);
     
     if (!packageData) {
       console.log('DeliveryCalculation - Package not found for value:', packageValue);
-      return { remainingDays: null, isOverdue: false, status: 'unknown', deliveryDate: null };
+      // If no package found, use default delivery times based on package value
+      const deliveryTimePatterns = {
+        'personal': 7,
+        'premium': 14,
+        'business': 10,
+        'artist': 12,
+        'remix': 5,
+        'instrumental': 5,
+        'gift': 7
+      };
+      
+      const deliveryDays = deliveryTimePatterns[packageValue as keyof typeof deliveryTimePatterns] || 7;
+      
+      const createdDate = new Date(orderCreatedAt);
+      const deliveryDate = new Date(createdDate);
+      deliveryDate.setDate(deliveryDate.getDate() + deliveryDays);
+      
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      deliveryDate.setHours(0, 0, 0, 0);
+      
+      const timeDiff = deliveryDate.getTime() - today.getTime();
+      const remainingDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      
+      const isOverdue = remainingDays < 0;
+      
+      let status: 'urgent' | 'warning' | 'normal' | 'overdue' = 'normal';
+      if (isOverdue) {
+        status = 'overdue';
+      } else if (remainingDays <= 1) {
+        status = 'urgent';
+      } else if (remainingDays <= 3) {
+        status = 'warning';
+      }
+
+      return {
+        remainingDays: Math.abs(remainingDays),
+        isOverdue,
+        status,
+        deliveryDate: deliveryDate.toLocaleDateString()
+      };
     }
 
-    // Default delivery times based on package types
-    const deliveryTimePatterns = {
-      'personal': 7,
-      'premium': 14,
-      'business': 10,
-      'artist': 12,
-      'remix': 5,
-      'instrumental': 5,
-      'gift': 7
-    };
-
-    let deliveryDays = deliveryTimePatterns[packageData.value as keyof typeof deliveryTimePatterns] || 7;
-    console.log('DeliveryCalculation - Using delivery days:', deliveryDays);
+    // Extract delivery time from package data
+    let deliveryDays = 7; // default
 
     // Try to extract delivery time from package delivery_time_key if available
     if (packageData.delivery_time_key) {
