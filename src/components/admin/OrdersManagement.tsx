@@ -10,6 +10,8 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from '@/hooks/useTranslations';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ResponsiveTable } from '@/components/ui/responsive-table';
 import SunoPromptsDialog from './SunoPromptsDialog';
 import DeliveryCountdownBadge from './DeliveryCountdownBadge';
 
@@ -29,6 +31,7 @@ const OrdersManagement = () => {
   const [openPromptDetails, setOpenPromptDetails] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
 
   const { data: orders = [], refetch } = useQuery({
     queryKey: ['admin-orders', selectedStatus],
@@ -48,7 +51,6 @@ const OrdersManagement = () => {
     }
   });
 
-  // Enhanced query to get saved prompts with full details for all orders
   const { data: savedPromptsDetails = [] } = useQuery({
     queryKey: ['saved-prompts-details'],
     queryFn: async () => {
@@ -176,405 +178,342 @@ const OrdersManagement = () => {
     });
   };
 
-  console.log('OrdersManagement - Orders:', orders.length);
+  const renderMobileOrderCard = (order: any) => {
+    const formData = order.form_data as OrderFormData;
+    const hasPrompts = hasSavedPrompts(order.id);
+    const savedPrompt = getSavedPrompt(order.id);
+    const isPromptCardOpen = openPromptCards.has(order.id);
+    const packageValue = order.package_value || (formData as any)?.package || (formData as any)?.packageType;
 
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">{t('ordersManagement', 'Orders Management')}</h2>
-        <div className="flex space-x-4">
-          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder={t('filterByStatus', 'Filter by status')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t('allOrders', 'All Orders')}</SelectItem>
-              <SelectItem value="pending">{t('pending', 'Pending')}</SelectItem>
-              <SelectItem value="in_progress">{t('inProgress', 'In Progress')}</SelectItem>
-              <SelectItem value="completed">{t('completed', 'Completed')}</SelectItem>
-              <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button onClick={exportOrders}>
-            <Download className="w-4 h-4 mr-2" />
-            {t('exportCSV', 'Export CSV')}
-          </Button>
+    return (
+      <div className="space-y-4">
+        {/* Header Section */}
+        <div className="flex flex-col space-y-2">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">#{order.id.slice(0, 8)}</h3>
+            <span className="text-lg font-bold text-purple-600">{order.total_price} RON</span>
+          </div>
+          
+          <div className="flex flex-wrap gap-2">
+            <Badge className={getStatusColor(order.status)}>
+              {t(order.status, order.status)}
+            </Badge>
+            <Badge className={getPaymentStatusColor(order.payment_status)}>
+              {t('payment', 'Payment')}: {t(order.payment_status, order.payment_status)}
+            </Badge>
+            <DeliveryCountdownBadge 
+              orderCreatedAt={order.created_at}
+              packageValue={packageValue}
+              orderStatus={order.status}
+            />
+            {hasPrompts && (
+              <Badge className="bg-purple-100 text-purple-800 border-purple-300">
+                <Database className="w-3 h-3 mr-1" />
+                {t('savedPrompts', 'Saved Prompts')}
+              </Badge>
+            )}
+          </div>
         </div>
+
+        {/* Order Details */}
+        <div className="grid grid-cols-1 gap-3 text-sm">
+          <div className="space-y-1">
+            <p><strong>{t('customer', 'Customer')}:</strong> {formData?.fullName || 'N/A'}</p>
+            <p><strong>{t('email', 'Email')}:</strong> {formData?.email || 'N/A'}</p>
+            <p><strong>{t('package', 'Package')}:</strong> {order.package_value || 'N/A'}</p>
+          </div>
+          <div className="space-y-1">
+            <p><strong>{t('created', 'Created')}:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
+            <p><strong>{t('recipient', 'Recipient')}:</strong> {formData?.recipientName || 'N/A'}</p>
+            <p><strong>{t('occasion', 'Occasion')}:</strong> {formData?.occasion || 'N/A'}</p>
+          </div>
+        </div>
+
+        {/* Saved Prompts Section */}
+        {hasPrompts && savedPrompt && (
+          <Collapsible 
+            open={isPromptCardOpen} 
+            onOpenChange={() => togglePromptCard(order.id)}
+          >
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="w-full justify-between bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100"
+              >
+                <span className="flex items-center">
+                  <Database className="w-4 h-4 mr-2" />
+                  {t('viewSavedPromptsDetails', 'View Saved Prompts Details')}
+                </span>
+                {isPromptCardOpen ? (
+                  <ChevronUp className="w-4 h-4" />
+                ) : (
+                  <ChevronDown className="w-4 h-4" />
+                )}
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-3 space-y-2 p-4 bg-purple-50 rounded-lg border border-purple-200">
+              {/* Title Section */}
+              <Collapsible 
+                open={openPromptDetails.has(`${order.id}-title`)} 
+                onOpenChange={() => togglePromptDetail(`${order.id}-title`)}
+              >
+                <CollapsibleTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
+                  >
+                    <span>{t('title', 'Title')}</span>
+                    {openPromptDetails.has(`${order.id}-title`) ? (
+                      <ChevronUp className="w-3 h-3" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3" />
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pl-2 pr-2 pb-2">
+                  <div className="flex justify-between items-start bg-white p-2 rounded border">
+                    <p className="text-sm text-gray-700 flex-1">{savedPrompt.title}</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyToClipboard(savedPrompt.title, t('title', 'Title'))}
+                      className="ml-2 h-6 w-6 p-0"
+                    >
+                      <Copy className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              {/* Description Section */}
+              {savedPrompt.description && (
+                <Collapsible 
+                  open={openPromptDetails.has(`${order.id}-description`)} 
+                  onOpenChange={() => togglePromptDetail(`${order.id}-description`)}
+                >
+                  <CollapsibleTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
+                    >
+                      <span>{t('description', 'Description')}</span>
+                      {openPromptDetails.has(`${order.id}-description`) ? (
+                        <ChevronUp className="w-3 h-3" />
+                      ) : (
+                        <ChevronDown className="w-3 h-3" />
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="pl-2 pr-2 pb-2">
+                    <div className="flex justify-between items-start bg-white p-2 rounded border">
+                      <p className="text-sm text-gray-700 flex-1">{savedPrompt.description}</p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(savedPrompt.description, t('description', 'Description'))}
+                        className="ml-2 h-6 w-6 p-0"
+                      >
+                        <Copy className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              )}
+
+              {/* Lyrics Section */}
+              <Collapsible 
+                open={openPromptDetails.has(`${order.id}-lyrics`)} 
+                onOpenChange={() => togglePromptDetail(`${order.id}-lyrics`)}
+              >
+                <CollapsibleTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
+                  >
+                    <span>{t('lyrics', 'Lyrics')}</span>
+                    {openPromptDetails.has(`${order.id}-lyrics`) ? (
+                      <ChevronUp className="w-3 h-3" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3" />
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pl-2 pr-2 pb-2">
+                  <div className="flex justify-between items-start bg-white p-2 rounded border">
+                    <p className="text-sm text-gray-700 flex-1 whitespace-pre-wrap">{savedPrompt.lyrics}</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyToClipboard(savedPrompt.lyrics, t('lyrics', 'Lyrics'))}
+                      className="ml-2 h-6 w-6 p-0"
+                    >
+                      <Copy className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              {/* Technical Tags Section */}
+              <Collapsible 
+                open={openPromptDetails.has(`${order.id}-tags`)} 
+                onOpenChange={() => togglePromptDetail(`${order.id}-tags`)}
+              >
+                <CollapsibleTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
+                  >
+                    <span>{t('technicalTags', 'Technical Tags')}</span>
+                    {openPromptDetails.has(`${order.id}-tags`) ? (
+                      <ChevronUp className="w-3 h-3" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3" />
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pl-2 pr-2 pb-2">
+                  <div className="flex justify-between items-start bg-white p-2 rounded border">
+                    <p className="text-sm text-gray-700 flex-1">{savedPrompt.technical_tags}</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyToClipboard(savedPrompt.technical_tags, t('technicalTags', 'Technical Tags'))}
+                      className="ml-2 h-6 w-6 p-0"
+                    >
+                      <Copy className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              {/* Complete Prompt Section */}
+              <Collapsible 
+                open={openPromptDetails.has(`${order.id}-prompt`)} 
+                onOpenChange={() => togglePromptDetail(`${order.id}-prompt`)}
+              >
+                <CollapsibleTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
+                  >
+                    <span>{t('completePrompt', 'Complete Prompt')}</span>
+                    {openPromptDetails.has(`${order.id}-prompt`) ? (
+                      <ChevronUp className="w-3 h-3" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3" />
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pl-2 pr-2 pb-2">
+                  <div className="flex justify-between items-start bg-white p-2 rounded border">
+                    <p className="text-sm text-gray-700 flex-1 whitespace-pre-wrap">{savedPrompt.prompt}</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyToClipboard(savedPrompt.prompt, t('completePrompt', 'Complete Prompt'))}
+                      className="ml-2 h-6 w-6 p-0"
+                    >
+                      <Copy className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
+              {/* Metadata */}
+              <div className="text-xs text-gray-500 pt-2 border-t border-purple-200">
+                <p>{t('language', 'Language')}: {savedPrompt.language}</p>
+                <p>{t('created', 'Created')}: {new Date(savedPrompt.created_at).toLocaleString()}</p>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        )}
       </div>
 
-      <div className="grid gap-4">
-        {orders.map((order) => {
-          const formData = order.form_data as OrderFormData;
-          const hasPrompts = hasSavedPrompts(order.id);
-          const savedPrompt = getSavedPrompt(order.id);
-          const isPromptCardOpen = openPromptCards.has(order.id);
-          
-          // Use package_value from the new column, fallback to form_data if needed
-          const packageValue = order.package_value || (formData as any)?.package || (formData as any)?.packageType;
-          
-          console.log('OrdersManagement - Rendering order:', { 
-            orderId: order.id, 
-            packageValue: order.package_value,
-            packageName: order.package_name,
-            packagePrice: order.package_price,
-            createdAt: order.created_at,
-            status: order.status 
-          });
-          
-          return (
-            <Card key={order.id}>
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2 flex-wrap">
-                      <h3 className="text-lg font-semibold">{t('orderNumber', 'Order')} #{order.id.slice(0, 8)}</h3>
-                      <Badge className={getStatusColor(order.status)}>
-                        {t(order.status, order.status)}
-                      </Badge>
-                      <Badge className={getPaymentStatusColor(order.payment_status)}>
-                        {t('payment', 'Payment')}: {t(order.payment_status, order.payment_status)}
-                      </Badge>
-                      
-                      {/* Delivery Countdown Badge using package_value */}
-                      <DeliveryCountdownBadge 
-                        orderCreatedAt={order.created_at}
-                        packageValue={packageValue}
-                        orderStatus={order.status}
-                      />
-                      
-                      {hasPrompts && (
-                        <Badge className="bg-purple-100 text-purple-800 border-purple-300">
-                          <Database className="w-3 h-3 mr-1" />
-                          {t('savedPrompts', 'Saved Prompts')}
-                        </Badge>
-                      )}
-                      <span className="text-lg font-bold text-purple-600">
-                        {order.total_price} RON
-                      </span>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 text-sm">
+      {/* Action Buttons */}
+      <div className="flex flex-col space-y-2">
+        <Select 
+          value={order.status} 
+          onValueChange={(value) => updateOrderStatus(order.id, value)}
+        >
+          <SelectTrigger className="w-full h-11">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="pending">{t('pending', 'Pending')}</SelectItem>
+            <SelectItem value="in_progress">{t('inProgress', 'In Progress')}</SelectItem>
+            <SelectItem value="completed">{t('completed', 'Completed')}</SelectItem>
+            <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <div className="flex flex-col space-y-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => openSunoDialog(order)}
+            className={`w-full h-11 justify-start ${hasPrompts 
+              ? "bg-purple-100 border-purple-300 text-purple-700 hover:bg-purple-200" 
+              : "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100"
+            }`}
+          >
+            <Music className="w-4 h-4 mr-2" />
+            {hasPrompts ? t('viewEditPrompts', 'View/Edit Prompts') : t('createPrompts', 'Create Prompts')}
+          </Button>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" className="w-full h-11 justify-start">
+                <Eye className="w-4 h-4 mr-2" />
+                {t('viewDetails', 'View Details')}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-[95vw] max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{t('orderDetails', 'Order Details')} #{order.id.slice(0, 8)}</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold mb-2">{t('packageInformation', 'Package Information')}:</h4>
+                  <div className="bg-gray-100 p-4 rounded text-sm">
+                    <p><strong>{t('packageValue', 'Package Value')}:</strong> {order.package_value}</p>
+                    <p><strong>{t('packageName', 'Package Name')}:</strong> {order.package_name ? t(order.package_name, order.package_name) : 'N/A'}</p>
+                    <p><strong>{t('packagePrice', 'Package Price')}:</strong> {order.package_price} RON</p>
+                    <p><strong>{t('deliveryTime', 'Delivery Time')}:</strong> {order.package_delivery_time ? t(order.package_delivery_time, order.package_delivery_time) : 'N/A'}</p>
+                    {order.package_includes && Array.isArray(order.package_includes) && order.package_includes.length > 0 && (
                       <div>
-                        <p><strong>{t('package', 'Package')}:</strong> {order.package_value || 'N/A'}</p>
-                        <p><strong>{t('packageName', 'Package Name')}:</strong> {order.package_name ? t(order.package_name, order.package_name) : 'N/A'}</p>
-                        <p><strong>{t('packagePrice', 'Package Price')}:</strong> {order.package_price ? `${order.package_price} RON` : 'N/A'}</p>
-                        <p><strong>{t('customer', 'Customer')}:</strong> {formData?.fullName || 'N/A'}</p>
-                        <p><strong>{t('email', 'Email')}:</strong> {formData?.email || 'N/A'}</p>
-                        <p><strong>{t('paymentId', 'Payment ID')}:</strong> {order.payment_id || 'N/A'}</p>
+                        <p><strong>{t('includes', 'Includes')}:</strong></p>
+                        <ul className="list-disc list-inside ml-4">
+                          {translatePackageIncludes(order.package_includes).map((translatedInclude: string, index: number) => (
+                            <li key={index}>{translatedInclude}</li>
+                          ))}
+                        </ul>
                       </div>
-                      <div>
-                        <p><strong>{t('created', 'Created')}:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
-                        <p><strong>{t('recipient', 'Recipient')}:</strong> {formData?.recipientName || 'N/A'}</p>
-                        <p><strong>{t('occasion', 'Occasion')}:</strong> {formData?.occasion || 'N/A'}</p>
-                        <p><strong>{t('deliveryTime', 'Delivery Time')}:</strong> {order.package_delivery_time ? t(order.package_delivery_time, order.package_delivery_time) : 'N/A'}</p>
-                      </div>
-                    </div>
-
-                    {/* Collapsible Saved Prompts Section */}
-                    {hasPrompts && savedPrompt && (
-                      <Collapsible 
-                        open={isPromptCardOpen} 
-                        onOpenChange={() => togglePromptCard(order.id)}
-                        className="mt-4"
-                      >
-                        <CollapsibleTrigger asChild>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="w-full justify-between bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100"
-                          >
-                            <span className="flex items-center">
-                              <Database className="w-4 h-4 mr-2" />
-                              {t('viewSavedPromptsDetails', 'View Saved Prompts Details')}
-                            </span>
-                            {isPromptCardOpen ? (
-                              <ChevronUp className="w-4 h-4" />
-                            ) : (
-                              <ChevronDown className="w-4 h-4" />
-                            )}
-                          </Button>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent className="mt-3 space-y-2 p-4 bg-purple-50 rounded-lg border border-purple-200">
-                          {/* Title Section */}
-                          <Collapsible 
-                            open={openPromptDetails.has(`${order.id}-title`)} 
-                            onOpenChange={() => togglePromptDetail(`${order.id}-title`)}
-                          >
-                            <CollapsibleTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
-                              >
-                                <span>{t('title', 'Title')}</span>
-                                {openPromptDetails.has(`${order.id}-title`) ? (
-                                  <ChevronUp className="w-3 h-3" />
-                                ) : (
-                                  <ChevronDown className="w-3 h-3" />
-                                )}
-                              </Button>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent className="pl-2 pr-2 pb-2">
-                              <div className="flex justify-between items-start bg-white p-2 rounded border">
-                                <p className="text-sm text-gray-700 flex-1">{savedPrompt.title}</p>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => copyToClipboard(savedPrompt.title, t('title', 'Title'))}
-                                  className="ml-2 h-6 w-6 p-0"
-                                >
-                                  <Copy className="w-3 h-3" />
-                                </Button>
-                              </div>
-                            </CollapsibleContent>
-                          </Collapsible>
-
-                          {/* Description Section */}
-                          {savedPrompt.description && (
-                            <Collapsible 
-                              open={openPromptDetails.has(`${order.id}-description`)} 
-                              onOpenChange={() => togglePromptDetail(`${order.id}-description`)}
-                            >
-                              <CollapsibleTrigger asChild>
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm"
-                                  className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
-                                >
-                                  <span>{t('description', 'Description')}</span>
-                                  {openPromptDetails.has(`${order.id}-description`) ? (
-                                    <ChevronUp className="w-3 h-3" />
-                                  ) : (
-                                    <ChevronDown className="w-3 h-3" />
-                                  )}
-                                </Button>
-                              </CollapsibleTrigger>
-                              <CollapsibleContent className="pl-2 pr-2 pb-2">
-                                <div className="flex justify-between items-start bg-white p-2 rounded border">
-                                  <p className="text-sm text-gray-700 flex-1">{savedPrompt.description}</p>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => copyToClipboard(savedPrompt.description, t('description', 'Description'))}
-                                    className="ml-2 h-6 w-6 p-0"
-                                  >
-                                    <Copy className="w-3 h-3" />
-                                  </Button>
-                                </div>
-                              </CollapsibleContent>
-                            </Collapsible>
-                          )}
-
-                          {/* Lyrics Section */}
-                          <Collapsible 
-                            open={openPromptDetails.has(`${order.id}-lyrics`)} 
-                            onOpenChange={() => togglePromptDetail(`${order.id}-lyrics`)}
-                          >
-                            <CollapsibleTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
-                              >
-                                <span>{t('lyrics', 'Lyrics')}</span>
-                                {openPromptDetails.has(`${order.id}-lyrics`) ? (
-                                  <ChevronUp className="w-3 h-3" />
-                                ) : (
-                                  <ChevronDown className="w-3 h-3" />
-                                )}
-                              </Button>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent className="pl-2 pr-2 pb-2">
-                              <div className="flex justify-between items-start bg-white p-2 rounded border">
-                                <p className="text-sm text-gray-700 flex-1 whitespace-pre-wrap">{savedPrompt.lyrics}</p>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => copyToClipboard(savedPrompt.lyrics, t('lyrics', 'Lyrics'))}
-                                  className="ml-2 h-6 w-6 p-0"
-                                >
-                                  <Copy className="w-3 h-3" />
-                                </Button>
-                              </div>
-                            </CollapsibleContent>
-                          </Collapsible>
-
-                          {/* Technical Tags Section */}
-                          <Collapsible 
-                            open={openPromptDetails.has(`${order.id}-tags`)} 
-                            onOpenChange={() => togglePromptDetail(`${order.id}-tags`)}
-                          >
-                            <CollapsibleTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
-                              >
-                                <span>{t('technicalTags', 'Technical Tags')}</span>
-                                {openPromptDetails.has(`${order.id}-tags`) ? (
-                                  <ChevronUp className="w-3 h-3" />
-                                ) : (
-                                  <ChevronDown className="w-3 h-3" />
-                                )}
-                              </Button>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent className="pl-2 pr-2 pb-2">
-                              <div className="flex justify-between items-start bg-white p-2 rounded border">
-                                <p className="text-sm text-gray-700 flex-1">{savedPrompt.technical_tags}</p>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => copyToClipboard(savedPrompt.technical_tags, t('technicalTags', 'Technical Tags'))}
-                                  className="ml-2 h-6 w-6 p-0"
-                                >
-                                  <Copy className="w-3 h-3" />
-                                </Button>
-                              </div>
-                            </CollapsibleContent>
-                          </Collapsible>
-
-                          {/* Complete Prompt Section */}
-                          <Collapsible 
-                            open={openPromptDetails.has(`${order.id}-prompt`)} 
-                            onOpenChange={() => togglePromptDetail(`${order.id}-prompt`)}
-                          >
-                            <CollapsibleTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
-                              >
-                                <span>{t('completePrompt', 'Complete Prompt')}</span>
-                                {openPromptDetails.has(`${order.id}-prompt`) ? (
-                                  <ChevronUp className="w-3 h-3" />
-                                ) : (
-                                  <ChevronDown className="w-3 h-3" />
-                                )}
-                              </Button>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent className="pl-2 pr-2 pb-2">
-                              <div className="flex justify-between items-start bg-white p-2 rounded border">
-                                <p className="text-sm text-gray-700 flex-1 whitespace-pre-wrap">{savedPrompt.prompt}</p>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => copyToClipboard(savedPrompt.prompt, t('completePrompt', 'Complete Prompt'))}
-                                  className="ml-2 h-6 w-6 p-0"
-                                >
-                                  <Copy className="w-3 h-3" />
-                                </Button>
-                              </div>
-                            </CollapsibleContent>
-                          </Collapsible>
-
-                          {/* Metadata */}
-                          <div className="text-xs text-gray-500 pt-2 border-t border-purple-200">
-                            <p>{t('language', 'Language')}: {savedPrompt.language}</p>
-                            <p>{t('created', 'Created')}: {new Date(savedPrompt.created_at).toLocaleString()}</p>
-                          </div>
-                        </CollapsibleContent>
-                      </Collapsible>
                     )}
                   </div>
-
-                  <div className="flex flex-col space-y-2">
-                    <Select 
-                      value={order.status} 
-                      onValueChange={(value) => updateOrderStatus(order.id, value)}
-                    >
-                      <SelectTrigger className="w-32">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pending">{t('pending', 'Pending')}</SelectItem>
-                        <SelectItem value="in_progress">{t('inProgress', 'In Progress')}</SelectItem>
-                        <SelectItem value="completed">{t('completed', 'Completed')}</SelectItem>
-                        <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => openSunoDialog(order)}
-                        className={hasPrompts 
-                          ? "bg-purple-100 border-purple-300 text-purple-700 hover:bg-purple-200" 
-                          : "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100"
-                        }
-                      >
-                        <Music className="w-4 h-4 mr-2" />
-                        {hasPrompts ? t('viewEditPrompts', 'View/Edit Prompts') : t('createPrompts', 'Create Prompts')}
-                      </Button>
-
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm">
-                            <Eye className="w-4 h-4 mr-2" />
-                            {t('viewDetails', 'View Details')}
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                          <DialogHeader>
-                            <DialogTitle>{t('orderDetails', 'Order Details')} #{order.id.slice(0, 8)}</DialogTitle>
-                          </DialogHeader>
-                          <div className="space-y-4">
-                            <div>
-                              <h4 className="font-semibold mb-2">{t('packageInformation', 'Package Information')}:</h4>
-                              <div className="bg-gray-100 p-4 rounded text-sm">
-                                <p><strong>{t('packageValue', 'Package Value')}:</strong> {order.package_value}</p>
-                                <p><strong>{t('packageName', 'Package Name')}:</strong> {order.package_name ? t(order.package_name, order.package_name) : 'N/A'}</p>
-                                <p><strong>{t('packagePrice', 'Package Price')}:</strong> {order.package_price} RON</p>
-                                <p><strong>{t('deliveryTime', 'Delivery Time')}:</strong> {order.package_delivery_time ? t(order.package_delivery_time, order.package_delivery_time) : 'N/A'}</p>
-                                {order.package_includes && Array.isArray(order.package_includes) && order.package_includes.length > 0 && (
-                                  <div>
-                                    <p><strong>{t('includes', 'Includes')}:</strong></p>
-                                    <ul className="list-disc list-inside ml-4">
-                                      {translatePackageIncludes(order.package_includes).map((translatedInclude: string, index: number) => (
-                                        <li key={index}>{translatedInclude}</li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            <div>
-                              <h4 className="font-semibold mb-2">{t('formData', 'Form Data')}:</h4>
-                              <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
-                                {JSON.stringify(order.form_data, null, 2)}
-                              </pre>
-                            </div>
-                            <div>
-                              <h4 className="font-semibold mb-2">{t('selectedAddons', 'Selected Addons')}:</h4>
-                              <pre className="bg-gray-100 p-4 rounded text-sm">
-                                {JSON.stringify(order.selected_addons, null, 2)}
-                              </pre>
-                            </div>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+                <div>
+                  <h4 className="font-semibold mb-2">{t('formData', 'Form Data')}:</h4>
+                  <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+                    {JSON.stringify(order.form_data, null, 2)}
+                  </pre>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">{t('selectedAddons', 'Selected Addons')}:</h4>
+                  <pre className="bg-gray-100 p-4 rounded text-sm">
+                    {JSON.stringify(order.selected_addons, null, 2)}
+                  </pre>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
-
-      {orders.length === 0 && (
-        <Card>
-          <CardContent className="p-8 text-center text-gray-500">
-            {t('noOrdersFound', 'No orders found for the selected filter.')}
-          </CardContent>
-        </Card>
-      )}
-
-      <SunoPromptsDialog
-        isOpen={sunoDialogOpen}
-        onClose={() => setSunoDialogOpen(false)}
-        orderData={selectedOrder}
-      />
     </div>
   );
 };

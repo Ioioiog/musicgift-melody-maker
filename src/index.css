@@ -95,6 +95,7 @@ img {
   font-size: 14px; /* Smaller base font size */
   text-align: center;
   touch-action: manipulation; /* Better touch interaction */
+  min-height: 44px; /* Apple's recommended touch target */
 }
 
 @media (min-width: 640px) {
@@ -382,6 +383,7 @@ select {
   transition: var(--transition);
   -webkit-appearance: none; /* Remove iOS styling */
   appearance: none;
+  min-height: 44px; /* Apple's recommended touch target */
 }
 
 @media (min-width: 768px) {
@@ -415,6 +417,7 @@ textarea {
 button, .btn, [role="button"] {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  min-height: 44px; /* Apple's recommended touch target */
 }
 
 /* Better mobile spacing utilities */
@@ -441,4 +444,73 @@ button, .btn, [role="button"] {
   .hide-mobile {
     display: none !important;
   }
+}
+
+/* Mobile-friendly table styles */
+.mobile-table-card {
+  @apply bg-white rounded-lg border shadow-sm p-4 space-y-3;
+}
+
+.mobile-table-row {
+  @apply flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0;
+}
+
+.mobile-table-label {
+  @apply text-sm font-medium text-gray-600;
+}
+
+.mobile-table-value {
+  @apply text-sm text-gray-900 text-right;
+}
+
+/* Mobile dialog optimizations */
+@media (max-width: 767px) {
+  [data-radix-dialog-content] {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    max-height: 90vh !important;
+    margin: 0 !important;
+    position: fixed !important;
+    top: 5vh !important;
+    left: 2.5vw !important;
+    transform: none !important;
+  }
+}
+
+/* Improved touch targets for small UI elements */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile-friendly dropdown menus */
+@media (max-width: 767px) {
+  [data-radix-select-content] {
+    max-height: 60vh !important;
+  }
+}
+
+/* Line clamp utilities for mobile */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }

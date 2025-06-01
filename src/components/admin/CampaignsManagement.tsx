@@ -14,6 +14,7 @@ import { useCampaigns, useCreateCampaign, useSendCampaign, useDeleteCampaign, us
 import { Plus, Send, Trash2, BarChart3, Mail, Users, Loader2, Eye, RefreshCw, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 import CampaignMetricsCard from '@/components/admin/CampaignMetricsCard';
 
 const CampaignsManagement = () => {
@@ -26,6 +27,7 @@ const CampaignsManagement = () => {
     target_list_ids: [] as number[]
   });
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const { data: campaigns = [], isLoading, error } = useCampaigns();
   const { data: brevoLists } = useBrevoLists();
@@ -119,6 +121,94 @@ const CampaignsManagement = () => {
     }
   };
 
+  const renderMobileCampaignCard = (campaign: any) => (
+    <div className="space-y-4">
+      <div className="flex flex-col space-y-2">
+        <div className="flex items-center justify-between">
+          <h3 className="font-medium truncate pr-2">{campaign.name}</h3>
+          <Badge variant={getStatusColor(campaign.status)} className="flex items-center gap-1 shrink-0">
+            {getStatusIcon(campaign.status)}
+            {campaign.status}
+          </Badge>
+        </div>
+        <p className="text-sm text-gray-600 line-clamp-2">{campaign.subject}</p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {campaign.brevo_campaign_id ? (
+          <Badge variant="default" className="bg-green-100 text-green-800 text-xs">
+            Synced
+          </Badge>
+        ) : (
+          <Badge variant="destructive" className="flex items-center gap-1 text-xs">
+            <AlertTriangle className="w-3 h-3" />
+            Not Synced
+          </Badge>
+        )}
+      </div>
+
+      <div className="text-xs text-gray-500 space-y-1">
+        <p>Created: {format(new Date(campaign.created_at), 'MMM dd, yyyy')}</p>
+        {campaign.sent_at && (
+          <p>Sent: {format(new Date(campaign.sent_at), 'MMM dd, yyyy HH:mm')}</p>
+        )}
+      </div>
+
+      <div className="flex flex-col space-y-2">
+        {campaign.status === 'draft' && (
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => handleSendCampaign(campaign.id)}
+            disabled={sendCampaign.isPending}
+            className="w-full h-10 text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 border border-green-200"
+          >
+            <Send className="w-4 h-4 mr-2" />
+            Send Campaign
+          </Button>
+        )}
+        
+        <div className="flex space-x-2">
+          {!campaign.brevo_campaign_id && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleResyncCampaign(campaign.id)}
+              disabled={resyncCampaign.isPending}
+              className="flex-1 h-10"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Resync
+            </Button>
+          )}
+          
+          {campaign.status === 'sent' && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedCampaignId(campaign.id)}
+              className="flex-1 h-10"
+            >
+              <BarChart3 className="w-4 h-4 mr-2" />
+              Metrics
+            </Button>
+          )}
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleDeleteCampaign(campaign.id)}
+            disabled={deleteCampaign.isPending}
+            className="flex-1 h-10 text-red-600 hover:text-red-700 border-red-200 hover:bg-red-50"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -147,40 +237,40 @@ const CampaignsManagement = () => {
   const totalCampaigns = campaigns.length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center">
-              <Mail className="h-8 w-8 text-green-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Sent Campaigns</p>
-                <p className="text-2xl font-bold text-gray-900">{sentCampaigns}</p>
+              <Mail className="h-6 w-6 sm:h-8 sm:w-8 text-green-600" />
+              <div className="ml-3 sm:ml-4">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Sent Campaigns</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{sentCampaigns}</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center">
-              <BarChart3 className="h-8 w-8 text-blue-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Draft Campaigns</p>
-                <p className="text-2xl font-bold text-gray-900">{draftCampaigns}</p>
+              <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
+              <div className="ml-3 sm:ml-4">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Draft Campaigns</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{draftCampaigns}</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center">
-              <Users className="h-8 w-8 text-purple-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Campaigns</p>
-                <p className="text-2xl font-bold text-gray-900">{totalCampaigns}</p>
+              <Users className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />
+              <div className="ml-3 sm:ml-4">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Total Campaigns</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{totalCampaigns}</p>
               </div>
             </div>
           </CardContent>
@@ -190,16 +280,16 @@ const CampaignsManagement = () => {
       {/* Main Management Interface */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>Email Campaigns</span>
+          <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+            <span className="text-lg sm:text-xl">Email Campaigns</span>
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
-                <Button>
+                <Button className="w-full sm:w-auto">
                   <Plus className="w-4 h-4 mr-2" />
                   Create Campaign
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+              <DialogContent className="max-w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Create New Campaign</DialogTitle>
                 </DialogHeader>
@@ -211,6 +301,7 @@ const CampaignsManagement = () => {
                       value={newCampaign.name}
                       onChange={(e) => setNewCampaign({ ...newCampaign, name: e.target.value })}
                       placeholder="Enter campaign name"
+                      className="h-11"
                       required
                     />
                   </div>
@@ -221,11 +312,11 @@ const CampaignsManagement = () => {
                       value={newCampaign.subject}
                       onChange={(e) => setNewCampaign({ ...newCampaign, subject: e.target.value })}
                       placeholder="Enter email subject"
+                      className="h-11"
                       required
                     />
                   </div>
                   
-                  {/* Target Lists Selection */}
                   {brevoLists && brevoLists.lists.length > 0 && (
                     <div>
                       <Label>Target Lists (leave empty for auto-detection)</Label>
@@ -254,6 +345,7 @@ const CampaignsManagement = () => {
                       onChange={(e) => setNewCampaign({ ...newCampaign, content: e.target.value })}
                       placeholder="Enter plain text content"
                       rows={4}
+                      className="resize-none"
                     />
                   </div>
                   <div>
@@ -264,13 +356,14 @@ const CampaignsManagement = () => {
                       onChange={(e) => setNewCampaign({ ...newCampaign, html_content: e.target.value })}
                       placeholder="Enter HTML content"
                       rows={6}
+                      className="resize-none"
                     />
                   </div>
-                  <div className="flex justify-end space-x-2">
-                    <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                  <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
+                    <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="h-11">
                       Cancel
                     </Button>
-                    <Button type="submit" disabled={createCampaign.isPending}>
+                    <Button type="submit" disabled={createCampaign.isPending} className="h-11">
                       {createCampaign.isPending ? (
                         <>
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -288,113 +381,135 @@ const CampaignsManagement = () => {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="campaigns" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
-              <TabsTrigger value="metrics">Metrics</TabsTrigger>
+            <TabsList className={isMobile ? "grid w-full grid-cols-2" : "grid w-full grid-cols-2 max-w-md"}>
+              <TabsTrigger value="campaigns" className="text-sm">Campaigns</TabsTrigger>
+              <TabsTrigger value="metrics" className="text-sm">Metrics</TabsTrigger>
             </TabsList>
             
             <TabsContent value="campaigns" className="space-y-4">
-              <div className="border rounded-lg">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Subject</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Brevo Sync</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead>Sent</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {campaigns.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={7} className="text-center py-8 text-gray-500">
-                          No campaigns yet. Create your first campaign to get started.
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      campaigns.map((campaign) => (
-                        <TableRow key={campaign.id}>
-                          <TableCell className="font-medium">{campaign.name}</TableCell>
-                          <TableCell>{campaign.subject}</TableCell>
-                          <TableCell>
-                            <Badge variant={getStatusColor(campaign.status)} className="flex items-center gap-1 w-fit">
-                              {getStatusIcon(campaign.status)}
-                              {campaign.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {campaign.brevo_campaign_id ? (
-                              <Badge variant="default" className="bg-green-100 text-green-800">
-                                Synced
-                              </Badge>
-                            ) : (
-                              <Badge variant="destructive" className="flex items-center gap-1 w-fit">
-                                <AlertTriangle className="w-3 h-3" />
-                                Not Synced
-                              </Badge>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {format(new Date(campaign.created_at), 'MMM dd, yyyy')}
-                          </TableCell>
-                          <TableCell>
-                            {campaign.sent_at ? format(new Date(campaign.sent_at), 'MMM dd, yyyy HH:mm') : '-'}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center space-x-2">
-                              {campaign.status === 'draft' && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleSendCampaign(campaign.id)}
-                                  disabled={sendCampaign.isPending}
-                                  className="text-green-600 hover:text-green-700"
-                                >
-                                  <Send className="w-4 h-4" />
-                                </Button>
-                              )}
-                              {!campaign.brevo_campaign_id && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleResyncCampaign(campaign.id)}
-                                  disabled={resyncCampaign.isPending}
-                                  className="text-orange-600 hover:text-orange-700"
-                                  title="Resync with Brevo"
-                                >
-                                  <RefreshCw className="w-4 h-4" />
-                                </Button>
-                              )}
-                              {campaign.status === 'sent' && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => setSelectedCampaignId(campaign.id)}
-                                  className="text-blue-600 hover:text-blue-700"
-                                >
-                                  <BarChart3 className="w-4 h-4" />
-                                </Button>
-                              )}
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleDeleteCampaign(campaign.id)}
-                                disabled={deleteCampaign.isPending}
-                                className="text-red-600 hover:text-red-700"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
+              {isMobile ? (
+                <div className="space-y-4">
+                  {campaigns.length === 0 ? (
+                    <Card>
+                      <CardContent className="p-6 text-center text-gray-500">
+                        No campaigns yet. Create your first campaign to get started.
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    campaigns.map((campaign) => (
+                      <Card key={campaign.id} className="shadow-sm">
+                        <CardContent className="p-4">
+                          {renderMobileCampaignCard(campaign)}
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              ) : (
+                <div className="border rounded-lg overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Subject</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Brevo Sync</TableHead>
+                          <TableHead>Created</TableHead>
+                          <TableHead>Sent</TableHead>
+                          <TableHead>Actions</TableHead>
                         </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
+                      </TableHeader>
+                      <TableBody>
+                        {campaigns.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                              No campaigns yet. Create your first campaign to get started.
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          campaigns.map((campaign) => (
+                            <TableRow key={campaign.id}>
+                              <TableCell className="font-medium">{campaign.name}</TableCell>
+                              <TableCell>{campaign.subject}</TableCell>
+                              <TableCell>
+                                <Badge variant={getStatusColor(campaign.status)} className="flex items-center gap-1 w-fit">
+                                  {getStatusIcon(campaign.status)}
+                                  {campaign.status}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                {campaign.brevo_campaign_id ? (
+                                  <Badge variant="default" className="bg-green-100 text-green-800">
+                                    Synced
+                                  </Badge>
+                                ) : (
+                                  <Badge variant="destructive" className="flex items-center gap-1 w-fit">
+                                    <AlertTriangle className="w-3 h-3" />
+                                    Not Synced
+                                  </Badge>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {format(new Date(campaign.created_at), 'MMM dd, yyyy')}
+                              </TableCell>
+                              <TableCell>
+                                {campaign.sent_at ? format(new Date(campaign.sent_at), 'MMM dd, yyyy HH:mm') : '-'}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center space-x-2">
+                                  {campaign.status === 'draft' && (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleSendCampaign(campaign.id)}
+                                      disabled={sendCampaign.isPending}
+                                      className="text-green-600 hover:text-green-700"
+                                    >
+                                      <Send className="w-4 h-4" />
+                                    </Button>
+                                  )}
+                                  {!campaign.brevo_campaign_id && (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleResyncCampaign(campaign.id)}
+                                      disabled={resyncCampaign.isPending}
+                                      className="text-orange-600 hover:text-orange-700"
+                                      title="Resync with Brevo"
+                                    >
+                                      <RefreshCw className="w-4 h-4" />
+                                    </Button>
+                                  )}
+                                  {campaign.status === 'sent' && (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => setSelectedCampaignId(campaign.id)}
+                                      className="text-blue-600 hover:text-blue-700"
+                                    >
+                                      <BarChart3 className="w-4 h-4" />
+                                    </Button>
+                                  )}
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleDeleteCampaign(campaign.id)}
+                                    disabled={deleteCampaign.isPending}
+                                    className="text-red-600 hover:text-red-700"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="metrics" className="space-y-4">
