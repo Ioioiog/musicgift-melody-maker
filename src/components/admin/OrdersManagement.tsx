@@ -27,10 +27,7 @@ const OrdersManagement = () => {
     queryFn: async () => {
       let query = supabase
         .from('orders')
-        .select(`
-          *,
-          package:package_info(*)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (selectedStatus !== 'all') {
@@ -61,10 +58,10 @@ const OrdersManagement = () => {
 
   const exportOrders = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
-      + "ID,Package,Total Price,Status,Created At,Customer Email\n"
+      + "ID,Package ID,Total Price,Status,Created At,Customer Email\n"
       + orders.map(order => {
           const formData = order.form_data as OrderFormData;
-          return `${order.id},${order.package?.label_key || 'N/A'},${order.total_price},${order.status},${order.created_at},${formData?.email || 'N/A'}`;
+          return `${order.id},${order.package_id || 'N/A'},${order.total_price},${order.status},${order.created_at},${formData?.email || 'N/A'}`;
         }).join("\n");
 
     const encodedUri = encodeURI(csvContent);
@@ -144,7 +141,7 @@ const OrdersManagement = () => {
                     
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p><strong>Package:</strong> {order.package?.label_key || 'N/A'}</p>
+                        <p><strong>Package ID:</strong> {order.package_id || 'N/A'}</p>
                         <p><strong>Customer:</strong> {formData?.fullName || 'N/A'}</p>
                         <p><strong>Email:</strong> {formData?.email || 'N/A'}</p>
                         <p><strong>Payment ID:</strong> {order.payment_id || 'N/A'}</p>
