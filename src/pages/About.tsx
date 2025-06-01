@@ -1,5 +1,4 @@
 
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,7 +12,7 @@ const About = () => {
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Enhanced Hero Section with Purple Musical Background, Our Story Content and Values */}
+      {/* Enhanced Hero Section with Purple Musical Background, Our Story Content and MusicGift Details */}
       <section 
         className="py-20 text-white relative overflow-hidden"
         style={{
@@ -129,42 +128,6 @@ const About = () => {
               </motion.div>
             </div>
           </div>
-
-          {/* Values Section - Now inside hero */}
-          <div>
-            <motion.div 
-              className="text-center mb-12"
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.6, delay: 0.8 }}
-            >
-              <h2 className="text-3xl font-bold text-white mb-4">{t('ourValues')}</h2>
-              <p className="text-white/90">{t('ourValuesSubtitle')}</p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                { icon: "🎨", title: t('creativity'), content: t('creativityContent') },
-                { icon: "❤️", title: t('passion'), content: t('passionContent') },
-                { icon: "🎯", title: t('quality'), content: t('qualityContent') }
-              ].map((value, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }} 
-                  animate={{ opacity: 1, y: 0 }} 
-                  transition={{ duration: 0.6, delay: 0.9 + index * 0.1 }}
-                >
-                  <Card className="h-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
-                    <CardContent className="p-6 text-center">
-                      <div className="text-4xl mb-4">{value.icon}</div>
-                      <h3 className="text-xl font-bold text-white mb-4">{value.title}</h3>
-                      <p className="text-white/90">{value.content}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 
@@ -174,4 +137,3 @@ const About = () => {
 };
 
 export default About;
-
