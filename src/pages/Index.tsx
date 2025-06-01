@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -9,6 +10,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
 import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
+
 const Index = () => {
   const {
     data: packages = [],
@@ -86,12 +89,12 @@ const Index = () => {
             
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Link to="/packages">
-                <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base lg:text-lg backdrop-blur-sm w-full sm:w-auto">
+                <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg w-full sm:w-auto">
                   {t('seePackages') || 'See Packages'}
                 </Button>
               </Link>
               <Link to="/testimonials">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base lg:text-lg backdrop-blur-sm w-full sm:w-auto">
+                <Button size="lg" variant="outline" className="border-2 border-purple-300 text-purple-100 hover:bg-purple-500/20 hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg bg-transparent w-full sm:w-auto">
                   {t('listenToSamples') || 'Listen to Samples'}
                 </Button>
               </Link>
@@ -110,88 +113,133 @@ const Index = () => {
       {/* ScenarioHero Banner */}
       <ScenarioHero />
 
-      {/* Packages Preview - Mobile Optimized */}
-      <section className="py-8 sm:py-12 md:py-16 bg-gray-50">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">{t('chooseYourPackage') || 'Choose Your Package'}</h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4">{t('selectPerfectPackage') || 'Select the perfect music package that fits your needs and budget'}</p>
-          </div>
+      {/* Packages Preview - ScenarioHero Style */}
+      <section className="relative overflow-hidden py-8 sm:py-12 md:py-16" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        {/* Overlay for better readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
+        
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <motion.div 
+            className="text-center mb-8 sm:mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">{t('chooseYourPackage') || 'Choose Your Package'}</h2>
+            <p className="text-base sm:text-lg md:text-xl text-white/90 px-4">{t('selectPerfectPackage') || 'Select the perfect music package that fits your needs and budget'}</p>
+          </motion.div>
           
           {/* Loading State */}
           {isLoading && <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px]">
               <div className="text-center">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-                <p className="text-gray-600 text-sm sm:text-base">{t('loadingPackages') || 'Loading packages...'}</p>
+                <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-white/20 border-t-white/60 rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-white/80 text-sm sm:text-base">{t('loadingPackages') || 'Loading packages...'}</p>
               </div>
             </div>}
 
           {/* Error State */}
           {error && <div className="text-center py-8 sm:py-12 px-4">
-              <p className="text-red-600 mb-4 text-sm sm:text-base">{t('failedToLoadPackages') || 'Failed to load packages. Please try again later.'}</p>
-              <Button onClick={() => window.location.reload()} variant="outline" className="text-sm sm:text-base">
+              <p className="text-red-300 mb-4 text-sm sm:text-base">{t('failedToLoadPackages') || 'Failed to load packages. Please try again later.'}</p>
+              <Button onClick={() => window.location.reload()} className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md text-sm sm:text-base">
                 {t('reload') || 'Reload'}
               </Button>
             </div>}
 
-          {/* Packages Grid - Mobile responsive */}
-          {!isLoading && !error && previewPackages.length > 0 && <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
-              {previewPackages.map(pkg => <Card key={pkg.id} className={`relative hover:shadow-xl transition-all duration-300 ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'border-2 border-purple-200 scale-105' : ''}`}>
-                  {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
-                      <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
-                        {t('mostPopular')}
-                      </span>
-                    </div>}
-                  
-                  <CardContent className="p-4 sm:p-6 md:p-8">
-                    {/* Icon and Title */}
-                    <div className="text-center mb-4 sm:mb-6">
-                      <div className="text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-3">
-                        {pkg.value === 'personal' ? '🎁' : pkg.value === 'business' ? '💼' : pkg.value === 'premium' ? '🌟' : pkg.value === 'artist' ? '🎤' : pkg.value === 'instrumental' ? '🎶' : pkg.value === 'remix' ? '🔁' : '🎁'}
+          {/* Packages Grid - ScenarioHero Style */}
+          {!isLoading && !error && previewPackages.length > 0 && (
+            <motion.div 
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              {previewPackages.map((pkg, index) => (
+                <motion.div
+                  key={pkg.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 * index }}
+                >
+                  <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
+                    {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && (
+                      <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 z-20">
+                        <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
+                          {t('mostPopular')}
+                        </span>
                       </div>
-                      <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">{tDb(pkg.label_key)}</h3>
-                      {pkg.tagline_key && <p className="text-xs sm:text-sm text-purple-600 font-medium mb-2 sm:mb-3">{tDb(pkg.tagline_key)}</p>}
-                    </div>
+                    )}
+                    
+                    <CardContent className="p-4 sm:p-6 md:p-8 text-white">
+                      {/* Icon and Title */}
+                      <div className="text-center mb-4 sm:mb-6">
+                        <div className="text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-3">
+                          {pkg.value === 'personal' ? '🎁' : pkg.value === 'business' ? '💼' : pkg.value === 'premium' ? '🌟' : pkg.value === 'artist' ? '🎤' : pkg.value === 'instrumental' ? '🎶' : pkg.value === 'remix' ? '🔁' : '🎁'}
+                        </div>
+                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">{tDb(pkg.label_key)}</h3>
+                        {pkg.tagline_key && <p className="text-xs sm:text-sm text-purple-200 font-medium mb-2 sm:mb-3">{tDb(pkg.tagline_key)}</p>}
+                      </div>
 
-                    {/* Price */}
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-600 mb-4 sm:mb-6 text-center">
-                      {pkg.price} <span className="text-sm sm:text-base md:text-lg text-gray-500">RON</span>
-                    </div>
+                      {/* Price */}
+                      <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 sm:mb-6 text-center">
+                        {pkg.price} <span className="text-sm sm:text-base md:text-lg text-white/70">RON</span>
+                      </div>
 
-                    {/* Features */}
-                    {pkg.includes && pkg.includes.length > 0 && <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
-                        {pkg.includes.map((include, featureIndex) => <li key={featureIndex} className="flex items-center text-gray-600 text-sm sm:text-base">
-                            <span className="w-4 h-4 sm:w-5 sm:h-5 bg-green-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
-                              <span className="text-green-600 text-xs">✓</span>
-                            </span>
-                            <span className="leading-tight">{tDb(include.include_key)}</span>
-                          </li>)}
-                      </ul>}
+                      {/* Features */}
+                      {pkg.includes && pkg.includes.length > 0 && (
+                        <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                          {pkg.includes.map((include, featureIndex) => (
+                            <li key={featureIndex} className="flex items-center text-white/90 text-sm sm:text-base">
+                              <span className="w-4 h-4 sm:w-5 sm:h-5 bg-green-400/20 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 border border-green-400/30">
+                                <span className="text-green-300 text-xs">✓</span>
+                              </span>
+                              <span className="leading-tight">{tDb(include.include_key)}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
 
-                    <Link to="/order">
-                      <Button className="w-full bg-gradient-purple hover:opacity-90 text-sm sm:text-base">
-                        {t('orderNow')}
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>)}
-            </div>}
+                      <Link to="/order">
+                        <Button className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
+                          {t('orderNow')}
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
 
           {/* No Packages State */}
           {!isLoading && !error && previewPackages.length === 0 && <div className="text-center py-8 sm:py-12 px-4">
-              <p className="text-gray-600 mb-4 text-sm sm:text-base">{t('noPackagesAvailable') || 'No packages available at the moment.'}</p>
-              <p className="text-gray-500 text-sm sm:text-base">{t('checkBackLater') || 'Please check back later.'}</p>
+              <p className="text-white/80 mb-4 text-sm sm:text-base">{t('noPackagesAvailable') || 'No packages available at the moment.'}</p>
+              <p className="text-white/60 text-sm sm:text-base">{t('checkBackLater') || 'Please check back later.'}</p>
             </div>}
           
           {/* View All Packages Button */}
-          {!isLoading && !error && previewPackages.length > 0 && <div className="text-center mt-8 sm:mt-12">
+          {!isLoading && !error && previewPackages.length > 0 && (
+            <motion.div 
+              className="text-center mt-8 sm:mt-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
               <Link to="/packages">
-                <Button size="lg" variant="outline" className="border-purple-200 text-purple-600 hover:bg-purple-50 text-sm sm:text-base">
+                <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
                   {t('viewAllPackages') || 'View All Packages'}
                 </Button>
               </Link>
-            </div>}
+            </motion.div>
+          )}
         </div>
+
+        {/* Bottom border accent */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
       </section>
 
       {/* CTA Section with Purple Musical Background - Mobile optimized */}
