@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import SunoPromptsDialog from './SunoPromptsDialog';
+import DeliveryCountdownBadge from './DeliveryCountdownBadge';
 
 interface OrderFormData {
   email?: string;
@@ -208,6 +209,11 @@ const OrdersManagement = () => {
                       <Badge className={getPaymentStatusColor(order.payment_status)}>
                         Payment: {order.payment_status}
                       </Badge>
+                      <DeliveryCountdownBadge 
+                        orderCreatedAt={order.created_at}
+                        packageValue={order.package_id}
+                        orderStatus={order.status}
+                      />
                       {hasPrompts && (
                         <Badge className="bg-purple-100 text-purple-800 border-purple-300">
                           <Database className="w-3 h-3 mr-1" />
