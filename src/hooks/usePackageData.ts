@@ -1,26 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useTranslation } from './useTranslations';
-import { samplePackages } from '@/data/samplePackages';
 
-export interface PackageData {
-  id: string;
-  value: string;
-  label_key: string;
-  price: number;
-  tagline_key?: string;
-  description_key?: string;
-  delivery_time_key?: string;
-  tags: Array<{
-    tag_type: string;
-    tag_label_key?: string;
-    styling_class?: string;
-  }>;
-  includes: Array<{
-    include_key: string;
-    include_order: number;
-  }>;
-}
+import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from './useTranslations';
+import { packages, PackageData } from '@/data/packages';
 
 export interface StepData {
   id: string;
@@ -37,45 +18,21 @@ export interface StepData {
   }>;
 }
 
-// Mapping between simplified values and database values
-const PACKAGE_VALUE_MAPPING: Record<string, string> = {
-  'business': 'pachet-business',
-  'personal': 'pachet-personal',
-  'premium': 'premium',
-  'artist': 'artist',
-  'instrumental': 'instrumental',
-  'remix': 'remix'
-};
-
-// Reverse mapping for database values to simplified values
-const DATABASE_TO_SIMPLE_MAPPING: Record<string, string> = {
-  'pachet-business': 'business',
-  'pachet-personal': 'personal',
-  'premium': 'premium',
-  'artist': 'artist',
-  'instrumental': 'instrumental',
-  'remix': 'remix'
-};
-
 export const usePackages = () => {
   const { t } = useTranslation();
   
   return useQuery({
     queryKey: ['packages'],
     queryFn: async () => {
-      console.log('Using sample packages data directly...');
+      console.log('Using consolidated packages data...');
       
-      // Transform sample packages to match the expected interface
-      const transformedPackages = samplePackages.map(pkg => ({
+      // Sort includes by include_order for each package
+      const transformedPackages = packages.map(pkg => ({
         ...pkg,
-        // Convert database value to simplified value for UI consistency
-        value: DATABASE_TO_SIMPLE_MAPPING[pkg.value] || pkg.value,
-        // Keep original database value for internal use
-        originalValue: pkg.value,
         includes: pkg.includes?.sort((a: any, b: any) => a.include_order - b.include_order) || []
       }));
       
-      console.log('Transformed sample packages:', transformedPackages);
+      console.log('Transformed packages:', transformedPackages);
       return transformedPackages as PackageData[];
     }
   });
@@ -90,17 +47,14 @@ export const usePackageSteps = (packageValue: string) => {
         return [];
       }
 
-      console.log('Getting steps for package from sample data:', packageValue);
+      console.log('Getting steps for package from consolidated data:', packageValue);
 
       try {
-        // Find the package in sample data
-        const packageData = samplePackages.find(pkg => {
-          const simplifiedValue = DATABASE_TO_SIMPLE_MAPPING[pkg.value] || pkg.value;
-          return simplifiedValue === packageValue;
-        });
+        // Find the package in consolidated data
+        const packageData = packages.find(pkg => pkg.value === packageValue);
 
         if (!packageData) {
-          console.error('Package not found in sample data:', packageValue);
+          console.error('Package not found in consolidated data:', packageValue);
           throw new Error(`Package not found: ${packageValue}`);
         }
 
@@ -160,10 +114,12 @@ export const useAddons = () => {
   return useQuery({
     queryKey: ['addons'],
     queryFn: async () => {
-      console.log('Using sample addons (empty for now)...');
+      console.log('Using consolidated addons (empty for now)...');
       
-      // Return empty array for now since sample packages don't have addons configured
+      // Return empty array for now since packages don't have addons configured
       return [];
     }
   });
 };
+
+export { PackageData };
