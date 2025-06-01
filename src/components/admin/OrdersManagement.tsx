@@ -475,13 +475,12 @@ const OrdersManagement = () => {
       </Card>
 
       <SunoPromptsDialog
-        open={sunoDialogOpen}
-        onOpenChange={setSunoDialogOpen}
-        order={selectedOrder}
-        onSuccess={() => {
+        isOpen={sunoDialogOpen}
+        onClose={() => {
           setSunoDialogOpen(false);
           refetch();
         }}
+        orderData={selectedOrder}
       />
     </div>
   );
