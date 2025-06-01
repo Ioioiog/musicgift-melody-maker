@@ -19,7 +19,7 @@ const HowItWorks = () => {
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }}>
-        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-black/20 py-0"></div>
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           
           
@@ -51,7 +51,7 @@ const HowItWorks = () => {
       </section>
 
       {/* Animated Steps Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 via-purple-50/30 to-blue-50/20 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-gray-50 via-purple-50/30 to-blue-50/20 relative overflow-hidden py-[5px]">
         {/* Background decorative elements */}
         <div className="absolute top-10 left-10 w-32 h-32 bg-purple-200/20 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-10 w-40 h-40 bg-blue-200/20 rounded-full blur-3xl" />
