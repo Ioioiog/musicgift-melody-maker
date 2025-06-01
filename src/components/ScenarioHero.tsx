@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslations';
 import { Gift, Heart, Users, Crown, Sparkles, Diamond, Car, Briefcase, Building, Mic, Music, RotateCcw, FileMusic, Star, Package, Cake, HeartHandshake, UserCheck, PartyPopper, Award, TrendingUp, Headphones, Volume2, Shuffle } from 'lucide-react';
-
 const scenarios = [
 // Personal Package scenarios
 {
@@ -111,7 +110,7 @@ const ScenarioHero = () => {
     backgroundRepeat: 'no-repeat'
   }}>
       {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/30"></div>
+      <div className="absolute inset-0 bg-black/40"></div>
       
       <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
         <motion.div className={`transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`} initial={{
