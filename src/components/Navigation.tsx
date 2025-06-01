@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -79,7 +80,7 @@ const Navigation = () => {
               
               <UserMenu />
               
-              <Link to="/order" className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white border-0 px-6 xl:px-8 py-2.5 rounded-full font-semibold transition-all duration-300 text-sm shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:scale-105">
+              <Link to="/order" className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white border-0 px-6 xl:px-8 py-2.5 rounded-full font-semibold transition-all duration-300 text-sm shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:scale-105">
                 {t("orderNow") || "Order Now"}
               </Link>
             </div>
@@ -116,7 +117,7 @@ const Navigation = () => {
                   
                   <UserMenu />
                   
-                  <Link to="/order" className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 w-full sm:w-auto text-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" onClick={() => setIsMenuOpen(false)}>
+                  <Link to="/order" className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 w-full sm:w-auto text-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" onClick={() => setIsMenuOpen(false)}>
                     {t("orderNow") || "Order Now"}
                   </Link>
                 </div>
@@ -126,4 +127,5 @@ const Navigation = () => {
       </header>
     </>;
 };
+
 export default Navigation;
