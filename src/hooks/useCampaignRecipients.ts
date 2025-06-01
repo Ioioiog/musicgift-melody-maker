@@ -41,18 +41,25 @@ export const useSyncCampaignRecipients = () => {
 
   return useMutation({
     mutationFn: async ({ campaignId, actionType }: { campaignId: string; actionType?: string }) => {
+      console.log('Syncing recipient data for campaign:', campaignId, 'action type:', actionType);
+      
       const { data, error } = await supabase.functions.invoke('brevo-campaign-recipients', {
         body: { campaignId, actionType }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
+      
+      console.log('Sync response:', data);
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['campaign-recipient-activity'] });
       toast({
         title: "Recipient data synced",
-        description: "Campaign recipient activity has been updated from Brevo.",
+        description: `Campaign recipient activity has been updated from Brevo. ${data?.count || 0} activities synced.`,
       });
     },
     onError: (error: any) => {

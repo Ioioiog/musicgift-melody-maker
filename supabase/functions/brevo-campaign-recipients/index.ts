@@ -58,29 +58,34 @@ serve(async (req) => {
     }
 
     // Determine the correct Brevo endpoint based on action type
-    let endpoint = `https://api.brevo.com/v3/emailCampaigns/${campaign.brevo_campaign_id}/recipients`
+    let endpoint = `https://api.brevo.com/v3/emailCampaigns/${campaign.brevo_campaign_id}`
+    let urlPath = '/recipients'
     
     if (actionType) {
       switch (actionType) {
         case 'opened':
-          endpoint += '/opens'
+          urlPath = '/opens'
           break
         case 'clicked':
-          endpoint += '/clicks'
+          urlPath = '/clicks'
           break
         case 'bounced':
-          endpoint += '/bounces'
+          urlPath = '/bounces'
           break
         case 'unsubscribed':
-          endpoint += '/unsubscriptions'
+          urlPath = '/unsubscriptions'
           break
         case 'complained':
-          endpoint += '/complaints'
+          urlPath = '/complaints'
           break
-        // 'delivered' uses the base recipients endpoint
+        case 'delivered':
+        default:
+          urlPath = '/recipients'
+          break
       }
     }
 
+    endpoint += urlPath
     console.log('Fetching recipient data from:', endpoint)
 
     // Fetch recipient data from Brevo
@@ -95,8 +100,21 @@ serve(async (req) => {
     if (!brevoResponse.ok) {
       const errorText = await brevoResponse.text()
       console.log('Brevo API error:', errorText)
+      
+      // If it's a 404, it might mean no data exists for this action type
+      if (brevoResponse.status === 404) {
+        return new Response(
+          JSON.stringify({ 
+            message: 'No recipient data found for this action type',
+            activities: [],
+            count: 0
+          }),
+          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+      
       return new Response(
-        JSON.stringify({ error: 'Failed to fetch recipient data from Brevo' }),
+        JSON.stringify({ error: `Failed to fetch recipient data from Brevo: ${errorText}` }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -106,32 +124,51 @@ serve(async (req) => {
 
     // Process and store recipient activity
     const activities = []
-    const recipients = recipientData.recipients || recipientData.data || []
+    
+    // Handle different response formats from Brevo API
+    let recipients = []
+    if (recipientData.recipients) {
+      recipients = recipientData.recipients
+    } else if (recipientData.data) {
+      recipients = recipientData.data
+    } else if (Array.isArray(recipientData)) {
+      recipients = recipientData
+    }
 
     for (const recipient of recipients) {
+      // Handle different timestamp field names
+      const timestamp = recipient.eventTime || 
+                       recipient.timestamp || 
+                       recipient.date || 
+                       recipient.createdAt || 
+                       new Date().toISOString()
+
       const activity = {
         campaign_id: campaignId,
-        email: recipient.email,
+        email: recipient.email || recipient.emailAddress || '',
         action_type: actionType || 'delivered',
-        action_timestamp: recipient.eventTime || recipient.timestamp || new Date().toISOString(),
-        ip_address: recipient.ip || null,
-        user_agent: recipient.userAgent || null,
-        link_url: recipient.url || null,
-        bounce_reason: recipient.reason || null
+        action_timestamp: timestamp,
+        ip_address: recipient.ip || recipient.ipAddress || null,
+        user_agent: recipient.userAgent || recipient.user_agent || null,
+        link_url: recipient.url || recipient.linkUrl || null,
+        bounce_reason: recipient.reason || recipient.bounceReason || null
       }
 
-      activities.push(activity)
+      // Only add if we have a valid email
+      if (activity.email) {
+        activities.push(activity)
 
-      // Insert or update activity in database
-      const { error: insertError } = await supabase
-        .from('campaign_recipient_activity')
-        .upsert(activity, {
-          onConflict: 'campaign_id,email,action_type',
-          ignoreDuplicates: false
-        })
+        // Insert or update activity in database
+        const { error: insertError } = await supabase
+          .from('campaign_recipient_activity')
+          .upsert(activity, {
+            onConflict: 'campaign_id,email,action_type',
+            ignoreDuplicates: false
+          })
 
-      if (insertError) {
-        console.error('Error inserting activity:', insertError)
+        if (insertError) {
+          console.error('Error inserting activity:', insertError)
+        }
       }
     }
 
