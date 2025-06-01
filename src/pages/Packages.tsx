@@ -43,10 +43,10 @@ const Packages = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              {t('ourPackages', 'Our Packages')}
+              {t('ourPackages') || 'Our Packages'}
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              {t('packagesDescription', 'Choose the perfect package for your musical needs')}
+              {t('packagesDescription') || 'Choose the perfect package for your musical needs'}
             </p>
           </div>
           
