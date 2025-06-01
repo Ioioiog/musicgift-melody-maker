@@ -90,11 +90,11 @@ const ScenarioHero = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFade(false); // Start fade-out
+      setFade(false);
 
       setTimeout(() => {
         setIndex(prev => (prev + 1) % scenarios.length);
-        setFade(true); // Fade in new content
+        setFade(true);
       }, 500);
     }, 4000);
     return () => clearInterval(interval);
@@ -104,7 +104,6 @@ const ScenarioHero = () => {
 
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
@@ -112,11 +111,11 @@ const ScenarioHero = () => {
         }}
       />
       
-      {/* Professional gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-slate-800/75 to-slate-900/85"></div>
       
-      {/* Subtle pattern overlay for texture */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.02\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"1\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+      <div className="absolute inset-0 opacity-50" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }}></div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-16 text-center">
         <motion.div 
@@ -125,7 +124,6 @@ const ScenarioHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {/* Icon with professional styling */}
           <div className="flex justify-center mb-8">
             <div className="relative">
               <div className="absolute inset-0 bg-white/10 rounded-full blur-xl"></div>
@@ -139,7 +137,6 @@ const ScenarioHero = () => {
             </div>
           </div>
 
-          {/* Professional typography */}
           <motion.div
             className="space-y-6"
             initial={{ opacity: 0, y: 20 }}
@@ -159,7 +156,6 @@ const ScenarioHero = () => {
             </div>
           </motion.div>
 
-          {/* Professional accent elements */}
           <motion.div
             className="mt-12 flex justify-center"
             initial={{ opacity: 0, y: 20 }}
@@ -179,7 +175,6 @@ const ScenarioHero = () => {
         </motion.div>
       </div>
 
-      {/* Bottom gradient fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-50 to-transparent"></div>
     </section>
   );
