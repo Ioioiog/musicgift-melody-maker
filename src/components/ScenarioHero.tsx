@@ -106,6 +106,9 @@ const ScenarioHero = () => {
       {/* Professional background pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.02)_50%,transparent_75%)] bg-[length:20px_20px]"></div>
       
+      {/* Subtle filter overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-purple-900/10 to-black/20"></div>
+      
       {/* Content container with professional layout */}
       <div className="relative z-10 h-full flex items-center justify-between max-w-7xl mx-auto px-8">
         
