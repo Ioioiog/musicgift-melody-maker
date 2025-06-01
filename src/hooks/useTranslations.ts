@@ -27,7 +27,7 @@ export const useTranslations = () => {
         translations[item.key_name] = item.translation;
       });
       
-      console.log('Fetched translations:', translations);
+      console.log('Fetched database translations:', translations);
       return translations;
     },
     staleTime: 1000 * 60 * 10, // Cache for 10 minutes
@@ -39,13 +39,17 @@ export const useTranslation = () => {
   const { t: localT, language } = useLanguage();
   
   const t = (key: string, fallback?: string) => {
-    // 1. Try database translation first
-    const dbTranslation = dbTranslations[key];
-    if (dbTranslation) return dbTranslation;
-    
-    // 2. Try local translation from LanguageContext
+    // 1. First try local translation from LanguageContext (prioritized for packages)
     const localTranslation = localT(key);
-    if (localTranslation && localTranslation !== key) return localTranslation;
+    if (localTranslation && localTranslation !== key) {
+      return localTranslation;
+    }
+    
+    // 2. Then try database translation (for dynamic/admin content)
+    const dbTranslation = dbTranslations[key];
+    if (dbTranslation) {
+      return dbTranslation;
+    }
     
     // 3. Return fallback or the key itself if no translation found
     return fallback || key;

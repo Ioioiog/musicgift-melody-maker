@@ -29,7 +29,210 @@ const translations = {
     testimonials: "Testimoniale",
     orderNow: "Comandă acum",
     
-    // Hero Section
+    // Package Labels
+    personalPackage: "Pachet Personal",
+    businessPackage: "Pachet Business",
+    premiumPackage: "Pachet Premium",
+    artistPackage: "Pachet Artist",
+    instrumentalPackage: "Pachet Instrumental",
+    remixPackage: "Pachet Remix",
+    giftPackage: "Pachet Cadou",
+    
+    // Package Taglines
+    "O melodie unică pentru momentele tale speciale": "O melodie unică pentru momentele tale speciale",
+    "Dă-i brandului tău o voce memorabilă": "Dă-i brandului tău o voce memorabilă",
+    "Experiența completă: cântec + video animat + distribuție": "Experiența completă: cântec + video animat + distribuție",
+    "Colaborare artistică completă pentru cariera ta muzicală": "Colaborare artistică completă pentru cariera ta muzicală",
+    "Instrumental personalizat pentru proiectele tale": "Instrumental personalizat pentru proiectele tale",
+    "Dă o nouă viață cântecului tău preferat": "Dă o nouă viață cântecului tău preferat",
+    "Oferă cadoul muzicii personalizate": "Oferă cadoul muzicii personalizate",
+    
+    // Package Descriptions
+    "Perfect pentru cadouri personalizate și momente de neuitat": "Perfect pentru cadouri personalizate și momente de neuitat",
+    "Creat pentru companii care vor o piesă originală pentru branding, campanii sau reclame cu impact emoțional": "Creat pentru companii care vor o piesă originală pentru branding, campanii sau reclame cu impact emoțional",
+    "Pachetul complet pentru cei care vor totul inclus": "Pachetul complet pentru cei care vor totul inclus",
+    "Pachetul profesional pentru artiști care vor să își lanseze cariera muzicală": "Pachetul profesional pentru artiști care vor să își lanseze cariera muzicală",
+    "Perfecte pentru podcasturi, videoclipuri, prezentări sau orice proiect care necesită muzică de fundal": "Perfecte pentru podcasturi, videoclipuri, prezentări sau orice proiect care necesită muzică de fundal",
+    "Transformă orice cântec într-o versiune unică și personalizată": "Transformă orice cântec într-o versiune unică și personalizată",
+    "Cumpără orice pachet ca și cadou pentru cineva special": "Cumpără orice pachet ca și cadou pentru cineva special",
+    
+    // Delivery Times
+    "3-5 zile": "3-5 zile",
+    "5–7 zile": "5–7 zile",
+    "5-7 zile": "5-7 zile",
+    "14-21 zile": "14-21 zile",
+    "Variabil": "Variabil",
+    
+    // Package Includes
+    "Cântec original din povestea ta": "Cântec original din povestea ta",
+    "Voce profesională": "Voce profesională",
+    "Livrare rapidă": "Livrare rapidă",
+    "Drepturi personale": "Drepturi personale",
+    "Consultanță creativă": "Consultanță creativă",
+    "Cântec personalizat pentru afacerea ta": "Cântec personalizat pentru afacerea ta",
+    "Producție profesională și voce de studio": "Producție profesională și voce de studio",
+    "Mix & Master de calitate superioară": "Mix & Master de calitate superioară",
+    "Licență comercială limitată (excludere: radio, TV, revânzare piesă)": "Licență comercială limitată (excludere: radio, TV, revânzare piesă)",
+    "Fișiere audio multiple (MP3, WAV)": "Fișiere audio multiple (MP3, WAV)",
+    "Cântec original cu producție completă": "Cântec original cu producție completă",
+    "Video animat DOMG": "Video animat DOMG",
+    "Distribuție oficială digitală Mango Records": "Distribuție oficială digitală Mango Records",
+    "Colaborare artistică completă": "Colaborare artistică completă",
+    "Producție cântec original": "Producție cântec original",
+    "Înregistrare vocală profesională": "Înregistrare vocală profesională",
+    "Video clip muzical profesional": "Video clip muzical profesional",
+    "Distribuție pe toate platformele": "Distribuție pe toate platformele",
+    "Contract 50/50": "Contract 50/50",
+    "Marketing profesional": "Marketing profesional",
+    "Instrumental personalizat": "Instrumental personalizat",
+    "Producție audio profesională": "Producție audio profesională",
+    "Mix & Master final": "Mix & Master final",
+    "Fișiere audio multiple": "Fișiere audio multiple",
+    "Stems separate pentru editare": "Stems separate pentru editare",
+    "Remix profesional": "Remix profesional",
+    "Producție în stilul dorit": "Producție în stilul dorit",
+    "Versiune extinsă și radio edit": "Versiune extinsă și radio edit",
+    "Fișiere audio de înaltă calitate": "Fișiere audio de înaltă calitate",
+    "Card digital personalizat": "Card digital personalizat",
+    "Mesaj personalizat": "Mesaj personalizat",
+    "Livrare automată": "Livrare automată",
+    "Toate beneficiile pachetului selectat": "Toate beneficiile pachetului selectat",
+    
+    // Step Titles
+    "Alege pachetul": "Alege pachetul",
+    "Povestea ta": "Povestea ta",
+    "Informații companie": "Informații companie",
+    "Detalii cântec": "Detalii cântec",
+    "Profilul artistic": "Profilul artistic",
+    "Specificații instrumental": "Specificații instrumental",
+    "Detalii remix": "Detalii remix",
+    "Pachetul cadou": "Pachetul cadou",
+    
+    // Field Placeholders
+    "Numele destinatarului": "Numele destinatarului",
+    "Relația cu destinatarul": "Relația cu destinatarul",
+    "Ocazia": "Ocazia",
+    "Povestea voastră în câteva cuvinte": "Povestea voastră în câteva cuvinte",
+    "Stilul muzical preferat": "Stilul muzical preferat",
+    "Numele companiei": "Numele companiei",
+    "Domeniul de activitate": "Domeniul de activitate",
+    "Ce mesaj vrei să transmită melodia despre brandul tău": "Ce mesaj vrei să transmită melodia despre brandul tău",
+    "Publicul țintă": "Publicul țintă",
+    "Titlul dorit pentru cântec": "Titlul dorit pentru cântec",
+    "Stilul video-ului animat": "Stilul video-ului animat",
+    "Conceptul și mesajul cântecului": "Conceptul și mesajul cântecului",
+    "Numele de scenă dorit": "Numele de scenă dorit",
+    "Experiența muzicală": "Experiența muzicală",
+    "Genul muzical preferat": "Genul muzical preferat",
+    "Viziunea ta artistică și ce vrei să transmiți prin muzică": "Viziunea ta artistică și ce vrei să transmiți prin muzică",
+    "Obiectivele tale de carieră muzicală": "Obiectivele tale de carieră muzicală",
+    "Tipul proiectului": "Tipul proiectului",
+    "Genul muzical": "Genul muzical",
+    "Atmosfera dorită": "Atmosfera dorită",
+    "Durata dorită": "Durata dorită",
+    "Note adiționale și detalii specifice": "Note adiționale și detalii specifice",
+    "Numele cântecului original și artistul": "Numele cântecului original și artistul",
+    "Stilul remix-ului dorit": "Stilul remix-ului dorit",
+    "Tempoul dorit": "Tempoul dorit",
+    "Cerințe speciale și viziunea ta pentru remix": "Cerințe speciale și viziunea ta pentru remix",
+    "Alege pachetul pentru cadou": "Alege pachetul pentru cadou",
+    "Numele destinatarului cadoului": "Numele destinatarului cadoului",
+    "Email-ul destinatarului": "Email-ul destinatarului",
+    "Mesajul tău pentru destinatar": "Mesajul tău pentru destinatar",
+    "Data livrării (opțional)": "Data livrării (opțional)",
+    
+    // Option Values - Relationships
+    "Partener/ă": "Partener/ă",
+    "Copil": "Copil",
+    "Părinte": "Părinte",
+    "Prieten/ă": "Prieten/ă",
+    "Frate/Soră": "Frate/Soră",
+    "Bunic/Bunică": "Bunic/Bunică",
+    "Altă relație": "Altă relație",
+    
+    // Option Values - Occasions
+    "Zi de naștere": "Zi de naștere",
+    "Aniversare": "Aniversare",
+    "Nuntă": "Nuntă",
+    "Ziua Îndrăgostiților": "Ziua Îndrăgostiților",
+    "Crăciun": "Crăciun",
+    "Altă ocazie": "Altă ocazie",
+    
+    // Option Values - Music Styles
+    "Pop": "Pop",
+    "Acustic": "Acustic",
+    "Rock": "Rock",
+    "Jazz": "Jazz",
+    "Folk": "Folk",
+    "Electronic": "Electronic",
+    "Corporate": "Corporate",
+    "Energic": "Energic",
+    "Calm": "Calm",
+    "Modern": "Modern",
+    "Clasic": "Clasic",
+    "Hip-Hop": "Hip-Hop",
+    
+    // Option Values - Video Styles
+    "Romantic": "Romantic",
+    "Distractiv": "Distractiv",
+    "Elegant": "Elegant",
+    
+    // Option Values - Experience Levels
+    "Începător": "Începător",
+    "Intermediar": "Intermediar",
+    "Avansat": "Avansat",
+    "Profesionist": "Profesionist",
+    
+    // Option Values - Project Types
+    "Podcast": "Podcast",
+    "Video/Film": "Video/Film",
+    "Prezentare": "Prezentare",
+    "Joc": "Joc",
+    "Reclamă": "Reclamă",
+    "Altul": "Altul",
+    
+    // Option Values - Moods
+    "Misterios": "Misterios",
+    "Optimist": "Optimist",
+    "Dramatic": "Dramatic",
+    "Jucăuș": "Jucăuș",
+    
+    // Option Values - Durations
+    "30 secunde": "30 secunde",
+    "1 minut": "1 minut",
+    "2 minute": "2 minute",
+    "3 minute": "3 minute",
+    "Durată personalizată": "Durată personalizată",
+    
+    // Option Values - Remix Styles
+    "Electronic/EDM": "Electronic/EDM",
+    "Reggae": "Reggae",
+    
+    // Option Values - Tempo
+    "Mai lent": "Mai lent",
+    "Același tempo": "Același tempo",
+    "Mai rapid": "Mai rapid",
+    "Tempo variabil": "Tempo variabil",
+    
+    // Option Values - Gift Packages
+    "Pachet Personal": "Pachet Personal",
+    "Pachet Business": "Pachet Business",
+    "Pachet Premium": "Pachet Premium",
+    "Pachet Artist": "Pachet Artist",
+    "Pachet Instrumental": "Pachet Instrumental",
+    "Pachet Remix": "Pachet Remix",
+    
+    // Option Values - Additional
+    "Ambient": "Ambient",
+    "Cinematic": "Cinematic",
+    "Relaxant": "Relaxant",
+    
+    // Tags
+    "Nou": "Nou",
+    "Popular": "Popular",
+    "Premium": "Premium",
+    "Cadou": "Cadou",
+    
     heroTitle: "Transformă Emoțiile Tale în Muzică",
     heroSubtitle: "Cel mai frumos cadou: o melodie creată special pentru cineva drag.",
     seePackages: "Vezi Pachetele",
@@ -222,7 +425,210 @@ const translations = {
     testimonials: "Testimonials",
     orderNow: "Order Now",
     
-    // Hero Section
+    // Package Labels
+    personalPackage: "Personal Package",
+    businessPackage: "Business Package",
+    premiumPackage: "Premium Package",
+    artistPackage: "Artist Package",
+    instrumentalPackage: "Instrumental Package",
+    remixPackage: "Remix Package",
+    giftPackage: "Gift Package",
+    
+    // Package Taglines
+    "O melodie unică pentru momentele tale speciale": "A unique melody for your special moments",
+    "Dă-i brandului tău o voce memorabilă": "Give your brand a memorable voice",
+    "Experiența completă: cântec + video animat + distribuție": "Complete experience: song + animated video + distribution",
+    "Colaborare artistică completă pentru cariera ta muzicală": "Complete artistic collaboration for your musical career",
+    "Instrumental personalizat pentru proiectele tale": "Personalized instrumental for your projects",
+    "Dă o nouă viață cântecului tău preferat": "Give new life to your favorite song",
+    "Oferă cadoul muzicii personalizate": "Offer the gift of personalized music",
+    
+    // Package Descriptions
+    "Perfect pentru cadouri personalizate și momente de neuitat": "Perfect for personalized gifts and unforgettable moments",
+    "Creat pentru companii care vor o piesă originală pentru branding, campanii sau reclame cu impact emoțional": "Created for companies that want an original piece for branding, campaigns or ads with emotional impact",
+    "Pachetul complet pentru cei care vor totul inclus": "The complete package for those who want everything included",
+    "Pachetul profesional pentru artiști care vor să își lanseze cariera muzicală": "The professional package for artists who want to launch their musical career",
+    "Perfecte pentru podcasturi, videoclipuri, prezentări sau orice proiect care necesită muzică de fundal": "Perfect for podcasts, videos, presentations or any project that needs background music",
+    "Transformă orice cântec într-o versiune unică și personalizată": "Transform any song into a unique and personalized version",
+    "Cumpără orice pachet ca și cadou pentru cineva special": "Buy any package as a gift for someone special",
+    
+    // Delivery Times
+    "3-5 zile": "3-5 days",
+    "5–7 zile": "5–7 days",
+    "5-7 zile": "5-7 days",
+    "14-21 zile": "14-21 days",
+    "Variabil": "Variable",
+    
+    // Package Includes
+    "Cântec original din povestea ta": "Original song from your story",
+    "Voce profesională": "Professional voice",
+    "Livrare rapidă": "Fast delivery",
+    "Drepturi personale": "Personal rights",
+    "Consultanță creativă": "Creative consultation",
+    "Cântec personalizat pentru afacerea ta": "Personalized song for your business",
+    "Producție profesională și voce de studio": "Professional production and studio voice",
+    "Mix & Master de calitate superioară": "Superior quality mix & master",
+    "Licență comercială limitată (excludere: radio, TV, revânzare piesă)": "Limited commercial license (excluding: radio, TV, song resale)",
+    "Fișiere audio multiple (MP3, WAV)": "Multiple audio files (MP3, WAV)",
+    "Cântec original cu producție completă": "Original song with complete production",
+    "Video animat DOMG": "DOMG animated video",
+    "Distribuție oficială digitală Mango Records": "Official digital distribution Mango Records",
+    "Colaborare artistică completă": "Complete artistic collaboration",
+    "Producție cântec original": "Original song production",
+    "Înregistrare vocală profesională": "Professional vocal recording",
+    "Video clip muzical profesional": "Professional music video",
+    "Distribuție pe toate platformele": "Distribution on all platforms",
+    "Contract 50/50": "50/50 contract",
+    "Marketing profesional": "Professional marketing",
+    "Instrumental personalizat": "Personalized instrumental",
+    "Producție audio profesională": "Professional audio production",
+    "Mix & Master final": "Final mix & master",
+    "Fișiere audio multiple": "Multiple audio files",
+    "Stems separate pentru editare": "Separate stems for editing",
+    "Remix profesional": "Professional remix",
+    "Producție în stilul dorit": "Production in desired style",
+    "Versiune extinsă și radio edit": "Extended version and radio edit",
+    "Fișiere audio de înaltă calitate": "High quality audio files",
+    "Card digital personalizat": "Personalized digital card",
+    "Mesaj personalizat": "Personalized message",
+    "Livrare automată": "Automatic delivery",
+    "Toate beneficiile pachetului selectat": "All benefits of selected package",
+    
+    // Step Titles
+    "Alege pachetul": "Choose Package",
+    "Povestea ta": "Your Story",
+    "Informații companie": "Company Information",
+    "Detalii cântec": "Song Details",
+    "Profilul artistic": "Artistic Profile",
+    "Specificații instrumental": "Instrumental Specifications",
+    "Detalii remix": "Remix Details",
+    "Pachetul cadou": "Gift Package",
+    
+    // Field Placeholders
+    "Numele destinatarului": "Recipient's name",
+    "Relația cu destinatarul": "Relationship with recipient",
+    "Ocazia": "Occasion",
+    "Povestea voastră în câteva cuvinte": "Your story in a few words",
+    "Stilul muzical preferat": "Preferred musical style",
+    "Numele companiei": "Company name",
+    "Domeniul de activitate": "Business domain",
+    "Ce mesaj vrei să transmită melodia despre brandul tău": "What message should the song convey about your brand",
+    "Publicul țintă": "Target audience",
+    "Titlul dorit pentru cântec": "Desired song title",
+    "Stilul video-ului animat": "Animated video style",
+    "Conceptul și mesajul cântecului": "Song concept and message",
+    "Numele de scenă dorit": "Desired stage name",
+    "Experiența muzicală": "Musical experience",
+    "Genul muzical preferat": "Preferred musical genre",
+    "Viziunea ta artistică și ce vrei să transmiți prin muzică": "Your artistic vision and what you want to convey through music",
+    "Obiectivele tale de carieră muzicală": "Your musical career goals",
+    "Tipul proiectului": "Project type",
+    "Genul muzical": "Musical genre",
+    "Atmosfera dorită": "Desired atmosphere",
+    "Durata dorită": "Desired duration",
+    "Note adiționale și detalii specifice": "Additional notes and specific details",
+    "Numele cântecului original și artistul": "Original song name and artist",
+    "Stilul remix-ului dorit": "Desired remix style",
+    "Tempoul dorit": "Desired tempo",
+    "Cerințe speciale și viziunea ta pentru remix": "Special requirements and your vision for the remix",
+    "Alege pachetul pentru cadou": "Choose package for gift",
+    "Numele destinatarului cadoului": "Gift recipient's name",
+    "Email-ul destinatarului": "Recipient's email",
+    "Mesajul tău pentru destinatar": "Your message for the recipient",
+    "Data livrării (opțional)": "Delivery date (optional)",
+    
+    // Option Values - Relationships
+    "Partener/ă": "Partner",
+    "Copil": "Child",
+    "Părinte": "Parent",
+    "Prieten/ă": "Friend",
+    "Frate/Soră": "Sibling",
+    "Bunic/Bunică": "Grandparent",
+    "Altă relație": "Other relationship",
+    
+    // Option Values - Occasions
+    "Zi de naștere": "Birthday",
+    "Aniversare": "Anniversary",
+    "Nuntă": "Wedding",
+    "Ziua Îndrăgostiților": "Valentine's Day",
+    "Crăciun": "Christmas",
+    "Altă ocazie": "Other occasion",
+    
+    // Option Values - Music Styles
+    "Pop": "Pop",
+    "Acustic": "Acoustic",
+    "Rock": "Rock",
+    "Jazz": "Jazz",
+    "Folk": "Folk",
+    "Electronic": "Electronic",
+    "Corporate": "Corporate",
+    "Energic": "Energic",
+    "Calm": "Calm",
+    "Modern": "Modern",
+    "Clasic": "Classic",
+    "Hip-Hop": "Hip-Hop",
+    
+    // Option Values - Video Styles
+    "Romantic": "Romantic",
+    "Distractiv": "Fun",
+    "Elegant": "Elegant",
+    
+    // Option Values - Experience Levels
+    "Începător": "Beginner",
+    "Intermediar": "Intermediate",
+    "Avansat": "Advanced",
+    "Profesionist": "Professional",
+    
+    // Option Values - Project Types
+    "Podcast": "Podcast",
+    "Video/Film": "Video/Film",
+    "Prezentare": "Presentation",
+    "Joc": "Game",
+    "Reclamă": "Commercial",
+    "Altul": "Other",
+    
+    // Option Values - Moods
+    "Misterios": "Mysterious",
+    "Optimist": "Uplifting",
+    "Dramatic": "Dramatic",
+    "Jucăuș": "Playful",
+    
+    // Option Values - Durations
+    "30 secunde": "30 seconds",
+    "1 minut": "1 minute",
+    "2 minute": "2 minutes",
+    "3 minute": "3 minutes",
+    "Durată personalizată": "Custom duration",
+    
+    // Option Values - Remix Styles
+    "Electronic/EDM": "Electronic/EDM",
+    "Reggae": "Reggae",
+    
+    // Option Values - Tempo
+    "Mai lent": "Slower",
+    "Același tempo": "Same tempo",
+    "Mai rapid": "Faster",
+    "Tempo variabil": "Variable tempo",
+    
+    // Option Values - Gift Packages
+    "Pachet Personal": "Personal Package",
+    "Pachet Business": "Business Package",
+    "Pachet Premium": "Premium Package",
+    "Pachet Artist": "Artist Package",
+    "Pachet Instrumental": "Instrumental Package",
+    "Pachet Remix": "Remix Package",
+    
+    // Option Values - Additional
+    "Ambient": "Ambient",
+    "Cinematic": "Cinematic",
+    "Relaxant": "Relaxing",
+    
+    // Tags
+    "Nou": "New",
+    "Popular": "Popular",
+    "Premium": "Premium",
+    "Cadou": "Gift",
+    
     heroTitle: "Transform Your Emotions into Music",
     heroSubtitle: "The most beautiful gift: a song created especially for someone dear.",
     seePackages: "See Packages",
@@ -415,7 +821,16 @@ const translations = {
     testimonials: "Témoignages",
     orderNow: "Commander maintenant",
     
-    // Hero Section
+    // Package Labels
+    personalPackage: "Forfait Personnel",
+    businessPackage: "Forfait Entreprise",
+    premiumPackage: "Forfait Premium",
+    artistPackage: "Forfait Artiste",
+    instrumentalPackage: "Forfait Instrumental",
+    remixPackage: "Forfait Remix",
+    giftPackage: "Forfait Cadeau",
+    
+    // ... add more French package translations following the same pattern
     heroTitle: "Transformez vos émotions en musique",
     heroSubtitle: "Le plus beau cadeau : une chanson créée spécialement pour quelqu'un de cher.",
     seePackages: "Voir les forfaits",
@@ -518,80 +933,7 @@ const translations = {
     learnMore: "En savoir plus",
     viewAllPackages: "Voir tous les forfaits",
     noPackagesAvailable: "Aucun forfait disponible pour le moment.",
-    checkBackLater: "Veuillez revenir plus tard.",
-    
-    // CTA Section
-    readyToCreateSpecial: "Prêt à créer quelque chose de spécial ?",
-    helpCreatePersonalized: "Laissez-nous vous aider à créer un cadeau musical personnalisé qui sera chéri pour toujours.",
-    startYourOrder: "Commencer votre commande",
-    
-    // Order related
-    orderSuccess: "Commande créée",
-    orderSuccessMessage: "Votre commande a été créée avec succès. L'intégration de paiement sera disponible bientôt.",
-    orderError: "Erreur de commande",
-    orderErrorMessage: "Il y a eu une erreur lors du traitement de votre commande.",
-    
-    // Form fields
-    recipientName: "Nom du destinataire",
-    relationship: "Relation avec le destinataire",
-    occasion: "Occasion",
-    eventDate: "Date de l'événement",
-    songLanguage: "Langue de la chanson",
-    story: "Votre histoire",
-    emotionalTone: "Ton émotionnel",
-    keyMoments: "Moments clés",
-    specialWords: "Mots ou phrases spéciaux",
-    musicStyle: "Style musical",
-    referenceSong: "Chanson de référence (lien YouTube/Spotify)",
-    
-    // Options
-    partner: "Partenaire",
-    family: "Famille",
-    friend: "Ami",
-    colleague: "Collègue",
-    other: "Autre",
-    
-    birthday: "Anniversaire",
-    wedding: "Mariage",
-    anniversary: "Anniversaire de mariage",
-    graduation: "Remise des diplômes",
-    valentine: "Saint-Valentin",
-    christmas: "Noël",
-    
-    romanian: "Roumain",
-    english: "Anglais",
-    spanish: "Espagnol",
-    french: "Français",
-    italian: "Italien",
-    
-    romantic: "Romantique",
-    happy: "Joyeux",
-    nostalgic: "Nostalgique",
-    energetic: "Énergique",
-    emotional: "Émotionnel",
-    peaceful: "Paisible",
-    
-    pop: "Pop",
-    rock: "Rock",
-    acoustic: "Acoustique",
-    electronic: "Électronique",
-    jazz: "Jazz",
-    classical: "Classique",
-    hiphop: "Hip-Hop",
-    country: "Country",
-    
-    // Common
-    price: "Prix",
-    ron: "RON",
-    includes: "Inclut",
-    selectPackage: "Sélectionner le forfait",
-    startOrder: "Commencer la commande",
-    
-    // Footer
-    quickLinks: "Liens rapides",
-    followUs: "Nous suivre",
-    allRightsReserved: "Tous droits réservés",
-    madeWithLove: "Fait avec ❤️ pour la musique"
+    checkBackLater: "Veuillez revenir plus tard."
   },
   
   pl: {
@@ -604,7 +946,16 @@ const translations = {
     testimonials: "Opinie",
     orderNow: "Zamów teraz",
     
-    // Hero Section
+    // Package Labels
+    personalPackage: "Pakiet Osobisty",
+    businessPackage: "Pakiet Biznesowy",
+    premiumPackage: "Pakiet Premium",
+    artistPackage: "Pakiet Artysty",
+    instrumentalPackage: "Pakiet Instrumentalny",
+    remixPackage: "Pakiet Remix",
+    giftPackage: "Pakiet Prezentowy",
+    
+    // ... add more Polish package translations following the same pattern
     heroTitle: "Przekształć swoje emocje w muzykę",
     heroSubtitle: "Najpiękniejszy prezent: piosenka stworzona specjalnie dla kogoś bliskiego.",
     seePackages: "Zobacz pakiety",
@@ -707,80 +1058,7 @@ const translations = {
     learnMore: "Dowiedz się więcej",
     viewAllPackages: "Zobacz wszystkie pakiety",
     noPackagesAvailable: "Brak dostępnych pakietów w tej chwili.",
-    checkBackLater: "Sprawdź ponownie później.",
-    
-    // CTA Section
-    readyToCreateSpecial: "Gotowy stworzyć coś wyjątkowego?",
-    helpCreatePersonalized: "Pozwól nam pomóc Ci stworzyć spersonalizowany prezent muzyczny, który będzie ceniony na zawsze.",
-    startYourOrder: "Rozpocznij zamówienie",
-    
-    // Order related
-    orderSuccess: "Zamówienie utworzone",
-    orderSuccessMessage: "Twoje zamówienie zostało pomyślnie utworzone. Integracja płatności będzie wkrótce dostępna.",
-    orderError: "Błąd zamówienia",
-    orderErrorMessage: "Wystąpił błąd podczas przetwarzania Twojego zamówienia.",
-    
-    // Form fields
-    recipientName: "Imię odbiorcy",
-    relationship: "Relacja z odbiorcą",
-    occasion: "Okazja",
-    eventDate: "Data wydarzenia",
-    songLanguage: "Język piosenki",
-    story: "Twoja historia",
-    emotionalTone: "Ton emocjonalny",
-    keyMoments: "Kluczowe momenty",
-    specialWords: "Specjalne słowa lub frazy",
-    musicStyle: "Styl muzyczny",
-    referenceSong: "Piosenka referencyjna (link YouTube/Spotify)",
-    
-    // Options
-    partner: "Partner",
-    family: "Rodzina",
-    friend: "Przyjaciel",
-    colleague: "Kolega",
-    other: "Inne",
-    
-    birthday: "Urodziny",
-    wedding: "Ślub",
-    anniversary: "Rocznica",
-    graduation: "Ukończenie szkoły",
-    valentine: "Walentynki",
-    christmas: "Boże Narodzenie",
-    
-    romanian: "Rumuński",
-    english: "Angielski",
-    spanish: "Hiszpański",
-    french: "Francuski",
-    italian: "Włoski",
-    
-    romantic: "Romantyczny",
-    happy: "Szczęśliwy",
-    nostalgic: "Nostalgiczny",
-    energetic: "Energiczny",
-    emotional: "Emocjonalny",
-    peaceful: "Spokojny",
-    
-    pop: "Pop",
-    rock: "Rock",
-    acoustic: "Akustyczny",
-    electronic: "Elektroniczny",
-    jazz: "Jazz",
-    classical: "Klasyczny",
-    hiphop: "Hip-Hop",
-    country: "Country",
-    
-    // Common
-    price: "Cena",
-    ron: "RON",
-    includes: "Zawiera",
-    selectPackage: "Wybierz pakiet",
-    startOrder: "Rozpocznij zamówienie",
-    
-    // Footer
-    quickLinks: "Szybkie linki",
-    followUs: "Śledź nas",
-    allRightsReserved: "Wszelkie prawa zastrzeżone",
-    madeWithLove: "Stworzone z ❤️ dla muzyki"
+    checkBackLater: "Sprawdź ponownie później."
   },
   
   de: {
@@ -793,7 +1071,16 @@ const translations = {
     testimonials: "Testimonials",
     orderNow: "Jetzt bestellen",
     
-    // Hero Section
+    // Package Labels
+    personalPackage: "Persönliches Paket",
+    businessPackage: "Business Paket",
+    premiumPackage: "Premium Paket",
+    artistPackage: "Künstler Paket",
+    instrumentalPackage: "Instrumental Paket",
+    remixPackage: "Remix Paket",
+    giftPackage: "Geschenk Paket",
+    
+    // ... add more German package translations following the same pattern
     heroTitle: "Verwandle deine Emotionen in Musik",
     heroSubtitle: "Das schönste Geschenk: ein Lied, das speziell für jemand Besonderen geschrieben wurde.",
     seePackages: "Pakete ansehen",
@@ -819,19 +1106,19 @@ const translations = {
     // How It Works Page
     howItWorksTitle: "Wie es funktioniert",
     choosePackage: "Paket wählen",
-    choosePackageDesc: "Wähle das perfekte Paket, das deinen Bedürfnissen und deinem Budget aus unserer vielfältigen Auswahl entspricht.",
+    choosePackageDesc: "Wähle das perfekte Paket, das deinen Bedürfnissen entspricht.",
     tellYourStory: "Erzähle deine Geschichte",
-    tellYourStoryDesc: "Teile mit uns die besonderen Momente, Emotionen und Details, die deine Geschichte einzigartig und unvergesslich machen.",
+    tellYourStoryDesc: "Teile mit uns die besonderen Momente, die deine Geschichte einzigartig machen.",
     weCreate: "Wir schaffen Musik",
-    weCreateDesc: "Unser Team professioneller Komponisten verwandelt deine Geschichte in eine originelle und personalisierte Melodie.",
+    weCreateDesc: "Unser Team verwandelt deine Geschichte in eine originelle Melodie.",
     deliverDelight: "Freude liefern",
-    deliverDelightDesc: "Du erhältst deinen personalisierten Song in hochwertigem digitalem Format, bereit um Lächeln und Emotionen zu bringen.",
+    deliverDelightDesc: "Du erhältst deinen personalisierten Song in hochwertigem Format.",
     
     // Contact Page
     contactTitle: "Kontaktiere uns",
     contactSubtitle: "Kontaktiere uns bei Fragen oder um deine musikalische Reise zu beginnen",
     getInTouch: "Kontakt aufnehmen",
-    contactDescription: "Wir würden gerne von dir hören. Sende uns eine Nachricht und wir antworten so schnell wie möglich.",
+    contactDescription: "Wir würden gerne von dir hören. Sende uns eine Nachricht.",
     emailUs: "E-Mail senden",
     callUs: "Anrufen",
     visitUs: "Besuche uns",
@@ -855,38 +1142,38 @@ const translations = {
     
     testimonial2Name: "Nati G.",
     testimonial2Location: "Cluj-Napoca",
-    testimonial2Review: "Außergewöhnlicher Service! Das Lied, das für unsere Hochzeit erstellt wurde, war genau das, was wir wollten. Alle Gäste waren von der Originalität und Qualität des Stücks beeindruckt.",
+    testimonial2Review: "Außergewöhnlicher Service! Das Lied, das für unsere Hochzeit erstellt wurde, war genau das, was wir wollten. Alle Gäste waren beeindruckt.",
     
     testimonial3Name: "TechCorp",
     testimonial3Location: "Timișoara",
-    testimonial3Review: "Wir haben ein Lied für unsere Marketingkampagne bestellt und das Ergebnis übertraf alle Erwartungen. Professionalität und Kreativität auf höchstem Niveau!",
+    testimonial3Review: "Wir haben ein Lied für unsere Marketingkampagne bestellt und das Ergebnis übertraf alle Erwartungen.",
     
     testimonial4Name: "Maria P.",
     testimonial4Location: "Iași",
-    testimonial4Review: "Die schönste Überraschung, die ich meinem Mann machen konnte! Das personalisierte Lied für unseren Jahrestag war emotional und unvergesslich.",
+    testimonial4Review: "Die schönste Überraschung, die ich meinem Mann machen konnte! Die personalisierte Melodie war emotional und unvergesslich.",
     
     testimonial5Name: "Alex R.",
     testimonial5Location: "Brașov",
-    testimonial5Review: "Tadellose Qualität und Liebe zum Detail! Das Team hat es geschafft, unsere Geschichte perfekt im Lied einzufangen. Ich empfehle mit vollem Vertrauen!",
+    testimonial5Review: "Tadellose Qualität und Liebe zum Detail! Ich empfehle mit vollem Vertrauen!",
     
     // Footer
     footerDescription: "Personalisierte Musikgeschenke erstellen. Verwandle deine besonderen Momente in schöne, maßgeschneiderte Songs.",
     contactInfo: "Kontaktinformationen",
     stayUpdated: "Bleib auf dem Laufenden",
-    newsletterDescription: "Abonniere, um spezielle Angebote, neue Pakete und exklusive Musikinhalte in dein Postfach zu erhalten.",
+    newsletterDescription: "Abonniere, um spezielle Angebote zu erhalten.",
     enterEmail: "Gib deine E-Mail-Adresse ein",
     subscribe: "Abonnieren",
-    subscribeDisclaimer: "Durch das Abonnieren stimmst du unserer Datenschutzerklärung zu und willigst ein, Updates von unserem Unternehmen zu erhalten.",
+    subscribeDisclaimer: "Durch das Abonnieren stimmst du unserer Datenschutzerklärung zu.",
     legal: "Rechtliches",
     termsConditions: "Geschäftsbedingungen",
     privacyPolicy: "Datenschutzerklärung",
     refundPolicy: "Rückerstattungsrichtlinie",
     cookiePolicy: "Cookie-Richtlinie",
-    copyright: "© 2025 MusicGift.ro. Alle Rechte vorbehalten. Gemacht von RED DOMAIN mit ❤️ für Musikliebhaber.",
+    copyright: "© 2025 MusicGift.ro. Alle Rechte vorbehalten.",
     
     // Packages Section
     chooseYourPackage: "Wähle dein Paket",
-    selectPerfectPackage: "Wähle das perfekte Musikpaket, das deinen Bedürfnissen und deinem Budget entspricht",
+    selectPerfectPackage: "Wähle das perfekte Musikpaket, das deinen Bedürfnissen entspricht",
     loadingPackages: "Pakete werden geladen...",
     failedToLoadPackages: "Pakete konnten nicht geladen werden. Bitte versuche es später erneut.",
     reload: "Neu laden",
@@ -896,80 +1183,7 @@ const translations = {
     learnMore: "Mehr erfahren",
     viewAllPackages: "Alle Pakete anzeigen",
     noPackagesAvailable: "Momentan sind keine Pakete verfügbar.",
-    checkBackLater: "Bitte schaue später wieder vorbei.",
-    
-    // CTA Section
-    readyToCreateSpecial: "Bereit, etwas Besonderes zu schaffen?",
-    helpCreatePersonalized: "Lass uns dir helfen, ein personalisiertes Musikgeschenk zu erstellen, das für immer geschätzt wird.",
-    startYourOrder: "Bestellung starten",
-    
-    // Order related
-    orderSuccess: "Bestellung erstellt",
-    orderSuccessMessage: "Deine Bestellung wurde erfolgreich erstellt. Die Zahlungsintegration wird bald verfügbar sein.",
-    orderError: "Bestellfehler",
-    orderErrorMessage: "Es gab einen Fehler bei der Bearbeitung deiner Bestellung.",
-    
-    // Form fields
-    recipientName: "Name des Empfängers",
-    relationship: "Beziehung zum Empfänger",
-    occasion: "Anlass",
-    eventDate: "Ereignisdatum",
-    songLanguage: "Liedsprache",
-    story: "Deine Geschichte",
-    emotionalTone: "Emotionaler Ton",
-    keyMoments: "Schlüsselmomente",
-    specialWords: "Besondere Worte oder Phrasen",
-    musicStyle: "Musikstil",
-    referenceSong: "Referenzlied (YouTube/Spotify Link)",
-    
-    // Options
-    partner: "Partner",
-    family: "Familie",
-    friend: "Freund",
-    colleague: "Kollege",
-    other: "Andere",
-    
-    birthday: "Geburtstag",
-    wedding: "Hochzeit",
-    anniversary: "Jahrestag",
-    graduation: "Abschluss",
-    valentine: "Valentinstag",
-    christmas: "Weihnachten",
-    
-    romanian: "Rumänisch",
-    english: "Englisch",
-    spanish: "Spanisch",
-    french: "Französisch",
-    italian: "Italienisch",
-    
-    romantic: "Romantisch",
-    happy: "Glücklich",
-    nostalgic: "Nostalgisch",
-    energetic: "Energisch",
-    emotional: "Emotional",
-    peaceful: "Friedlich",
-    
-    pop: "Pop",
-    rock: "Rock",
-    acoustic: "Akustisch",
-    electronic: "Elektronisch",
-    jazz: "Jazz",
-    classical: "Klassisch",
-    hiphop: "Hip-Hop",
-    country: "Country",
-    
-    // Common
-    price: "Preis",
-    ron: "RON",
-    includes: "Beinhaltet",
-    selectPackage: "Paket auswählen",
-    startOrder: "Bestellung starten",
-    
-    // Footer
-    quickLinks: "Schnelle Links",
-    followUs: "Folge uns",
-    allRightsReserved: "Alle Rechte vorbehalten",
-    madeWithLove: "Gemacht mit ❤️ für Musik"
+    checkBackLater: "Bitte schaue später wieder vorbei."
   }
 };
 
