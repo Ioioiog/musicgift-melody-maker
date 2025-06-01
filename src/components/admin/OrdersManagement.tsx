@@ -9,6 +9,7 @@ import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy } from 'lu
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from '@/hooks/useTranslations';
 import SunoPromptsDialog from './SunoPromptsDialog';
 import DeliveryCountdownBadge from './DeliveryCountdownBadge';
 
@@ -27,6 +28,7 @@ const OrdersManagement = () => {
   const [openPromptCards, setOpenPromptCards] = useState<Set<string>>(new Set());
   const [openPromptDetails, setOpenPromptDetails] = useState<Set<string>>(new Set());
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const { data: orders = [], refetch } = useQuery({
     queryKey: ['admin-orders', selectedStatus],
@@ -165,28 +167,37 @@ const OrdersManagement = () => {
     }
   };
 
+  const translatePackageIncludes = (includes: any[]) => {
+    if (!includes || !Array.isArray(includes)) return [];
+    
+    return includes.map((include: any) => {
+      const includeKey = include.include_key || include;
+      return t(includeKey, includeKey);
+    });
+  };
+
   console.log('OrdersManagement - Orders:', orders.length);
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Orders Management</h2>
+        <h2 className="text-2xl font-bold">{t('ordersManagement', 'Orders Management')}</h2>
         <div className="flex space-x-4">
           <Select value={selectedStatus} onValueChange={setSelectedStatus}>
             <SelectTrigger className="w-40">
-              <SelectValue placeholder="Filter by status" />
+              <SelectValue placeholder={t('filterByStatus', 'Filter by status')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Orders</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="in_progress">In Progress</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
+              <SelectItem value="all">{t('allOrders', 'All Orders')}</SelectItem>
+              <SelectItem value="pending">{t('pending', 'Pending')}</SelectItem>
+              <SelectItem value="in_progress">{t('inProgress', 'In Progress')}</SelectItem>
+              <SelectItem value="completed">{t('completed', 'Completed')}</SelectItem>
+              <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
             </SelectContent>
           </Select>
           <Button onClick={exportOrders}>
             <Download className="w-4 h-4 mr-2" />
-            Export CSV
+            {t('exportCSV', 'Export CSV')}
           </Button>
         </div>
       </div>
@@ -216,12 +227,12 @@ const OrdersManagement = () => {
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2 flex-wrap">
-                      <h3 className="text-lg font-semibold">Order #{order.id.slice(0, 8)}</h3>
+                      <h3 className="text-lg font-semibold">{t('orderNumber', 'Order')} #{order.id.slice(0, 8)}</h3>
                       <Badge className={getStatusColor(order.status)}>
-                        {order.status}
+                        {t(order.status, order.status)}
                       </Badge>
                       <Badge className={getPaymentStatusColor(order.payment_status)}>
-                        Payment: {order.payment_status}
+                        {t('payment', 'Payment')}: {t(order.payment_status, order.payment_status)}
                       </Badge>
                       
                       {/* Delivery Countdown Badge using package_value */}
@@ -234,7 +245,7 @@ const OrdersManagement = () => {
                       {hasPrompts && (
                         <Badge className="bg-purple-100 text-purple-800 border-purple-300">
                           <Database className="w-3 h-3 mr-1" />
-                          Saved Prompts
+                          {t('savedPrompts', 'Saved Prompts')}
                         </Badge>
                       )}
                       <span className="text-lg font-bold text-purple-600">
@@ -244,18 +255,18 @@ const OrdersManagement = () => {
                     
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p><strong>Package:</strong> {order.package_value || 'N/A'}</p>
-                        <p><strong>Package Name:</strong> {order.package_name || 'N/A'}</p>
-                        <p><strong>Package Price:</strong> {order.package_price ? `${order.package_price} RON` : 'N/A'}</p>
-                        <p><strong>Customer:</strong> {formData?.fullName || 'N/A'}</p>
-                        <p><strong>Email:</strong> {formData?.email || 'N/A'}</p>
-                        <p><strong>Payment ID:</strong> {order.payment_id || 'N/A'}</p>
+                        <p><strong>{t('package', 'Package')}:</strong> {order.package_value || 'N/A'}</p>
+                        <p><strong>{t('packageName', 'Package Name')}:</strong> {order.package_name ? t(order.package_name, order.package_name) : 'N/A'}</p>
+                        <p><strong>{t('packagePrice', 'Package Price')}:</strong> {order.package_price ? `${order.package_price} RON` : 'N/A'}</p>
+                        <p><strong>{t('customer', 'Customer')}:</strong> {formData?.fullName || 'N/A'}</p>
+                        <p><strong>{t('email', 'Email')}:</strong> {formData?.email || 'N/A'}</p>
+                        <p><strong>{t('paymentId', 'Payment ID')}:</strong> {order.payment_id || 'N/A'}</p>
                       </div>
                       <div>
-                        <p><strong>Created:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
-                        <p><strong>Recipient:</strong> {formData?.recipientName || 'N/A'}</p>
-                        <p><strong>Occasion:</strong> {formData?.occasion || 'N/A'}</p>
-                        <p><strong>Delivery Time:</strong> {order.package_delivery_time || 'N/A'}</p>
+                        <p><strong>{t('created', 'Created')}:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
+                        <p><strong>{t('recipient', 'Recipient')}:</strong> {formData?.recipientName || 'N/A'}</p>
+                        <p><strong>{t('occasion', 'Occasion')}:</strong> {formData?.occasion || 'N/A'}</p>
+                        <p><strong>{t('deliveryTime', 'Delivery Time')}:</strong> {order.package_delivery_time ? t(order.package_delivery_time, order.package_delivery_time) : 'N/A'}</p>
                       </div>
                     </div>
 
@@ -274,7 +285,7 @@ const OrdersManagement = () => {
                           >
                             <span className="flex items-center">
                               <Database className="w-4 h-4 mr-2" />
-                              View Saved Prompts Details
+                              {t('viewSavedPromptsDetails', 'View Saved Prompts Details')}
                             </span>
                             {isPromptCardOpen ? (
                               <ChevronUp className="w-4 h-4" />
@@ -295,7 +306,7 @@ const OrdersManagement = () => {
                                 size="sm"
                                 className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
                               >
-                                <span>Title</span>
+                                <span>{t('title', 'Title')}</span>
                                 {openPromptDetails.has(`${order.id}-title`) ? (
                                   <ChevronUp className="w-3 h-3" />
                                 ) : (
@@ -309,7 +320,7 @@ const OrdersManagement = () => {
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => copyToClipboard(savedPrompt.title, 'Title')}
+                                  onClick={() => copyToClipboard(savedPrompt.title, t('title', 'Title'))}
                                   className="ml-2 h-6 w-6 p-0"
                                 >
                                   <Copy className="w-3 h-3" />
@@ -330,7 +341,7 @@ const OrdersManagement = () => {
                                   size="sm"
                                   className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
                                 >
-                                  <span>Description</span>
+                                  <span>{t('description', 'Description')}</span>
                                   {openPromptDetails.has(`${order.id}-description`) ? (
                                     <ChevronUp className="w-3 h-3" />
                                   ) : (
@@ -344,7 +355,7 @@ const OrdersManagement = () => {
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    onClick={() => copyToClipboard(savedPrompt.description, 'Description')}
+                                    onClick={() => copyToClipboard(savedPrompt.description, t('description', 'Description'))}
                                     className="ml-2 h-6 w-6 p-0"
                                   >
                                     <Copy className="w-3 h-3" />
@@ -365,7 +376,7 @@ const OrdersManagement = () => {
                                 size="sm"
                                 className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
                               >
-                                <span>Lyrics</span>
+                                <span>{t('lyrics', 'Lyrics')}</span>
                                 {openPromptDetails.has(`${order.id}-lyrics`) ? (
                                   <ChevronUp className="w-3 h-3" />
                                 ) : (
@@ -379,7 +390,7 @@ const OrdersManagement = () => {
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => copyToClipboard(savedPrompt.lyrics, 'Lyrics')}
+                                  onClick={() => copyToClipboard(savedPrompt.lyrics, t('lyrics', 'Lyrics'))}
                                   className="ml-2 h-6 w-6 p-0"
                                 >
                                   <Copy className="w-3 h-3" />
@@ -399,7 +410,7 @@ const OrdersManagement = () => {
                                 size="sm"
                                 className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
                               >
-                                <span>Technical Tags</span>
+                                <span>{t('technicalTags', 'Technical Tags')}</span>
                                 {openPromptDetails.has(`${order.id}-tags`) ? (
                                   <ChevronUp className="w-3 h-3" />
                                 ) : (
@@ -413,7 +424,7 @@ const OrdersManagement = () => {
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => copyToClipboard(savedPrompt.technical_tags, 'Technical Tags')}
+                                  onClick={() => copyToClipboard(savedPrompt.technical_tags, t('technicalTags', 'Technical Tags'))}
                                   className="ml-2 h-6 w-6 p-0"
                                 >
                                   <Copy className="w-3 h-3" />
@@ -433,7 +444,7 @@ const OrdersManagement = () => {
                                 size="sm"
                                 className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
                               >
-                                <span>Complete Prompt</span>
+                                <span>{t('completePrompt', 'Complete Prompt')}</span>
                                 {openPromptDetails.has(`${order.id}-prompt`) ? (
                                   <ChevronUp className="w-3 h-3" />
                                 ) : (
@@ -447,7 +458,7 @@ const OrdersManagement = () => {
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => copyToClipboard(savedPrompt.prompt, 'Complete Prompt')}
+                                  onClick={() => copyToClipboard(savedPrompt.prompt, t('completePrompt', 'Complete Prompt'))}
                                   className="ml-2 h-6 w-6 p-0"
                                 >
                                   <Copy className="w-3 h-3" />
@@ -458,8 +469,8 @@ const OrdersManagement = () => {
 
                           {/* Metadata */}
                           <div className="text-xs text-gray-500 pt-2 border-t border-purple-200">
-                            <p>Language: {savedPrompt.language}</p>
-                            <p>Created: {new Date(savedPrompt.created_at).toLocaleString()}</p>
+                            <p>{t('language', 'Language')}: {savedPrompt.language}</p>
+                            <p>{t('created', 'Created')}: {new Date(savedPrompt.created_at).toLocaleString()}</p>
                           </div>
                         </CollapsibleContent>
                       </Collapsible>
@@ -475,10 +486,10 @@ const OrdersManagement = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="in_progress">In Progress</SelectItem>
-                        <SelectItem value="completed">Completed</SelectItem>
-                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                        <SelectItem value="pending">{t('pending', 'Pending')}</SelectItem>
+                        <SelectItem value="in_progress">{t('inProgress', 'In Progress')}</SelectItem>
+                        <SelectItem value="completed">{t('completed', 'Completed')}</SelectItem>
+                        <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -493,34 +504,34 @@ const OrdersManagement = () => {
                         }
                       >
                         <Music className="w-4 h-4 mr-2" />
-                        {hasPrompts ? 'View/Edit Prompts' : 'Create Prompts'}
+                        {hasPrompts ? t('viewEditPrompts', 'View/Edit Prompts') : t('createPrompts', 'Create Prompts')}
                       </Button>
 
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button variant="outline" size="sm">
                             <Eye className="w-4 h-4 mr-2" />
-                            View Details
+                            {t('viewDetails', 'View Details')}
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                           <DialogHeader>
-                            <DialogTitle>Order Details #{order.id.slice(0, 8)}</DialogTitle>
+                            <DialogTitle>{t('orderDetails', 'Order Details')} #{order.id.slice(0, 8)}</DialogTitle>
                           </DialogHeader>
                           <div className="space-y-4">
                             <div>
-                              <h4 className="font-semibold mb-2">Package Information:</h4>
+                              <h4 className="font-semibold mb-2">{t('packageInformation', 'Package Information')}:</h4>
                               <div className="bg-gray-100 p-4 rounded text-sm">
-                                <p><strong>Package Value:</strong> {order.package_value}</p>
-                                <p><strong>Package Name:</strong> {order.package_name}</p>
-                                <p><strong>Package Price:</strong> {order.package_price} RON</p>
-                                <p><strong>Delivery Time:</strong> {order.package_delivery_time}</p>
+                                <p><strong>{t('packageValue', 'Package Value')}:</strong> {order.package_value}</p>
+                                <p><strong>{t('packageName', 'Package Name')}:</strong> {order.package_name ? t(order.package_name, order.package_name) : 'N/A'}</p>
+                                <p><strong>{t('packagePrice', 'Package Price')}:</strong> {order.package_price} RON</p>
+                                <p><strong>{t('deliveryTime', 'Delivery Time')}:</strong> {order.package_delivery_time ? t(order.package_delivery_time, order.package_delivery_time) : 'N/A'}</p>
                                 {order.package_includes && Array.isArray(order.package_includes) && order.package_includes.length > 0 && (
                                   <div>
-                                    <p><strong>Includes:</strong></p>
+                                    <p><strong>{t('includes', 'Includes')}:</strong></p>
                                     <ul className="list-disc list-inside ml-4">
-                                      {order.package_includes.map((include: any, index: number) => (
-                                        <li key={index}>{include.include_key || include}</li>
+                                      {translatePackageIncludes(order.package_includes).map((translatedInclude: string, index: number) => (
+                                        <li key={index}>{translatedInclude}</li>
                                       ))}
                                     </ul>
                                   </div>
@@ -528,13 +539,13 @@ const OrdersManagement = () => {
                               </div>
                             </div>
                             <div>
-                              <h4 className="font-semibold mb-2">Form Data:</h4>
+                              <h4 className="font-semibold mb-2">{t('formData', 'Form Data')}:</h4>
                               <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
                                 {JSON.stringify(order.form_data, null, 2)}
                               </pre>
                             </div>
                             <div>
-                              <h4 className="font-semibold mb-2">Selected Addons:</h4>
+                              <h4 className="font-semibold mb-2">{t('selectedAddons', 'Selected Addons')}:</h4>
                               <pre className="bg-gray-100 p-4 rounded text-sm">
                                 {JSON.stringify(order.selected_addons, null, 2)}
                               </pre>
@@ -554,7 +565,7 @@ const OrdersManagement = () => {
       {orders.length === 0 && (
         <Card>
           <CardContent className="p-8 text-center text-gray-500">
-            No orders found for the selected filter.
+            {t('noOrdersFound', 'No orders found for the selected filter.')}
           </CardContent>
         </Card>
       )}
