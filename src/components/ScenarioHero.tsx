@@ -5,14 +5,34 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslations';
 
 const scenarios = [
-  { emoji: '🎂', text: "Is it someone special's birthday? Celebrate with lyrics, not just cake!", packageKey: 'personalPackage' },
-  { emoji: '💍', text: 'Got big plans? Surprise her with a sung proposal.', packageKey: 'personalPackage' },
-  { emoji: '💑', text: 'Years together? Hit play on your love story.', packageKey: 'personalPackage' },
-  { emoji: '👩‍👧', text: 'Your mom deserves more than just flowers.', packageKey: 'personalPackage' },
-  { emoji: '👰', text: "Want your wedding to stay in the heart's playlist?", packageKey: 'premiumPackage' },
-  { emoji: '🚗', text: "Just got a new car? Let's start it with rhythm.", packageKey: 'businessPackage' },
-  { emoji: '🧑‍💼', text: 'Started a new job? Celebrate in style!', packageKey: 'businessPackage' },
-  { emoji: '✨', text: 'And for any other "wow!" moment in life – we put it to music.', packageKey: 'giftPackage' }
+  // Personal Package scenarios
+  { emoji: '🎂', text: "Make their birthday legendary! A personalized song hits deeper than any gift card ever could. Give them something they'll treasure forever!", packageKey: 'personalPackage' },
+  { emoji: '💍', text: "Pop the question with a melody that'll make her cry happy tears! Your love story deserves its own soundtrack. Create the perfect proposal song today!", packageKey: 'personalPackage' },
+  { emoji: '💑', text: "Turn your love story into a chart-topper! Celebrate your journey with a custom song that captures every beautiful moment. Your relationship deserves this!", packageKey: 'personalPackage' },
+  { emoji: '👩‍👧', text: "Mom gave you life - give her a song that celebrates it! Show her she's your hero with a personalized melody that'll make her heart sing.", packageKey: 'personalPackage' },
+  
+  // Premium Package scenarios
+  { emoji: '👰', text: "Your wedding deserves Hollywood-level production! Create a premium musical masterpiece that'll have your guests in tears. This is your moment - make it unforgettable!", packageKey: 'premiumPackage' },
+  { emoji: '💎', text: "When ordinary gifts won't cut it, music speaks volumes! Premium quality for premium moments. Invest in memories that last a lifetime!", packageKey: 'premiumPackage' },
+  
+  // Business Package scenarios
+  { emoji: '🚗', text: "Rev up your success with a custom anthem! Your new ride deserves a soundtrack as smooth as your drive. Celebrate your achievement in style!", packageKey: 'businessPackage' },
+  { emoji: '🧑‍💼', text: "Success sounds better with your own theme song! Mark this milestone with music that motivates. Your achievements deserve a soundtrack!", packageKey: 'businessPackage' },
+  { emoji: '🏢', text: "Every great brand needs its anthem! Stand out from the competition with a custom business song that gets stuck in your customers' heads.", packageKey: 'businessPackage' },
+  
+  // Artist Package scenarios
+  { emoji: '🎤', text: "Ready to level up your sound? Partner with professionals who understand your vision. Transform your musical dreams into reality!", packageKey: 'artistPackage' },
+  { emoji: '🎵', text: "Your talent deserves professional production! Create music that showcases your unique voice. Let's make your artistic vision come alive!", packageKey: 'artistPackage' },
+  
+  // Remix Package scenarios
+  { emoji: '🔄', text: "Give your favorite song a fresh new vibe! Transform any track into your personal anthem. Breathe new life into the music you love!", packageKey: 'remixPackage' },
+  
+  // Instrumental Package scenarios
+  { emoji: '🎼', text: "Create the perfect soundtrack for your content! Professional instrumentals that elevate any project. Music that moves your audience!", packageKey: 'instrumentalPackage' },
+  
+  // Gift Package scenarios
+  { emoji: '✨', text: "Some moments need their own soundtrack! For any celebration, surprise, or 'just because' moment. Music makes everything more magical!", packageKey: 'giftPackage' },
+  { emoji: '🎁', text: "Stuck on gift ideas? Music never goes out of style! Give them something truly unique that shows you care. The gift that keeps on giving!", packageKey: 'giftPackage' }
 ];
 
 const ScenarioHero = () => {
