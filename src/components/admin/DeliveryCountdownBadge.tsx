@@ -15,14 +15,14 @@ const DeliveryCountdownBadge: React.FC<DeliveryCountdownBadgeProps> = ({
   packageValue,
   orderStatus
 }) => {
+  console.log('DeliveryCountdownBadge - Props:', { orderCreatedAt, packageValue, orderStatus });
+  
   const { remainingDays, isOverdue, status, deliveryDate } = useDeliveryCalculation(
     orderCreatedAt,
     packageValue
   );
 
-  if (remainingDays === null) {
-    return null;
-  }
+  console.log('DeliveryCountdownBadge - Calculation result:', { remainingDays, isOverdue, status, deliveryDate });
 
   // Don't show countdown for completed orders
   if (orderStatus === 'completed') {
@@ -30,6 +30,17 @@ const DeliveryCountdownBadge: React.FC<DeliveryCountdownBadgeProps> = ({
       <Badge className="bg-green-100 text-green-800 border-green-300">
         <CheckCircle className="w-3 h-3 mr-1" />
         Delivered
+      </Badge>
+    );
+  }
+
+  // If calculation failed, show a fallback badge
+  if (remainingDays === null) {
+    console.log('DeliveryCountdownBadge - No delivery calculation available');
+    return (
+      <Badge className="bg-gray-100 text-gray-800 border-gray-300">
+        <Clock className="w-3 h-3 mr-1" />
+        Delivery pending
       </Badge>
     );
   }

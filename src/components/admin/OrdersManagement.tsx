@@ -165,6 +165,8 @@ const OrdersManagement = () => {
     }
   };
 
+  console.log('OrdersManagement - Orders:', orders.length);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -196,12 +198,19 @@ const OrdersManagement = () => {
           const savedPrompt = getSavedPrompt(order.id);
           const isPromptCardOpen = openPromptCards.has(order.id);
           
+          console.log('OrdersManagement - Rendering order:', { 
+            orderId: order.id, 
+            packageId: order.package_id, 
+            createdAt: order.created_at,
+            status: order.status 
+          });
+          
           return (
             <Card key={order.id}>
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
+                    <div className="flex items-center space-x-3 mb-2 flex-wrap">
                       <h3 className="text-lg font-semibold">Order #{order.id.slice(0, 8)}</h3>
                       <Badge className={getStatusColor(order.status)}>
                         {order.status}
@@ -209,11 +218,14 @@ const OrdersManagement = () => {
                       <Badge className={getPaymentStatusColor(order.payment_status)}>
                         Payment: {order.payment_status}
                       </Badge>
+                      
+                      {/* Delivery Countdown Badge - This should be visible */}
                       <DeliveryCountdownBadge 
                         orderCreatedAt={order.created_at}
                         packageValue={order.package_id}
                         orderStatus={order.status}
                       />
+                      
                       {hasPrompts && (
                         <Badge className="bg-purple-100 text-purple-800 border-purple-300">
                           <Database className="w-3 h-3 mr-1" />

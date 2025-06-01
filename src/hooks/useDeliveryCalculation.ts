@@ -6,19 +6,23 @@ export const useDeliveryCalculation = (orderCreatedAt: string, packageValue?: st
   const { data: packages = [] } = usePackages();
 
   return useMemo(() => {
-    if (!packageValue || !orderCreatedAt) {
-      return { remainingDays: null, isOverdue: false, status: 'unknown' };
-    }
-
-    const packageData = packages.find(pkg => pkg.value === packageValue);
-    if (!packageData) {
-      return { remainingDays: null, isOverdue: false, status: 'unknown' };
-    }
-
-    // Parse delivery time from package - extract number from delivery time key
-    let deliveryDays = 7; // default fallback
+    console.log('DeliveryCalculation - Input:', { orderCreatedAt, packageValue, packagesCount: packages.length });
     
-    // Common patterns for delivery times in packages
+    if (!packageValue || !orderCreatedAt) {
+      console.log('DeliveryCalculation - Missing required data');
+      return { remainingDays: null, isOverdue: false, status: 'unknown', deliveryDate: null };
+    }
+
+    // Find package by value
+    const packageData = packages.find(pkg => pkg.value === packageValue);
+    console.log('DeliveryCalculation - Found package:', packageData);
+    
+    if (!packageData) {
+      console.log('DeliveryCalculation - Package not found for value:', packageValue);
+      return { remainingDays: null, isOverdue: false, status: 'unknown', deliveryDate: null };
+    }
+
+    // Default delivery times based on package types
     const deliveryTimePatterns = {
       'personal': 7,
       'premium': 14,
@@ -29,9 +33,16 @@ export const useDeliveryCalculation = (orderCreatedAt: string, packageValue?: st
       'gift': 7
     };
 
-    // Use predefined patterns or try to extract from delivery_time_key
-    if (deliveryTimePatterns[packageValue as keyof typeof deliveryTimePatterns]) {
-      deliveryDays = deliveryTimePatterns[packageValue as keyof typeof deliveryTimePatterns];
+    let deliveryDays = deliveryTimePatterns[packageValue as keyof typeof deliveryTimePatterns] || 7;
+    console.log('DeliveryCalculation - Using delivery days:', deliveryDays);
+
+    // Try to extract delivery time from package delivery_time_key if available
+    if (packageData.delivery_time_key) {
+      const timeMatch = packageData.delivery_time_key.match(/(\d+)/);
+      if (timeMatch) {
+        deliveryDays = parseInt(timeMatch[1]);
+        console.log('DeliveryCalculation - Extracted delivery days from key:', deliveryDays);
+      }
     }
 
     const createdDate = new Date(orderCreatedAt);
@@ -39,6 +50,9 @@ export const useDeliveryCalculation = (orderCreatedAt: string, packageValue?: st
     deliveryDate.setDate(deliveryDate.getDate() + deliveryDays);
     
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
+    deliveryDate.setHours(0, 0, 0, 0);
+    
     const timeDiff = deliveryDate.getTime() - today.getTime();
     const remainingDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
     
@@ -53,11 +67,14 @@ export const useDeliveryCalculation = (orderCreatedAt: string, packageValue?: st
       status = 'warning';
     }
 
-    return {
+    const result = {
       remainingDays: Math.abs(remainingDays),
       isOverdue,
       status,
       deliveryDate: deliveryDate.toLocaleDateString()
     };
+
+    console.log('DeliveryCalculation - Final result:', result);
+    return result;
   }, [orderCreatedAt, packageValue, packages]);
 };
