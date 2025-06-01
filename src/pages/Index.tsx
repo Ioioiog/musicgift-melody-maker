@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { usePackages } from "@/hooks/usePackageData";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslations";
-import { VolumeX, Volume2 } from "lucide-react";
+import { VolumeX, Volume2, Play } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 
@@ -26,41 +26,149 @@ const Index = () => {
     t: tDb
   } = useTranslation(); // Database translations for package content
 
-  // Audio player state
+  // Video and audio player state
   const [isMuted, setIsMuted] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [showPlayButton, setShowPlayButton] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Get video source based on language
   const getVideoSource = () => {
     return language === 'ro' ? "/lovable-uploads/Jingle Musicgift master.mp4" : "/lovable-uploads/MusicGiftvideoENG.mp4";
   };
 
-  // Auto-play audio when component mounts
+  // Handle video autoplay and fallbacks
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.play().catch(error => {
-        console.log("Auto-play failed:", error);
-      });
-    }
+    const video = videoRef.current;
+    if (!video) return;
+
+    console.log('Safari video debug: Setting up video element');
+
+    const handleCanPlay = () => {
+      console.log('Safari video debug: Video can play');
+      setVideoLoaded(true);
+      
+      // Try to autoplay
+      const playPromise = video.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log('Safari video debug: Autoplay successful');
+            setShowPlayButton(false);
+          })
+          .catch((error) => {
+            console.log('Safari video debug: Autoplay failed:', error);
+            setShowPlayButton(true);
+          });
+      }
+    };
+
+    const handleLoadStart = () => {
+      console.log('Safari video debug: Video load started');
+    };
+
+    const handleError = (e) => {
+      console.error('Safari video debug: Video error:', e);
+      setShowPlayButton(true);
+    };
+
+    const handlePlay = () => {
+      console.log('Safari video debug: Video started playing');
+      setShowPlayButton(false);
+    };
+
+    const handlePause = () => {
+      console.log('Safari video debug: Video paused');
+    };
+
+    // Add event listeners
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('loadstart', handleLoadStart);
+    video.addEventListener('error', handleError);
+    video.addEventListener('play', handlePlay);
+    video.addEventListener('pause', handlePause);
+
+    // Cleanup
+    return () => {
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('loadstart', handleLoadStart);
+      video.removeEventListener('error', handleError);
+      video.removeEventListener('play', handlePlay);
+      video.removeEventListener('pause', handlePause);
+    };
   }, []);
+
+  // Handle language change
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video && videoLoaded) {
+      console.log('Safari video debug: Language changed, reloading video');
+      video.load(); // Reload video with new source
+    }
+  }, [language]);
+
+  // Handle manual play button click
+  const handlePlayClick = () => {
+    const video = videoRef.current;
+    if (video) {
+      console.log('Safari video debug: Manual play button clicked');
+      video.play()
+        .then(() => {
+          console.log('Safari video debug: Manual play successful');
+          setShowPlayButton(false);
+        })
+        .catch((error) => {
+          console.error('Safari video debug: Manual play failed:', error);
+        });
+    }
+  };
+
+  // Handle mute toggle
   const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
+    const video = videoRef.current;
+    if (video) {
+      video.muted = !isMuted;
       setIsMuted(!isMuted);
+      console.log('Safari video debug: Mute toggled:', !isMuted);
     }
   };
 
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
-  return <div className="min-h-screen">
+
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Video Background - Mobile Optimized */}
       <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex flex-col justify-center overflow-hidden bg-black">
         {/* Video Background */}
-        <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline key={language}>
+        <video 
+          ref={videoRef}
+          className="absolute top-0 left-0 w-full h-full object-cover z-0" 
+          autoPlay 
+          muted={isMuted}
+          loop 
+          playsInline
+          preload="metadata"
+          key={language}
+        >
           <source src={getVideoSource()} type="video/mp4" />
         </video>
+
+        {/* Play Button Overlay */}
+        {showPlayButton && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
+            <Button
+              onClick={handlePlayClick}
+              size="lg"
+              className="rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md border-2 border-white/50 w-20 h-20"
+            >
+              <Play className="w-8 h-8 text-white ml-1" />
+            </Button>
+          </div>
+        )}
         
         {/* Hero Content - Mobile optimized - moved further down */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
@@ -97,9 +205,6 @@ const Index = () => {
           <Button onClick={toggleMute} size="icon" className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md w-10 h-10 sm:w-12 sm:h-12">
             {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
           </Button>
-          <audio ref={audioRef} loop muted={isMuted} key={language}>
-            <source src={getVideoSource()} type="audio/mp4" />
-          </audio>
         </div>
         
         {/* Scroll down indicator - hidden on very small screens */}
@@ -115,24 +220,24 @@ const Index = () => {
 
       {/* Packages Preview - ScenarioHero Style */}
       <section className="relative overflow-hidden py-8 sm:py-12 md:py-16" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         {/* Overlay for better readability */}
         <div className="absolute inset-0 bg-black/40"></div>
         
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <motion.div className="text-center mb-8 sm:mb-12" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6
-        }}>
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6
+          }}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">{t('chooseYourPackage')}</h2>
             <p className="text-base sm:text-lg md:text-xl text-white/90 px-4">{t('selectPerfectPackage')}</p>
           </motion.div>
@@ -155,16 +260,6 @@ const Index = () => {
 
           {/* Packages Grid - ScenarioHero Style */}
           {!isLoading && !error && previewPackages.length > 0 && <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.2
-        }}>
-              {previewPackages.map((pkg, index) => <motion.div key={pkg.id} initial={{
             opacity: 0,
             y: 20
           }} animate={{
@@ -172,8 +267,18 @@ const Index = () => {
             y: 0
           }} transition={{
             duration: 0.6,
-            delay: 0.1 * index
+            delay: 0.2
           }}>
+              {previewPackages.map((pkg, index) => <motion.div key={pkg.id} initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 0.1 * index
+              }}>
                   <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
                     {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 z-20">
                         <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
@@ -224,15 +329,15 @@ const Index = () => {
           
           {/* View All Packages Button */}
           {!isLoading && !error && previewPackages.length > 0 && <motion.div className="text-center mt-8 sm:mt-12" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.4
-        }}>
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.4
+          }}>
               <Link to="/packages">
                 <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
                   {t('viewAllPackages')}
@@ -247,11 +352,11 @@ const Index = () => {
 
       {/* CTA Section with Purple Musical Background - Mobile optimized */}
       <section className="py-8 sm:py-12 md:py-16 text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container mx-auto px-4 sm:px-6 text-center relative z-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">{t('readyToCreateSpecial')}</h2>
@@ -267,7 +372,8 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
 
 export default Index;
