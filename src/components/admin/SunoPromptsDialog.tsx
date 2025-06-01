@@ -5,13 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Copy, RefreshCw, Music, Edit, Save, Check } from 'lucide-react';
+import { Copy, RefreshCw, Music, Edit, Save, Check, Globe } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 interface SunoPrompt {
   title: string;
   description: string;
+  lyrics: string;
+  technicalTags: string;
   prompt: string;
 }
 
@@ -19,6 +21,8 @@ interface EditablePrompt extends SunoPrompt {
   isEditing: boolean;
   editedTitle: string;
   editedDescription: string;
+  editedLyrics: string;
+  editedTechnicalTags: string;
   editedPrompt: string;
 }
 
@@ -49,6 +53,8 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
           isEditing: false,
           editedTitle: prompt.title,
           editedDescription: prompt.description,
+          editedLyrics: prompt.lyrics || '',
+          editedTechnicalTags: prompt.technicalTags || '',
           editedPrompt: prompt.prompt
         }));
         setPrompts(editablePrompts);
@@ -92,7 +98,11 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
     ));
   };
 
-  const updateEditedField = (index: number, field: 'editedTitle' | 'editedDescription' | 'editedPrompt', value: string) => {
+  const updateEditedField = (
+    index: number, 
+    field: 'editedTitle' | 'editedDescription' | 'editedLyrics' | 'editedTechnicalTags' | 'editedPrompt', 
+    value: string
+  ) => {
     setPrompts(prev => prev.map((prompt, i) => 
       i === index 
         ? { ...prompt, [field]: value }
@@ -107,6 +117,8 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
             ...prompt, 
             title: prompt.editedTitle,
             description: prompt.editedDescription,
+            lyrics: prompt.editedLyrics,
+            technicalTags: prompt.editedTechnicalTags,
             prompt: prompt.editedPrompt,
             isEditing: false 
           }
@@ -135,13 +147,21 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
     }
   }, [isOpen]);
 
+  const getLanguage = () => {
+    return orderData?.form_data?.language || 'English';
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Music className="w-5 h-5 text-purple-600" />
-            <span>Suno.AI Song Prompts - Order #{orderData?.id?.slice(0, 8)}</span>
+            <span>Suno.AI Song Prompts with Lyrics - Order #{orderData?.id?.slice(0, 8)}</span>
+            <Badge variant="outline" className="ml-2">
+              <Globe className="w-3 h-3 mr-1" />
+              {getLanguage()}
+            </Badge>
           </DialogTitle>
         </DialogHeader>
 
@@ -149,13 +169,13 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <RefreshCw className="w-6 h-6 animate-spin mr-2" />
-              <span>Generating AI prompts...</span>
+              <span>Generating AI prompts with lyrics in {getLanguage()}...</span>
             </div>
           ) : (
             <>
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-600">
-                  Generated prompts optimized for Suno.AI music generation
+                  Generated prompts with complete lyrics in <strong>{getLanguage()}</strong>, optimized for Suno.AI music generation
                 </p>
                 <Button
                   variant="outline"
@@ -169,7 +189,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
               </div>
 
               {prompts.map((prompt, index) => (
-                <div key={index} className="border rounded-lg p-4 space-y-3">
+                <div key={index} className="border rounded-lg p-6 space-y-4">
                   <div className="flex justify-between items-start">
                     <div className="flex-1 space-y-2">
                       {prompt.isEditing ? (
@@ -178,11 +198,13 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                             value={prompt.editedTitle}
                             onChange={(e) => updateEditedField(index, 'editedTitle', e.target.value)}
                             className="font-semibold text-lg"
+                            placeholder="Song title"
                           />
                           <Input
                             value={prompt.editedDescription}
                             onChange={(e) => updateEditedField(index, 'editedDescription', e.target.value)}
                             className="text-sm"
+                            placeholder="Description"
                           />
                         </>
                       ) : (
@@ -205,51 +227,119 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 rounded-md p-3 relative">
-                    {prompt.isEditing ? (
-                      <Textarea
-                        value={prompt.editedPrompt}
-                        onChange={(e) => updateEditedField(index, 'editedPrompt', e.target.value)}
-                        className="min-h-[120px] font-mono text-sm"
-                      />
-                    ) : (
-                      <pre className="text-sm whitespace-pre-wrap font-mono">
-                        {prompt.prompt}
-                      </pre>
-                    )}
-                    
-                    <div className="absolute top-2 right-2 flex space-x-1">
+                  {/* Lyrics Section */}
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-sm text-purple-700 flex items-center">
+                      <Music className="w-4 h-4 mr-1" />
+                      Song Lyrics ({getLanguage()})
+                    </h4>
+                    <div className="bg-purple-50 rounded-md p-4 relative">
                       {prompt.isEditing ? (
+                        <Textarea
+                          value={prompt.editedLyrics}
+                          onChange={(e) => updateEditedField(index, 'editedLyrics', e.target.value)}
+                          className="min-h-[150px] font-mono text-sm"
+                          placeholder="Complete song lyrics..."
+                        />
+                      ) : (
+                        <pre className="text-sm whitespace-pre-wrap font-mono leading-relaxed">
+                          {prompt.lyrics}
+                        </pre>
+                      )}
+                      
+                      {!prompt.isEditing && (
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => saveEdit(index)}
+                          className="absolute top-2 right-2"
+                          onClick={() => copyToClipboard(prompt.lyrics)}
                         >
-                          <Save className="w-4 h-4" />
+                          <Copy className="w-4 h-4" />
                         </Button>
-                      ) : (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => toggleEdit(index)}
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => copyToClipboard(prompt.prompt)}
-                          >
-                            <Copy className="w-4 h-4" />
-                          </Button>
-                        </>
                       )}
                     </div>
                   </div>
 
+                  {/* Technical Tags Section */}
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-sm text-blue-700">Technical Tags</h4>
+                    <div className="bg-blue-50 rounded-md p-3 relative">
+                      {prompt.isEditing ? (
+                        <Textarea
+                          value={prompt.editedTechnicalTags}
+                          onChange={(e) => updateEditedField(index, 'editedTechnicalTags', e.target.value)}
+                          className="min-h-[80px] font-mono text-sm"
+                          placeholder="Suno.AI technical tags..."
+                        />
+                      ) : (
+                        <pre className="text-sm whitespace-pre-wrap font-mono">
+                          {prompt.technicalTags}
+                        </pre>
+                      )}
+                      
+                      {!prompt.isEditing && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="absolute top-2 right-2"
+                          onClick={() => copyToClipboard(prompt.technicalTags)}
+                        >
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Complete Prompt Section */}
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-sm text-gray-700">Complete Suno.AI Prompt</h4>
+                    <div className="bg-gray-50 rounded-md p-4 relative">
+                      {prompt.isEditing ? (
+                        <Textarea
+                          value={prompt.editedPrompt}
+                          onChange={(e) => updateEditedField(index, 'editedPrompt', e.target.value)}
+                          className="min-h-[120px] font-mono text-sm"
+                          placeholder="Complete Suno.AI prompt combining lyrics and technical tags..."
+                        />
+                      ) : (
+                        <pre className="text-sm whitespace-pre-wrap font-mono">
+                          {prompt.prompt}
+                        </pre>
+                      )}
+                      
+                      <div className="absolute top-2 right-2 flex space-x-1">
+                        {prompt.isEditing ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => saveEdit(index)}
+                          >
+                            <Save className="w-4 h-4" />
+                          </Button>
+                        ) : (
+                          <>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => toggleEdit(index)}
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => copyToClipboard(prompt.prompt)}
+                            >
+                              <Copy className="w-4 h-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
                   {!prompt.isEditing && (
-                    <div className="flex justify-end">
+                    <div className="flex justify-end pt-2">
                       <Button
                         variant={savedPrompt === prompt.prompt ? "default" : "outline"}
                         size="sm"
@@ -272,14 +362,15 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
 
               {prompts.length > 0 && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-900 mb-2">How to use these prompts:</h4>
+                  <h4 className="font-semibold text-blue-900 mb-2">How to use these prompts with lyrics:</h4>
                   <ol className="text-sm text-blue-800 space-y-1">
-                    <li>1. Edit prompts as needed using the edit button</li>
-                    <li>2. Save your preferred optimized version</li>
-                    <li>3. Copy your optimized prompt</li>
-                    <li>4. Go to Suno.AI and create a new song</li>
-                    <li>5. Paste the prompt in the description field</li>
-                    <li>6. Generate your personalized song</li>
+                    <li>1. Review and edit the generated lyrics in <strong>{getLanguage()}</strong> as needed</li>
+                    <li>2. Adjust technical tags to match your musical vision</li>
+                    <li>3. Save your preferred optimized version</li>
+                    <li>4. Copy the complete prompt (lyrics + technical tags)</li>
+                    <li>5. Go to Suno.AI and create a new song</li>
+                    <li>6. Paste the complete prompt in Suno.AI</li>
+                    <li>7. Generate your personalized multilingual song</li>
                   </ol>
                 </div>
               )}

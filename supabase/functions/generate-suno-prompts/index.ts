@@ -51,7 +51,7 @@ serve(async (req) => {
     const language = formData.language || 'English';
     const keywords = formData.keywords || formData.specialRequests || '';
 
-    const prompt = `Create 3 different Suno.AI song generation prompts based on this music order information:
+    const prompt = `Create 3 different Suno.AI song generation prompts with complete lyrics based on this music order information:
 
 **Order Details:**
 - Story/Message: ${storyDetails}
@@ -64,36 +64,56 @@ serve(async (req) => {
 - Special Keywords: ${keywords}
 
 Generate 3 different prompt variations for Suno.AI that include:
-1. A descriptive song theme/story
-2. Musical style tags (genre, tempo, instrumentation)
-3. Mood and atmosphere descriptors
-4. Voice specifications
-5. Language instructions
 
-Format each prompt as a complete Suno.AI prompt with proper tags and descriptions. Make them creative and unique while staying true to the order requirements.
+1. **Complete song lyrics** written in ${language} that:
+   - Tell the story from the order details
+   - Are appropriate for the occasion (${occasion})
+   - Match the emotional mood (${mood})
+   - Include references to the recipient (${recipientName}) if provided
+   - Follow proper verse-chorus-bridge structure
+   - Maintain cultural authenticity for ${language}
+   - Include rhyme schemes appropriate for the language
+
+2. **Technical Suno.AI tags** including:
+   - Musical style and genre tags
+   - Tempo and rhythm indicators
+   - Instrumentation specifications
+   - Voice type and gender specifications
+   - Language specifications
+   - Mood and atmosphere descriptors
+
+3. **Combined prompt** ready for Suno.AI that merges the lyrics with technical tags
+
+Each variation should have a different musical approach while maintaining the core story and emotional message.
 
 Return the response in this JSON format:
 {
   "prompts": [
     {
       "title": "Prompt 1 Title",
-      "description": "Brief description of this variation",
-      "prompt": "Complete Suno.AI prompt text with tags"
+      "description": "Brief description of this variation's musical style and approach",
+      "lyrics": "Complete song lyrics in ${language} with verse-chorus-bridge structure",
+      "technicalTags": "Suno.AI technical tags (genre, tempo, instruments, voice, etc.)",
+      "prompt": "Complete Suno.AI prompt combining lyrics and technical tags"
     },
     {
       "title": "Prompt 2 Title", 
-      "description": "Brief description of this variation",
-      "prompt": "Complete Suno.AI prompt text with tags"
+      "description": "Brief description of this variation's musical style and approach",
+      "lyrics": "Complete song lyrics in ${language} with verse-chorus-bridge structure",
+      "technicalTags": "Suno.AI technical tags (genre, tempo, instruments, voice, etc.)",
+      "prompt": "Complete Suno.AI prompt combining lyrics and technical tags"
     },
     {
       "title": "Prompt 3 Title",
-      "description": "Brief description of this variation", 
-      "prompt": "Complete Suno.AI prompt text with tags"
+      "description": "Brief description of this variation's musical style and approach",
+      "lyrics": "Complete song lyrics in ${language} with verse-chorus-bridge structure",
+      "technicalTags": "Suno.AI technical tags (genre, tempo, instruments, voice, etc.)",
+      "prompt": "Complete Suno.AI prompt combining lyrics and technical tags"
     }
   ]
 }
 
-Make the prompts engaging, emotionally resonant, and technically optimized for Suno.AI generation.`;
+Make the lyrics emotionally resonant, culturally appropriate for ${language}, and technically optimized for Suno.AI generation. Ensure each variation offers a different musical interpretation of the same story.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -106,7 +126,7 @@ Make the prompts engaging, emotionally resonant, and technically optimized for S
         messages: [
           {
             role: 'system',
-            content: 'You are an expert AI music prompt engineer specialized in creating optimized prompts for Suno.AI. Generate creative, detailed prompts that include proper musical tags, mood descriptors, and technical specifications for the best AI music generation results.'
+            content: `You are an expert AI music prompt engineer and lyricist specialized in creating optimized prompts for Suno.AI. You are fluent in multiple languages and can write authentic, culturally appropriate lyrics in any language. You understand song structure, rhyme schemes, and how to create emotionally compelling lyrics that work well with AI music generation. Generate creative, detailed prompts that include complete lyrics and proper technical specifications for the best AI music generation results.`
           },
           {
             role: 'user',
@@ -114,7 +134,7 @@ Make the prompts engaging, emotionally resonant, and technically optimized for S
           }
         ],
         temperature: 0.8,
-        max_tokens: 2000,
+        max_tokens: 3000,
       }),
     });
 
@@ -191,7 +211,21 @@ Make the prompts engaging, emotionally resonant, and technically optimized for S
       );
     }
 
-    console.log('Successfully generated Suno.AI prompts');
+    // Validate that each prompt has the required fields including lyrics
+    for (const prompt of generatedPrompts.prompts) {
+      if (!prompt.title || !prompt.description || !prompt.lyrics || !prompt.technicalTags || !prompt.prompt) {
+        console.error('Missing required fields in prompt:', prompt);
+        return new Response(
+          JSON.stringify({ error: 'Generated prompts missing required fields (lyrics, technicalTags, etc.)' }),
+          { 
+            status: 500, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+    }
+
+    console.log('Successfully generated Suno.AI prompts with lyrics');
     
     return new Response(
       JSON.stringify({ 
