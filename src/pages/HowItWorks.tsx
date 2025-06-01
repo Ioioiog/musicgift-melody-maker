@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -10,7 +9,7 @@ import { Button } from "@/components/ui/button";
 const HowItWorks = () => {
   const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true); // Start playing by default
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
   const steps = useMemo(() => [
@@ -77,7 +76,7 @@ const HowItWorks = () => {
     setIsPlaying(false);
   }, []);
 
-  // Simplified auto-play effect
+  // Auto-play effect with 4-second interval
   useEffect(() => {
     if (!isPlaying) return;
     
