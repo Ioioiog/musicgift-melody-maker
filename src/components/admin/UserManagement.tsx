@@ -11,7 +11,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Plus, Edit, Trash2, UserPlus } from 'lucide-react';
+import { Plus, Edit, Trash2, UserPlus, RefreshCw } from 'lucide-react';
 import type { Tables, TablesInsert, TablesUpdate } from '@/integrations/supabase/types';
 
 type UserRole = Tables<'user_roles'> & {
@@ -33,10 +33,10 @@ const UserManagement = () => {
   const { user } = useAuth();
 
   // Fetch all users with roles
-  const { data: userRoles = [], isLoading } = useQuery({
+  const { data: userRoles = [], isLoading: rolesLoading, error: rolesError } = useQuery({
     queryKey: ['admin-user-roles'],
     queryFn: async () => {
-      console.log('Fetching user roles...');
+      console.log('🔍 Fetching user roles...');
       // First get user roles
       const { data: rolesData, error: rolesError } = await supabase
         .from('user_roles')
@@ -44,27 +44,33 @@ const UserManagement = () => {
         .order('created_at', { ascending: false });
       
       if (rolesError) {
-        console.error('Error fetching user roles:', rolesError);
+        console.error('❌ Error fetching user roles:', rolesError);
         throw rolesError;
       }
 
-      console.log('Roles data:', rolesData);
+      console.log('📋 Roles data retrieved:', rolesData);
+      console.log('📊 Total roles count:', rolesData?.length || 0);
 
       if (!rolesData || rolesData.length === 0) {
+        console.log('ℹ️ No roles found');
         return [];
       }
 
       // Then get profiles for these users
       const userIds = rolesData.map(role => role.user_id);
+      console.log('👥 User IDs with roles:', userIds);
+      
       const { data: profilesData, error: profilesError } = await supabase
         .from('profiles')
         .select('id, email, full_name')
         .in('id', userIds);
 
       if (profilesError) {
-        console.error('Error fetching profiles:', profilesError);
+        console.error('❌ Error fetching profiles for roles:', profilesError);
         throw profilesError;
       }
+
+      console.log('👤 Profiles for roles:', profilesData);
 
       // Combine the data
       const combinedData = rolesData.map(role => ({
@@ -72,28 +78,67 @@ const UserManagement = () => {
         profiles: profilesData?.find(profile => profile.id === role.user_id) || null
       }));
 
-      console.log('Combined user roles data:', combinedData);
+      console.log('🔗 Combined user roles data:', combinedData);
       return combinedData as UserRole[];
     }
   });
 
-  // Fetch all profiles for user selection
-  const { data: allProfiles = [] } = useQuery({
+  // Fetch all profiles for user selection with enhanced debugging
+  const { data: allProfiles = [], isLoading: profilesLoading, error: profilesError } = useQuery({
     queryKey: ['admin-all-profiles'],
     queryFn: async () => {
-      console.log('Fetching all profiles...');
-      const { data, error } = await supabase
+      console.log('🔍 Fetching ALL profiles for selection...');
+      
+      const { data, error, count } = await supabase
         .from('profiles')
-        .select('*')
+        .select('*', { count: 'exact' })
         .order('email');
+      
       if (error) {
-        console.error('Error fetching profiles:', error);
+        console.error('❌ Error fetching all profiles:', error);
+        console.error('❌ Error details:', JSON.stringify(error, null, 2));
         throw error;
       }
-      console.log('All profiles:', data);
+      
+      console.log('📊 Total profiles count from DB:', count);
+      console.log('📋 All profiles raw data:', data);
+      console.log('🔢 Profiles array length:', data?.length || 0);
+      
+      if (data && data.length > 0) {
+        data.forEach((profile, index) => {
+          console.log(`👤 Profile ${index + 1}:`, {
+            id: profile.id,
+            email: profile.email,
+            full_name: profile.full_name,
+            created_at: profile.created_at
+          });
+        });
+      } else {
+        console.log('⚠️ No profiles found in database');
+      }
+      
       return data as Profile[];
-    }
+    },
+    staleTime: 0, // Always fetch fresh data
+    refetchOnMount: true,
+    refetchOnWindowFocus: true
   });
+
+  // Manual refresh function
+  const handleRefreshData = async () => {
+    console.log('🔄 Manual refresh triggered');
+    toast({ title: 'Refreshing data...', description: 'Fetching latest user information' });
+    
+    await queryClient.invalidateQueries({ queryKey: ['admin-all-profiles'] });
+    await queryClient.invalidateQueries({ queryKey: ['admin-user-roles'] });
+    
+    // Force refetch
+    await queryClient.refetchQueries({ queryKey: ['admin-all-profiles'] });
+    await queryClient.refetchQueries({ queryKey: ['admin-user-roles'] });
+    
+    console.log('✅ Manual refresh completed');
+    toast({ title: 'Data refreshed', description: 'User information updated' });
+  };
 
   // Create user role mutation
   const createRoleMutation = useMutation({
@@ -244,27 +289,60 @@ const UserManagement = () => {
 
   // Show all users for super admins and admins, with current role indication
   const getSelectableUsers = () => {
-    console.log('Getting selectable users. All profiles:', allProfiles);
-    console.log('Current user roles:', userRoles);
+    console.log('🔍 Getting selectable users...');
+    console.log('📋 All profiles available:', allProfiles);
+    console.log('🔢 All profiles count:', allProfiles.length);
+    console.log('👥 Current user roles:', userRoles);
     
     if (allProfiles.length === 0) {
-      console.log('No profiles available');
+      console.log('⚠️ No profiles available for selection');
       return [];
     }
 
-    return allProfiles.map(profile => ({
-      ...profile,
-      currentRole: getUserCurrentRole(profile.id)
-    }));
+    const selectableUsers = allProfiles.map(profile => {
+      const currentRole = getUserCurrentRole(profile.id);
+      console.log(`👤 Processing profile: ${profile.email} (${profile.full_name}) - Role: ${currentRole || 'none'}`);
+      return {
+        ...profile,
+        currentRole
+      };
+    });
+
+    console.log('✅ Final selectable users:', selectableUsers);
+    return selectableUsers;
   };
 
   const selectableUsers = getSelectableUsers();
-  console.log('Selectable users:', selectableUsers);
+
+  // Loading and error states
+  const isLoading = rolesLoading || profilesLoading;
+  const hasError = rolesError || profilesError;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">User Management</h2>
+        <div>
+          <h2 className="text-2xl font-bold">User Management</h2>
+          <div className="flex items-center gap-2 mt-2">
+            <p className="text-sm text-gray-600">
+              Total profiles: {allProfiles.length} | Roles assigned: {userRoles.length}
+            </p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleRefreshData}
+              disabled={isLoading}
+            >
+              <RefreshCw className={`w-4 h-4 mr-1 ${isLoading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
+          {hasError && (
+            <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-sm text-red-600">
+              Error loading data: {rolesError?.message || profilesError?.message}
+            </div>
+          )}
+        </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={openCreateDialog}>
@@ -280,9 +358,15 @@ const UserManagement = () => {
               {!editingRole && (
                 <div>
                   <Label htmlFor="user_select">Select User</Label>
-                  {selectableUsers.length === 0 ? (
+                  {isLoading ? (
+                    <div className="p-3 text-sm text-gray-500 border rounded">
+                      Loading users...
+                    </div>
+                  ) : selectableUsers.length === 0 ? (
                     <div className="p-3 text-sm text-gray-500 border rounded">
                       No users available. Users need to have profiles created first.
+                      <br />
+                      <small>Debug: Profiles count: {allProfiles.length}</small>
                     </div>
                   ) : (
                     <Select value={selectedUserId} onValueChange={setSelectedUserId} required>
@@ -376,7 +460,7 @@ const UserManagement = () => {
                         <Button 
                           size="sm" 
                           variant="outline" 
-                          onClick={() => openEditDialog(userRole)}
+          onClick={() => openEditDialog(userRole)}
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
