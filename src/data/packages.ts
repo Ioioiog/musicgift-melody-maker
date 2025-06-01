@@ -44,55 +44,83 @@ export const packages: PackageData[] = [
     delivery_time_key: "personalDelivery",
     tags: [
       {
-        tag_type: "new",
-        tag_label_key: "newTag",
-        styling_class: "bg-green-100 text-green-800"
+        tag_type: "popular",
+        tag_label_key: "popularTag",
+        styling_class: "bg-blue-100 text-blue-800"
       }
     ],
     includes: [
       { include_key: "personalInclude1", include_order: 1 },
       { include_key: "personalInclude2", include_order: 2 },
       { include_key: "personalInclude3", include_order: 3 },
-      { include_key: "personalInclude4", include_order: 4 },
-      { include_key: "personalInclude5", include_order: 5 }
+      { include_key: "personalInclude4", include_order: 4 }
     ],
     steps: [
       {
         step_number: 1,
-        title_key: "forWhomIsSongStep",
+        title_key: "songStoryStep",
         step_order: 1,
         fields: [
           {
-            field_name: "recipientName",
+            field_name: "recipient",
             field_type: "text",
-            placeholder_key: "recipientNamePlaceholder",
+            placeholder_key: "recipientPlaceholder",
             required: true,
             field_order: 1,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "recipientNamePronunciation",
-            field_type: "file",
-            placeholder_key: "recipientNamePronunciationPlaceholder",
+            field_name: "includeNameInSong",
+            field_type: "checkbox",
+            placeholder_key: "includeNameInSongPlaceholder",
             required: false,
             field_order: 2,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "relationship",
-            field_type: "select",
-            placeholder_key: "relationshipPlaceholder",
+            field_name: "pronunciationAudio",
+            field_type: "audio-recorder",
+            placeholder_key: "pronunciationAudioPlaceholder",
             required: false,
             field_order: 3,
-            options: [
-              { value: "partner", label_key: "relationshipPartner" },
-              { value: "family", label_key: "relationshipFamily" },
-              { value: "friend", label_key: "relationshipFriend" },
-              { value: "colleague", label_key: "relationshipColleague" },
-              { value: "other", label_key: "relationshipOther" }
-            ],
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "relationshipText",
+            field_type: "text",
+            placeholder_key: "relationshipTextPlaceholder",
+            required: false,
+            field_order: 4,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "story",
+            field_type: "textarea",
+            placeholder_key: "storyDetailedPlaceholder",
+            required: true,
+            field_order: 5,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "keywords",
+            field_type: "text",
+            placeholder_key: "keywordsPlaceholder",
+            required: false,
+            field_order: 6,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "keywordsAudio",
+            field_type: "audio-recorder",
+            placeholder_key: "keywordsAudioPlaceholder",
+            required: false,
+            field_order: 7,
             validations: [],
             dependencies: []
           }
@@ -100,8 +128,97 @@ export const packages: PackageData[] = [
       },
       {
         step_number: 2,
-        title_key: "yourContactDetailsStep",
+        title_key: "musicalPreferencesStep",
         step_order: 2,
+        fields: [
+          {
+            field_name: "styleReference",
+            field_type: "text",
+            placeholder_key: "styleReferencePlaceholder",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "mood",
+            field_type: "select",
+            placeholder_key: "vibePlaceholder",
+            required: true,
+            field_order: 2,
+            options: [
+              { value: "romantic", label_key: "moodRomantic" },
+              { value: "cheerful", label_key: "moodCheerful" },
+              { value: "nostalgic", label_key: "moodNostalgic" },
+              { value: "energetic", label_key: "moodEnergetic" },
+              { value: "melancholic", label_key: "moodMelancholic" },
+              { value: "inspirational", label_key: "moodInspirational" },
+              { value: "emotional", label_key: "moodEmotional" },
+              { value: "uplifting", label_key: "moodUplifting" }
+            ],
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "voiceGender",
+            field_type: "select",
+            placeholder_key: "vibePlaceholder",
+            required: true,
+            field_order: 3,
+            options: [
+              { value: "feminine", label_key: "voiceFeminine" },
+              { value: "masculine", label_key: "voiceMasculine" },
+              { value: "duet", label_key: "voiceDuet" },
+              { value: "musicgift-choice", label_key: "voiceMusicGiftChoice" }
+            ],
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "youtubeExample",
+            field_type: "text",
+            placeholder_key: "youtubeExamplePlaceholder",
+            required: false,
+            field_order: 4,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "language",
+            field_type: "select",
+            placeholder_key: "songLanguagePlaceholder",
+            required: true,
+            field_order: 5,
+            options: [
+              { value: "ro", label_key: "romanianLanguage" },
+              { value: "en", label_key: "englishLanguage" },
+              { value: "fr", label_key: "frenchLanguage" }
+            ],
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 3,
+        title_key: "addonsStep",
+        step_order: 3,
+        fields: [
+          {
+            field_name: "addons",
+            field_type: "checkbox-group",
+            placeholder_key: "selectAddonsPlaceholder",
+            required: false,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 4,
+        title_key: "contactDetailsStep",
+        step_order: 4,
         fields: [
           {
             field_name: "fullName",
@@ -129,111 +246,38 @@ export const packages: PackageData[] = [
             field_order: 3,
             validations: [],
             dependencies: []
-          },
-          {
-            field_name: "language",
-            field_type: "select",
-            placeholder_key: "songLanguagePlaceholder",
-            required: true,
-            field_order: 4,
-            options: [
-              { value: "ro", label_key: "romanianLanguage" },
-              { value: "en", label_key: "englishLanguage" },
-              { value: "fr", label_key: "frenchLanguage" }
-            ],
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "occasion",
-            field_type: "text",
-            placeholder_key: "occasionPlaceholder",
-            required: false,
-            field_order: 5,
-            validations: [],
-            dependencies: []
           }
         ]
       },
       {
-        step_number: 3,
-        title_key: "yourStoryStep",
-        step_order: 3,
+        step_number: 5,
+        title_key: "legalAcceptancesStep",
+        step_order: 5,
         fields: [
           {
-            field_name: "story",
-            field_type: "textarea",
-            placeholder_key: "storyPlaceholder",
+            field_name: "termsMentionMusicGift",
+            field_type: "checkbox",
+            placeholder_key: "termsMentionMusicGiftPlaceholder",
             required: true,
             field_order: 1,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "vibe",
-            field_type: "text",
-            placeholder_key: "vibePlaceholder",
+            field_name: "confirmOrder",
+            field_type: "checkbox",
+            placeholder_key: "confirmOrderPlaceholder",
             required: true,
             field_order: 2,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "youtubeLinks",
-            field_type: "text",
-            placeholder_key: "youtubeLinksPlaceholder",
-            required: false,
-            field_order: 3,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "importantKeywords",
-            field_type: "text",
-            placeholder_key: "importantKeywordsPlaceholder",
-            required: false,
-            field_order: 4,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "keywordsPronunciationRecording",
-            field_type: "file",
-            placeholder_key: "keywordsPronunciationPlaceholder",
-            required: false,
-            field_order: 5,
-            validations: [],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        step_number: 4,
-        title_key: "addonsStep",
-        step_order: 4,
-        fields: [
-          {
-            field_name: "addons",
-            field_type: "checkbox-group",
-            placeholder_key: "selectAddonsPlaceholder",
-            required: false,
-            field_order: 1,
-            validations: [],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        step_number: 5,
-        title_key: "distributionConfirmationStep",
-        step_order: 5,
-        fields: [
-          {
-            field_name: "acceptMention",
+            field_name: "acceptTermsAndConditions",
             field_type: "checkbox",
-            placeholder_key: "acceptMentionPlaceholder",
+            placeholder_key: "acceptTermsAndConditionsPlaceholder",
             required: true,
-            field_order: 1,
+            field_order: 3,
             validations: [],
             dependencies: []
           }
@@ -1050,5 +1094,6 @@ export const addons = {
   distributionMangoRecords: { labelKey: 'distributionMangoRecords', price: 200 },
   customVideo: { labelKey: 'customVideo', price: 149 },
   audioMessageFromSender: { labelKey: 'audioMessageFromSender', price: 100 },
+  videoMessageFromSender: { labelKey: 'videoMessageFromSender', price: 100 },
   extendedSong: { labelKey: 'extendedSong', price: 49 },
 };

@@ -40,7 +40,7 @@ const translations = {
     giftPackage: "Pachet Cadou",
     
     // Package taglines
-    personalTagline: "Un cântec scris cu suflet – doar pentru tine",
+    personalTagline: "Un cântec scris cu suflet – doar pentru tine și cei dragi",
     premiumTagline: "Lansare completă cu distribuție globală",
     businessTagline: "Dă-i brandului tău o voce memorabilă",
     artistTagline: "Lansează-ți cariera muzicală cu o piesă de top",
@@ -49,7 +49,7 @@ const translations = {
     giftTagline: "O poveste muzicală oferită în dar",
     
     // Package descriptions
-    personalDescription: "Un cântec scris cu suflet – doar pentru tine și cei dragi. Ideal pentru aniversări, nunți sau ocazii speciale – transformăm povestea ta într-un cadou muzical unic și emoționant.",
+    personalDescription: "Ideal pentru aniversări, nunți sau ocazii speciale – transformăm povestea ta într-un cadou muzical unic și emoționant.",
     premiumDescription: "Lansare completă. Expune-ți povestea lumii întregi. Muzică originală, videoclip animat DOMG și distribuție globală prin canalul Mango Records (+100k).",
     businessDescription: "Dă-i brandului tău o voce memorabilă. Creat pentru companii care vor o piesă originală pentru branding, campanii sau reclame cu impact emoțional.",
     artistDescription: "Lansează-ți cariera muzicală cu o piesă de top. Pentru artiști dedicați care își doresc o piesă originală, distribuție completă și co-proprietate asupra drepturilor.",
@@ -58,7 +58,7 @@ const translations = {
     giftDescription: "O poveste muzicală oferită în dar. Perfect pentru a surprinde pe cineva drag – destinatarul își alege singur stilul și atmosfera cântecului.",
     
     // Delivery times
-    personalDelivery: "3–5 zile",
+    personalDelivery: "3–5 zile lucrătoare",
     premiumDelivery: "5–7 zile",
     businessDelivery: "5–7 zile",
     artistDelivery: "7–10 zile",
@@ -66,12 +66,11 @@ const translations = {
     instrumentalDelivery: "3–5 zile",
     giftDelivery: "Instant",
     
-    // Package includes
+    // Package includes - Updated for Personal
     personalInclude1: "Cântec original creat după povestea ta",
     personalInclude2: "Voce profesionistă din echipa MusicGift",
-    personalInclude3: "Livrare rapidă în 3–5 zile",
+    personalInclude3: "Livrare digitală în 3–5 zile",
     personalInclude4: "Drepturi de utilizare personală (non-comercial)",
-    personalInclude5: "Consultare creativă bazată pe poveste și preferințe muzicale",
     
     premiumInclude1: "Piesă originală cu producție completă",
     premiumInclude2: "Videoclip animat (stil \"Do Music for Good\")",
@@ -114,6 +113,49 @@ const translations = {
     romanianLanguage: "Română",
     englishLanguage: "Engleză",
     frenchLanguage: "Franceză",
+    
+    // NEW: Personal Package Step Titles
+    songStoryStep: "Povestea melodiei",
+    musicalPreferencesStep: "Preferințe muzicale",
+    contactDetailsStep: "Detalii contact și livrare",
+    legalAcceptancesStep: "Acceptări legale",
+    
+    // NEW: Personal Package Field Placeholders
+    recipientPlaceholder: "Cui este dedicată melodia? (ex: Maria)",
+    includeNameInSongPlaceholder: "Vrei ca numele persoanei să apară în melodie?",
+    pronunciationAudioPlaceholder: "Înregistrează pronunția numelui dacă e atipic",
+    relationshipTextPlaceholder: "Relația ta cu această persoană (ex: soție/soț, prieten, coleg, sora/frate)",
+    storyDetailedPlaceholder: "Spune-ne povestea acestei persoane. Ce o face specială? Care sunt momentele frumoase pe care le-ați trăit împreună? Ce calități vrei să subliniezi în melodie? Ce amintiri importante aveți?",
+    keywordsPlaceholder: "Cuvinte cheie importante (nume, locuri, expresii speciale)",
+    keywordsAudioPlaceholder: "Înregistrează pronunția unor cuvinte cheie (opțional)",
+    
+    // NEW: Musical Preferences Fields
+    styleReferencePlaceholder: "Ce stil vrei să aibă melodia? (ex: pop, rock, balada, rap)",
+    youtubeExamplePlaceholder: "Link YouTube cu exemplu de melodie în genul celei pe care o vrei",
+    
+    // NEW: Mood Options
+    moodRomantic: "Romantic",
+    moodCheerful: "Vesel",
+    moodNostalgic: "Nostalgic",
+    moodEnergetic: "Energic",
+    moodMelancholic: "Melancolic",
+    moodInspirational: "Inspirațional",
+    moodEmotional: "Emoțional",
+    moodUplifting: "Încurajator",
+    
+    // NEW: Voice Gender Options
+    voiceFeminine: "Voce feminină",
+    voiceMasculine: "Voce masculină",
+    voiceDuet: "Duet",
+    voiceMusicGiftChoice: "Las la alegerea MusicGift",
+    
+    // NEW: Legal Acceptances
+    termsMentionMusicGiftPlaceholder: "Accept că dacă postez public piesa, trebuie să menționez: \"Produs de MusicGift.ro by Mango Records\"",
+    confirmOrderPlaceholder: "Confirm comanda și detaliile oferite",
+    acceptTermsAndConditionsPlaceholder: "Accept termenii și condițiile de pe site",
+    
+    // NEW: Addons
+    videoMessageFromSender: "Mesaj video de la tine",
     
     // Step titles - NEW TRANSLATIONS
     forWhomIsSongStep: "Pentru cine este cântecul?",
@@ -260,7 +302,7 @@ const translations = {
     giftPackage: "Gift Package",
     
     // Package taglines
-    personalTagline: "A song written with soul – just for you",
+    personalTagline: "A song written with soul – just for you and your loved ones",
     premiumTagline: "Complete release with global distribution",
     businessTagline: "Give your brand a memorable voice",
     artistTagline: "Launch your musical career with a top song",
@@ -269,7 +311,7 @@ const translations = {
     giftTagline: "A musical story given as a gift",
     
     // Package descriptions
-    personalDescription: "A song written with soul – just for you and your loved ones. Perfect for birthdays, weddings or special occasions – we transform your story into a unique and emotional musical gift.",
+    personalDescription: "Perfect for birthdays, weddings or special occasions – we transform your story into a unique and emotional musical gift.",
     premiumDescription: "Complete release. Expose your story to the whole world. Original music, animated DOMG video and global distribution through Mango Records channel (+100k).",
     businessDescription: "Give your brand a memorable voice. Created for companies that want an original song for branding, campaigns or ads with emotional impact.",
     artistDescription: "Launch your musical career with a top song. For dedicated artists who want an original song, complete distribution and co-ownership of rights.",
@@ -278,7 +320,7 @@ const translations = {
     giftDescription: "A musical story given as a gift. Perfect for surprising someone dear – the recipient chooses the style and atmosphere of the song themselves.",
     
     // Delivery times
-    personalDelivery: "3–5 days",
+    personalDelivery: "3–5 working days",
     premiumDelivery: "5–7 days",
     businessDelivery: "5–7 days",
     artistDelivery: "7–10 days",
@@ -286,12 +328,11 @@ const translations = {
     instrumentalDelivery: "3–5 days",
     giftDelivery: "Instant",
     
-    // Package includes
+    // Package includes - Updated for Personal
     personalInclude1: "Original song created after your story",
     personalInclude2: "Professional voice from MusicGift team",
-    personalInclude3: "Fast delivery in 3–5 days",
+    personalInclude3: "Digital delivery in 3–5 days",
     personalInclude4: "Personal use rights (non-commercial)",
-    personalInclude5: "Creative consultation based on story and musical preferences",
     
     premiumInclude1: "Original song with complete production",
     premiumInclude2: "Animated video (\"Do Music for Good\" style)",
@@ -334,6 +375,49 @@ const translations = {
     romanianLanguage: "Romanian",
     englishLanguage: "English",
     frenchLanguage: "French",
+    
+    // NEW: Personal Package Step Titles
+    songStoryStep: "Song Story",
+    musicalPreferencesStep: "Musical Preferences",
+    contactDetailsStep: "Contact & Delivery Details",
+    legalAcceptancesStep: "Legal Acceptances",
+    
+    // NEW: Personal Package Field Placeholders
+    recipientPlaceholder: "Who is the song dedicated to? (e.g. Maria)",
+    includeNameInSongPlaceholder: "Do you want the person's name to appear in the song?",
+    pronunciationAudioPlaceholder: "Record name pronunciation if atypical",
+    relationshipTextPlaceholder: "Your relationship with this person (e.g. wife/husband, friend, colleague, sister/brother)",
+    storyDetailedPlaceholder: "Tell us the story of this person. What makes them special? What beautiful moments have you lived together? What qualities do you want to highlight in the song? What important memories do you have?",
+    keywordsPlaceholder: "Important keywords (names, places, special expressions)",
+    keywordsAudioPlaceholder: "Record pronunciation of some keywords (optional)",
+    
+    // NEW: Musical Preferences Fields
+    styleReferencePlaceholder: "What style do you want the song to have? (e.g. pop, rock, ballad, rap)",
+    youtubeExamplePlaceholder: "YouTube link with example song in the genre you want",
+    
+    // NEW: Mood Options
+    moodRomantic: "Romantic",
+    moodCheerful: "Cheerful",
+    moodNostalgic: "Nostalgic",
+    moodEnergetic: "Energetic",
+    moodMelancholic: "Melancholic",
+    moodInspirational: "Inspirational",
+    moodEmotional: "Emotional",
+    moodUplifting: "Uplifting",
+    
+    // NEW: Voice Gender Options
+    voiceFeminine: "Female voice",
+    voiceMasculine: "Male voice",
+    voiceDuet: "Duet",
+    voiceMusicGiftChoice: "Let MusicGift choose",
+    
+    // NEW: Legal Acceptances
+    termsMentionMusicGiftPlaceholder: "I accept that if I post the song publicly, I must mention: \"Produced by MusicGift.ro by Mango Records\"",
+    confirmOrderPlaceholder: "I confirm the order and details provided",
+    acceptTermsAndConditionsPlaceholder: "I accept the terms and conditions from the website",
+    
+    // NEW: Addons
+    videoMessageFromSender: "Video message from you",
     
     // Step titles - NEW TRANSLATIONS
     forWhomIsSongStep: "Who is the song for?",
