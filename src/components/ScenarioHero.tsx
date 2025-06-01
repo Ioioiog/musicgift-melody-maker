@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslations';
-import { Gift, Heart, Users, Crown, Sparkles, Diamond, Car, Briefcase, Building, Mic, Music, RotateCcw, FileMusic, Star, Package, Cake, Ring, HeartHandshake, UserCheck, PartyPopper, Award, TrendingUp, Headphones, Volume2, Shuffle } from 'lucide-react';
+import { Gift, Heart, Users, Crown, Sparkles, Diamond, Car, Briefcase, Building, Mic, Music, RotateCcw, FileMusic, Star, Package, Cake, HeartHandshake, UserCheck, PartyPopper, Award, TrendingUp, Headphones, Volume2, Shuffle } from 'lucide-react';
+
 const scenarios = [
 // Personal Package scenarios
 {
