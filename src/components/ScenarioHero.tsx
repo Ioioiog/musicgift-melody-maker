@@ -2,22 +2,24 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslation } from '@/hooks/useTranslations';
 
 const scenarios = [
-  { emoji: '🎂', text: "Is it someone special's birthday? Celebrate with lyrics, not just cake!" },
-  { emoji: '💍', text: 'Got big plans? Surprise her with a sung proposal.' },
-  { emoji: '💑', text: 'Years together? Hit play on your love story.' },
-  { emoji: '👩‍👧', text: 'Your mom deserves more than just flowers.' },
-  { emoji: '👰', text: "Want your wedding to stay in the heart's playlist?" },
-  { emoji: '🚗', text: "Just got a new car? Let's start it with rhythm." },
-  { emoji: '🧑‍💼', text: 'Started a new job? Celebrate in style!' },
-  { emoji: '✨', text: 'And for any other "wow!" moment in life – we put it to music.' }
+  { emoji: '🎂', text: "Is it someone special's birthday? Celebrate with lyrics, not just cake!", packageKey: 'personalPackage' },
+  { emoji: '💍', text: 'Got big plans? Surprise her with a sung proposal.', packageKey: 'personalPackage' },
+  { emoji: '💑', text: 'Years together? Hit play on your love story.', packageKey: 'personalPackage' },
+  { emoji: '👩‍👧', text: 'Your mom deserves more than just flowers.', packageKey: 'personalPackage' },
+  { emoji: '👰', text: "Want your wedding to stay in the heart's playlist?", packageKey: 'premiumPackage' },
+  { emoji: '🚗', text: "Just got a new car? Let's start it with rhythm.", packageKey: 'businessPackage' },
+  { emoji: '🧑‍💼', text: 'Started a new job? Celebrate in style!', packageKey: 'businessPackage' },
+  { emoji: '✨', text: 'And for any other "wow!" moment in life – we put it to music.', packageKey: 'giftPackage' }
 ];
 
 const ScenarioHero = () => {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const { t } = useLanguage();
+  const { t: tDb } = useTranslation();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,7 +34,7 @@ const ScenarioHero = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const { emoji, text } = scenarios[index];
+  const { emoji, text, packageKey } = scenarios[index];
 
   return (
     <section className="py-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
@@ -52,7 +54,7 @@ const ScenarioHero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {t('packagesTitle')}
+            {tDb(packageKey)}
           </motion.h1>
           <motion.p 
             className="text-lg md:text-xl opacity-90 max-w-3xl mx-auto leading-relaxed"
