@@ -1,11 +1,9 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import UserMenu from "@/components/UserMenu";
-
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +12,6 @@ const Navigation = () => {
     setLanguage,
     t
   } = useLanguage();
-
   const navItems = [{
     path: "/",
     label: t("home") || "Home"
@@ -34,20 +31,15 @@ const Navigation = () => {
     path: "/contact",
     label: t("contact") || "Contact"
   }];
-
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
-
   return <>
       {/* Background behind navbar */}
-      <div 
-        className="fixed top-0 left-0 w-full h-32 z-40"
-        style={{
-          backgroundImage: 'url(/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      ></div>
+      <div className="fixed top-0 left-0 w-full h-32 z-40" style={{
+      backgroundImage: 'url(/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}></div>
 
       {/* Floating Logo - responsive positioning */}
       <div className="fixed -top-4 left-2 sm:left-4 md:left-6 lg:left-10 z-[100]">
@@ -59,7 +51,7 @@ const Navigation = () => {
       {/* Navigation Bar */}
       <header className="fixed top-2 sm:top-4 w-full z-50 border-b border-gray-200 bg-white">        
         <div className="container mx-auto sm:px-0 md:px-0 my-0 relative z-10 px-[26px] py-0">
-          <div className="flex items-center justify-between h-16 sm:h-18 md:h-20 py-0">
+          <div className="flex items-center justify-between h-16 sm:h-18 md:h-20 py-[30px]">
             
             {/* Desktop Nav - positioned after logo */}
             <nav className="hidden lg:flex items-center ml-32 sm:ml-36 md:ml-48 lg:ml-56 xl:ml-60">
@@ -134,5 +126,4 @@ const Navigation = () => {
       </header>
     </>;
 };
-
 export default Navigation;
