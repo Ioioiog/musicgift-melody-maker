@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -6,56 +5,46 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import AnimatedStepFlow from "@/components/AnimatedStepFlow";
-
 const HowItWorks = () => {
-  const { t } = useLanguage();
-  
-  return (
-    <div className="min-h-screen">
+  const {
+    t
+  } = useLanguage();
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Purple Musical Background */}
-      <section 
-        className="py-20 text-white relative overflow-hidden"
-        style={{
-          backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
+      <section className="py-20 text-white relative overflow-hidden" style={{
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <motion.h1 
-            className="text-4xl md:text-6xl font-bold mb-6" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6 }}
-          >
-            {t('howItWorksTitle')}
-          </motion.h1>
-          <motion.p 
-            className="text-xl md:text-2xl opacity-90 mb-8" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            {t('howItWorksSubtitle')}
-          </motion.p>
-          <motion.h2 
-            className="text-3xl md:text-4xl font-bold mb-4" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
+          
+          
+          <motion.h2 className="text-3xl md:text-4xl font-bold mb-4" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.4
+        }}>
             {t('howItWorksProcessTitle')}
           </motion.h2>
-          <motion.p 
-            className="text-lg md:text-xl opacity-90" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
+          <motion.p className="text-lg md:text-xl opacity-90" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.5
+        }}>
             {t('howItWorksProcessSubtitle')}
           </motion.p>
         </div>
@@ -68,12 +57,16 @@ const HowItWorks = () => {
         <div className="absolute bottom-10 right-10 w-40 h-40 bg-blue-200/20 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-purple-100/10 to-blue-100/10 rounded-full blur-3xl" />
         
-        <motion.div
-          initial={{ opacity: 0, y: 30 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative z-10"
-        >
+        <motion.div initial={{
+        opacity: 0,
+        y: 30
+      }} animate={{
+        opacity: 1,
+        y: 0
+      }} transition={{
+        duration: 0.8,
+        delay: 0.3
+      }} className="relative z-10">
           <AnimatedStepFlow />
         </motion.div>
       </section>
@@ -81,11 +74,15 @@ const HowItWorks = () => {
       {/* CTA Section */}
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6 }}
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }}>
             <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('readyToStart')}</h2>
             <p className="text-xl text-gray-600 mb-8">{t('readyToStartContent')}</p>
             <Link to="/packages">
@@ -98,8 +95,6 @@ const HowItWorks = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default HowItWorks;
