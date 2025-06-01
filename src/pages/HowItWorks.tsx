@@ -1,42 +1,14 @@
 
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { ShoppingCart, MessageSquare, Music, Gift } from "lucide-react";
+import AnimatedStepFlow from "@/components/AnimatedStepFlow";
 
 const HowItWorks = () => {
   const { t } = useLanguage();
-
-  const steps = [
-    {
-      icon: ShoppingCart,
-      title: t('step1Title'),
-      description: t('step1Description'),
-      color: "bg-blue-100 text-blue-600"
-    },
-    {
-      icon: MessageSquare,
-      title: t('step2Title'),
-      description: t('step2Description'),
-      color: "bg-green-100 text-green-600"
-    },
-    {
-      icon: Music,
-      title: t('step3Title'),
-      description: t('step3Description'),
-      color: "bg-purple-100 text-purple-600"
-    },
-    {
-      icon: Gift,
-      title: t('step4Title'),
-      description: t('step4Description'),
-      color: "bg-orange-100 text-orange-600"
-    }
-  ];
   
   return (
     <div className="min-h-screen">
@@ -73,37 +45,44 @@ const HowItWorks = () => {
         </div>
       </section>
 
-      {/* Steps Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {steps.map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <Card className="h-full hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6 text-center">
-                    <div className={`w-16 h-16 rounded-full ${step.color} flex items-center justify-center mx-auto mb-4`}>
-                      <step.icon className="w-8 h-8" />
-                    </div>
-                    <div className="text-lg font-bold text-purple-600 mb-2">
-                      {t('step')} {index + 1}
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">{step.title}</h3>
-                    <p className="text-gray-600">{step.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+      {/* Animated Steps Section */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 via-purple-50/30 to-blue-50/20 relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute top-10 left-10 w-32 h-32 bg-purple-200/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-40 h-40 bg-blue-200/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-purple-100/10 to-blue-100/10 rounded-full blur-3xl" />
+        
+        <motion.div
+          initial={{ opacity: 0, y: 30 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="relative z-10"
+        >
+          <div className="text-center mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              Our Simple Process
+            </motion.h2>
+            <motion.p 
+              className="text-lg text-gray-600 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              Follow these easy steps to create your personalized musical gift
+            </motion.p>
           </div>
-        </div>
+          
+          <AnimatedStepFlow />
+        </motion.div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16">
+      <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }} 
