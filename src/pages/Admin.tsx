@@ -8,6 +8,8 @@ import OrdersManagement from "@/components/admin/OrdersManagement";
 import StaticPackageManager from "@/components/admin/StaticPackageManager";
 import NewsletterManagement from "@/components/admin/NewsletterManagement";
 import CampaignsManagement from "@/components/admin/CampaignsManagement";
+import StepsManagement from "@/components/admin/StepsManagement";
+import ValidationManagement from "@/components/admin/ValidationManagement";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 
@@ -27,12 +29,14 @@ const Admin = () => {
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-7">
                 <TabsTrigger value="packages">Packages</TabsTrigger>
                 <TabsTrigger value="orders">Orders</TabsTrigger>
                 <TabsTrigger value="users">Users</TabsTrigger>
                 <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
                 <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
+                <TabsTrigger value="steps">Steps</TabsTrigger>
+                <TabsTrigger value="validation">Validation</TabsTrigger>
               </TabsList>
 
               <TabsContent value="packages" className="space-y-6">
@@ -53,6 +57,14 @@ const Admin = () => {
 
               <TabsContent value="campaigns" className="space-y-6">
                 <CampaignsManagement />
+              </TabsContent>
+
+              <TabsContent value="steps" className="space-y-6">
+                <StepsManagement />
+              </TabsContent>
+
+              <TabsContent value="validation" className="space-y-6">
+                <ValidationManagement />
               </TabsContent>
             </Tabs>
           </div>
