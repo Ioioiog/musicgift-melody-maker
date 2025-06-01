@@ -49,7 +49,7 @@ const Navigation = () => {
             {/* Logo - enhanced */}
             <div className="flex items-center">
               <Link to="/" className="block group">
-                <img alt="MusicGift Logo" src="/lovable-uploads/fc25a6ff-2842-4b54-a3a9-a38754893226.png" className="h-14 w-auto sm:h-16 md:h-18 lg:h-20 transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:drop-shadow-lg" />
+                <img alt="MusicGift Logo" src="/lovable-uploads/498505b7-a0a3-4796-a3eb-940dd9e1bab0.png" className="h-30 w-auto sm:h-16 md:h-18 lg:h-20 transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:drop-shadow-lg" />
               </Link>
             </div>
 
