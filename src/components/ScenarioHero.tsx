@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslations';
 import { Gift, Heart, Users, Crown, Sparkles, Diamond, Car, Briefcase, Building, Mic, Music, RotateCcw, FileMusic, Star, Package, Cake, HeartHandshake, UserCheck, PartyPopper, Award, TrendingUp, Headphones, Volume2, Shuffle } from 'lucide-react';
-
 const scenarios = [
 // Personal Package scenarios
 {
@@ -103,17 +102,16 @@ const ScenarioHero = () => {
     text,
     packageKey
   } = scenarios[index];
-  return (
-    <section className="relative h-30 flex items-center justify-center overflow-hidden">
+  return <section className="relative h-30 flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-        backgroundImage: `url('/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png')`
-      }} />
+      backgroundImage: `url('/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png')`
+    }} />
       
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-slate-800/75 to-slate-900/85"></div>
       
       <div style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-      }} className="absolute inset-0 opacity-50 py-0"></div>
+      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+    }} className="absolute inset-0 opacity-50 py-0"></div>
 
       <div className="relative z-10 max-w-5xl text-center px-[73px] my-0 mx-0 py-[12px]">
         <motion.div className={`transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`} initial={{
@@ -125,8 +123,8 @@ const ScenarioHero = () => {
       }} transition={{
         duration: 0.6
       }}>
-          <div className="flex justify-center mb-8">
-            <div className="relative">
+          <div className="flex justify-center mb-8 my-0">
+            <div className="relative py-0">
               <div className="absolute inset-0 bg-white/10 rounded-full blur-xl"></div>
               <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-full p-6">
                 <IconComponent size={64} className="text-white drop-shadow-2xl" strokeWidth={1.5} />
@@ -144,40 +142,24 @@ const ScenarioHero = () => {
           duration: 0.6,
           delay: 0.2
         }}>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight">
-              <span className="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight tracking-tight lg:text-7xl">
+              <span className="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent text-5xl">
                 {tDb(packageKey)}
               </span>
             </h1>
             
             <div className="max-w-4xl mx-auto">
-              <p className="text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed font-light tracking-wide">
+              <p className="text-lg md:text-xl text-gray-200 leading-relaxed font-light tracking-wide lg:text-base text-center py-0">
                 {text}
               </p>
             </div>
           </motion.div>
 
-          <motion.div className="mt-12 flex justify-center" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.4
-        }}>
-            <div className="flex space-x-2">
-              {[...Array(3)].map((_, i) => <div key={i} className="w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{
-              animationDelay: `${i * 0.2}s`
-            }} />)}
-            </div>
-          </motion.div>
+          
         </motion.div>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-22 bg-gradient-to-t from-gray-50 to-transparent"></div>
-    </section>
-  );
+    </section>;
 };
 export default ScenarioHero;
