@@ -83,47 +83,91 @@ const About = () => {
                 </p>
               </motion.div>
 
-              {/* Creative Team Section */}
+              {/* Our Creative Team Title and Cards */}
               <motion.div 
-                className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-8"
+                className="mt-16"
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }} 
                 transition={{ duration: 0.6, delay: 0.7 }}
               >
-                <h3 className="text-2xl font-bold text-white mb-6 text-center">Our Creative Team</h3>
+                <h3 className="text-3xl font-bold text-white mb-12 text-center">Our Creative Team</h3>
                 
-                <div className="space-y-6">
-                  {/* Mihai Gruia */}
-                  <div>
-                    <h4 className="text-xl font-bold text-white mb-3">🎵 Mihai Gruia</h4>
-                    <p className="text-white/90 leading-relaxed">
-                      Music producer and composer, founding member of Akcent – one of the most successful Romanian pop bands internationally, with famous hits like 'That's My Name', 'Kylie' and 'Stay with Me'. After Akcent's success, Mihai continued his artistic career through the TWO project and got involved in music production for top artists. Today, he coordinates the MusicGift and DOMG Studio team, bringing his expertise to every delivered project.
-                    </p>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Mihai Gruia Card */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    transition={{ duration: 0.6, delay: 0.8 }}
+                  >
+                    <Card className="h-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
+                      <CardContent className="p-8">
+                        <div className="text-center mb-6">
+                          <div className="text-4xl mb-4">🎵</div>
+                          <h4 className="text-xl font-bold text-white mb-3">Mihai Gruia</h4>
+                        </div>
+                        <p className="text-white/90 leading-relaxed text-sm">
+                          Music producer and composer, founding member of Akcent – one of the most successful Romanian pop bands internationally, with famous hits like 'That's My Name', 'Kylie' and 'Stay with Me'. After Akcent's success, Mihai continued his artistic career through the TWO project and got involved in music production for top artists. Today, he coordinates the MusicGift and DOMG Studio team, bringing his expertise to every delivered project.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
 
-                  {/* Mango Records */}
-                  <div>
-                    <h4 className="text-xl font-bold text-white mb-3">🥭 Mango Records</h4>
-                    <p className="text-white/90 leading-relaxed">
-                      Mango Records, founded and coordinated by Mihai Gruia, is an independent record label from Romania, specialized in launching and distributing original music internationally. It has promoted successful artists like TWO (ex-Akcent), DOMG, Mellina, Red Blonde, Pitt Leffer, Katerina and Vulgaris. With over 1000 tracks distributed globally on Spotify, Apple Music and YouTube, Mango Records actively contributes to the contemporary music scene. It has also achieved successful commercial collaborations with international brands.
-                    </p>
-                  </div>
+                  {/* Mango Records Card */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    transition={{ duration: 0.6, delay: 0.9 }}
+                  >
+                    <Card className="h-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
+                      <CardContent className="p-8">
+                        <div className="text-center mb-6">
+                          <div className="text-4xl mb-4">🥭</div>
+                          <h4 className="text-xl font-bold text-white mb-3">Mango Records</h4>
+                        </div>
+                        <p className="text-white/90 leading-relaxed text-sm">
+                          Mango Records, founded and coordinated by Mihai Gruia, is an independent record label from Romania, specialized in launching and distributing original music internationally. It has promoted successful artists like TWO (ex-Akcent), DOMG, Mellina, Red Blonde, Pitt Leffer, Katerina and Vulgaris. With over 1000 tracks distributed globally on Spotify, Apple Music and YouTube, Mango Records actively contributes to the contemporary music scene.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
 
-                  {/* DOMG Studio */}
-                  <div>
-                    <h4 className="text-xl font-bold text-white mb-3">🎚️ DOMG Studio</h4>
-                    <p className="text-white/90 leading-relaxed">
-                      Premium music creation studio, with compositions for top Romanian and international artists: Akcent, Andra, Lora, Alina Eremia and others. Offers impeccable audio quality and professional composition, recording and mix-master processes.
-                    </p>
-                  </div>
+                  {/* DOMG Studio Card */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    transition={{ duration: 0.6, delay: 1.0 }}
+                  >
+                    <Card className="h-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
+                      <CardContent className="p-8">
+                        <div className="text-center mb-6">
+                          <div className="text-4xl mb-4">🎚️</div>
+                          <h4 className="text-xl font-bold text-white mb-3">DOMG Studio</h4>
+                        </div>
+                        <p className="text-white/90 leading-relaxed text-sm">
+                          Premium music creation studio, with compositions for top Romanian and international artists: Akcent, Andra, Lora, Alina Eremia and others. Offers impeccable audio quality and professional composition, recording and mix-master processes.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
 
-                  {/* Do Music for Good Band */}
-                  <div>
-                    <h4 className="text-xl font-bold text-white mb-3">🎤 Do Music for Good Band</h4>
-                    <p className="text-white/90 leading-relaxed">
-                      A team of professional performers who collaborate to bring MusicGift melodies to life. Each voice and each note are carefully chosen to authentically express the emotion conveyed by the client.
-                    </p>
-                  </div>
+                  {/* Do Music for Good Band Card */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    transition={{ duration: 0.6, delay: 1.1 }}
+                  >
+                    <Card className="h-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
+                      <CardContent className="p-8">
+                        <div className="text-center mb-6">
+                          <div className="text-4xl mb-4">🎤</div>
+                          <h4 className="text-xl font-bold text-white mb-3">Do Music for Good Band</h4>
+                        </div>
+                        <p className="text-white/90 leading-relaxed text-sm">
+                          A team of professional performers who collaborate to bring MusicGift melodies to life. Each voice and each note are carefully chosen to authentically express the emotion conveyed by the client.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 </div>
               </motion.div>
             </div>
