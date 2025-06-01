@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -25,6 +24,7 @@ interface Field {
   id: string;
   field_name: string;
   field_type: string;
+  label_key?: string;
   placeholder_key?: string;
   required: boolean;
   field_order: number;
@@ -132,6 +132,22 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
             required={field.required}
             className="min-h-[100px] w-full"
           />
+        );
+
+      case 'audio':
+        return (
+          <div className="space-y-2">
+            <AudioRecorder
+              value={value || null}
+              onChange={(audioFile) => onChange(audioFile)}
+              maxDuration={45}
+            />
+            {field.placeholder_key && (
+              <p className="text-sm text-gray-600">
+                {t(field.placeholder_key)}
+              </p>
+            )}
+          </div>
         );
 
       case 'select':
@@ -318,7 +334,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   return (
     <div className="space-y-3">
       <Label className="text-sm font-medium text-gray-700">
-        {field.field_name === 'package' ? t('selectYourPackage') : field.placeholder_key ? t(field.placeholder_key) : field.field_name}
+        {field.label_key ? t(field.label_key) : field.field_name === 'package' ? t('selectYourPackage') : field.field_name}
         {field.required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       {renderField()}

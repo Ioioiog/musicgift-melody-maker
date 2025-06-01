@@ -1,149 +1,111 @@
-export interface PackageData {
-  id: string;
-  value: string;
-  label_key: string;
-  price: number;
-  tagline_key?: string;
-  description_key?: string;
-  delivery_time_key?: string;
-  tags: Array<{
-    tag_type: string;
-    tag_label_key?: string;
-    styling_class?: string;
-  }>;
-  includes: Array<{
-    include_key: string;
-    include_order: number;
-  }>;
-  steps: Array<{
-    step_number: number;
-    title_key: string;
-    step_order: number;
-    fields: Array<{
-      field_name: string;
-      field_type: string;
-      placeholder_key?: string;
-      required: boolean;
-      field_order: number;
-      options?: Array<{ value: string; label_key: string; }>;
-      validations: any[];
-      dependencies: any[];
-    }>;
-  }>;
-  addons: any[];
-}
+import { Package } from '@/types';
 
-export const packages: PackageData[] = [
+export const packages: Package[] = [
   {
-    id: "personal-package-id",
     value: "personal",
     label_key: "personalPackage",
-    price: 300,
     tagline_key: "personalTagline",
     description_key: "personalDescription",
+    price: 300,
     delivery_time_key: "personalDelivery",
-    tags: [
-      {
-        tag_type: "popular",
-        tag_label_key: "popularTag",
-        styling_class: "bg-blue-100 text-blue-800"
-      }
-    ],
+    tag: "popular",
     includes: [
-      { include_key: "personalInclude1", include_order: 1 },
-      { include_key: "personalInclude2", include_order: 2 },
-      { include_key: "personalInclude3", include_order: 3 },
-      { include_key: "personalInclude4", include_order: 4 }
+      { include_key: "personalInclude1" },
+      { include_key: "personalInclude2" },
+      { include_key: "personalInclude3" },
+      { include_key: "personalInclude4" }
     ],
     steps: [
       {
+        id: "personal-step-1",
         step_number: 1,
         title_key: "songStoryStep",
-        step_order: 1,
         fields: [
           {
+            id: "recipient",
             field_name: "recipient",
             field_type: "text",
+            label_key: "recipientLabel",
             placeholder_key: "recipientPlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "includeNameInSong",
             field_name: "includeNameInSong",
             field_type: "checkbox",
+            label_key: "includeNameInSongLabel",
             placeholder_key: "includeNameInSongPlaceholder",
             required: false,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 2
           },
           {
+            id: "pronunciationAudio",
             field_name: "pronunciationAudio",
-            field_type: "audio-recorder",
+            field_type: "audio",
+            label_key: "pronunciationAudioLabel",
             placeholder_key: "pronunciationAudioPlaceholder",
             required: false,
-            field_order: 3,
-            validations: [],
-            dependencies: []
+            field_order: 3
           },
           {
+            id: "relationshipText",
             field_name: "relationshipText",
             field_type: "text",
+            label_key: "relationshipTextLabel",
             placeholder_key: "relationshipTextPlaceholder",
-            required: false,
-            field_order: 4,
-            validations: [],
-            dependencies: []
+            required: true,
+            field_order: 4
           },
           {
-            field_name: "story",
+            id: "storyDetailed",
+            field_name: "storyDetailed",
             field_type: "textarea",
+            label_key: "storyDetailedLabel",
             placeholder_key: "storyDetailedPlaceholder",
             required: true,
-            field_order: 5,
-            validations: [],
-            dependencies: []
+            field_order: 5
           },
           {
+            id: "keywords",
             field_name: "keywords",
             field_type: "text",
+            label_key: "keywordsLabel",
             placeholder_key: "keywordsPlaceholder",
             required: false,
-            field_order: 6,
-            validations: [],
-            dependencies: []
+            field_order: 6
           },
           {
+            id: "keywordsAudio",
             field_name: "keywordsAudio",
-            field_type: "audio-recorder",
+            field_type: "audio",
+            label_key: "keywordsAudioLabel",
             placeholder_key: "keywordsAudioPlaceholder",
             required: false,
-            field_order: 7,
-            validations: [],
-            dependencies: []
+            field_order: 7
           }
         ]
       },
       {
+        id: "personal-step-2",
         step_number: 2,
         title_key: "musicalPreferencesStep",
-        step_order: 2,
         fields: [
           {
+            id: "styleReference",
             field_name: "styleReference",
             field_type: "text",
+            label_key: "styleReferenceLabel",
             placeholder_key: "styleReferencePlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "mood",
             field_name: "mood",
             field_type: "select",
-            placeholder_key: "vibePlaceholder",
+            label_key: "Atmosfera dorită",
+            placeholder_key: "Selectează atmosfera",
             required: true,
             field_order: 2,
             options: [
@@ -155,945 +117,751 @@ export const packages: PackageData[] = [
               { value: "inspirational", label_key: "moodInspirational" },
               { value: "emotional", label_key: "moodEmotional" },
               { value: "uplifting", label_key: "moodUplifting" }
-            ],
-            validations: [],
-            dependencies: []
+            ]
           },
           {
+            id: "voiceGender",
             field_name: "voiceGender",
             field_type: "select",
-            placeholder_key: "vibePlaceholder",
+            label_key: "Tip de voce preferat",
+            placeholder_key: "Selectează tipul de voce",
             required: true,
             field_order: 3,
             options: [
               { value: "feminine", label_key: "voiceFeminine" },
               { value: "masculine", label_key: "voiceMasculine" },
               { value: "duet", label_key: "voiceDuet" },
-              { value: "musicgift-choice", label_key: "voiceMusicGiftChoice" }
-            ],
-            validations: [],
-            dependencies: []
+              { value: "musicgift_choice", label_key: "voiceMusicGiftChoice" }
+            ]
           },
           {
+            id: "youtubeExample",
             field_name: "youtubeExample",
-            field_type: "text",
+            field_type: "url",
+            label_key: "youtubeExampleLabel",
             placeholder_key: "youtubeExamplePlaceholder",
             required: false,
-            field_order: 4,
-            validations: [],
-            dependencies: []
+            field_order: 4
           },
           {
+            id: "language",
             field_name: "language",
             field_type: "select",
-            placeholder_key: "songLanguagePlaceholder",
+            label_key: "Limba piesei",
+            placeholder_key: "Selectează limba",
             required: true,
             field_order: 5,
             options: [
               { value: "ro", label_key: "romanianLanguage" },
               { value: "en", label_key: "englishLanguage" },
               { value: "fr", label_key: "frenchLanguage" }
-            ],
-            validations: [],
-            dependencies: []
+            ]
           }
         ]
       },
       {
+        id: "personal-step-3",
         step_number: 3,
         title_key: "addonsStep",
-        step_order: 3,
         fields: [
           {
+            id: "addons",
             field_name: "addons",
             field_type: "checkbox-group",
-            placeholder_key: "selectAddonsPlaceholder",
+            label_key: "Opțiuni suplimentare",
+            placeholder_key: "Selectează opțiunile dorite",
             required: false,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           }
         ]
       },
       {
+        id: "personal-step-4",
         step_number: 4,
         title_key: "contactDetailsStep",
-        step_order: 4,
         fields: [
           {
+            id: "fullName",
             field_name: "fullName",
             field_type: "text",
+            label_key: "Numele complet",
             placeholder_key: "fullNamePlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "email",
             field_name: "email",
             field_type: "email",
+            label_key: "Adresa de email",
             placeholder_key: "emailPlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 2
           },
           {
+            id: "phone",
             field_name: "phone",
-            field_type: "text",
+            field_type: "tel",
+            label_key: "Telefon",
             placeholder_key: "phonePlaceholder",
             required: true,
-            field_order: 3,
-            validations: [],
-            dependencies: []
+            field_order: 3
           }
         ]
       },
       {
+        id: "personal-step-5",
         step_number: 5,
         title_key: "legalAcceptancesStep",
-        step_order: 5,
         fields: [
           {
+            id: "termsMentionMusicGift",
             field_name: "termsMentionMusicGift",
             field_type: "checkbox",
+            label_key: "Mențiune MusicGift",
             placeholder_key: "termsMentionMusicGiftPlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "confirmOrder",
             field_name: "confirmOrder",
             field_type: "checkbox",
+            label_key: "Confirmare comandă",
             placeholder_key: "confirmOrderPlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 2
           },
           {
+            id: "acceptTermsAndConditions",
             field_name: "acceptTermsAndConditions",
             field_type: "checkbox",
+            label_key: "Termeni și condiții",
             placeholder_key: "acceptTermsAndConditionsPlaceholder",
             required: true,
-            field_order: 3,
-            validations: [],
-            dependencies: []
+            field_order: 3
           }
         ]
       }
-    ],
-    addons: []
+    ]
   },
   {
-    id: "premium-package-id",
     value: "premium",
     label_key: "premiumPackage",
-    price: 500,
     tagline_key: "premiumTagline",
     description_key: "premiumDescription",
+    price: 2500,
     delivery_time_key: "premiumDelivery",
-    tags: [
-      {
-        tag_type: "hot",
-        tag_label_key: "popularTag",
-        styling_class: "bg-red-100 text-red-800"
-      }
-    ],
+    tag: "premium",
     includes: [
-      { include_key: "premiumInclude1", include_order: 1 },
-      { include_key: "premiumInclude2", include_order: 2 },
-      { include_key: "premiumInclude3", include_order: 3 }
+      { include_key: "premiumInclude1" },
+      { include_key: "premiumInclude2" },
+      { include_key: "premiumInclude3" }
     ],
     steps: [
       {
+        id: "premium-step-1",
         step_number: 1,
-        title_key: "forWhomIsSongStep",
-        step_order: 1,
+        title_key: "personalDetailsStep",
         fields: [
           {
-            field_name: "recipientName",
-            field_type: "text",
-            placeholder_key: "recipientNamePlaceholder",
-            required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "recipientNamePronunciation",
-            field_type: "file",
-            placeholder_key: "recipientNamePronunciationPlaceholder",
-            required: false,
-            field_order: 2,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "relationship",
-            field_type: "select",
-            placeholder_key: "relationshipPlaceholder",
-            required: false,
-            field_order: 3,
-            options: [
-              { value: "partner", label_key: "relationshipPartner" },
-              { value: "family", label_key: "relationshipFamily" },
-              { value: "friend", label_key: "relationshipFriend" },
-              { value: "colleague", label_key: "relationshipColleague" },
-              { value: "other", label_key: "relationshipOther" }
-            ],
-            validations: [],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        step_number: 2,
-        title_key: "yourContactDetailsStep",
-        step_order: 2,
-        fields: [
-          {
+            id: "fullName",
             field_name: "fullName",
             field_type: "text",
             placeholder_key: "fullNamePlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "email",
             field_name: "email",
             field_type: "email",
             placeholder_key: "emailPlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 2
           },
           {
+            id: "phone",
             field_name: "phone",
-            field_type: "text",
+            field_type: "tel",
             placeholder_key: "phonePlaceholder",
             required: true,
-            field_order: 3,
-            validations: [],
-            dependencies: []
+            field_order: 3
           },
           {
+            id: "language",
             field_name: "language",
             field_type: "select",
             placeholder_key: "songLanguagePlaceholder",
             required: true,
             field_order: 4,
             options: [
-              { value: "ro", label_key: "romanianLanguage" },
-              { value: "en", label_key: "englishLanguage" },
-              { value: "fr", label_key: "frenchLanguage" }
-            ],
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "occasion",
-            field_type: "text",
-            placeholder_key: "occasionPlaceholder",
-            required: false,
-            field_order: 5,
-            validations: [],
-            dependencies: []
+              { value: "ro", label_key: "Română" },
+              { value: "en", label_key: "English" },
+              { value: "fr", label_key: "Français" }
+            ]
           }
         ]
       },
       {
-        step_number: 3,
+        id: "premium-step-2",
+        step_number: 2,
         title_key: "yourStoryStep",
-        step_order: 3,
         fields: [
           {
+            id: "occasion",
+            field_name: "occasion",
+            field_type: "text",
+            placeholder_key: "occasionPlaceholder",
+            required: true,
+            field_order: 1
+          },
+          {
+            id: "pronunciationRecording",
+            field_name: "pronunciationRecording",
+            field_type: "file",
+            placeholder_key: "pronunciationRecordingPlaceholder",
+            required: false,
+            field_order: 2
+          },
+          {
+            id: "story",
             field_name: "story",
             field_type: "textarea",
             placeholder_key: "storyPlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 3
           },
           {
+            id: "vibe",
             field_name: "vibe",
             field_type: "text",
             placeholder_key: "vibePlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 4
           },
           {
+            id: "youtubeLinks",
             field_name: "youtubeLinks",
-            field_type: "text",
+            field_type: "textarea",
             placeholder_key: "youtubeLinksPlaceholder",
             required: false,
-            field_order: 3,
-            validations: [],
-            dependencies: []
+            field_order: 5
           },
           {
+            id: "importantKeywords",
             field_name: "importantKeywords",
             field_type: "text",
             placeholder_key: "importantKeywordsPlaceholder",
             required: false,
-            field_order: 4,
-            validations: [],
-            dependencies: []
+            field_order: 6
           },
           {
-            field_name: "keywordsPronunciationRecording",
+            id: "keywordsPronunciation",
+            field_name: "keywordsPronunciation",
             field_type: "file",
             placeholder_key: "keywordsPronunciationPlaceholder",
             required: false,
-            field_order: 5,
-            validations: [],
-            dependencies: []
+            field_order: 7
           }
         ]
       },
       {
-        step_number: 4,
+        id: "premium-step-3",
+        step_number: 3,
         title_key: "addonsStep",
-        step_order: 4,
         fields: [
           {
+            id: "addons",
             field_name: "addons",
             field_type: "checkbox-group",
             placeholder_key: "selectAddonsPlaceholder",
             required: false,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           }
         ]
       },
       {
-        step_number: 5,
+        id: "premium-step-4",
+        step_number: 4,
         title_key: "distributionConfirmationStep",
-        step_order: 5,
         fields: [
           {
+            id: "acceptMention",
+            field_name: "acceptMention",
+            field_type: "checkbox",
+            placeholder_key: "acceptMentionPlaceholder",
+            required: true,
+            field_order: 1
+          },
+          {
+            id: "acceptMangoDistribution",
             field_name: "acceptMangoDistribution",
             field_type: "checkbox",
             placeholder_key: "acceptMangoDistributionPlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 2
           }
         ]
       }
-    ],
-    addons: []
+    ]
   },
   {
-    id: "business-package-id",
     value: "business",
     label_key: "businessPackage",
-    price: 500,
     tagline_key: "businessTagline",
     description_key: "businessDescription",
+    price: 1500,
     delivery_time_key: "businessDelivery",
-    tags: [
-      {
-        tag_type: "popular",
-        tag_label_key: "popularTag",
-        styling_class: "bg-blue-100 text-blue-800"
-      }
-    ],
+    tag: "new",
     includes: [
-      { include_key: "businessInclude1", include_order: 1 },
-      { include_key: "businessInclude2", include_order: 2 },
-      { include_key: "businessInclude3", include_order: 3 },
-      { include_key: "businessInclude4", include_order: 4 }
+      { include_key: "businessInclude1" },
+      { include_key: "businessInclude2" },
+      { include_key: "businessInclude3" },
+      { include_key: "businessInclude4" }
     ],
     steps: [
       {
+        id: "business-step-1",
         step_number: 1,
-        title_key: "forWhichCompanyIsSongStep",
-        step_order: 1,
+        title_key: "companyDetailsStep",
         fields: [
           {
+            id: "companyName",
             field_name: "companyName",
             field_type: "text",
-            placeholder_key: "companyNameForSongPlaceholder",
+            placeholder_key: "companyNamePlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
-            field_name: "companyNamePronunciation",
-            field_type: "file",
-            placeholder_key: "companyNamePronunciationPlaceholder",
-            required: false,
-            field_order: 2,
-            validations: [],
-            dependencies: []
-          },
-          {
+            id: "contactPerson",
             field_name: "contactPerson",
             field_type: "text",
             placeholder_key: "contactPersonPlaceholder",
             required: true,
-            field_order: 3,
-            validations: [],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        step_number: 2,
-        title_key: "contactAndBillingDetailsStep",
-        step_order: 2,
-        fields: [
+            field_order: 2
+          },
           {
+            id: "email",
             field_name: "email",
             field_type: "email",
             placeholder_key: "emailPlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 3
           },
           {
+            id: "phone",
             field_name: "phone",
-            field_type: "text",
+            field_type: "tel",
             placeholder_key: "phonePlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 4
           },
           {
-            field_name: "language",
-            field_type: "select",
-            placeholder_key: "songLanguagePlaceholder",
-            required: true,
-            field_order: 3,
-            options: [
-              { value: "ro", label_key: "romanianLanguage" },
-              { value: "en", label_key: "englishLanguage" },
-              { value: "fr", label_key: "frenchLanguage" }
-            ],
-            validations: [],
-            dependencies: []
+            id: "companyPronunciation",
+            field_name: "companyPronunciation",
+            field_type: "file",
+            placeholder_key: "companyPronunciationPlaceholder",
+            required: false,
+            field_order: 5
           }
         ]
       },
       {
-        step_number: 3,
+        id: "business-step-2",
+        step_number: 2,
         title_key: "brandStoryStep",
-        step_order: 3,
         fields: [
           {
+            id: "brandStory",
             field_name: "brandStory",
             field_type: "textarea",
             placeholder_key: "brandStoryPlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "keyValues",
             field_name: "keyValues",
-            field_type: "text",
+            field_type: "textarea",
             placeholder_key: "keyValuesPlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 2
           },
           {
-            field_name: "youtubeLinks",
-            field_type: "text",
+            id: "inspirationLinks",
+            field_name: "inspirationLinks",
+            field_type: "textarea",
             placeholder_key: "inspirationLinksPlaceholder",
             required: false,
-            field_order: 3,
-            validations: [],
-            dependencies: []
+            field_order: 3
           }
         ]
       },
       {
-        step_number: 4,
+        id: "business-step-3",
+        step_number: 3,
         title_key: "addonsStep",
-        step_order: 4,
         fields: [
           {
+            id: "addons",
             field_name: "addons",
             field_type: "checkbox-group",
             placeholder_key: "selectAddonsPlaceholder",
             required: false,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           }
         ]
       }
-    ],
-    addons: []
+    ]
   },
   {
-    id: "artist-package-id",
     value: "artist",
     label_key: "artistPackage",
-    price: 8000,
     tagline_key: "artistTagline",
     description_key: "artistDescription",
+    price: 1200,
     delivery_time_key: "artistDelivery",
-    tags: [
-      {
-        tag_type: "premium",
-        tag_label_key: "premiumTag",
-        styling_class: "bg-purple-100 text-purple-800"
-      }
-    ],
+    tag: "new",
     includes: [
-      { include_key: "artistInclude1", include_order: 1 },
-      { include_key: "artistInclude2", include_order: 2 },
-      { include_key: "artistInclude3", include_order: 3 },
-      { include_key: "artistInclude4", include_order: 4 }
+      { include_key: "artistInclude1" },
+      { include_key: "artistInclude2" },
+      { include_key: "artistInclude3" },
+      { include_key: "artistInclude4" }
     ],
     steps: [
       {
+        id: "artist-step-1",
         step_number: 1,
-        title_key: "choosePackageStep",
-        step_order: 1,
-        fields: [
-          {
-            field_name: "package",
-            field_type: "select",
-            placeholder_key: "chooseArtistPackage",
-            required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        step_number: 2,
         title_key: "artisticDataStep",
-        step_order: 2,
         fields: [
           {
+            id: "artistName",
             field_name: "artistName",
             field_type: "text",
             placeholder_key: "artistNamePlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "email",
             field_name: "email",
             field_type: "email",
             placeholder_key: "emailPlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 2
           },
           {
+            id: "phone",
             field_name: "phone",
-            field_type: "text",
+            field_type: "tel",
             placeholder_key: "phonePlaceholder",
             required: true,
-            field_order: 3,
-            validations: [],
-            dependencies: []
+            field_order: 3
           },
           {
-            field_name: "language",
-            field_type: "select",
-            placeholder_key: "songLanguagePlaceholder",
-            required: true,
-            field_order: 4,
-            options: [
-              { value: "ro", label_key: "romanianLanguage" },
-              { value: "en", label_key: "englishLanguage" },
-              { value: "fr", label_key: "frenchLanguage" }
-            ],
-            validations: [],
-            dependencies: []
-          },
-          {
+            id: "mediaLinks",
             field_name: "mediaLinks",
-            field_type: "text",
+            field_type: "textarea",
             placeholder_key: "mediaLinksPlaceholder",
             required: false,
-            field_order: 5,
-            validations: [],
-            dependencies: []
+            field_order: 4
           },
           {
+            id: "pressLinks",
             field_name: "pressLinks",
-            field_type: "text",
+            field_type: "textarea",
             placeholder_key: "pressLinksPlaceholder",
             required: false,
-            field_order: 6,
-            validations: [],
-            dependencies: []
+            field_order: 5
           }
         ]
       },
       {
-        step_number: 3,
+        id: "artist-step-2",
+        step_number: 2,
         title_key: "songConceptStep",
-        step_order: 3,
         fields: [
           {
-            field_name: "vision",
+            id: "musicalVision",
+            field_name: "musicalVision",
             field_type: "textarea",
             placeholder_key: "musicalVisionPlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "youtubeLinks",
-            field_type: "text",
-            placeholder_key: "youtubeLinksPlaceholder",
-            required: false,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 1
           }
         ]
       },
       {
-        step_number: 4,
+        id: "artist-step-3",
+        step_number: 3,
         title_key: "processAcceptanceStep",
-        step_order: 4,
         fields: [
           {
+            id: "acceptProcess",
             field_name: "acceptProcess",
             field_type: "checkbox",
             placeholder_key: "acceptProcessPlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "acceptContact",
             field_name: "acceptContact",
             field_type: "checkbox",
             placeholder_key: "acceptContactPlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 2
           }
         ]
       }
-    ],
-    addons: []
+    ]
   },
   {
-    id: "remix-package-id",
     value: "remix",
     label_key: "remixPackage",
-    price: 500,
     tagline_key: "remixTagline",
     description_key: "remixDescription",
+    price: 800,
     delivery_time_key: "remixDelivery",
-    tags: [],
+    tag: "new",
     includes: [
-      { include_key: "remixInclude1", include_order: 1 },
-      { include_key: "remixInclude2", include_order: 2 },
-      { include_key: "remixInclude3", include_order: 3 },
-      { include_key: "remixInclude4", include_order: 4 },
-      { include_key: "remixInclude5", include_order: 5 },
-      { include_key: "remixInclude6", include_order: 6 }
+      { include_key: "remixInclude1" },
+      { include_key: "remixInclude2" },
+      { include_key: "remixInclude3" },
+      { include_key: "remixInclude4" },
+      { include_key: "remixInclude5" },
+      { include_key: "remixInclude6" }
     ],
     steps: [
       {
+        id: "remix-step-1",
         step_number: 1,
         title_key: "remixInfoStep",
-        step_order: 1,
         fields: [
           {
+            id: "originalSongLink",
             field_name: "originalSongLink",
-            field_type: "text",
+            field_type: "url",
             placeholder_key: "originalSongLinkPlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "uploadWAV",
             field_name: "uploadWAV",
             field_type: "file",
             placeholder_key: "uploadWAVPlaceholder",
-            required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            required: false,
+            field_order: 2
           },
           {
-            field_name: "genre",
+            id: "remixGenre",
+            field_name: "remixGenre",
             field_type: "text",
             placeholder_key: "remixGenrePlaceholder",
             required: true,
-            field_order: 3,
-            validations: [],
-            dependencies: []
+            field_order: 3
           }
         ]
       },
       {
+        id: "remix-step-2",
         step_number: 2,
         title_key: "legalityContactStep",
-        step_order: 2,
         fields: [
           {
+            id: "ownershipConfirmation",
             field_name: "ownershipConfirmation",
             field_type: "checkbox",
             placeholder_key: "ownershipConfirmationPlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
-            field_name: "acceptContact",
-            field_type: "checkbox",
-            placeholder_key: "acceptContactPlaceholder",
-            required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
-          }
-        ]
-      }
-    ],
-    addons: []
-  },
-  {
-    id: "instrumental-package-id",
-    value: "instrumental",
-    label_key: "instrumentalPackage",
-    price: 500,
-    tagline_key: "instrumentalTagline",
-    description_key: "instrumentalDescription",
-    delivery_time_key: "instrumentalDelivery",
-    tags: [],
-    includes: [
-      { include_key: "instrumentalInclude1", include_order: 1 },
-      { include_key: "instrumentalInclude2", include_order: 2 },
-      { include_key: "instrumentalInclude3", include_order: 3 },
-      { include_key: "instrumentalInclude4", include_order: 4 },
-      { include_key: "instrumentalInclude5", include_order: 5 }
-    ],
-    steps: [
-      {
-        step_number: 1,
-        title_key: "artisticDetailsStep",
-        step_order: 1,
-        fields: [
-          {
-            field_name: "artistName",
+            id: "fullName",
+            field_name: "fullName",
             field_type: "text",
-            placeholder_key: "artistNamePlaceholder",
+            placeholder_key: "fullNamePlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 2
           },
           {
+            id: "email",
             field_name: "email",
             field_type: "email",
             placeholder_key: "emailPlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 3
           },
           {
+            id: "phone",
             field_name: "phone",
-            field_type: "text",
+            field_type: "tel",
             placeholder_key: "phonePlaceholder",
             required: true,
-            field_order: 3,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "language",
-            field_type: "select",
-            placeholder_key: "titleLanguagePlaceholder",
-            required: true,
-            field_order: 4,
-            options: [
-              { value: "ro", label_key: "romanianLanguage" },
-              { value: "en", label_key: "englishLanguage" },
-              { value: "fr", label_key: "frenchLanguage" }
-            ],
-            validations: [],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        step_number: 2,
-        title_key: "visionStyleStep",
-        step_order: 2,
-        fields: [
-          {
-            field_name: "genre",
-            field_type: "text",
-            placeholder_key: "instrumentalGenrePlaceholder",
-            required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "mood",
-            field_type: "text",
-            placeholder_key: "moodAtmospherePlaceholder",
-            required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "youtubeLinks",
-            field_type: "text",
-            placeholder_key: "youtubeLinksPlaceholder",
-            required: false,
-            field_order: 3,
-            validations: [],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        step_number: 3,
-        title_key: "extraOptionsStep",
-        step_order: 3,
-        fields: [
-          {
-            field_name: "addons",
-            field_type: "checkbox-group",
-            placeholder_key: "selectAddonsPlaceholder",
-            required: false,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 4
           }
         ]
       }
-    ],
-    addons: []
+    ]
   },
   {
-    id: "gift-package-id",
-    value: "gift",
-    label_key: "giftPackage",
-    price: 0,
-    tagline_key: "giftTagline",
-    description_key: "giftDescription",
-    delivery_time_key: "giftDelivery",
-    tags: [
-      {
-        tag_type: "special",
-        tag_label_key: "giftTag",
-        styling_class: "bg-pink-100 text-pink-800"
-      }
-    ],
+    value: "instrumental",
+    label_key: "instrumentalPackage",
+    tagline_key: "instrumentalTagline",
+    description_key: "instrumentalDescription",
+    price: 600,
+    delivery_time_key: "instrumentalDelivery",
+    tag: "new",
     includes: [
-      { include_key: "giftInclude1", include_order: 1 },
-      { include_key: "giftInclude2", include_order: 2 },
-      { include_key: "giftInclude3", include_order: 3 }
+      { include_key: "instrumentalInclude1" },
+      { include_key: "instrumentalInclude2" },
+      { include_key: "instrumentalInclude3" },
+      { include_key: "instrumentalInclude4" },
+      { include_key: "instrumentalInclude5" }
     ],
     steps: [
       {
+        id: "instrumental-step-1",
         step_number: 1,
-        title_key: "recipientDetailsStep",
-        step_order: 1,
+        title_key: "artisticDetailsStep",
         fields: [
           {
-            field_name: "recipientName",
+            id: "titleLanguage",
+            field_name: "titleLanguage",
+            field_type: "text",
+            placeholder_key: "titleLanguagePlaceholder",
+            required: true,
+            field_order: 1
+          },
+          {
+            id: "instrumentalGenre",
+            field_name: "instrumentalGenre",
+            field_type: "text",
+            placeholder_key: "instrumentalGenrePlaceholder",
+            required: true,
+            field_order: 2
+          }
+        ]
+      },
+      {
+        id: "instrumental-step-2",
+        step_number: 2,
+        title_key: "visionStyleStep",
+        fields: [
+          {
+            id: "moodAtmosphere",
+            field_name: "moodAtmosphere",
+            field_type: "text",
+            placeholder_key: "moodAtmospherePlaceholder",
+            required: true,
+            field_order: 1
+          }
+        ]
+      },
+      {
+        id: "instrumental-step-3",
+        step_number: 3,
+        title_key: "extraOptionsStep",
+        fields: [
+          {
+            id: "fullName",
+            field_name: "fullName",
+            field_type: "text",
+            placeholder_key: "fullNamePlaceholder",
+            required: true,
+            field_order: 1
+          },
+          {
+            id: "email",
+            field_name: "email",
+            field_type: "email",
+            placeholder_key: "emailPlaceholder",
+            required: true,
+            field_order: 2
+          },
+          {
+            id: "phone",
+            field_name: "phone",
+            field_type: "tel",
+            placeholder_key: "phonePlaceholder",
+            required: true,
+            field_order: 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    value: "gift",
+    label_key: "giftPackage",
+    tagline_key: "giftTagline",
+    description_key: "giftDescription",
+    price: 350,
+    delivery_time_key: "giftDelivery",
+    tag: "gift",
+    includes: [
+      { include_key: "giftInclude1" },
+      { include_key: "giftInclude2" },
+      { include_key: "giftInclude3" }
+    ],
+    steps: [
+      {
+        id: "gift-step-1",
+        step_number: 1,
+        title_key: "recipientDetailsStep",
+        fields: [
+          {
+            id: "giftRecipientName",
+            field_name: "giftRecipientName",
             field_type: "text",
             placeholder_key: "giftRecipientNamePlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "recipientEmail",
             field_name: "recipientEmail",
             field_type: "email",
             placeholder_key: "recipientEmailPlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 2
           },
           {
+            id: "personalMessage",
             field_name: "personalMessage",
             field_type: "textarea",
             placeholder_key: "personalMessagePlaceholder",
             required: false,
-            field_order: 3,
-            validations: [],
-            dependencies: []
+            field_order: 3
           }
         ]
       },
       {
+        id: "gift-step-2",
         step_number: 2,
         title_key: "deliveryConfirmationStep",
-        step_order: 2,
         fields: [
           {
+            id: "senderName",
             field_name: "senderName",
             field_type: "text",
             placeholder_key: "senderNamePlaceholder",
             required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
+            field_order: 1
           },
           {
+            id: "senderEmail",
             field_name: "senderEmail",
             field_type: "email",
             placeholder_key: "senderEmailPlaceholder",
             required: true,
-            field_order: 2,
-            validations: [],
-            dependencies: []
+            field_order: 2
           }
         ]
       }
-    ],
-    addons: []
+    ]
   }
 ];
-
-export const languages = [
-  { value: 'ro', labelKey: 'romanian', flag: '🇷🇴' },
-  { value: 'en', labelKey: 'english', flag: '🇺🇸' },
-  { value: 'fr', labelKey: 'french', flag: '🇫🇷' },
-  { value: 'de', labelKey: 'german', flag: '🇩🇪' },
-  { value: 'pl', labelKey: 'polish', flag: '🇵🇱' },
-];
-
-export const addons = {
-  rushDelivery: { labelKey: 'rushDelivery', price: 100 },
-  commercialRights: { labelKey: 'commercialRights', price: 100 },
-  distributionMangoRecords: { labelKey: 'distributionMangoRecords', price: 200 },
-  customVideo: { labelKey: 'customVideo', price: 149 },
-  audioMessageFromSender: { labelKey: 'audioMessageFromSender', price: 100 },
-  videoMessageFromSender: { labelKey: 'videoMessageFromSender', price: 100 },
-  extendedSong: { labelKey: 'extendedSong', price: 49 },
-};

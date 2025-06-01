@@ -120,24 +120,35 @@ const translations = {
     contactDetailsStep: "Detalii contact și livrare",
     legalAcceptancesStep: "Acceptări legale",
     
-    // NEW: Personal Package Field Placeholders
-    recipientPlaceholder: "Cui este dedicată melodia? (ex: Maria)",
+    // NEW: Field Labels (just the field names)
+    recipientLabel: "Cui este dedicată melodia?",
+    includeNameInSongLabel: "Numele în melodie",
+    pronunciationAudioLabel: "Pronunție nume",
+    relationshipTextLabel: "Relația ta cu această persoană",
+    storyDetailedLabel: "Povestea acestei persoane",
+    keywordsLabel: "Cuvinte cheie importante",
+    keywordsAudioLabel: "Pronunție cuvinte cheie",
+    styleReferenceLabel: "Stilul melodiei",
+    youtubeExampleLabel: "Exemplu YouTube",
+    
+    // NEW: Personal Package Field Placeholders (helpful text only)
+    recipientPlaceholder: "ex: Maria",
     includeNameInSongPlaceholder: "Vrei ca numele persoanei să apară în melodie?",
     pronunciationAudioPlaceholder: "Înregistrează pronunția numelui dacă e atipic",
-    relationshipTextPlaceholder: "Relația ta cu această persoană (ex: soție/soț, prieten, coleg, sora/frate)",
-    storyDetailedPlaceholder: "Spune-ne povestea acestei persoane. Ce o face specială? Care sunt momentele frumoase pe care le-ați trăit împreună? Ce calități vrei să subliniezi în melodie? Ce amintiri importante aveți?",
-    keywordsPlaceholder: "Cuvinte cheie importante (nume, locuri, expresii speciale)",
+    relationshipTextPlaceholder: "ex: soție/soț, prieten, coleg, sora/frate",
+    storyDetailedPlaceholder: "Ce o face specială? Care sunt momentele frumoase pe care le-ați trăit împreună? Ce calități vrei să subliniezi în melodie? Ce amintiri importante aveți?",
+    keywordsPlaceholder: "nume, locuri, expresii speciale",
     keywordsAudioPlaceholder: "Înregistrează pronunția unor cuvinte cheie (opțional)",
     
     // NEW: Musical Preferences Fields
-    styleReferencePlaceholder: "Ce stil vrei să aibă melodia? (ex: pop, rock, balada, rap)",
+    styleReferencePlaceholder: "ex: pop, rock, ballad, rap",
     youtubeExamplePlaceholder: "Link YouTube cu exemplu de melodie în genul celei pe care o vrei",
     
     // NEW: Mood Options
     moodRomantic: "Romantic",
     moodCheerful: "Vesel",
     moodNostalgic: "Nostalgic",
-    moodEnergetic: "Energic",
+    moodEnergetic: "Energetic",
     moodMelancholic: "Melancolic",
     moodInspirational: "Inspirațional",
     moodEmotional: "Emoțional",
@@ -382,17 +393,28 @@ const translations = {
     contactDetailsStep: "Contact & Delivery Details",
     legalAcceptancesStep: "Legal Acceptances",
     
-    // NEW: Personal Package Field Placeholders
-    recipientPlaceholder: "Who is the song dedicated to? (e.g. Maria)",
+    // NEW: Field Labels (just the field names)
+    recipientLabel: "Who is the song dedicated to?",
+    includeNameInSongLabel: "Name in song",
+    pronunciationAudioLabel: "Name pronunciation",
+    relationshipTextLabel: "Your relationship with this person",
+    storyDetailedLabel: "Story of this person",
+    keywordsLabel: "Important keywords",
+    keywordsAudioLabel: "Keywords pronunciation",
+    styleReferenceLabel: "Song style",
+    youtubeExampleLabel: "YouTube example",
+    
+    // NEW: Personal Package Field Placeholders (helpful text only)
+    recipientPlaceholder: "e.g. Maria",
     includeNameInSongPlaceholder: "Do you want the person's name to appear in the song?",
     pronunciationAudioPlaceholder: "Record name pronunciation if atypical",
-    relationshipTextPlaceholder: "Your relationship with this person (e.g. wife/husband, friend, colleague, sister/brother)",
-    storyDetailedPlaceholder: "Tell us the story of this person. What makes them special? What beautiful moments have you lived together? What qualities do you want to highlight in the song? What important memories do you have?",
-    keywordsPlaceholder: "Important keywords (names, places, special expressions)",
+    relationshipTextPlaceholder: "e.g. wife/husband, friend, colleague, sister/brother",
+    storyDetailedPlaceholder: "What makes them special? What beautiful moments have you lived together? What qualities do you want to highlight in the song? What important memories do you have?",
+    keywordsPlaceholder: "names, places, special expressions",
     keywordsAudioPlaceholder: "Record pronunciation of some keywords (optional)",
     
     // NEW: Musical Preferences Fields
-    styleReferencePlaceholder: "What style do you want the song to have? (e.g. pop, rock, ballad, rap)",
+    styleReferencePlaceholder: "e.g. pop, rock, ballad, rap",
     youtubeExamplePlaceholder: "YouTube link with example song in the genre you want",
     
     // NEW: Mood Options
@@ -402,7 +424,7 @@ const translations = {
     moodEnergetic: "Energetic",
     moodMelancholic: "Melancholic",
     moodInspirational: "Inspirational",
-    moodEmotional: "Emotional",
+    moodEmotional: "Emoțional",
     moodUplifting: "Uplifting",
     
     // NEW: Voice Gender Options
@@ -521,7 +543,7 @@ const translations = {
     of: "of",
     progress: "Progress",
     whatsIncluded: "What's included",
-    professionalQuality: "Professional quality",
+    professionalQuality: "Professional Quality",
     previous: "Previous",
     continue: "Continue",
     submitting: "Submitting...",
