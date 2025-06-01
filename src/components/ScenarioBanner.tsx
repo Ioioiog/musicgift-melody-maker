@@ -1,4 +1,6 @@
+
 import { useEffect, useState } from 'react';
+
 const scenarios = [{
   emoji: '🎂',
   text: "Is it someone special's birthday? Celebrate with lyrics, not just cake!"
@@ -24,9 +26,11 @@ const scenarios = [{
   emoji: '✨',
   text: 'And for any other "wow!" moment in life – we put it to music.'
 }];
+
 const ScenarioBanner = () => {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false); // Start fade-out
@@ -36,19 +40,24 @@ const ScenarioBanner = () => {
         setFade(true); // Fade in new content
       }, 500);
     }, 4000);
+
     return () => clearInterval(interval);
   }, []);
-  const {
-    emoji,
-    text
-  } = scenarios[index];
-  return <div className="w-full bg-gradient-to-r from-[#f0f4ff] to-[#e6eaff] text-center rounded-lg shadow-md min-h-[30vh] md:min-h-[70vh] lg:min-h-[80vh] flex flex-col justify-center items-center mx-0 my-0 py-0 px-[0px]">
-      <div className={`transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}>
-        <div className="text-6xl md:text-7xl lg:text-8xl mb-6 scenario-emoji">{emoji}</div>
-        <p className="text-xl md:text-2xl lg:text-3xl font-medium scenario-message max-w-4xl mx-auto leading-relaxed">
-          {text}
-        </p>
+
+  const { emoji, text } = scenarios[index];
+
+  return (
+    <section className="py-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+      <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className={`transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="text-6xl md:text-8xl mb-6 scenario-emoji">{emoji}</div>
+          <p className="text-xl md:text-2xl opacity-90 scenario-message max-w-3xl mx-auto leading-relaxed">
+            {text}
+          </p>
+        </div>
       </div>
-    </div>;
+    </section>
+  );
 };
+
 export default ScenarioBanner;
