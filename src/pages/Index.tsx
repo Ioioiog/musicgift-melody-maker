@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -53,15 +54,20 @@ const Index = () => {
   return <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section with Video Background - Mobile Optimized */}
-      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-center overflow-hidden">
-        {/* Video Background */}
-        <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline key={language}>
+      {/* Hero Section with Purple Musical Background - Mobile Optimized */}
+      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-center overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        {/* Video Background (Optional - can be removed if you prefer just the purple background) */}
+        <video className="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-30" autoPlay muted loop playsInline key={language}>
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
         {/* Overlay for better text readability */}
-        <div className="absolute top-0 left-0 w-full h-full bg-black/50 sm:bg-black/40 z-10 py-0"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-black/30 sm:bg-black/20 z-10 py-0"></div>
         
         {/* Floating musical notes - responsive positioning */}
         <div className="absolute top-6 sm:top-10 right-6 sm:right-10 text-2xl sm:text-3xl md:text-4xl animate-bounce delay-75 z-20">🎵</div>
@@ -200,9 +206,15 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section - Mobile optimized */}
-      <section className="py-8 sm:py-12 md:py-16 bg-gradient-purple text-white">
-        <div className="container mx-auto px-4 sm:px-6 text-center">
+      {/* CTA Section with Purple Musical Background - Mobile optimized */}
+      <section className="py-8 sm:py-12 md:py-16 text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container mx-auto px-4 sm:px-6 text-center relative z-10">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">{t('readyToCreateSpecial') || 'Ready to Create Something Special?'}</h2>
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
             {t('helpCreatePersonalized') || 'Let us help you create a personalized musical gift that will be treasured forever.'}

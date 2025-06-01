@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -102,9 +101,17 @@ const ScenarioHero = () => {
   const { icon: IconComponent, text, packageKey } = scenarios[index];
 
   return (
-    <section className="relative h-30 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
-      {/* Professional background pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.02)_50%,transparent_75%)] bg-[length:20px_20px]"></div>
+    <section 
+      className="relative h-30 overflow-hidden"
+      style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/40"></div>
       
       {/* Content container with professional layout */}
       <div className="relative z-10 h-full flex items-center justify-between max-w-7xl mx-auto px-8">
