@@ -34,12 +34,12 @@ const Navigation = () => {
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
   return <>
       {/* Background behind navbar */}
-      <div className="fixed top-0 left-0 w-full h-32 z-40" style={{
+      <div style={{
       backgroundImage: 'url(/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
-    }}></div>
+    }} className="fixed top-0 left-0 w-full h-20 z-1"></div>
 
       {/* Floating Logo - responsive positioning */}
       <div className="fixed -top-4 left-2 sm:left-4 md:left-6 lg:left-10 z-[100]">
