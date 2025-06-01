@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserManagement from "@/components/admin/UserManagement";
 import OrdersManagement from "@/components/admin/OrdersManagement";
-import StaticPackageManager from "@/components/admin/StaticPackageManager";
+import PackageManagement from "@/components/admin/PackageManagement";
 import NewsletterManagement from "@/components/admin/NewsletterManagement";
 import CampaignsManagement from "@/components/admin/CampaignsManagement";
 import AuthGuard from "@/components/AuthGuard";
@@ -36,7 +36,7 @@ const Admin = () => {
               </TabsList>
 
               <TabsContent value="packages" className="space-y-6">
-                <StaticPackageManager />
+                <PackageManagement />
               </TabsContent>
 
               <TabsContent value="orders" className="space-y-6">
