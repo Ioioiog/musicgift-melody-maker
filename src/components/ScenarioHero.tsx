@@ -102,7 +102,7 @@ const ScenarioHero = () => {
   const { icon: IconComponent, text, packageKey } = scenarios[index];
 
   return (
-    <section className="relative h-30 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
+    <section className="relative h-30 bg-black overflow-hidden">
       {/* Professional background pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,.02)_50%,transparent_75%)] bg-[length:20px_20px]"></div>
       
