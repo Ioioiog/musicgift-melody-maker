@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Copy, RefreshCw, Music, Edit, Save, Check, Globe, Database, Clock, User, AlertTriangle, Plus } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Copy, RefreshCw, Music, Edit, Save, Check, Globe, Database, Clock, User, AlertTriangle, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -63,6 +64,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
   const [isSaving, setIsSaving] = useState(false);
   const [showingExisting, setShowingExisting] = useState(false);
   const [isRegeneratingVersions, setIsRegeneratingVersions] = useState(false);
+  const [expandedPrompts, setExpandedPrompts] = useState<Set<number>>(new Set([0])); // First prompt expanded by default
   const { toast } = useToast();
 
   const generateNewPrompts = async () => {
@@ -356,6 +358,24 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
     return `Variation ${index + 1}`;
   };
 
+  const togglePromptExpansion = (index: number) => {
+    const newExpanded = new Set(expandedPrompts);
+    if (newExpanded.has(index)) {
+      newExpanded.delete(index);
+    } else {
+      newExpanded.add(index);
+    }
+    setExpandedPrompts(newExpanded);
+  };
+
+  const expandAllPrompts = () => {
+    setExpandedPrompts(new Set(prompts.map((_, index) => index)));
+  };
+
+  const collapseAllPrompts = () => {
+    setExpandedPrompts(new Set());
+  };
+
   // Updated useEffect to properly handle order changes
   React.useEffect(() => {
     if (isOpen && orderData?.id) {
@@ -443,6 +463,24 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                   )}
                 </div>
                 <div className="flex space-x-2">
+                  {prompts.length > 1 && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={expandAllPrompts}
+                      >
+                        Expand All
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={collapseAllPrompts}
+                      >
+                        Collapse All
+                      </Button>
+                    </>
+                  )}
                   {showingExisting ? (
                     <>
                       <AlertDialog>
@@ -537,205 +575,225 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                 const createdInfo = getCreatedByInfo(index);
                 const versionLabel = getVersionLabel(index);
                 const isNewVersion = showingExisting && index >= existingPrompts.length;
+                const isExpanded = expandedPrompts.has(index);
                 
                 return (
-                  <div key={index} className={`border rounded-lg p-6 space-y-4 ${isNewVersion ? 'border-blue-300 bg-blue-50' : ''}`}>
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1 space-y-2">
-                        {prompt.isEditing ? (
-                          <>
-                            <Input
-                              value={prompt.editedTitle}
-                              onChange={(e) => updateEditedField(index, 'editedTitle', e.target.value)}
-                              className="font-semibold text-lg"
-                              placeholder="Song title"
-                            />
-                            <Input
-                              value={prompt.editedDescription}
-                              onChange={(e) => updateEditedField(index, 'editedDescription', e.target.value)}
-                              className="text-sm"
-                              placeholder="Description"
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <h3 className="font-semibold text-lg">{prompt.title}</h3>
-                            <p className="text-sm text-gray-600">{prompt.description}</p>
-                          </>
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-2 ml-4">
-                        <Badge variant={isNewVersion ? "default" : "outline"} className={isNewVersion ? "bg-blue-100 text-blue-800 border-blue-300" : ""}>
-                          {versionLabel} {index + 1}
-                        </Badge>
-                        {isNewVersion && (
-                          <Badge className="bg-green-100 text-green-800 border-green-300">
-                            <Plus className="w-3 h-3 mr-1" />
-                            New
-                          </Badge>
-                        )}
-                        {createdInfo && (
-                          <>
-                            <Badge variant="outline" className="text-xs">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {createdInfo.createdAt}
-                            </Badge>
-                            {createdInfo.isOptimized && (
-                              <Badge className="bg-green-100 text-green-800 border-green-300">
-                                <Check className="w-3 h-3 mr-1" />
-                                Optimized
-                              </Badge>
-                            )}
-                          </>
-                        )}
-                        {isPromptSavedInDatabase(index) && !showingExisting && (
-                          <Badge className="bg-green-100 text-green-800 border-green-300">
-                            <Check className="w-3 h-3 mr-1" />
-                            Saved in DB
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
+                  <Collapsible
+                    key={index}
+                    open={isExpanded}
+                    onOpenChange={() => togglePromptExpansion(index)}
+                  >
+                    <div className={`border rounded-lg ${isNewVersion ? 'border-blue-300 bg-blue-50' : ''}`}>
+                      <CollapsibleTrigger asChild>
+                        <div className="p-4 cursor-pointer hover:bg-gray-50 transition-colors">
+                          <div className="flex justify-between items-center">
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3">
+                                <h3 className="font-semibold text-lg">{prompt.title}</h3>
+                                <Badge variant={isNewVersion ? "default" : "outline"} className={isNewVersion ? "bg-blue-100 text-blue-800 border-blue-300" : ""}>
+                                  {versionLabel} {index + 1}
+                                </Badge>
+                                {isNewVersion && (
+                                  <Badge className="bg-green-100 text-green-800 border-green-300">
+                                    <Plus className="w-3 h-3 mr-1" />
+                                    New
+                                  </Badge>
+                                )}
+                                {createdInfo && (
+                                  <>
+                                    <Badge variant="outline" className="text-xs">
+                                      <Clock className="w-3 h-3 mr-1" />
+                                      {createdInfo.createdAt}
+                                    </Badge>
+                                    {createdInfo.isOptimized && (
+                                      <Badge className="bg-green-100 text-green-800 border-green-300">
+                                        <Check className="w-3 h-3 mr-1" />
+                                        Optimized
+                                      </Badge>
+                                    )}
+                                  </>
+                                )}
+                                {isPromptSavedInDatabase(index) && !showingExisting && (
+                                  <Badge className="bg-green-100 text-green-800 border-green-300">
+                                    <Check className="w-3 h-3 mr-1" />
+                                    Saved in DB
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-sm text-gray-600 mt-1">{prompt.description}</p>
+                            </div>
+                            <div className="flex items-center space-x-2 ml-4">
+                              {isExpanded ? (
+                                <ChevronUp className="w-5 h-5 text-gray-400" />
+                              ) : (
+                                <ChevronDown className="w-5 h-5 text-gray-400" />
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </CollapsibleTrigger>
 
-                    {/* Lyrics Section */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-sm text-purple-700 flex items-center">
-                        <Music className="w-4 h-4 mr-1" />
-                        Song Lyrics ({getLanguage()})
-                      </h4>
-                      <div className="bg-purple-50 rounded-md p-4 relative">
-                        {prompt.isEditing ? (
-                          <Textarea
-                            value={prompt.editedLyrics}
-                            onChange={(e) => updateEditedField(index, 'editedLyrics', e.target.value)}
-                            className="min-h-[150px] font-mono text-sm"
-                            placeholder="Complete song lyrics..."
-                          />
-                        ) : (
-                          <pre className="text-sm whitespace-pre-wrap font-mono leading-relaxed">
-                            {prompt.lyrics}
-                          </pre>
-                        )}
-                        
-                        {!prompt.isEditing && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute top-2 right-2"
-                            onClick={() => copyToClipboard(prompt.lyrics)}
-                          >
-                            <Copy className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </div>
+                      <CollapsibleContent>
+                        <div className="px-4 pb-4 space-y-4">
+                          {prompt.isEditing && (
+                            <div className="space-y-2">
+                              <Input
+                                value={prompt.editedTitle}
+                                onChange={(e) => updateEditedField(index, 'editedTitle', e.target.value)}
+                                className="font-semibold text-lg"
+                                placeholder="Song title"
+                              />
+                              <Input
+                                value={prompt.editedDescription}
+                                onChange={(e) => updateEditedField(index, 'editedDescription', e.target.value)}
+                                className="text-sm"
+                                placeholder="Description"
+                              />
+                            </div>
+                          )}
 
-                    {/* Technical Tags Section */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-sm text-blue-700">Technical Tags</h4>
-                      <div className="bg-blue-50 rounded-md p-3 relative">
-                        {prompt.isEditing ? (
-                          <Textarea
-                            value={prompt.editedTechnicalTags}
-                            onChange={(e) => updateEditedField(index, 'editedTechnicalTags', e.target.value)}
-                            className="min-h-[80px] font-mono text-sm"
-                            placeholder="Suno.AI technical tags..."
-                          />
-                        ) : (
-                          <pre className="text-sm whitespace-pre-wrap font-mono">
-                            {prompt.technicalTags}
-                          </pre>
-                        )}
-                        
-                        {!prompt.isEditing && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute top-2 right-2"
-                            onClick={() => copyToClipboard(prompt.technicalTags)}
-                          >
-                            <Copy className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </div>
+                          {/* Lyrics Section */}
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-sm text-purple-700 flex items-center">
+                              <Music className="w-4 h-4 mr-1" />
+                              Song Lyrics ({getLanguage()})
+                            </h4>
+                            <div className="bg-purple-50 rounded-md p-4 relative">
+                              {prompt.isEditing ? (
+                                <Textarea
+                                  value={prompt.editedLyrics}
+                                  onChange={(e) => updateEditedField(index, 'editedLyrics', e.target.value)}
+                                  className="min-h-[150px] font-mono text-sm"
+                                  placeholder="Complete song lyrics..."
+                                />
+                              ) : (
+                                <pre className="text-sm whitespace-pre-wrap font-mono leading-relaxed">
+                                  {prompt.lyrics}
+                                </pre>
+                              )}
+                              
+                              {!prompt.isEditing && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="absolute top-2 right-2"
+                                  onClick={() => copyToClipboard(prompt.lyrics)}
+                                >
+                                  <Copy className="w-4 h-4" />
+                                </Button>
+                              )}
+                            </div>
+                          </div>
 
-                    {/* Complete Prompt Section */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-sm text-gray-700">Complete Suno.AI Prompt</h4>
-                      <div className="bg-gray-50 rounded-md p-4 relative">
-                        {prompt.isEditing ? (
-                          <Textarea
-                            value={prompt.editedPrompt}
-                            onChange={(e) => updateEditedField(index, 'editedPrompt', e.target.value)}
-                            className="min-h-[120px] font-mono text-sm"
-                            placeholder="Complete Suno.AI prompt combining lyrics and technical tags..."
-                          />
-                        ) : (
-                          <pre className="text-sm whitespace-pre-wrap font-mono">
-                            {prompt.prompt}
-                          </pre>
-                        )}
-                        
-                        <div className="absolute top-2 right-2 flex space-x-1">
-                          {prompt.isEditing ? (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => saveEdit(index)}
-                            >
-                              <Save className="w-4 h-4" />
-                            </Button>
-                          ) : (
-                            <>
+                          {/* Technical Tags Section */}
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-sm text-blue-700">Technical Tags</h4>
+                            <div className="bg-blue-50 rounded-md p-3 relative">
+                              {prompt.isEditing ? (
+                                <Textarea
+                                  value={prompt.editedTechnicalTags}
+                                  onChange={(e) => updateEditedField(index, 'editedTechnicalTags', e.target.value)}
+                                  className="min-h-[80px] font-mono text-sm"
+                                  placeholder="Suno.AI technical tags..."
+                                />
+                              ) : (
+                                <pre className="text-sm whitespace-pre-wrap font-mono">
+                                  {prompt.technicalTags}
+                                </pre>
+                              )}
+                              
+                              {!prompt.isEditing && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="absolute top-2 right-2"
+                                  onClick={() => copyToClipboard(prompt.technicalTags)}
+                                >
+                                  <Copy className="w-4 h-4" />
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Complete Prompt Section */}
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-sm text-gray-700">Complete Suno.AI Prompt</h4>
+                            <div className="bg-gray-50 rounded-md p-4 relative">
+                              {prompt.isEditing ? (
+                                <Textarea
+                                  value={prompt.editedPrompt}
+                                  onChange={(e) => updateEditedField(index, 'editedPrompt', e.target.value)}
+                                  className="min-h-[120px] font-mono text-sm"
+                                  placeholder="Complete Suno.AI prompt combining lyrics and technical tags..."
+                                />
+                              ) : (
+                                <pre className="text-sm whitespace-pre-wrap font-mono">
+                                  {prompt.prompt}
+                                </pre>
+                              )}
+                              
+                              <div className="absolute top-2 right-2 flex space-x-1">
+                                {prompt.isEditing ? (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => saveEdit(index)}
+                                  >
+                                    <Save className="w-4 h-4" />
+                                  </Button>
+                                ) : (
+                                  <>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => toggleEdit(index)}
+                                    >
+                                      <Edit className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => copyToClipboard(prompt.prompt)}
+                                    >
+                                      <Copy className="w-4 h-4" />
+                                    </Button>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {!prompt.isEditing && (!showingExisting || isNewVersion) && (
+                            <div className="flex justify-end pt-2">
                               <Button
-                                variant="ghost"
+                                variant={isPromptSavedInDatabase(index) ? "default" : "outline"}
                                 size="sm"
-                                onClick={() => toggleEdit(index)}
+                                onClick={() => savePromptToDatabase(index)}
+                                disabled={isSaving}
                               >
-                                <Edit className="w-4 h-4" />
+                                {isSaving ? (
+                                  <>
+                                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                                    Saving...
+                                  </>
+                                ) : isPromptSavedInDatabase(index) ? (
+                                  <>
+                                    <Database className="w-4 h-4 mr-2" />
+                                    Saved to Database
+                                  </>
+                                ) : (
+                                  <>
+                                    <Database className="w-4 h-4 mr-2" />
+                                    Save as Optimized Version
+                                  </>
+                                )}
                               </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => copyToClipboard(prompt.prompt)}
-                              >
-                                <Copy className="w-4 h-4" />
-                              </Button>
-                            </>
+                            </div>
                           )}
                         </div>
-                      </div>
+                      </CollapsibleContent>
                     </div>
-
-                    {!prompt.isEditing && (!showingExisting || isNewVersion) && (
-                      <div className="flex justify-end pt-2">
-                        <Button
-                          variant={isPromptSavedInDatabase(index) ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => savePromptToDatabase(index)}
-                          disabled={isSaving}
-                        >
-                          {isSaving ? (
-                            <>
-                              <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                              Saving...
-                            </>
-                          ) : isPromptSavedInDatabase(index) ? (
-                            <>
-                              <Database className="w-4 h-4 mr-2" />
-                              Saved to Database
-                            </>
-                          ) : (
-                            <>
-                              <Database className="w-4 h-4 mr-2" />
-                              Save as Optimized Version
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    )}
-                  </div>
+                  </Collapsible>
                 );
               })}
 
@@ -743,13 +801,14 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h4 className="font-semibold text-blue-900 mb-2">How to use these prompts with lyrics:</h4>
                   <ol className="text-sm text-blue-800 space-y-1">
-                    <li>1. Review and edit the {showingExisting ? 'existing' : 'generated'} lyrics in <strong>{getLanguage()}</strong> as needed</li>
-                    <li>2. Adjust technical tags to match your musical vision</li>
-                    {(!showingExisting || prompts.length > existingPrompts.length) && <li>3. Save your preferred version as the optimized version to the database</li>}
-                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '4' : '3'}. Copy the complete prompt (lyrics + technical tags)</li>
-                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '5' : '4'}. Go to Suno.AI and create a new song</li>
-                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '6' : '5'}. Paste the complete prompt in Suno.AI</li>
-                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '7' : '6'}. Generate your personalized multilingual song</li>
+                    <li>1. Click on any prompt above to expand and view its details</li>
+                    <li>2. Review and edit the {showingExisting ? 'existing' : 'generated'} lyrics in <strong>{getLanguage()}</strong> as needed</li>
+                    <li>3. Adjust technical tags to match your musical vision</li>
+                    {(!showingExisting || prompts.length > existingPrompts.length) && <li>4. Save your preferred version as the optimized version to the database</li>}
+                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '5' : '4'}. Copy the complete prompt (lyrics + technical tags)</li>
+                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '6' : '5'}. Go to Suno.AI and create a new song</li>
+                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '7' : '6'}. Paste the complete prompt in Suno.AI</li>
+                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '8' : '7'}. Generate your personalized multilingual song</li>
                   </ol>
                 </div>
               )}
