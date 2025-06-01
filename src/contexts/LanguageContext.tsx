@@ -784,7 +784,7 @@ const translations = {
     romantic: "Romantic",
     happy: "Happy",
     nostalgic: "Nostalgic",
-    energetic: "Energetic",
+    energetic: "Energic",
     emotional: "Emotional",
     peaceful: "Peaceful",
     

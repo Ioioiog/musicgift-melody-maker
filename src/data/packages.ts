@@ -40,223 +40,185 @@ export const packages: PackageData[] = [
     value: "personal",
     label_key: "personalPackage",
     price: 300,
-    tagline_key: "O melodie unică pentru momentele tale speciale",
-    description_key: "Perfect pentru cadouri personalizate și momente de neuitat",
-    delivery_time_key: "3-5 zile",
+    tagline_key: "personalTagline",
+    description_key: "personalDescription",
+    delivery_time_key: "personalDelivery",
     tags: [
       {
         tag_type: "new",
-        tag_label_key: "Nou",
+        tag_label_key: "newTag",
         styling_class: "bg-green-100 text-green-800"
       }
     ],
     includes: [
-      {
-        include_key: "Cântec original din povestea ta",
-        include_order: 1
-      },
-      {
-        include_key: "Voce profesională",
-        include_order: 2
-      },
-      {
-        include_key: "Livrare rapidă",
-        include_order: 3
-      },
-      {
-        include_key: "Drepturi personale",
-        include_order: 4
-      },
-      {
-        include_key: "Consultanță creativă",
-        include_order: 5
-      }
+      { include_key: "personalInclude1", include_order: 1 },
+      { include_key: "personalInclude2", include_order: 2 },
+      { include_key: "personalInclude3", include_order: 3 },
+      { include_key: "personalInclude4", include_order: 4 },
+      { include_key: "personalInclude5", include_order: 5 }
     ],
     steps: [
       {
         step_number: 1,
-        title_key: "Alege pachetul",
+        title_key: "choosePackageStep",
         step_order: 1,
-        fields: []
+        fields: [
+          {
+            field_name: "package",
+            field_type: "select",
+            placeholder_key: "choosePersonalPackage",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          }
+        ]
       },
       {
         step_number: 2,
-        title_key: "Povestea ta",
+        title_key: "personalDetailsStep",
         step_order: 2,
         fields: [
           {
-            field_name: "recipientName",
+            field_name: "fullName",
             field_type: "text",
-            placeholder_key: "Numele destinatarului",
+            placeholder_key: "fullNamePlaceholder",
             required: true,
             field_order: 1,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "relationship",
-            field_type: "select",
-            placeholder_key: "Relația cu destinatarul",
+            field_name: "email",
+            field_type: "email",
+            placeholder_key: "emailPlaceholder",
             required: true,
             field_order: 2,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "phone",
+            field_type: "text",
+            placeholder_key: "phonePlaceholder",
+            required: true,
+            field_order: 3,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "language",
+            field_type: "select",
+            placeholder_key: "songLanguagePlaceholder",
+            required: true,
+            field_order: 4,
             options: [
-              { value: "partner", label_key: "Partener/ă" },
-              { value: "child", label_key: "Copil" },
-              { value: "parent", label_key: "Părinte" },
-              { value: "friend", label_key: "Prieten/ă" },
-              { value: "sibling", label_key: "Frate/Soră" },
-              { value: "grandparent", label_key: "Bunic/Bunică" },
-              { value: "other", label_key: "Altă relație" }
+              { value: "ro", label_key: "romanianLanguage" },
+              { value: "en", label_key: "englishLanguage" },
+              { value: "fr", label_key: "frenchLanguage" }
             ],
             validations: [],
             dependencies: []
           },
           {
             field_name: "occasion",
-            field_type: "select",
-            placeholder_key: "Ocazia",
-            required: true,
-            field_order: 3,
-            options: [
-              { value: "birthday", label_key: "Zi de naștere" },
-              { value: "anniversary", label_key: "Aniversare" },
-              { value: "wedding", label_key: "Nuntă" },
-              { value: "valentine", label_key: "Ziua Îndrăgostiților" },
-              { value: "christmas", label_key: "Crăciun" },
-              { value: "other", label_key: "Altă ocazie" }
-            ],
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "story",
-            field_type: "textarea",
-            placeholder_key: "Povestea voastră în câteva cuvinte",
-            required: true,
-            field_order: 4,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "musicStyle",
-            field_type: "select",
-            placeholder_key: "Stilul muzical preferat",
+            field_type: "text",
+            placeholder_key: "occasionPlaceholder",
             required: false,
             field_order: 5,
-            options: [
-              { value: "pop", label_key: "Pop" },
-              { value: "acoustic", label_key: "Acustic" },
-              { value: "rock", label_key: "Rock" },
-              { value: "jazz", label_key: "Jazz" },
-              { value: "folk", label_key: "Folk" },
-              { value: "electronic", label_key: "Electronic" }
-            ],
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "pronunciationRecording",
+            field_type: "file",
+            placeholder_key: "pronunciationRecordingPlaceholder",
+            required: false,
+            field_order: 6,
             validations: [],
             dependencies: []
           }
         ]
-      }
-    ],
-    addons: []
-  },
-  {
-    id: "business-package-id",
-    value: "business",
-    label_key: "businessPackage",
-    price: 500,
-    tagline_key: "Dă-i brandului tău o voce memorabilă",
-    description_key: "Creat pentru companii care vor o piesă originală pentru branding, campanii sau reclame cu impact emoțional",
-    delivery_time_key: "5–7 zile",
-    tags: [
-      {
-        tag_type: "popular",
-        tag_label_key: "Popular",
-        styling_class: "bg-blue-100 text-blue-800"
-      }
-    ],
-    includes: [
-      {
-        include_key: "Cântec personalizat pentru afacerea ta",
-        include_order: 1
       },
       {
-        include_key: "Producție profesională și voce de studio",
-        include_order: 2
-      },
-      {
-        include_key: "Mix & Master de calitate superioară",
-        include_order: 3
-      },
-      {
-        include_key: "Licență comercială limitată (excludere: radio, TV, revânzare piesă)",
-        include_order: 4
-      },
-      {
-        include_key: "Fișiere audio multiple (MP3, WAV)",
-        include_order: 5
-      }
-    ],
-    steps: [
-      {
-        step_number: 1,
-        title_key: "Alege pachetul",
-        step_order: 1,
-        fields: []
-      },
-      {
-        step_number: 2,
-        title_key: "Informații companie",
-        step_order: 2,
+        step_number: 3,
+        title_key: "yourStoryStep",
+        step_order: 3,
         fields: [
           {
-            field_name: "companyName",
-            field_type: "text",
-            placeholder_key: "Numele companiei",
+            field_name: "story",
+            field_type: "textarea",
+            placeholder_key: "storyPlaceholder",
             required: true,
             field_order: 1,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "companyActivity",
+            field_name: "vibe",
             field_type: "text",
-            placeholder_key: "Domeniul de activitate",
+            placeholder_key: "vibePlaceholder",
             required: true,
             field_order: 2,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "brandMessage",
-            field_type: "textarea",
-            placeholder_key: "Ce mesaj vrei să transmită melodia despre brandul tău",
-            required: true,
+            field_name: "youtubeLinks",
+            field_type: "text",
+            placeholder_key: "youtubeLinksPlaceholder",
+            required: false,
             field_order: 3,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "targetAudience",
+            field_name: "importantKeywords",
             field_type: "text",
-            placeholder_key: "Publicul țintă",
+            placeholder_key: "importantKeywordsPlaceholder",
             required: false,
             field_order: 4,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "musicStyle",
-            field_type: "select",
-            placeholder_key: "Stilul muzical preferat",
-            required: true,
+            field_name: "keywordsPronunciationRecording",
+            field_type: "file",
+            placeholder_key: "keywordsPronunciationPlaceholder",
+            required: false,
             field_order: 5,
-            options: [
-              { value: "corporate", label_key: "Corporate" },
-              { value: "energetic", label_key: "Energic" },
-              { value: "calm", label_key: "Calm" },
-              { value: "modern", label_key: "Modern" },
-              { value: "classic", label_key: "Clasic" }
-            ],
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 4,
+        title_key: "addonsStep",
+        step_order: 4,
+        fields: [
+          {
+            field_name: "addons",
+            field_type: "checkbox-group",
+            placeholder_key: "selectAddonsPlaceholder",
+            required: false,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 5,
+        title_key: "distributionConfirmationStep",
+        step_order: 5,
+        fields: [
+          {
+            field_name: "acceptMention",
+            field_type: "checkbox",
+            placeholder_key: "acceptMentionPlaceholder",
+            required: true,
+            field_order: 1,
             validations: [],
             dependencies: []
           }
@@ -270,88 +232,340 @@ export const packages: PackageData[] = [
     value: "premium",
     label_key: "premiumPackage",
     price: 500,
-    tagline_key: "Experiența completă: cântec + video animat + distribuție",
-    description_key: "Pachetul complet pentru cei care vor totul inclus",
-    delivery_time_key: "5-7 zile",
+    tagline_key: "premiumTagline",
+    description_key: "premiumDescription",
+    delivery_time_key: "premiumDelivery",
     tags: [
       {
         tag_type: "hot",
-        tag_label_key: "Popular",
+        tag_label_key: "popularTag",
         styling_class: "bg-red-100 text-red-800"
       }
     ],
     includes: [
-      {
-        include_key: "Cântec original cu producție completă",
-        include_order: 1
-      },
-      {
-        include_key: "Video animat DOMG",
-        include_order: 2
-      },
-      {
-        include_key: "Distribuție oficială digitală Mango Records",
-        include_order: 3
-      }
+      { include_key: "premiumInclude1", include_order: 1 },
+      { include_key: "premiumInclude2", include_order: 2 },
+      { include_key: "premiumInclude3", include_order: 3 }
     ],
     steps: [
       {
         step_number: 1,
-        title_key: "Alege pachetul",
+        title_key: "choosePackageStep",
         step_order: 1,
-        fields: []
+        fields: [
+          {
+            field_name: "package",
+            field_type: "select",
+            placeholder_key: "choosePremiumPackage",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          }
+        ]
       },
       {
         step_number: 2,
-        title_key: "Detalii cântec",
+        title_key: "personalDetailsStep",
         step_order: 2,
         fields: [
           {
-            field_name: "songTitle",
+            field_name: "fullName",
             field_type: "text",
-            placeholder_key: "Titlul dorit pentru cântec",
+            placeholder_key: "fullNamePlaceholder",
             required: true,
             field_order: 1,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "musicStyle",
-            field_type: "select",
-            placeholder_key: "Stilul muzical preferat",
+            field_name: "email",
+            field_type: "email",
+            placeholder_key: "emailPlaceholder",
             required: true,
             field_order: 2,
-            options: [
-              { value: "pop", label_key: "Pop" },
-              { value: "rock", label_key: "Rock" },
-              { value: "acoustic", label_key: "Acustic" },
-              { value: "electronic", label_key: "Electronic" },
-              { value: "folk", label_key: "Folk" }
-            ],
             validations: [],
             dependencies: []
           },
           {
-            field_name: "videoStyle",
-            field_type: "select",
-            placeholder_key: "Stilul video-ului animat",
+            field_name: "phone",
+            field_type: "text",
+            placeholder_key: "phonePlaceholder",
             required: true,
             field_order: 3,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "language",
+            field_type: "select",
+            placeholder_key: "songLanguagePlaceholder",
+            required: true,
+            field_order: 4,
             options: [
-              { value: "romantic", label_key: "Romantic" },
-              { value: "fun", label_key: "Distractiv" },
-              { value: "elegant", label_key: "Elegant" },
-              { value: "energetic", label_key: "Energic" }
+              { value: "ro", label_key: "romanianLanguage" },
+              { value: "en", label_key: "englishLanguage" },
+              { value: "fr", label_key: "frenchLanguage" }
             ],
             validations: [],
             dependencies: []
           },
           {
-            field_name: "songConcept",
+            field_name: "occasion",
+            field_type: "text",
+            placeholder_key: "occasionPlaceholder",
+            required: false,
+            field_order: 5,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "pronunciationRecording",
+            field_type: "file",
+            placeholder_key: "pronunciationRecordingPlaceholder",
+            required: false,
+            field_order: 6,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 3,
+        title_key: "yourStoryStep",
+        step_order: 3,
+        fields: [
+          {
+            field_name: "story",
             field_type: "textarea",
-            placeholder_key: "Conceptul și mesajul cântecului",
+            placeholder_key: "storyPlaceholder",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "vibe",
+            field_type: "text",
+            placeholder_key: "vibePlaceholder",
+            required: true,
+            field_order: 2,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "youtubeLinks",
+            field_type: "text",
+            placeholder_key: "youtubeLinksPlaceholder",
+            required: false,
+            field_order: 3,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "importantKeywords",
+            field_type: "text",
+            placeholder_key: "importantKeywordsPlaceholder",
+            required: false,
+            field_order: 4,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "keywordsPronunciationRecording",
+            field_type: "file",
+            placeholder_key: "keywordsPronunciationPlaceholder",
+            required: false,
+            field_order: 5,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 4,
+        title_key: "addonsStep",
+        step_order: 4,
+        fields: [
+          {
+            field_name: "addons",
+            field_type: "checkbox-group",
+            placeholder_key: "selectAddonsPlaceholder",
+            required: false,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 5,
+        title_key: "distributionConfirmationStep",
+        step_order: 5,
+        fields: [
+          {
+            field_name: "acceptMangoDistribution",
+            field_type: "checkbox",
+            placeholder_key: "acceptMangoDistributionPlaceholder",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      }
+    ],
+    addons: []
+  },
+  {
+    id: "business-package-id",
+    value: "business",
+    label_key: "businessPackage",
+    price: 500,
+    tagline_key: "businessTagline",
+    description_key: "businessDescription",
+    delivery_time_key: "businessDelivery",
+    tags: [
+      {
+        tag_type: "popular",
+        tag_label_key: "popularTag",
+        styling_class: "bg-blue-100 text-blue-800"
+      }
+    ],
+    includes: [
+      { include_key: "businessInclude1", include_order: 1 },
+      { include_key: "businessInclude2", include_order: 2 },
+      { include_key: "businessInclude3", include_order: 3 },
+      { include_key: "businessInclude4", include_order: 4 }
+    ],
+    steps: [
+      {
+        step_number: 1,
+        title_key: "choosePackageStep",
+        step_order: 1,
+        fields: [
+          {
+            field_name: "package",
+            field_type: "select",
+            placeholder_key: "chooseBusinessPackage",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 2,
+        title_key: "companyDetailsStep",
+        step_order: 2,
+        fields: [
+          {
+            field_name: "companyName",
+            field_type: "text",
+            placeholder_key: "companyNamePlaceholder",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "contactPerson",
+            field_type: "text",
+            placeholder_key: "contactPersonPlaceholder",
+            required: true,
+            field_order: 2,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "email",
+            field_type: "email",
+            placeholder_key: "emailPlaceholder",
+            required: true,
+            field_order: 3,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "phone",
+            field_type: "text",
+            placeholder_key: "phonePlaceholder",
             required: true,
             field_order: 4,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "language",
+            field_type: "select",
+            placeholder_key: "songLanguagePlaceholder",
+            required: true,
+            field_order: 5,
+            options: [
+              { value: "ro", label_key: "romanianLanguage" },
+              { value: "en", label_key: "englishLanguage" },
+              { value: "fr", label_key: "frenchLanguage" }
+            ],
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "pronunciationRecording",
+            field_type: "file",
+            placeholder_key: "companyPronunciationPlaceholder",
+            required: false,
+            field_order: 6,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 3,
+        title_key: "brandStoryStep",
+        step_order: 3,
+        fields: [
+          {
+            field_name: "brandStory",
+            field_type: "textarea",
+            placeholder_key: "brandStoryPlaceholder",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "keyValues",
+            field_type: "text",
+            placeholder_key: "keyValuesPlaceholder",
+            required: true,
+            field_order: 2,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "youtubeLinks",
+            field_type: "text",
+            placeholder_key: "inspirationLinksPlaceholder",
+            required: false,
+            field_order: 3,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 4,
+        title_key: "addonsStep",
+        step_order: 4,
+        fields: [
+          {
+            field_name: "addons",
+            field_type: "checkbox-group",
+            placeholder_key: "selectAddonsPlaceholder",
+            required: false,
+            field_order: 1,
             validations: [],
             dependencies: []
           }
@@ -365,238 +579,150 @@ export const packages: PackageData[] = [
     value: "artist",
     label_key: "artistPackage",
     price: 8000,
-    tagline_key: "Colaborare artistică completă pentru cariera ta muzicală",
-    description_key: "Pachetul profesional pentru artiști care vor să își lanseze cariera muzicală",
-    delivery_time_key: "14-21 zile",
+    tagline_key: "artistTagline",
+    description_key: "artistDescription",
+    delivery_time_key: "artistDelivery",
     tags: [
       {
         tag_type: "premium",
-        tag_label_key: "Premium",
+        tag_label_key: "premiumTag",
         styling_class: "bg-purple-100 text-purple-800"
       }
     ],
     includes: [
-      {
-        include_key: "Colaborare artistică completă",
-        include_order: 1
-      },
-      {
-        include_key: "Producție cântec original",
-        include_order: 2
-      },
-      {
-        include_key: "Înregistrare vocală profesională",
-        include_order: 3
-      },
-      {
-        include_key: "Video clip muzical profesional",
-        include_order: 4
-      },
-      {
-        include_key: "Distribuție pe toate platformele",
-        include_order: 5
-      },
-      {
-        include_key: "Contract 50/50",
-        include_order: 6
-      },
-      {
-        include_key: "Marketing profesional",
-        include_order: 7
-      }
+      { include_key: "artistInclude1", include_order: 1 },
+      { include_key: "artistInclude2", include_order: 2 },
+      { include_key: "artistInclude3", include_order: 3 },
+      { include_key: "artistInclude4", include_order: 4 }
     ],
     steps: [
       {
         step_number: 1,
-        title_key: "Alege pachetul",
+        title_key: "choosePackageStep",
         step_order: 1,
-        fields: []
+        fields: [
+          {
+            field_name: "package",
+            field_type: "select",
+            placeholder_key: "chooseArtistPackage",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          }
+        ]
       },
       {
         step_number: 2,
-        title_key: "Profilul artistic",
+        title_key: "artisticDataStep",
         step_order: 2,
         fields: [
           {
             field_name: "artistName",
             field_type: "text",
-            placeholder_key: "Numele de scenă dorit",
+            placeholder_key: "artistNamePlaceholder",
             required: true,
             field_order: 1,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "musicalExperience",
-            field_type: "select",
-            placeholder_key: "Experiența muzicală",
+            field_name: "email",
+            field_type: "email",
+            placeholder_key: "emailPlaceholder",
             required: true,
             field_order: 2,
-            options: [
-              { value: "beginner", label_key: "Începător" },
-              { value: "intermediate", label_key: "Intermediar" },
-              { value: "advanced", label_key: "Avansat" },
-              { value: "professional", label_key: "Profesionist" }
-            ],
             validations: [],
             dependencies: []
           },
           {
-            field_name: "preferredGenre",
-            field_type: "select",
-            placeholder_key: "Genul muzical preferat",
+            field_name: "phone",
+            field_type: "text",
+            placeholder_key: "phonePlaceholder",
             required: true,
             field_order: 3,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "language",
+            field_type: "select",
+            placeholder_key: "songLanguagePlaceholder",
+            required: true,
+            field_order: 4,
             options: [
-              { value: "pop", label_key: "Pop" },
-              { value: "rock", label_key: "Rock" },
-              { value: "hip-hop", label_key: "Hip-Hop" },
-              { value: "electronic", label_key: "Electronic" },
-              { value: "folk", label_key: "Folk" },
-              { value: "jazz", label_key: "Jazz" }
+              { value: "ro", label_key: "romanianLanguage" },
+              { value: "en", label_key: "englishLanguage" },
+              { value: "fr", label_key: "frenchLanguage" }
             ],
             validations: [],
             dependencies: []
           },
           {
-            field_name: "artisticVision",
-            field_type: "textarea",
-            placeholder_key: "Viziunea ta artistică și ce vrei să transmiți prin muzică",
-            required: true,
-            field_order: 4,
+            field_name: "mediaLinks",
+            field_type: "text",
+            placeholder_key: "mediaLinksPlaceholder",
+            required: false,
+            field_order: 5,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "careerGoals",
-            field_type: "textarea",
-            placeholder_key: "Obiectivele tale de carieră muzicală",
-            required: true,
-            field_order: 5,
+            field_name: "pressLinks",
+            field_type: "text",
+            placeholder_key: "pressLinksPlaceholder",
+            required: false,
+            field_order: 6,
             validations: [],
             dependencies: []
           }
         ]
-      }
-    ],
-    addons: []
-  },
-  {
-    id: "instrumental-package-id",
-    value: "instrumental",
-    label_key: "instrumentalPackage",
-    price: 500,
-    tagline_key: "Instrumental personalizat pentru proiectele tale",
-    description_key: "Perfecte pentru podcasturi, videoclipuri, prezentări sau orice proiect care necesită muzică de fundal",
-    delivery_time_key: "5-7 zile",
-    tags: [],
-    includes: [
-      {
-        include_key: "Instrumental personalizat",
-        include_order: 1
       },
       {
-        include_key: "Producție audio profesională",
-        include_order: 2
-      },
-      {
-        include_key: "Mix & Master final",
-        include_order: 3
-      },
-      {
-        include_key: "Fișiere audio multiple",
-        include_order: 4
-      },
-      {
-        include_key: "Stems separate pentru editare",
-        include_order: 5
-      }
-    ],
-    steps: [
-      {
-        step_number: 1,
-        title_key: "Alege pachetul",
-        step_order: 1,
-        fields: []
-      },
-      {
-        step_number: 2,
-        title_key: "Specificații instrumental",
-        step_order: 2,
+        step_number: 3,
+        title_key: "songConceptStep",
+        step_order: 3,
         fields: [
           {
-            field_name: "projectType",
-            field_type: "select",
-            placeholder_key: "Tipul proiectului",
+            field_name: "vision",
+            field_type: "textarea",
+            placeholder_key: "musicalVisionPlaceholder",
             required: true,
             field_order: 1,
-            options: [
-              { value: "podcast", label_key: "Podcast" },
-              { value: "video", label_key: "Video/Film" },
-              { value: "presentation", label_key: "Prezentare" },
-              { value: "game", label_key: "Joc" },
-              { value: "commercial", label_key: "Reclamă" },
-              { value: "other", label_key: "Altul" }
-            ],
             validations: [],
             dependencies: []
           },
           {
-            field_name: "musicGenre",
-            field_type: "select",
-            placeholder_key: "Genul muzical",
+            field_name: "youtubeLinks",
+            field_type: "text",
+            placeholder_key: "youtubeLinksPlaceholder",
+            required: false,
+            field_order: 2,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 4,
+        title_key: "processAcceptanceStep",
+        step_order: 4,
+        fields: [
+          {
+            field_name: "acceptProcess",
+            field_type: "checkbox",
+            placeholder_key: "acceptProcessPlaceholder",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "acceptContact",
+            field_type: "checkbox",
+            placeholder_key: "acceptContactPlaceholder",
             required: true,
             field_order: 2,
-            options: [
-              { value: "ambient", label_key: "Ambient" },
-              { value: "electronic", label_key: "Electronic" },
-              { value: "acoustic", label_key: "Acustic" },
-              { value: "cinematic", label_key: "Cinematic" },
-              { value: "upbeat", label_key: "Energic" },
-              { value: "relaxing", label_key: "Relaxant" }
-            ],
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "mood",
-            field_type: "select",
-            placeholder_key: "Atmosfera dorită",
-            required: true,
-            field_order: 3,
-            options: [
-              { value: "energetic", label_key: "Energic" },
-              { value: "calm", label_key: "Calm" },
-              { value: "mysterious", label_key: "Misterios" },
-              { value: "uplifting", label_key: "Optimist" },
-              { value: "dramatic", label_key: "Dramatic" },
-              { value: "playful", label_key: "Jucăuș" }
-            ],
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "duration",
-            field_type: "select",
-            placeholder_key: "Durata dorită",
-            required: true,
-            field_order: 4,
-            options: [
-              { value: "30s", label_key: "30 secunde" },
-              { value: "1min", label_key: "1 minut" },
-              { value: "2min", label_key: "2 minute" },
-              { value: "3min", label_key: "3 minute" },
-              { value: "custom", label_key: "Durată personalizată" }
-            ],
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "additionalNotes",
-            field_type: "textarea",
-            placeholder_key: "Note adiționale și detalii specifice",
-            required: false,
-            field_order: 5,
             validations: [],
             dependencies: []
           }
@@ -610,91 +736,191 @@ export const packages: PackageData[] = [
     value: "remix",
     label_key: "remixPackage",
     price: 500,
-    tagline_key: "Dă o nouă viață cântecului tău preferat",
-    description_key: "Transformă orice cântec într-o versiune unică și personalizată",
-    delivery_time_key: "5-7 zile",
+    tagline_key: "remixTagline",
+    description_key: "remixDescription",
+    delivery_time_key: "remixDelivery",
     tags: [],
     includes: [
-      {
-        include_key: "Remix profesional",
-        include_order: 1
-      },
-      {
-        include_key: "Producție în stilul dorit",
-        include_order: 2
-      },
-      {
-        include_key: "Mix & Master final",
-        include_order: 3
-      },
-      {
-        include_key: "Versiune extinsă și radio edit",
-        include_order: 4
-      },
-      {
-        include_key: "Fișiere audio de înaltă calitate",
-        include_order: 5
-      }
+      { include_key: "remixInclude1", include_order: 1 },
+      { include_key: "remixInclude2", include_order: 2 },
+      { include_key: "remixInclude3", include_order: 3 },
+      { include_key: "remixInclude4", include_order: 4 },
+      { include_key: "remixInclude5", include_order: 5 },
+      { include_key: "remixInclude6", include_order: 6 }
     ],
     steps: [
       {
         step_number: 1,
-        title_key: "Alege pachetul",
+        title_key: "remixInfoStep",
         step_order: 1,
-        fields: []
-      },
-      {
-        step_number: 2,
-        title_key: "Detalii remix",
-        step_order: 2,
         fields: [
           {
-            field_name: "originalSong",
+            field_name: "originalSongLink",
             field_type: "text",
-            placeholder_key: "Numele cântecului original și artistul",
+            placeholder_key: "originalSongLinkPlaceholder",
             required: true,
             field_order: 1,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "remixStyle",
-            field_type: "select",
-            placeholder_key: "Stilul remix-ului dorit",
+            field_name: "uploadWAV",
+            field_type: "file",
+            placeholder_key: "uploadWAVPlaceholder",
             required: true,
             field_order: 2,
-            options: [
-              { value: "electronic", label_key: "Electronic/EDM" },
-              { value: "acoustic", label_key: "Acustic" },
-              { value: "hip-hop", label_key: "Hip-Hop" },
-              { value: "rock", label_key: "Rock" },
-              { value: "reggae", label_key: "Reggae" },
-              { value: "jazz", label_key: "Jazz" }
-            ],
             validations: [],
             dependencies: []
           },
           {
-            field_name: "tempo",
-            field_type: "select",
-            placeholder_key: "Tempoul dorit",
+            field_name: "genre",
+            field_type: "text",
+            placeholder_key: "remixGenrePlaceholder",
             required: true,
             field_order: 3,
-            options: [
-              { value: "slower", label_key: "Mai lent" },
-              { value: "same", label_key: "Același tempo" },
-              { value: "faster", label_key: "Mai rapid" },
-              { value: "variable", label_key: "Tempo variabil" }
-            ],
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 2,
+        title_key: "legalityContactStep",
+        step_order: 2,
+        fields: [
+          {
+            field_name: "ownershipConfirmation",
+            field_type: "checkbox",
+            placeholder_key: "ownershipConfirmationPlaceholder",
+            required: true,
+            field_order: 1,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "specialRequests",
-            field_type: "textarea",
-            placeholder_key: "Cerințe speciale și viziunea ta pentru remix",
-            required: false,
+            field_name: "acceptContact",
+            field_type: "checkbox",
+            placeholder_key: "acceptContactPlaceholder",
+            required: true,
+            field_order: 2,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      }
+    ],
+    addons: []
+  },
+  {
+    id: "instrumental-package-id",
+    value: "instrumental",
+    label_key: "instrumentalPackage",
+    price: 500,
+    tagline_key: "instrumentalTagline",
+    description_key: "instrumentalDescription",
+    delivery_time_key: "instrumentalDelivery",
+    tags: [],
+    includes: [
+      { include_key: "instrumentalInclude1", include_order: 1 },
+      { include_key: "instrumentalInclude2", include_order: 2 },
+      { include_key: "instrumentalInclude3", include_order: 3 },
+      { include_key: "instrumentalInclude4", include_order: 4 },
+      { include_key: "instrumentalInclude5", include_order: 5 }
+    ],
+    steps: [
+      {
+        step_number: 1,
+        title_key: "artisticDetailsStep",
+        step_order: 1,
+        fields: [
+          {
+            field_name: "artistName",
+            field_type: "text",
+            placeholder_key: "artistNamePlaceholder",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "email",
+            field_type: "email",
+            placeholder_key: "emailPlaceholder",
+            required: true,
+            field_order: 2,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "phone",
+            field_type: "text",
+            placeholder_key: "phonePlaceholder",
+            required: true,
+            field_order: 3,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "language",
+            field_type: "select",
+            placeholder_key: "titleLanguagePlaceholder",
+            required: true,
             field_order: 4,
+            options: [
+              { value: "ro", label_key: "romanianLanguage" },
+              { value: "en", label_key: "englishLanguage" },
+              { value: "fr", label_key: "frenchLanguage" }
+            ],
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 2,
+        title_key: "visionStyleStep",
+        step_order: 2,
+        fields: [
+          {
+            field_name: "genre",
+            field_type: "text",
+            placeholder_key: "instrumentalGenrePlaceholder",
+            required: true,
+            field_order: 1,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "mood",
+            field_type: "text",
+            placeholder_key: "moodAtmospherePlaceholder",
+            required: true,
+            field_order: 2,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "youtubeLinks",
+            field_type: "text",
+            placeholder_key: "youtubeLinksPlaceholder",
+            required: false,
+            field_order: 3,
+            validations: [],
+            dependencies: []
+          }
+        ]
+      },
+      {
+        step_number: 3,
+        title_key: "extraOptionsStep",
+        step_order: 3,
+        fields: [
+          {
+            field_name: "addons",
+            field_type: "checkbox-group",
+            placeholder_key: "selectAddonsPlaceholder",
+            required: false,
+            field_order: 1,
             validations: [],
             dependencies: []
           }
@@ -708,96 +934,76 @@ export const packages: PackageData[] = [
     value: "gift",
     label_key: "giftPackage",
     price: 0,
-    tagline_key: "Oferă cadoul muzicii personalizate",
-    description_key: "Cumpără orice pachet ca și cadou pentru cineva special",
-    delivery_time_key: "Variabil",
+    tagline_key: "giftTagline",
+    description_key: "giftDescription",
+    delivery_time_key: "giftDelivery",
     tags: [
       {
         tag_type: "special",
-        tag_label_key: "Cadou",
+        tag_label_key: "giftTag",
         styling_class: "bg-pink-100 text-pink-800"
       }
     ],
     includes: [
-      {
-        include_key: "Card digital personalizat",
-        include_order: 1
-      },
-      {
-        include_key: "Mesaj personalizat",
-        include_order: 2
-      },
-      {
-        include_key: "Livrare automată",
-        include_order: 3
-      },
-      {
-        include_key: "Toate beneficiile pachetului selectat",
-        include_order: 4
-      }
+      { include_key: "giftInclude1", include_order: 1 },
+      { include_key: "giftInclude2", include_order: 2 },
+      { include_key: "giftInclude3", include_order: 3 }
     ],
     steps: [
       {
         step_number: 1,
-        title_key: "Alege pachetul",
+        title_key: "recipientDetailsStep",
         step_order: 1,
-        fields: []
-      },
-      {
-        step_number: 2,
-        title_key: "Pachetul cadou",
-        step_order: 2,
         fields: [
-          {
-            field_name: "giftPackageType",
-            field_type: "select",
-            placeholder_key: "Alege pachetul pentru cadou",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "personal", label_key: "Pachet Personal" },
-              { value: "business", label_key: "Pachet Business" },
-              { value: "premium", label_key: "Pachet Premium" },
-              { value: "artist", label_key: "Pachet Artist" },
-              { value: "instrumental", label_key: "Pachet Instrumental" },
-              { value: "remix", label_key: "Pachet Remix" }
-            ],
-            validations: [],
-            dependencies: []
-          },
           {
             field_name: "recipientName",
             field_type: "text",
-            placeholder_key: "Numele destinatarului cadoului",
+            placeholder_key: "giftRecipientNamePlaceholder",
             required: true,
-            field_order: 2,
+            field_order: 1,
             validations: [],
             dependencies: []
           },
           {
             field_name: "recipientEmail",
             field_type: "email",
-            placeholder_key: "Email-ul destinatarului",
+            placeholder_key: "recipientEmailPlaceholder",
             required: true,
+            field_order: 2,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "personalMessage",
+            field_type: "textarea",
+            placeholder_key: "personalMessagePlaceholder",
+            required: false,
             field_order: 3,
             validations: [],
             dependencies: []
-          },
+          }
+        ]
+      },
+      {
+        step_number: 2,
+        title_key: "deliveryConfirmationStep",
+        step_order: 2,
+        fields: [
           {
-            field_name: "giftMessage",
-            field_type: "textarea",
-            placeholder_key: "Mesajul tău pentru destinatar",
+            field_name: "senderName",
+            field_type: "text",
+            placeholder_key: "senderNamePlaceholder",
             required: true,
-            field_order: 4,
+            field_order: 1,
             validations: [],
             dependencies: []
           },
           {
-            field_name: "deliveryDate",
-            field_type: "date",
-            placeholder_key: "Data livrării (opțional)",
-            required: false,
-            field_order: 5,
+            field_name: "senderEmail",
+            field_type: "email",
+            placeholder_key: "senderEmailPlaceholder",
+            required: true,
+            field_order: 2,
             validations: [],
             dependencies: []
           }
