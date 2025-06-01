@@ -54,7 +54,7 @@ const PackageDetails = () => {
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section with Purple Musical Background */}
+      {/* Enhanced Hero Section with Package Details Grid */}
       <section 
         className="py-20 text-white relative overflow-hidden"
         style={{
@@ -65,14 +65,14 @@ const PackageDetails = () => {
         }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="max-w-4xl mx-auto px-4 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
           <Link to="/packages" className="inline-flex items-center text-white/80 hover:text-white mb-6 transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
             {t('backToPackages')}
           </Link>
           
           <motion.div 
-            className="text-center"
+            className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6 }}
@@ -94,12 +94,8 @@ const PackageDetails = () => {
               </p>
             )}
           </motion.div>
-        </div>
-      </section>
 
-      {/* Package Details */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
+          {/* Package Details Grid moved into Hero */}
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Package Info */}
             <motion.div
@@ -107,14 +103,14 @@ const PackageDetails = () => {
               animate={{ opacity: 1, x: 0 }} 
               transition={{ duration: 0.6 }}
             >
-              <Card>
+              <Card className="backdrop-blur-md bg-white/10 border border-white/20">
                 <CardContent className="p-8">
                   <div className="text-center mb-8">
-                    <div className="text-4xl font-bold text-purple-600 mb-2">
-                      {selectedPackage.price} <span className="text-lg text-gray-500">RON</span>
+                    <div className="text-4xl font-bold text-white mb-2">
+                      {selectedPackage.price} <span className="text-lg text-white/70">RON</span>
                     </div>
                     {selectedPackage.delivery_time_key && (
-                      <div className="flex items-center justify-center text-gray-500">
+                      <div className="flex items-center justify-center text-white/80">
                         <Clock className="w-4 h-4 mr-2" />
                         {tDb(selectedPackage.delivery_time_key)}
                       </div>
@@ -123,15 +119,15 @@ const PackageDetails = () => {
 
                   {selectedPackage.description_key && (
                     <div className="mb-8">
-                      <h3 className="text-xl font-bold text-gray-900 mb-4">{t('description')}</h3>
-                      <p className="text-gray-600 leading-relaxed">
+                      <h3 className="text-xl font-bold text-white mb-4">{t('description')}</h3>
+                      <p className="text-white/90 leading-relaxed">
                         {tDb(selectedPackage.description_key)}
                       </p>
                     </div>
                   )}
 
                   <Link to="/order">
-                    <Button className="w-full bg-gradient-purple text-lg py-4">
+                    <Button className="w-full bg-white/20 hover:bg-white/30 text-white border border-white/30 text-lg py-4 backdrop-blur-md">
                       {t('orderNow')}
                     </Button>
                   </Link>
@@ -145,10 +141,10 @@ const PackageDetails = () => {
               animate={{ opacity: 1, x: 0 }} 
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Card>
+              <Card className="backdrop-blur-md bg-white/10 border border-white/20">
                 <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    <Star className="w-6 h-6 text-yellow-500 mr-2" />
+                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center">
+                    <Star className="w-6 h-6 text-yellow-400 mr-2" />
                     {t('whatsIncluded')}
                   </h3>
                   
@@ -156,17 +152,17 @@ const PackageDetails = () => {
                     <ul className="space-y-4">
                       {selectedPackage.includes.map((include, index) => (
                         <li key={index} className="flex items-start">
-                          <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                            <Check className="w-4 h-4 text-green-600" />
+                          <div className="w-6 h-6 bg-green-400/20 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0 border border-green-400/30">
+                            <Check className="w-4 h-4 text-green-300" />
                           </div>
-                          <span className="text-gray-700 leading-relaxed">
+                          <span className="text-white/90 leading-relaxed">
                             {tDb(include.include_key)}
                           </span>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-gray-500">{t('noFeaturesListed')}</p>
+                    <p className="text-white/70">{t('noFeaturesListed')}</p>
                   )}
                 </CardContent>
               </Card>
