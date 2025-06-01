@@ -8,6 +8,7 @@ import { usePackages } from "@/hooks/usePackageData";
 import { useTranslation } from "@/hooks/useTranslations";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight } from "lucide-react";
+import ScenarioBanner from "@/components/ScenarioBanner";
 
 const Packages = () => {
   const { data: packages = [], isLoading } = usePackages();
@@ -35,19 +36,19 @@ const Packages = () => {
       
       {/* Enhanced Packages Section */}
       <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-purple-50 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute top-0 left-0 w-72 h-72 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="absolute top-0 right-0 w-72 h-72 bg-yellow-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               {t('ourPackages') || 'Our Packages'}
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
               {t('packagesDescription') || 'Choose the perfect package for your musical needs'}
             </p>
+            
+            {/* ScenarioBanner replacing the static blobs */}
+            <div className="max-w-4xl mx-auto mb-12">
+              <ScenarioBanner />
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-8xl mx-auto">
