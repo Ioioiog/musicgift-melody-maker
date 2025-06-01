@@ -1,163 +1,191 @@
+
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import NewsletterForm from "@/components/NewsletterForm";
+
 const Footer = () => {
-  const {
-    t
-  } = useLanguage();
-  return <footer className="bg-gradient-to-br from-gray-800 via-gray-900 to-slate-900 text-white relative overflow-hidden">
-      {/* Glass effect overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-white/2 to-transparent backdrop-blur-sm"></div>
-      
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 bg-white rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 bg-gray-400 rounded-full filter blur-3xl"></div>
+  const { t } = useLanguage();
+  
+  return (
+    <footer className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-gray-900 to-black">
+      {/* Modern geometric background pattern */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-tl from-blue-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-purple-500/5 to-pink-500/5 rounded-full blur-2xl"></div>
       </div>
-      
-      <div className="container mx-auto sm:px-6 sm:py-12 md:py-16 relative z-10 backdrop-blur-md bg-white/5 border-t border-white/10 px-[28px] py-[13px]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
-          {/* Brand */}
-          <div className="space-y-4 sm:space-y-6 sm:col-span-2 lg:col-span-1">
-            <Link to="/" className="flex items-center space-x-3 group">
-              <img src="/lovable-uploads/61b6a361-9741-4d73-8075-0df2b2f8fb27.png" alt="MusicGift by Mango Records" className="h-10 sm:h-12 w-auto transition-transform duration-300 group-hover:scale-105" />
+
+      {/* Subtle grid pattern overlay */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }}></div>
+
+      <div className="container mx-auto px-6 py-16 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+          
+          {/* Brand Section - Enhanced */}
+          <div className="space-y-6 lg:col-span-1">
+            <Link to="/" className="inline-block group">
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 transition-all duration-300 group-hover:bg-white/10 group-hover:border-white/20 group-hover:scale-105">
+                <img 
+                  src="/lovable-uploads/61b6a361-9741-4d73-8075-0df2b2f8fb27.png" 
+                  alt="MusicGift by Mango Records" 
+                  className="h-12 w-auto" 
+                />
+              </div>
             </Link>
-            <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+            
+            <p className="text-gray-300 leading-relaxed text-sm font-light">
               {t('footerDescription')}
             </p>
-            <div className="flex space-x-3 sm:space-x-4">
-              {[{
-              icon: Facebook,
-              href: "#",
-              label: "Facebook"
-            }, {
-              icon: Instagram,
-              href: "#",
-              label: "Instagram"
-            }, {
-              icon: Youtube,
-              href: "#",
-              label: "YouTube"
-            }, {
-              icon: Music,
-              href: "#",
-              label: "TikTok"
-            }].map(({
-              icon: Icon,
-              href,
-              label
-            }) => <a key={label} href={href} className="w-8 h-8 sm:w-10 sm:h-10 bg-white/10 hover:bg-purple-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group" aria-label={label}>
-                  <Icon className="w-4 h-4 sm:w-5 sm:h-5 group-hover:text-white" />
-                </a>)}
+            
+            {/* Enhanced Social Links */}
+            <div className="space-y-3">
+              <h4 className="text-white font-semibold text-sm uppercase tracking-wider">
+                {t('followUs') || 'Follow Us'}
+              </h4>
+              <div className="flex space-x-3">
+                {[
+                  { icon: Facebook, href: "#", label: "Facebook", color: "hover:bg-blue-600" },
+                  { icon: Instagram, href: "#", label: "Instagram", color: "hover:bg-pink-600" },
+                  { icon: Youtube, href: "#", label: "YouTube", color: "hover:bg-red-600" },
+                  { icon: Music, href: "#", label: "TikTok", color: "hover:bg-gray-800" }
+                ].map(({ icon: Icon, href, label, color }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    className={`w-11 h-11 bg-white/5 backdrop-blur-sm border border-white/10 ${color} rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-white/30 group`}
+                    aria-label={label}
+                  >
+                    <Icon className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors duration-300" />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-4 sm:space-y-6">
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 relative">
-              {t('quickLinks')}
-              <div className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400"></div>
-            </h3>
-            <ul className="space-y-2 sm:space-y-3">
-              {[{
-              to: "/",
-              label: t('home')
-            }, {
-              to: "/about",
-              label: t('about')
-            }, {
-              to: "/packages",
-              label: t('packages')
-            }, {
-              to: "/how-it-works",
-              label: t('howItWorks')
-            }, {
-              to: "/testimonials",
-              label: t('testimonials')
-            }, {
-              to: "/admin",
-              label: t('admin')
-            }].map(({
-              to,
-              label
-            }) => <li key={to}>
-                  <Link to={to} className="text-gray-300 hover:text-purple-400 transition-all duration-300 hover:translate-x-2 inline-block relative group text-sm sm:text-base">
-                    {label}
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-400 transition-all duration-300 group-hover:w-full"></span>
+          {/* Quick Links - Enhanced */}
+          <div className="space-y-6">
+            <div className="relative">
+              <h3 className="text-white font-bold text-lg mb-1">
+                {t('quickLinks')}
+              </h3>
+              <div className="w-12 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+            </div>
+            
+            <ul className="space-y-3">
+              {[
+                { to: "/", label: t('home') },
+                { to: "/about", label: t('about') },
+                { to: "/packages", label: t('packages') },
+                { to: "/how-it-works", label: t('howItWorks') },
+                { to: "/testimonials", label: t('testimonials') },
+                { to: "/admin", label: t('admin') }
+              ].map(({ to, label }) => (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    className="text-gray-300 hover:text-white transition-all duration-300 relative group inline-block py-1"
+                  >
+                    <span className="relative z-10">{label}</span>
+                    <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300"></div>
                   </Link>
-                </li>)}
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Contact Info */}
-          <div className="space-y-4 sm:space-y-6">
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 relative">
-              {t('contactInfo')}
-              <div className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400"></div>
-            </h3>
-            <div className="space-y-3 sm:space-y-4">
-              {[{
-              icon: Mail,
-              text: "info@musicgift.ro",
-              href: "mailto:info@musicgift.ro"
-            }, {
-              icon: Phone,
-              text: "+40 721 234 567",
-              href: "tel:+40721234567"
-            }, {
-              icon: MapPin,
-              text: "Strada Muzicii 42, București",
-              href: "#"
-            }].map(({
-              icon: Icon,
-              text,
-              href
-            }) => <a key={text} href={href} className="flex items-center space-x-2 sm:space-x-3 text-gray-300 hover:text-purple-400 transition-colors duration-300 group text-sm sm:text-base">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-600/20 rounded-lg flex items-center justify-center group-hover:bg-purple-600/40 transition-colors duration-300 flex-shrink-0">
-                    <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
+          {/* Contact Info - Enhanced */}
+          <div className="space-y-6">
+            <div className="relative">
+              <h3 className="text-white font-bold text-lg mb-1">
+                {t('contactInfo')}
+              </h3>
+              <div className="w-12 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+            </div>
+            
+            <div className="space-y-4">
+              {[
+                { icon: Mail, text: "info@musicgift.ro", href: "mailto:info@musicgift.ro" },
+                { icon: Phone, text: "+40 721 234 567", href: "tel:+40721234567" },
+                { icon: MapPin, text: "Strada Muzicii 42, București", href: "#" }
+              ].map(({ icon: Icon, text, href }) => (
+                <a
+                  key={text}
+                  href={href}
+                  className="flex items-center space-x-3 text-gray-300 hover:text-white transition-all duration-300 group p-3 rounded-xl hover:bg-white/5 backdrop-blur-sm border border-transparent hover:border-white/10"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-white/10 rounded-lg flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300 flex-shrink-0">
+                    <Icon className="w-4 h-4" />
                   </div>
-                  <span className="break-all">{text}</span>
-                </a>)}
+                  <span className="text-sm font-medium break-all">{text}</span>
+                </a>
+              ))}
             </div>
 
-            {/* Legal Links */}
-            <div className="pt-3 sm:pt-4">
-              <h4 className="text-xs sm:text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2 sm:mb-3">
+            {/* Legal Links - Enhanced */}
+            <div className="pt-4 border-t border-white/10">
+              <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">
                 {t('legal')}
               </h4>
-              <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm">
-                {[t('termsConditions'), t('privacyPolicy'), t('refundPolicy'), t('cookiePolicy')].map(item => <li key={item}>
-                    <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors duration-300">
+              <ul className="grid grid-cols-2 gap-2 text-sm">
+                {[t('termsConditions'), t('privacyPolicy'), t('refundPolicy'), t('cookiePolicy')].map((item) => (
+                  <li key={item}>
+                    <a
+                      href="#"
+                      className="text-gray-400 hover:text-purple-300 transition-colors duration-300 hover:underline block py-1"
+                    >
                       {item}
                     </a>
-                  </li>)}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
 
-          {/* Newsletter */}
-          <div className="space-y-4 sm:space-y-6 sm:col-span-2 lg:col-span-1">
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 relative">
-              {t('stayUpdated')}
-              <div className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400"></div>
-            </h3>
-            <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-              {t('newsletterDescription')}
-            </p>
-            <NewsletterForm />
+          {/* Newsletter - Enhanced */}
+          <div className="space-y-6">
+            <div className="relative">
+              <h3 className="text-white font-bold text-lg mb-1">
+                {t('stayUpdated')}
+              </h3>
+              <div className="w-12 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+            </div>
+            
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300">
+              <p className="text-gray-300 leading-relaxed text-sm mb-6 font-light">
+                {t('newsletterDescription')}
+              </p>
+              <NewsletterForm />
+            </div>
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="border-t border-white/10 mt-8 sm:mt-12 md:mt-16 pt-6 sm:pt-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
-            <p className="text-xs sm:text-sm text-slate-50 text-center py-[3px] px-[240px] sm:text-center">
-              {t('copyright')}
-            </p>
+        {/* Bottom Section - Enhanced */}
+        <div className="border-t border-white/10 mt-16 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-6 py-3">
+              <p className="text-sm text-gray-300 font-light">
+                {t('copyright')}
+              </p>
+            </div>
+            
+            {/* Additional trust indicators */}
+            <div className="flex items-center space-x-4 text-xs text-gray-400">
+              <span className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-3 py-1">
+                🔒 {t('securePayments') || 'Secure Payments'}
+              </span>
+              <span className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-3 py-1">
+                ⚡ {t('fastDelivery') || 'Fast Delivery'}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;
