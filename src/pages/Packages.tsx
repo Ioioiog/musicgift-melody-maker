@@ -9,7 +9,6 @@ import { useTranslation } from "@/hooks/useTranslations";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-
 const Packages = () => {
   const {
     data: packages = [],
@@ -21,7 +20,6 @@ const Packages = () => {
   const {
     t
   } = useLanguage();
-
   if (isLoading) {
     return <div className="min-h-screen">
         <Navigation />
@@ -34,7 +32,6 @@ const Packages = () => {
         <Footer />
       </div>;
   }
-
   return <div className="min-h-screen">
       <Navigation />
       
@@ -43,48 +40,48 @@ const Packages = () => {
 
       {/* Enhanced Packages Section with Homepage Style */}
       <section className="relative overflow-hidden py-16" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         {/* Overlay for better readability */}
         <div className="absolute inset-0 bg-black/40"></div>
         
         <div className="container mx-auto relative z-10 px-[22px]">
           {/* Section Title */}
           <motion.div className="text-center mb-12" initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6
-          }}>
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }}>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('chooseYourPackage')}</h2>
             <p className="text-lg md:text-xl text-white/90">{t('selectPerfectPackage')}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-8xl mx-auto">
             {packages.map((pkg, index) => <motion.div key={pkg.id || pkg.value} initial={{
-              opacity: 0,
-              y: 20
-            }} animate={{
-              opacity: 1,
-              y: 0
-            }} transition={{
-              duration: 0.6,
-              delay: 0.1 * index
-            }}>
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.1 * index
+          }}>
                 <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
                   {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
-                      <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl animate-pulse">
+                      <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white py-2 rounded-full text-sm font-bold shadow-xl animate-pulse px-[14px] text-justify">
                         ⭐ {t('mostPopular')}
                       </span>
                     </div>}
                   
-                  <CardContent className="p-8 relative z-10 text-white">
+                  <CardContent className="p-8 relative z-10 text-white py-[12px] px-[22px]">
                     {/* Icon and Title */}
                     <div className="text-center mb-8">
                       <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -137,5 +134,4 @@ const Packages = () => {
       <Footer />
     </div>;
 };
-
 export default Packages;
