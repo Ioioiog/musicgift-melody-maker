@@ -10,7 +10,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, Download, RefreshCw, Users, Mail, MousePointer, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
-import { toast } from 'react-toastify';
+import { toast } from '@/hooks/use-toast';
 
 interface CampaignRecipientActivityProps {
   campaignId: string;
