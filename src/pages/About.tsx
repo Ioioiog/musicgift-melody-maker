@@ -1,6 +1,7 @@
 
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import ImpactCards from "@/components/ImpactCards";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
@@ -52,6 +53,9 @@ const About = () => {
         </div>
       </section>
 
+      {/* Impact Cards Section */}
+      <ImpactCards />
+
       {/* Enhanced Content Section */}
       <section className="relative bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden py-20">
         {/* Floating elements */}
@@ -89,37 +93,6 @@ const About = () => {
                       {t('aboutNewDescription2')}
                     </p>
                   </div>
-                </div>
-
-                {/* Stats - Mobile responsive grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 pt-6 sm:pt-8">
-                  <motion.div 
-                    className="text-center p-4 bg-white rounded-lg shadow-sm"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                  >
-                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-600 mb-2">1,000+</h3>
-                    <p className="text-gray-600 text-sm sm:text-base">{t('songsCreated')}</p>
-                  </motion.div>
-                  <motion.div 
-                    className="text-center p-4 bg-white rounded-lg shadow-sm"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                  >
-                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-600 mb-2">3+</h3>
-                    <p className="text-gray-600 text-sm sm:text-base">{t('yearsExperience')}</p>
-                  </motion.div>
-                  <motion.div 
-                    className="text-center p-4 bg-white rounded-lg shadow-sm"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                  >
-                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-600 mb-2">98%</h3>
-                    <p className="text-gray-600 text-sm sm:text-base">{t('clientSatisfaction')}</p>
-                  </motion.div>
                 </div>
               </motion.div>
 
