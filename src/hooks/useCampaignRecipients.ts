@@ -23,13 +23,20 @@ export const useCampaignRecipientActivity = (campaignId?: string) => {
     queryFn: async () => {
       if (!campaignId) return [];
       
+      console.log('Fetching recipient activity for campaign:', campaignId);
+      
       const { data, error } = await supabase
         .from('campaign_recipient_activity')
         .select('*')
         .eq('campaign_id', campaignId)
         .order('action_timestamp', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching recipient activity:', error);
+        throw error;
+      }
+      
+      console.log(`Found ${data?.length || 0} recipient activities`);
       return data as CampaignRecipientActivity[];
     },
     enabled: !!campaignId,
@@ -49,7 +56,7 @@ export const useSyncCampaignRecipients = () => {
 
       if (error) {
         console.error('Supabase function error:', error);
-        throw error;
+        throw new Error(error.message || 'Failed to sync recipient data');
       }
       
       console.log('Sync response:', data);
@@ -57,9 +64,14 @@ export const useSyncCampaignRecipients = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['campaign-recipient-activity'] });
+      
+      const message = data?.note 
+        ? `${data.count || 0} activities synced. ${data.note}`
+        : `${data?.count || 0} activities synced successfully.`;
+        
       toast({
         title: "Recipient data synced",
-        description: `Campaign recipient activity has been updated from Brevo. ${data?.count || 0} activities synced.`,
+        description: message,
       });
     },
     onError: (error: any) => {

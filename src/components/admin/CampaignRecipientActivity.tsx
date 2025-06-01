@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,10 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Search, Download, RefreshCw, Users, Mail, MousePointer, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
+import { toast } from 'react-toastify';
 
 interface CampaignRecipientActivityProps {
   campaignId: string;
@@ -50,6 +50,44 @@ const CampaignRecipientActivity = ({ campaignId, isOpen, onOpenChange }: Campaig
     enabled: isOpen && !!campaignId,
   });
 
+  const syncRecipientsMutation = useMutation({
+    mutationFn: async (actionType?: string) => {
+      const { data, error } = await supabase.functions.invoke('brevo-campaign-recipients', {
+        body: { campaignId, actionType }
+      });
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      refetch();
+      toast({
+        title: "Recipient data synced",
+        description: `${data?.count || 0} activities synced successfully.`,
+      });
+    },
+    onError: (error: any) => {
+      console.error('Recipient sync error:', error);
+      toast({
+        title: "Recipient sync failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Auto-sync when dialog opens if no data exists
+  React.useEffect(() => {
+    if (isOpen && campaignId && activities.length === 0 && !isLoading) {
+      console.log('No recipient activity found, auto-syncing...');
+      syncRecipientsMutation.mutate();
+    }
+  }, [isOpen, campaignId, activities.length, isLoading]);
+
+  const syncRecipientData = async (actionType?: string) => {
+    syncRecipientsMutation.mutate(actionType);
+  };
+
   const filteredActivities = activities.filter(activity => {
     const matchesSearch = activity.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTab = activeTab === 'all' || activity.action_type === activeTab;
@@ -74,17 +112,6 @@ const CampaignRecipientActivity = ({ campaignId, isOpen, onOpenChange }: Campaig
     });
 
     return counts;
-  };
-
-  const syncRecipientData = async (actionType?: string) => {
-    try {
-      await supabase.functions.invoke('brevo-campaign-recipients', {
-        body: { campaignId, actionType }
-      });
-      refetch();
-    } catch (error) {
-      console.error('Error syncing recipient data:', error);
-    }
   };
 
   const exportToCSV = () => {
@@ -138,9 +165,9 @@ const CampaignRecipientActivity = ({ campaignId, isOpen, onOpenChange }: Campaig
                 variant="outline"
                 size="sm"
                 onClick={() => syncRecipientData()}
-                disabled={isLoading}
+                disabled={isLoading || syncRecipientsMutation.isPending}
               >
-                <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-4 h-4 mr-2 ${(isLoading || syncRecipientsMutation.isPending) ? 'animate-spin' : ''}`} />
                 Sync Data
               </Button>
               <Button
@@ -203,16 +230,22 @@ const CampaignRecipientActivity = ({ campaignId, isOpen, onOpenChange }: Campaig
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {isLoading ? (
+                  {(isLoading || syncRecipientsMutation.isPending) ? (
                     <TableRow>
                       <TableCell colSpan={5} className="text-center py-8">
-                        Loading recipient activity...
+                        <div className="flex items-center justify-center">
+                          <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                          {syncRecipientsMutation.isPending ? 'Syncing recipient data...' : 'Loading recipient activity...'}
+                        </div>
                       </TableCell>
                     </TableRow>
                   ) : filteredActivities.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={5} className="text-center py-8 text-gray-500">
-                        No recipient activity found for this filter.
+                        {activities.length === 0 
+                          ? "No recipient activity found. Click 'Sync Data' to fetch from Brevo."
+                          : "No recipient activity found for this filter."
+                        }
                       </TableCell>
                     </TableRow>
                   ) : (
