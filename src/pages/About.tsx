@@ -23,8 +23,15 @@ const About = () => {
         }}
       >
         <div className="absolute inset-0 bg-black/30"></div>
+        
+        {/* Floating Musical Notes */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-10 left-10 text-4xl opacity-30" style={{transform: "translateX(35.2px) translateY(-17.6px) rotate(296.64deg)"}}>♪</div>
+          <div className="absolute bottom-10 right-10 text-6xl opacity-20" style={{transform: "translateX(-69.12px) translateY(34.56px) rotate(-77.76deg)"}}>🎵</div>
+        </div>
+        
         <div className="max-w-6xl mx-auto px-4 relative z-10">
-          {/* Hero Title */}
+          {/* Hero Title with Scrolling Statistics */}
           <div className="text-center mb-16">
             <motion.h1 
               className="text-4xl md:text-6xl font-bold mb-6" 
@@ -35,13 +42,89 @@ const About = () => {
               {t('aboutTitle')}
             </motion.h1>
             <motion.p 
-              className="text-xl md:text-2xl opacity-90" 
+              className="text-xl md:text-2xl opacity-90 mb-8" 
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               {t('aboutSubtitle')}
             </motion.p>
+            
+            {/* Scrolling Statistics Section */}
+            <div className="overflow-hidden bg-white/10 rounded-full mb-8 my-[48px] py-[62px]" style={{opacity: 1, transform: "none"}}>
+              <div className="flex space-x-12 whitespace-nowrap animate-pulse" style={{transform: "translateX(-72.96%)"}}>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🎵</span>
+                  <span>2.000+</span>
+                  <span className="opacity-75 text-3xl">Cântece Personalizate</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🎤</span>
+                  <span>20+</span>
+                  <span className="opacity-75 text-3xl">Ani de Pasiune Muzicală</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🌟</span>
+                  <span>98%</span>
+                  <span className="opacity-75 text-3xl">Clienți Fericiți</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🚀</span>
+                  <span>50+</span>
+                  <span className="opacity-75 text-3xl">Artiști Lansați</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🎉</span>
+                  <span>400+</span>
+                  <span className="opacity-75 text-3xl">Evenimente Memorabile</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">💿</span>
+                  <span>100+</span>
+                  <span className="opacity-75 text-3xl">Albume Lansate</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🏆</span>
+                  <span>1 Milion+</span>
+                  <span className="opacity-75 text-3xl">Exemplare Vândute</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🎵</span>
+                  <span>2.000+</span>
+                  <span className="opacity-75 text-3xl">Cântece Personalizate</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🎤</span>
+                  <span>20+</span>
+                  <span className="opacity-75 text-3xl">Ani de Pasiune Muzicală</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🌟</span>
+                  <span>98%</span>
+                  <span className="opacity-75 text-3xl">Clienți Fericiți</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🚀</span>
+                  <span>50+</span>
+                  <span className="opacity-75 text-3xl">Artiști Lansați</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🎉</span>
+                  <span>400+</span>
+                  <span className="opacity-75 text-3xl">Evenimente Memorabile</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">💿</span>
+                  <span>100+</span>
+                  <span className="opacity-75 text-3xl">Albume Lansate</span>
+                </div>
+                <div className="flex items-center space-x-3 text-lg font-semibold">
+                  <span className="text-4xl">🏆</span>
+                  <span>1 Milion+</span>
+                  <span className="opacity-75 text-3xl">Exemplare Vândute</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Our Story Content */}
