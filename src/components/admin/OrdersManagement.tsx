@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Eye, Download, Music } from 'lucide-react';
+import { Eye, Download, Music, Database } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -37,6 +37,20 @@ const OrdersManagement = () => {
       }
 
       const { data, error } = await query;
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  // Query to get saved prompts for all orders
+  const { data: savedPrompts = [] } = useQuery({
+    queryKey: ['saved-prompts'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('suno_prompts')
+        .select('order_id, is_optimized')
+        .eq('is_optimized', true);
+
       if (error) throw error;
       return data;
     }
@@ -101,6 +115,10 @@ const OrdersManagement = () => {
     setSunoDialogOpen(true);
   };
 
+  const hasSavedPrompts = (orderId: string) => {
+    return savedPrompts.some(prompt => prompt.order_id === orderId);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -128,6 +146,8 @@ const OrdersManagement = () => {
       <div className="grid gap-4">
         {orders.map((order) => {
           const formData = order.form_data as OrderFormData;
+          const hasPrompts = hasSavedPrompts(order.id);
+          
           return (
             <Card key={order.id}>
               <CardContent className="p-6">
@@ -141,6 +161,12 @@ const OrdersManagement = () => {
                       <Badge className={getPaymentStatusColor(order.payment_status)}>
                         Payment: {order.payment_status}
                       </Badge>
+                      {hasPrompts && (
+                        <Badge className="bg-purple-100 text-purple-800 border-purple-300">
+                          <Database className="w-3 h-3 mr-1" />
+                          Saved Prompts
+                        </Badge>
+                      )}
                       <span className="text-lg font-bold text-purple-600">
                         {order.total_price} RON
                       </span>
@@ -182,10 +208,13 @@ const OrdersManagement = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => openSunoDialog(order)}
-                        className="bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100"
+                        className={hasPrompts 
+                          ? "bg-purple-100 border-purple-300 text-purple-700 hover:bg-purple-200" 
+                          : "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100"
+                        }
                       >
                         <Music className="w-4 h-4 mr-2" />
-                        Create Prompts
+                        {hasPrompts ? 'View/Edit Prompts' : 'Create Prompts'}
                       </Button>
 
                       <Dialog>
