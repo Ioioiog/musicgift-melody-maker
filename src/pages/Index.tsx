@@ -56,28 +56,13 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section with Video Background - Mobile Optimized */}
-      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-center overflow-hidden bg-black">
+      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex flex-col justify-start pt-8 sm:pt-12 md:pt-16 overflow-hidden bg-black">
         {/* Video Background */}
         <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline key={language}>
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
-        {/* Floating musical notes - responsive positioning */}
-        <div className="absolute top-6 sm:top-10 right-6 sm:right-10 text-2xl sm:text-3xl md:text-4xl animate-bounce delay-75 z-20">🎵</div>
-        <div className="absolute bottom-12 sm:bottom-20 left-0 text-xl sm:text-2xl md:text-3xl animate-bounce delay-150 z-20">🎶</div>
-        <div className="absolute top-20 sm:top-32 left-6 sm:left-10 text-lg sm:text-xl md:text-2xl animate-bounce delay-300 z-20">♪</div>
-        
-        {/* Mute/Unmute Button - Mobile responsive positioning */}
-        <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 right-4 sm:right-6 md:right-8 z-30">
-          <Button onClick={toggleMute} size="icon" className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md w-10 h-10 sm:w-12 sm:h-12">
-            {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
-          </Button>
-          <audio ref={audioRef} loop muted={isMuted} key={language}>
-            <source src={getVideoSource()} type="audio/mp4" />
-          </audio>
-        </div>
-        
-        {/* Hero Content - Mobile optimized */}
+        {/* Hero Content - Mobile optimized - moved to top */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
           <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 py-[25px] px-[38px]">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight">
@@ -100,6 +85,21 @@ const Index = () => {
               </Link>
             </div>
           </div>
+        </div>
+        
+        {/* Floating musical notes - responsive positioning */}
+        <div className="absolute top-6 sm:top-10 right-6 sm:right-10 text-2xl sm:text-3xl md:text-4xl animate-bounce delay-75 z-20">🎵</div>
+        <div className="absolute bottom-12 sm:bottom-20 left-0 text-xl sm:text-2xl md:text-3xl animate-bounce delay-150 z-20">🎶</div>
+        <div className="absolute top-20 sm:top-32 left-6 sm:left-10 text-lg sm:text-xl md:text-2xl animate-bounce delay-300 z-20">♪</div>
+        
+        {/* Mute/Unmute Button - Mobile responsive positioning */}
+        <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 right-4 sm:right-6 md:right-8 z-30">
+          <Button onClick={toggleMute} size="icon" className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md w-10 h-10 sm:w-12 sm:h-12">
+            {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
+          </Button>
+          <audio ref={audioRef} loop muted={isMuted} key={language}>
+            <source src={getVideoSource()} type="audio/mp4" />
+          </audio>
         </div>
         
         {/* Scroll down indicator - hidden on very small screens */}
