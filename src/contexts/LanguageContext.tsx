@@ -1,5 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+export type Language = "en" | "ro" | "fr" | "pl" | "de";
+
+export const languageNames: Record<Language, string> = {
+  en: "English",
+  ro: "Română", 
+  fr: "Français",
+  pl: "Polski",
+  de: "Deutsch"
+};
+
 interface LanguageContextType {
   language: string;
   setLanguage: (lang: string) => void;
