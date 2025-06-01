@@ -36,6 +36,7 @@ const UserManagement = () => {
   const { data: userRoles = [], isLoading } = useQuery({
     queryKey: ['admin-user-roles'],
     queryFn: async () => {
+      console.log('Fetching user roles...');
       // First get user roles
       const { data: rolesData, error: rolesError } = await supabase
         .from('user_roles')
@@ -46,6 +47,8 @@ const UserManagement = () => {
         console.error('Error fetching user roles:', rolesError);
         throw rolesError;
       }
+
+      console.log('Roles data:', rolesData);
 
       if (!rolesData || rolesData.length === 0) {
         return [];
@@ -69,6 +72,7 @@ const UserManagement = () => {
         profiles: profilesData?.find(profile => profile.id === role.user_id) || null
       }));
 
+      console.log('Combined user roles data:', combinedData);
       return combinedData as UserRole[];
     }
   });
@@ -77,11 +81,16 @@ const UserManagement = () => {
   const { data: allProfiles = [] } = useQuery({
     queryKey: ['admin-all-profiles'],
     queryFn: async () => {
+      console.log('Fetching all profiles...');
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .order('email');
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching profiles:', error);
+        throw error;
+      }
+      console.log('All profiles:', data);
       return data as Profile[];
     }
   });
@@ -89,6 +98,23 @@ const UserManagement = () => {
   // Create user role mutation
   const createRoleMutation = useMutation({
     mutationFn: async (roleData: TablesInsert<'user_roles'>) => {
+      console.log('Creating role:', roleData);
+      
+      // Check if user already has a role
+      const existingRole = userRoles.find(role => role.user_id === roleData.user_id);
+      if (existingRole) {
+        console.log('User already has role, updating instead...');
+        // Update existing role instead of creating new one
+        const { data, error } = await supabase
+          .from('user_roles')
+          .update({ role: roleData.role })
+          .eq('user_id', roleData.user_id)
+          .select()
+          .single();
+        if (error) throw error;
+        return data;
+      }
+
       const { data, error } = await supabase
         .from('user_roles')
         .insert({
@@ -100,15 +126,19 @@ const UserManagement = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin-user-roles'] });
-      toast({ title: 'User role assigned successfully' });
+      const existingRole = userRoles.find(role => role.user_id === variables.user_id);
+      toast({ 
+        title: existingRole ? 'User role updated successfully' : 'User role assigned successfully' 
+      });
       setDialogOpen(false);
       setEditingRole(null);
       setSelectedUserId('');
       setSelectedRole('viewer');
     },
     onError: (error) => {
+      console.error('Error assigning/updating role:', error);
       toast({ title: 'Error assigning role', description: error.message, variant: 'destructive' });
     }
   });
@@ -116,6 +146,7 @@ const UserManagement = () => {
   // Update user role mutation
   const updateRoleMutation = useMutation({
     mutationFn: async ({ id, ...roleData }: { id: string } & TablesUpdate<'user_roles'>) => {
+      console.log('Updating role:', { id, roleData });
       const { data, error } = await supabase
         .from('user_roles')
         .update(roleData)
@@ -132,6 +163,7 @@ const UserManagement = () => {
       setEditingRole(null);
     },
     onError: (error) => {
+      console.error('Error updating role:', error);
       toast({ title: 'Error updating role', description: error.message, variant: 'destructive' });
     }
   });
@@ -139,6 +171,7 @@ const UserManagement = () => {
   // Delete user role mutation
   const deleteRoleMutation = useMutation({
     mutationFn: async (id: string) => {
+      console.log('Deleting role:', id);
       const { error } = await supabase
         .from('user_roles')
         .delete()
@@ -150,12 +183,15 @@ const UserManagement = () => {
       toast({ title: 'User role removed successfully' });
     },
     onError: (error) => {
+      console.error('Error removing role:', error);
       toast({ title: 'Error removing role', description: error.message, variant: 'destructive' });
     }
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    console.log('Form submitted:', { editingRole, selectedUserId, selectedRole });
     
     if (editingRole) {
       updateRoleMutation.mutate({ 
@@ -175,6 +211,7 @@ const UserManagement = () => {
   };
 
   const openCreateDialog = () => {
+    console.log('Opening create dialog');
     setEditingRole(null);
     setSelectedUserId('');
     setSelectedRole('viewer');
@@ -182,6 +219,7 @@ const UserManagement = () => {
   };
 
   const openEditDialog = (role: UserRole) => {
+    console.log('Opening edit dialog for role:', role);
     setEditingRole(role);
     setSelectedUserId(role.user_id);
     setSelectedRole(role.role);
@@ -198,10 +236,30 @@ const UserManagement = () => {
     return colors[role as keyof typeof colors] || colors.viewer;
   };
 
-  // Filter out users who already have roles when creating new assignments
-  const availableUsers = allProfiles.filter(profile => 
-    !userRoles.some(role => role.user_id === profile.id)
-  );
+  // Get user's current role for display in dropdown
+  const getUserCurrentRole = (userId: string) => {
+    const userRole = userRoles.find(role => role.user_id === userId);
+    return userRole?.role || null;
+  };
+
+  // Show all users for super admins and admins, with current role indication
+  const getSelectableUsers = () => {
+    console.log('Getting selectable users. All profiles:', allProfiles);
+    console.log('Current user roles:', userRoles);
+    
+    if (allProfiles.length === 0) {
+      console.log('No profiles available');
+      return [];
+    }
+
+    return allProfiles.map(profile => ({
+      ...profile,
+      currentRole: getUserCurrentRole(profile.id)
+    }));
+  };
+
+  const selectableUsers = getSelectableUsers();
+  console.log('Selectable users:', selectableUsers);
 
   return (
     <div className="space-y-6">
@@ -222,18 +280,31 @@ const UserManagement = () => {
               {!editingRole && (
                 <div>
                   <Label htmlFor="user_select">Select User</Label>
-                  <Select value={selectedUserId} onValueChange={setSelectedUserId} required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose a user..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availableUsers.map((profile) => (
-                        <SelectItem key={profile.id} value={profile.id}>
-                          {profile.full_name || profile.email}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {selectableUsers.length === 0 ? (
+                    <div className="p-3 text-sm text-gray-500 border rounded">
+                      No users available. Users need to have profiles created first.
+                    </div>
+                  ) : (
+                    <Select value={selectedUserId} onValueChange={setSelectedUserId} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose a user..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {selectableUsers.map((profile) => (
+                          <SelectItem key={profile.id} value={profile.id}>
+                            <div className="flex items-center justify-between w-full">
+                              <span>{profile.full_name || profile.email}</span>
+                              {profile.currentRole && (
+                                <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${getRoleBadge(profile.currentRole)}`}>
+                                  {profile.currentRole.replace('_', ' ').toUpperCase()}
+                                </span>
+                              )}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
                 </div>
               )}
               <div>
@@ -251,7 +322,7 @@ const UserManagement = () => {
                 </Select>
               </div>
               <div className="flex space-x-2">
-                <Button type="submit" className="flex-1">
+                <Button type="submit" className="flex-1" disabled={!editingRole && selectableUsers.length === 0}>
                   {editingRole ? 'Update' : 'Assign'}
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
@@ -268,7 +339,12 @@ const UserManagement = () => {
           {isLoading ? (
             <div className="p-8 text-center text-gray-500">Loading users...</div>
           ) : userRoles.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">No user roles assigned yet</div>
+            <div className="p-8 text-center text-gray-500">
+              <p>No user roles assigned yet</p>
+              {allProfiles.length === 0 && (
+                <p className="text-sm mt-2">No user profiles found. Users need to sign up first to appear here.</p>
+              )}
+            </div>
           ) : (
             <Table>
               <TableHeader>
