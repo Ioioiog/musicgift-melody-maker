@@ -1,4 +1,5 @@
-import { Package } from '@/types';
+
+import type { Package } from '@/types';
 
 export const packages: Package[] = [
   {
@@ -865,3 +866,9 @@ export const packages: Package[] = [
     ]
   }
 ];
+
+// Export for compatibility with existing code
+export type PackageData = Package;
+
+// Add empty addons export for migration compatibility
+export const addons: Record<string, { labelKey: string; price: number }> = {};

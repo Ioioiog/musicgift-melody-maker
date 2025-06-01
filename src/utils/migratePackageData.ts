@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { packages, addons } from '@/data/packages';
 
@@ -42,20 +41,24 @@ export const migratePackageData = async () => {
       }
     }
 
-    // 3. Migrate addons
-    const addonInserts = Object.entries(addons).map(([key, addon]) => ({
-      addon_key: key,
-      label_key: addon.labelKey,
-      price: addon.price
-    }));
+    // 3. Migrate addons - skip if no addons defined
+    if (Object.keys(addons).length > 0) {
+      const addonInserts = Object.entries(addons).map(([key, addon]) => ({
+        addon_key: key,
+        label_key: addon.labelKey,
+        price: addon.price
+      }));
 
-    const { data: insertedAddons, error: addonError } = await supabase
-      .from('addons')
-      .insert(addonInserts)
-      .select();
+      const { data: insertedAddons, error: addonError } = await supabase
+        .from('addons')
+        .insert(addonInserts)
+        .select();
 
-    if (addonError) throw addonError;
-    console.log('Addons migrated:', insertedAddons);
+      if (addonError) throw addonError;
+      console.log('Addons migrated:', insertedAddons);
+    } else {
+      console.log('No addons to migrate - skipping addon migration');
+    }
 
     // 4. Migrate package tags (add popular tag for premium)
     const premiumPackage = insertedPackages?.find(p => p.value === 'premium');
