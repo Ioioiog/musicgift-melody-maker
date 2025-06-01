@@ -48,7 +48,7 @@ const HowItWorks = () => {
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Our Simple Process
+            {t('howItWorksProcessTitle')}
           </motion.h2>
           <motion.p 
             className="text-lg md:text-xl opacity-90" 
@@ -56,7 +56,7 @@ const HowItWorks = () => {
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.5 }}
           >
-            Follow these easy steps to create your personalized musical gift
+            {t('howItWorksProcessSubtitle')}
           </motion.p>
         </div>
       </section>

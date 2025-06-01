@@ -30,6 +30,28 @@ const translations = {
     getStarted: "Începe acum",
     orderNow: "Comandă acum",
     
+    // How It Works Page
+    howItWorksTitle: "Cum funcționează",
+    howItWorksSubtitle: "Procesul nostru simplu de creare a cadourilor muzicale personalizate",
+    howItWorksProcessTitle: "Procesul nostru simplu",
+    howItWorksProcessSubtitle: "Urmează acești pași simpli pentru a-ți crea cadoul muzical personalizat",
+    
+    // Steps
+    step: "Pasul",
+    step1Title: "Alege pachetul",
+    step1Description: "Selectează pachetul care se potrivește ocaziei tale și bugetului",
+    step2Title: "Spune-ne povestea",
+    step2Description: "Completează formularul cu detaliile și povestea ta unică",
+    step3Title: "Creăm muzica",
+    step3Description: "Echipa noastră profesionistă creează cântecul tău personalizat",
+    step4Title: "Primești cadoul",
+    step4Description: "Îți livrăm cântecul finalizat în 3-7 zile lucrătoare",
+    
+    // CTA Section
+    readyToStart: "Gata să începi?",
+    readyToStartContent: "Începe călătoria ta muzicală astăzi și creează un cadou de neuitat",
+    startYourOrder: "Începe comanda",
+    
     // Package names
     personalPackage: "Pachet Personal",
     premiumPackage: "Pachet Premium",
@@ -303,6 +325,28 @@ const translations = {
     getStarted: "Get Started",
     orderNow: "Order Now",
     
+    // How It Works Page
+    howItWorksTitle: "How It Works",
+    howItWorksSubtitle: "Our simple process for creating personalized musical gifts",
+    howItWorksProcessTitle: "Our Simple Process",
+    howItWorksProcessSubtitle: "Follow these easy steps to create your personalized musical gift",
+    
+    // Steps
+    step: "Step",
+    step1Title: "Choose Package",
+    step1Description: "Select the package that fits your occasion and budget",
+    step2Title: "Tell Your Story",
+    step2Description: "Fill out the form with your details and unique story",
+    step3Title: "We Create Music",
+    step3Description: "Our professional team creates your personalized song",
+    step4Title: "Receive Your Gift",
+    step4Description: "We deliver your finished song within 3-7 working days",
+    
+    // CTA Section
+    readyToStart: "Ready to Start?",
+    readyToStartContent: "Begin your musical journey today and create an unforgettable gift",
+    startYourOrder: "Start Your Order",
+    
     // Package names
     personalPackage: "Personal Package",
     premiumPackage: "Premium Package",
@@ -423,7 +467,7 @@ const translations = {
     moodNostalgic: "Nostalgic",
     moodEnergetic: "Energetic",
     moodMelancholic: "Melancholic",
-    moodInspirational: "Inspirational",
+    moodInspirational: "Inspirațional",
     moodEmotional: "Emoțional",
     moodUplifting: "Uplifting",
     
