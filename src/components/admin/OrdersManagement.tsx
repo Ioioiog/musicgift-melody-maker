@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -516,12 +515,12 @@ const OrdersManagement = () => {
                                 <p><strong>Package Name:</strong> {order.package_name}</p>
                                 <p><strong>Package Price:</strong> {order.package_price} RON</p>
                                 <p><strong>Delivery Time:</strong> {order.package_delivery_time}</p>
-                                {order.package_includes && order.package_includes.length > 0 && (
+                                {order.package_includes && Array.isArray(order.package_includes) && order.package_includes.length > 0 && (
                                   <div>
                                     <p><strong>Includes:</strong></p>
                                     <ul className="list-disc list-inside ml-4">
                                       {order.package_includes.map((include: any, index: number) => (
-                                        <li key={index}>{include.item_key || include}</li>
+                                        <li key={index}>{include.include_key || include}</li>
                                       ))}
                                     </ul>
                                   </div>

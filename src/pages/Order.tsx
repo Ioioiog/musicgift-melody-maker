@@ -51,10 +51,10 @@ const Order = () => {
         payment_status: 'pending',
         // New package detail columns
         package_value: selectedPackage.value,
-        package_name: selectedPackage.name_key,
+        package_name: selectedPackage.label_key,
         package_price: selectedPackage.price,
         package_delivery_time: selectedPackage.delivery_time_key,
-        package_includes: selectedPackage.includes || []
+        package_includes: selectedPackage.includes ? JSON.parse(JSON.stringify(selectedPackage.includes)) : []
       };
 
       console.log("Saving order to database:", orderPayload);
