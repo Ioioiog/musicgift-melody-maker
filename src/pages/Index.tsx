@@ -53,15 +53,10 @@ const Index = () => {
   return <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section with Purple Musical Background - Mobile Optimized */}
-      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-center overflow-hidden" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
-        {/* Video Background (Optional - can be removed if you prefer just the purple background) */}
-        <video className="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-30" autoPlay muted loop playsInline key={language}>
+      {/* Hero Section with Video Background - Mobile Optimized */}
+      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-center overflow-hidden bg-black">
+        {/* Video Background */}
+        <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline key={language}>
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
