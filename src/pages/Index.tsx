@@ -84,7 +84,18 @@ const Index = () => {
               {t('heroSubtitle') || 'Cel mai frumos cadou: o melodie creată special pentru cineva drag.'}
             </p>
             
-            
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <Link to="/packages">
+                <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base lg:text-lg backdrop-blur-sm w-full sm:w-auto">
+                  {t('seePackages') || 'See Packages'}
+                </Button>
+              </Link>
+              <Link to="/testimonials">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base lg:text-lg backdrop-blur-sm w-full sm:w-auto">
+                  {t('listenToSamples') || 'Listen to Samples'}
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
         
