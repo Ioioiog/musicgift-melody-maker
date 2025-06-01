@@ -44,7 +44,7 @@ const Navigation = () => {
       {/* Floating Logo - responsive positioning */}
       <div className="fixed -top-4 left-2 sm:left-4 md:left-6 lg:left-10 z-[100]">
         <Link to="/" className="block">
-          <img alt="MusicGift Logo" src="/lovable-uploads/fc25a6ff-2842-4b54-a3a9-a38754893226.png" className="h-40 w-30 sm:h-48 sm:w-28 md:h-56 md:w-36 lg:h-60 lg:w-40 transition-transform duration-100 ease-in-out hover:scale-105" />
+          <img alt="MusicGift Logo" src="/lovable-uploads/fc25a6ff-2842-4b54-a3a9-a38754893226.png" className="h-40 w-30 sm:h-70 sm:w-28 md:h-70 md:w-36 lg:h-70 lg:w-40 transition-transform duration-100 ease-in-out hover:scale-105" />
         </Link>
       </div>
 
