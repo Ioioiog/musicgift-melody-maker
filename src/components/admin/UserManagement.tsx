@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,7 +10,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Plus, Edit, Trash2, UserPlus, RefreshCw } from 'lucide-react';
+import { Plus, Edit, Trash2, UserPlus, RefreshCw, AlertCircle } from 'lucide-react';
 import type { Tables, TablesInsert, TablesUpdate } from '@/integrations/supabase/types';
 
 type UserRole = Tables<'user_roles'> & {
@@ -28,12 +27,13 @@ const UserManagement = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState('');
   const [selectedRole, setSelectedRole] = useState<'super_admin' | 'admin' | 'editor' | 'viewer'>('viewer');
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
   // Fetch all users with roles
-  const { data: userRoles = [], isLoading: rolesLoading, error: rolesError } = useQuery({
+  const { data: userRoles = [], isLoading: rolesLoading, error: rolesError, refetch: refetchRoles } = useQuery({
     queryKey: ['admin-user-roles'],
     queryFn: async () => {
       console.log('🔍 Fetching user roles...');
@@ -49,7 +49,6 @@ const UserManagement = () => {
       }
 
       console.log('📋 Roles data retrieved:', rolesData);
-      console.log('📊 Total roles count:', rolesData?.length || 0);
 
       if (!rolesData || rolesData.length === 0) {
         console.log('ℹ️ No roles found');
@@ -80,64 +79,100 @@ const UserManagement = () => {
 
       console.log('🔗 Combined user roles data:', combinedData);
       return combinedData as UserRole[];
-    }
-  });
-
-  // Fetch all profiles for user selection with enhanced debugging
-  const { data: allProfiles = [], isLoading: profilesLoading, error: profilesError } = useQuery({
-    queryKey: ['admin-all-profiles'],
-    queryFn: async () => {
-      console.log('🔍 Fetching ALL profiles for selection...');
-      
-      const { data, error, count } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact' })
-        .order('email');
-      
-      if (error) {
-        console.error('❌ Error fetching all profiles:', error);
-        console.error('❌ Error details:', JSON.stringify(error, null, 2));
-        throw error;
-      }
-      
-      console.log('📊 Total profiles count from DB:', count);
-      console.log('📋 All profiles raw data:', data);
-      console.log('🔢 Profiles array length:', data?.length || 0);
-      
-      if (data && data.length > 0) {
-        data.forEach((profile, index) => {
-          console.log(`👤 Profile ${index + 1}:`, {
-            id: profile.id,
-            email: profile.email,
-            full_name: profile.full_name,
-            created_at: profile.created_at
-          });
-        });
-      } else {
-        console.log('⚠️ No profiles found in database');
-      }
-      
-      return data as Profile[];
     },
-    staleTime: 0, // Always fetch fresh data
+    staleTime: 0,
+    gcTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true
   });
 
-  // Manual refresh function
+  // Fetch all profiles with aggressive refresh settings
+  const { data: allProfiles = [], isLoading: profilesLoading, error: profilesError, refetch: refetchProfiles } = useQuery({
+    queryKey: ['admin-all-profiles'],
+    queryFn: async () => {
+      console.log('🔍 Fetching ALL profiles for selection...');
+      console.log('🔑 Current user ID:', user?.id);
+      
+      try {
+        // Force a fresh query with no caching
+        const { data, error, count } = await supabase
+          .from('profiles')
+          .select('*', { count: 'exact' })
+          .order('email');
+        
+        if (error) {
+          console.error('❌ Error fetching all profiles:', error);
+          console.error('❌ Error details:', JSON.stringify(error, null, 2));
+          throw error;
+        }
+        
+        console.log('📊 Database returned count:', count);
+        console.log('📋 Raw profiles data from DB:', data);
+        console.log('🔢 Actual array length:', data?.length || 0);
+        
+        if (data && data.length > 0) {
+          console.log('👥 All profiles found:');
+          data.forEach((profile, index) => {
+            console.log(`  ${index + 1}. ${profile.email} (${profile.full_name}) - ID: ${profile.id}`);
+          });
+        } else {
+          console.warn('⚠️ No profiles found in database');
+        }
+        
+        return data as Profile[];
+      } catch (error) {
+        console.error('💥 Critical error in profiles query:', error);
+        throw error;
+      }
+    },
+    staleTime: 0, // Always consider data stale
+    gcTime: 0, // Don't cache at all
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchInterval: false, // Don't auto-refetch
+    retry: 3,
+    retryDelay: 1000
+  });
+
+  // Enhanced refresh function with better error handling
   const handleRefreshData = async () => {
-    console.log('🔄 Manual refresh triggered');
-    toast({ title: 'Refreshing data...', description: 'Fetching latest user information' });
+    console.log('🔄 Starting comprehensive data refresh...');
+    setIsRefreshing(true);
     
-    await queryClient.invalidateQueries({ queryKey: ['admin-all-profiles'] });
-    await queryClient.invalidateQueries({ queryKey: ['admin-user-roles'] });
-    
-    // Force refetch
-    await queryClient.refetchQueries({ queryKey: ['admin-all-profiles'] });
-    await queryClient.refetchQueries({ queryKey: ['admin-user-roles'] });
-    
-    console.log('✅ Manual refresh completed');
-    toast({ title: 'Data refreshed', description: 'User information updated' });
+    try {
+      toast({ title: 'Refreshing data...', description: 'Clearing cache and fetching fresh data' });
+      
+      // Clear all related queries from cache
+      await queryClient.removeQueries({ queryKey: ['admin-all-profiles'] });
+      await queryClient.removeQueries({ queryKey: ['admin-user-roles'] });
+      
+      console.log('🗑️ Cache cleared, fetching fresh data...');
+      
+      // Force refetch both queries
+      const [profilesResult, rolesResult] = await Promise.all([
+        refetchProfiles(),
+        refetchRoles()
+      ]);
+      
+      console.log('✅ Refresh results:', {
+        profiles: profilesResult.data?.length || 0,
+        roles: rolesResult.data?.length || 0
+      });
+      
+      toast({ 
+        title: 'Data refreshed successfully', 
+        description: `Found ${profilesResult.data?.length || 0} profiles and ${rolesResult.data?.length || 0} roles`
+      });
+    } catch (error) {
+      console.error('💥 Error during refresh:', error);
+      toast({ 
+        title: 'Refresh failed', 
+        description: 'There was an error refreshing the data. Please try again.',
+        variant: 'destructive' 
+      });
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   // Create user role mutation
@@ -287,21 +322,21 @@ const UserManagement = () => {
     return userRole?.role || null;
   };
 
-  // Show all users for super admins and admins, with current role indication
+  // Enhanced selectable users function with better debugging
   const getSelectableUsers = () => {
     console.log('🔍 Getting selectable users...');
-    console.log('📋 All profiles available:', allProfiles);
-    console.log('🔢 All profiles count:', allProfiles.length);
+    console.log('📋 Available profiles:', allProfiles);
+    console.log('🔢 Profiles count:', allProfiles.length);
     console.log('👥 Current user roles:', userRoles);
     
     if (allProfiles.length === 0) {
-      console.log('⚠️ No profiles available for selection');
+      console.warn('⚠️ No profiles available for selection');
       return [];
     }
 
     const selectableUsers = allProfiles.map(profile => {
       const currentRole = getUserCurrentRole(profile.id);
-      console.log(`👤 Processing profile: ${profile.email} (${profile.full_name}) - Role: ${currentRole || 'none'}`);
+      console.log(`👤 Processing: ${profile.email} (${profile.full_name}) - Current role: ${currentRole || 'none'}`);
       return {
         ...profile,
         currentRole
@@ -331,15 +366,27 @@ const UserManagement = () => {
               variant="outline" 
               size="sm" 
               onClick={handleRefreshData}
-              disabled={isLoading}
+              disabled={isLoading || isRefreshing}
             >
-              <RefreshCw className={`w-4 h-4 mr-1 ${isLoading ? 'animate-spin' : ''}`} />
-              Refresh
+              <RefreshCw className={`w-4 h-4 mr-1 ${(isLoading || isRefreshing) ? 'animate-spin' : ''}`} />
+              {isRefreshing ? 'Refreshing...' : 'Refresh'}
             </Button>
           </div>
           {hasError && (
-            <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-sm text-red-600">
-              Error loading data: {rolesError?.message || profilesError?.message}
+            <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-red-500 mt-0.5" />
+              <div className="text-sm text-red-600">
+                <p className="font-medium">Error loading data:</p>
+                <p>{rolesError?.message || profilesError?.message}</p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleRefreshData}
+                  className="mt-2"
+                >
+                  Try Again
+                </Button>
+              </div>
             </div>
           )}
         </div>
@@ -364,9 +411,25 @@ const UserManagement = () => {
                     </div>
                   ) : selectableUsers.length === 0 ? (
                     <div className="p-3 text-sm text-gray-500 border rounded">
-                      No users available. Users need to have profiles created first.
-                      <br />
-                      <small>Debug: Profiles count: {allProfiles.length}</small>
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5" />
+                        <div>
+                          <p>No users available for role assignment.</p>
+                          <p className="text-xs mt-1">
+                            Debug: Found {allProfiles.length} profiles in database
+                          </p>
+                          <Button 
+                            type="button"
+                            variant="outline" 
+                            size="sm" 
+                            onClick={handleRefreshData}
+                            className="mt-2"
+                          >
+                            <RefreshCw className="w-3 h-3 mr-1" />
+                            Refresh Data
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <Select value={selectedUserId} onValueChange={setSelectedUserId} required>
@@ -406,7 +469,11 @@ const UserManagement = () => {
                 </Select>
               </div>
               <div className="flex space-x-2">
-                <Button type="submit" className="flex-1" disabled={!editingRole && selectableUsers.length === 0}>
+                <Button 
+                  type="submit" 
+                  className="flex-1" 
+                  disabled={(!editingRole && selectableUsers.length === 0) || isLoading}
+                >
                   {editingRole ? 'Update' : 'Assign'}
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
@@ -421,7 +488,10 @@ const UserManagement = () => {
       <Card>
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-8 text-center text-gray-500">Loading users...</div>
+            <div className="p-8 text-center text-gray-500">
+              <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" />
+              Loading users...
+            </div>
           ) : userRoles.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
               <p>No user roles assigned yet</p>
@@ -460,7 +530,7 @@ const UserManagement = () => {
                         <Button 
                           size="sm" 
                           variant="outline" 
-          onClick={() => openEditDialog(userRole)}
+                          onClick={() => openEditDialog(userRole)}
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
