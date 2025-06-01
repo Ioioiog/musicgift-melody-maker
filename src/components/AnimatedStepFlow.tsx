@@ -98,16 +98,13 @@ const AnimatedStepFlow = () => {
               >
                 {/* Step Circle */}
                 <motion.div
-                  className={`
-                    relative w-16 h-16 rounded-full flex items-center justify-center text-sm font-semibold
-                    transition-all duration-500 ease-in-out
-                    ${isActive 
+                  className={`relative w-16 h-16 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-500 ease-in-out ${
+                    isActive 
                       ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-xl ring-4 ring-purple-200' :
                       isCompleted
                         ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg' :
                         'bg-white border-2 border-gray-300 text-gray-500 hover:border-purple-300'
-                    }
-                  `}
+                  }`}
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ 
                     scale: isActive ? 1.1 : 1,
@@ -129,13 +126,11 @@ const AnimatedStepFlow = () => {
 
                 {/* Step Number */}
                 <motion.div 
-                  className={`
-                    mt-3 text-center transition-all duration-300
-                    ${isActive || isCompleted 
+                  className={`mt-3 text-center transition-all duration-300 ${
+                    isActive || isCompleted 
                       ? 'text-purple-700 font-semibold' 
                       : 'text-gray-500 font-medium'
-                    }
-                  `}
+                  }`}
                   animate={{ scale: isActive ? 1.05 : 1 }}
                 >
                   <span className="text-sm lg:text-base whitespace-nowrap">
@@ -179,7 +174,9 @@ const AnimatedStepFlow = () => {
                   animate={{ rotate: 0, scale: 1 }}
                   transition={{ duration: 0.6, type: "spring", bounce: 0.3 }}
                 >
-                  <steps[activeStep].icon className={`w-10 h-10 ${steps[activeStep].color}`} />
+                  {React.createElement(steps[activeStep].icon, { 
+                    className: `w-10 h-10 ${steps[activeStep].color}` 
+                  })}
                 </motion.div>
 
                 {/* Title */}
