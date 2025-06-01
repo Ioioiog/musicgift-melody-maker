@@ -10,7 +10,6 @@ import { useTranslation } from "@/hooks/useTranslations";
 import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-
 const Index = () => {
   const {
     data: packages = [],
@@ -63,7 +62,7 @@ const Index = () => {
         
         {/* Hero Content - Mobile optimized - moved down */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
-          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 py-[50px] px-[38px]">
+          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 py-[150px] px-[38px]">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight">
               {t('heroTitle') || 'Transformă Emoțiile Tale în Muzică'}
             </h1>
@@ -114,21 +113,24 @@ const Index = () => {
 
       {/* Packages Preview - ScenarioHero Style */}
       <section className="relative overflow-hidden py-8 sm:py-12 md:py-16" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         {/* Overlay for better readability */}
         <div className="absolute inset-0 bg-black/40"></div>
         
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <motion.div 
-            className="text-center mb-8 sm:mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <motion.div className="text-center mb-8 sm:mb-12" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">{t('chooseYourPackage') || 'Choose Your Package'}</h2>
             <p className="text-base sm:text-lg md:text-xl text-white/90 px-4">{t('selectPerfectPackage') || 'Select the perfect music package that fits your needs and budget'}</p>
           </motion.div>
@@ -150,28 +152,32 @@ const Index = () => {
             </div>}
 
           {/* Packages Grid - ScenarioHero Style */}
-          {!isLoading && !error && previewPackages.length > 0 && (
-            <motion.div 
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              {previewPackages.map((pkg, index) => (
-                <motion.div
-                  key={pkg.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 * index }}
-                >
+          {!isLoading && !error && previewPackages.length > 0 && <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.2
+        }}>
+              {previewPackages.map((pkg, index) => <motion.div key={pkg.id} initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.1 * index
+          }}>
                   <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
-                    {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && (
-                      <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 z-20">
+                    {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 z-20">
                         <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
                           {t('mostPopular')}
                         </span>
-                      </div>
-                    )}
+                      </div>}
                     
                     <CardContent className="p-4 sm:p-6 md:p-8 text-white">
                       {/* Icon and Title */}
@@ -189,18 +195,14 @@ const Index = () => {
                       </div>
 
                       {/* Features */}
-                      {pkg.includes && pkg.includes.length > 0 && (
-                        <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
-                          {pkg.includes.map((include, featureIndex) => (
-                            <li key={featureIndex} className="flex items-center text-white/90 text-sm sm:text-base">
+                      {pkg.includes && pkg.includes.length > 0 && <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                          {pkg.includes.map((include, featureIndex) => <li key={featureIndex} className="flex items-center text-white/90 text-sm sm:text-base">
                               <span className="w-4 h-4 sm:w-5 sm:h-5 bg-green-400/20 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 border border-green-400/30">
                                 <span className="text-green-300 text-xs">✓</span>
                               </span>
                               <span className="leading-tight">{tDb(include.include_key)}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                            </li>)}
+                        </ul>}
 
                       <Link to="/order">
                         <Button className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
@@ -209,10 +211,8 @@ const Index = () => {
                       </Link>
                     </CardContent>
                   </Card>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
+                </motion.div>)}
+            </motion.div>}
 
           {/* No Packages State */}
           {!isLoading && !error && previewPackages.length === 0 && <div className="text-center py-8 sm:py-12 px-4">
@@ -221,20 +221,22 @@ const Index = () => {
             </div>}
           
           {/* View All Packages Button */}
-          {!isLoading && !error && previewPackages.length > 0 && (
-            <motion.div 
-              className="text-center mt-8 sm:mt-12"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
+          {!isLoading && !error && previewPackages.length > 0 && <motion.div className="text-center mt-8 sm:mt-12" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.4
+        }}>
               <Link to="/packages">
                 <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
                   {t('viewAllPackages') || 'View All Packages'}
                 </Button>
               </Link>
-            </motion.div>
-          )}
+            </motion.div>}
         </div>
 
         {/* Bottom border accent */}
