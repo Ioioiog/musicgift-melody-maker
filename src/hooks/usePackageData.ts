@@ -1,6 +1,7 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from './useTranslations';
-import { packages, type PackageData } from '@/data/packages';
+import { packages, addons, type PackageData } from '@/data/packages';
 
 export interface StepData {
   id: string;
@@ -113,10 +114,24 @@ export const useAddons = () => {
   return useQuery({
     queryKey: ['addons'],
     queryFn: async () => {
-      console.log('Using consolidated addons (empty for now)...');
+      console.log('Using consolidated addons data...');
       
-      // Return empty array for now since packages don't have addons configured
-      return [];
+      // Transform addons object to array format expected by components
+      const addonsArray = Object.entries(addons).map(([key, addon]) => ({
+        id: key,
+        addon_key: key,
+        label_key: addon.label_key,
+        description_key: addon.description_key,
+        price: addon.price,
+        is_active: true,
+        trigger_field_type: null,
+        trigger_field_config: {},
+        trigger_condition: 'package_in',
+        trigger_condition_value: addon.availableFor.join(',')
+      }));
+      
+      console.log('Transformed addons:', addonsArray);
+      return addonsArray;
     }
   });
 };

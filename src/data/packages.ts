@@ -1,5 +1,51 @@
 import type { Package } from '@/types';
 
+// Define the addons configuration
+export const addons = {
+  rushDelivery: { 
+    price: 100, 
+    label_key: 'rushDeliveryLabel',
+    description_key: 'rushDeliveryDescription',
+    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
+  },
+  commercialRights: { 
+    price: 100, 
+    label_key: 'commercialRightsLabel',
+    description_key: 'commercialRightsDescription',
+    availableFor: ['personal']
+  },
+  distributieMangoRecords: {
+    price: 200, 
+    label_key: 'distributieMangoRecordsLabel',
+    description_key: 'distributieMangoRecordsDescription',
+    availableFor: ['personal', 'remix', 'instrumental']
+  },
+  customVideo: { 
+    price: 149, 
+    label_key: 'customVideoLabel',
+    description_key: 'customVideoDescription',
+    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
+  },
+  audioMessageFromSender: { 
+    price: 100, 
+    label_key: 'audioMessageFromSenderLabel',
+    description_key: 'audioMessageFromSenderDescription',
+    availableFor: ['personal', 'business', 'premium']
+  },
+  commercialRightsUpgrade: {
+    price: 400,
+    label_key: 'commercialRightsUpgradeLabel',
+    description_key: 'commercialRightsUpgradeDescription',
+    availableFor: ['business']
+  },
+  extendedSong: {
+    price: 49,
+    label_key: 'extendedSongLabel',
+    description_key: 'extendedSongDescription',
+    availableFor: ['personal', 'premium', 'business']
+  }
+};
+
 export const packages: Package[] = [
   {
     id: "personal-package",
@@ -875,6 +921,3 @@ export const packages: Package[] = [
 
 // Export for compatibility with existing code
 export type PackageData = Package;
-
-// Add empty addons export for migration compatibility
-export const addons: Record<string, { labelKey: string; price: number }> = {};

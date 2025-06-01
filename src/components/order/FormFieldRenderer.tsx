@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -201,10 +202,16 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         const selectedPackage = getSelectedPackage();
         const filteredAddons = availableAddons.filter(addon => shouldShowAddon(addon, selectedPackage));
         
+        console.log('Rendering addon checkbox group:', {
+          selectedPackage,
+          availableAddons,
+          filteredAddons
+        });
+        
         if (filteredAddons.length === 0) {
           return (
             <div className="text-sm text-gray-500 italic">
-              No addons available for the selected package.
+              {t('noAddonsAvailable', 'Nu sunt disponibile opțiuni suplimentare pentru acest pachet.')}
             </div>
           );
         }
