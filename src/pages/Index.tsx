@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -57,9 +56,6 @@ const Index = () => {
   
   return <div className="min-h-screen">
       <Navigation />
-      
-      {/* ScenarioHero Banner */}
-      <ScenarioHero />
       
       {/* Hero Section with Video Background - Mobile Optimized */}
       <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-center overflow-hidden">
@@ -136,6 +132,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* ScenarioHero Banner */}
+      <ScenarioHero />
 
       {/* Packages Preview - Mobile Optimized */}
       <section className="py-8 sm:py-12 md:py-16 bg-gray-50">
