@@ -20,38 +20,66 @@ const Admin = () => {
         <div className="min-h-screen bg-gray-50">
           <Navigation />
           
-          <div className="container mx-auto px-4 py-8 pt-20">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-              <p className="text-gray-600">Manage your application settings and data</p>
+          <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6 md:py-8 pt-16 sm:pt-20">
+            <div className="mb-6 sm:mb-8">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+              <p className="text-sm sm:text-base text-gray-600">Manage your application settings and data</p>
             </div>
 
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-5">
-                <TabsTrigger value="packages">Packages</TabsTrigger>
-                <TabsTrigger value="orders">Orders</TabsTrigger>
-                <TabsTrigger value="users">Users</TabsTrigger>
-                <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
-                <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
-              </TabsList>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+              {/* Mobile-optimized tab layout */}
+              <div className="w-full overflow-x-auto">
+                <TabsList className="grid w-full grid-cols-5 min-w-[500px] sm:min-w-full h-auto p-1">
+                  <TabsTrigger 
+                    value="packages" 
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                  >
+                    Packages
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="orders" 
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                  >
+                    Orders
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="users" 
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                  >
+                    Users
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="newsletter" 
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                  >
+                    Newsletter
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="campaigns" 
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                  >
+                    Campaigns
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
-              <TabsContent value="packages" className="space-y-6">
+              <TabsContent value="packages" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <PackageManagement />
               </TabsContent>
 
-              <TabsContent value="orders" className="space-y-6">
+              <TabsContent value="orders" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <OrdersManagement />
               </TabsContent>
 
-              <TabsContent value="users" className="space-y-6">
+              <TabsContent value="users" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <UserManagement />
               </TabsContent>
 
-              <TabsContent value="newsletter" className="space-y-6">
+              <TabsContent value="newsletter" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <NewsletterManagement />
               </TabsContent>
 
-              <TabsContent value="campaigns" className="space-y-6">
+              <TabsContent value="campaigns" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <CampaignsManagement />
               </TabsContent>
             </Tabs>
