@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -109,13 +108,6 @@ const Packages = () => {
                           </div>}
                       </div>
                     </div>
-
-                    {/* Description */}
-                    {pkg.description_key && <div className="mb-8 p-4 bg-white/10 rounded-lg border-l-4 border-purple-300/50">
-                        <p className="text-sm text-white/90 leading-relaxed italic line-clamp-3">
-                          {tDb(pkg.description_key)}
-                        </p>
-                      </div>}
 
                     <div className="space-y-3">
                       <Link to={`/packages/${pkg.value}`}>

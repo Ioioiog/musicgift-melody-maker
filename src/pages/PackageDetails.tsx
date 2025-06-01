@@ -118,9 +118,9 @@ const PackageDetails = () => {
                   </div>
 
                   {selectedPackage.description_key && (
-                    <div className="mb-8">
+                    <div className="mb-8 p-4 bg-white/10 rounded-lg border-l-4 border-purple-300/50">
                       <h3 className="text-xl font-bold text-white mb-4">{t('description')}</h3>
-                      <p className="text-white/90 leading-relaxed">
+                      <p className="text-white/90 leading-relaxed italic">
                         {tDb(selectedPackage.description_key)}
                       </p>
                     </div>
