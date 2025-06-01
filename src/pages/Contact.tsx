@@ -28,7 +28,9 @@ const Contact = () => {
         }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+        
+        {/* Hero Title Section */}
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10 mb-12">
           <motion.h1 
             className="text-4xl md:text-6xl font-bold mb-6" 
             initial={{ opacity: 0, y: 20 }} 
@@ -46,11 +48,9 @@ const Contact = () => {
             {t('contactSubtitle')}
           </motion.p>
         </div>
-      </section>
 
-      {/* Contact Form and Info */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
+        {/* Contact Form and Info inside hero */}
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <motion.div
@@ -58,7 +58,7 @@ const Contact = () => {
               animate={{ opacity: 1, x: 0 }} 
               transition={{ duration: 0.6 }}
             >
-              <Card>
+              <Card className="bg-white/95 backdrop-blur-md border border-white/20 shadow-xl">
                 <CardContent className="p-8">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('sendMessage')}</h2>
                   <form className="space-y-6">
@@ -98,43 +98,43 @@ const Contact = () => {
             >
               <div className="space-y-8">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('getInTouch')}</h2>
-                  <p className="text-gray-600 mb-8">{t('getInTouchContent')}</p>
+                  <h2 className="text-2xl font-bold mb-6">{t('getInTouch')}</h2>
+                  <p className="opacity-90 mb-8">{t('getInTouchContent')}</p>
                 </div>
 
                 <div className="space-y-6">
                   <div className="flex items-center space-x-4">
-                    <div className="bg-purple-100 p-3 rounded-full">
-                      <Mail className="w-6 h-6 text-purple-600" />
+                    <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                      <Mail className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{t('email')}</h3>
-                      <p className="text-gray-600">contact@musicgift.ro</p>
+                      <h3 className="font-semibold">{t('email')}</h3>
+                      <p className="opacity-90">contact@musicgift.ro</p>
                     </div>
                   </div>
 
                   <div className="flex items-center space-x-4">
-                    <div className="bg-purple-100 p-3 rounded-full">
-                      <Phone className="w-6 h-6 text-purple-600" />
+                    <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                      <Phone className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{t('phone')}</h3>
-                      <p className="text-gray-600">+40 XXX XXX XXX</p>
+                      <h3 className="font-semibold">{t('phone')}</h3>
+                      <p className="opacity-90">+40 XXX XXX XXX</p>
                     </div>
                   </div>
 
                   <div className="flex items-center space-x-4">
-                    <div className="bg-purple-100 p-3 rounded-full">
-                      <MapPin className="w-6 h-6 text-purple-600" />
+                    <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                      <MapPin className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{t('location')}</h3>
-                      <p className="text-gray-600">Romania</p>
+                      <h3 className="font-semibold">{t('location')}</h3>
+                      <p className="opacity-90">Romania</p>
                     </div>
                   </div>
                 </div>
 
-                <Card className="border-purple-200">
+                <Card className="bg-white/95 backdrop-blur-md border border-white/20 shadow-xl">
                   <CardContent className="p-6">
                     <h3 className="font-bold text-gray-900 mb-4">{t('businessHours')}</h3>
                     <div className="space-y-2 text-sm text-gray-600">
