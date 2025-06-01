@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -65,9 +64,6 @@ const Index = () => {
         <video className="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-30" autoPlay muted loop playsInline key={language}>
           <source src={getVideoSource()} type="video/mp4" />
         </video>
-        
-        {/* Transparent overlay */}
-        <div className="absolute top-0 left-0 w-full h-full z-10 py-0"></div>
         
         {/* Floating musical notes - responsive positioning */}
         <div className="absolute top-6 sm:top-10 right-6 sm:right-10 text-2xl sm:text-3xl md:text-4xl animate-bounce delay-75 z-20">🎵</div>
