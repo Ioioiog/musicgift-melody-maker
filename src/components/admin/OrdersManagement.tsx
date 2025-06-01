@@ -24,6 +24,7 @@ const OrdersManagement = () => {
   const [sunoDialogOpen, setSunoDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [openPromptCards, setOpenPromptCards] = useState<Set<string>>(new Set());
+  const [openPromptDetails, setOpenPromptDetails] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const { data: orders = [], refetch } = useQuery({
@@ -136,6 +137,16 @@ const OrdersManagement = () => {
     setOpenPromptCards(newOpenCards);
   };
 
+  const togglePromptDetail = (detailId: string) => {
+    const newOpenDetails = new Set(openPromptDetails);
+    if (newOpenDetails.has(detailId)) {
+      newOpenDetails.delete(detailId);
+    } else {
+      newOpenDetails.add(detailId);
+    }
+    setOpenPromptDetails(newOpenDetails);
+  };
+
   const copyToClipboard = async (text: string, type: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -246,95 +257,178 @@ const OrdersManagement = () => {
                             )}
                           </Button>
                         </CollapsibleTrigger>
-                        <CollapsibleContent className="mt-3 space-y-3 p-4 bg-purple-50 rounded-lg border border-purple-200">
-                          {/* Title */}
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <h4 className="font-semibold text-purple-900 mb-1">Title</h4>
-                              <p className="text-sm text-gray-700">{savedPrompt.title}</p>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => copyToClipboard(savedPrompt.title, 'Title')}
-                              className="ml-2 h-8 w-8 p-0"
-                            >
-                              <Copy className="w-3 h-3" />
-                            </Button>
-                          </div>
-
-                          {/* Description */}
-                          {savedPrompt.description && (
-                            <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <h4 className="font-semibold text-purple-900 mb-1">Description</h4>
-                                <p className="text-sm text-gray-700">{savedPrompt.description}</p>
-                              </div>
-                              <Button
-                                variant="ghost"
+                        <CollapsibleContent className="mt-3 space-y-2 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                          {/* Title Section */}
+                          <Collapsible 
+                            open={openPromptDetails.has(`${order.id}-title`)} 
+                            onOpenChange={() => togglePromptDetail(`${order.id}-title`)}
+                          >
+                            <CollapsibleTrigger asChild>
+                              <Button 
+                                variant="ghost" 
                                 size="sm"
-                                onClick={() => copyToClipboard(savedPrompt.description, 'Description')}
-                                className="ml-2 h-8 w-8 p-0"
+                                className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
                               >
-                                <Copy className="w-3 h-3" />
+                                <span>Title</span>
+                                {openPromptDetails.has(`${order.id}-title`) ? (
+                                  <ChevronUp className="w-3 h-3" />
+                                ) : (
+                                  <ChevronDown className="w-3 h-3" />
+                                )}
                               </Button>
-                            </div>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="pl-2 pr-2 pb-2">
+                              <div className="flex justify-between items-start bg-white p-2 rounded border">
+                                <p className="text-sm text-gray-700 flex-1">{savedPrompt.title}</p>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => copyToClipboard(savedPrompt.title, 'Title')}
+                                  className="ml-2 h-6 w-6 p-0"
+                                >
+                                  <Copy className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            </CollapsibleContent>
+                          </Collapsible>
+
+                          {/* Description Section */}
+                          {savedPrompt.description && (
+                            <Collapsible 
+                              open={openPromptDetails.has(`${order.id}-description`)} 
+                              onOpenChange={() => togglePromptDetail(`${order.id}-description`)}
+                            >
+                              <CollapsibleTrigger asChild>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
+                                >
+                                  <span>Description</span>
+                                  {openPromptDetails.has(`${order.id}-description`) ? (
+                                    <ChevronUp className="w-3 h-3" />
+                                  ) : (
+                                    <ChevronDown className="w-3 h-3" />
+                                  )}
+                                </Button>
+                              </CollapsibleTrigger>
+                              <CollapsibleContent className="pl-2 pr-2 pb-2">
+                                <div className="flex justify-between items-start bg-white p-2 rounded border">
+                                  <p className="text-sm text-gray-700 flex-1">{savedPrompt.description}</p>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => copyToClipboard(savedPrompt.description, 'Description')}
+                                    className="ml-2 h-6 w-6 p-0"
+                                  >
+                                    <Copy className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                              </CollapsibleContent>
+                            </Collapsible>
                           )}
 
-                          {/* Lyrics Preview */}
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <h4 className="font-semibold text-purple-900 mb-1">Lyrics Preview</h4>
-                              <p className="text-sm text-gray-700">
-                                {savedPrompt.lyrics.length > 100 
-                                  ? `${savedPrompt.lyrics.slice(0, 100)}...` 
-                                  : savedPrompt.lyrics
-                                }
-                              </p>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => copyToClipboard(savedPrompt.lyrics, 'Full Lyrics')}
-                              className="ml-2 h-8 w-8 p-0"
-                            >
-                              <Copy className="w-3 h-3" />
-                            </Button>
-                          </div>
+                          {/* Lyrics Section */}
+                          <Collapsible 
+                            open={openPromptDetails.has(`${order.id}-lyrics`)} 
+                            onOpenChange={() => togglePromptDetail(`${order.id}-lyrics`)}
+                          >
+                            <CollapsibleTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
+                              >
+                                <span>Lyrics</span>
+                                {openPromptDetails.has(`${order.id}-lyrics`) ? (
+                                  <ChevronUp className="w-3 h-3" />
+                                ) : (
+                                  <ChevronDown className="w-3 h-3" />
+                                )}
+                              </Button>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="pl-2 pr-2 pb-2">
+                              <div className="flex justify-between items-start bg-white p-2 rounded border">
+                                <p className="text-sm text-gray-700 flex-1 whitespace-pre-wrap">{savedPrompt.lyrics}</p>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => copyToClipboard(savedPrompt.lyrics, 'Lyrics')}
+                                  className="ml-2 h-6 w-6 p-0"
+                                >
+                                  <Copy className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            </CollapsibleContent>
+                          </Collapsible>
 
-                          {/* Technical Tags */}
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <h4 className="font-semibold text-purple-900 mb-1">Technical Tags</h4>
-                              <p className="text-sm text-gray-700">{savedPrompt.technical_tags}</p>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => copyToClipboard(savedPrompt.technical_tags, 'Technical Tags')}
-                              className="ml-2 h-8 w-8 p-0"
-                            >
-                              <Copy className="w-3 h-3" />
-                            </Button>
-                          </div>
+                          {/* Technical Tags Section */}
+                          <Collapsible 
+                            open={openPromptDetails.has(`${order.id}-tags`)} 
+                            onOpenChange={() => togglePromptDetail(`${order.id}-tags`)}
+                          >
+                            <CollapsibleTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
+                              >
+                                <span>Technical Tags</span>
+                                {openPromptDetails.has(`${order.id}-tags`) ? (
+                                  <ChevronUp className="w-3 h-3" />
+                                ) : (
+                                  <ChevronDown className="w-3 h-3" />
+                                )}
+                              </Button>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="pl-2 pr-2 pb-2">
+                              <div className="flex justify-between items-start bg-white p-2 rounded border">
+                                <p className="text-sm text-gray-700 flex-1">{savedPrompt.technical_tags}</p>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => copyToClipboard(savedPrompt.technical_tags, 'Technical Tags')}
+                                  className="ml-2 h-6 w-6 p-0"
+                                >
+                                  <Copy className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            </CollapsibleContent>
+                          </Collapsible>
 
-                          {/* Full Prompt */}
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <h4 className="font-semibold text-purple-900 mb-1">Complete Prompt</h4>
-                              <p className="text-sm text-gray-700 bg-white p-2 rounded border">
-                                {savedPrompt.prompt}
-                              </p>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => copyToClipboard(savedPrompt.prompt, 'Complete Prompt')}
-                              className="ml-2 h-8 w-8 p-0"
-                            >
-                              <Copy className="w-3 h-3" />
-                            </Button>
-                          </div>
+                          {/* Complete Prompt Section */}
+                          <Collapsible 
+                            open={openPromptDetails.has(`${order.id}-prompt`)} 
+                            onOpenChange={() => togglePromptDetail(`${order.id}-prompt`)}
+                          >
+                            <CollapsibleTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="w-full justify-between p-2 text-left font-semibold text-purple-900 hover:bg-purple-100"
+                              >
+                                <span>Complete Prompt</span>
+                                {openPromptDetails.has(`${order.id}-prompt`) ? (
+                                  <ChevronUp className="w-3 h-3" />
+                                ) : (
+                                  <ChevronDown className="w-3 h-3" />
+                                )}
+                              </Button>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="pl-2 pr-2 pb-2">
+                              <div className="flex justify-between items-start bg-white p-2 rounded border">
+                                <p className="text-sm text-gray-700 flex-1 whitespace-pre-wrap">{savedPrompt.prompt}</p>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => copyToClipboard(savedPrompt.prompt, 'Complete Prompt')}
+                                  className="ml-2 h-6 w-6 p-0"
+                                >
+                                  <Copy className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            </CollapsibleContent>
+                          </Collapsible>
 
                           {/* Metadata */}
                           <div className="text-xs text-gray-500 pt-2 border-t border-purple-200">
