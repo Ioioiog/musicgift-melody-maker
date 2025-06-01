@@ -1,14 +1,14 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Eye, Download } from 'lucide-react';
+import { Eye, Download, Music } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import SunoPromptsDialog from './SunoPromptsDialog';
 
 interface OrderFormData {
   email?: string;
@@ -20,6 +20,8 @@ interface OrderFormData {
 
 const OrdersManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [sunoDialogOpen, setSunoDialogOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const { toast } = useToast();
 
   const { data: orders = [], refetch } = useQuery({
@@ -92,6 +94,11 @@ const OrdersManagement = () => {
       case 'cancelled': return 'bg-gray-100 text-gray-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const openSunoDialog = (order: any) => {
+    setSelectedOrder(order);
+    setSunoDialogOpen(true);
   };
 
   return (
@@ -170,33 +177,45 @@ const OrdersManagement = () => {
                       </SelectContent>
                     </Select>
 
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          <Eye className="w-4 h-4 mr-2" />
-                          View Details
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                        <DialogHeader>
-                          <DialogTitle>Order Details #{order.id.slice(0, 8)}</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <div>
-                            <h4 className="font-semibold mb-2">Form Data:</h4>
-                            <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
-                              {JSON.stringify(order.form_data, null, 2)}
-                            </pre>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openSunoDialog(order)}
+                        className="bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100"
+                      >
+                        <Music className="w-4 h-4 mr-2" />
+                        Create Prompts
+                      </Button>
+
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <Eye className="w-4 h-4 mr-2" />
+                            View Details
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle>Order Details #{order.id.slice(0, 8)}</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div>
+                              <h4 className="font-semibold mb-2">Form Data:</h4>
+                              <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+                                {JSON.stringify(order.form_data, null, 2)}
+                              </pre>
+                            </div>
+                            <div>
+                              <h4 className="font-semibold mb-2">Selected Addons:</h4>
+                              <pre className="bg-gray-100 p-4 rounded text-sm">
+                                {JSON.stringify(order.selected_addons, null, 2)}
+                              </pre>
+                            </div>
                           </div>
-                          <div>
-                            <h4 className="font-semibold mb-2">Selected Addons:</h4>
-                            <pre className="bg-gray-100 p-4 rounded text-sm">
-                              {JSON.stringify(order.selected_addons, null, 2)}
-                            </pre>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -212,6 +231,12 @@ const OrdersManagement = () => {
           </CardContent>
         </Card>
       )}
+
+      <SunoPromptsDialog
+        isOpen={sunoDialogOpen}
+        onClose={() => setSunoDialogOpen(false)}
+        orderData={selectedOrder}
+      />
     </div>
   );
 };
