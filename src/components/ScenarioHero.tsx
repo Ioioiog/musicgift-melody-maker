@@ -134,7 +134,7 @@ const ScenarioHero = () => {
         </motion.div>
 
         {/* Action Buttons */}
-        <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4 ml-8" initial={{
+        <motion.div initial={{
         opacity: 0,
         x: 20
       }} animate={{
@@ -143,7 +143,7 @@ const ScenarioHero = () => {
       }} transition={{
         duration: 0.6,
         delay: 0.3
-      }}>
+      }} className="flex flex-col sm:flex-row gap-3 sm:gap-4 ml-8 mx-0">
           <Link to="/packages">
             <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 font-semibold px-6 py-3 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg">
               {t('seePackages') || 'See Packages'}
