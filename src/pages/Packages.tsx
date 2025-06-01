@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import ScenarioHero from "@/components/ScenarioHero";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -7,7 +8,7 @@ import { usePackages } from "@/hooks/usePackageData";
 import { useTranslation } from "@/hooks/useTranslations";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+
 const Packages = () => {
   const {
     data: packages = [],
@@ -19,6 +20,7 @@ const Packages = () => {
   const {
     t
   } = useLanguage();
+
   if (isLoading) {
     return <div className="min-h-screen">
         <Navigation />
@@ -31,13 +33,12 @@ const Packages = () => {
         <Footer />
       </div>;
   }
+
   return <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="py-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
-        
-      </section>
+      {/* Dynamic Scenario Hero Section */}
+      <ScenarioHero />
 
       {/* Enhanced Packages Section */}
       <section className="bg-gradient-to-br from-gray-50 via-white to-purple-50 relative overflow-hidden py-16">
@@ -128,4 +129,5 @@ const Packages = () => {
       <Footer />
     </div>;
 };
+
 export default Packages;
