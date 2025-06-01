@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +16,6 @@ const PackageManagement = () => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [editingPackage, setEditingPackage] = useState<string | null>(null);
-  const [isCreating, setIsCreating] = useState(false);
   const [formData, setFormData] = useState({
     value: '',
     label_key: '',
@@ -44,13 +42,10 @@ const PackageManagement = () => {
         return;
       }
 
-      if (isCreating) {
-        toast({ title: 'Package created successfully (Note: This is static data)' });
-      } else if (editingPackage) {
+      if (editingPackage) {
         toast({ title: 'Package updated successfully (Note: This is static data)' });
       }
       
-      setIsCreating(false);
       setEditingPackage(null);
       resetForm();
     } catch (error) {
@@ -102,7 +97,6 @@ const PackageManagement = () => {
   };
 
   const handleCancel = () => {
-    setIsCreating(false);
     setEditingPackage(null);
     resetForm();
   };
@@ -151,20 +145,14 @@ const PackageManagement = () => {
           </h2>
           <p className="text-gray-600 text-sm">Manage and view package configurations</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <Input
-              placeholder="Search packages..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-full sm:w-64"
-            />
-          </div>
-          <Button onClick={() => setIsCreating(true)} disabled={isCreating || !!editingPackage}>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Package
-          </Button>
+        <div className="relative">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            placeholder="Search packages..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 w-full sm:w-64"
+          />
         </div>
       </div>
 
@@ -181,11 +169,11 @@ const PackageManagement = () => {
         </div>
       </div>
 
-      {/* Creation/Editing Form */}
-      {(isCreating || editingPackage) && (
+      {/* Editing Form */}
+      {editingPackage && (
         <Card>
           <CardHeader>
-            <CardTitle>{isCreating ? 'Create New Package' : 'Edit Package'}</CardTitle>
+            <CardTitle>Edit Package</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -244,7 +232,7 @@ const PackageManagement = () => {
       <div className="space-y-4">
         {filteredPackages.length === 0 ? (
           <div className="text-center text-gray-500 py-8">
-            {searchTerm ? `No packages found matching "${searchTerm}"` : 'No packages found. Create your first package above.'}
+            {searchTerm ? `No packages found matching "${searchTerm}"` : 'No packages found.'}
           </div>
         ) : (
           <Accordion type="multiple" className="space-y-4">
@@ -279,7 +267,7 @@ const PackageManagement = () => {
                             e.stopPropagation();
                             handleEdit(pkg);
                           }}
-                          disabled={isCreating || !!editingPackage}
+                          disabled={!!editingPackage}
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
@@ -290,7 +278,7 @@ const PackageManagement = () => {
                             e.stopPropagation();
                             handleDelete(pkg.id || pkg.value);
                           }}
-                          disabled={isCreating || !!editingPackage}
+                          disabled={!!editingPackage}
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
