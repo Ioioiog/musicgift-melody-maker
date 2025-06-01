@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,7 +12,7 @@ const About = () => {
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section with Purple Musical Background */}
+      {/* Enhanced Hero Section with Purple Musical Background and Our Story Content */}
       <section 
         className="py-20 text-white relative overflow-hidden"
         style={{
@@ -21,55 +22,54 @@ const About = () => {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <motion.h1 
-            className="text-4xl md:text-6xl font-bold mb-6" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6 }}
-          >
-            {t('aboutTitle')}
-          </motion.h1>
-          <motion.p 
-            className="text-xl md:text-2xl opacity-90" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            {t('aboutSubtitle')}
-          </motion.p>
-        </div>
-      </section>
+        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          {/* Hero Title */}
+          <div className="text-center mb-16">
+            <motion.h1 
+              className="text-4xl md:text-6xl font-bold mb-6" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6 }}
+            >
+              {t('aboutTitle')}
+            </motion.h1>
+            <motion.p 
+              className="text-xl md:text-2xl opacity-90" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              {t('aboutSubtitle')}
+            </motion.p>
+          </div>
 
-      {/* Rest of the About page content */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
+          {/* Our Story Content - Now inside hero */}
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div 
               initial={{ opacity: 0, x: -20 }} 
               animate={{ opacity: 1, x: 0 }} 
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('ourStory')}</h2>
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <h2 className="text-3xl font-bold text-white mb-6">{t('ourStory')}</h2>
+              <p className="text-white/90 mb-6 leading-relaxed">
                 {t('ourStoryContent')}
               </p>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-white/90 leading-relaxed">
                 {t('ourStoryContent2')}
               </p>
             </motion.div>
             
             <motion.div 
-              className="bg-white rounded-lg shadow-lg overflow-hidden"
+              className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg overflow-hidden border border-white/20"
               initial={{ opacity: 0, x: 20 }} 
               animate={{ opacity: 1, x: 0 }} 
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
             >
               <div className="p-8">
                 <div className="text-4xl mb-4">🎵</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">{t('ourMission')}</h3>
-                <p className="text-gray-600">
+                <h3 className="text-xl font-bold text-white mb-4">{t('ourMission')}</h3>
+                <p className="text-white/90">
                   {t('ourMissionContent')}
                 </p>
               </div>
