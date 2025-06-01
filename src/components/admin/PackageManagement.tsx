@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { AlertCircle, Search, Package as PackageIcon, ChevronDown } from 'lucide-react';
+import { Search, Package as PackageIcon, ChevronDown } from 'lucide-react';
 import { usePackages } from '@/hooks/usePackageData';
 import { useTranslation } from '@/hooks/useTranslations';
 
@@ -71,19 +71,6 @@ const PackageManagement = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 w-full sm:w-64"
           />
-        </div>
-      </div>
-
-      {/* Static Data Info */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div className="flex items-center space-x-2">
-          <AlertCircle className="w-5 h-5 text-blue-600" />
-          <div>
-            <div className="font-medium text-blue-800">Static Package System</div>
-            <div className="text-sm text-blue-700">
-              Packages are managed via static data (packages.ts) for better type safety and deployment consistency.
-            </div>
-          </div>
         </div>
       </div>
 
@@ -228,23 +215,6 @@ const PackageManagement = () => {
           </Accordion>
         )}
       </div>
-
-      {/* Info Card */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="p-6">
-          <div className="flex items-start gap-3">
-            <div className="text-2xl">💡</div>
-            <div>
-              <h3 className="font-semibold text-blue-900 mb-2">Static Package System</h3>
-              <p className="text-blue-800 text-sm">
-                Packages are managed statically in <code className="bg-blue-100 px-1 rounded">src/data/packages.ts</code>. 
-                This provides better type safety, version control, and deployment consistency. To modify packages, 
-                update the TypeScript file and redeploy the application.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
