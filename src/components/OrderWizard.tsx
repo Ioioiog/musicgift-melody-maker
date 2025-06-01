@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -397,26 +396,26 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
-        <div className="max-w-7xl mx-0 my-[6px] py-0 px-[4px]">
-          <div className="mb-12"></div>
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-4">
+          <div className="mb-6 sm:mb-8 md:mb-12"></div>
 
-          <div className="grid lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             <div className="lg:col-span-3">
               <StepIndicator currentStep={1} />
 
-              <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
-                <CardContent className="p-8 lg:p-10">
-                  <div className="mb-8">
-                    <div className="flex items-center justify-between mb-4">
+              <Card className="border-0 shadow-xl sm:shadow-2xl bg-white/80 backdrop-blur-sm">
+                <CardContent className="p-4 sm:p-6 lg:p-8 xl:p-10">
+                  <div className="mb-6 sm:mb-8">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3 sm:gap-0">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base">
                           1
                         </div>
                         <div>
-                          <h2 className="text-3xl font-bold text-gray-900">
+                          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                             {t('choosePackage', 'Alege pachetul tău')}
                           </h2>
-                          <p className="text-purple-600 font-medium">
+                          <p className="text-sm sm:text-base text-purple-600 font-medium">
                             {t('stepPackage', 'Pasul')} 1
                           </p>
                         </div>
@@ -424,8 +423,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                     </div>
                   </div>
 
-                  <div className="space-y-8">
-                    <div className="transform transition-all duration-200 hover:scale-[1.02]">
+                  <div className="space-y-6 sm:space-y-8">
+                    <div className="transform transition-all duration-200 hover:scale-[1.01] sm:hover:scale-[1.02]">
                       <FormFieldRenderer 
                         field={packageSelectionStep.fields[0] as Field}
                         value={formData.package} 
@@ -440,11 +439,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center pt-10 border-t mt-10">
+                  <div className="flex flex-col sm:flex-row justify-between items-center pt-6 sm:pt-8 lg:pt-10 border-t mt-6 sm:mt-8 lg:mt-10 gap-4 sm:gap-0">
                     <Button 
                       variant="outline" 
                       disabled={true}
-                      className="px-8 py-3 font-semibold border-2 hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
+                      className="w-full sm:w-auto px-6 sm:px-8 py-3 font-semibold border-2 hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
                     >
                       <ArrowLeft className="w-4 h-4 mr-2" />
                       {t('previous', 'Anterior')}
@@ -453,7 +452,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                     <Button 
                       onClick={handleNext} 
                       disabled={!formData.package} 
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
+                      className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 sm:px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
                     >
                       {t('continue', 'Continuă')}
                       <ChevronRight className="w-4 h-4 ml-2" />
@@ -463,10 +462,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
               </Card>
             </div>
 
-            <div className="lg:col-span-1 space-y-6">
-              <div className="sticky top-8 space-y-6">
+            <div className="order-first lg:order-last lg:col-span-1 space-y-4 sm:space-y-6">
+              <div className="lg:sticky lg:top-8 space-y-4 sm:space-y-6">
                 <HelpSection />
-                <TestimonialSection />
+                <div className="hidden sm:block">
+                  <TestimonialSection />
+                </div>
               </div>
             </div>
           </div>
@@ -528,28 +529,28 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
-      <div className="max-w-7xl mx-0 my-[6px] py-0 px-[4px]">
-        <div className="mb-12"></div>
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-4">
+        <div className="mb-6 sm:mb-8 md:mb-12"></div>
 
-        <div className="grid lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           <div className="lg:col-span-3">
             <StepIndicator currentStep={currentStep} />
 
-            <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-8 lg:p-10">
+            <Card className="border-0 shadow-xl sm:shadow-2xl bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-4 sm:p-6 lg:p-8 xl:p-10">
                 {currentStepData && (
                   <>
-                    <div className="mb-8">
-                      <div className="flex items-center justify-between mb-4">
+                    <div className="mb-6 sm:mb-8">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3 sm:gap-0">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base">
                             {currentStep}
                           </div>
                           <div>
-                            <h2 className="text-3xl font-bold text-gray-900">
+                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                               {t(currentStepData.title_key)}
                             </h2>
-                            <p className="text-purple-600 font-medium">
+                            <p className="text-sm sm:text-base text-purple-600 font-medium">
                               {t('stepPackage', 'Pasul')} {currentStep} {t('of', 'din')} {totalSteps}
                             </p>
                           </div>
@@ -565,13 +566,25 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                           <span>{Math.round(completionPercentage)}%</span>
                         </div>
                       </div>
+                      
+                      {/* Mobile progress bar */}
+                      <div className="lg:hidden flex items-center space-x-2 text-sm text-gray-500 mb-4">
+                        <span>{t('progress', 'Progres')}:</span>
+                        <div className="flex-1 bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-500" 
+                            style={{ width: `${completionPercentage}%` }} 
+                          />
+                        </div>
+                        <span>{Math.round(completionPercentage)}%</span>
+                      </div>
                     </div>
 
                     {/* Package Details Section - Show when package is selected and it's step 1 */}
                     {selectedPackageDetails && currentStep === 1 && (
-                      <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
-                        <div className="flex items-start space-x-4">
-                          <div className="text-4xl">
+                      <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200">
+                        <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                          <div className="text-3xl sm:text-4xl">
                             {selectedPackageDetails.value === 'personal' ? '🎁' : 
                              selectedPackageDetails.value === 'business' ? '💼' : 
                              selectedPackageDetails.value === 'premium' ? '🌟' : 
@@ -579,13 +592,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                              selectedPackageDetails.value === 'instrumental' ? '🎶' : 
                              selectedPackageDetails.value === 'remix' ? '🔁' : '🎁'}
                           </div>
-                          <div className="flex-1">
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                          <div className="flex-1 w-full">
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
                               {t(selectedPackageDetails.label_key)}
                             </h3>
-                            <div className="flex items-center space-x-4 mb-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
                               <div className="flex items-center space-x-2">
-                                <span className="text-3xl font-bold text-purple-600">
+                                <span className="text-2xl sm:text-3xl font-bold text-purple-600">
                                   {selectedPackageDetails.price} RON
                                 </span>
                               </div>
@@ -603,7 +616,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                                   <Star className="w-4 h-4 mr-2 text-yellow-500" />
                                   {t('whatsIncluded', "Ce este inclus")}
                                 </h4>
-                                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <ul className="grid grid-cols-1 gap-2">
                                   {selectedPackageDetails.includes.map((include, index) => (
                                     <li key={index} className="flex items-start space-x-2 text-sm text-gray-700">
                                       <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
@@ -623,9 +636,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                       </div>
                     )}
 
-                    <div className="space-y-8">
+                    <div className="space-y-6 sm:space-y-8">
                       {currentStepData.fields && currentStepData.fields.map((field, index) => (
-                        <div key={index} className="transform transition-all duration-200 hover:scale-[1.02]">
+                        <div key={index} className="transform transition-all duration-200 hover:scale-[1.01] sm:hover:scale-[1.02]">
                           <FormFieldRenderer 
                             field={field}
                             value={formData[field.field_name]} 
@@ -641,12 +654,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                       ))}
                     </div>
 
-                    <div className="flex justify-between items-center pt-10 border-t mt-10">
+                    <div className="flex flex-col sm:flex-row justify-between items-center pt-6 sm:pt-8 lg:pt-10 border-t mt-6 sm:mt-8 lg:mt-10 gap-4 sm:gap-0">
                       <Button 
                         variant="outline" 
                         onClick={handlePrevious} 
                         disabled={currentStep === 1} 
-                        className="px-8 py-3 font-semibold border-2 hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 font-semibold border-2 hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
                       >
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         {t('previous', 'Anterior')}
@@ -667,7 +680,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                         <Button 
                           onClick={handleSubmit} 
                           disabled={!canProceed() || isSubmitting} 
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
+                          className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 sm:px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
                         >
                           {isSubmitting ? (
                             <>
@@ -685,7 +698,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                         <Button 
                           onClick={handleNext} 
                           disabled={!canProceed()} 
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
+                          className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 sm:px-8 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
                         >
                           {t('continue', 'Continuă')}
                           <ChevronRight className="w-4 h-4 ml-2" />
@@ -698,10 +711,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
             </Card>
           </div>
 
-          <div className="lg:col-span-1 space-y-6">
-            <div className="sticky top-8 space-y-6">
+          <div className="order-first lg:order-last lg:col-span-1 space-y-4 sm:space-y-6">
+            <div className="lg:sticky lg:top-8 space-y-4 sm:space-y-6">
               <HelpSection />
-              <TestimonialSection />
+              <div className="hidden sm:block">
+                <TestimonialSection />
+              </div>
               {selectedPackage && (
                 <OrderSummary selectedPackage={selectedPackage} selectedAddons={selectedAddons} />
               )}
