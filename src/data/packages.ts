@@ -1,4 +1,3 @@
-
 export interface PackageData {
   id: string;
   value: string;
@@ -60,15 +59,40 @@ export const packages: PackageData[] = [
     steps: [
       {
         step_number: 1,
-        title_key: "choosePackageStep",
+        title_key: "forWhomIsSongStep",
         step_order: 1,
         fields: [
           {
-            field_name: "package",
-            field_type: "select",
-            placeholder_key: "choosePersonalPackage",
+            field_name: "recipientName",
+            field_type: "text",
+            placeholder_key: "recipientNamePlaceholder",
             required: true,
             field_order: 1,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "recipientNamePronunciation",
+            field_type: "file",
+            placeholder_key: "recipientNamePronunciationPlaceholder",
+            required: false,
+            field_order: 2,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "relationship",
+            field_type: "select",
+            placeholder_key: "relationshipPlaceholder",
+            required: false,
+            field_order: 3,
+            options: [
+              { value: "partner", label_key: "relationshipPartner" },
+              { value: "family", label_key: "relationshipFamily" },
+              { value: "friend", label_key: "relationshipFriend" },
+              { value: "colleague", label_key: "relationshipColleague" },
+              { value: "other", label_key: "relationshipOther" }
+            ],
             validations: [],
             dependencies: []
           }
@@ -76,7 +100,7 @@ export const packages: PackageData[] = [
       },
       {
         step_number: 2,
-        title_key: "personalDetailsStep",
+        title_key: "yourContactDetailsStep",
         step_order: 2,
         fields: [
           {
@@ -126,15 +150,6 @@ export const packages: PackageData[] = [
             placeholder_key: "occasionPlaceholder",
             required: false,
             field_order: 5,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "pronunciationRecording",
-            field_type: "file",
-            placeholder_key: "pronunciationRecordingPlaceholder",
-            required: false,
-            field_order: 6,
             validations: [],
             dependencies: []
           }
@@ -250,15 +265,40 @@ export const packages: PackageData[] = [
     steps: [
       {
         step_number: 1,
-        title_key: "choosePackageStep",
+        title_key: "forWhomIsSongStep",
         step_order: 1,
         fields: [
           {
-            field_name: "package",
-            field_type: "select",
-            placeholder_key: "choosePremiumPackage",
+            field_name: "recipientName",
+            field_type: "text",
+            placeholder_key: "recipientNamePlaceholder",
             required: true,
             field_order: 1,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "recipientNamePronunciation",
+            field_type: "file",
+            placeholder_key: "recipientNamePronunciationPlaceholder",
+            required: false,
+            field_order: 2,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "relationship",
+            field_type: "select",
+            placeholder_key: "relationshipPlaceholder",
+            required: false,
+            field_order: 3,
+            options: [
+              { value: "partner", label_key: "relationshipPartner" },
+              { value: "family", label_key: "relationshipFamily" },
+              { value: "friend", label_key: "relationshipFriend" },
+              { value: "colleague", label_key: "relationshipColleague" },
+              { value: "other", label_key: "relationshipOther" }
+            ],
             validations: [],
             dependencies: []
           }
@@ -266,7 +306,7 @@ export const packages: PackageData[] = [
       },
       {
         step_number: 2,
-        title_key: "personalDetailsStep",
+        title_key: "yourContactDetailsStep",
         step_order: 2,
         fields: [
           {
@@ -316,15 +356,6 @@ export const packages: PackageData[] = [
             placeholder_key: "occasionPlaceholder",
             required: false,
             field_order: 5,
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "pronunciationRecording",
-            field_type: "file",
-            placeholder_key: "pronunciationRecordingPlaceholder",
-            required: false,
-            field_order: 6,
             validations: [],
             dependencies: []
           }
@@ -441,31 +472,24 @@ export const packages: PackageData[] = [
     steps: [
       {
         step_number: 1,
-        title_key: "choosePackageStep",
+        title_key: "forWhichCompanyIsSongStep",
         step_order: 1,
-        fields: [
-          {
-            field_name: "package",
-            field_type: "select",
-            placeholder_key: "chooseBusinessPackage",
-            required: true,
-            field_order: 1,
-            validations: [],
-            dependencies: []
-          }
-        ]
-      },
-      {
-        step_number: 2,
-        title_key: "companyDetailsStep",
-        step_order: 2,
         fields: [
           {
             field_name: "companyName",
             field_type: "text",
-            placeholder_key: "companyNamePlaceholder",
+            placeholder_key: "companyNameForSongPlaceholder",
             required: true,
             field_order: 1,
+            validations: [],
+            dependencies: []
+          },
+          {
+            field_name: "companyNamePronunciation",
+            field_type: "file",
+            placeholder_key: "companyNamePronunciationPlaceholder",
+            required: false,
+            field_order: 2,
             validations: [],
             dependencies: []
           },
@@ -474,16 +498,23 @@ export const packages: PackageData[] = [
             field_type: "text",
             placeholder_key: "contactPersonPlaceholder",
             required: true,
-            field_order: 2,
+            field_order: 3,
             validations: [],
             dependencies: []
-          },
+          }
+        ]
+      },
+      {
+        step_number: 2,
+        title_key: "contactAndBillingDetailsStep",
+        step_order: 2,
+        fields: [
           {
             field_name: "email",
             field_type: "email",
             placeholder_key: "emailPlaceholder",
             required: true,
-            field_order: 3,
+            field_order: 1,
             validations: [],
             dependencies: []
           },
@@ -492,7 +523,7 @@ export const packages: PackageData[] = [
             field_type: "text",
             placeholder_key: "phonePlaceholder",
             required: true,
-            field_order: 4,
+            field_order: 2,
             validations: [],
             dependencies: []
           },
@@ -501,21 +532,12 @@ export const packages: PackageData[] = [
             field_type: "select",
             placeholder_key: "songLanguagePlaceholder",
             required: true,
-            field_order: 5,
+            field_order: 3,
             options: [
               { value: "ro", label_key: "romanianLanguage" },
               { value: "en", label_key: "englishLanguage" },
               { value: "fr", label_key: "frenchLanguage" }
             ],
-            validations: [],
-            dependencies: []
-          },
-          {
-            field_name: "pronunciationRecording",
-            field_type: "file",
-            placeholder_key: "companyPronunciationPlaceholder",
-            required: false,
-            field_order: 6,
             validations: [],
             dependencies: []
           }
