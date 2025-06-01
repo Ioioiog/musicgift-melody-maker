@@ -4,7 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Eye, Download, Music, Database } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -22,6 +23,7 @@ const OrdersManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [sunoDialogOpen, setSunoDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [openPromptCards, setOpenPromptCards] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const { data: orders = [], refetch } = useQuery({
@@ -42,14 +44,15 @@ const OrdersManagement = () => {
     }
   });
 
-  // Query to get saved prompts for all orders
-  const { data: savedPrompts = [] } = useQuery({
-    queryKey: ['saved-prompts'],
+  // Enhanced query to get saved prompts with full details for all orders
+  const { data: savedPromptsDetails = [] } = useQuery({
+    queryKey: ['saved-prompts-details'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('suno_prompts')
-        .select('order_id, is_optimized')
-        .eq('is_optimized', true);
+        .select('order_id, title, description, lyrics, technical_tags, prompt, language, created_at, is_optimized')
+        .eq('is_optimized', true)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data;
@@ -116,7 +119,38 @@ const OrdersManagement = () => {
   };
 
   const hasSavedPrompts = (orderId: string) => {
-    return savedPrompts.some(prompt => prompt.order_id === orderId);
+    return savedPromptsDetails.some(prompt => prompt.order_id === orderId);
+  };
+
+  const getSavedPrompt = (orderId: string) => {
+    return savedPromptsDetails.find(prompt => prompt.order_id === orderId);
+  };
+
+  const togglePromptCard = (orderId: string) => {
+    const newOpenCards = new Set(openPromptCards);
+    if (newOpenCards.has(orderId)) {
+      newOpenCards.delete(orderId);
+    } else {
+      newOpenCards.add(orderId);
+    }
+    setOpenPromptCards(newOpenCards);
+  };
+
+  const copyToClipboard = async (text: string, type: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: 'Copied to clipboard',
+        description: `${type} has been copied to your clipboard`
+      });
+    } catch (error) {
+      console.error('Failed to copy:', error);
+      toast({
+        title: 'Copy failed',
+        description: 'Unable to copy to clipboard',
+        variant: 'destructive'
+      });
+    }
   };
 
   return (
@@ -147,6 +181,8 @@ const OrdersManagement = () => {
         {orders.map((order) => {
           const formData = order.form_data as OrderFormData;
           const hasPrompts = hasSavedPrompts(order.id);
+          const savedPrompt = getSavedPrompt(order.id);
+          const isPromptCardOpen = openPromptCards.has(order.id);
           
           return (
             <Card key={order.id}>
