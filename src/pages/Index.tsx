@@ -60,7 +60,7 @@ const Index = () => {
         </video>
         
         {/* Overlay for better text readability */}
-        <div className="absolute top-0 left-0 w-full h-full bg-black/50 sm:bg-black/40 z-10"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-black/50 sm:bg-black/40 z-10 py-0"></div>
         
         {/* Floating musical notes - responsive positioning */}
         <div className="absolute top-6 sm:top-10 right-6 sm:right-10 text-2xl sm:text-3xl md:text-4xl animate-bounce delay-75 z-20">🎵</div>
@@ -79,7 +79,7 @@ const Index = () => {
         
         {/* Hero Content - Mobile optimized */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
-          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in my-[15px] px-0 mx-0 py-[119px]">
+          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 py-[62px] my-0 px-[36px]">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight">
               {t('heroTitle') || 'Transformă Emoțiile Tale în Muzică'}
             </h1>
