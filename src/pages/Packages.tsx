@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,8 @@ import { usePackages } from "@/hooks/usePackageData";
 import { useTranslation } from "@/hooks/useTranslations";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight } from "lucide-react";
-import ScenarioBanner from "@/components/ScenarioBanner";
+import { motion } from "framer-motion";
+
 const Packages = () => {
   const {
     data: packages = [],
@@ -19,6 +21,7 @@ const Packages = () => {
   const {
     t
   } = useLanguage();
+
   if (isLoading) {
     return <div className="min-h-screen">
         <Navigation />
@@ -31,22 +34,42 @@ const Packages = () => {
         <Footer />
       </div>;
   }
+
   return <div className="min-h-screen">
       <Navigation />
       
+      {/* Hero Section */}
+      <section className="py-12 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <motion.h1 className="text-3xl md:text-5xl font-bold mb-4" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }}>
+            {t('packagesTitle')}
+          </motion.h1>
+          <motion.p className="text-lg md:text-xl opacity-90" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.2
+        }}>
+            {t('packagesSubtitle')}
+          </motion.p>
+        </div>
+      </section>
+
       {/* Enhanced Packages Section */}
-      <section className="bg-gradient-to-br from-gray-50 via-white to-purple-50 relative overflow-hidden py-0">
+      <section className="bg-gradient-to-br from-gray-50 via-white to-purple-50 relative overflow-hidden py-16">
         <div className="container mx-auto relative z-10 px-[22px]">
-          <div className="text-center mb-12 ">
-            
-            
-            
-            {/* ScenarioBanner replacing the static blobs */}
-            <div className="max-w-4xl mx-auto mb-12">
-              <ScenarioBanner />
-            </div>
-          </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-8xl mx-auto">
             {packages.map((pkg, index) => <Card key={pkg.id || pkg.value} className={`relative hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 backdrop-blur-sm bg-white/80 border-0 shadow-lg group ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-200 scale-105 shadow-purple-100' : ''}`}>
                 {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
@@ -133,4 +156,5 @@ const Packages = () => {
       <Footer />
     </div>;
 };
+
 export default Packages;
