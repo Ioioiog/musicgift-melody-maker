@@ -103,7 +103,7 @@ const HowItWorks = () => {
       </section>
 
       {/* Enhanced Steps Section */}
-      <section className="relative py-20 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden my-0 py-[5px]">
         {/* Simplified floating elements */}
         <div className="absolute inset-0 pointer-events-none">
           <motion.div className="absolute top-10 left-0 text-6xl text-purple-300 opacity-20" animate={{
