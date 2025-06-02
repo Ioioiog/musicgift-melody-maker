@@ -12,6 +12,7 @@ import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 const Index = () => {
   const {
     data: packages = [],
@@ -141,11 +142,9 @@ const Index = () => {
           duration: 0.6
         }}>
             <div className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
-                Ready to Create Something Special?
-              </h2>
               <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl mx-auto px-4">
-                {t('helpCreatePersonalized')}
+                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-white block mb-4">Ready to Create Something Special?</span>
+                Let us help you create a personalized musical gift that will be treasured forever
               </p>
             </div>
             
@@ -163,8 +162,6 @@ const Index = () => {
             </div>
           </motion.div>
 
-          
-          
           {/* Loading State */}
           {isLoading && <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px]">
               <div className="text-center">
