@@ -1,9 +1,11 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +14,7 @@ const Navigation = () => {
     setLanguage,
     t
   } = useLanguage();
+  
   const navItems = [{
     path: "/",
     label: t("home") || "Home"
@@ -31,7 +34,9 @@ const Navigation = () => {
     path: "/contact",
     label: t("contact") || "Contact"
   }];
+  
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
+  
   return <>
       {/* Background behind navbar */}
       <div style={{
@@ -41,20 +46,29 @@ const Navigation = () => {
       backgroundRepeat: 'no-repeat'
     }} className="fixed top-0 left-0 w-full h-24 z-1"></div>
 
+      {/* Floating Logo - positioned above navbar */}
+      <div className="fixed top-2 left-1/2 transform -translate-x-1/2 z-50">
+        <Link to="/" className="block group">
+          <img 
+            alt="MusicGift Logo" 
+            src="/lovable-uploads/498505b7-a0a3-4796-a3eb-940dd9e1bab0.png" 
+            className="h-20 w-auto sm:h-24 md:h-28 lg:h-32 transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:drop-shadow-lg" 
+          />
+        </Link>
+      </div>
+
       {/* Navigation Bar */}
-      <header className="fixed top-2 sm:top-4 w-full z-50 border-b border-white/10 bg-white/95 backdrop-blur-md shadow-lg">        
+      <header className="fixed top-16 sm:top-20 w-full z-40 border-b border-white/10 bg-white/95 backdrop-blur-md shadow-lg">        
         <div className="container mx-auto sm:px-6 md:px-8 my-0 relative z-10 px-[18px] py-[3px]">
           <div className="flex items-center justify-between h-20 py-[4px]">
             
-            {/* Logo - enhanced */}
-            <div className="flex items-center">
-              <Link to="/" className="block group">
-                <img alt="MusicGift Logo" src="/lovable-uploads/498505b7-a0a3-4796-a3eb-940dd9e1bab0.png" className="h-30 w-auto sm:h-16 md:h-18 lg:h-20 transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:drop-shadow-lg" />
-              </Link>
+            {/* Empty space where logo was - now used for spacing */}
+            <div className="flex items-center lg:w-48">
+              {/* This space maintains layout balance */}
             </div>
 
             {/* Desktop Nav - enhanced */}
-            <nav className="hidden lg:flex items-center ml-12">
+            <nav className="hidden lg:flex items-center">
               <div className="flex items-center space-x-8 xl:space-x-10">
                 {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`relative text-sm font-semibold transition-all duration-300 hover:text-violet-600 ${location.pathname === item.path ? "text-violet-600" : "text-gray-700 hover:text-violet-600"} after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-violet-600 after:left-0 after:-bottom-1 after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left ${location.pathname === item.path ? "after:scale-x-100" : ""}`}>
                     {item.label}
@@ -126,4 +140,5 @@ const Navigation = () => {
       </header>
     </>;
 };
+
 export default Navigation;
