@@ -5,7 +5,6 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
-
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -99,7 +98,7 @@ const Navigation = () => {
                     
                     {/* Text overlay - Mobile responsive */}
                     <div className="absolute inset-0 flex items-center justify-center py-[16px] px-[16px] my-[64px]">
-                      <span className="relative z-10 font-bold leading-tight drop-shadow-lg text-2xl xl:text-3xl rounded-full py-2 px-[6px] text-center text-slate-50">
+                      <span className="relative z-10 font-bold leading-tight drop-shadow-lg xl:text-3xl rounded-full text-center px-[16px] py-[19px] text-4xl text-slate-50">
                         {t("orderNow") || "Order Now"}
                       </span>
                     </div>
@@ -168,5 +167,4 @@ const Navigation = () => {
       </header>
     </>;
 };
-
 export default Navigation;
