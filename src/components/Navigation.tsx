@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -92,13 +94,22 @@ const Navigation = () => {
               {/* Vinyl Record Order Button - Made much bigger */}
               <Link to="/order" className="relative group">
                 <div className="relative w-40 h-40 xl:w-44 xl:h-44 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
-                  {/* Vinyl Record Image */}
-                  <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
-                    <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
+                  {/* Vinyl Record Image - Made black */}
+                  <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300 bg-black">
+                    <div className="w-full h-full rounded-full bg-black border-4 border-gray-800">
+                      {/* Vinyl record rings */}
+                      <div className="absolute inset-4 rounded-full border border-gray-600"></div>
+                      <div className="absolute inset-8 rounded-full border border-gray-600"></div>
+                      <div className="absolute inset-12 rounded-full border border-gray-600"></div>
+                      {/* Center hole */}
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gray-800 rounded-full border-2 border-gray-600"></div>
+                    </div>
                     
-                    {/* Gift box icon overlay */}
+                    {/* Gift box icon overlay - Made orange */}
                     <div className="absolute inset-0 flex items-center justify-center py-[20px] px-[20px] my-[70px] ml-[10px]">
-                      <img alt="Gift" src="/lovable-uploads/cdaff943-06a1-4aa0-a177-3209c50e1a1f.png" className="relative z-10 w-10 h-19 xl:w-10 xl:h-20 drop-shadow-lg ml-20" />
+                      <div className="relative z-10 w-10 h-19 xl:w-10 xl:h-20 drop-shadow-lg ml-20 filter hue-rotate-15 saturate-150 brightness-110" style={{filter: 'hue-rotate(15deg) saturate(150%) brightness(110%) sepia(100%) hue-rotate(25deg)'}}>
+                        <img alt="Gift" src="/lovable-uploads/cdaff943-06a1-4aa0-a177-3209c50e1a1f.png" className="w-full h-full" style={{filter: 'hue-rotate(25deg) saturate(200%) brightness(120%)'}} />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -142,16 +153,25 @@ const Navigation = () => {
                     <UserMenu />
                   </div>
                   
-                  {/* Mobile Vinyl Record Button - Made much bigger */}
+                  {/* Mobile Vinyl Record Button - Made much bigger with black vinyl */}
                   <Link to="/order" className="relative group ml-auto" onClick={() => setIsMenuOpen(false)}>
                     <div className="relative w-28 h-28 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
-                      {/* Mobile Vinyl Record Image */}
-                      <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
-                        <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
+                      {/* Mobile Vinyl Record Image - Made black */}
+                      <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300 bg-black">
+                        <div className="w-full h-full rounded-full bg-black border-2 border-gray-800">
+                          {/* Vinyl record rings */}
+                          <div className="absolute inset-2 rounded-full border border-gray-600"></div>
+                          <div className="absolute inset-4 rounded-full border border-gray-600"></div>
+                          <div className="absolute inset-6 rounded-full border border-gray-600"></div>
+                          {/* Center hole */}
+                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-gray-800 rounded-full border border-gray-600"></div>
+                        </div>
                         
-                        {/* Gift box icon overlay for mobile */}
+                        {/* Gift box icon overlay for mobile - Made orange */}
                         <div className="absolute inset-0 flex items-center justify-center ml-[6px] mt-[4px]">
-                          <img src="/lovable-uploads/2784fec2-bf48-4f39-96f9-0e36bf6783f2.png" alt="Gift" className="relative z-10 w-10 h-10 drop-shadow-lg" />
+                          <div className="relative z-10 w-10 h-10 drop-shadow-lg" style={{filter: 'hue-rotate(25deg) saturate(200%) brightness(120%)'}}>
+                            <img src="/lovable-uploads/2784fec2-bf48-4f39-96f9-0e36bf6783f2.png" alt="Gift" className="w-full h-full" />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -163,4 +183,5 @@ const Navigation = () => {
       </header>
     </>;
 };
+
 export default Navigation;
