@@ -33,211 +33,148 @@ const LegalModals = ({ t }: LegalModalsProps) => {
     ro: {
       title: "Termeni și Condiții – MusicGift.ro",
       intro: "Bine ai venit pe MusicGift.ro! Comandând o melodie personalizată, ești de acord cu regulile de mai jos. Le-am scris simplu și clar, ca să știi exact ce primești.",
-      sections: [
-        {
-          title: "1. Cine suntem?",
-          content: "MusicGift este un serviciu creat de Mango Records SRL, companie românească cu sediul în București, Str. Fabrica de Glucoză 6–8, înregistrată la Registrul Comerțului cu nr. J23/2828/2017, CUI RO29228083."
-        },
-        {
-          title: "2. Ce înseamnă fiecare termen?",
-          content: `• MusicGift – Serviciul care creează melodii personalizate.
+      content: `1. Cine suntem?
+MusicGift este un serviciu creat de Mango Records SRL, companie românească cu sediul în București, Str. Fabrica de Glucoză 6–8, înregistrată la Registrul Comerțului cu nr. J23/2828/2017, CUI RO29228083.
+
+2. Ce înseamnă fiecare termen?
+• MusicGift – Serviciul care creează melodii personalizate.
 • Clientul – Tu, cel/cea care comandă o melodie.
 • Melodia – Cântecul final livrat.
 • Master – Fișierul audio final.
-• Compoziția – Linia melodică, armonia și versurile.`
-        },
-        {
-          title: "3. Ce oferim?",
-          content: "🎶 Creăm melodii unice, inspirate din poveștile clienților noștri – pentru cadouri, evenimente, reclame sau uz artistic."
-        },
-        {
-          title: "4. Cum funcționează comanda?",
-          content: `🕒 Termene de livrare:
+• Compoziția – Linia melodică, armonia și versurile.
+
+3. Ce oferim?
+🎶 Creăm melodii unice, inspirate din poveștile clienților noștri – pentru cadouri, evenimente, reclame sau uz artistic.
+
+4. Cum funcționează comanda?
+🕒 Termene de livrare:
 • 3–5 zile lucrătoare: pentru pachetele Personal, Business, Premium
 • 7–10 zile lucrătoare: pentru pachetul Artist
 
-📦 Melodia se livrează prin link securizat, trimis pe email.`
-        },
-        {
-          title: "5. Drepturi de autor și utilizare",
-          content: `✍️ Drepturile de autor asupra piesei (compoziție și text) rămân la Mango Records.
+📦 Melodia se livrează prin link securizat, trimis pe email.
 
-🎧 Tu primești dreptul de a folosi melodia conform pachetului ales (ex: personal, comercial etc.).`
-        },
-        {
-          title: "6. Portofoliu",
-          content: "Putem include melodia ta în portofoliul nostru ca exemplu de creație. Nu îți afectează în niciun fel drepturile de utilizare."
-        },
-        {
-          title: "7. Plata și rambursare",
-          content: `💳 Plata se face integral la plasarea comenzii.
+5. Drepturi de autor și utilizare
+✍️ Drepturile de autor asupra piesei (compoziție și text) rămân la Mango Records.
+🎧 Tu primești dreptul de a folosi melodia conform pachetului ales (ex: personal, comercial etc.).
 
-❌ Pentru că produsele sunt personalizate, nu se acceptă rambursări – cu excepția unor situații speciale (ex: eroare tehnică gravă).`
-        },
-        {
-          title: "8. Responsabilitățile tale",
-          content: `• Să oferi informații corecte și complete.
+6. Portofoliu
+Putem include melodia ta în portofoliul nostru ca exemplu de creație. Nu îți afectează în niciun fel drepturile de utilizare.
+
+7. Plata și rambursare
+💳 Plata se face integral la plasarea comenzii.
+❌ Pentru că produsele sunt personalizate, nu se acceptă rambursări – cu excepția unor situații speciale (ex: eroare tehnică gravă).
+
+8. Responsabilitățile tale
+• Să oferi informații corecte și complete.
 • Să nu trimiți conținut neadecvat (vulgar, ilegal etc.).
-• Să folosești site-ul în mod responsabil.`
-        },
-        {
-          title: "9. Modificări ale termenilor",
-          content: "Putem actualiza acești termeni oricând. Te încurajăm să revii periodic pentru a verifica eventualele modificări."
-        },
-        {
-          title: "10. 📬 Newsletter și comunicări comerciale",
-          content: `Prin abonarea la newsletter:
+• Să folosești site-ul în mod responsabil.
+
+9. Modificări ale termenilor
+Putem actualiza acești termeni oricând. Te încurajăm să revii periodic pentru a verifica eventualele modificări.
+
+10. 📬 Newsletter și comunicări comerciale
+Prin abonarea la newsletter:
 • Accepți să primești emailuri cu noutăți, oferte și campanii MusicGift.
 • Te poți dezabona oricând prin linkul din email sau scriind la: mihai.gruia@mangorecords.net
-• Respectăm toate reglementările GDPR. Nu trimitem spam și nu partajăm datele tale cu terți.`
-        },
-        {
-          title: "11. 🔐 Protecția datelor (GDPR)",
-          content: `Colectăm:
-• Nume, email, telefon
+• Respectăm toate reglementările GDPR. Nu trimitem spam și nu partajăm datele tale cu terți.
 
-Scop:
-• Procesarea comenzii
-• Trimiterea de comunicări comerciale
+11. 🔐 Protecția datelor (GDPR)
+Colectăm: Nume, email, telefon
+Scop: Procesarea comenzii, Trimiterea de comunicări comerciale
+Drepturile tale: Acces, rectificare, ștergere, opoziție, portabilitate
 
-Drepturile tale:
-• Acces, rectificare, ștergere, opoziție, portabilitate`
-        },
-        {
-          title: "12. Utilizarea site-ului",
-          content: `Este interzisă:
-• Frauda
-• Utilizarea abuzivă
-• Copierea conținutului fără acord`
-        },
-        {
-          title: "13. Politica de cookies",
-          content: "Folosim cookie-uri pentru a îmbunătăți experiența ta pe site."
-        },
-        {
-          title: "14. Legea aplicabilă",
-          content: "Acești termeni sunt guvernați de legislația română."
-        },
-        {
-          title: "15. Dreptul de a refuza comenzi",
-          content: "Putem refuza comenzi în cazuri justificate (ex: conținut inacceptabil). În astfel de cazuri, returnăm integral banii."
-        },
-        {
-          title: "16. 🔁 Politica de returnare",
-          content: `Fiind produse 100% personalizate, acestea nu pot fi returnate, conform OUG nr. 34/2014.
+12. Utilizarea site-ului
+Este interzisă: Frauda, Utilizarea abuzivă, Copierea conținutului fără acord
 
+13. Politica de cookies
+Folosim cookie-uri pentru a îmbunătăți experiența ta pe site.
+
+14. Legea aplicabilă
+Acești termeni sunt guvernați de legislația română.
+
+15. Dreptul de a refuza comenzi
+Putem refuza comenzi în cazuri justificate (ex: conținut inacceptabil). În astfel de cazuri, returnăm integral banii.
+
+16. 🔁 Politica de returnare
+Fiind produse 100% personalizate, acestea nu pot fi returnate, conform OUG nr. 34/2014.
 ✅ În cazuri excepționale (erori tehnice sau imposibilitatea livrării), putem:
 • Reface melodia
-• Oferi rambursare parțială/integrală`
-        },
-        {
-          title: "17. Limitarea răspunderii",
-          content: "MusicGift nu este responsabil pentru daune indirecte. Răspunderea noastră maximă este suma plătită de client."
-        },
-        {
-          title: "18. Forță majoră",
-          content: "Nu suntem responsabili pentru întârzieri cauzate de factori externi: dezastre, pandemii, conflicte etc."
-        },
-        {
-          title: "19. Utilizarea melodiei",
-          content: "Clientul este singurul responsabil pentru cum, unde și în ce context folosește melodia."
-        },
-        {
-          title: "20. Comenzi cu conținut inacceptabil",
-          content: `Refuzăm comenzi care conțin:
-• Limbaj vulgar
-• Mesaje politice, discriminatorii sau ofensatoare`
-        },
-        {
-          title: "21. Materiale trimise de client",
-          content: `Dacă ne trimiți imagini, clipuri sau alte fișiere pentru videoclip:
+• Oferi rambursare parțială/integrală
+
+17. Limitarea răspunderii
+MusicGift nu este responsabil pentru daune indirecte. Răspunderea noastră maximă este suma plătită de client.
+
+18. Forță majoră
+Nu suntem responsabili pentru întârzieri cauzate de factori externi: dezastre, pandemii, conflicte etc.
+
+19. Utilizarea melodiei
+Clientul este singurul responsabil pentru cum, unde și în ce context folosește melodia.
+
+20. Comenzi cu conținut inacceptabil
+Refuzăm comenzi care conțin: Limbaj vulgar, Mesaje politice, discriminatorii sau ofensatoare
+
+21. Materiale trimise de client
+Dacă ne trimiți imagini, clipuri sau alte fișiere pentru videoclip:
 • Trebuie să deții drepturile de utilizare
-• Ne oferi permisiunea de a le folosi doar pentru livrarea comenzii`
-        },
-        {
-          title: "22. 🎧 Pachetul „Remix"",
-          content: `Poți comanda un remix doar dacă deții 100% din drepturile asupra piesei originale.
+• Ne oferi permisiunea de a le folosi doar pentru livrarea comenzii
 
+22. 🎧 Pachetul „Remix"
+Poți comanda un remix doar dacă deții 100% din drepturile asupra piesei originale.
 Dacă ceri publicarea prin Mango Records, trebuie să ne trimiți dovezi legale.
-
 Dacă se dovedește că ai oferit informații false:
 • Suma achitată nu se rambursează
-• Tu vei răspunde pentru orice dispută privind drepturile de autor`
-        },
-        {
-          title: "23. ⏳ Stocarea livrărilor",
-          content: `Păstrăm melodiile și fișierele asociate comenzii tale timp de 6 luni.
+• Tu vei răspunde pentru orice dispută privind drepturile de autor
 
+23. ⏳ Stocarea livrărilor
+Păstrăm melodiile și fișierele asociate comenzii tale timp de 6 luni.
 După această perioadă, pot fi șterse automat fără notificare.
+👉 Te rugăm să salvezi fișierele local imediat după livrare.
 
-👉 Te rugăm să salvezi fișierele local imediat după livrare.`
-        },
-        {
-          title: "24. Contact",
-          content: `📧 Email: mihai.gruia@mangorecords.net
+24. Contact
+📧 Email: mihai.gruia@mangorecords.net
 📞 Telefon: 0723 141 501
 🌐 Website: www.musicgift.ro
 🏢 Operat de: SC MANGO RECORDS SRL
 📍 Sediu: Str. Fabrica de Glucoză 6–8, București
-🧾 CUI: RO29228083 | Nr. RC: J23/2828/2017`
-        }
-      ],
+🧾 CUI: RO29228083 | Nr. RC: J23/2828/2017`,
       footer: "Dacă ai întrebări, ne poți scrie oricând – suntem aici să te ajutăm cu drag! 🎼❤️"
     },
     en: {
       title: "Terms and Conditions – MusicGift.ro",
       intro: "Welcome to MusicGift.ro! By ordering a personalized song, you agree to the rules below. We have written them simply and clearly, so you know exactly what you are getting.",
-      sections: [
-        {
-          title: "1. Who are we?",
-          content: "MusicGift is a service created by Mango Records SRL, a Romanian company headquartered in Bucharest, Str. Fabrica de Glucoză 6–8, registered with the Trade Registry under nr. J23/2828/2017, CUI RO29228083."
-        },
-        {
-          title: "2. What does each term mean?",
-          content: `• MusicGift – The service that creates personalized songs.
+      content: `1. Who are we?
+MusicGift is a service created by Mango Records SRL, a Romanian company headquartered in Bucharest, Str. Fabrica de Glucoză 6–8, registered with the Trade Registry under nr. J23/2828/2017, CUI RO29228083.
+
+2. What does each term mean?
+• MusicGift – The service that creates personalized songs.
 • Client – You, the one ordering a song.
 • Song – The final delivered track.
 • Master – The final audio file.
-• Composition – The melody line, harmony and lyrics.`
-        },
-        {
-          title: "3. What do we offer?",
-          content: "🎶 We create unique songs, inspired by our clients' stories – for gifts, events, advertisements or artistic use."
-        }
-      ],
+• Composition – The melody line, harmony and lyrics.
+
+3. What do we offer?
+🎶 We create unique songs, inspired by our clients' stories – for gifts, events, advertisements or artistic use.`,
       footer: "If you have questions, you can write to us anytime – we are here to help you with pleasure! 🎼❤️"
     },
     fr: {
       title: "Conditions Générales – MusicGift.ro",
       intro: "Bienvenue sur MusicGift.ro ! En commandant une chanson personnalisée, vous acceptez les règles ci-dessous.",
-      sections: [
-        {
-          title: "1. Qui sommes-nous ?",
-          content: "MusicGift est un service créé par Mango Records SRL, société roumaine dont le siège social est à Bucarest."
-        }
-      ],
+      content: `1. Qui sommes-nous ?
+MusicGift est un service créé par Mango Records SRL, société roumaine dont le siège social est à Bucarest.`,
       footer: "Si vous avez des questions, vous pouvez nous écrire à tout moment ! 🎼❤️"
     },
     nl: {
       title: "Algemene Voorwaarden – MusicGift.ro",
       intro: "Welkom bij MusicGift.ro! Door een gepersonaliseerd nummer te bestellen, ga je akkoord met de onderstaande regels.",
-      sections: [
-        {
-          title: "1. Wie zijn wij?",
-          content: "MusicGift is een service gecreëerd door Mango Records SRL, een Roemeens bedrijf gevestigd in Boekarest."
-        }
-      ],
+      content: `1. Wie zijn wij?
+MusicGift is een service gecreëerd door Mango Records SRL, een Roemeens bedrijf gevestigd in Boekarest.`,
       footer: "Als je vragen hebt, kun je ons op elk moment schrijven! 🎼❤️"
     },
     pl: {
       title: "Regulamin – MusicGift.ro",
       intro: "Witamy na MusicGift.ro! Zamawiając spersonalizowaną piosenkę, zgadzasz się na poniższe zasady.",
-      sections: [
-        {
-          title: "1. Kim jesteśmy?",
-          content: "MusicGift to usługa stworzona przez Mango Records SRL, rumuńską firmę z siedzibą w Bukareszcie."
-        }
-      ],
+      content: `1. Kim jesteśmy?
+MusicGift to usługa stworzona przez Mango Records SRL, rumuńską firmę z siedzibą w Bukareszcie.`,
       footer: "Jeśli masz pytania, możesz napisać do nas w dowolnym momencie! 🎼❤️"
     }
   };
@@ -261,15 +198,9 @@ După această perioadă, pot fi șterse automat fără notificare.
             
             <div className="w-full h-px bg-gradient-to-r from-purple-600 to-pink-600"></div>
             
-            {currentTerms.sections.map((section, index) => (
-              <section key={index}>
-                <h3 className="text-lg font-semibold mb-3 text-gray-900">{section.title}</h3>
-                <div className="whitespace-pre-line">{section.content}</div>
-                {index < currentTerms.sections.length - 1 && (
-                  <div className="w-full h-px bg-gray-200 mt-6"></div>
-                )}
-              </section>
-            ))}
+            <div className="whitespace-pre-line">
+              {currentTerms.content}
+            </div>
             
             <div className="w-full h-px bg-gradient-to-r from-purple-600 to-pink-600"></div>
             
