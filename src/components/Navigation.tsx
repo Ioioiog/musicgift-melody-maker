@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -103,16 +104,13 @@ const Navigation = () => {
               {/* Vinyl Record Order Button - Made much bigger */}
               <Link to="/order" className="relative group">
                 <div className="relative w-40 h-40 xl:w-44 xl:h-44 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
-                  {/* Vinyl Record Image - Made black */}
-                  <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300 bg-black">
-                    <div className="w-full h-full rounded-full bg-black border-4 border-gray-800">
-                      {/* Vinyl record rings */}
-                      <div className="absolute inset-4 rounded-full border border-gray-600"></div>
-                      <div className="absolute inset-8 rounded-full border border-gray-600"></div>
-                      <div className="absolute inset-12 rounded-full border border-gray-600"></div>
-                      {/* Center hole */}
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gray-800 rounded-full border-2 border-gray-600"></div>
-                    </div>
+                  {/* Orange Vinyl Record Image */}
+                  <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
+                    <img 
+                      src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" 
+                      alt="Orange vinyl record"
+                      className="w-full h-full object-cover"
+                    />
                     
                     {/* Shopping bags image overlay with text */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -172,16 +170,13 @@ const Navigation = () => {
                   {/* Mobile Vinyl Record Button - Made much bigger with shopping bags image */}
                   <Link to="/order" className="relative group ml-auto" onClick={() => setIsMenuOpen(false)}>
                     <div className="relative w-28 h-28 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
-                      {/* Mobile Vinyl Record Image - Made black */}
-                      <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300 bg-black">
-                        <div className="w-full h-full rounded-full bg-black border-2 border-gray-800">
-                          {/* Vinyl record rings */}
-                          <div className="absolute inset-2 rounded-full border border-gray-600"></div>
-                          <div className="absolute inset-4 rounded-full border border-gray-600"></div>
-                          <div className="absolute inset-6 rounded-full border border-gray-600"></div>
-                          {/* Center hole */}
-                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-gray-800 rounded-full border border-gray-600"></div>
-                        </div>
+                      {/* Mobile Orange Vinyl Record Image */}
+                      <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
+                        <img 
+                          src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" 
+                          alt="Orange vinyl record"
+                          className="w-full h-full object-cover"
+                        />
                         
                         {/* Shopping bags image overlay for mobile with text */}
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
