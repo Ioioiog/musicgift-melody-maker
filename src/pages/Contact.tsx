@@ -17,7 +17,7 @@ const Contact = () => {
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section with Purple Musical Background */}
+      {/* Contact Form and Info Section */}
       <section 
         className="py-20 text-white relative overflow-hidden"
         style={{
@@ -28,28 +28,8 @@ const Contact = () => {
         }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
-        
-        {/* Hero Title Section */}
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10 mb-12">
-          <motion.h1 
-            className="text-4xl md:text-6xl font-bold mb-6" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6 }}
-          >
-            {t('contactTitle')}
-          </motion.h1>
-          <motion.p 
-            className="text-xl md:text-2xl opacity-90" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            {t('contactSubtitle')}
-          </motion.p>
-        </div>
 
-        {/* Contact Form and Info inside hero */}
+        {/* Contact Form and Info */}
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
