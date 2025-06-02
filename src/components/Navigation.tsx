@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -107,7 +106,7 @@ const Navigation = () => {
                     
                     {/* Gift box icon overlay - Made orange */}
                     <div className="absolute inset-0 flex items-center justify-center py-[20px] px-[20px] my-[70px] ml-[10px]">
-                      <div className="relative z-10 w-10 h-19 xl:w-10 xl:h-20 drop-shadow-lg ml-20 filter hue-rotate-15 saturate-150 brightness-110" style={{filter: 'hue-rotate(15deg) saturate(150%) brightness(110%) sepia(100%) hue-rotate(25deg)'}}>
+                      <div className="relative z-10 w-10 h-19 xl:w-10 xl:h-20 drop-shadow-lg ml-20">
                         <img alt="Gift" src="/lovable-uploads/cdaff943-06a1-4aa0-a177-3209c50e1a1f.png" className="w-full h-full" style={{filter: 'hue-rotate(25deg) saturate(200%) brightness(120%)'}} />
                       </div>
                     </div>
@@ -169,8 +168,8 @@ const Navigation = () => {
                         
                         {/* Gift box icon overlay for mobile - Made orange */}
                         <div className="absolute inset-0 flex items-center justify-center ml-[6px] mt-[4px]">
-                          <div className="relative z-10 w-10 h-10 drop-shadow-lg" style={{filter: 'hue-rotate(25deg) saturate(200%) brightness(120%)'}}>
-                            <img src="/lovable-uploads/2784fec2-bf48-4f39-96f9-0e36bf6783f2.png" alt="Gift" className="w-full h-full" />
+                          <div className="relative z-10 w-10 h-10 drop-shadow-lg">
+                            <img src="/lovable-uploads/2784fec2-bf48-4f39-96f9-0e36bf6783f2.png" alt="Gift" className="w-full h-full" style={{filter: 'hue-rotate(25deg) saturate(200%) brightness(120%)'}} />
                           </div>
                         </div>
                       </div>
