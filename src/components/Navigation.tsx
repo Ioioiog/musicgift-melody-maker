@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -108,7 +107,7 @@ const Navigation = () => {
                     <img src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" alt="Orange vinyl record" className="w-full h-full object-cover" />
                     
                     {/* Shopping bags image overlay with text */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center px-0 my-[53px] mx-[52px] py-[20px]">
                       <div className="relative z-10 mb-1">
                         
                       </div>
