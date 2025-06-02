@@ -117,7 +117,7 @@ const Index = () => {
               <Link to="/packages" className="w-full sm:w-auto">
                 <Button size="lg" className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-purple-500/25 w-full sm:w-auto text-sm sm:text-base">
                   <span className="relative z-10">{t('seePackages')}</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
               </Link>
               
