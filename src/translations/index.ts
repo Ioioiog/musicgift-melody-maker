@@ -1,15 +1,17 @@
 
 import { roTranslations } from './ro';
 import { enTranslations } from './en';
+import { frTranslations } from './fr';
+import { plTranslations } from './pl';
+import { deTranslations } from './de';
 import type { Language } from '@/types/language';
 
 export const translations: Record<Language, Record<string, string>> = {
   ro: roTranslations,
   en: enTranslations,
-  // Placeholder for other languages - can be expanded later
-  fr: enTranslations, // TODO: Add French translations
-  pl: enTranslations, // TODO: Add Polish translations
-  de: enTranslations, // TODO: Add German translations
+  fr: frTranslations,
+  pl: plTranslations,
+  de: deTranslations,
 };
 
-export { roTranslations, enTranslations };
+export { roTranslations, enTranslations, frTranslations, plTranslations, deTranslations };

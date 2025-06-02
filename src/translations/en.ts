@@ -152,6 +152,8 @@ export const enTranslations = {
   romanianLanguage: "Romanian",
   englishLanguage: "English",
   frenchLanguage: "French",
+  polishLanguage: "Polish",
+  germanLanguage: "German",
   
   // Order wizard and form fields
   loadingPackages: "Loading packages...",
@@ -186,11 +188,11 @@ export const enTranslations = {
   orderError: "Error",
   orderErrorMessage: "An error occurred",
   
-  // Help section - MISSING TRANSLATIONS FOUND
+  // Help section
   needHelp: "Need Help?",
   mondayToFriday: "Monday - Friday, 9:00 - 18:00",
   
-  // Testimonials - MISSING TRANSLATIONS FOUND
+  // Testimonials
   testimonialsTitle: "What Our Clients Say",
   testimonialsSubtitle: "Discover the success stories of those who chose MusicGift",
   
@@ -202,4 +204,15 @@ export const enTranslations = {
   distributionMangoRecords: "Mango Records distribution",
   customVideo: "Custom video",
   extendedSong: "Extended song",
+  
+  // Missing keys found in Index.tsx
+  mostPopular: "Most Popular",
+  failedToLoadPackages: "Failed to load packages. Please try again later.",
+  reload: "Reload",
+  noPackagesAvailable: "No packages available at the moment.",
+  checkBackLater: "Please check back later.",
+  
+  // Missing testimonial keys
+  testimonialQuote: "MusicGift created the perfect song for our wedding. It was everything we dreamed of and more!",
+  testimonialAuthor: "Maria & Alexandru",
 };

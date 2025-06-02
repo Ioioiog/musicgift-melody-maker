@@ -152,6 +152,8 @@ export const roTranslations = {
   romanianLanguage: "Română",
   englishLanguage: "Engleză",
   frenchLanguage: "Franceză",
+  polishLanguage: "Poloneză",
+  germanLanguage: "Germană",
   
   // Order wizard and form fields
   loadingPackages: "Se încarcă pachetele...",
@@ -186,11 +188,11 @@ export const roTranslations = {
   orderError: "Eroare",
   orderErrorMessage: "A apărut o eroare",
   
-  // Help section - MISSING TRANSLATIONS FOUND
+  // Help section
   needHelp: "Ai nevoie de ajutor?",
   mondayToFriday: "Luni - Vineri, 9:00 - 18:00",
   
-  // Testimonials - MISSING TRANSLATIONS FOUND
+  // Testimonials
   testimonialsTitle: "Ce spun clienții noștri",
   testimonialsSubtitle: "Descoperă poveștile de succes ale celor care au ales MusicGift",
   
@@ -202,4 +204,15 @@ export const roTranslations = {
   distributionMangoRecords: "Distribuție Mango Records",
   customVideo: "Video personalizat",
   extendedSong: "Cântec extins",
+  
+  // Missing keys found in Index.tsx
+  mostPopular: "Cel mai popular",
+  failedToLoadPackages: "Eșuarea încărcării pachetelor. Te rugăm să încerci din nou mai târziu.",
+  reload: "Reîncarcă",
+  noPackagesAvailable: "Nu sunt pachete disponibile în acest moment.",
+  checkBackLater: "Te rugăm să revii mai târziu.",
+  
+  // Missing testimonial keys
+  testimonialQuote: "MusicGift a creat cântecul perfect pentru nunta noastră. A fost tot ce ne-am visat și mai mult!",
+  testimonialAuthor: "Maria și Alexandru",
 };
