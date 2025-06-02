@@ -1,4 +1,3 @@
-
 export const commonTranslations = {
   // CTA Section
   readyToCreateSpecial: "Gata să creezi ceva special?",
@@ -66,4 +65,27 @@ export const commonTranslations = {
   distributionMangoRecords: "Distribuție Mango Records",
   customVideo: "Video personalizat",
   extendedSong: "Cântec extins",
+  
+  // Contact Page
+  contactTitle: "Contactează-ne",
+  contactSubtitle: "Ia legătura cu noi pentru orice întrebări sau suport",
+  sendMessage: "Trimite mesajul",
+  firstName: "Prenume",
+  lastName: "Nume",
+  email: "Email",
+  subject: "Subiect",
+  message: "Mesaj",
+  getInTouch: "Ia legătura",
+  getInTouchContent: "Suntem aici să te ajutăm să creezi cadoul muzical perfect. Contactează-ne cu orice întrebări sau cerințe speciale.",
+  phone: "Telefon",
+  location: "Locație",
+  businessHours: "Program de lucru",
+  monday: "Luni",
+  tuesday: "Marți",
+  wednesday: "Miercuri",
+  thursday: "Joi", 
+  friday: "Vineri",
+  saturday: "Sâmbătă",
+  sunday: "Duminică",
+  closed: "Închis",
 };

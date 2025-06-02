@@ -1,4 +1,3 @@
-
 export const commonTranslations = {
   // CTA Section
   readyToCreateSpecial: "Ready to Create Something Special?",
@@ -66,4 +65,27 @@ export const commonTranslations = {
   distributionMangoRecords: "Mango Records distribution",
   customVideo: "Custom video",
   extendedSong: "Extended song",
+  
+  // Contact Page
+  contactTitle: "Contact Us",
+  contactSubtitle: "Get in touch with us for any questions or support",
+  sendMessage: "Send Message",
+  firstName: "First Name",
+  lastName: "Last Name", 
+  email: "Email",
+  subject: "Subject",
+  message: "Message",
+  getInTouch: "Get in Touch",
+  getInTouchContent: "We're here to help you create the perfect musical gift. Reach out to us with any questions or special requests.",
+  phone: "Phone",
+  location: "Location",
+  businessHours: "Business Hours",
+  monday: "Monday",
+  tuesday: "Tuesday",
+  wednesday: "Wednesday", 
+  thursday: "Thursday",
+  friday: "Friday",
+  saturday: "Saturday",
+  sunday: "Sunday",
+  closed: "Closed",
 };

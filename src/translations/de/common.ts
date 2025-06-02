@@ -1,4 +1,3 @@
-
 export const commonTranslations = {
   readyToCreateSpecial: "Bereit, etwas Besonderes zu schaffen?",
   helpCreatePersonalized: "Lassen Sie uns Ihnen helfen, ein personalisiertes Musikgeschenk zu schaffen, das für immer geschätzt wird",
@@ -56,4 +55,27 @@ export const commonTranslations = {
   distributionMangoRecords: "Mango Records Distribution",
   customVideo: "Individuelles Video",
   extendedSong: "Erweitertes Lied",
+  
+  // Contact Page
+  contactTitle: "Kontaktieren Sie uns",
+  contactSubtitle: "Kontaktieren Sie uns bei Fragen oder für Unterstützung",
+  sendMessage: "Nachricht senden",
+  firstName: "Vorname",
+  lastName: "Nachname",
+  email: "E-Mail",
+  subject: "Betreff",
+  message: "Nachricht",
+  getInTouch: "Kontakt aufnehmen",
+  getInTouchContent: "Wir sind hier, um Ihnen zu helfen, das perfekte Musikgeschenk zu erstellen. Kontaktieren Sie uns bei Fragen oder besonderen Wünschen.",
+  phone: "Telefon",
+  location: "Standort",
+  businessHours: "Öffnungszeiten",
+  monday: "Montag",
+  tuesday: "Dienstag",
+  wednesday: "Mittwoch",
+  thursday: "Donnerstag",
+  friday: "Freitag",
+  saturday: "Samstag",
+  sunday: "Sonntag",
+  closed: "Geschlossen",
 };
