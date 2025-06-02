@@ -61,7 +61,7 @@ const Navigation = () => {
 
             {/* Desktop Nav - enhanced */}
             <nav className="hidden lg:flex items-center">
-              <div className="flex items-center space-x-8 xl:space-x-10">
+              <div className="flex items-center space-x-8 xl:space-x-10 py-0 px-[50px]">
                 {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`relative text-sm font-semibold transition-all duration-300 hover:text-violet-600 ${location.pathname === item.path ? "text-violet-600" : "text-gray-700 hover:text-violet-600"} after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-violet-600 after:left-0 after:-bottom-1 after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left ${location.pathname === item.path ? "after:scale-x-100" : ""}`}>
                     {item.label}
                   </Link>)}
