@@ -5,7 +5,6 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
-
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -124,7 +123,7 @@ const Navigation = () => {
                     <div className="absolute bottom-2 left-1 right-1 h-0.5 bg-gradient-to-r from-transparent via-orange-200/60 to-transparent rounded-full opacity-50"></div>
                     
                     {/* Rotating highlight - orange tone */}
-                    <div className="absolute top-1 left-1/2 w-0.5 h-6 bg-orange-200/50 rounded-full transform -translate-x-1/2 group-hover:animate-spin origin-center transition-all duration-300"></div>
+                    
                   </div>
                   
                   {/* Floating musical notes animation */}
@@ -216,5 +215,4 @@ const Navigation = () => {
       </header>
     </>;
 };
-
 export default Navigation;
