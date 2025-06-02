@@ -42,26 +42,29 @@ const Footer = () => {
               </h4>
               <div className="flex space-x-3">
                 {[{
-                icon: Facebook,
-                href: "#",
-                label: "Facebook",
-                color: "hover:bg-blue-600"
-              }, {
-                icon: Instagram,
-                href: "#",
-                label: "Instagram",
-                color: "hover:bg-pink-600"
-              }, {
-                icon: Youtube,
-                href: "#",
-                label: "YouTube",
-                color: "hover:bg-red-600"
-              }, {
-                icon: Music,
-                href: "#",
-                label: "TikTok",
-                color: "hover:bg-gray-800"
-              }].map(({
+    icon: Facebook,
+    href: "https://www.facebook.com/MusicGiftofficialpage/",
+    label: "Facebook",
+    color: "hover:bg-blue-600"
+  },
+  {
+    icon: Instagram,
+    href: "https://www.instagram.com/musicgiftofficial/",
+    label: "Instagram",
+    color: "hover:bg-pink-600"
+  },
+  {
+    icon: Youtube,
+    href: "https://www.youtube.com/@MangoRecordsChannel",
+    label: "YouTube",
+    color: "hover:bg-red-600"
+  },
+  {
+    icon: Music,
+    href: "https://www.tiktok.com/@musicgiftofficial",
+    label: "TikTok",
+    color: "hover:bg-gray-800"
+  }].map(({
                 icon: Icon,
                 href,
                 label,
@@ -130,11 +133,11 @@ const Footer = () => {
               href: "mailto:mihai.gruia@mangorecords.net"
             }, {
               icon: Phone,
-              text: "+40 700 000 000",
-              href: "tel:+4070000000"
+              text: "+40 723 141 501,
+              href: "tel:+40723141501"
             }, {
               icon: MapPin,
-              text: "Strada Fabrica de Glucozã 6-8, București",
+              text: "Strada Fabrica de Glucoza 6-8, București",
               href: "#"
             }].map(({
               icon: Icon,
