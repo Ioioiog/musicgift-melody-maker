@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -13,7 +12,6 @@ import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 const Index = () => {
   const {
     data: packages = [],
@@ -132,9 +130,9 @@ const Index = () => {
       backgroundRepeat: 'no-repeat'
     }}>
         {/* Overlay for better readability */}
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/40 py-0 px-0"></div>
         
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        <div className="container mx-auto sm:px-6 relative z-10 px-[30px] py-0">
           {/* CTA Content - Moved to first position */}
           <motion.div className="text-center mb-12 sm:mb-16 space-y-6 sm:space-y-8" initial={{
           opacity: 0,
@@ -149,7 +147,7 @@ const Index = () => {
               
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-4 py-0 my-0 mx-0 px-0">
               <Link to="/packages">
                 <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold text-sm sm:text-base mr-4">
                   {t('startYourOrder')}
