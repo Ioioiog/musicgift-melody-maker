@@ -1,58 +1,48 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-
 const About = () => {
-  const { t } = useLanguage();
-  
-  return (
-    <div className="min-h-screen">
+  const {
+    t
+  } = useLanguage();
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Enhanced Hero Section with Purple Musical Background, Our Story Content and MusicGift Details */}
-      <section 
-        className="py-20 text-white relative overflow-hidden"
-        style={{
-          backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
+      <section className="py-20 text-white relative overflow-hidden" style={{
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/30"></div>
         
         {/* Floating Musical Notes */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-10 left-10 text-4xl opacity-30" style={{transform: "translateX(35.2px) translateY(-17.6px) rotate(296.64deg)"}}>♪</div>
-          <div className="absolute bottom-10 right-10 text-6xl opacity-20" style={{transform: "translateX(-69.12px) translateY(34.56px) rotate(-77.76deg)"}}>🎵</div>
+          <div className="absolute top-10 left-10 text-4xl opacity-30" style={{
+          transform: "translateX(35.2px) translateY(-17.6px) rotate(296.64deg)"
+        }}>♪</div>
+          <div className="absolute bottom-10 right-10 text-6xl opacity-20" style={{
+          transform: "translateX(-69.12px) translateY(34.56px) rotate(-77.76deg)"
+        }}>🎵</div>
         </div>
         
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           {/* Hero Title with Scrolling Statistics */}
           <div className="text-center mb-16">
-            <motion.h1 
-              className="text-4xl md:text-6xl font-bold mb-6" 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.6 }}
-            >
-              {t('aboutTitle')}
-            </motion.h1>
-            <motion.p 
-              className="text-xl md:text-2xl opacity-90 mb-8" 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              {t('aboutSubtitle')}
-            </motion.p>
+            
+            
             
             {/* Scrolling Statistics Section */}
-            <div className="overflow-hidden bg-white/10 rounded-full mb-8 my-[48px] py-[62px]" style={{opacity: 1, transform: "none"}}>
-              <div className="flex space-x-12 whitespace-nowrap animate-pulse" style={{transform: "translateX(-72.96%)"}}>
+            <div style={{
+            opacity: 1,
+            transform: "none"
+          }} className="overflow-hidden bg-white/10 rounded-full mb-8 my-[48px] py-0 px-0">
+              <div className="flex space-x-12 whitespace-nowrap animate-pulse" style={{
+              transform: "translateX(-72.96%)"
+            }}>
                 <div className="flex items-center space-x-3 text-lg font-semibold">
                   <span className="text-4xl">🎵</span>
                   <span>2.000+</span>
@@ -129,35 +119,47 @@ const About = () => {
 
           {/* Our Story Content */}
           <div className="mb-20">
-            <motion.div 
-              className="text-center mb-12"
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
+            <motion.div className="text-center mb-12" initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.4
+          }}>
               <h2 className="text-3xl font-bold text-white mb-6">{t('ourStory')}</h2>
             </motion.div>
 
             <div className="space-y-8">
               {/* Main Philosophy */}
-              <motion.div 
-                className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-8"
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ duration: 0.6, delay: 0.5 }}
-              >
+              <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-8" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 0.5
+            }}>
                 <p className="text-white/90 leading-relaxed text-lg text-center">
                   At MusicGift we believe that music is the purest form of emotion. In every personal story there is an unsung song, an emotion that deserves to come to life. We transform these emotions into real melodies, created by real artists, for real people.
                 </p>
               </motion.div>
 
               {/* Company Story */}
-              <motion.div 
-                className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-8"
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ duration: 0.6, delay: 0.6 }}
-              >
+              <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-8" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 0.6
+            }}>
                 <p className="text-white/90 leading-relaxed mb-4">
                   MusicGift was born from the desire to bring people a unique gift: a song created especially for them. In a world where everything becomes fast and superficial, we have chosen to invest time, soul and passion in every musical creation.
                 </p>
@@ -167,21 +169,30 @@ const About = () => {
               </motion.div>
 
               {/* Our Creative Team Title and Cards */}
-              <motion.div 
-                className="mt-16"
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ duration: 0.6, delay: 0.7 }}
-              >
+              <motion.div className="mt-16" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 0.7
+            }}>
                 <h3 className="text-3xl font-bold text-white mb-12 text-center">Our Creative Team</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Mihai Gruia Card */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ duration: 0.6, delay: 0.8 }}
-                  >
+                  <motion.div initial={{
+                  opacity: 0,
+                  y: 20
+                }} animate={{
+                  opacity: 1,
+                  y: 0
+                }} transition={{
+                  duration: 0.6,
+                  delay: 0.8
+                }}>
                     <Card className="h-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
                       <CardContent className="p-8">
                         <div className="text-center mb-6">
@@ -196,11 +207,16 @@ const About = () => {
                   </motion.div>
 
                   {/* Mango Records Card */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ duration: 0.6, delay: 0.9 }}
-                  >
+                  <motion.div initial={{
+                  opacity: 0,
+                  y: 20
+                }} animate={{
+                  opacity: 1,
+                  y: 0
+                }} transition={{
+                  duration: 0.6,
+                  delay: 0.9
+                }}>
                     <Card className="h-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
                       <CardContent className="p-8">
                         <div className="text-center mb-6">
@@ -215,11 +231,16 @@ const About = () => {
                   </motion.div>
 
                   {/* DOMG Studio Card */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ duration: 0.6, delay: 1.0 }}
-                  >
+                  <motion.div initial={{
+                  opacity: 0,
+                  y: 20
+                }} animate={{
+                  opacity: 1,
+                  y: 0
+                }} transition={{
+                  duration: 0.6,
+                  delay: 1.0
+                }}>
                     <Card className="h-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
                       <CardContent className="p-8">
                         <div className="text-center mb-6">
@@ -234,11 +255,16 @@ const About = () => {
                   </motion.div>
 
                   {/* Do Music for Good Band Card */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    transition={{ duration: 0.6, delay: 1.1 }}
-                  >
+                  <motion.div initial={{
+                  opacity: 0,
+                  y: 20
+                }} animate={{
+                  opacity: 1,
+                  y: 0
+                }} transition={{
+                  duration: 0.6,
+                  delay: 1.1
+                }}>
                     <Card className="h-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
                       <CardContent className="p-8">
                         <div className="text-center mb-6">
@@ -259,8 +285,6 @@ const About = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
