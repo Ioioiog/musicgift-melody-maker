@@ -4,21 +4,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
-
 const About = () => {
-  const { t } = useLanguage();
-
-  return (
-    <div className="min-h-screen">
+  const {
+    t
+  } = useLanguage();
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Enhanced Hero Section with Purple Musical Background, Our Story Content and MusicGift Details */}
       <section className="py-20 text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/30"></div>
         
         {/* Floating Musical Notes */}
@@ -50,17 +49,17 @@ const About = () => {
                     <span className="opacity-90 text-xl">Ani de Pasiune Muzicală</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <Star className="w-12 h-12 text-yellow-300" />
+                    <Star className="w-12 h-12 text-yellow-400" />
                     <span className="text-3xl text-white">98%</span>
                     <span className="opacity-90 text-xl">Clienți Fericiți</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <Rocket className="w-12 h-12 text-green-300" />
+                    <Rocket className="w-12 h-12 text-orange-400" />
                     <span className="text-3xl text-white">50+</span>
                     <span className="opacity-90 text-xl">Artiști Lansați</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <PartyPopper className="w-12 h-12 text-pink-300" />
+                    <PartyPopper className="w-12 h-12 text-red-200" />
                     <span className="text-3xl text-white">400+</span>
                     <span className="opacity-90 text-xl">Evenimente Memorabile</span>
                   </div>
@@ -121,15 +120,15 @@ const About = () => {
             {/* Left Column: Our Story */}
             <div>
               <motion.div className="mb-8" initial={{
-                opacity: 0,
-                y: 20
-              }} animate={{
-                opacity: 1,
-                y: 0
-              }} transition={{
-                duration: 0.6,
-                delay: 0.4
-              }}>
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 0.4
+            }}>
                 <h2 className="text-3xl font-bold text-white mb-6">{t('ourStory')}</h2>
               </motion.div>
 
@@ -174,6 +173,21 @@ const About = () => {
             {/* Right Column: Our Creative Team */}
             <div>
               <motion.div className="mb-8" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 0.7
+            }}>
+                <h3 className="text-3xl font-bold text-white mb-6">Our Creative Team</h3>
+              </motion.div>
+              
+              <div className="space-y-6">
+                {/* Mihai Gruia Card */}
+                <motion.div initial={{
                 opacity: 0,
                 y: 20
               }} animate={{
@@ -181,23 +195,8 @@ const About = () => {
                 y: 0
               }} transition={{
                 duration: 0.6,
-                delay: 0.7
+                delay: 0.8
               }}>
-                <h3 className="text-3xl font-bold text-white mb-6">Our Creative Team</h3>
-              </motion.div>
-              
-              <div className="space-y-6">
-                {/* Mihai Gruia Card */}
-                <motion.div initial={{
-                  opacity: 0,
-                  y: 20
-                }} animate={{
-                  opacity: 1,
-                  y: 0
-                }} transition={{
-                  duration: 0.6,
-                  delay: 0.8
-                }}>
                   <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
@@ -215,15 +214,15 @@ const About = () => {
 
                 {/* Mango Records Card */}
                 <motion.div initial={{
-                  opacity: 0,
-                  y: 20
-                }} animate={{
-                  opacity: 1,
-                  y: 0
-                }} transition={{
-                  duration: 0.6,
-                  delay: 0.9
-                }}>
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 0.9
+              }}>
                   <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
@@ -241,15 +240,15 @@ const About = () => {
 
                 {/* DOMG Studio Card */}
                 <motion.div initial={{
-                  opacity: 0,
-                  y: 20
-                }} animate={{
-                  opacity: 1,
-                  y: 0
-                }} transition={{
-                  duration: 0.6,
-                  delay: 1.0
-                }}>
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 1.0
+              }}>
                   <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
@@ -267,15 +266,15 @@ const About = () => {
 
                 {/* Do Music for Good Band Card */}
                 <motion.div initial={{
-                  opacity: 0,
-                  y: 20
-                }} animate={{
-                  opacity: 1,
-                  y: 0
-                }} transition={{
-                  duration: 0.6,
-                  delay: 1.1
-                }}>
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 1.1
+              }}>
                   <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
@@ -297,8 +296,6 @@ const About = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
