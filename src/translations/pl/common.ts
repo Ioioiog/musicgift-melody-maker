@@ -22,6 +22,28 @@ export const commonTranslations = {
   testimonialsSubtitle: "Odkryj historie sukcesu tych, którzy wybrali MusicGift",
   testimonialQuote: "MusicGift stworzył idealną piosenkę na nasz ślub. To było wszystko, o czym marzyliśmy i więcej!",
   testimonialAuthor: "Maria i Alexandru",
+  
+  // Testimonial Cards
+  testimonial1Name: "Anna & Tomasz",
+  testimonial1Location: "Warszawa, Polska",
+  testimonial1Review: "Najpiękniejsza piosenka weselna! Nasi goście płakali ze wzruszenia. Dziękujemy MusicGift za to, że uczyniliście nasz dzień tak wyjątkowym.",
+  
+  testimonial2Name: "Katarzyna Nowak",
+  testimonial2Location: "Kraków, Polska",
+  testimonial2Review: "Zamówiłam to na urodziny męża i był zachwycony. Jakość jest niesamowita, a tekst bardzo osobisty.",
+  
+  testimonial3Name: "Michał & Agnieszka",
+  testimonial3Location: "Gdańsk, Polska",
+  testimonial3Review: "Niesamowita praca! Piosenka idealnie oddała naszą historię miłosną. Słuchamy jej na każdą rocznicę.",
+  
+  testimonial4Name: "Piotr Kowalski",
+  testimonial4Location: "Wrocław, Polska",
+  testimonial4Review: "Idealny prezent na 60. urodziny mamy. Płakała, gdy ją usłyszała. Naprawdę niezapomniane przeżycie.",
+  
+  testimonial5Name: "Ewa & Marcin",
+  testimonial5Location: "Poznań, Polska",
+  testimonial5Review: "Profesjonalna obsługa i piękny rezultat. Nasza piosenka to teraz ulubiona melodia naszej rodziny.",
+  
   romanianLanguage: "Rumuński",
   englishLanguage: "Angielski",
   frenchLanguage: "Francuski",

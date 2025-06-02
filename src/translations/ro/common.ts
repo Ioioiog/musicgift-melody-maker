@@ -30,6 +30,27 @@ export const commonTranslations = {
   testimonialQuote: "MusicGift a creat cântecul perfect pentru nunta noastră. A fost tot ce ne-am visat și mai mult!",
   testimonialAuthor: "Maria și Alexandru",
   
+  // Testimonial Cards
+  testimonial1Name: "Ana & Radu",
+  testimonial1Location: "București, România",
+  testimonial1Review: "Cea mai frumoasă melodie de nuntă! Invitații au plâns de emoție. Mulțumim MusicGift pentru că ne-ați făcut ziua atât de specială.",
+  
+  testimonial2Name: "Elena Popescu",
+  testimonial2Location: "Cluj-Napoca, România",
+  testimonial2Review: "Am comandat pentru ziua de naștere a soțului meu și a fost încântat. Calitatea este uimitoare și versurile foarte personale.",
+  
+  testimonial3Name: "Mihai & Ioana",
+  testimonial3Location: "Iași, România",
+  testimonial3Review: "Muncă incredibilă! Melodia a surprins perfect povestea noastră de dragoste. O ascultăm la fiecare aniversare.",
+  
+  testimonial4Name: "George Ionescu",
+  testimonial4Location: "Constanța, România",
+  testimonial4Review: "Cadoul perfect pentru a 60-a aniversare a mamei. A plâns când a auzit-o. O experiență cu adevărat memorabilă.",
+  
+  testimonial5Name: "Cristina & Andrei",
+  testimonial5Location: "Timișoara, România",
+  testimonial5Review: "Serviciu profesionist și rezultat frumos. Melodia noastră este acum melodia preferată a familiei.",
+  
   // Languages
   romanianLanguage: "Română",
   englishLanguage: "Engleză",

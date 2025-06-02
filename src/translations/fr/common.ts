@@ -30,6 +30,27 @@ export const commonTranslations = {
   testimonialQuote: "MusicGift a créé la chanson parfaite pour notre mariage. C'était tout ce dont nous rêvions et plus encore !",
   testimonialAuthor: "Maria et Alexandru",
   
+  // Testimonial Cards
+  testimonial1Name: "Sophie & Pierre",
+  testimonial1Location: "Paris, France",
+  testimonial1Review: "La plus belle chanson de mariage ! Nos invités étaient en larmes. Merci MusicGift d'avoir rendu notre journée si spéciale.",
+  
+  testimonial2Name: "Marie Dubois",
+  testimonial2Location: "Lyon, France",
+  testimonial2Review: "J'ai commandé ceci pour l'anniversaire de mon mari et il a adoré. La qualité est incroyable et les paroles si personnelles.",
+  
+  testimonial3Name: "Antoine & Camille",
+  testimonial3Location: "Marseille, France",
+  testimonial3Review: "Travail incroyable ! La chanson a parfaitement capturé notre histoire d'amour. Nous l'écoutons à chaque anniversaire.",
+  
+  testimonial4Name: "François Martin",
+  testimonial4Location: "Nice, France",
+  testimonial4Review: "Cadeau parfait pour les 60 ans de ma mère. Elle a pleuré en l'entendant. Une expérience vraiment mémorable.",
+  
+  testimonial5Name: "Julie & Thomas",
+  testimonial5Location: "Bordeaux, France",
+  testimonial5Review: "Service professionnel et beau résultat. Notre chanson est maintenant la mélodie préférée de notre famille.",
+  
   // Languages
   romanianLanguage: "Roumain",
   englishLanguage: "Anglais",
