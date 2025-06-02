@@ -1,10 +1,12 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Globe, ChevronDown } from "lucide-react";
+import { Globe, ChevronDown, ShoppingCart } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -99,9 +101,16 @@ const Navigation = () => {
               {/* User Menu */}
               <UserMenu />
               
-              {/* Shopping Bags Order Button */}
+              {/* Orange Shopping Cart Button */}
               <Link to="/order" className="relative group">
-                
+                <div className="flex items-center bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full h-12 pl-4 pr-16 min-h-[44px] touch-manipulation">
+                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3">
+                    <ShoppingCart className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <span className="text-sm font-bold">
+                    {getOrderText()}
+                  </span>
+                </div>
               </Link>
             </div>
 
@@ -142,10 +151,12 @@ const Navigation = () => {
                     <UserMenu />
                   </div>
                   
-                  {/* Mobile Shopping Bags Button */}
+                  {/* Mobile Orange Shopping Cart Button */}
                   <Link to="/order" className="relative group ml-auto" onClick={() => setIsMenuOpen(false)}>
-                    <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[44px] touch-manipulation">
-                      <img src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" alt="Shopping bags" className="w-5 h-5 drop-shadow-lg" />
+                    <div className="flex items-center bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full h-12 pl-4 pr-16 min-h-[44px] touch-manipulation">
+                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3">
+                        <ShoppingCart className="w-5 h-5 text-orange-500" />
+                      </div>
                       <span className="text-sm font-bold">
                         {getOrderText()}
                       </span>
@@ -158,4 +169,5 @@ const Navigation = () => {
       </header>
     </>;
 };
+
 export default Navigation;
