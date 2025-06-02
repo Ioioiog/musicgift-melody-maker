@@ -89,7 +89,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold">{t('email')}</h3>
-                      <p className="opacity-90">contact@musicgift.ro</p>
+                      <p className="opacity-90">info@musicgift.ro</p>
                     </div>
                   </div>
 
@@ -99,7 +99,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold">{t('phone')}</h3>
-                      <p className="opacity-90">+40 XXX XXX XXX</p>
+                      <p className="opacity-90">+40 73 141 501</p>
                     </div>
                   </div>
 
@@ -124,7 +124,7 @@ const Contact = () => {
                       </div>
                       <div className="flex justify-between">
                         <span>{t('saturday')}</span>
-                        <span>10:00 - 16:00</span>
+                        <span>{t('closed')}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>{t('sunday')}</span>
