@@ -101,18 +101,7 @@ const Index = () => {
             </div>
 
             {/* Subtitle with Better Spacing */}
-            <motion.p className="text-base sm:text-lg md:text-xl leading-relaxed text-white/90 max-w-xl font-light" initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.8,
-            delay: 0.6
-          }}>
-              {t('heroSubtitle')}
-            </motion.p>
+            
             
             {/* Enhanced Button Layout */}
             <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4" initial={{
@@ -141,30 +130,7 @@ const Index = () => {
             </motion.div>
 
             {/* Feature Highlights */}
-            <motion.div className="flex flex-wrap gap-3 pt-3" initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.8,
-            delay: 1.0
-          }}>
-              {[{
-              icon: "🎵",
-              text: t('personalizedSongs') || "Personalized Songs"
-            }, {
-              icon: "⚡",
-              text: t('fastDelivery') || "Fast Delivery"
-            }, {
-              icon: "🎁",
-              text: t('perfectGift') || "Perfect Gift"
-            }].map((feature, index) => <div key={index} className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1 text-xs sm:text-sm">
-                  <span className="text-sm">{feature.icon}</span>
-                  <span className="font-medium">{feature.text}</span>
-                </div>)}
-            </motion.div>
+            
           </motion.div>
         </div>
         
