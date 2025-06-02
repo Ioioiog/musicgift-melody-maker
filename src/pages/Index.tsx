@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -20,16 +21,15 @@ const Index = () => {
   const {
     t,
     language
-  } = useLanguage(); // Frontend translations for static UI
+  } = useLanguage();
   const {
     t: tDb
-  } = useTranslation(); // Database translations for package content
+  } = useTranslation();
 
   // Video player state
   const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Get all packages instead of limiting to 3
   const allPackages = packages;
 
   // Get video source based on language
@@ -37,14 +37,15 @@ const Index = () => {
     return language === 'ro' ? "/lovable-uploads/Jingle Musicgift master.mp4" : "/lovable-uploads/MusicGiftvideoENG.mp4";
   };
 
-  // Auto-play video when component mounts
+  // Auto-play video when component mounts or language changes
   useEffect(() => {
     if (videoRef.current) {
+      videoRef.current.load(); // Reload the video with new source
       videoRef.current.play().catch(error => {
         console.log("Auto-play failed:", error);
       });
     }
-  }, []);
+  }, [language]);
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -56,8 +57,8 @@ const Index = () => {
   return <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section with Video Background - Left aligned, bottom positioned */}
-      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-end overflow-hidden bg-black">
+      {/* Hero Section with Video Background - Mobile optimized */}
+      <section className="relative h-[50vh] sm:h-[60vh] md:h-[65vh] lg:h-[70vh] flex items-end overflow-hidden bg-black">
         {/* Video Background */}
         <video 
           ref={videoRef}
@@ -71,9 +72,9 @@ const Index = () => {
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
-        {/* Hero Content - Left aligned and bottom positioned */}
-        <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white pb-8 sm:pb-12 md:pb-16">
-          <motion.div className="max-w-2xl text-left space-y-6" initial={{
+        {/* Hero Content - Mobile responsive positioning */}
+        <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white pb-6 sm:pb-8 md:pb-12 lg:pb-16">
+          <motion.div className="max-w-xl lg:max-w-2xl text-left space-y-4 sm:space-y-6" initial={{
           opacity: 0,
           x: -30
         }} animate={{
@@ -83,63 +84,47 @@ const Index = () => {
           duration: 0.8,
           ease: "easeOut"
         }}>
-            {/* Main Title with Enhanced Typography */}
-            <div className="space-y-3">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+            {/* Main Title - Mobile responsive typography */}
+            <div className="space-y-2 sm:space-y-3">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight">
                 Ready to Create Something Special?
               </h2>
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl mx-auto px-4">
+              <p className="text-sm sm:text-base md:text-lg text-white/90 leading-relaxed">
                 Let us help you create a personalized musical gift that will be treasured forever
               </p>
             </div>
-
-            {/* Subtitle with Better Spacing */}
-            
-            
-            {/* Enhanced Button Layout */}
-            
-
-            {/* Feature Highlights */}
-            
           </motion.div>
         </div>
         
-        {/* Floating musical notes - responsive positioning */}
-        <div className="absolute top-6 sm:top-10 right-6 sm:right-10 text-2xl sm:text-3xl md:text-4xl animate-bounce delay-75 z-20">🎵</div>
-        <div className="absolute bottom-12 sm:bottom-20 right-20 sm:right-32 text-xl sm:text-2xl md:text-3xl animate-bounce delay-150 z-20">🎶</div>
-        <div className="absolute top-20 sm:top-32 left-6 sm:left-10 text-lg sm:text-xl md:text-2xl animate-bounce delay-300 z-20">♪</div>
+        {/* Floating musical notes - Mobile responsive positioning */}
+        <div className="absolute top-4 sm:top-6 md:top-10 right-4 sm:right-6 md:right-10 text-xl sm:text-2xl md:text-3xl lg:text-4xl animate-bounce delay-75 z-20">🎵</div>
+        <div className="absolute bottom-8 sm:bottom-12 md:bottom-20 right-12 sm:right-20 md:right-32 text-lg sm:text-xl md:text-2xl lg:text-3xl animate-bounce delay-150 z-20">🎶</div>
+        <div className="absolute top-12 sm:top-20 md:top-32 left-4 sm:left-6 md:left-10 text-base sm:text-lg md:text-xl lg:text-2xl animate-bounce delay-300 z-20">♪</div>
         
         {/* Mute/Unmute Button - Mobile responsive positioning */}
         <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 right-4 sm:right-6 md:right-8 z-30">
-          <Button onClick={toggleMute} size="icon" className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md w-10 h-10 sm:w-12 sm:h-12">
+          <Button onClick={toggleMute} size="icon" className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md w-10 h-10 sm:w-12 sm:h-12 touch-manipulation min-h-[44px]">
             {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
           </Button>
-        </div>
-        
-        {/* Scroll down indicator - hidden on very small screens */}
-        <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-30 hidden sm:block">
-          <div className="animate-bounce">
-            
-          </div>
         </div>
       </section>
 
       {/* ScenarioHero Banner */}
       <ScenarioHero />
 
-      {/* Combined Packages and CTA Section - Reduced spacing */}
-      <section className="relative overflow-hidden pt-4 pb-8 sm:pt-6 sm:pb-12 md:pt-8 md:pb-16" style={{
+      {/* Packages and CTA Section - Mobile optimized */}
+      <section className="relative overflow-hidden py-6 sm:py-8 md:py-12 lg:py-16" style={{
       backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }}>
         {/* Overlay for better readability */}
-        <div className="absolute inset-0 bg-black/40 py-0 my-px mx-px px-0"></div>
+        <div className="absolute inset-0 bg-black/40"></div>
         
-        <div className="container mx-auto sm:px-6 relative z-10 px-[30px] py-0">
-          {/* CTA Content - Reduced margin */}
-          <motion.div className="text-center mb-6 sm:mb-8 space-y-6 sm:space-y-8" initial={{
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          {/* CTA Content - Mobile responsive */}
+          <motion.div className="text-center mb-6 sm:mb-8 md:mb-10 space-y-4 sm:space-y-6" initial={{
           opacity: 0,
           y: 20
         }} animate={{
@@ -148,18 +133,14 @@ const Index = () => {
         }} transition={{
           duration: 0.6
         }}>
-            <div className="space-y-4">
-              
-            </div>
-            
-            <div className="space-y-4 py-0 px-[82px] my-[2px] mx-px">
+            <div className="space-y-3 sm:space-y-4 px-4 sm:px-8 md:px-16">
               <Link to="/packages">
-                <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold text-sm sm:text-base mr-4">
+                <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold text-sm sm:text-base mb-3 sm:mb-0 sm:mr-4 w-full sm:w-auto touch-manipulation min-h-[44px]">
                   {t('startYourOrder')}
                 </Button>
               </Link>
               <Link to="/packages">
-                <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
+                <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base w-full sm:w-auto touch-manipulation min-h-[44px]">
                   {t('viewAllPackages')}
                 </Button>
               </Link>
@@ -167,22 +148,22 @@ const Index = () => {
           </motion.div>
 
           {/* Loading State */}
-          {isLoading && <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px]">
+          {isLoading && <div className="flex items-center justify-center min-h-[250px] sm:min-h-[300px] md:min-h-[400px]">
               <div className="text-center">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-white/20 border-t-white/60 rounded-full animate-spin mx-auto mb-4"></div>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 border-4 border-white/20 border-t-white/60 rounded-full animate-spin mx-auto mb-4"></div>
                 <p className="text-white/80 text-sm sm:text-base">{t('loadingPackages')}</p>
               </div>
             </div>}
 
           {/* Error State */}
-          {error && <div className="text-center py-8 sm:py-12 px-4">
+          {error && <div className="text-center py-6 sm:py-8 md:py-12 px-4">
               <p className="text-red-300 mb-4 text-sm sm:text-base">{t('failedToLoadPackages') || 'Failed to load packages. Please try again later.'}</p>
-              <Button onClick={() => window.location.reload()} className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md text-sm sm:text-base">
+              <Button onClick={() => window.location.reload()} className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md text-sm sm:text-base touch-manipulation min-h-[44px]">
                 {t('reload') || 'Reload'}
               </Button>
             </div>}
 
-          {/* Packages Grid - 3 per row */}
+          {/* Packages Grid - Mobile responsive */}
           {!isLoading && !error && allPackages.length > 0 && <motion.div className="max-w-6xl mx-auto" initial={{
           opacity: 0,
           y: 20
@@ -193,7 +174,7 @@ const Index = () => {
           duration: 0.6,
           delay: 0.2
         }}>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {allPackages.map((pkg, index) => <motion.div key={pkg.id} className="flex" initial={{
               opacity: 0,
               y: 20
@@ -205,31 +186,31 @@ const Index = () => {
               delay: 0.1 * index
             }}>
                     <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl flex flex-col w-full h-full ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
-                      {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 z-20">
-                          <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
+                      {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-2 sm:-top-3 md:-top-4 left-1/2 transform -translate-x-1/2 z-20">
+                          <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 sm:px-3 md:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
                             {t('mostPopular')}
                           </span>
                         </div>}
                       
-                      <CardContent className="p-4 sm:p-6 md:p-8 text-white flex flex-col h-full">
-                        {/* Icon and Title */}
-                        <div className="text-center mb-4 sm:mb-6">
-                          <div className="text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-3">
+                      <CardContent className="p-3 sm:p-4 md:p-6 lg:p-8 text-white flex flex-col h-full">
+                        {/* Icon and Title - Mobile responsive */}
+                        <div className="text-center mb-3 sm:mb-4 md:mb-6">
+                          <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-2 sm:mb-3">
                             {pkg.value === 'personal' ? '🎁' : pkg.value === 'business' ? '💼' : pkg.value === 'premium' ? '🌟' : pkg.value === 'artist' ? '🎤' : pkg.value === 'instrumental' ? '🎶' : pkg.value === 'remix' ? '🔁' : '🎁'}
                           </div>
-                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">{tDb(pkg.label_key)}</h3>
+                          <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-1 sm:mb-2 leading-tight">{tDb(pkg.label_key)}</h3>
                           {pkg.tagline_key && <p className="text-xs sm:text-sm text-purple-200 font-medium mb-2 sm:mb-3">{tDb(pkg.tagline_key)}</p>}
                         </div>
 
-                        {/* Price */}
-                        <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 sm:mb-6 text-center">
-                          {pkg.price} <span className="text-sm sm:text-base md:text-lg text-white/70">RON</span>
+                        {/* Price - Mobile responsive */}
+                        <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 md:mb-6 text-center">
+                          {pkg.price} <span className="text-xs sm:text-sm md:text-base lg:text-lg text-white/70">RON</span>
                         </div>
 
-                        {/* Features */}
-                        {pkg.includes && pkg.includes.length > 0 && <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8 flex-grow">
-                            {pkg.includes.map((include, featureIndex) => <li key={featureIndex} className="flex items-center text-white/90 text-sm sm:text-base">
-                                <span className="w-4 h-4 sm:w-5 sm:h-5 bg-green-400/20 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 border border-green-400/30">
+                        {/* Features - Mobile responsive */}
+                        {pkg.includes && pkg.includes.length > 0 && <ul className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 md:mb-8 flex-grow">
+                            {pkg.includes.map((include, featureIndex) => <li key={featureIndex} className="flex items-start text-white/90 text-xs sm:text-sm md:text-base">
+                                <span className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 bg-green-400/20 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 border border-green-400/30 mt-0.5">
                                   <span className="text-green-300 text-xs">✓</span>
                                 </span>
                                 <span className="leading-tight">{tDb(include.include_key)}</span>
@@ -237,7 +218,7 @@ const Index = () => {
                           </ul>}
 
                         <Link to="/order" className="mt-auto">
-                          <Button className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
+                          <Button className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-xs sm:text-sm md:text-base touch-manipulation min-h-[44px]">
                             {t('orderNow')}
                           </Button>
                         </Link>
@@ -248,13 +229,10 @@ const Index = () => {
             </motion.div>}
 
           {/* No Packages State */}
-          {!isLoading && !error && allPackages.length === 0 && <div className="text-center py-8 sm:py-12 px-4">
+          {!isLoading && !error && allPackages.length === 0 && <div className="text-center py-6 sm:py-8 md:py-12 px-4">
               <p className="text-white/80 mb-4 text-sm sm:text-base">{t('noPackagesAvailable') || 'No packages available at the moment.'}</p>
               <p className="text-white/60 text-sm sm:text-base">{t('checkBackLater') || 'Please check back later.'}</p>
             </div>}
-          
-          {/* CTA Content - Now integrated into the packages section */}
-          
         </div>
 
         {/* Bottom border accent */}
