@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -25,10 +26,10 @@ const Footer = () => {
       }}></div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 py-8 sm:py-12">
-        {/* Mobile-first responsive grid */}
+        {/* Main 4-column layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           
-          {/* Brand Section - Mobile optimized */}
+          {/* Column 1: Brand & Social */}
           <div className="space-y-4 sm:space-y-6 text-center sm:text-left">
             <Link to="/" className="inline-block group">
               <div className="backdrop-blur-sm border border-black/10 p-3 sm:p-4 transition-all duration-300 group-hover:border-black/20 group-hover:scale-105 bg-transparent rounded-lg">
@@ -40,7 +41,7 @@ const Footer = () => {
               {t('footerDescription')}
             </p>
             
-            {/* Enhanced Social Links - Mobile optimized */}
+            {/* Social Links */}
             <div className="space-y-3">
               <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider">
                 {t('followUs') || 'Follow Us'}
@@ -65,7 +66,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links + Legal Section - Mobile optimized */}
+          {/* Column 2: Quick Navigation */}
           <div className="space-y-4 sm:space-y-6 text-center sm:text-left">
             <div className="relative">
               <h3 className="text-gray-900 font-bold text-lg mb-2">
@@ -94,51 +95,59 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
-
-            {/* Legal Links */}
-            <div className="space-y-4">
-              <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider">
-                {t('legal')}
-              </h4>
-              <ul className="grid grid-cols-1 gap-2 text-sm">
-                <li>
-                  <button 
-                    onClick={openTerms} 
-                    className="text-gray-600 hover:text-purple-600 transition-colors duration-300 hover:underline py-2 px-3 text-center sm:text-left w-full rounded-lg hover:bg-white/10 touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start"
-                  >
-                    {t('termsConditions')}
-                  </button>
-                </li>
-                <li>
-                  <button 
-                    onClick={openPrivacy} 
-                    className="text-gray-600 hover:text-purple-600 transition-colors duration-300 hover:underline py-2 px-3 text-center sm:text-left w-full rounded-lg hover:bg-white/10 touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start"
-                  >
-                    {t('privacyPolicy')}
-                  </button>
-                </li>
-                <li>
-                  <button 
-                    onClick={openRefund} 
-                    className="text-gray-600 hover:text-purple-600 transition-colors duration-300 hover:underline py-2 px-3 text-center sm:text-left w-full rounded-lg hover:bg-white/10 touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start"
-                  >
-                    {t('refundPolicy')}
-                  </button>
-                </li>
-                <li>
-                  <button 
-                    onClick={openCookie} 
-                    className="text-gray-600 hover:text-purple-600 transition-colors duration-300 hover:underline py-2 px-3 text-center sm:text-left w-full rounded-lg hover:bg-white/10 touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start"
-                  >
-                    {t('cookiePolicy')}
-                  </button>
-                </li>
-              </ul>
-            </div>
           </div>
 
-          {/* Contact Info - Now spans 2 columns */}
-          <div className="lg:col-span-2 space-y-4 sm:space-y-6 text-center sm:text-left">
+          {/* Column 3: Legal & Policies */}
+          <div className="space-y-4 sm:space-y-6 text-center sm:text-left">
+            <div className="relative">
+              <h3 className="text-gray-900 font-bold text-lg mb-2">
+                {t('legal')}
+              </h3>
+              <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
+            </div>
+            
+            <ul className="space-y-3">
+              <li>
+                <button 
+                  onClick={openTerms} 
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start w-full"
+                >
+                  <span className="relative z-10">{t('termsConditions')}</span>
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={openPrivacy} 
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start w-full"
+                >
+                  <span className="relative z-10">{t('privacyPolicy')}</span>
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={openRefund} 
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start w-full"
+                >
+                  <span className="relative z-10">{t('refundPolicy')}</span>
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={openCookie} 
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start w-full"
+                >
+                  <span className="relative z-10">{t('cookiePolicy')}</span>
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Contact & Newsletter */}
+          <div className="space-y-4 sm:space-y-6 text-center sm:text-left">
             <div className="relative">
               <h3 className="text-gray-900 font-bold text-lg mb-2">
                 {t('contactInfo')}
@@ -146,7 +155,8 @@ const Footer = () => {
               <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Contact Information */}
+            <div className="space-y-3">
               {[
                 { icon: Mail, text: "mihai.gruia@mangorecords.net", href: "mailto:mihai.gruia@mangorecords.net" },
                 { icon: Phone, text: "+40 723 141 501", href: "tel:+40723141501" },
@@ -155,59 +165,49 @@ const Footer = () => {
                 <a
                   key={text}
                   href={href}
-                  className="flex flex-col sm:flex-row items-center sm:items-start space-y-2 sm:space-y-0 sm:space-x-3 text-gray-700 hover:text-gray-900 transition-all duration-300 group p-3 rounded-xl hover:bg-white/10 backdrop-blur-sm border border-transparent hover:border-black/10 touch-manipulation min-h-[44px]"
+                  className="flex items-center space-x-3 text-gray-700 hover:text-gray-900 transition-all duration-300 group p-2 rounded-lg hover:bg-white/10 backdrop-blur-sm border border-transparent hover:border-black/10 touch-manipulation min-h-[44px]"
                 >
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-black/10 rounded-lg flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300 flex-shrink-0">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-black/10 rounded-lg flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300 flex-shrink-0">
                     <Icon className="w-4 h-4" />
                   </div>
-                  <span className="text-sm font-medium text-center sm:text-left break-words">{text}</span>
+                  <span className="text-xs font-medium break-words">{text}</span>
                 </a>
               ))}
             </div>
-          </div>
 
-          {/* Newsletter - Mobile optimized */}
-          <div className="lg:col-span-4 space-y-4 sm:space-y-6 text-center sm:text-left">
-            <div className="relative">
-              <h3 className="text-gray-900 font-bold text-lg mb-2">
+            {/* Newsletter */}
+            <div className="space-y-3">
+              <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider">
                 {t('stayUpdated')}
-              </h3>
-              <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
+              </h4>
+              <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-xl p-3">
+                <p className="text-gray-700 leading-relaxed text-xs mb-3 font-medium">
+                  {t('newsletterDescription')}
+                </p>
+                <NewsletterForm />
+              </div>
             </div>
-            
-            <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-2xl p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 max-w-md mx-auto sm:mx-0">
-              <p className="text-gray-700 leading-relaxed text-sm mb-4 sm:mb-6 font-medium">
-                {t('newsletterDescription')}
-              </p>
-              <NewsletterForm />
-            </div>
-          </div>
-
-          {/* Legal Compliance Section - NEW DEDICATED SECTION */}
-          <div className="lg:col-span-4 space-y-4 sm:space-y-6">
-            <div className="relative text-center sm:text-left">
-              <h3 className="text-gray-900 font-bold text-lg mb-2">
-                Legal Compliance & Partners
-              </h3>
-              <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
-            </div>
-            <LegalCompliance />
           </div>
         </div>
 
-        {/* Bottom Section - Mobile optimized */}
+        {/* Legal Compliance Section - Full Width */}
+        <div className="mt-8 sm:mt-16 space-y-4 sm:space-y-6">
+          <div className="relative text-center sm:text-left">
+            <h3 className="text-gray-900 font-bold text-lg mb-2">
+              Legal Compliance & Partners
+            </h3>
+            <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
+          </div>
+          <LegalCompliance />
+        </div>
+
+        {/* Bottom Section - Copyright */}
         <div className="border-t border-black/10 mt-8 sm:mt-16 pt-6 sm:pt-8">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
             <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-full px-4 py-2 sm:py-3 sm:px-[214px]">
               <p className="text-sm text-gray-700 font-medium text-center">
                 {t('copyright')}
               </p>
-            </div>
-            
-            {/* Trust indicators - Mobile optimized */}
-            <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 text-xs text-gray-600">
-              
-              
             </div>
           </div>
         </div>
