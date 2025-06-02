@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -78,9 +79,12 @@ const Index = () => {
         }}>
             {/* Main Title with Enhanced Typography */}
             <div className="space-y-3">
-              
-              
-              
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+                Ready to Create Something Special?
+              </h2>
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl mx-auto px-4">
+                Let us help you create a personalized musical gift that will be treasured forever
+              </p>
             </div>
 
             {/* Subtitle with Better Spacing */}
@@ -142,10 +146,7 @@ const Index = () => {
           duration: 0.6
         }}>
             <div className="space-y-4">
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl mx-auto px-4">
-                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-white block mb-4">Ready to Create Something Special?</span>
-                Let us help you create a personalized musical gift that will be treasured forever
-              </p>
+              
             </div>
             
             <div className="space-y-4">
