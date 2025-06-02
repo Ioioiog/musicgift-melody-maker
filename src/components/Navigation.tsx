@@ -5,7 +5,6 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
-
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,7 +23,6 @@ const Navigation = () => {
         return "ORDER NOW";
     }
   };
-
   const navItems = [{
     path: "/",
     label: t("home") || "Home"
@@ -55,7 +53,7 @@ const Navigation = () => {
     }} className="fixed top-0 left-0 w-full h-8 sm:h-10 z-1"></div>
 
       {/* Floating Logo - Mobile responsive positioning and sizing */}
-      <div className="fixed top-2 left-6 sm:top-3 sm:left-7 md:top-4 md:left-8 z-50">
+      <div className="fixed top-2 left-4 sm:top-3 sm:left-5 md:top-4 md:left-6 z-50">
         <Link to="/" className="block group">
           <img alt="MusicGift Logo" className="w-32 sm:w-40 md:w-48 lg:w-60 h-auto transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" />
         </Link>
@@ -101,27 +99,25 @@ const Navigation = () => {
               {/* User Menu */}
               <UserMenu />
               
-              {/* Vinyl Record Order Button - Moved further down */}
-              <div className="fixed top-16 right-4 z-50">
-                <Link to="/order" className="relative group">
-                  <div className="relative w-40 h-40 xl:w-44 xl:h-44 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
-                    {/* Orange Vinyl Record Image */}
-                    <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
-                      <img src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" alt="Orange vinyl record" className="w-full h-full object-cover" />
-                      
-                      {/* Shopping bags image overlay with text */}
-                      <div className="absolute inset-0 flex flex-col items-center justify-center px-0 my-[53px] mx-[52px] py-[20px]">
-                        <div className="relative z-10 mb-1">
-                          <img src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" alt="Shopping bags" className="w-10 h-10 drop-shadow-lg" />
-                        </div>
-                        <div className="text-white text-xs xl:text-xl font-bold text-center drop-shadow-lg px-[16px] py-[5px]">
-                          {getOrderText()}
-                        </div>
+              {/* Vinyl Record Order Button - Made much bigger */}
+              <Link to="/order" className="relative group">
+                <div className="relative w-40 h-40 xl:w-44 xl:h-44 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
+                  {/* Orange Vinyl Record Image */}
+                  <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
+                    <img src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" alt="Orange vinyl record" className="w-full h-full object-cover" />
+                    
+                    {/* Shopping bags image overlay with text */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center px-0 my-[53px] mx-[52px] py-[20px]">
+                      <div className="relative z-10 mb-1">
+                        
+                      </div>
+                      <div className="text-white text-xs xl:text-xl\n font-bold text-center drop-shadow-lg px-[16px] py-[5px]">
+                        {getOrderText()}
                       </div>
                     </div>
                   </div>
-                </Link>
-              </div>
+                </div>
+              </Link>
             </div>
 
             {/* Mobile Menu Toggle - Enhanced touch target */}
@@ -187,5 +183,4 @@ const Navigation = () => {
       </header>
     </>;
 };
-
 export default Navigation;
