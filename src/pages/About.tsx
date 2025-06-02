@@ -181,7 +181,10 @@ const About = () => {
                   <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
                     <CardContent className="p-6">
                       <div className="text-center mb-4">
-                        <div className="text-3xl mb-3">🎵</div>
+                        <div className="w-24 h-24 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center">
+                          {/* Photo placeholder - replace with actual photo */}
+                          <span className="text-white/60 text-sm">Photo</span>
+                        </div>
                         <h4 className="text-lg font-bold text-white mb-2">Mihai Gruia</h4>
                       </div>
                       <p className="text-white/90 leading-relaxed text-sm">
@@ -200,7 +203,10 @@ const About = () => {
                   <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
                     <CardContent className="p-6">
                       <div className="text-center mb-4">
-                        <div className="text-3xl mb-3">🥭</div>
+                        <div className="w-24 h-24 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center">
+                          {/* Photo placeholder - replace with actual photo */}
+                          <span className="text-white/60 text-sm">Photo</span>
+                        </div>
                         <h4 className="text-lg font-bold text-white mb-2">Mango Records</h4>
                       </div>
                       <p className="text-white/90 leading-relaxed text-sm">
@@ -219,7 +225,10 @@ const About = () => {
                   <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
                     <CardContent className="p-6">
                       <div className="text-center mb-4">
-                        <div className="text-3xl mb-3">🎚️</div>
+                        <div className="w-24 h-24 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center">
+                          {/* Photo placeholder - replace with actual photo */}
+                          <span className="text-white/60 text-sm">Photo</span>
+                        </div>
                         <h4 className="text-lg font-bold text-white mb-2">DOMG Studio</h4>
                       </div>
                       <p className="text-white/90 leading-relaxed text-sm">
@@ -238,7 +247,10 @@ const About = () => {
                   <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
                     <CardContent className="p-6">
                       <div className="text-center mb-4">
-                        <div className="text-3xl mb-3">🎤</div>
+                        <div className="w-24 h-24 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center">
+                          {/* Photo placeholder - replace with actual photo */}
+                          <span className="text-white/60 text-sm">Photo</span>
+                        </div>
                         <h4 className="text-lg font-bold text-white mb-2">Do Music for Good Band</h4>
                       </div>
                       <p className="text-white/90 leading-relaxed text-sm">
