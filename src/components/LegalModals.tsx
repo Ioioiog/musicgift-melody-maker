@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -185,7 +186,7 @@ După această perioadă, pot fi șterse automat fără notificare.
     },
     en: {
       title: "Terms and Conditions – MusicGift.ro",
-      intro: "Welcome to MusicGift.ro! By ordering a personalized song, you agree to the rules below. We've written them simply and clearly, so you know exactly what you're getting.",
+      intro: "Welcome to MusicGift.ro! By ordering a personalized song, you agree to the rules below. We have written them simply and clearly, so you know exactly what you are getting.",
       sections: [
         {
           title: "1. Who are we?",
@@ -219,7 +220,7 @@ După această perioadă, pot fi șterse automat fără notificare.
         },
         {
           title: "6. Portfolio",
-          content: "We may include your song in our portfolio as an example of creation. This doesn't affect your usage rights in any way."
+          content: "We may include your song in our portfolio as an example of creation. This does not affect your usage rights in any way."
         },
         {
           title: "7. Payment and refunds",
@@ -230,7 +231,7 @@ După această perioadă, pot fi șterse automat fără notificare.
         {
           title: "8. Your responsibilities",
           content: `• Provide accurate and complete information.
-• Don't send inappropriate content (vulgar, illegal etc.).
+• Do not send inappropriate content (vulgar, illegal etc.).
 • Use the website responsibly.`
         },
         {
@@ -242,7 +243,7 @@ După această perioadă, pot fi șterse automat fără notificare.
           content: `By subscribing to the newsletter:
 • You agree to receive emails with news, offers and MusicGift campaigns.
 • You can unsubscribe anytime via the email link or by writing to: mihai.gruia@mangorecords.net
-• We respect all GDPR regulations. We don't send spam and don't share your data with third parties.`
+• We respect all GDPR regulations. We do not send spam and do not share your data with third parties.`
         },
         {
           title: "11. 🔐 Data protection (GDPR)",
@@ -289,7 +290,7 @@ Your rights:
         },
         {
           title: "18. Force majeure",
-          content: "We are not responsible for delays caused by external factors: disasters, pandemies, conflicts etc."
+          content: "We are not responsible for delays caused by external factors: disasters, pandemics, conflicts etc."
         },
         {
           title: "19. Song usage",
@@ -313,7 +314,7 @@ Your rights:
 
 If you request publication through Mango Records, you must send us legal proof.
 
-If it's proven you provided false information:
+If it is proven you provided false information:
 • The paid amount is not refunded
 • You will be responsible for any copyright disputes`
         },
@@ -335,7 +336,7 @@ After this period, they may be automatically deleted without notification.
 🧾 CUI: RO29228083 | RC Nr: J23/2828/2017`
         }
       ],
-      footer: "If you have questions, you can write to us anytime – we're here to help you with pleasure! 🎼❤️"
+      footer: "If you have questions, you can write to us anytime – we are here to help you with pleasure! 🎼❤️"
     },
     fr: {
       title: "Conditions Générales – MusicGift.ro",
@@ -384,7 +385,7 @@ After this period, they may be automatically deleted without notification.
         {
           title: "8. Vos responsabilités",
           content: `• Fournir des informations exactes et complètes.
-• Ne pas envoyer de contenu inapproprié (vulgair, illégal etc.).
+• Ne pas envoyer de contenu inapproprié (vulgaire, illégal etc.).
 • Utiliser le site de manière responsable.`
         },
         {
@@ -394,7 +395,7 @@ After this period, they may be automatically deleted without notification.
         {
           title: "10. 📬 Newsletter et communications commerciales",
           content: `En vous abonnant à la newsletter :
-• Vous acceptez de recevoir des emails avec actualités, offres et MusicGift campagnes.
+• Vous acceptez de recevoir des emails avec actualités, offres et campagnes MusicGift.
 • Vous pouvez vous désabonner à tout moment via le lien dans l'email ou en écrivant à : mihai.gruia@mangorecords.net
 • Nous respectons toutes les réglementations RGPD. Nous n'envoyons pas de spam et ne partageons pas vos données avec des tiers.`
         },
@@ -430,7 +431,7 @@ Vos droits :
           content: "Nous pouvons refuser des commandes dans des cas justifiés (ex : contenu inacceptable). Dans de tels cas, nous remboursons intégralement l'argent."
         },
         {
-          title: "16. 🔁 Retourbeleid",
+          title: "16. 🔁 Politique de retour",
           content: `Étant des produits 100% personnalisés, ils ne peuvent pas être retournés, conformément à OUG nr. 34/2014.
 
 ✅ Dans des cas exceptionnels (erreurs techniques ou impossibilité de livraison), nous pouvons :
@@ -453,7 +454,7 @@ Vos droits :
           title: "20. Commandes avec contenu inacceptable",
           content: `Nous refusons les commandes contenant :
 • Langage vulgaire
-• Messages politiques, discriminatoires ou beledigants`
+• Messages politiques, discriminatoires ou offensants`
         },
         {
           title: "21. Matériaux envoyés par le client",
@@ -462,7 +463,7 @@ Vos droits :
 • Vous nous donnez la permission de les utiliser uniquement pour la livraison de la commande`
         },
         {
-          title: "22. 🎧 \"Remix\" pakket",
+          title: "22. 🎧 Forfait \"Remix\"",
           content: `Vous pouvez commander un remix seulement si vous détenez 100% des droits sur la chanson originale.
 
 Si vous demandez la publication via Mango Records, vous devez nous envoyer des preuves légales.
@@ -472,8 +473,8 @@ S'il s'avère que vous avez fourni de fausses informations :
 • Vous répondrez de tout litige concernant les droits d'auteur`
         },
         {
-          title: "23. ⏳ Levering opslag",
-          content: `We conserven chansons et fichiers associés à votre commande pendant 6 mois.
+          title: "23. ⏳ Stockage des livraisons",
+          content: `Nous conservons chansons et fichiers associés à votre commande pendant 6 mois.
 
 Après cette période, ils peuvent être supprimés automatiquement sans notification.
 
@@ -554,19 +555,19 @@ Après cette période, ils peuvent être supprimés automatiquement sans notific
         },
         {
           title: "11. 🔐 Gegevensbescherming (AVG)",
-          content: `We verzamelen :
+          content: `We verzamelen:
 • Naam, email, telefoon
 
-Doel :
+Doel:
 • Bestelling verwerken
 • Verzenden van commerciële communicatie
 
-Jouw rechten :
+Jouw rechten:
 • Toegang, rectificatie, verwijdering, bezwaar, overdraagbaarheid`
         },
         {
           title: "12. Website gebruik",
-          content: `Verboden :
+          content: `Verboden:
 • Fraude
 • Misbruik
 • Inhoud kopiëren zonder toestemming`
@@ -659,7 +660,7 @@ Na deze periode kunnen ze automatisch worden verwijderd zonder melding.
 • Klient – Ty, osoba zamawiająca piosenkę.
 • Piosenka – Ostateczny dostarczony utwór.
 • Master – Ostateczny plik audio.
-• Kompozycja – Linia melodyczna, harmonia i teksten.`
+• Kompozycja – Linia melodyczna, harmonia i tekst.`
         },
         {
           title: "3. Co oferujemy?",
