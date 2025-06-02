@@ -65,8 +65,8 @@ const Index = () => {
         
         {/* Hero Content - Mobile optimized */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
-          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 py-[13px] px-[240px]">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight">
+          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 px-[41px] py-0">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight px-[3px]">
               {t('heroTitle')}
             </h1>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl">
