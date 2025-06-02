@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import NewsletterForm from "@/components/NewsletterForm";
+import LegalModals, { useLegalModals } from "@/components/LegalModals";
 
 const Footer = () => {
   const { t } = useLanguage();
+  const { openTerms, openPrivacy, openRefund, openCookie } = useLegalModals();
 
   return (
     <footer className="relative overflow-hidden" style={{
@@ -158,19 +160,44 @@ const Footer = () => {
               ))}
             </div>
 
-            {/* Legal Links - Enhanced */}
+            {/* Legal Links - Enhanced with Modal Triggers */}
             <div className="pt-4 border-t border-black/10">
               <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider mb-4">
                 {t('legal')}
               </h4>
               <ul className="grid grid-cols-2 gap-2 text-sm">
-                {[t('termsConditions'), t('privacyPolicy'), t('refundPolicy'), t('cookiePolicy')].map(item => (
-                  <li key={item}>
-                    <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors duration-300 hover:underline block py-1">
-                      {item}
-                    </a>
-                  </li>
-                ))}
+                <li>
+                  <button 
+                    onClick={openTerms}
+                    className="text-gray-600 hover:text-purple-600 transition-colors duration-300 hover:underline block py-1 text-left w-full"
+                  >
+                    {t('termsConditions')}
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={openPrivacy}
+                    className="text-gray-600 hover:text-purple-600 transition-colors duration-300 hover:underline block py-1 text-left w-full"
+                  >
+                    {t('privacyPolicy')}
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={openRefund}
+                    className="text-gray-600 hover:text-purple-600 transition-colors duration-300 hover:underline block py-1 text-left w-full"
+                  >
+                    {t('refundPolicy')}
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={openCookie}
+                    className="text-gray-600 hover:text-purple-600 transition-colors duration-300 hover:underline block py-1 text-left w-full"
+                  >
+                    {t('cookiePolicy')}
+                  </button>
+                </li>
               </ul>
             </div>
           </div>
@@ -214,6 +241,9 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Include the Legal Modals */}
+      <LegalModals t={t} />
     </footer>
   );
 };
