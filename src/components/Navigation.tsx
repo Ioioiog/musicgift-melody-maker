@@ -5,6 +5,7 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -113,10 +114,14 @@ const Navigation = () => {
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gray-800 rounded-full border-2 border-gray-600"></div>
                     </div>
                     
-                    {/* Gift box emoji overlay with text */}
+                    {/* Shopping bags image overlay with text */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <div className="relative z-10 text-3xl xl:text-9xl drop-shadow-lg mb-1 px-[14px] py-[13px] mx-0">
-                        🎁
+                      <div className="relative z-10 mb-1">
+                        <img 
+                          src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" 
+                          alt="Shopping bags"
+                          className="w-12 h-12 xl:w-14 xl:h-14 drop-shadow-lg"
+                        />
                       </div>
                       <div className="text-white text-xs xl:text-sm font-bold text-center drop-shadow-lg px-2 py-1">
                         {getOrderText()}
@@ -164,7 +169,7 @@ const Navigation = () => {
                     <UserMenu />
                   </div>
                   
-                  {/* Mobile Vinyl Record Button - Made much bigger with gift emoji */}
+                  {/* Mobile Vinyl Record Button - Made much bigger with shopping bags image */}
                   <Link to="/order" className="relative group ml-auto" onClick={() => setIsMenuOpen(false)}>
                     <div className="relative w-28 h-28 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                       {/* Mobile Vinyl Record Image - Made black */}
@@ -178,10 +183,14 @@ const Navigation = () => {
                           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-gray-800 rounded-full border border-gray-600"></div>
                         </div>
                         
-                        {/* Gift box emoji overlay for mobile with text */}
+                        {/* Shopping bags image overlay for mobile with text */}
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
-                          <div className="relative z-10 text-xl drop-shadow-lg mb-1">
-                            🎁
+                          <div className="relative z-10 mb-1">
+                            <img 
+                              src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" 
+                              alt="Shopping bags"
+                              className="w-8 h-8 drop-shadow-lg"
+                            />
                           </div>
                           <div className="text-white text-[10px] font-bold text-center px-1 drop-shadow-lg leading-tight">
                             {getOrderText()}
