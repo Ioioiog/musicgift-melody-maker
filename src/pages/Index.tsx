@@ -77,7 +77,7 @@ const Index = () => {
         }}>
             {/* Main Title with Enhanced Typography */}
             <div className="space-y-3">
-              <motion.h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent" initial={{
+              <motion.h1 initial={{
               opacity: 0,
               y: 20
             }} animate={{
@@ -86,18 +86,11 @@ const Index = () => {
             }} transition={{
               duration: 0.8,
               delay: 0.2
-            }}>
+            }} className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent my-0">
                 {t('heroTitle')}
               </motion.h1>
               
-              <motion.div initial={{
-              width: 0
-            }} animate={{
-              width: 80
-            }} transition={{
-              duration: 0.8,
-              delay: 0.4
-            }} className="w-20 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full px-[75px]" />
+              
             </div>
 
             {/* Subtitle with Better Spacing */}
@@ -115,17 +108,11 @@ const Index = () => {
             delay: 0.8
           }}>
               <Link to="/packages" className="w-full sm:w-auto">
-                <Button size="lg" className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-purple-500/25 w-full sm:w-auto text-sm sm:text-base">
-                  <span className="relative z-10">{t('seePackages')}</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </Button>
+                
               </Link>
               
               <Link to="/testimonials" className="w-full sm:w-auto">
-                <Button size="lg" variant="outline" className="group relative overflow-hidden bg-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-white/10 w-full sm:w-auto text-sm sm:text-base">
-                  <span className="relative z-10">{t('listenToSamples')}</span>
-                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </Button>
+                
               </Link>
             </motion.div>
 
