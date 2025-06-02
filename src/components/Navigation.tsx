@@ -5,7 +5,6 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
-
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,7 +23,6 @@ const Navigation = () => {
         return "ORDER NOW";
     }
   };
-
   const navItems = [{
     path: "/",
     label: t("home") || "Home"
@@ -103,7 +101,7 @@ const Navigation = () => {
               
               {/* Shopping Bags Order Button */}
               <Link to="/order" className="relative group">
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[44px] touch-manipulation">
+                <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-orange-700 hover:to-orange-700 text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[44px] touch-manipulation bg-orange-500">
                   <img src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" alt="Shopping bags" className="w-6 h-6 drop-shadow-lg" />
                   <span className="text-sm font-bold">
                     {getOrderText()}
@@ -165,5 +163,4 @@ const Navigation = () => {
       </header>
     </>;
 };
-
 export default Navigation;
