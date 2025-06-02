@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Globe, ChevronDown, ShoppingCart } from "lucide-react";
+import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
 
 const Navigation = () => {
@@ -97,9 +97,9 @@ const Navigation = () => {
                   <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
                     <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                     
-                    {/* Shopping cart icon overlay */}
+                    {/* Gift box icon overlay */}
                     <div className="absolute inset-0 flex items-center justify-center py-[16px] px-[16px] my-[64px]">
-                      <ShoppingCart className="relative z-10 w-16 h-16 xl:w-20 xl:h-20 text-slate-50 drop-shadow-lg" />
+                      <img src="/lovable-uploads/2784fec2-bf48-4f39-96f9-0e36bf6783f2.png" alt="Gift" className="relative z-10 w-16 h-16 xl:w-20 xl:h-20 drop-shadow-lg" />
                     </div>
                   </div>
                 </div>
@@ -150,9 +150,9 @@ const Navigation = () => {
                       <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
                         <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                         
-                        {/* Shopping cart icon overlay for mobile */}
+                        {/* Gift box icon overlay for mobile */}
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <ShoppingCart className="relative z-10 w-10 h-10 text-slate-50 drop-shadow-lg" />
+                          <img src="/lovable-uploads/2784fec2-bf48-4f39-96f9-0e36bf6783f2.png" alt="Gift" className="relative z-10 w-10 h-10 drop-shadow-lg" />
                         </div>
                       </div>
                     </div>
