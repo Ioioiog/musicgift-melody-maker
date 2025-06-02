@@ -97,7 +97,7 @@ const Navigation = () => {
                     <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                     
                     {/* Text overlay - Mobile responsive */}
-                    <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="absolute inset-0 flex items-center justify-center py-[16px] px-[16px]">
                       <span className="relative z-10 font-bold leading-tight drop-shadow-lg text-lg xl:text-xl text-white text-center px-2  rounded-full py-2">
                         {t("orderNow") || "Order Now"}
                       </span>
