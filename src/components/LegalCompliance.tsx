@@ -32,8 +32,8 @@ const LegalCompliance = () => {
             className="block bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-3 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg"
           >
             <img
-              src="https://anpc.ro/wp-content/uploads/2021/04/sal.png"
-              alt="Soluționarea alternativă a litigiilor"
+              src="/lovable-uploads/1f4ebed9-cee9-49a4-9585-1bbe339732a2.png"
+              alt="Soluționarea alternativă a litigiilor - ANPC"
               className="max-w-[160px] w-full h-auto mx-auto hover:opacity-90 transition"
             />
           </a>
@@ -44,7 +44,7 @@ const LegalCompliance = () => {
             className="block bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-3 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg"
           >
             <img
-              src="https://anpc.ro/wp-content/uploads/2021/04/sol.png"
+              src="/lovable-uploads/e923f28a-a040-43f3-a749-31a8b2e479b3.png"
               alt="Soluționarea online a litigiilor"
               className="max-w-[160px] w-full h-auto mx-auto hover:opacity-90 transition"
             />
