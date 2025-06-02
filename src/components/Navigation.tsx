@@ -14,6 +14,7 @@ const Navigation = () => {
     setLanguage,
     t
   } = useLanguage();
+  
   const navItems = [{
     path: "/",
     label: t("home") || "Home"
@@ -34,6 +35,7 @@ const Navigation = () => {
     label: t("contact") || "Contact"
   }];
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
+  
   return (
     <>
       {/* Background behind navbar */}
@@ -76,15 +78,15 @@ const Navigation = () => {
             <div className="hidden lg:flex items-center space-x-4 xl:space-x-5 ml-auto">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="text-sm font-medium bg-gradient-to-r from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100 border-2 border-purple-200 hover:border-purple-300 text-purple-700 hover:text-purple-800 transition-all duration-300 backdrop-blur-sm shadow-md hover:shadow-lg rounded-full px-4 py-2 flex items-center space-x-2">
-                    <Globe className="w-4 h-4" />
-                    <span>{languageNames[language]}</span>
-                    <ChevronDown className="w-3 h-3" />
+                  <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white border-0 transition-all duration-500 backdrop-blur-sm shadow-lg hover:shadow-2xl rounded-full px-5 py-2.5 flex items-center space-x-2 transform hover:scale-105 hover:-translate-y-1 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300">
+                    <Globe className="w-4 h-4 relative z-10" />
+                    <span className="relative z-10">{languageNames[language]}</span>
+                    <ChevronDown className="w-3 h-3 relative z-10 transition-transform duration-300 group-hover:rotate-180" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border-2 border-purple-100 shadow-xl z-50 rounded-xl p-1">
+                <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border-2 border-purple-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
                   {languages.map(lang => (
-                    <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-purple-50 transition-colors duration-200 rounded-lg mx-1 ${language === lang ? "bg-purple-50 text-purple-700 font-medium" : "text-gray-700"}`}>
+                    <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold shadow-sm" : "text-gray-700"}`}>
                       {languageNames[lang]}
                     </DropdownMenuItem>
                   ))}
@@ -93,8 +95,11 @@ const Navigation = () => {
               
               <UserMenu />
               
-              <Link to="/order" className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white border-0 px-6 xl:px-8 py-2.5 rounded-full font-semibold transition-all duration-300 text-sm shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:scale-105">
-                {t("orderNow") || "Order Now"}
+              <Link to="/order" className="relative overflow-hidden group bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 hover:from-amber-500 hover:via-orange-600 hover:to-red-600 text-white border-0 px-8 xl:px-10 py-3 rounded-full font-bold transition-all duration-500 text-sm shadow-xl hover:shadow-2xl transform hover:scale-110 hover:-translate-y-1 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300 after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/10 after:to-transparent after:translate-x-[-100%] hover:after:translate-x-[100%] after:transition-transform after:duration-700">
+                <span className="relative z-10 flex items-center space-x-2">
+                  <span>{t("orderNow") || "Order Now"}</span>
+                  <span className="text-lg">🎵</span>
+                </span>
               </Link>
             </div>
 
@@ -120,15 +125,15 @@ const Navigation = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center pt-4 space-y-3 sm:space-y-0 sm:space-x-3 px-4">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="text-sm font-medium w-full sm:w-auto bg-gradient-to-r from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100 border-2 border-purple-200 text-purple-700 hover:border-purple-300 hover:text-purple-800 transition-all duration-300 rounded-full flex items-center justify-center space-x-2">
+                      <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold w-full sm:w-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white border-0 transition-all duration-500 rounded-full flex items-center justify-center space-x-2 py-2.5 transform hover:scale-105">
                         <Globe className="w-4 h-4" />
                         <span>{languageNames[language]}</span>
-                        <ChevronDown className="w-3 h-3" />
+                        <ChevronDown className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-white border-2 border-purple-100 shadow-lg z-50 rounded-xl">
+                    <DropdownMenuContent align="end" className="bg-white border-2 border-purple-200 shadow-2xl z-50 rounded-xl p-2">
                       {languages.map(lang => (
-                        <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-purple-50 transition-colors duration-200 rounded-lg ${language === lang ? "bg-purple-50 text-purple-700 font-medium" : "text-gray-700"}`}>
+                        <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg px-3 py-2 cursor-pointer ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold" : "text-gray-700"}`}>
                           {languageNames[lang]}
                         </DropdownMenuItem>
                       ))}
@@ -137,8 +142,11 @@ const Navigation = () => {
                   
                   <UserMenu />
                   
-                  <Link to="/order" className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 w-full sm:w-auto text-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" onClick={() => setIsMenuOpen(false)}>
-                    {t("orderNow") || "Order Now"}
+                  <Link to="/order" className="relative overflow-hidden group bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 hover:from-amber-500 hover:via-orange-600 hover:to-red-600 text-white px-8 py-3 rounded-full text-sm font-bold transition-all duration-500 w-full sm:w-auto text-center shadow-xl hover:shadow-2xl transform hover:scale-105 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300" onClick={() => setIsMenuOpen(false)}>
+                    <span className="relative z-10 flex items-center justify-center space-x-2">
+                      <span>{t("orderNow") || "Order Now"}</span>
+                      <span className="text-lg">🎵</span>
+                    </span>
                   </Link>
                 </div>
               </nav>
