@@ -104,7 +104,7 @@ const Navigation = () => {
                 <div className="relative w-40 h-40 xl:w-44 xl:h-44 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                   {/* Orange Vinyl Record Image */}
                   <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
-                    <img src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" alt="Orange vinyl record" className="w-full h-full object-cover" />
+                    <img alt="Orange vinyl record" className="w-full h-full object-cover" src="/lovable-uploads/4f98621f-4315-4ce3-8f09-a832aeed78a5.png" />
                     
                     {/* Shopping bags image overlay with text */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center px-0 my-[53px] mx-[52px] py-[20px]">
