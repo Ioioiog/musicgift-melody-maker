@@ -196,7 +196,7 @@ const Index = () => {
             }}>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
                 {allPackages.map((pkg, index) => (
-                  <motion.div key={pkg.id} initial={{
+                  <motion.div key={pkg.id} className="flex" initial={{
                     opacity: 0,
                     y: 20
                   }} animate={{
@@ -206,7 +206,7 @@ const Index = () => {
                     duration: 0.6,
                     delay: 0.1 * index
                   }}>
-                    <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
+                    <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl flex flex-col w-full h-full ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
                       {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && (
                         <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 z-20">
                           <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
@@ -215,7 +215,7 @@ const Index = () => {
                         </div>
                       )}
                       
-                      <CardContent className="p-4 sm:p-6 md:p-8 text-white">
+                      <CardContent className="p-4 sm:p-6 md:p-8 text-white flex flex-col h-full">
                         {/* Icon and Title */}
                         <div className="text-center mb-4 sm:mb-6">
                           <div className="text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-3">
@@ -239,7 +239,7 @@ const Index = () => {
 
                         {/* Features */}
                         {pkg.includes && pkg.includes.length > 0 && (
-                          <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                          <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8 flex-grow">
                             {pkg.includes.map((include, featureIndex) => (
                               <li key={featureIndex} className="flex items-center text-white/90 text-sm sm:text-base">
                                 <span className="w-4 h-4 sm:w-5 sm:h-5 bg-green-400/20 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 border border-green-400/30">
@@ -251,7 +251,7 @@ const Index = () => {
                           </ul>
                         )}
 
-                        <Link to="/order">
+                        <Link to="/order" className="mt-auto">
                           <Button className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
                             {t('orderNow')}
                           </Button>
