@@ -116,7 +116,7 @@ const Index = () => {
       {/* ScenarioHero Banner */}
       <ScenarioHero />
 
-      {/* Packages Preview - ScenarioHero Style */}
+      {/* Combined Packages and CTA Section */}
       <section className="relative overflow-hidden py-8 sm:py-12 md:py-16" style={{
       backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
       backgroundSize: 'cover',
@@ -245,48 +245,41 @@ const Index = () => {
               <p className="text-white/60 text-sm sm:text-base">{t('checkBackLater') || 'Please check back later.'}</p>
             </div>}
           
-          {/* View All Packages Button */}
-          {!isLoading && !error && previewPackages.length > 0 && <motion.div className="text-center mt-8 sm:mt-12" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.4
-        }}>
-              <Link to="/packages">
-                <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
-                  {t('viewAllPackages')}
-                </Button>
-              </Link>
-            </motion.div>}
+          {/* CTA Content - Now integrated into the packages section */}
+          {!isLoading && !error && previewPackages.length > 0 && (
+            <motion.div 
+              className="text-center mt-12 sm:mt-16 space-y-6 sm:space-y-8" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <div className="space-y-4">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+                  {t('readyToCreateSpecial')}
+                </h2>
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl mx-auto px-4">
+                  {t('helpCreatePersonalized')}
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                <Link to="/packages">
+                  <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold text-sm sm:text-base mr-4">
+                    {t('startYourOrder')}
+                  </Button>
+                </Link>
+                <Link to="/packages">
+                  <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
+                    {t('viewAllPackages')}
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {/* Bottom border accent */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
-      </section>
-
-      {/* CTA Section with Purple Musical Background - Mobile optimized */}
-      <section className="py-8 sm:py-12 md:py-16 text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="container mx-auto px-4 sm:px-6 text-center relative z-10">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">{t('readyToCreateSpecial')}</h2>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
-            {t('helpCreatePersonalized')}
-          </p>
-          <Link to="/packages">
-            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold text-sm sm:text-base">
-              {t('startYourOrder')}
-            </Button>
-          </Link>
-        </div>
       </section>
 
       <Footer />
