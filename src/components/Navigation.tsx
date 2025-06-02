@@ -1,4 +1,5 @@
 
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,7 @@ const Navigation = () => {
     path: "/contact",
     label: t("contact") || "Contact"
   }];
-  const languages: Language[] = ["en", "ro", "fr", "pl", "de", "nl"];
+  const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
   return <>
       {/* Background behind navbar */}
       <div style={{
@@ -91,46 +92,49 @@ const Navigation = () => {
               {/* User Menu - Now styled with glass morphism */}
               <UserMenu />
               
-              {/* Enhanced Vinyl Record Order Button - MORE ORANGE */}
+              {/* Enhanced Vinyl Record Order Button - Based on reference image */}
               <Link to="/order" className="relative group">
                 <div className="relative w-24 h-24 transition-all duration-500 transform hover:scale-110 hover:rotate-12 group-hover:drop-shadow-2xl">
-                  {/* Outer glow effect - more orange */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 rounded-full blur-lg opacity-60 group-hover:opacity-85 transition-opacity duration-300 animate-pulse"></div>
+                  {/* Outer glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse"></div>
                   
-                  {/* Main vinyl record - enhanced orange */}
-                  <div className="relative w-full h-full bg-gradient-to-br from-orange-600 via-orange-700 to-orange-800 rounded-full shadow-2xl group-hover:shadow-orange-600/60 transition-all duration-300">
-                    {/* Vinyl texture with multiple grooves - more orange tones */}
-                    <div className="absolute inset-1 rounded-full border-2 border-orange-400/50 shadow-inner"></div>
-                    <div className="absolute inset-2 rounded-full border border-orange-400/40"></div>
-                    <div className="absolute inset-3 rounded-full border border-orange-400/35"></div>
-                    <div className="absolute inset-4 rounded-full border border-orange-400/30"></div>
-                    <div className="absolute inset-5 rounded-full border border-orange-400/25"></div>
-                    <div className="absolute inset-6 rounded-full border border-orange-400/20"></div>
+                  {/* Main vinyl record - matching the reference image colors */}
+                  <div className="relative w-full h-full bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 rounded-full shadow-2xl group-hover:shadow-orange-500/60 transition-all duration-300">
+                    {/* Multiple vinyl grooves - like in the reference image */}
+                    <div className="absolute inset-1 rounded-full border border-orange-200/60 shadow-inner"></div>
+                    <div className="absolute inset-2 rounded-full border border-orange-200/50"></div>
+                    <div className="absolute inset-3 rounded-full border border-orange-200/40"></div>
+                    <div className="absolute inset-4 rounded-full border border-orange-200/35"></div>
+                    <div className="absolute inset-5 rounded-full border border-orange-200/30"></div>
+                    <div className="absolute inset-6 rounded-full border border-orange-200/25"></div>
                     
-                    {/* Center label area - deeper orange */}
-                    <div className="absolute inset-7 bg-gradient-to-br from-orange-900 via-orange-950 to-orange-900 rounded-full shadow-2xl flex items-center justify-center">
+                    {/* Center label area - cream/beige like in reference */}
+                    <div className="absolute inset-7 bg-gradient-to-br from-orange-100 via-orange-50 to-orange-100 rounded-full shadow-2xl flex items-center justify-center border border-orange-200/30">
                       {/* Center hole */}
-                      <div className="absolute w-6 h-6 bg-black rounded-full shadow-inner border-2 border-orange-900/60"></div>
+                      <div className="absolute w-6 h-6 bg-black rounded-full shadow-inner border border-orange-900/40"></div>
                       
                       {/* Text overlay */}
-                      <span className="relative z-10 text-orange-100 font-bold text-xs text-center leading-tight drop-shadow-lg">
+                      <span className="relative z-10 text-orange-800 font-bold text-xs text-center leading-tight drop-shadow-sm">
                         {t("orderNow") || "Order Now"}
                       </span>
                     </div>
                     
-                    {/* Vinyl reflection/shine effect - Updated to match the image */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-orange-200/60 via-transparent to-orange-300/30 opacity-40 group-hover:opacity-70 transition-opacity duration-500 transform"></div>
+                    {/* Realistic metallic shine patterns - matching reference image */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/80 via-transparent to-white/20 opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
                     
-                    {/* Additional metallic shine for more realistic effect */}
-                    <div className="absolute top-2 left-2 right-6 bottom-6 rounded-full bg-gradient-to-br from-orange-100/50 via-transparent to-transparent opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                    {/* Horizontal shine bands - like the reference image */}
+                    <div className="absolute top-3 left-2 right-2 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent rounded-full opacity-40"></div>
+                    <div className="absolute top-6 left-3 right-3 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent rounded-full opacity-35"></div>
+                    <div className="absolute bottom-6 left-3 right-3 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent rounded-full opacity-35"></div>
+                    <div className="absolute bottom-3 left-2 right-2 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent rounded-full opacity-40"></div>
                     
-                    {/* Rotating highlight - orange tinted */}
-                    <div className="absolute top-2 left-1/2 w-1 h-8 bg-orange-200/30 rounded-full transform -translate-x-1/2 group-hover:animate-spin origin-center transition-all duration-300"></div>
+                    {/* Rotating highlight */}
+                    <div className="absolute top-2 left-1/2 w-1 h-8 bg-white/40 rounded-full transform -translate-x-1/2 group-hover:animate-spin origin-center transition-all duration-300"></div>
                   </div>
                   
-                  {/* Floating musical notes animation - orange */}
-                  <div className="absolute -top-2 -right-2 text-orange-400 text-sm animate-bounce delay-100 group-hover:text-orange-300 transition-colors duration-300">♪</div>
-                  <div className="absolute -bottom-2 -left-2 text-orange-400 text-xs animate-bounce delay-300 group-hover:text-orange-300 transition-colors duration-300">♫</div>
+                  {/* Floating musical notes animation */}
+                  <div className="absolute -top-2 -right-2 text-orange-500 text-sm animate-bounce delay-100 group-hover:text-orange-400 transition-colors duration-300">♪</div>
+                  <div className="absolute -bottom-2 -left-2 text-orange-500 text-xs animate-bounce delay-300 group-hover:text-orange-400 transition-colors duration-300">♫</div>
                 </div>
               </Link>
             </div>
@@ -169,45 +173,48 @@ const Navigation = () => {
                   
                   <UserMenu />
                   
-                  {/* Enhanced Mobile Vinyl Record Button - MORE ORANGE */}
+                  {/* Enhanced Mobile Vinyl Record Button - Based on reference image */}
                   <Link to="/order" className="relative group w-full sm:w-auto" onClick={() => setIsMenuOpen(false)}>
                     <div className="relative w-full h-20 sm:w-20 sm:h-20 mx-auto transition-all duration-500 transform hover:scale-110 hover:rotate-12 group-hover:drop-shadow-2xl">
-                      {/* Outer glow effect - more orange */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 rounded-full blur-lg opacity-60 group-hover:opacity-85 transition-opacity duration-300 animate-pulse"></div>
+                      {/* Outer glow effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse"></div>
                       
-                      {/* Main vinyl record - enhanced orange */}
-                      <div className="relative w-full h-full bg-gradient-to-br from-orange-600 via-orange-700 to-orange-800 rounded-full shadow-2xl group-hover:shadow-orange-600/60 transition-all duration-300">
-                        {/* Vinyl texture with multiple grooves - more orange tones */}
-                        <div className="absolute inset-1 rounded-full border-2 border-orange-400/50 shadow-inner"></div>
-                        <div className="absolute inset-2 rounded-full border border-orange-400/40"></div>
-                        <div className="absolute inset-3 rounded-full border border-orange-400/35"></div>
-                        <div className="absolute inset-4 rounded-full border border-orange-400/30"></div>
-                        <div className="absolute inset-5 rounded-full border border-orange-400/25"></div>
+                      {/* Main vinyl record - matching the reference image colors */}
+                      <div className="relative w-full h-full bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 rounded-full shadow-2xl group-hover:shadow-orange-500/60 transition-all duration-300">
+                        {/* Multiple vinyl grooves - like in the reference image */}
+                        <div className="absolute inset-1 rounded-full border border-orange-200/60 shadow-inner"></div>
+                        <div className="absolute inset-2 rounded-full border border-orange-200/50"></div>
+                        <div className="absolute inset-3 rounded-full border border-orange-200/40"></div>
+                        <div className="absolute inset-4 rounded-full border border-orange-200/35"></div>
+                        <div className="absolute inset-5 rounded-full border border-orange-200/30"></div>
                         
-                        {/* Center label area - deeper orange */}
-                        <div className="absolute inset-6 bg-gradient-to-br from-orange-900 via-orange-950 to-orange-900 rounded-full shadow-2xl flex items-center justify-center">
+                        {/* Center label area - cream/beige like in reference */}
+                        <div className="absolute inset-6 bg-gradient-to-br from-orange-100 via-orange-50 to-orange-100 rounded-full shadow-2xl flex items-center justify-center border border-orange-200/30">
                           {/* Center hole */}
-                          <div className="absolute w-4 h-4 bg-black rounded-full shadow-inner border border-orange-900/60"></div>
+                          <div className="absolute w-4 h-4 bg-black rounded-full shadow-inner border border-orange-900/40"></div>
                           
                           {/* Text overlay */}
-                          <span className="relative z-10 text-orange-100 font-bold text-xs text-center leading-tight drop-shadow-lg">
+                          <span className="relative z-10 text-orange-800 font-bold text-xs text-center leading-tight drop-shadow-sm">
                             {t("orderNow") || "Order Now"}
                           </span>
                         </div>
                         
-                        {/* Vinyl reflection/shine effect - Updated to match the image */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-orange-200/60 via-transparent to-orange-300/30 opacity-40 group-hover:opacity-70 transition-opacity duration-500 transform"></div>
+                        {/* Realistic metallic shine patterns - matching reference image */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/80 via-transparent to-white/20 opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
                         
-                        {/* Additional metallic shine for more realistic effect */}
-                        <div className="absolute top-1 left-1 right-4 bottom-4 rounded-full bg-gradient-to-br from-orange-100/50 via-transparent to-transparent opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                        {/* Horizontal shine bands - like the reference image */}
+                        <div className="absolute top-2 left-1 right-1 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent rounded-full opacity-40"></div>
+                        <div className="absolute top-4 left-2 right-2 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent rounded-full opacity-35"></div>
+                        <div className="absolute bottom-4 left-2 right-2 h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent rounded-full opacity-35"></div>
+                        <div className="absolute bottom-2 left-1 right-1 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent rounded-full opacity-40"></div>
                         
-                        {/* Rotating highlight - orange tinted */}
-                        <div className="absolute top-1 left-1/2 w-0.5 h-6 bg-orange-200/30 rounded-full transform -translate-x-1/2 group-hover:animate-spin origin-center transition-all duration-300"></div>
+                        {/* Rotating highlight */}
+                        <div className="absolute top-1 left-1/2 w-0.5 h-6 bg-white/40 rounded-full transform -translate-x-1/2 group-hover:animate-spin origin-center transition-all duration-300"></div>
                       </div>
                       
-                      {/* Floating musical notes animation - orange */}
-                      <div className="absolute -top-1 -right-1 text-orange-400 text-sm animate-bounce delay-100 group-hover:text-orange-300 transition-colors duration-300">♪</div>
-                      <div className="absolute -bottom-1 -left-1 text-orange-400 text-xs animate-bounce delay-300 group-hover:text-orange-300 transition-colors duration-300">♫</div>
+                      {/* Floating musical notes animation */}
+                      <div className="absolute -top-1 -right-1 text-orange-500 text-sm animate-bounce delay-100 group-hover:text-orange-400 transition-colors duration-300">♪</div>
+                      <div className="absolute -bottom-1 -left-1 text-orange-500 text-xs animate-bounce delay-300 group-hover:text-orange-400 transition-colors duration-300">♫</div>
                     </div>
                   </Link>
                 </div>
@@ -219,3 +226,4 @@ const Navigation = () => {
 };
 
 export default Navigation;
+
