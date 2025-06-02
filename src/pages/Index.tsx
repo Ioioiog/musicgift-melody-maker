@@ -10,6 +10,7 @@ import { useTranslation } from "@/hooks/useTranslations";
 import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+
 const Index = () => {
   const {
     data: packages = [],
@@ -24,9 +25,9 @@ const Index = () => {
     t: tDb
   } = useTranslation(); // Database translations for package content
 
-  // Audio player state
+  // Video player state
   const [isMuted, setIsMuted] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Get all packages instead of limiting to 3
   const allPackages = packages;
@@ -36,27 +37,37 @@ const Index = () => {
     return language === 'ro' ? "/lovable-uploads/Jingle Musicgift master.mp4" : "/lovable-uploads/MusicGiftvideoENG.mp4";
   };
 
-  // Auto-play audio when component mounts
+  // Auto-play video when component mounts
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.play().catch(error => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
         console.log("Auto-play failed:", error);
       });
     }
   }, []);
+
   const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
     }
   };
+
   return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Video Background - Left aligned, bottom positioned */}
       <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-end overflow-hidden bg-black">
         {/* Video Background */}
-        <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline key={language}>
+        <video 
+          ref={videoRef}
+          className="absolute top-0 left-0 w-full h-full object-cover z-0" 
+          autoPlay 
+          muted={isMuted}
+          loop 
+          playsInline 
+          key={language}
+        >
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
@@ -103,9 +114,6 @@ const Index = () => {
           <Button onClick={toggleMute} size="icon" className="rounded-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-md w-10 h-10 sm:w-12 sm:h-12">
             {isMuted ? <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" /> : <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />}
           </Button>
-          <audio ref={audioRef} loop muted={isMuted} key={language}>
-            <source src={getVideoSource()} type="audio/mp4" />
-          </audio>
         </div>
         
         {/* Scroll down indicator - hidden on very small screens */}
@@ -256,4 +264,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
