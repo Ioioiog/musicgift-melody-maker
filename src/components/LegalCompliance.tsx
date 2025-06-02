@@ -1,17 +1,20 @@
+
 import React from 'react';
 import NTPLogo from 'ntp-logo-react';
 
 const LegalCompliance = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-      {/* NTP Logo Section */}
+      {/* Registered Business Section - Now empty, could be used for other content */}
       <div className="space-y-3">
         <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider text-center md:text-left">
           Registered Business
         </h4>
         <div className="flex justify-center md:justify-start">
           <div className="bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 shadow-lg">
-            <NTPLogo color="#1f2937" version="horizontal" secret="152227" />
+            <div className="text-gray-700 font-medium text-center">
+              Business Registration Info
+            </div>
           </div>
         </div>
       </div>
@@ -49,7 +52,7 @@ const LegalCompliance = () => {
         </div>
       </div>
 
-      {/* Payment Partners */}
+      {/* Payment Partners - Now includes NTP */}
       <div className="space-y-3">
         <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider text-center md:text-left">
           Payment Partners
@@ -79,6 +82,9 @@ const LegalCompliance = () => {
               className="h-8 hover:opacity-80 transition"
             />
           </a>
+          <div className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
+            <NTPLogo color="#ffffff" version="orizontal" secret="152227" />
+          </div>
         </div>
       </div>
     </div>
