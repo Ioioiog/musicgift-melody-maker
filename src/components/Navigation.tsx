@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -90,14 +91,11 @@ const Navigation = () => {
               {/* User Menu */}
               <UserMenu />
               
-              {/* Vinyl Record Order Button - Mobile responsive sizing */}
+              {/* Vinyl Record Order Button - Simplified */}
               <Link to="/order" className="relative group">
-                <div className="relative w-20 h-20 xl:w-24 xl:h-24 transition-all duration-500 transform hover:scale-110 hover:rotate-12 group-hover:drop-shadow-2xl">
-                  {/* Outer glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse"></div>
-                  
+                <div className="relative w-20 h-20 xl:w-24 xl:h-24 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                   {/* Vinyl Record Image */}
-                  <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl group-hover:shadow-orange-500/60 transition-all duration-300">
+                  <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
                     <img 
                       src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" 
                       alt="Vinyl Record" 
@@ -111,10 +109,6 @@ const Navigation = () => {
                       </span>
                     </div>
                   </div>
-                  
-                  {/* Floating musical notes */}
-                  <div className="absolute -top-1 -right-1 text-orange-500 text-sm animate-bounce delay-100 group-hover:text-orange-400 transition-colors duration-300">♪</div>
-                  <div className="absolute -bottom-1 -left-1 text-orange-500 text-xs animate-bounce delay-300 group-hover:text-orange-400 transition-colors duration-300">♫</div>
                 </div>
               </Link>
             </div>
@@ -156,14 +150,11 @@ const Navigation = () => {
                     <UserMenu />
                   </div>
                   
-                  {/* Mobile Vinyl Record Button - Right aligned */}
+                  {/* Mobile Vinyl Record Button - Simplified */}
                   <Link to="/order" className="relative group ml-auto" onClick={() => setIsMenuOpen(false)}>
-                    <div className="relative w-16 h-16 transition-all duration-500 transform hover:scale-110 hover:rotate-12 group-hover:drop-shadow-2xl">
-                      {/* Outer glow effect */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse"></div>
-                      
+                    <div className="relative w-16 h-16 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                       {/* Mobile Vinyl Record Image */}
-                      <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl group-hover:shadow-orange-500/60 transition-all duration-300">
+                      <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
                         <img 
                           src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" 
                           alt="Vinyl Record" 
@@ -177,10 +168,6 @@ const Navigation = () => {
                           </span>
                         </div>
                       </div>
-                      
-                      {/* Floating musical notes */}
-                      <div className="absolute -top-1 -right-1 text-orange-500 text-sm animate-bounce delay-100 group-hover:text-orange-400 transition-colors duration-300">♪</div>
-                      <div className="absolute -bottom-1 -left-1 text-orange-500 text-xs animate-bounce delay-300 group-hover:text-orange-400 transition-colors duration-300">♫</div>
                     </div>
                   </Link>
                 </div>
