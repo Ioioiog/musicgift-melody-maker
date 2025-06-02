@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -140,34 +140,36 @@ const Navigation = () => {
             </button>
           </div>
 
-          {/* Mobile Menu - Enhanced mobile layout */}
+          {/* Mobile Menu - Enhanced mobile layout with right-aligned text */}
           {isMenuOpen && <div className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200">
               <nav className="flex flex-col space-y-2">
-                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center ${location.pathname === item.path ? "text-violet-600 bg-violet-50" : "text-gray-700"}`} onClick={() => setIsMenuOpen(false)}>
+                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center justify-end text-right ${location.pathname === item.path ? "text-violet-600 bg-violet-50" : "text-gray-700"}`} onClick={() => setIsMenuOpen(false)}>
                     {item.label}
                   </Link>)}
-                <div className="flex flex-col space-y-3 pt-4 px-4">
-                  {/* Mobile Language Selector */}
+                <div className="flex flex-col space-y-3 pt-4 px-4 items-end">
+                  {/* Mobile Language Selector - Right aligned */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold w-full bg-white/80 backdrop-blur-sm border-2 border-purple-200/50 hover:border-purple-300 text-gray-700 hover:text-purple-700 rounded-xl flex items-center justify-center space-x-2 py-3 transform hover:scale-105 min-h-[44px] touch-manipulation">
+                      <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold bg-white/80 backdrop-blur-sm border-2 border-purple-200/50 hover:border-purple-300 text-gray-700 hover:text-purple-700 rounded-xl flex items-center justify-center space-x-2 py-3 transform hover:scale-105 min-h-[44px] touch-manipulation ml-auto">
                         <Globe className="w-4 h-4" />
                         <span>{languageNames[language]}</span>
                         <ChevronDown className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-white border-2 border-purple-200 shadow-2xl z-50 rounded-xl p-2 w-full">
-                      {languages.map(lang => <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg px-3 py-3 cursor-pointer min-h-[44px] touch-manipulation ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold" : "text-gray-700"}`}>
+                    <DropdownMenuContent align="end" className="bg-white border-2 border-purple-200 shadow-2xl z-50 rounded-xl p-2">
+                      {languages.map(lang => <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg px-3 py-3 cursor-pointer min-h-[44px] touch-manipulation text-right justify-end ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold" : "text-gray-700"}`}>
                           {languageNames[lang]}
                         </DropdownMenuItem>)}
                     </DropdownMenuContent>
                   </DropdownMenu>
                   
-                  <UserMenu />
+                  <div className="ml-auto">
+                    <UserMenu />
+                  </div>
                   
-                  {/* Mobile Vinyl Record Button */}
-                  <Link to="/order" className="relative group w-full" onClick={() => setIsMenuOpen(false)}>
-                    <div className="relative w-16 h-16 mx-auto transition-all duration-500 transform hover:scale-110 hover:rotate-12 group-hover:drop-shadow-2xl">
+                  {/* Mobile Vinyl Record Button - Right aligned */}
+                  <Link to="/order" className="relative group ml-auto" onClick={() => setIsMenuOpen(false)}>
+                    <div className="relative w-16 h-16 transition-all duration-500 transform hover:scale-110 hover:rotate-12 group-hover:drop-shadow-2xl">
                       {/* Outer glow effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse"></div>
                       
@@ -203,4 +205,5 @@ const Navigation = () => {
       </header>
     </>;
 };
+
 export default Navigation;
