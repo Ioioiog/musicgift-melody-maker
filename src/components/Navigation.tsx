@@ -5,6 +5,7 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,7 +46,7 @@ const Navigation = () => {
       {/* Floating Logo - positioned on the left side */}
       <div className="fixed top-4 left-4 z-50">
         <Link to="/" className="block group">
-          <img alt="MusicGift Logo" className="w-60 h-auto transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg" src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" />
+          <img alt="MusicGift Logo" className="w-60 h-auto transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" />
         </Link>
       </div>
 
@@ -209,4 +210,5 @@ const Navigation = () => {
       </header>
     </>;
 };
+
 export default Navigation;
