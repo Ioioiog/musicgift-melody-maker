@@ -127,7 +127,7 @@ const Index = () => {
       backgroundRepeat: 'no-repeat'
     }}>
         {/* Overlay for better readability */}
-        <div className="absolute inset-0 bg-black/40 py-0 px-[10px] mx-[7px] my-[4px]"></div>
+        <div className="absolute inset-0 bg-black/40 py-0 my-px mx-px px-0"></div>
         
         <div className="container mx-auto sm:px-6 relative z-10 px-[30px] py-0">
           {/* CTA Content - Reduced margin */}
