@@ -98,7 +98,7 @@ const Navigation = () => {
                     <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                     
                     {/* Gift box icon overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center py-[16px] px-[16px] my-[64px]">
+                    <div className="absolute inset-0 flex items-center justify-center py-[20px] px-[20px] my-[70px] ml-[10px]">
                       <img src="/lovable-uploads/2784fec2-bf48-4f39-96f9-0e36bf6783f2.png" alt="Gift" className="relative z-10 w-16 h-16 xl:w-20 xl:h-20 drop-shadow-lg" />
                     </div>
                   </div>
@@ -151,7 +151,7 @@ const Navigation = () => {
                         <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                         
                         {/* Gift box icon overlay for mobile */}
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="absolute inset-0 flex items-center justify-center ml-[6px] mt-[4px]">
                           <img src="/lovable-uploads/2784fec2-bf48-4f39-96f9-0e36bf6783f2.png" alt="Gift" className="relative z-10 w-10 h-10 drop-shadow-lg" />
                         </div>
                       </div>
