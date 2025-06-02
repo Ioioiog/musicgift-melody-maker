@@ -1,9 +1,9 @@
-
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import NewsletterForm from "@/components/NewsletterForm";
 import LegalModals, { useLegalModals } from "@/components/LegalModals";
+import LegalCompliance from "@/components/LegalCompliance";
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -95,7 +95,7 @@ const Footer = () => {
               ))}
             </ul>
 
-            {/* Legal Links - Moved here from Contact Info */}
+            {/* Legal Links */}
             <div className="space-y-4">
               <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider">
                 {t('legal')}
@@ -181,6 +181,17 @@ const Footer = () => {
               </p>
               <NewsletterForm />
             </div>
+          </div>
+
+          {/* Legal Compliance Section - NEW DEDICATED SECTION */}
+          <div className="lg:col-span-4 space-y-4 sm:space-y-6">
+            <div className="relative text-center sm:text-left">
+              <h3 className="text-gray-900 font-bold text-lg mb-2">
+                Legal Compliance & Partners
+              </h3>
+              <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
+            </div>
+            <LegalCompliance />
           </div>
         </div>
 
