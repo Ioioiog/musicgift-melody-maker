@@ -12,7 +12,6 @@ import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 const Index = () => {
   const {
     data: packages = [],
@@ -66,7 +65,7 @@ const Index = () => {
         
         {/* Hero Content - Mobile optimized */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
-          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 py-[120px] px-[38px]">
+          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 py-[13px] px-[240px]">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight">
               {t('heroTitle')}
             </h1>
@@ -74,7 +73,7 @@ const Index = () => {
               {t('heroSubtitle')}
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 py-0">
               <Link to="/packages">
                 <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg w-full sm:w-auto">
                   {t('seePackages')}
@@ -166,26 +165,22 @@ const Index = () => {
           duration: 0.6,
           delay: 0.2
         }}>
-              <Carousel
-                opts={{
-                  align: "start",
-                  loop: true
-                }}
-                className="w-full"
-              >
+              <Carousel opts={{
+            align: "start",
+            loop: true
+          }} className="w-full">
                 <CarouselContent className="-ml-2 md:-ml-4">
-                  {previewPackages.map((pkg, index) => (
-                    <CarouselItem key={pkg.id} className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+                  {previewPackages.map((pkg, index) => <CarouselItem key={pkg.id} className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                       <motion.div initial={{
-                        opacity: 0,
-                        y: 20
-                      }} animate={{
-                        opacity: 1,
-                        y: 0
-                      }} transition={{
-                        duration: 0.6,
-                        delay: 0.1 * index
-                      }}>
+                  opacity: 0,
+                  y: 20
+                }} animate={{
+                  opacity: 1,
+                  y: 0
+                }} transition={{
+                  duration: 0.6,
+                  delay: 0.1 * index
+                }}>
                         <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
                           {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 z-20">
                               <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
@@ -226,15 +221,12 @@ const Index = () => {
                           </CardContent>
                         </Card>
                       </motion.div>
-                    </CarouselItem>
-                  ))}
+                    </CarouselItem>)}
                 </CarouselContent>
-                {!isMobile && (
-                  <>
+                {!isMobile && <>
                     <CarouselPrevious className="hidden md:flex -left-12 bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 backdrop-blur-md" />
                     <CarouselNext className="hidden md:flex -right-12 bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 backdrop-blur-md" />
-                  </>
-                )}
+                  </>}
               </Carousel>
             </motion.div>}
 
@@ -245,13 +237,16 @@ const Index = () => {
             </div>}
           
           {/* CTA Content - Now integrated into the packages section */}
-          {!isLoading && !error && previewPackages.length > 0 && (
-            <motion.div 
-              className="text-center mt-12 sm:mt-16 space-y-6 sm:space-y-8" 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
+          {!isLoading && !error && previewPackages.length > 0 && <motion.div className="text-center mt-12 sm:mt-16 space-y-6 sm:space-y-8" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.4
+        }}>
               <div className="space-y-4">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
                   {t('readyToCreateSpecial')}
@@ -273,8 +268,7 @@ const Index = () => {
                   </Button>
                 </Link>
               </div>
-            </motion.div>
-          )}
+            </motion.div>}
         </div>
 
         {/* Bottom border accent */}
@@ -284,5 +278,4 @@ const Index = () => {
       <Footer />
     </div>;
 };
-
 export default Index;
