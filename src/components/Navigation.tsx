@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -53,7 +54,7 @@ const Navigation = () => {
     }} className="fixed top-0 left-0 w-full h-8 sm:h-10 z-1"></div>
 
       {/* Floating Logo - Mobile responsive positioning and sizing */}
-      <div className="fixed top-2 left-2 sm:top-3 sm:left-3 md:top-4 md:left-4 z-50">
+      <div className="fixed top-2 left-4 sm:top-3 sm:left-5 md:top-4 md:left-6 z-50">
         <Link to="/" className="block group">
           <img alt="MusicGift Logo" className="w-32 sm:w-40 md:w-48 lg:w-60 h-auto transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" />
         </Link>
