@@ -1,35 +1,33 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
-
 const About = () => {
-  const { t } = useLanguage();
-
-  return (
-    <div className="min-h-screen">
+  const {
+    t
+  } = useLanguage();
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Enhanced Hero Section with Purple Musical Background, Our Story Content and MusicGift Details */}
       <section className="py-20 text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/30"></div>
         
         {/* Floating Musical Notes */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-10 left-10 text-4xl opacity-30" style={{
-            transform: "translateX(35.2px) translateY(-17.6px) rotate(296.64deg)"
-          }}>♪</div>
+          transform: "translateX(35.2px) translateY(-17.6px) rotate(296.64deg)"
+        }}>♪</div>
           <div className="absolute bottom-10 right-10 text-6xl opacity-20" style={{
-            transform: "translateX(-69.12px) translateY(34.56px) rotate(-77.76deg)"
-          }}>🎵</div>
+          transform: "translateX(-69.12px) translateY(34.56px) rotate(-77.76deg)"
+        }}>🎵</div>
         </div>
         
         <div className="max-w-6xl mx-auto px-4 relative z-10">
@@ -37,8 +35,8 @@ const About = () => {
           <div className="text-center mb-16">
             {/* Professional Full-Screen Scrolling Statistics Section */}
             <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mb-8 my-[48px] overflow-hidden">
-              <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-6">
-                <div className="flex space-x-16 whitespace-nowrap animate-[scroll_30s_linear_infinite]">
+              <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[2px]">
+                <div className="flex space-x-16 whitespace-nowrap animate-[scroll_50s_linear_infinite]">
                   {/* First set of statistics */}
                   <div className="flex items-center space-x-4 text-xl font-bold">
                     <Music className="w-12 h-12 text-blue-300" />
@@ -285,8 +283,6 @@ const About = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
