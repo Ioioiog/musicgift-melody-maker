@@ -104,7 +104,7 @@ const Footer = () => {
             }].map(({
               to,
               label
-            }) => <li key={to}>
+            }) => <li key={to} className="px-[66px]">
                   <Link to={to} className="text-gray-700 hover:text-gray-900 transition-all duration-300 relative group inline-block py-1">
                     <span className="relative z-10 text-right">{label}</span>
                     <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
