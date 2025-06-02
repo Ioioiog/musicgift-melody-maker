@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import NewsletterForm from "@/components/NewsletterForm";
-
 const Footer = () => {
   const {
     t
@@ -27,8 +26,8 @@ const Footer = () => {
           {/* Brand Section - Enhanced */}
           <div className="space-y-20 lg:col-span-1 py-[36px]">
             <Link to="/" className="inline-block group">
-              <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-2xl p-4 transition-all duration-300 group-hover:bg-white/20 group-hover:border-black/20 group-hover:scale-105 px-[86px] py-[38px]">
-                <img src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" alt="MusicGift by Mango Records" className="h-12 w-auto" />
+              <div className="backdrop-blur-sm border border-black/10 p-4 transition-all duration-300 group-hover:border-black/20 group-hover:scale-105 py-[55px] px-[32px] bg-transparent rounded-none">
+                <img src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" alt="MusicGift by Mango Records" className="h-40 w-40 object-cover" />
               </div>
             </Link>
             
@@ -205,5 +204,4 @@ const Footer = () => {
       </div>
     </footer>;
 };
-
 export default Footer;
