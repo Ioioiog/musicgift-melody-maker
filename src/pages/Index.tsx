@@ -12,6 +12,7 @@ import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 const Index = () => {
   const {
     data: packages = [],
@@ -53,7 +54,8 @@ const Index = () => {
 
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
-  return <div className="min-h-screen">
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Video Background - Mobile Optimized - No margin/gap */}
@@ -63,29 +65,94 @@ const Index = () => {
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
-        {/* Hero Content - Mobile optimized */}
+        {/* Hero Content - Redesigned Layout */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
-          <div className="max-w-4xl space-y-4 sm:space-y-6 animate-fade-in mx-0 my-0 px-[41px] py-0">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold leading-tight px-[3px]">
-              {t('heroTitle')}
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl">
-              {t('heroSubtitle')}
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 py-0">
-              <Link to="/packages">
-                <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg w-full sm:w-auto">
-                  {t('seePackages')}
-                </Button>
-              </Link>
-              <Link to="/testimonials">
-                <Button size="lg" variant="outline" className="border-2 border-purple-300 text-purple-100 hover:bg-purple-500/20 hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg bg-transparent w-full sm:w-auto">
-                  {t('listenToSamples')}
-                </Button>
-              </Link>
+          <motion.div 
+            className="max-w-5xl mx-auto text-center space-y-8"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            {/* Main Title with Enhanced Typography */}
+            <div className="space-y-4">
+              <motion.h1 
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                {t('heroTitle')}
+              </motion.h1>
+              
+              <motion.div 
+                className="w-24 h-1 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: 96 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              />
             </div>
-          </div>
+
+            {/* Subtitle with Better Spacing */}
+            <motion.p 
+              className="text-lg sm:text-xl md:text-2xl leading-relaxed text-white/90 max-w-3xl mx-auto font-light"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              {t('heroSubtitle')}
+            </motion.p>
+            
+            {/* Enhanced Button Layout */}
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <Link to="/packages" className="w-full sm:w-auto">
+                <Button 
+                  size="lg" 
+                  className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 font-semibold px-8 sm:px-12 py-4 sm:py-6 rounded-full transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-purple-500/25 w-full sm:w-auto text-base sm:text-lg"
+                >
+                  <span className="relative z-10">{t('seePackages')}</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Button>
+              </Link>
+              
+              <Link to="/testimonials" className="w-full sm:w-auto">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="group relative overflow-hidden bg-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 font-semibold px-8 sm:px-12 py-4 sm:py-6 rounded-full transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-white/10 w-full sm:w-auto text-base sm:text-lg"
+                >
+                  <span className="relative z-10">{t('listenToSamples')}</span>
+                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Button>
+              </Link>
+            </motion.div>
+
+            {/* Feature Highlights */}
+            <motion.div 
+              className="flex flex-wrap justify-center gap-4 sm:gap-6 pt-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.0 }}
+            >
+              {[
+                { icon: "🎵", text: t('personalizedSongs') || "Personalized Songs" },
+                { icon: "⚡", text: t('fastDelivery') || "Fast Delivery" },
+                { icon: "🎁", text: t('perfectGift') || "Perfect Gift" }
+              ].map((feature, index) => (
+                <div 
+                  key={index}
+                  className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm sm:text-base"
+                >
+                  <span className="text-lg">{feature.icon}</span>
+                  <span className="font-medium">{feature.text}</span>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
         </div>
         
         {/* Floating musical notes - responsive positioning */}
@@ -276,6 +343,8 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
