@@ -20,18 +20,18 @@ const Footer = () => {
       backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
     }}></div>
 
-      <div className="container mx-auto px-6 py-16 relative z-10">
+      <div className="container mx-auto px-6 relative z-10 py-0">
         <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-5 py-0 px-px">
           
           {/* Brand Section - Enhanced */}
-          <div className="space-y-6 lg:col-span-1">
+          <div className="space-y-20 lg:col-span-1 py-[36px]">
             <Link to="/" className="inline-block group">
-              <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-2xl p-4 transition-all duration-300 group-hover:bg-white/20 group-hover:border-black/20 group-hover:scale-105">
+              <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-2xl p-4 transition-all duration-300 group-hover:bg-white/20 group-hover:border-black/20 group-hover:scale-105 px-[86px] py-[38px]">
                 <img src="/lovable-uploads/61b6a361-9741-4d73-8075-0df2b2f8fb27.png" alt="MusicGift by Mango Records" className="h-12 w-auto" />
               </div>
             </Link>
             
-            <p className="text-gray-800 leading-relaxed text-sm font-medium">
+            <p className="text-gray-800 leading-relaxed text-sm font-medium text-left">
               {t('footerDescription')}
             </p>
             
@@ -74,12 +74,12 @@ const Footer = () => {
           </div>
 
           {/* Quick Links - Enhanced */}
-          <div className="space-y-6">
+          <div className="space-y-6 py-[17px]">
             <div className="relative">
-              <h3 className="text-gray-900 font-bold text-lg mb-1">
+              <h3 className="text-gray-900 font-bold text-lg mb-1 text-right">
                 {t('quickLinks')}
               </h3>
-              <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"></div>
+              <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full py-0 px-[141px]"></div>
             </div>
             
             <ul className="space-y-3">
@@ -106,7 +106,7 @@ const Footer = () => {
               label
             }) => <li key={to}>
                   <Link to={to} className="text-gray-700 hover:text-gray-900 transition-all duration-300 relative group inline-block py-1">
-                    <span className="relative z-10">{label}</span>
+                    <span className="relative z-10 text-right">{label}</span>
                     <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                     <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                   </Link>
@@ -115,12 +115,12 @@ const Footer = () => {
           </div>
 
           {/* Contact Info - Enhanced */}
-          <div className="space-y-6">
+          <div className="space-y-6 py-[17px]">
             <div className="relative">
-              <h3 className="text-gray-900 font-bold text-lg mb-1">
+              <h3 className="text-gray-900 font-bold text-lg mb-1 text-right">
                 {t('contactInfo')}
               </h3>
-              <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"></div>
+              <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full px-[139px]"></div>
             </div>
             
             <div className="space-y-4">
@@ -164,12 +164,12 @@ const Footer = () => {
           </div>
 
           {/* Newsletter - Enhanced */}
-          <div className="space-y-6">
+          <div className="space-y-6 py-[17px]">
             <div className="relative">
-              <h3 className="text-gray-900 font-bold text-lg mb-1">
+              <h3 className="text-gray-900 font-bold text-lg mb-1 text-right">
                 {t('stayUpdated')}
               </h3>
-              <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"></div>
+              <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full px-[138px]"></div>
             </div>
             
             <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
@@ -182,7 +182,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section - Enhanced */}
-        <div className="border-t border-black/10 mt-16 pt-8">
+        <div className="border-t border-black/10 mt-16 pt-8 py-0">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-full px-6 py-3">
               <p className="text-sm text-gray-700 font-medium">
