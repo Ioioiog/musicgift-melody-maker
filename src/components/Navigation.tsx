@@ -58,7 +58,7 @@ const Navigation = () => {
       </div>
 
       {/* Navigation Bar */}
-      <header className="fixed top-16 sm:top-20 w-full z-40 border-b border-white/10 bg-white/95 backdrop-blur-md shadow-lg">        
+      <header className="fixed top-4 w-full z-40 border-b border-white/10 bg-white/95 backdrop-blur-md shadow-lg">        
         <div className="container mx-auto sm:px-6 md:px-8 my-0 relative z-10 px-[18px] py-[3px]">
           <div className="flex items-center justify-between h-20 py-[4px]">
             
