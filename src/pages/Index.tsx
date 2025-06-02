@@ -119,8 +119,8 @@ const Index = () => {
       {/* ScenarioHero Banner */}
       <ScenarioHero />
 
-      {/* Combined Packages and CTA Section */}
-      <section className="relative overflow-hidden py-8 sm:py-12 md:py-16" style={{
+      {/* Combined Packages and CTA Section - Reduced spacing */}
+      <section className="relative overflow-hidden pt-4 pb-8 sm:pt-6 sm:pb-12 md:pt-8 md:pb-16" style={{
       backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -130,8 +130,8 @@ const Index = () => {
         <div className="absolute inset-0 bg-black/40 py-0 px-0"></div>
         
         <div className="container mx-auto sm:px-6 relative z-10 px-[30px] py-0">
-          {/* CTA Content - Moved to first position */}
-          <motion.div className="text-center mb-12 sm:mb-16 space-y-6 sm:space-y-8" initial={{
+          {/* CTA Content - Reduced margin */}
+          <motion.div className="text-center mb-6 sm:mb-8 space-y-6 sm:space-y-8" initial={{
           opacity: 0,
           y: 20
         }} animate={{
