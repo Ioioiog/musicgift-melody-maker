@@ -98,7 +98,7 @@ const Navigation = () => {
                     
                     {/* Gift box icon overlay */}
                     <div className="absolute inset-0 flex items-center justify-center py-[20px] px-[20px] my-[70px] ml-[10px]">
-                      <img alt="Gift" src="/lovable-uploads/cdaff943-06a1-4aa0-a177-3209c50e1a1f.png" className="relative z-10 w-15 h-15 xl:w-20 xl:h-18 drop-shadow-lg ml-25" />
+                      <img alt="Gift" src="/lovable-uploads/cdaff943-06a1-4aa0-a177-3209c50e1a1f.png" className="relative z-10 w-10 h-19 xl:w-10 xl:h-20 drop-shadow-lg ml-20" />
                     </div>
                   </div>
                 </div>
