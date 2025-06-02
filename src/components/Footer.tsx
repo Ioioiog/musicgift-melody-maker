@@ -104,10 +104,10 @@ const Footer = () => {
             }].map(({
               to,
               label
-            }) => <li key={to} className="py-0 px-[133px]">
+            }) => <li key={to}>
                   <Link to={to} className="text-gray-700 hover:text-gray-900 transition-all duration-300 relative group inline-block py-1">
-                    <span className="relative z-10 text-right my-0 mx-0">{label}</span>
-                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left px-[70px] py-0"></div>
+                    <span className="relative z-10 text-right">{label}</span>
+                    <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-lg scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                     <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                   </Link>
                 </li>)}
