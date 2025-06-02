@@ -94,16 +94,31 @@ const Order = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <Navigation />
-      
-      <section className="pt-16 sm:pt-20 md:pt-24 py-4 sm:py-6 md:py-8 bg-gray-50">
-        <div className="container mx-auto px-2 sm:px-4">
-          <OrderWizard onComplete={handleOrderComplete} />
-        </div>
-      </section>
+    <div className="min-h-screen relative overflow-hidden" style={{
+      backgroundImage: 'url(/lovable-uploads/80488a4f-b392-4eca-b181-f587474721fd.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
+      {/* White glass overlay for glassmorphism effect */}
+      <div className="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
 
-      <Footer />
+      {/* Subtle grid pattern overlay */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }}></div>
+
+      <div className="relative z-10">
+        <Navigation />
+        
+        <section className="pt-16 sm:pt-20 md:pt-24 py-4 sm:py-6 md:py-8">
+          <div className="container mx-auto px-2 sm:px-4">
+            <OrderWizard onComplete={handleOrderComplete} />
+          </div>
+        </section>
+
+        <Footer />
+      </div>
     </div>
   );
 };
