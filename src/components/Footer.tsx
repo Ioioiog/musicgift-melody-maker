@@ -24,20 +24,20 @@ const Footer = () => {
         <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-5 py-0 px-px">
           
           {/* Brand Section - Enhanced */}
-          <div className="space-y-20 lg:col-span-1 py-[36px]">
+          <div className="space-y-20 lg:col-span-1 py-0 px-0">
             <Link to="/" className="inline-block group">
-              <div className="backdrop-blur-sm border border-black/10 p-4 transition-all duration-300 group-hover:border-black/20 group-hover:scale-105 py-[55px] px-[32px] bg-transparent rounded-none">
-                <img src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" alt="MusicGift by Mango Records" className="h-40 w-40 object-cover" />
+              <div className="backdrop-blur-sm border border-black/10 p-4 transition-all duration-300 group-hover:border-black/20 group-hover:scale-105 bg-transparent rounded-none py-[5px] px-[34px]">
+                <img src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" alt="MusicGift by Mango Records" className="h-30 w-30 object-cover" />
               </div>
             </Link>
             
-            <p className="text-gray-800 leading-relaxed text-sm font-medium text-left">
+            <p className="text-gray-800 leading-relaxed text-sm font-medium text-left py-0 my-[2px]">
               {t('footerDescription')}
             </p>
             
             {/* Enhanced Social Links */}
-            <div className="space-y-3">
-              <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider">
+            <div className="space-y-3 my-[31px]">
+              <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider my-0">
                 {t('followUs') || 'Follow Us'}
               </h4>
               <div className="flex space-x-3">
