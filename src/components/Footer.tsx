@@ -126,15 +126,15 @@ const Footer = () => {
             <div className="space-y-4">
               {[{
               icon: Mail,
-              text: "info@musicgift.ro",
-              href: "mailto:info@musicgift.ro"
+              text: "mihai.gruia@mangorecords.net",
+              href: "mailto:mihai.gruia@mangorecords.net"
             }, {
               icon: Phone,
-              text: "+40 721 234 567",
-              href: "tel:+40721234567"
+              text: "+40 700 000 000",
+              href: "tel:+4070000000"
             }, {
               icon: MapPin,
-              text: "Strada Muzicii 42, București",
+              text: "Strada Fabrica de Glucozã 6-8, București",
               href: "#"
             }].map(({
               icon: Icon,
