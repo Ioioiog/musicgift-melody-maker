@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -58,8 +57,8 @@ const Index = () => {
   return <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section with Video Background - Mobile Optimized - Moved directly under navbar */}
-      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex flex-col justify-center overflow-hidden bg-black mt-[72px]">
+      {/* Hero Section with Video Background - Mobile Optimized - No margin/gap */}
+      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex flex-col justify-center overflow-hidden bg-black">
         {/* Video Background */}
         <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline key={language}>
           <source src={getVideoSource()} type="video/mp4" />
