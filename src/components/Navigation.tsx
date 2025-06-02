@@ -5,6 +5,7 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,6 +24,7 @@ const Navigation = () => {
         return "ORDER NOW";
     }
   };
+
   const navItems = [{
     path: "/",
     label: t("home") || "Home"
@@ -99,23 +101,13 @@ const Navigation = () => {
               {/* User Menu */}
               <UserMenu />
               
-              {/* Vinyl Record Order Button - Made much bigger */}
+              {/* Shopping Bags Order Button */}
               <Link to="/order" className="relative group">
-                <div className="relative w-40 h-40 xl:w-44 xl:h-44 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
-                  {/* Orange Vinyl Record Image */}
-                  <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
-                    <img alt="Orange vinyl record" className="w-full h-full object-cover" src="/lovable-uploads/4f98621f-4315-4ce3-8f09-a832aeed78a5.png" />
-                    
-                    {/* Shopping bags image overlay with text */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center px-0 my-[53px] mx-[52px] py-[20px]">
-                      <div className="relative z-10 mb-1">
-                        
-                      </div>
-                      <div className="text-white text-xs xl:text-xl\n font-bold text-center drop-shadow-lg px-[16px] py-[5px]">
-                        {getOrderText()}
-                      </div>
-                    </div>
-                  </div>
+                <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[44px] touch-manipulation">
+                  <img src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" alt="Shopping bags" className="w-6 h-6 drop-shadow-lg" />
+                  <span className="text-sm font-bold">
+                    {getOrderText()}
+                  </span>
                 </div>
               </Link>
             </div>
@@ -157,23 +149,13 @@ const Navigation = () => {
                     <UserMenu />
                   </div>
                   
-                  {/* Mobile Vinyl Record Button - Made much bigger with shopping bags image */}
+                  {/* Mobile Shopping Bags Button */}
                   <Link to="/order" className="relative group ml-auto" onClick={() => setIsMenuOpen(false)}>
-                    <div className="relative w-28 h-28 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
-                      {/* Mobile Orange Vinyl Record Image */}
-                      <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
-                        <img src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" alt="Orange vinyl record" className="w-full h-full object-cover" />
-                        
-                        {/* Shopping bags image overlay for mobile with text */}
-                        <div className="absolute inset-0 flex flex-col items-center justify-center">
-                          <div className="relative z-10 mb-1">
-                            <img src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" alt="Shopping bags" className="w-8 h-8 drop-shadow-lg" />
-                          </div>
-                          <div className="text-white text-[10px] font-bold text-center px-1 drop-shadow-lg leading-tight">
-                            {getOrderText()}
-                          </div>
-                        </div>
-                      </div>
+                    <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[44px] touch-manipulation">
+                      <img src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" alt="Shopping bags" className="w-5 h-5 drop-shadow-lg" />
+                      <span className="text-sm font-bold">
+                        {getOrderText()}
+                      </span>
                     </div>
                   </Link>
                 </div>
@@ -183,4 +165,5 @@ const Navigation = () => {
       </header>
     </>;
 };
+
 export default Navigation;
