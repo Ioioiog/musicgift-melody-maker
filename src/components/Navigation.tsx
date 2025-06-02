@@ -116,9 +116,12 @@ const Navigation = () => {
                     {/* Orange box icon overlay with text */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <div className="relative z-10 w-12 h-12 xl:w-14 xl:h-14 drop-shadow-lg mb-1">
-                        
+                        <img src="/lovable-uploads/47cac880-f533-4319-bdcb-58c2b7147f23.png" alt="Gift Box" className="w-full h-full" style={{
+                          filter: 'hue-rotate(25deg) saturate(200%) brightness(120%)'
+                        }} />
                       </div>
-                      <div className="text-white text-xL xl:text-ml\n font-bold text-center drop-shadow-lg py-30px] rounded-none px-[21px] py-[11px]">
+                      <div className="text-white text-xL xl:text-ml
+ font-bold text-center drop-shadow-lg py-30px] rounded-none px-[21px] py-[11px]">
                         {getOrderText()}
                       </div>
                     </div>
