@@ -1,0 +1,38 @@
+
+export const orderTranslations = {
+  loadingPackages: "Loading packages...",
+  loadingSteps: "Loading steps...",
+  errorLoadingSteps: "Error loading steps",
+  errorLoadingStepsDesc: "Unable to load the configuration for this package. Please try again or contact support.",
+  chooseAnotherPackage: "Choose another package",
+  tryAgain: "Try again",
+  noStepsConfigured: "No steps configured",
+  noStepsConfiguredDesc: "This package doesn't have any steps configured yet. Please contact support or choose a different package.",
+  selectYourPackage: "Select your package",
+  selectOption: "Select an option",
+  completeRequiredFields: "Please complete all required fields",
+  completeRequiredFieldsDesc: "Make sure all required fields are filled out before proceeding.",
+  somethingWentWrong: "Something went wrong",
+  tryAgainSupport: "Please try again or contact support if the problem persists.",
+  stepPackage: "Step",
+  of: "of",
+  progress: "Progress",
+  whatsIncluded: "What's included",
+  professionalQuality: "Professional Quality",
+  previous: "Previous",
+  continue: "Continue",
+  submitting: "Submitting...",
+  completeOrder: "Complete order",
+  choosePackage: "Choose package",
+  pickDate: "Pick date",
+  
+  // Toast messages
+  orderSuccess: "Order created",
+  orderSuccessMessage: "Your order has been created successfully. This is using sample data for demonstration.",
+  orderError: "Error",
+  orderErrorMessage: "An error occurred",
+  
+  // Help section
+  needHelp: "Need Help?",
+  mondayToFriday: "Monday - Friday, 9:00 - 18:00",
+};
