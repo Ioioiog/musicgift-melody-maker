@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -13,7 +12,6 @@ import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 const Index = () => {
   const {
     data: packages = [],
@@ -55,8 +53,7 @@ const Index = () => {
 
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Video Background - Left aligned, bottom positioned */}
@@ -68,64 +65,75 @@ const Index = () => {
         
         {/* Hero Content - Left aligned and bottom positioned */}
         <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white pb-8 sm:pb-12 md:pb-16">
-          <motion.div 
-            className="max-w-2xl text-left space-y-6"
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
+          <motion.div className="max-w-2xl text-left space-y-6" initial={{
+          opacity: 0,
+          x: -30
+        }} animate={{
+          opacity: 1,
+          x: 0
+        }} transition={{
+          duration: 0.8,
+          ease: "easeOut"
+        }}>
             {/* Main Title with Enhanced Typography */}
             <div className="space-y-3">
-              <motion.h1 
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              >
+              <motion.h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.8,
+              delay: 0.2
+            }}>
                 {t('heroTitle')}
               </motion.h1>
               
-              <motion.div 
-                className="w-20 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: 80 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-              />
+              <motion.div initial={{
+              width: 0
+            }} animate={{
+              width: 80
+            }} transition={{
+              duration: 0.8,
+              delay: 0.4
+            }} className="w-20 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full px-[75px]" />
             </div>
 
             {/* Subtitle with Better Spacing */}
-            <motion.p 
-              className="text-base sm:text-lg md:text-xl leading-relaxed text-white/90 max-w-xl font-light"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
+            <motion.p className="text-base sm:text-lg md:text-xl leading-relaxed text-white/90 max-w-xl font-light" initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.8,
+            delay: 0.6
+          }}>
               {t('heroSubtitle')}
             </motion.p>
             
             {/* Enhanced Button Layout */}
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-            >
+            <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4" initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.8,
+            delay: 0.8
+          }}>
               <Link to="/packages" className="w-full sm:w-auto">
-                <Button 
-                  size="lg" 
-                  className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-purple-500/25 w-full sm:w-auto text-sm sm:text-base"
-                >
+                <Button size="lg" className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-purple-500/25 w-full sm:w-auto text-sm sm:text-base">
                   <span className="relative z-10">{t('seePackages')}</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
               </Link>
               
               <Link to="/testimonials" className="w-full sm:w-auto">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="group relative overflow-hidden bg-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-white/10 w-full sm:w-auto text-sm sm:text-base"
-                >
+                <Button size="lg" variant="outline" className="group relative overflow-hidden bg-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-white/10 w-full sm:w-auto text-sm sm:text-base">
                   <span className="relative z-10">{t('listenToSamples')}</span>
                   <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
@@ -133,25 +141,29 @@ const Index = () => {
             </motion.div>
 
             {/* Feature Highlights */}
-            <motion.div 
-              className="flex flex-wrap gap-3 pt-3"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.0 }}
-            >
-              {[
-                { icon: "🎵", text: t('personalizedSongs') || "Personalized Songs" },
-                { icon: "⚡", text: t('fastDelivery') || "Fast Delivery" },
-                { icon: "🎁", text: t('perfectGift') || "Perfect Gift" }
-              ].map((feature, index) => (
-                <div 
-                  key={index}
-                  className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1 text-xs sm:text-sm"
-                >
+            <motion.div className="flex flex-wrap gap-3 pt-3" initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.8,
+            delay: 1.0
+          }}>
+              {[{
+              icon: "🎵",
+              text: t('personalizedSongs') || "Personalized Songs"
+            }, {
+              icon: "⚡",
+              text: t('fastDelivery') || "Fast Delivery"
+            }, {
+              icon: "🎁",
+              text: t('perfectGift') || "Perfect Gift"
+            }].map((feature, index) => <div key={index} className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1 text-xs sm:text-sm">
                   <span className="text-sm">{feature.icon}</span>
                   <span className="font-medium">{feature.text}</span>
-                </div>
-              ))}
+                </div>)}
             </motion.div>
           </motion.div>
         </div>
@@ -344,8 +356,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
