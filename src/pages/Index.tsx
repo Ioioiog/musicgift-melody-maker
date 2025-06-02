@@ -12,6 +12,7 @@ import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 const Index = () => {
   const {
     data: packages = [],
@@ -53,7 +54,8 @@ const Index = () => {
 
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
-  return <div className="min-h-screen">
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Video Background - Left aligned, bottom positioned */}
@@ -162,24 +164,55 @@ const Index = () => {
 
       {/* Combined Packages and CTA Section */}
       <section className="relative overflow-hidden py-8 sm:py-12 md:py-16" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         {/* Overlay for better readability */}
         <div className="absolute inset-0 bg-black/40"></div>
         
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          {/* CTA Content - Moved to first position */}
+          <motion.div 
+            className="text-center mb-12 sm:mb-16 space-y-6 sm:space-y-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="space-y-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+                {t('readyToCreateSpecial')}
+              </h2>
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl mx-auto px-4">
+                {t('helpCreatePersonalized')}
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              <Link to="/packages">
+                <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold text-sm sm:text-base mr-4">
+                  {t('startYourOrder')}
+                </Button>
+              </Link>
+              <Link to="/packages">
+                <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
+                  {t('viewAllPackages')}
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+
           <motion.div className="text-center mb-8 sm:mb-12" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6
-        }}>
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.2
+          }}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">{t('chooseYourPackage')}</h2>
             <p className="text-base sm:text-lg md:text-xl text-white/90 px-4">{t('selectPerfectPackage')}</p>
           </motion.div>
@@ -283,38 +316,7 @@ const Index = () => {
             </div>}
           
           {/* CTA Content - Now integrated into the packages section */}
-          {!isLoading && !error && previewPackages.length > 0 && <motion.div className="text-center mt-12 sm:mt-16 space-y-6 sm:space-y-8" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.4
-        }}>
-              <div className="space-y-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
-                  {t('readyToCreateSpecial')}
-                </h2>
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl mx-auto px-4">
-                  {t('helpCreatePersonalized')}
-                </p>
-              </div>
-              
-              <div className="space-y-4">
-                <Link to="/packages">
-                  <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold text-sm sm:text-base mr-4">
-                    {t('startYourOrder')}
-                  </Button>
-                </Link>
-                <Link to="/packages">
-                  <Button size="lg" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
-                    {t('viewAllPackages')}
-                  </Button>
-                </Link>
-              </div>
-            </motion.div>}
+          
         </div>
 
         {/* Bottom border accent */}
@@ -322,6 +324,8 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
