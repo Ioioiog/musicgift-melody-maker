@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -18,9 +19,9 @@ const Navigation = () => {
   const getOrderText = () => {
     switch (language) {
       case "ro":
-        return "COMANDA ACUM";
+        return "COMANDA";
       default:
-        return "ORDER NOW";
+        return "ORDER";
     }
   };
 
@@ -79,53 +80,53 @@ const Navigation = () => {
               </div>
             </nav>
 
-            {/* Right Side: Mobile responsive buttons */}
-            <div className="hidden lg:flex items-center space-x-2 xl:space-x-3 ml-auto">
-              {/* Currency Selector */}
+            {/* Right Side: Mobile responsive buttons with smaller widths */}
+            <div className="hidden lg:flex items-center space-x-2 ml-auto">
+              {/* Currency Selector - Smaller width */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-orange-200/50 hover:border-orange-300 text-gray-700 hover:text-orange-700 transition-all duration-300 rounded-xl px-3 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2 min-h-[44px] touch-manipulation">
+                  <Button variant="outline" size="sm" className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-orange-200/50 hover:border-orange-300 text-gray-700 hover:text-orange-700 transition-all duration-300 rounded-xl px-2 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-1 min-h-[40px] touch-manipulation">
                     <CurrencyIcon currency={currency} className="w-4 h-4" />
                     <span className="text-sm font-medium">{currency}</span>
                     <ChevronDown className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border-2 border-orange-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
-                  <DropdownMenuItem onClick={() => setCurrency('EUR')} className={`hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[44px] touch-manipulation flex items-center space-x-2 ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}>
+                  <DropdownMenuItem onClick={() => setCurrency('EUR')} className={`hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center space-x-2 ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}>
                     <CurrencyIcon currency="EUR" className="w-4 h-4" />
                     <span>EUR</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setCurrency('RON')} className={`hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[44px] touch-manipulation flex items-center space-x-2 ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}>
+                  <DropdownMenuItem onClick={() => setCurrency('RON')} className={`hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center space-x-2 ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}>
                     <CurrencyIcon currency="RON" className="w-4 h-4" />
                     <span>RON</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Language Selector - Mobile friendly sizing */}
+              {/* Language Selector - Smaller width */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-purple-200/50 hover:border-purple-300 text-gray-700 hover:text-purple-700 transition-all duration-300 rounded-xl px-3 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2 min-h-[44px] touch-manipulation">
+                  <Button variant="outline" size="sm" className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-purple-200/50 hover:border-purple-300 text-gray-700 hover:text-purple-700 transition-all duration-300 rounded-xl px-2 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-1 min-h-[40px] touch-manipulation">
                     <Globe className="w-4 h-4" />
                     <span className="text-sm font-medium">{languageNames[language]}</span>
                     <ChevronDown className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border-2 border-purple-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
-                  {languages.map(lang => <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[44px] touch-manipulation ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold shadow-sm" : "text-gray-700"}`}>
+                  {languages.map(lang => <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold shadow-sm" : "text-gray-700"}`}>
                       {languageNames[lang]}
                     </DropdownMenuItem>)}
                 </DropdownMenuContent>
               </DropdownMenu>
               
-              {/* User Menu */}
+              {/* User Menu - Already compact */}
               <UserMenu />
               
-              {/* Orange Shopping Cart Button */}
+              {/* Orange Shopping Cart Button - Smaller width */}
               <Link to="/order" className="relative group">
-                <div className="flex items-center bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full h-12 pl-4 pr-16 min-h-[44px] touch-manipulation">
-                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3">
-                    <ShoppingCart className="w-5 h-5 text-orange-500" />
+                <div className="flex items-center bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full h-10 pl-3 pr-12 min-h-[40px] touch-manipulation">
+                  <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center mr-2">
+                    <ShoppingCart className="w-4 h-4 text-orange-500" />
                   </div>
                   <span className="text-sm font-bold">
                     {getOrderText()}
@@ -151,10 +152,10 @@ const Navigation = () => {
                     {item.label}
                   </Link>)}
                 <div className="flex flex-col space-y-3 pt-4 px-4 items-end">
-                  {/* Mobile Currency Selector - Right aligned */}
+                  {/* Mobile Currency Selector - Right aligned and smaller */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold bg-white/80 backdrop-blur-sm border-2 border-orange-200/50 hover:border-orange-300 text-gray-700 hover:text-orange-700 rounded-xl flex items-center justify-center space-x-2 py-3 transform hover:scale-105 min-h-[44px] touch-manipulation ml-auto">
+                      <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold bg-white/80 backdrop-blur-sm border-2 border-orange-200/50 hover:border-orange-300 text-gray-700 hover:text-orange-700 rounded-xl flex items-center justify-center space-x-1 py-2 px-2 transform hover:scale-105 min-h-[40px] touch-manipulation ml-auto">
                         <CurrencyIcon currency={currency} className="w-4 h-4" />
                         <span>{currency}</span>
                         <ChevronDown className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" />
@@ -172,10 +173,10 @@ const Navigation = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  {/* Mobile Language Selector - Right aligned */}
+                  {/* Mobile Language Selector - Right aligned and smaller */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold bg-white/80 backdrop-blur-sm border-2 border-purple-200/50 hover:border-purple-300 text-gray-700 hover:text-purple-700 rounded-xl flex items-center justify-center space-x-2 py-3 transform hover:scale-105 min-h-[44px] touch-manipulation ml-auto">
+                      <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold bg-white/80 backdrop-blur-sm border-2 border-purple-200/50 hover:border-purple-300 text-gray-700 hover:text-purple-700 rounded-xl flex items-center justify-center space-x-1 py-2 px-2 transform hover:scale-105 min-h-[40px] touch-manipulation ml-auto">
                         <Globe className="w-4 h-4" />
                         <span>{languageNames[language]}</span>
                         <ChevronDown className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" />
@@ -192,11 +193,11 @@ const Navigation = () => {
                     <UserMenu />
                   </div>
                   
-                  {/* Mobile Orange Shopping Cart Button */}
+                  {/* Mobile Orange Shopping Cart Button - Smaller */}
                   <Link to="/order" className="relative group ml-auto" onClick={() => setIsMenuOpen(false)}>
-                    <div className="flex items-center bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full h-12 pl-4 pr-16 min-h-[44px] touch-manipulation">
-                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3">
-                        <ShoppingCart className="w-5 h-5 text-orange-500" />
+                    <div className="flex items-center bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full h-10 pl-3 pr-12 min-h-[40px] touch-manipulation">
+                      <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center mr-2">
+                        <ShoppingCart className="w-4 h-4 text-orange-500" />
                       </div>
                       <span className="text-sm font-bold">
                         {getOrderText()}
