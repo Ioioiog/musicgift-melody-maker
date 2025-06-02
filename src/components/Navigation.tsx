@@ -92,7 +92,7 @@ const Navigation = () => {
               {/* Order Now Button - Premium gradient with animation */}
               <Link to="/order" className="relative group">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
-                <button className="relative px-6 bg-gradient-to-r from-orange-600 to-purple-600 hover:from-orange-700 to-purple-700 text-white font-bold rounded-full transition-all duration-300 text-sm shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-0.5 flex items-center space-x-2 xl:px-[7px] py-[35px] bg-orange-500 hover:bg-orange-400">
+                <button className="relative px-6 bg-gradient-to-r from-orange-600 to-purple-600 hover:from-orange-700 to-purple-700 text-white font-bold rounded-full transition-all duration-300 text-sm shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-0.5 flex items-center space-x-2 xl:px-[7px] bg-orange-500 hover:bg-orange-400 mx-0 my-[41px] py-[29px]">
                   <span className="text-lg font-extrabold text-zinc-50">{t("orderNow") || "Order Now"}</span>
                   
                 </button>
