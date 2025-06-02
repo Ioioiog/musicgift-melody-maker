@@ -3,7 +3,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,14 +34,15 @@ const Navigation = () => {
     label: t("contact") || "Contact"
   }];
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
-  return <>
+  return (
+    <>
       {/* Background behind navbar */}
       <div style={{
-      backgroundImage: 'url(/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }} className="fixed top-0 left-0 w-full h-24 z-1"></div>
+        backgroundImage: 'url(/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }} className="fixed top-0 left-0 w-full h-24 z-1"></div>
 
       {/* Floating Logo - positioned on the left side */}
       <div className="fixed top-4 left-4 z-50">
@@ -61,9 +64,11 @@ const Navigation = () => {
             {/* Desktop Nav - enhanced */}
             <nav className="hidden lg:flex items-center">
               <div className="flex items-center space-x-8 xl:space-x-10">
-                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`relative text-sm font-semibold transition-all duration-300 hover:text-violet-600 ${location.pathname === item.path ? "text-violet-600" : "text-gray-700 hover:text-violet-600"} after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-violet-600 after:left-0 after:-bottom-1 after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left ${location.pathname === item.path ? "after:scale-x-100" : ""}`}>
+                {navItems.map(item => (
+                  <Link key={item.path + item.label} to={item.path} className={`relative text-sm font-semibold transition-all duration-300 hover:text-violet-600 ${location.pathname === item.path ? "text-violet-600" : "text-gray-700 hover:text-violet-600"} after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-violet-600 after:left-0 after:-bottom-1 after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left ${location.pathname === item.path ? "after:scale-x-100" : ""}`}>
                     {item.label}
-                  </Link>)}
+                  </Link>
+                ))}
               </div>
             </nav>
 
@@ -71,14 +76,18 @@ const Navigation = () => {
             <div className="hidden lg:flex items-center space-x-4 xl:space-x-5 ml-auto">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="text-sm font-medium bg-white/80 hover:bg-white border-gray-200 hover:border-violet-300 text-gray-700 hover:text-violet-600 transition-all duration-300 backdrop-blur-sm shadow-sm hover:shadow-md">
-                    {languageNames[language]}
+                  <Button variant="outline" size="sm" className="text-sm font-medium bg-gradient-to-r from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100 border-2 border-purple-200 hover:border-purple-300 text-purple-700 hover:text-purple-800 transition-all duration-300 backdrop-blur-sm shadow-md hover:shadow-lg rounded-full px-4 py-2 flex items-center space-x-2">
+                    <Globe className="w-4 h-4" />
+                    <span>{languageNames[language]}</span>
+                    <ChevronDown className="w-3 h-3" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border border-gray-200 shadow-xl z-50 rounded-lg">
-                  {languages.map(lang => <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-violet-50 transition-colors duration-200 ${language === lang ? "bg-violet-50 text-violet-600" : ""}`}>
+                <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border-2 border-purple-100 shadow-xl z-50 rounded-xl p-1">
+                  {languages.map(lang => (
+                    <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-purple-50 transition-colors duration-200 rounded-lg mx-1 ${language === lang ? "bg-purple-50 text-purple-700 font-medium" : "text-gray-700"}`}>
                       {languageNames[lang]}
-                    </DropdownMenuItem>)}
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
               
@@ -100,22 +109,29 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu - enhanced */}
-          {isMenuOpen && <div className="lg:hidden py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl">
+          {isMenuOpen && (
+            <div className="lg:hidden py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl">
               <nav className="flex flex-col space-y-4">
-                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-50 ${location.pathname === item.path ? "text-violet-600 bg-violet-50" : "text-gray-700"}`} onClick={() => setIsMenuOpen(false)}>
+                {navItems.map(item => (
+                  <Link key={item.path + item.label} to={item.path} className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-50 ${location.pathname === item.path ? "text-violet-600 bg-violet-50" : "text-gray-700"}`} onClick={() => setIsMenuOpen(false)}>
                     {item.label}
-                  </Link>)}
+                  </Link>
+                ))}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center pt-4 space-y-3 sm:space-y-0 sm:space-x-3 px-4">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="text-sm font-medium w-full sm:w-auto bg-white hover:bg-gray-50 text-gray-700 border-gray-300 hover:border-violet-300 hover:text-violet-600 transition-all duration-300">
-                        {languageNames[language]}
+                      <Button variant="outline" size="sm" className="text-sm font-medium w-full sm:w-auto bg-gradient-to-r from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100 border-2 border-purple-200 text-purple-700 hover:border-purple-300 hover:text-purple-800 transition-all duration-300 rounded-full flex items-center justify-center space-x-2">
+                        <Globe className="w-4 h-4" />
+                        <span>{languageNames[language]}</span>
+                        <ChevronDown className="w-3 h-3" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-white border shadow-lg z-50">
-                      {languages.map(lang => <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-violet-50 transition-colors duration-200 ${language === lang ? "bg-violet-50 text-violet-600" : ""}`}>
+                    <DropdownMenuContent align="end" className="bg-white border-2 border-purple-100 shadow-lg z-50 rounded-xl">
+                      {languages.map(lang => (
+                        <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className={`hover:bg-purple-50 transition-colors duration-200 rounded-lg ${language === lang ? "bg-purple-50 text-purple-700 font-medium" : "text-gray-700"}`}>
                           {languageNames[lang]}
-                        </DropdownMenuItem>)}
+                        </DropdownMenuItem>
+                      ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
                   
@@ -126,9 +142,12 @@ const Navigation = () => {
                   </Link>
                 </div>
               </nav>
-            </div>}
+            </div>
+          )}
         </div>
       </header>
-    </>;
+    </>
+  );
 };
+
 export default Navigation;
