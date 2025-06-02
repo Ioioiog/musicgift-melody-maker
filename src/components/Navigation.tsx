@@ -89,9 +89,9 @@ const Navigation = () => {
               {/* User Menu */}
               <UserMenu />
               
-              {/* Vinyl Record Order Button - Simplified */}
+              {/* Vinyl Record Order Button - Made bigger */}
               <Link to="/order" className="relative group">
-                <div className="relative w-20 h-20 xl:w-24 xl:h-24 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
+                <div className="relative w-24 h-24 xl:w-28 xl:h-28 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                   {/* Vinyl Record Image */}
                   <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
                     <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
@@ -144,9 +144,9 @@ const Navigation = () => {
                     <UserMenu />
                   </div>
                   
-                  {/* Mobile Vinyl Record Button - Simplified */}
+                  {/* Mobile Vinyl Record Button - Made bigger */}
                   <Link to="/order" className="relative group ml-auto" onClick={() => setIsMenuOpen(false)}>
-                    <div className="relative w-16 h-16 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
+                    <div className="relative w-20 h-20 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                       {/* Mobile Vinyl Record Image */}
                       <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
                         <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
