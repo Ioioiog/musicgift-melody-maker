@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -30,7 +29,7 @@ import { Moon, Sun, Menu, User, LogOut } from "lucide-react";
 
 const Navigation = () => {
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
   const { language, setLanguage } = useLanguage();
   const { theme, setTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -151,7 +150,7 @@ const Navigation = () => {
                     </Link>
                   </DropdownMenuItem>
                 ) : null}
-                <DropdownMenuItem onClick={signOut}>
+                <DropdownMenuItem onClick={logout}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
                 </DropdownMenuItem>
@@ -230,7 +229,7 @@ const Navigation = () => {
                         Admin
                       </Link>
                     ) : null}
-                    <Button variant="destructive" size="sm" onClick={signOut} className="justify-start">
+                    <Button variant="destructive" size="sm" onClick={logout} className="justify-start">
                       <LogOut className="h-4 w-4 mr-2" />
                       Logout
                     </Button>

@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { ThemeProvider } from "@/contexts/ThemeContext";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -36,49 +35,47 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <ThemeProvider>
-          <LanguageProvider>
-            <AuthProvider>
-              <ErrorBoundary>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/packages" element={<Packages />} />
-                  <Route path="/packages/:packageId" element={<PackageDetails />} />
-                  <Route path="/how-it-works" element={<HowItWorks />} />
-                  <Route path="/testimonials" element={<Testimonials />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/order" element={<Order />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/unsubscribe" element={<Unsubscribe />} />
-                  <Route path="/payment/success" element={<PaymentSuccess />} />
-                  <Route path="/payment/error" element={<PaymentError />} />
-                  <Route path="/payment/cancel" element={<PaymentCancel />} />
-                  <Route path="/access-denied" element={<AccessDenied />} />
-                  <Route 
-                    path="/settings" 
-                    element={
-                      <AuthGuard>
-                        <Settings />
-                      </AuthGuard>
-                    } 
-                  />
-                  <Route 
-                    path="/admin" 
-                    element={
-                      <AuthGuard>
-                        <RoleGuard allowedRoles={['admin', 'super_admin']}>
-                          <Admin />
-                        </RoleGuard>
-                      </AuthGuard>
-                    } 
-                  />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </ErrorBoundary>
-            </AuthProvider>
-          </LanguageProvider>
-        </ThemeProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <ErrorBoundary>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/packages" element={<Packages />} />
+                <Route path="/packages/:packageId" element={<PackageDetails />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
+                <Route path="/testimonials" element={<Testimonials />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/order" element={<Order />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/unsubscribe" element={<Unsubscribe />} />
+                <Route path="/payment/success" element={<PaymentSuccess />} />
+                <Route path="/payment/error" element={<PaymentError />} />
+                <Route path="/payment/cancel" element={<PaymentCancel />} />
+                <Route path="/access-denied" element={<AccessDenied />} />
+                <Route 
+                  path="/settings" 
+                  element={
+                    <AuthGuard>
+                      <Settings />
+                    </AuthGuard>
+                  } 
+                />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <AuthGuard>
+                      <RoleGuard allowedRoles={['admin', 'super_admin']}>
+                        <Admin />
+                      </RoleGuard>
+                    </AuthGuard>
+                  } 
+                />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </ErrorBoundary>
+          </AuthProvider>
+        </LanguageProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
