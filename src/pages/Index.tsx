@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -11,7 +10,6 @@ import { useTranslation } from "@/hooks/useTranslations";
 import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-
 const Index = () => {
   const {
     data: packages = [],
@@ -52,9 +50,7 @@ const Index = () => {
       setIsMuted(!isMuted);
     }
   };
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Video Background - Left aligned, bottom positioned */}
@@ -125,30 +121,30 @@ const Index = () => {
 
       {/* Combined Packages and CTA Section */}
       <section className="relative overflow-hidden py-8 sm:py-12 md:py-16" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         {/* Overlay for better readability */}
         <div className="absolute inset-0 bg-black/40 py-0 px-0"></div>
         
         <div className="container mx-auto sm:px-6 relative z-10 px-[30px] py-0">
           {/* CTA Content - Moved to first position */}
           <motion.div className="text-center mb-12 sm:mb-16 space-y-6 sm:space-y-8" initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6
-          }}>
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }}>
             <div className="space-y-4">
               
             </div>
             
-            <div className="space-y-4 py-0 my-0 mx-0 px-0">
+            <div className="space-y-4 my-0 mx-0 px-[85px] py-[4px]">
               <Link to="/packages">
                 <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 font-semibold text-sm sm:text-base mr-4">
                   {t('startYourOrder')}
@@ -163,28 +159,34 @@ const Index = () => {
           </motion.div>
 
           {/* Loading State */}
-          {isLoading && (
-            <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px]">
+          {isLoading && <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px]">
               <div className="text-center">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-white/20 border-t-white/60 rounded-full animate-spin mx-auto mb-4"></div>
                 <p className="text-white/80 text-sm sm:text-base">{t('loadingPackages')}</p>
               </div>
-            </div>
-          )}
+            </div>}
 
           {/* Error State */}
-          {error && (
-            <div className="text-center py-8 sm:py-12 px-4">
+          {error && <div className="text-center py-8 sm:py-12 px-4">
               <p className="text-red-300 mb-4 text-sm sm:text-base">{t('failedToLoadPackages') || 'Failed to load packages. Please try again later.'}</p>
               <Button onClick={() => window.location.reload()} className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md text-sm sm:text-base">
                 {t('reload') || 'Reload'}
               </Button>
-            </div>
-          )}
+            </div>}
 
           {/* Packages Grid - 3 per row */}
-          {!isLoading && !error && allPackages.length > 0 && (
-            <motion.div className="max-w-6xl mx-auto" initial={{
+          {!isLoading && !error && allPackages.length > 0 && <motion.div className="max-w-6xl mx-auto" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.2
+        }}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                {allPackages.map((pkg, index) => <motion.div key={pkg.id} className="flex" initial={{
               opacity: 0,
               y: 20
             }} animate={{
@@ -192,44 +194,23 @@ const Index = () => {
               y: 0
             }} transition={{
               duration: 0.6,
-              delay: 0.2
+              delay: 0.1 * index
             }}>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                {allPackages.map((pkg, index) => (
-                  <motion.div key={pkg.id} className="flex" initial={{
-                    opacity: 0,
-                    y: 20
-                  }} animate={{
-                    opacity: 1,
-                    y: 0
-                  }} transition={{
-                    duration: 0.6,
-                    delay: 0.1 * index
-                  }}>
                     <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl flex flex-col w-full h-full ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
-                      {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && (
-                        <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 z-20">
+                      {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 z-20">
                           <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
                             {t('mostPopular')}
                           </span>
-                        </div>
-                      )}
+                        </div>}
                       
                       <CardContent className="p-4 sm:p-6 md:p-8 text-white flex flex-col h-full">
                         {/* Icon and Title */}
                         <div className="text-center mb-4 sm:mb-6">
                           <div className="text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-3">
-                            {pkg.value === 'personal' ? '🎁' : 
-                             pkg.value === 'business' ? '💼' : 
-                             pkg.value === 'premium' ? '🌟' : 
-                             pkg.value === 'artist' ? '🎤' : 
-                             pkg.value === 'instrumental' ? '🎶' : 
-                             pkg.value === 'remix' ? '🔁' : '🎁'}
+                            {pkg.value === 'personal' ? '🎁' : pkg.value === 'business' ? '💼' : pkg.value === 'premium' ? '🌟' : pkg.value === 'artist' ? '🎤' : pkg.value === 'instrumental' ? '🎶' : pkg.value === 'remix' ? '🔁' : '🎁'}
                           </div>
                           <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">{tDb(pkg.label_key)}</h3>
-                          {pkg.tagline_key && (
-                            <p className="text-xs sm:text-sm text-purple-200 font-medium mb-2 sm:mb-3">{tDb(pkg.tagline_key)}</p>
-                          )}
+                          {pkg.tagline_key && <p className="text-xs sm:text-sm text-purple-200 font-medium mb-2 sm:mb-3">{tDb(pkg.tagline_key)}</p>}
                         </div>
 
                         {/* Price */}
@@ -238,18 +219,14 @@ const Index = () => {
                         </div>
 
                         {/* Features */}
-                        {pkg.includes && pkg.includes.length > 0 && (
-                          <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8 flex-grow">
-                            {pkg.includes.map((include, featureIndex) => (
-                              <li key={featureIndex} className="flex items-center text-white/90 text-sm sm:text-base">
+                        {pkg.includes && pkg.includes.length > 0 && <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8 flex-grow">
+                            {pkg.includes.map((include, featureIndex) => <li key={featureIndex} className="flex items-center text-white/90 text-sm sm:text-base">
                                 <span className="w-4 h-4 sm:w-5 sm:h-5 bg-green-400/20 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 border border-green-400/30">
                                   <span className="text-green-300 text-xs">✓</span>
                                 </span>
                                 <span className="leading-tight">{tDb(include.include_key)}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
+                              </li>)}
+                          </ul>}
 
                         <Link to="/order" className="mt-auto">
                           <Button className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 hover:scale-105 shadow-lg text-sm sm:text-base">
@@ -258,19 +235,15 @@ const Index = () => {
                         </Link>
                       </CardContent>
                     </Card>
-                  </motion.div>
-                ))}
+                  </motion.div>)}
               </div>
-            </motion.div>
-          )}
+            </motion.div>}
 
           {/* No Packages State */}
-          {!isLoading && !error && allPackages.length === 0 && (
-            <div className="text-center py-8 sm:py-12 px-4">
+          {!isLoading && !error && allPackages.length === 0 && <div className="text-center py-8 sm:py-12 px-4">
               <p className="text-white/80 mb-4 text-sm sm:text-base">{t('noPackagesAvailable') || 'No packages available at the moment.'}</p>
               <p className="text-white/60 text-sm sm:text-base">{t('checkBackLater') || 'Please check back later.'}</p>
-            </div>
-          )}
+            </div>}
           
           {/* CTA Content - Now integrated into the packages section */}
           
@@ -281,8 +254,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
