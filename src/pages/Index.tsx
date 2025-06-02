@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScenarioHero from "@/components/ScenarioHero";
@@ -58,25 +59,25 @@ const Index = () => {
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section with Video Background - Mobile Optimized - No margin/gap */}
-      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex flex-col justify-center overflow-hidden bg-black">
+      {/* Hero Section with Video Background - Left aligned, bottom positioned */}
+      <section className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] flex items-end overflow-hidden bg-black">
         {/* Video Background */}
         <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay muted loop playsInline key={language}>
           <source src={getVideoSource()} type="video/mp4" />
         </video>
         
-        {/* Hero Content - Redesigned Layout */}
-        <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white">
+        {/* Hero Content - Left aligned and bottom positioned */}
+        <div className="container mx-auto px-4 sm:px-6 relative z-30 text-white pb-8 sm:pb-12 md:pb-16">
           <motion.div 
-            className="max-w-5xl mx-auto text-center space-y-8"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            className="max-w-2xl text-left space-y-6"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             {/* Main Title with Enhanced Typography */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <motion.h1 
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
@@ -85,16 +86,16 @@ const Index = () => {
               </motion.h1>
               
               <motion.div 
-                className="w-24 h-1 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto rounded-full"
+                className="w-20 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"
                 initial={{ width: 0 }}
-                animate={{ width: 96 }}
+                animate={{ width: 80 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               />
             </div>
 
             {/* Subtitle with Better Spacing */}
             <motion.p 
-              className="text-lg sm:text-xl md:text-2xl leading-relaxed text-white/90 max-w-3xl mx-auto font-light"
+              className="text-base sm:text-lg md:text-xl leading-relaxed text-white/90 max-w-xl font-light"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
@@ -104,7 +105,7 @@ const Index = () => {
             
             {/* Enhanced Button Layout */}
             <motion.div 
-              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-8"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
@@ -112,7 +113,7 @@ const Index = () => {
               <Link to="/packages" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
-                  className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 font-semibold px-8 sm:px-12 py-4 sm:py-6 rounded-full transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-purple-500/25 w-full sm:w-auto text-base sm:text-lg"
+                  className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-purple-500/25 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <span className="relative z-10">{t('seePackages')}</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -123,7 +124,7 @@ const Index = () => {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="group relative overflow-hidden bg-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 font-semibold px-8 sm:px-12 py-4 sm:py-6 rounded-full transition-all duration-300 hover:scale-110 shadow-2xl hover:shadow-white/10 w-full sm:w-auto text-base sm:text-lg"
+                  className="group relative overflow-hidden bg-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-white/10 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <span className="relative z-10">{t('listenToSamples')}</span>
                   <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -133,7 +134,7 @@ const Index = () => {
 
             {/* Feature Highlights */}
             <motion.div 
-              className="flex flex-wrap justify-center gap-4 sm:gap-6 pt-6"
+              className="flex flex-wrap gap-3 pt-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.0 }}
@@ -145,9 +146,9 @@ const Index = () => {
               ].map((feature, index) => (
                 <div 
                   key={index}
-                  className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm sm:text-base"
+                  className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1 text-xs sm:text-sm"
                 >
-                  <span className="text-lg">{feature.icon}</span>
+                  <span className="text-sm">{feature.icon}</span>
                   <span className="font-medium">{feature.text}</span>
                 </div>
               ))}
@@ -157,7 +158,7 @@ const Index = () => {
         
         {/* Floating musical notes - responsive positioning */}
         <div className="absolute top-6 sm:top-10 right-6 sm:right-10 text-2xl sm:text-3xl md:text-4xl animate-bounce delay-75 z-20">🎵</div>
-        <div className="absolute bottom-12 sm:bottom-20 left-0 text-xl sm:text-2xl md:text-3xl animate-bounce delay-150 z-20">🎶</div>
+        <div className="absolute bottom-12 sm:bottom-20 right-20 sm:right-32 text-xl sm:text-2xl md:text-3xl animate-bounce delay-150 z-20">🎶</div>
         <div className="absolute top-20 sm:top-32 left-6 sm:left-10 text-lg sm:text-xl md:text-2xl animate-bounce delay-300 z-20">♪</div>
         
         {/* Mute/Unmute Button - Mobile responsive positioning */}
