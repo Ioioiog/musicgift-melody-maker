@@ -108,7 +108,7 @@ const Navigation = () => {
                     {/* Center area - still orange, no black hole */}
                     <div className="absolute inset-7 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 rounded-full shadow-2xl flex items-center justify-center border border-orange-300/30">
                       {/* Text overlay */}
-                      <span className="relative z-10 font-bold leading-tight drop-shadow-sm text-xl text-violet-900 my-0 text-left px-[20px] py-0">
+                      <span className="relative z-10 font-bold leading-tight drop-shadow-sm text-xl text-violet-900 my-0 px-[20px] py-0 text-center">
                         {t("orderNow") || "Order Now"}
                       </span>
                     </div>
