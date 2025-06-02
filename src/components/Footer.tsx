@@ -2,7 +2,6 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import NewsletterForm from "@/components/NewsletterForm";
 import LegalModals, { useLegalModals } from "@/components/LegalModals";
 import LegalCompliance from "@/components/LegalCompliance";
 
@@ -146,7 +145,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 4: Contact & Newsletter */}
+          {/* Column 4: Contact Info Only */}
           <div className="space-y-4 sm:space-y-6 text-center sm:text-left">
             <div className="relative">
               <h3 className="text-gray-900 font-bold text-lg mb-2">
@@ -173,19 +172,6 @@ const Footer = () => {
                   <span className="text-xs font-medium break-words">{text}</span>
                 </a>
               ))}
-            </div>
-
-            {/* Newsletter */}
-            <div className="space-y-3">
-              <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider">
-                {t('stayUpdated')}
-              </h4>
-              <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-xl p-3">
-                <p className="text-gray-700 leading-relaxed text-xs mb-3 font-medium">
-                  {t('newsletterDescription')}
-                </p>
-                <NewsletterForm />
-              </div>
             </div>
           </div>
         </div>
