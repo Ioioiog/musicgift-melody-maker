@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,6 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
-
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -96,15 +94,11 @@ const Navigation = () => {
                 <div className="relative w-20 h-20 xl:w-24 xl:h-24 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                   {/* Vinyl Record Image */}
                   <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
-                    <img 
-                      src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" 
-                      alt="Vinyl Record" 
-                      className="w-full h-full object-cover rounded-full"
-                    />
+                    <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                     
                     {/* Text overlay - Mobile responsive */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="relative z-10 font-bold leading-tight drop-shadow-lg text-lg xl:text-xl text-white text-center px-2 bg-black/30 rounded-full py-2">
+                      <span className="relative z-10 font-bold leading-tight drop-shadow-lg text-lg xl:text-xl text-white text-center px-2  rounded-full py-2">
                         {t("orderNow") || "Order Now"}
                       </span>
                     </div>
@@ -155,11 +149,7 @@ const Navigation = () => {
                     <div className="relative w-16 h-16 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                       {/* Mobile Vinyl Record Image */}
                       <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
-                        <img 
-                          src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" 
-                          alt="Vinyl Record" 
-                          className="w-full h-full object-cover rounded-full"
-                        />
+                        <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                         
                         {/* Text overlay */}
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -177,5 +167,4 @@ const Navigation = () => {
       </header>
     </>;
 };
-
 export default Navigation;
