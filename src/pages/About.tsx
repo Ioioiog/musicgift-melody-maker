@@ -36,7 +36,7 @@ const About = () => {
             {/* Professional Full-Screen Scrolling Statistics Section */}
             <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mb-8 my-[48px] overflow-hidden">
               <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[2px]">
-                <div className="flex space-x-16 whitespace-nowrap animate-[scroll_50s_linear_infinite]">
+                <div className="flex space-x-16 whitespace-nowrap animate-[scroll_5s_linear_infinite]">
                   {/* First set of statistics */}
                   <div className="flex items-center space-x-4 text-xl font-bold">
                     <Music className="w-12 h-12 text-blue-300" />
