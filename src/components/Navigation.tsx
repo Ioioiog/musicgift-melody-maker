@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -68,14 +70,15 @@ const Navigation = () => {
               </div>
             </nav>
 
-            {/* Right Side: Enhanced buttons */}
-            <div className="hidden lg:flex items-center space-x-4 xl:space-x-5 ml-auto">
+            {/* Right Side: Redesigned buttons with modern styling */}
+            <div className="hidden lg:flex items-center space-x-3 xl:space-x-4 ml-auto">
+              {/* Language Selector - Glass morphism design */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white border-0 transition-all duration-500 backdrop-blur-sm shadow-lg hover:shadow-2xl rounded-full px-5 py-2.5 flex items-center space-x-2 transform hover:scale-105 hover:-translate-y-1 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300">
-                    <Globe className="w-4 h-4 relative z-10" />
-                    <span className="relative z-10">{languageNames[language]}</span>
-                    <ChevronDown className="w-3 h-3 relative z-10 transition-transform duration-300 group-hover:rotate-180" />
+                  <Button variant="outline" size="sm" className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-purple-200/50 hover:border-purple-300 text-gray-700 hover:text-purple-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2">
+                    <Globe className="w-4 h-4" />
+                    <span className="text-sm font-medium">{languageNames[language]}</span>
+                    <ChevronDown className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border-2 border-purple-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
@@ -85,13 +88,16 @@ const Navigation = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
               
+              {/* User Menu - Now styled with glass morphism */}
               <UserMenu />
               
-              <Link to="/order" className="relative overflow-hidden group bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 hover:from-amber-500 hover:via-orange-600 hover:to-red-600 text-white border-0 px-8 xl:px-10 py-3 rounded-full font-bold transition-all duration-500 text-sm shadow-xl hover:shadow-2xl transform hover:scale-110 hover:-translate-y-1 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300 after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/10 after:to-transparent after:translate-x-[-100%] hover:after:translate-x-[100%] after:transition-transform after:duration-700">
-                <span className="relative z-10 flex items-center space-x-2">
+              {/* Order Now Button - Premium gradient with animation */}
+              <Link to="/order" className="relative group">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                <button className="relative px-6 xl:px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold rounded-full transition-all duration-300 text-sm shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-0.5 flex items-center space-x-2">
                   <span>{t("orderNow") || "Order Now"}</span>
                   <span className="text-lg">🎵</span>
-                </span>
+                </button>
               </Link>
             </div>
 
@@ -114,7 +120,7 @@ const Navigation = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center pt-4 space-y-3 sm:space-y-0 sm:space-x-3 px-4">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold w-full sm:w-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white border-0 transition-all duration-500 rounded-full flex items-center justify-center space-x-2 py-2.5 transform hover:scale-105">
+                      <Button variant="outline" size="sm" className="relative overflow-hidden group text-sm font-semibold w-full sm:w-auto bg-white/80 backdrop-blur-sm border-2 border-purple-200/50 hover:border-purple-300 text-gray-700 hover:text-purple-700 rounded-xl flex items-center justify-center space-x-2 py-2.5 transform hover:scale-105">
                         <Globe className="w-4 h-4" />
                         <span>{languageNames[language]}</span>
                         <ChevronDown className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" />
@@ -129,11 +135,12 @@ const Navigation = () => {
                   
                   <UserMenu />
                   
-                  <Link to="/order" className="relative overflow-hidden group bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 hover:from-amber-500 hover:via-orange-600 hover:to-red-600 text-white px-8 py-3 rounded-full text-sm font-bold transition-all duration-500 w-full sm:w-auto text-center shadow-xl hover:shadow-2xl transform hover:scale-105 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300" onClick={() => setIsMenuOpen(false)}>
-                    <span className="relative z-10 flex items-center justify-center space-x-2">
+                  <Link to="/order" className="relative group w-full sm:w-auto" onClick={() => setIsMenuOpen(false)}>
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                    <button className="relative w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold rounded-full transition-all duration-300 text-sm shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center space-x-2">
                       <span>{t("orderNow") || "Order Now"}</span>
                       <span className="text-lg">🎵</span>
-                    </span>
+                    </button>
                   </Link>
                 </div>
               </nav>
@@ -142,4 +149,5 @@ const Navigation = () => {
       </header>
     </>;
 };
+
 export default Navigation;

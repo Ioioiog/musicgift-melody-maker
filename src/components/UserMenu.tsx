@@ -24,9 +24,9 @@ const UserMenu = () => {
   if (!user) {
     return (
       <Link to="/auth">
-        <Button variant="outline" className="relative overflow-hidden group bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white border-0 transition-all duration-500 rounded-full px-5 py-2.5 font-semibold shadow-lg hover:shadow-2xl flex items-center space-x-2 transform hover:scale-105 hover:-translate-y-1 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300">
-          <UserCircle className="w-4 h-4 relative z-10" />
-          <span className="relative z-10">{t('signIn')}</span>
+        <Button variant="outline" className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-emerald-200/50 hover:border-emerald-300 text-gray-700 hover:text-emerald-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2">
+          <UserCircle className="w-4 h-4" />
+          <span className="text-sm font-medium">{t('signIn')}</span>
         </Button>
       </Link>
     );
@@ -35,9 +35,9 @@ const UserMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="relative overflow-hidden group bg-gradient-to-r from-rose-500 via-pink-500 to-fuchsia-500 hover:from-rose-600 hover:via-pink-600 hover:to-fuchsia-600 text-white border-0 transition-all duration-500 rounded-full px-5 py-2.5 font-semibold shadow-lg hover:shadow-2xl flex items-center space-x-2 transform hover:scale-105 hover:-translate-y-1 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/20 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300">
-          <User className="w-4 h-4 relative z-10" />
-          <span className="hidden md:inline relative z-10">
+        <Button variant="outline" className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-rose-200/50 hover:border-rose-300 text-gray-700 hover:text-rose-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2">
+          <User className="w-4 h-4" />
+          <span className="hidden md:inline text-sm font-medium">
             {user.user_metadata?.full_name || user.email?.split('@')[0] || t('user')}
           </span>
         </Button>
