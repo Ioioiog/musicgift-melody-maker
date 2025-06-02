@@ -46,7 +46,7 @@ const Navigation = () => {
       {/* Floating Logo - positioned on the left side */}
       <div className="fixed top-4 left-4 z-50">
         <Link to="/" className="block group">
-          <img alt="MusicGift Logo" className="w-60 h-auto transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" />
+          <img alt="MusicGift Logo" className="w-60 h-auto transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg drop-shadow-[0_0_25px_rgba(255,255,255,1)] shadow-[0_0_30px_rgba(255,255,255,0.9),0_0_50px_rgba(255,255,255,0.7)]" src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" />
         </Link>
       </div>
 
