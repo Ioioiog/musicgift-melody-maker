@@ -3,8 +3,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Globe, ChevronDown } from "lucide-react";
+import { Globe, ChevronDown, ShoppingCart } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -96,11 +97,9 @@ const Navigation = () => {
                   <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
                     <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                     
-                    {/* Text overlay - Mobile responsive */}
+                    {/* Shopping cart icon overlay */}
                     <div className="absolute inset-0 flex items-center justify-center py-[16px] px-[16px] my-[64px]">
-                      <span className="relative z-10 font-bold leading-tight drop-shadow-lg xl:text-3xl rounded-full text-center px-[16px] py-[19px] text-4xl text-slate-50">
-                        {t("orderNow") || "Order Now"}
-                      </span>
+                      <ShoppingCart className="relative z-10 w-16 h-16 xl:w-20 xl:h-20 text-slate-50 drop-shadow-lg" />
                     </div>
                   </div>
                 </div>
@@ -151,11 +150,9 @@ const Navigation = () => {
                       <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
                         <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                         
-                        {/* Text overlay */}
+                        {/* Shopping cart icon overlay for mobile */}
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="relative z-10 text-white font-bold text-base text-center leading-tight drop-shadow-lg bg-black/40 rounded-full px-2 py-1">
-                            {t("orderNow") || "Order"}
-                          </span>
+                          <ShoppingCart className="relative z-10 w-10 h-10 text-slate-50 drop-shadow-lg" />
                         </div>
                       </div>
                     </div>
