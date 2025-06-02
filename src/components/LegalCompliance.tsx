@@ -1,6 +1,5 @@
 
 import React from 'react';
-import NTPLogo from 'ntp-logo-react';
 
 const LegalCompliance = () => {
   return (
@@ -12,7 +11,10 @@ const LegalCompliance = () => {
         </h4>
         <div className="flex justify-center md:justify-start">
           <div className="bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 shadow-lg">
-            <NTPLogo color="#1f2937" version="orizontal" secret="152227" />
+            <div className="text-gray-700 font-bold text-lg text-center">
+              NTP Logo
+              <div className="text-xs text-gray-600 mt-1">Registered Business</div>
+            </div>
           </div>
         </div>
       </div>
