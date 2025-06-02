@@ -1,9 +1,11 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import UserMenu from "@/components/UserMenu";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +14,7 @@ const Navigation = () => {
     setLanguage,
     t
   } = useLanguage();
+
   const navItems = [{
     path: "/",
     label: t("home") || "Home"
@@ -31,7 +34,9 @@ const Navigation = () => {
     path: "/contact",
     label: t("contact") || "Contact"
   }];
+
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
+
   return <>
       {/* Background behind navbar */}
       <div style={{
@@ -41,10 +46,14 @@ const Navigation = () => {
       backgroundRepeat: 'no-repeat'
     }} className="fixed top-0 left-0 w-full h-24 z-1"></div>
 
-      {/* Floating Logo - positioned above navbar */}
-      <div className="fixed top-2 left-1/2 transform -translate-x-1/2 z-50">
+      {/* Floating Logo - positioned on the left side */}
+      <div className="fixed top-4 left-4 z-50">
         <Link to="/" className="block group">
-          
+          <img 
+            src="/lovable-uploads/b8d4dbea-6ce1-4368-b11c-47cbc1ea1ba0.png" 
+            alt="MusicGift Logo" 
+            className="w-32 h-auto transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg"
+          />
         </Link>
       </div>
 
@@ -131,4 +140,5 @@ const Navigation = () => {
       </header>
     </>;
 };
+
 export default Navigation;
