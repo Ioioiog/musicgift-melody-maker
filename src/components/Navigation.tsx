@@ -14,6 +14,17 @@ const Navigation = () => {
     setLanguage,
     t
   } = useLanguage();
+  
+  // Get order text based on language
+  const getOrderText = () => {
+    switch (language) {
+      case "ro":
+        return "COMANDA ACUM";
+      default:
+        return "ORDER NOW";
+    }
+  };
+
   const navItems = [{
     path: "/",
     label: t("home") || "Home"
@@ -34,6 +45,7 @@ const Navigation = () => {
     label: t("contact") || "Contact"
   }];
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
+  
   return <>
       {/* Background behind navbar */}
       <div style={{
@@ -104,10 +116,13 @@ const Navigation = () => {
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gray-800 rounded-full border-2 border-gray-600"></div>
                     </div>
                     
-                    {/* Gift box icon overlay - Made orange */}
-                    <div className="absolute inset-0 flex items-center justify-center py-[20px] px-[20px] my-[70px] ml-[10px]">
-                      <div className="relative z-10 w-10 h-19 xl:w-10 xl:h-20 drop-shadow-lg ml-20">
-                        <img alt="Gift" src="/lovable-uploads/cdaff943-06a1-4aa0-a177-3209c50e1a1f.png" className="w-full h-full" style={{filter: 'hue-rotate(25deg) saturate(200%) brightness(120%)'}} />
+                    {/* Orange box icon overlay with text */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <div className="relative z-10 w-12 h-12 xl:w-14 xl:h-14 drop-shadow-lg mb-1">
+                        <img alt="Gift Box" src="/lovable-uploads/47cac880-f533-4319-bdcb-58c2b7147f23.png" className="w-full h-full" style={{filter: 'hue-rotate(25deg) saturate(200%) brightness(120%)'}} />
+                      </div>
+                      <div className="text-white text-xs xl:text-sm font-bold text-center px-2 drop-shadow-lg">
+                        {getOrderText()}
                       </div>
                     </div>
                   </div>
@@ -166,10 +181,13 @@ const Navigation = () => {
                           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-gray-800 rounded-full border border-gray-600"></div>
                         </div>
                         
-                        {/* Gift box icon overlay for mobile - Made orange */}
-                        <div className="absolute inset-0 flex items-center justify-center ml-[6px] mt-[4px]">
-                          <div className="relative z-10 w-10 h-10 drop-shadow-lg">
-                            <img src="/lovable-uploads/2784fec2-bf48-4f39-96f9-0e36bf6783f2.png" alt="Gift" className="w-full h-full" style={{filter: 'hue-rotate(25deg) saturate(200%) brightness(120%)'}} />
+                        {/* Orange box icon overlay for mobile with text */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                          <div className="relative z-10 w-8 h-8 drop-shadow-lg mb-1">
+                            <img src="/lovable-uploads/47cac880-f533-4319-bdcb-58c2b7147f23.png" alt="Gift Box" className="w-full h-full" style={{filter: 'hue-rotate(25deg) saturate(200%) brightness(120%)'}} />
+                          </div>
+                          <div className="text-white text-[10px] font-bold text-center px-1 drop-shadow-lg leading-tight">
+                            {getOrderText()}
                           </div>
                         </div>
                       </div>
