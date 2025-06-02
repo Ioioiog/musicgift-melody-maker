@@ -89,16 +89,16 @@ const Navigation = () => {
               {/* User Menu */}
               <UserMenu />
               
-              {/* Vinyl Record Order Button - Made bigger */}
+              {/* Vinyl Record Order Button - Made even bigger */}
               <Link to="/order" className="relative group">
-                <div className="relative w-24 h-24 xl:w-28 xl:h-28 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
+                <div className="relative w-32 h-32 xl:w-36 xl:h-36 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                   {/* Vinyl Record Image */}
                   <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
                     <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                     
                     {/* Text overlay - Mobile responsive */}
                     <div className="absolute inset-0 flex items-center justify-center py-[16px] px-[16px] my-[64px]">
-                      <span className="relative z-10 font-bold leading-tight drop-shadow-lg text-lg xl:text-xl rounded-full py-2 px-[6px] text-center text-slate-50">
+                      <span className="relative z-10 font-bold leading-tight drop-shadow-lg text-xl xl:text-2xl rounded-full py-2 px-[6px] text-center text-slate-50">
                         {t("orderNow") || "Order Now"}
                       </span>
                     </div>
@@ -144,16 +144,16 @@ const Navigation = () => {
                     <UserMenu />
                   </div>
                   
-                  {/* Mobile Vinyl Record Button - Made bigger */}
+                  {/* Mobile Vinyl Record Button - Made even bigger */}
                   <Link to="/order" className="relative group ml-auto" onClick={() => setIsMenuOpen(false)}>
-                    <div className="relative w-20 h-20 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
+                    <div className="relative w-24 h-24 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                       {/* Mobile Vinyl Record Image */}
                       <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
                         <img src="/lovable-uploads/ff8d0c13-4ac3-4079-aa17-03f0128b70ff.png" alt="Vinyl Record" className="w-full h-full object-cover rounded-full" />
                         
                         {/* Text overlay */}
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="relative z-10 text-white font-bold text-xs text-center leading-tight drop-shadow-lg bg-black/40 rounded-full px-2 py-1">
+                          <span className="relative z-10 text-white font-bold text-sm text-center leading-tight drop-shadow-lg bg-black/40 rounded-full px-2 py-1">
                             {t("orderNow") || "Order"}
                           </span>
                         </div>
