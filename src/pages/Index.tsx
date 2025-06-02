@@ -10,6 +10,7 @@ import { useTranslation } from "@/hooks/useTranslations";
 import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+
 const Index = () => {
   const {
     data: packages = [],
@@ -44,12 +45,14 @@ const Index = () => {
       });
     }
   }, []);
+  
   const toggleMute = () => {
     if (audioRef.current) {
       audioRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
     }
   };
+  
   return <div className="min-h-screen">
       <Navigation />
       
@@ -75,10 +78,10 @@ const Index = () => {
             {/* Main Title with Enhanced Typography */}
             <div className="space-y-3">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
-                Ready to Create Something Special?
+                {t('readyToCreateSpecial')}
               </h2>
               <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl mx-auto px-4">
-                Let us help you create a personalized musical gift that will be treasured forever
+                {t('helpCreatePersonalized')}
               </p>
             </div>
 
@@ -168,9 +171,9 @@ const Index = () => {
 
           {/* Error State */}
           {error && <div className="text-center py-8 sm:py-12 px-4">
-              <p className="text-red-300 mb-4 text-sm sm:text-base">{t('failedToLoadPackages') || 'Failed to load packages. Please try again later.'}</p>
+              <p className="text-red-300 mb-4 text-sm sm:text-base">{t('failedToLoadPackages')}</p>
               <Button onClick={() => window.location.reload()} className="bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md text-sm sm:text-base">
-                {t('reload') || 'Reload'}
+                {t('reload')}
               </Button>
             </div>}
 
@@ -241,8 +244,8 @@ const Index = () => {
 
           {/* No Packages State */}
           {!isLoading && !error && allPackages.length === 0 && <div className="text-center py-8 sm:py-12 px-4">
-              <p className="text-white/80 mb-4 text-sm sm:text-base">{t('noPackagesAvailable') || 'No packages available at the moment.'}</p>
-              <p className="text-white/60 text-sm sm:text-base">{t('checkBackLater') || 'Please check back later.'}</p>
+              <p className="text-white/80 mb-4 text-sm sm:text-base">{t('noPackagesAvailable')}</p>
+              <p className="text-white/60 text-sm sm:text-base">{t('checkBackLater')}</p>
             </div>}
           
           {/* CTA Content - Now integrated into the packages section */}
@@ -256,4 +259,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
