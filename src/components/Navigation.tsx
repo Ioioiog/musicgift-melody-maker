@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,7 @@ const Navigation = () => {
     path: "/contact",
     label: t("contact") || "Contact"
   }];
-  const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
+  const languages: Language[] = ["en", "ro", "fr", "pl", "de", "nl"];
   return <>
       {/* Background behind navbar */}
       <div style={{
@@ -117,8 +118,11 @@ const Navigation = () => {
                       </span>
                     </div>
                     
-                    {/* Vinyl reflection/shine effect - orange tinted */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-orange-200/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform rotate-45"></div>
+                    {/* Vinyl reflection/shine effect - Updated to match the image */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-orange-200/60 via-transparent to-orange-300/30 opacity-40 group-hover:opacity-70 transition-opacity duration-500 transform"></div>
+                    
+                    {/* Additional metallic shine for more realistic effect */}
+                    <div className="absolute top-2 left-2 right-6 bottom-6 rounded-full bg-gradient-to-br from-orange-100/50 via-transparent to-transparent opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
                     
                     {/* Rotating highlight - orange tinted */}
                     <div className="absolute top-2 left-1/2 w-1 h-8 bg-orange-200/30 rounded-full transform -translate-x-1/2 group-hover:animate-spin origin-center transition-all duration-300"></div>
@@ -191,8 +195,11 @@ const Navigation = () => {
                           </span>
                         </div>
                         
-                        {/* Vinyl reflection/shine effect - orange tinted */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-orange-200/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform rotate-45"></div>
+                        {/* Vinyl reflection/shine effect - Updated to match the image */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-orange-200/60 via-transparent to-orange-300/30 opacity-40 group-hover:opacity-70 transition-opacity duration-500 transform"></div>
+                        
+                        {/* Additional metallic shine for more realistic effect */}
+                        <div className="absolute top-1 left-1 right-4 bottom-4 rounded-full bg-gradient-to-br from-orange-100/50 via-transparent to-transparent opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
                         
                         {/* Rotating highlight - orange tinted */}
                         <div className="absolute top-1 left-1/2 w-0.5 h-6 bg-orange-200/30 rounded-full transform -translate-x-1/2 group-hover:animate-spin origin-center transition-all duration-300"></div>
