@@ -185,7 +185,7 @@ const Footer = () => {
         <div className="border-t border-black/10 mt-16 pt-8 py-0">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-full px-6 py-3">
-              <p className="text-sm text-gray-700 font-medium">
+              <p className="text-sm text-gray-700 font-medium px-[151px]">
                 {t('copyright')}
               </p>
             </div>
