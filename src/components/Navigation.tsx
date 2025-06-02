@@ -5,7 +5,6 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
-
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -116,7 +115,7 @@ const Navigation = () => {
                     
                     {/* Gift box emoji overlay with text */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <div className="relative z-10 text-3xl xl:text-4xl drop-shadow-lg mb-1">
+                      <div className="relative z-10 text-3xl xl:text-9xl drop-shadow-lg mb-1 px-[14px] py-[13px] mx-0">
                         🎁
                       </div>
                       <div className="text-white text-xs xl:text-sm font-bold text-center drop-shadow-lg px-2 py-1">
