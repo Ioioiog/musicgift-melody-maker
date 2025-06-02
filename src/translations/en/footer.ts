@@ -19,4 +19,10 @@ export const footerTranslations = {
   subscribe: "Subscribe",
   subscribing: "Subscribing...",
   subscribeDisclaimer: "By subscribing, you agree to our Privacy Policy and consent to receive updates from our company",
+  
+  // Legal Compliance
+  legalCompliance: "Legal Compliance & Partners",
+  consumerProtection: "Consumer Protection",
+  onlineDisputeResolution: "Online Dispute Resolution",
+  paymentPartners: "Payment Partners",
 };

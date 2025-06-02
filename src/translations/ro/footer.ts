@@ -19,4 +19,10 @@ export const footerTranslations = {
   subscribe: "Abonează-te",
   subscribing: "Se abonează...",
   subscribeDisclaimer: "Prin abonare, accepți Politica noastră de confidențialitate și consimți să primești actualizări de la compania noastră",
+  
+  // Legal Compliance
+  legalCompliance: "Conformitate legală și parteneri",
+  consumerProtection: "Protecția consumatorului",
+  onlineDisputeResolution: "Soluționarea online a litigiilor",
+  paymentPartners: "Parteneri de plată",
 };

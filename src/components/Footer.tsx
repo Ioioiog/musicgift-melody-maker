@@ -194,7 +194,7 @@ const Footer = () => {
         <div className="mt-8 sm:mt-16 space-y-4 sm:space-y-6">
           <div className="relative text-center sm:text-left">
             <h3 className="text-gray-900 font-bold text-lg mb-2">
-              Legal Compliance & Partners
+              {t('legalCompliance')}
             </h3>
             <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
           </div>

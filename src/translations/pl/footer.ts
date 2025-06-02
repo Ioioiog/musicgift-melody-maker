@@ -17,4 +17,10 @@ export const footerTranslations = {
   subscribe: "Subskrybuj",
   subscribing: "Subskrybowanie...",
   subscribeDisclaimer: "Subskrybując, akceptujesz naszą Politykę prywatności i wyrażasz zgodę na otrzymywanie aktualizacji od naszej firmy",
+  
+  // Legal Compliance
+  legalCompliance: "Zgodność prawna i partnerzy",
+  consumerProtection: "Ochrona konsumentów",
+  onlineDisputeResolution: "Rozwiązywanie sporów online",
+  paymentPartners: "Partnerzy płatności",
 };
