@@ -4,20 +4,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
+
 const About = () => {
-  const {
-    t
-  } = useLanguage();
-  return <div className="min-h-screen">
+  const { t } = useLanguage();
+
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Enhanced Hero Section with Purple Musical Background, Our Story Content and MusicGift Details */}
       <section className="py-20 text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30"></div>
         
         {/* Floating Musical Notes */}
@@ -120,15 +121,15 @@ const About = () => {
             {/* Left Column: Our Story */}
             <div>
               <motion.div className="mb-8" initial={{
-              opacity: 0,
-              y: 20
-            }} animate={{
-              opacity: 1,
-              y: 0
-            }} transition={{
-              duration: 0.6,
-              delay: 0.4
-            }}>
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 0.4
+              }}>
                 <h2 className="text-3xl font-bold text-white mb-6">{t('ourStory')}</h2>
               </motion.div>
 
@@ -173,21 +174,6 @@ const About = () => {
             {/* Right Column: Our Creative Team */}
             <div>
               <motion.div className="mb-8" initial={{
-              opacity: 0,
-              y: 20
-            }} animate={{
-              opacity: 1,
-              y: 0
-            }} transition={{
-              duration: 0.6,
-              delay: 0.7
-            }}>
-                <h3 className="text-3xl font-bold text-white mb-6">Our Creative Team</h3>
-              </motion.div>
-              
-              <div className="space-y-6">
-                {/* Mihai Gruia Card */}
-                <motion.div initial={{
                 opacity: 0,
                 y: 20
               }} animate={{
@@ -195,17 +181,32 @@ const About = () => {
                 y: 0
               }} transition={{
                 duration: 0.6,
-                delay: 0.8
+                delay: 0.7
               }}>
-                  <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
-                    <CardContent className="p-6 py-[67px]">
-                      <div className="text-center mb-4">
-                        <div className="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden">
+                <h3 className="text-3xl font-bold text-white mb-6">Our Creative Team</h3>
+              </motion.div>
+              
+              <div className="space-y-6">
+                {/* Mihai Gruia Card */}
+                <motion.div initial={{
+                  opacity: 0,
+                  y: 20
+                }} animate={{
+                  opacity: 1,
+                  y: 0
+                }} transition={{
+                  duration: 0.6,
+                  delay: 0.8
+                }}>
+                  <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
+                    <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
+                      <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
+                        <div className="w-24 h-24 group-hover:w-32 group-hover:h-32 rounded-full mx-auto mb-3 overflow-hidden transition-all duration-300">
                           <img src="/lovable-uploads/23e06586-3da9-43f2-9b3c-9ae8bb17fa42.png" alt="Mihai Gruia" className="w-full h-full object-cover" />
                         </div>
-                        <h4 className="text-lg font-bold text-white mb-2">Mihai Gruia</h4>
+                        <h4 className="text-lg group-hover:text-xl font-bold text-white mb-2 transition-all duration-300">Mihai Gruia</h4>
                       </div>
-                      <p className="text-white/90 leading-relaxed text-sm">
+                      <p className="text-white/90 leading-relaxed text-sm group-hover:opacity-0 group-hover:h-0 group-hover:mb-0 transition-all duration-300 overflow-hidden">
                         Music producer and composer, founding member of Akcent – one of the most successful Romanian pop bands internationally, with famous hits like 'That's My Name', 'Kylie' and 'Stay with Me'. After Akcent's success, Mihai continued his artistic career through the TWO project and got involved in music production for top artists. Today, he coordinates the MusicGift and DOMG Studio team, bringing his expertise to every delivered project.
                       </p>
                     </CardContent>
@@ -214,24 +215,24 @@ const About = () => {
 
                 {/* Mango Records Card */}
                 <motion.div initial={{
-                opacity: 0,
-                y: 20
-              }} animate={{
-                opacity: 1,
-                y: 0
-              }} transition={{
-                duration: 0.6,
-                delay: 0.9
-              }}>
-                  <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
-                    <CardContent className="p-6">
-                      <div className="text-center mb-4">
-                        <div className="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden">
+                  opacity: 0,
+                  y: 20
+                }} animate={{
+                  opacity: 1,
+                  y: 0
+                }} transition={{
+                  duration: 0.6,
+                  delay: 0.9
+                }}>
+                  <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
+                    <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
+                      <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
+                        <div className="w-24 h-24 group-hover:w-32 group-hover:h-32 rounded-full mx-auto mb-3 overflow-hidden transition-all duration-300">
                           <img src="/lovable-uploads/47cac880-f533-4319-bdcb-58c2b7147f23.png" alt="Mango Records" className="w-full h-full object-cover" />
                         </div>
-                        <h4 className="text-lg font-bold text-white mb-2">Mango Records</h4>
+                        <h4 className="text-lg group-hover:text-xl font-bold text-white mb-2 transition-all duration-300">Mango Records</h4>
                       </div>
-                      <p className="text-white/90 leading-relaxed text-sm">
+                      <p className="text-white/90 leading-relaxed text-sm group-hover:opacity-0 group-hover:h-0 group-hover:mb-0 transition-all duration-300 overflow-hidden">
                         Mango Records, founded and coordinated by Mihai Gruia, is an independent record label from Romania, specialized in launching and distributing original music internationally. It has promoted successful artists like TWO (ex-Akcent), DOMG, Mellina, Red Blonde, Pitt Leffer, Katerina and Vulgaris. With over 1000 tracks distributed globally on Spotify, Apple Music and YouTube, Mango Records actively contributes to the contemporary music scene.
                       </p>
                     </CardContent>
@@ -240,24 +241,24 @@ const About = () => {
 
                 {/* DOMG Studio Card */}
                 <motion.div initial={{
-                opacity: 0,
-                y: 20
-              }} animate={{
-                opacity: 1,
-                y: 0
-              }} transition={{
-                duration: 0.6,
-                delay: 1.0
-              }}>
-                  <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
-                    <CardContent className="p-6">
-                      <div className="text-center mb-4">
-                        <div className="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden">
+                  opacity: 0,
+                  y: 20
+                }} animate={{
+                  opacity: 1,
+                  y: 0
+                }} transition={{
+                  duration: 0.6,
+                  delay: 1.0
+                }}>
+                  <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
+                    <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
+                      <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
+                        <div className="w-24 h-24 group-hover:w-32 group-hover:h-32 rounded-full mx-auto mb-3 overflow-hidden transition-all duration-300">
                           <img src="/lovable-uploads/b4c3e4f4-7bf8-4e27-9293-dbbd3de72dc2.png" alt="DOMG Studio" className="w-full h-full object-cover" />
                         </div>
-                        <h4 className="text-lg font-bold text-white mb-2">DOMG Studio</h4>
+                        <h4 className="text-lg group-hover:text-xl font-bold text-white mb-2 transition-all duration-300">DOMG Studio</h4>
                       </div>
-                      <p className="text-white/90 leading-relaxed text-sm">
+                      <p className="text-white/90 leading-relaxed text-sm group-hover:opacity-0 group-hover:h-0 group-hover:mb-0 transition-all duration-300 overflow-hidden">
                         Premium music creation studio, with compositions for top Romanian and international artists: Akcent, Andra, Lora, Alina Eremia and others. Offers impeccable audio quality and professional composition, recording and mix-master processes.
                       </p>
                     </CardContent>
@@ -266,24 +267,24 @@ const About = () => {
 
                 {/* Do Music for Good Band Card */}
                 <motion.div initial={{
-                opacity: 0,
-                y: 20
-              }} animate={{
-                opacity: 1,
-                y: 0
-              }} transition={{
-                duration: 0.6,
-                delay: 1.1
-              }}>
-                  <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl">
-                    <CardContent className="p-6">
-                      <div className="text-center mb-4">
-                        <div className="w-24 h-24 rounded-full mx-auto mb-3 overflow-hidden">
+                  opacity: 0,
+                  y: 20
+                }} animate={{
+                  opacity: 1,
+                  y: 0
+                }} transition={{
+                  duration: 0.6,
+                  delay: 1.1
+                }}>
+                  <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
+                    <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
+                      <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
+                        <div className="w-24 h-24 group-hover:w-32 group-hover:h-32 rounded-full mx-auto mb-3 overflow-hidden transition-all duration-300">
                           <img src="/lovable-uploads/a9f2d1c2-3e76-4ff5-a071-c522efb3cd5d.png" alt="Do Music for Good Band" className="w-full h-full object-cover" />
                         </div>
-                        <h4 className="text-lg font-bold text-white mb-2">Do Music for Good Band</h4>
+                        <h4 className="text-lg group-hover:text-xl font-bold text-white mb-2 transition-all duration-300">Do Music for Good Band</h4>
                       </div>
-                      <p className="text-white/90 leading-relaxed text-sm">
+                      <p className="text-white/90 leading-relaxed text-sm group-hover:opacity-0 group-hover:h-0 group-hover:mb-0 transition-all duration-300 overflow-hidden">
                         A team of professional performers who collaborate to bring MusicGift melodies to life. Each voice and each note are carefully chosen to authentically express the emotion conveyed by the client.
                       </p>
                     </CardContent>
@@ -296,6 +297,8 @@ const About = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default About;
