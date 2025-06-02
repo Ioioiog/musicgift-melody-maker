@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,6 @@ import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
 import UserMenu from "@/components/UserMenu";
-
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -106,22 +104,14 @@ const Navigation = () => {
                 <div className="relative w-40 h-40 xl:w-44 xl:h-44 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                   {/* Orange Vinyl Record Image */}
                   <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
-                    <img 
-                      src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" 
-                      alt="Orange vinyl record"
-                      className="w-full h-full object-cover"
-                    />
+                    <img src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" alt="Orange vinyl record" className="w-full h-full object-cover" />
                     
                     {/* Shopping bags image overlay with text */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <div className="relative z-10 mb-1">
-                        <img 
-                          src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" 
-                          alt="Shopping bags"
-                          className="w-12 h-12 xl:w-14 xl:h-14 drop-shadow-lg"
-                        />
+                        
                       </div>
-                      <div className="text-white text-xs xl:text-sm font-bold text-center drop-shadow-lg px-2 py-1">
+                      <div className="text-white text-xs xl:text-xl\n font-bold text-center drop-shadow-lg px-[16px] py-[5px]">
                         {getOrderText()}
                       </div>
                     </div>
@@ -172,20 +162,12 @@ const Navigation = () => {
                     <div className="relative w-28 h-28 transition-all duration-500 transform hover:scale-110 hover:rotate-12">
                       {/* Mobile Orange Vinyl Record Image */}
                       <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transition-all duration-300">
-                        <img 
-                          src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" 
-                          alt="Orange vinyl record"
-                          className="w-full h-full object-cover"
-                        />
+                        <img src="/lovable-uploads/d4f06d2f-0da7-40d3-94af-7dbd6373e43d.png" alt="Orange vinyl record" className="w-full h-full object-cover" />
                         
                         {/* Shopping bags image overlay for mobile with text */}
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
                           <div className="relative z-10 mb-1">
-                            <img 
-                              src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" 
-                              alt="Shopping bags"
-                              className="w-8 h-8 drop-shadow-lg"
-                            />
+                            <img src="/lovable-uploads/604ba54f-4e6d-4a3c-98cb-eb7b0fe59893.png" alt="Shopping bags" className="w-8 h-8 drop-shadow-lg" />
                           </div>
                           <div className="text-white text-[10px] font-bold text-center px-1 drop-shadow-lg leading-tight">
                             {getOrderText()}
