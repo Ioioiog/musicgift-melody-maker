@@ -101,12 +101,7 @@ const Navigation = () => {
               
               {/* Shopping Bags Order Button */}
               <Link to="/order" className="relative group">
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-orange-700 hover:to-orange-700 text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 min-h-[44px] touch-manipulation bg-orange-500">
-                  <img alt="Shopping bags" className="w-6 h-6 drop-shadow-lg" src="/lovable-uploads/5dfdc72c-98cd-43ff-9445-153702a4731e.png" />
-                  <span className="text-sm font-bold">
-                    {getOrderText()}
-                  </span>
-                </div>
+                
               </Link>
             </div>
 
