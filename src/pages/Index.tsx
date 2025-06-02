@@ -12,7 +12,6 @@ import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 const Index = () => {
   const {
     data: packages = [],
@@ -78,18 +77,7 @@ const Index = () => {
         }}>
             {/* Main Title with Enhanced Typography */}
             <div className="space-y-3">
-              <motion.h1 initial={{
-              opacity: 0,
-              y: 20
-            }} animate={{
-              opacity: 1,
-              y: 0
-            }} transition={{
-              duration: 0.8,
-              delay: 0.2
-            }} className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent my-0">
-                {t('heroTitle')}
-              </motion.h1>
+              
               
               
             </div>
@@ -98,24 +86,7 @@ const Index = () => {
             
             
             {/* Enhanced Button Layout */}
-            <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4" initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.8,
-            delay: 0.8
-          }}>
-              <Link to="/packages" className="w-full sm:w-auto">
-                
-              </Link>
-              
-              <Link to="/testimonials" className="w-full sm:w-auto">
-                
-              </Link>
-            </motion.div>
+            
 
             {/* Feature Highlights */}
             
@@ -303,5 +274,4 @@ const Index = () => {
       <Footer />
     </div>;
 };
-
 export default Index;
