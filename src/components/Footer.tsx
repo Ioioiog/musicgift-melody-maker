@@ -8,13 +8,17 @@ const Footer = () => {
   const { t } = useLanguage();
   
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-gray-900 to-black">
-      {/* Modern geometric background pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-tl from-blue-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-purple-500/5 to-pink-500/5 rounded-full blur-2xl"></div>
-      </div>
+    <footer 
+      className="relative overflow-hidden"
+      style={{
+        backgroundImage: 'url(/lovable-uploads/80488a4f-b392-4eca-b181-f587474721fd.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Dark overlay to ensure text readability */}
+      <div className="absolute inset-0 bg-slate-900/80"></div>
 
       {/* Subtle grid pattern overlay */}
       <div className="absolute inset-0 opacity-[0.02]" style={{
