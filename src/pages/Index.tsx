@@ -87,10 +87,10 @@ const Index = () => {
             {/* Main Title - Mobile responsive typography */}
             <div className="space-y-2 sm:space-y-3">
               <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight">
-                Ready to Create Something Special?
+                {t('heroCtaTitle')}
               </h2>
               <p className="text-sm sm:text-base md:text-lg text-white/90 leading-relaxed">
-                Let us help you create a personalized musical gift that will be treasured forever
+                {t('heroCtaSubtitle')}
               </p>
             </div>
           </motion.div>
