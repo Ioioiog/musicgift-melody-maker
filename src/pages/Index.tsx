@@ -12,7 +12,6 @@ import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 const Index = () => {
   const {
     data: packages = [],
@@ -54,8 +53,7 @@ const Index = () => {
 
   // Limit to first 3 packages for homepage preview
   const previewPackages = packages.slice(0, 3);
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Video Background - Left aligned, bottom positioned */}
@@ -164,22 +162,25 @@ const Index = () => {
 
       {/* Combined Packages and CTA Section */}
       <section className="relative overflow-hidden py-8 sm:py-12 md:py-16" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         {/* Overlay for better readability */}
         <div className="absolute inset-0 bg-black/40"></div>
         
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
           {/* CTA Content - Moved to first position */}
-          <motion.div 
-            className="text-center mb-12 sm:mb-16 space-y-6 sm:space-y-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <motion.div className="text-center mb-12 sm:mb-16 space-y-6 sm:space-y-8" initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }}>
             <div className="space-y-4">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
                 {t('readyToCreateSpecial')}
@@ -203,19 +204,7 @@ const Index = () => {
             </div>
           </motion.div>
 
-          <motion.div className="text-center mb-8 sm:mb-12" initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6,
-            delay: 0.2
-          }}>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">{t('chooseYourPackage')}</h2>
-            <p className="text-base sm:text-lg md:text-xl text-white/90 px-4">{t('selectPerfectPackage')}</p>
-          </motion.div>
+          
           
           {/* Loading State */}
           {isLoading && <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px]">
@@ -324,8 +313,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
