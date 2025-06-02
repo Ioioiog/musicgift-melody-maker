@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
+import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
 
 const About = () => {
   const { t } = useLanguage();
@@ -40,74 +41,74 @@ const About = () => {
                 <div className="flex space-x-16 whitespace-nowrap animate-[scroll_30s_linear_infinite]">
                   {/* First set of statistics */}
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🎵</span>
+                    <Music className="w-12 h-12 text-blue-300" />
                     <span className="text-3xl text-white">2.000+</span>
                     <span className="opacity-90 text-xl">Cântece Personalizate</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🎤</span>
+                    <Mic className="w-12 h-12 text-purple-300" />
                     <span className="text-3xl text-white">20+</span>
                     <span className="opacity-90 text-xl">Ani de Pasiune Muzicală</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🌟</span>
+                    <Star className="w-12 h-12 text-yellow-300" />
                     <span className="text-3xl text-white">98%</span>
                     <span className="opacity-90 text-xl">Clienți Fericiți</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🚀</span>
+                    <Rocket className="w-12 h-12 text-green-300" />
                     <span className="text-3xl text-white">50+</span>
                     <span className="opacity-90 text-xl">Artiști Lansați</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🎉</span>
+                    <PartyPopper className="w-12 h-12 text-pink-300" />
                     <span className="text-3xl text-white">400+</span>
                     <span className="opacity-90 text-xl">Evenimente Memorabile</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">💿</span>
+                    <Disc className="w-12 h-12 text-indigo-300" />
                     <span className="text-3xl text-white">100+</span>
                     <span className="opacity-90 text-xl">Albume Lansate</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🏆</span>
+                    <Trophy className="w-12 h-12 text-orange-300" />
                     <span className="text-3xl text-white">1 Milion+</span>
                     <span className="opacity-90 text-xl">Exemplare Vândute</span>
                   </div>
                   
                   {/* Duplicate set for seamless scrolling */}
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🎵</span>
+                    <Music className="w-12 h-12 text-blue-300" />
                     <span className="text-3xl text-white">2.000+</span>
                     <span className="opacity-90 text-xl">Cântece Personalizate</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🎤</span>
+                    <Mic className="w-12 h-12 text-purple-300" />
                     <span className="text-3xl text-white">20+</span>
                     <span className="opacity-90 text-xl">Ani de Pasiune Muzicală</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🌟</span>
+                    <Star className="w-12 h-12 text-yellow-300" />
                     <span className="text-3xl text-white">98%</span>
                     <span className="opacity-90 text-xl">Clienți Fericiți</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🚀</span>
+                    <Rocket className="w-12 h-12 text-green-300" />
                     <span className="text-3xl text-white">50+</span>
                     <span className="opacity-90 text-xl">Artiști Lansați</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🎉</span>
+                    <PartyPopper className="w-12 h-12 text-pink-300" />
                     <span className="text-3xl text-white">400+</span>
                     <span className="opacity-90 text-xl">Evenimente Memorabile</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">💿</span>
+                    <Disc className="w-12 h-12 text-indigo-300" />
                     <span className="text-3xl text-white">100+</span>
                     <span className="opacity-90 text-xl">Albume Lansate</span>
                   </div>
                   <div className="flex items-center space-x-4 text-xl font-bold">
-                    <span className="text-5xl">🏆</span>
+                    <Trophy className="w-12 h-12 text-orange-300" />
                     <span className="text-3xl text-white">1 Milion+</span>
                     <span className="opacity-90 text-xl">Exemplare Vândute</span>
                   </div>
