@@ -298,7 +298,7 @@ export const packages: Package[] = [
     label_key: "premiumPackage",
     tagline_key: "premiumTagline",
     description_key: "premiumDescription",
-    price: 2500,
+    price: 500,
     delivery_time_key: "premiumDelivery",
     tag: "premium",
     includes: [
@@ -460,7 +460,7 @@ export const packages: Package[] = [
     label_key: "businessPackage",
     tagline_key: "businessTagline",
     description_key: "businessDescription",
-    price: 1500,
+    price: 500,
     delivery_time_key: "businessDelivery",
     tag: "new",
     includes: [
@@ -571,7 +571,7 @@ export const packages: Package[] = [
     label_key: "artistPackage",
     tagline_key: "artistTagline",
     description_key: "artistDescription",
-    price: 1200,
+    price: 8000,
     delivery_time_key: "artistDelivery",
     tag: "new",
     includes: [
@@ -674,7 +674,7 @@ export const packages: Package[] = [
     label_key: "remixPackage",
     tagline_key: "remixTagline",
     description_key: "remixDescription",
-    price: 800,
+    price: 500,
     delivery_time_key: "remixDelivery",
     tag: "new",
     includes: [
@@ -764,7 +764,7 @@ export const packages: Package[] = [
     label_key: "instrumentalPackage",
     tagline_key: "instrumentalTagline",
     description_key: "instrumentalDescription",
-    price: 600,
+    price: 500,
     delivery_time_key: "instrumentalDelivery",
     tag: "new",
     includes: [
