@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Ładowanie pakietów...",
   loadingSteps: "Ładowanie kroków...",
@@ -165,4 +166,26 @@ export const orderTranslations = {
   // Dedication message
   dedicationMessageLabel: "Osobista Wiadomość Dedykacyjna",
   dedicationMessagePlaceholder: "Osobista wiadomość do dołączenia do twojej piosenki",
+  
+  // Add-on labels and descriptions
+  rushDeliveryLabel: "Szybka Dostawa",
+  rushDeliveryDescription: "Otrzymaj swoją spersonalizowaną piosenkę w zaledwie 3-5 dni roboczych zamiast standardowego czasu dostawy. Idealne dla prezentów w ostatniej chwili! (100 RON / 19 EUR)",
+  
+  commercialRightsLabel: "Prawa Komercyjne",
+  commercialRightsDescription: "Uzyskaj pełne prawa komercyjne do wykorzystania twojej spersonalizowanej piosenki w celach biznesowych, reklamowych lub publicznych występów. (200 RON / 39 EUR)",
+  
+  distributieMangoRecordsLabel: "Dystrybucja Mango Records",
+  distributieMangoRecordsDescription: "Profesjonalna dystrybucja twojej piosenki przez Mango Records na głównych platformach streamingowych, w tym Spotify, Apple Music i innych. (149 RON / 29 EUR)",
+  
+  customVideoLabel: "Spersonalizowany Teledysk",
+  customVideoDescription: "Przekształć swoją spersonalizowaną piosenkę w piękny teledysk z niestandardowymi obrazami, wyświetlaniem tekstów i profesjonalną edycją. Idealny do udostępniania w mediach społecznościowych! (200 RON / 39 EUR)",
+  
+  audioMessageFromSenderLabel: "Wiadomość Audio od Nadawcy",
+  audioMessageFromSenderDescription: "Dołącz osobistą wiadomość audio od siebie do odbiorcy, dostarczoną wraz z piosenką. Dodaj swój głos, aby prezent był jeszcze bardziej osobisty! (49 RON / 9 EUR)",
+  
+  commercialRightsUpgradeLabel: "Upgrade Praw Komercyjnych",
+  commercialRightsUpgradeDescription: "Upgrade do pełnych praw komercyjnych pozwalający na wykorzystanie spersonalizowanej piosenki do dowolnych celów komercyjnych bez ograniczeń. (200 RON / 39 EUR)",
+  
+  extendedSongLabel: "Rozszerzona Wersja Piosenki",
+  extendedSongDescription: "Otrzymaj dłuższą wersję swojej spersonalizowanej piosenki z dodatkowymi zwrotkami i rozszerzonymi aranżacjami muzycznymi dla pełniejszego doświadczenia. (149 RON / 29 EUR)",
 };

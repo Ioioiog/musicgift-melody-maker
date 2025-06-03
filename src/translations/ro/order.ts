@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -165,4 +166,26 @@ export const orderTranslations = {
   // Dedication message
   dedicationMessageLabel: "Mesaj Personal de Dedicație",
   dedicationMessagePlaceholder: "Un mesaj personal de inclus cu cântecul tău",
+  
+  // Add-on labels and descriptions
+  rushDeliveryLabel: "Livrare Rapidă",
+  rushDeliveryDescription: "Primește cântecul tău personalizat în doar 3-5 zile lucrătoare în loc de timpul standard de livrare. Perfect pentru cadouri de ultimă oră! (100 RON / 19 EUR)",
+  
+  commercialRightsLabel: "Drepturi Comerciale",
+  commercialRightsDescription: "Obține drepturi comerciale complete pentru a folosi cântecul tău personalizat în scopuri comerciale, publicitate sau spectacole publice. (200 RON / 39 EUR)",
+  
+  distributieMangoRecordsLabel: "Distribuție Mango Records",
+  distributieMangoRecordsDescription: "Distribuție profesională a cântecului tău prin Mango Records pe platformele majore de streaming incluzând Spotify, Apple Music și altele. (149 RON / 29 EUR)",
+  
+  customVideoLabel: "Video Muzical Personalizat",
+  customVideoDescription: "Transformă cântecul tău personalizat într-un videoclip frumos cu imagini personalizate, afișarea versurilor și editare profesională. Perfect pentru partajare pe rețelele sociale! (200 RON / 39 EUR)",
+  
+  audioMessageFromSenderLabel: "Mesaj Audio de la Expeditor",
+  audioMessageFromSenderDescription: "Include un mesaj audio personal de la tine către destinatar, livrat alături de cântec. Adaugă vocea ta pentru a face cadoul și mai personal! (49 RON / 9 EUR)",
+  
+  commercialRightsUpgradeLabel: "Upgrade Drepturi Comerciale",
+  commercialRightsUpgradeDescription: "Upgrade la drepturi comerciale complete care îți permit să folosești cântecul personalizat pentru orice scop comercial fără restricții. (200 RON / 39 EUR)",
+  
+  extendedSongLabel: "Versiune Extinsă a Cântecului",
+  extendedSongDescription: "Primește o versiune mai lungă a cântecului tău personalizat cu versuri suplimentare și aranjamente muzicale extinse pentru o experiență mai completă. (149 RON / 29 EUR)",
 };
