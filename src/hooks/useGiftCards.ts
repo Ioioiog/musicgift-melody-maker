@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -34,10 +33,8 @@ export interface GiftCard {
   updated_at: string;
 }
 
-// Use Supabase's Insert type but make code optional since it's auto-generated
-export type GiftCardInsert = Omit<Database['public']['Tables']['gift_cards']['Insert'], 'code'> & {
-  code?: string;
-};
+// Use Supabase's exact Insert type - the database trigger will handle code generation
+export type GiftCardInsert = Database['public']['Tables']['gift_cards']['Insert'];
 
 export const useGiftCardDesigns = () => {
   return useQuery({
