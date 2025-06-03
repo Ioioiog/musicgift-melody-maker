@@ -1,11 +1,9 @@
-
 import { useParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePackages } from "@/hooks/usePackageData";
-import { useTranslation } from "@/hooks/useTranslations";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, Clock, Star } from "lucide-react";

@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePackages } from "@/hooks/usePackageData";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useTranslation } from "@/hooks/useTranslations";
 import { VolumeX, Volume2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";

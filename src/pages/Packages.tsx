@@ -5,18 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { usePackages } from "@/hooks/usePackageData";
-import { useTranslation } from "@/hooks/useTranslations";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+
 const Packages = () => {
   const {
     data: packages = [],
     isLoading
   } = usePackages();
-  const {
-    t: tDb
-  } = useTranslation();
   const {
     t
   } = useLanguage();

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,11 +6,11 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Search, Package as PackageIcon, ChevronDown } from 'lucide-react';
 import { usePackages } from '@/hooks/usePackageData';
-import { useTranslation } from '@/hooks/useTranslations';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const PackageManagement = () => {
   const { data: packages = [], isLoading } = usePackages();
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredPackages = packages.filter(pkg => 

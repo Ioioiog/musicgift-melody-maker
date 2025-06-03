@@ -1,6 +1,5 @@
-
 import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from './useTranslations';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { packages, addons, type PackageData } from '@/data/packages';
 
 export interface StepData {
@@ -19,7 +18,7 @@ export interface StepData {
 }
 
 export const usePackages = () => {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   
   return useQuery({
     queryKey: ['packages'],

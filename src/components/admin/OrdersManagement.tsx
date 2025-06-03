@@ -9,7 +9,7 @@ import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy } from 'lu
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useTranslation } from '@/hooks/useTranslations';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ResponsiveTable } from '@/components/ui/responsive-table';
 import SunoPromptsDialog from './SunoPromptsDialog';
@@ -30,7 +30,7 @@ const OrdersManagement = () => {
   const [openPromptCards, setOpenPromptCards] = useState<Set<string>>(new Set());
   const [openPromptDetails, setOpenPromptDetails] = useState<Set<string>>(new Set());
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const isMobile = useIsMobile();
 
   const { data: orders = [], refetch } = useQuery({

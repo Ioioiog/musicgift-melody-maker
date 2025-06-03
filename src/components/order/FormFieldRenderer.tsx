@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { CalendarIcon, Upload, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { useTranslation } from '@/hooks/useTranslations';
+import { useLanguage } from '@/contexts/LanguageContext';
 import AudioRecorder from './AudioRecorder';
 
 interface FieldOption {
@@ -68,7 +67,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   onAddonFieldChange,
   selectedPackage = ''
 }) => {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const [date, setDate] = useState<Date>();
 
   // Helper function to check if addon should be shown based on trigger condition
