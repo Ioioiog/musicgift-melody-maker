@@ -1,31 +1,137 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Gift, Music } from 'lucide-react';
+import { Gift, Music, Play, Volume2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 const VideoHero = () => {
   const { t, language } = useLanguage();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [showPlayButton, setShowPlayButton] = useState(false);
+  const [hasAudio, setHasAudio] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Select video based on language
   const videoSrc = language === 'ro' 
     ? '/lovable-uploads/Jingle Musicgift master.mp4'
     : '/lovable-uploads/MusicGiftvideoENG.mp4';
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleCanPlay = () => {
+      setIsLoading(false);
+      // Try to play with audio first
+      video.muted = false;
+      const playPromise = video.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            // Autoplay with audio succeeded
+            setHasAudio(true);
+            setShowPlayButton(false);
+          })
+          .catch(() => {
+            // Autoplay with audio blocked, fall back to muted
+            video.muted = true;
+            video.play().then(() => {
+              setShowPlayButton(true);
+              setHasAudio(false);
+            });
+          });
+      }
+    };
+
+    const handleError = () => {
+      setIsLoading(false);
+      console.log('Video failed to load');
+    };
+
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('error', handleError);
+
+    return () => {
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('error', handleError);
+    };
+  }, [videoSrc]);
+
+  const handlePlayWithAudio = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = false;
+    video.play().then(() => {
+      setHasAudio(true);
+      setShowPlayButton(false);
+    }).catch((error) => {
+      console.log('Failed to play with audio:', error);
+      // Keep the play button if it still fails
+    });
+  };
+
+  const handleToggleAudio = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (hasAudio) {
+      video.muted = true;
+      setHasAudio(false);
+    } else {
+      video.muted = false;
+      setHasAudio(true);
+    }
+  };
+
   return (
     <section className="video-hero relative overflow-hidden">
       {/* Video Background */}
       <video
+        ref={videoRef}
         autoPlay
         muted
         loop
         playsInline
         className="absolute top-0 left-0 w-full h-full object-cover"
-        key={videoSrc} // Force re-render when video changes
+        key={videoSrc}
       >
         <source src={videoSrc} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
+
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="absolute inset-0 bg-black flex items-center justify-center z-20">
+          <div className="text-white text-xl">Loading...</div>
+        </div>
+      )}
+
+      {/* Play Button Overlay */}
+      {showPlayButton && !isLoading && (
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-20">
+          <Button
+            onClick={handlePlayWithAudio}
+            size="lg"
+            className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
+          >
+            <Play className="w-8 h-8 mr-2" />
+            {t('playWithSound', 'Play with Sound')}
+          </Button>
+        </div>
+      )}
+
+      {/* Audio Control Button */}
+      {!showPlayButton && !isLoading && (
+        <button
+          onClick={handleToggleAudio}
+          className="absolute top-4 right-4 z-30 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-200"
+          aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
+        >
+          <Volume2 className={`w-5 h-5 ${hasAudio ? 'opacity-100' : 'opacity-50'}`} />
+        </button>
+      )}
 
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/40"></div>
