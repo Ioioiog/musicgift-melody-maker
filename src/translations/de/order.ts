@@ -70,21 +70,30 @@ export const orderTranslations = {
   testimonialQuote: "\"Das perfekte Geschenk für Musikliebhaber! Das personalisierte Lied war absolut wunderschön und machte unseren Jahrestag unvergesslich.\"",
   testimonialAuthor: "- Sarah M., Zufriedener Kunde",
   
-  // Form field labels and placeholders - NEWLY ADDED
+  // Form field labels and placeholders
   recipientLabel: "Name des Empfängers",
   recipientPlaceholder: "Für wen ist dieses Lied?",
   includeNameInSongLabel: "Name im Lied erwähnen",
   includeNameInSongPlaceholder: "Sollen wir den Namen des Empfängers im Text erwähnen?",
   pronunciationAudioLabel: "Namensaussprache (Audio)",
+  pronunciationAudioPlaceholder: "Nehmen Sie auf, wie der Name des Empfängers ausgesprochen wird",
   occasionLabel: "Anlass",
   occasionPlaceholder: "Was ist der besondere Anlass? (z.B. Geburtstag, Jubiläum, Abschluss)",
   specialRequestsLabel: "Besondere Wünsche",
   specialRequestsPlaceholder: "Besondere Nachrichten, Erinnerungen oder Themen, die Sie einbeziehen möchten?",
   deliveryInstructionsLabel: "Lieferanweisungen",
   deliveryInstructionsPlaceholder: "Besondere Lieferpräferenzen oder Anweisungen?",
+  
+  // Step titles
   songStoryStep: "Ihre Liedgeschichte",
   personalDetailsStep: "Persönliche Daten",
   contactInfoStep: "Kontaktinformationen",
+  musicalPreferencesStep: "Musikpräferenzen",
+  addonsStep: "Zusätze & Extras",
+  contactDetailsStep: "Kontaktdaten",
+  legalAcceptancesStep: "Rechtliche Einverständnisse",
+  
+  // Contact and personal info fields
   fullNameLabel: "Vollständiger Name",
   fullNamePlaceholder: "Ihr vollständiger Name",
   emailLabel: "E-Mail-Adresse",
@@ -97,6 +106,18 @@ export const orderTranslations = {
   genderPlaceholder: "Geschlecht auswählen",
   relationshipLabel: "Beziehung zum Empfänger",
   relationshipPlaceholder: "Wie kennen Sie den Empfänger?",
+  relationshipTextLabel: "Beschreiben Sie Ihre Beziehung",
+  relationshipTextPlaceholder: "Erzählen Sie uns mehr über Ihre Beziehung zum Empfänger",
+  
+  // Story and content fields
+  storyDetailedLabel: "Detaillierte Geschichte",
+  storyDetailedPlaceholder: "Teilen Sie mehr Details über Ihre Geschichte, Erinnerungen oder was diese Person besonders macht",
+  keywordsLabel: "Wichtige Schlüsselwörter",
+  keywordsPlaceholder: "Listen Sie wichtige Wörter, Namen oder Phrasen auf, die im Lied enthalten sein sollen",
+  keywordsAudioLabel: "Schlüsselwort-Aussprache (Audio)",
+  keywordsAudioPlaceholder: "Nehmen Sie die Aussprache schwieriger Wörter oder Namen auf",
+  
+  // Musical preference fields
   favoriteGenreLabel: "Lieblings-Musikgenre",
   favoriteGenrePlaceholder: "Welches Genre würden Sie bevorzugen?",
   songLengthLabel: "Bevorzugte Liedlänge",
@@ -107,6 +128,12 @@ export const orderTranslations = {
   moodPlaceholder: "Welche Stimmung soll das Lied haben?",
   lyricsThemeLabel: "Textthema",
   lyricsThemePlaceholder: "Worauf soll sich der Text konzentrieren?",
+  styleReferenceLabel: "Stil-Referenz",
+  styleReferencePlaceholder: "Ein bestimmter Künstler oder Liedstil, den Sie als Referenz verwenden möchten?",
+  youtubeExampleLabel: "YouTube-Beispiel",
+  youtubeExamplePlaceholder: "Teilen Sie einen YouTube-Link eines Liedstils, der Ihnen gefällt",
+  
+  // Dedication message
   dedicationMessageLabel: "Persönliche Widmungsnachricht",
   dedicationMessagePlaceholder: "Eine persönliche Nachricht, die zu Ihrem Lied hinzugefügt werden soll",
 };

@@ -70,21 +70,30 @@ export const orderTranslations = {
   testimonialQuote: "\"Idealny prezent dla miłośników muzyki! Spersonalizowana piosenka była absolutnie piękna i sprawiła, że nasza rocznica była niezapomniana.\"",
   testimonialAuthor: "- Sarah M., Zadowolony Klient",
   
-  // Form field labels and placeholders - NEWLY ADDED
+  // Form field labels and placeholders
   recipientLabel: "Imię Odbiorcy",
   recipientPlaceholder: "Dla kogo jest ta piosenka?",
   includeNameInSongLabel: "Uwzględnij imię w piosence",
   includeNameInSongPlaceholder: "Czy powinniśmy wspomnieć imię odbiorcy w tekście?",
   pronunciationAudioLabel: "Wymowa Imienia (Audio)",
+  pronunciationAudioPlaceholder: "Nagraj, jak wymawia się imię odbiorcy",
   occasionLabel: "Okazja",
   occasionPlaceholder: "Jaka to specjalna okazja? (np. urodziny, rocznica, ukończenie szkoły)",
   specialRequestsLabel: "Specjalne Życzenia",
   specialRequestsPlaceholder: "Specjalne wiadomości, wspomnienia lub tematy, które chciałbyś uwzględnić?",
   deliveryInstructionsLabel: "Instrukcje Dostawy",
   deliveryInstructionsPlaceholder: "Specjalne preferencje lub instrukcje dotyczące dostawy?",
+  
+  // Step titles
   songStoryStep: "Historia Twojej Piosenki",
   personalDetailsStep: "Dane Osobowe",
   contactInfoStep: "Informacje Kontaktowe",
+  musicalPreferencesStep: "Preferencje Muzyczne",
+  addonsStep: "Dodatki i Ekstra",
+  contactDetailsStep: "Dane Kontaktowe",
+  legalAcceptancesStep: "Akceptacje Prawne",
+  
+  // Contact and personal info fields
   fullNameLabel: "Pełne Imię i Nazwisko",
   fullNamePlaceholder: "Twoje pełne imię i nazwisko",
   emailLabel: "Adres Email",
@@ -97,6 +106,18 @@ export const orderTranslations = {
   genderPlaceholder: "Wybierz płeć",
   relationshipLabel: "Relacja z Odbiorcą",
   relationshipPlaceholder: "Jak znasz odbiorcę?",
+  relationshipTextLabel: "Opisz Swoją Relację",
+  relationshipTextPlaceholder: "Opowiedz nam więcej o swojej relacji z odbiorcą",
+  
+  // Story and content fields
+  storyDetailedLabel: "Szczegółowa Historia",
+  storyDetailedPlaceholder: "Podziel się więcej szczegółami o swojej historii, wspomnieniach lub o tym, co czyni tę osobę wyjątkową",
+  keywordsLabel: "Ważne Słowa Kluczowe",
+  keywordsPlaceholder: "Wymień ważne słowa, imiona lub frazy do włączenia w piosenkę",
+  keywordsAudioLabel: "Wymowa Słów Kluczowych (Audio)",
+  keywordsAudioPlaceholder: "Nagraj wymowę trudnych słów lub imion",
+  
+  // Musical preference fields
   favoriteGenreLabel: "Ulubiony Gatunek Muzyczny",
   favoriteGenrePlaceholder: "Jaki gatunek byś preferował?",
   songLengthLabel: "Preferowana Długość Piosenki",
@@ -107,6 +128,12 @@ export const orderTranslations = {
   moodPlaceholder: "Jaki nastrój powinna mieć piosenka?",
   lyricsThemeLabel: "Temat Tekstu",
   lyricsThemePlaceholder: "Na czym powinien się skupić tekst?",
+  styleReferenceLabel: "Odniesienie Stylistyczne",
+  styleReferenceLabel: "Konkretny artysta lub styl piosenki, do którego chciałbyś się odnieść?",
+  youtubeExampleLabel: "Przykład z YouTube",
+  youtubeExamplePlaceholder: "Udostępnij link YouTube do stylu piosenki, który ci się podoba",
+  
+  // Dedication message
   dedicationMessageLabel: "Osobista Wiadomość Dedykacyjna",
   dedicationMessagePlaceholder: "Osobista wiadomość do dołączenia do twojej piosenki",
 };

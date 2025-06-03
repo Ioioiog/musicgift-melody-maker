@@ -70,21 +70,30 @@ export const orderTranslations = {
   testimonialQuote: "\"Cadoul perfect pentru iubitorii de muzică! Cântecul personalizat a fost absolut frumos și ne-a făcut aniversarea de neuitat.\"",
   testimonialAuthor: "- Sarah M., Client Mulțumit",
   
-  // Form field labels and placeholders - NEWLY ADDED
+  // Form field labels and placeholders
   recipientLabel: "Numele Destinatarului",
   recipientPlaceholder: "Pentru cine este acest cântec?",
   includeNameInSongLabel: "Include numele în cântec",
   includeNameInSongPlaceholder: "Să menționăm numele destinatarului în versuri?",
   pronunciationAudioLabel: "Pronunția Numelui (Audio)",
+  pronunciationAudioPlaceholder: "Înregistrează cum se pronunță numele destinatarului",
   occasionLabel: "Ocazia",
   occasionPlaceholder: "Care este ocazia specială? (ex: ziua de naștere, aniversarea, absolvirea)",
   specialRequestsLabel: "Cerințe Speciale",
   specialRequestsPlaceholder: "Mesaje speciale, amintiri sau teme pe care ai dori să le includem?",
   deliveryInstructionsLabel: "Instrucțiuni de Livrare",
   deliveryInstructionsPlaceholder: "Preferințe sau instrucțiuni specifice de livrare?",
+  
+  // Step titles
   songStoryStep: "Povestea Cântecului Tău",
   personalDetailsStep: "Detalii Personale",
   contactInfoStep: "Informații de Contact",
+  musicalPreferencesStep: "Preferințe Muzicale",
+  addonsStep: "Opțiuni Suplimentare",
+  contactDetailsStep: "Detalii de Contact",
+  legalAcceptancesStep: "Acceptări Legale",
+  
+  // Contact and personal info fields
   fullNameLabel: "Numele Complet",
   fullNamePlaceholder: "Numele tău complet",
   emailLabel: "Adresa de Email",
@@ -97,6 +106,18 @@ export const orderTranslations = {
   genderPlaceholder: "Selectează genul",
   relationshipLabel: "Relația cu Destinatarul",
   relationshipPlaceholder: "Cum îl cunoști pe destinatar?",
+  relationshipTextLabel: "Descrie Relația Ta",
+  relationshipTextPlaceholder: "Spune-ne mai multe despre relația ta cu destinatarul",
+  
+  // Story and content fields
+  storyDetailedLabel: "Poveste Detaliată",
+  storyDetailedPlaceholder: "Împărtășește mai multe detalii despre povestea ta, amintiri sau ce face această persoană specială",
+  keywordsLabel: "Cuvinte Cheie Importante",
+  keywordsPlaceholder: "Listează cuvinte importante, nume sau fraze de inclus în cântec",
+  keywordsAudioLabel: "Pronunția Cuvintelor Cheie (Audio)",
+  keywordsAudioPlaceholder: "Înregistrează pronunția pentru cuvinte sau nume dificile",
+  
+  // Musical preference fields
   favoriteGenreLabel: "Genul Musical Preferat",
   favoriteGenrePlaceholder: "Ce gen ai prefera?",
   songLengthLabel: "Durata Preferată a Cântecului",
@@ -107,6 +128,12 @@ export const orderTranslations = {
   moodPlaceholder: "Ce atmosferă să aibă cântecul?",
   lyricsThemeLabel: "Tema Versurilor",
   lyricsThemePlaceholder: "Pe ce să se concentreze versurile?",
+  styleReferenceLabel: "Referință de Stil",
+  styleReferencePlaceholder: "Vreun artist sau stil de cântec specific pe care ai dori să îl referențiem?",
+  youtubeExampleLabel: "Exemplu YouTube",
+  youtubeExamplePlaceholder: "Împărtășește un link YouTube cu un stil de cântec care îți place",
+  
+  // Dedication message
   dedicationMessageLabel: "Mesaj Personal de Dedicație",
   dedicationMessagePlaceholder: "Un mesaj personal de inclus cu cântecul tău",
 };
