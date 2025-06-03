@@ -86,7 +86,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
               </p>
             </CardHeader>
 
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3">
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600">
                   {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg, currency)}
@@ -95,25 +95,6 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                   <Clock className="w-4 h-4" />
                   {t(pkg.delivery_time_key)}
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-sm font-medium">{t('whatsIncluded')}:</p>
-                <ul className="space-y-1">
-                  {pkg.includes?.slice(0, 3).map((include, index) => (
-                    <li key={index} className="flex items-center gap-2 text-sm">
-                      <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-600">
-                        {t(include.include_key)}
-                      </span>
-                    </li>
-                  ))}
-                  {pkg.includes && pkg.includes.length > 3 && (
-                    <li className="text-sm text-gray-500 ml-5">
-                      +{pkg.includes.length - 3} {t('more')}
-                    </li>
-                  )}
-                </ul>
               </div>
 
               <Button
