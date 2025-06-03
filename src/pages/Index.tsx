@@ -7,6 +7,7 @@ import ScenarioHero from "@/components/ScenarioHero";
 import AnimatedStepFlow from "@/components/AnimatedStepFlow";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import ImpactCards from "@/components/ImpactCards";
+import BusinessPartners from "@/components/BusinessPartners";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
@@ -55,6 +56,9 @@ const Index = () => {
           <ImpactCards />
         </div>
       </div>
+
+      {/* Business Partners */}
+      <BusinessPartners />
 
       {/* Testimonials */}
       <div className="relative overflow-hidden" style={backgroundStyle}>
