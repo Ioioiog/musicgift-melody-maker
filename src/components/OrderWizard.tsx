@@ -11,6 +11,7 @@ import OrderSummary from './order/OrderSummary';
 import { usePackages, usePackageSteps, useAddons } from '@/hooks/usePackageData';
 import { useTranslation } from '@/hooks/useTranslations';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface OrderWizardProps {
   onComplete: (data: any) => void;
@@ -55,6 +56,7 @@ const ensureFieldOptionFormat = (field: any): Field => {
 const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, preselectedPackage }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPackage, setSelectedPackage] = useState(preselectedPackage || '');
   
@@ -120,14 +122,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
 
   // Set preselected package if provided
   useEffect(() => {
-    if (preselectedPackage && regularPackages.length > 0) {
-      const packageExists = regularPackages.find(p => p.value === preselectedPackage);
+    if (preselectedPackage && packages.length > 0) {
+      const packageExists = packages.find(p => p.value === preselectedPackage);
       if (packageExists) {
         setFormData(prev => ({ ...prev, package: preselectedPackage }));
         setSelectedPackage(preselectedPackage);
       }
     }
-  }, [preselectedPackage, regularPackages]);
+  }, [preselectedPackage, packages]);
 
   // Enhanced logging for debugging
   useEffect(() => {
@@ -150,6 +152,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
 
   const updateFormData = (field: string, value: any) => {
     console.log('Updating form data:', field, value);
+    
+    // Check if gift package is selected and redirect
+    if (field === 'package' && value === 'gift') {
+      console.log('Gift package selected, redirecting to gift flow');
+      navigate('/order?package=gift');
+      return;
+    }
+    
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -319,11 +329,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
     const enhancedStep = {
       ...dbStep,
       fields: dbStep.fields.map(field => {
-        // Handle package field specifically - inject regular package options only
+        // Handle package field specifically - inject all package options including gift
         if (field.field_name === 'package' && field.field_type === 'select') {
           const packageField: Field = {
             ...field,
-            options: regularPackages.map(pkg => ({
+            options: packages.map(pkg => ({
               value: pkg.value,
               label_key: pkg.label_key
             }))
@@ -402,7 +412,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
 
   // If no package is selected yet or we're still waiting for steps to load, show package selection
   if (!selectedPackage || (selectedPackage && !stepsFetched)) {
-    // Create a mock first step for package selection using regular packages only
+    // Create a mock first step for package selection including all packages
     const packageSelectionStep = {
       id: 'package-selection',
       step_number: 1,
@@ -414,7 +424,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
         placeholder_key: 'selectPackage',
         required: true,
         field_order: 1,
-        options: regularPackages.map(pkg => ({
+        options: packages.map(pkg => ({
           value: pkg.value,
           label_key: pkg.label_key
         }))
@@ -657,7 +667,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
                              selectedPackageDetails.value === 'premium' ? '🌟' : 
                              selectedPackageDetails.value === 'artist' ? '🎤' : 
                              selectedPackageDetails.value === 'instrumental' ? '🎶' : 
-                             selectedPackageDetails.value === 'remix' ? '🔁' : '🎁'}
+                             selectedPackageDetails.value === 'remix' ? '🔁' : 
+                             selectedPackageDetails.value === 'gift' ? '🎁' : '🎁'}
                           </div>
                           <div className="flex-1 w-full">
                             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
