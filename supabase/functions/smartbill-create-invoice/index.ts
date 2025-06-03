@@ -19,6 +19,10 @@ interface OrderData {
   status: string;
   payment_status: string;
   currency: string;
+  gift_card_id?: string;
+  is_gift_redemption?: boolean;
+  gift_credit_applied?: number;
+  user_id?: string;
 }
 
 interface SmartBillInvoiceData {
@@ -34,26 +38,29 @@ interface SmartBillInvoiceData {
     county?: string;
     country: string;
     email?: string;
+    saveToDb?: boolean;
   };
   issueDate: string;
   dueDate: string;
+  deliveryDate: string;
+  isDraft: boolean;
   language: string;
+  sendEmail: boolean;
   precision: number;
   currency: string;
   products: Array<{
     name: string;
-    code?: string;
-    isUom: boolean;
-    qty: number;
+    quantity: number;
     price: number;
-    isService: boolean;
-    saveToDb: boolean;
-    productType: string;
+    measuringUnitName: string;
+    currency: string;
+    isTaxIncluded: boolean;
     taxName: string;
     taxPercentage: number;
+    isDiscount: boolean;
+    saveToDb: boolean;
+    isService: boolean;
   }>;
-  issuerName?: string;
-  issuerCnp?: string;
   observations?: string;
 }
 
@@ -62,15 +69,17 @@ const validateSmartBillConfig = () => {
   const token = Deno.env.get('SMARTBILL_TOKEN')
   const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
   const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
+  const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'mng'
   
   console.log('SmartBill Config Check:', {
     username: username ? '***configured***' : 'MISSING',
     token: token ? '***configured***' : 'MISSING',
     baseUrl,
-    companyVat: companyVat ? '***configured***' : 'MISSING'
+    companyVat: companyVat ? '***configured***' : 'MISSING',
+    seriesName
   })
   
-  return { username, token, baseUrl, companyVat }
+  return { username, token, baseUrl, companyVat, seriesName }
 }
 
 const handleSmartBillResponse = async (response: Response) => {
@@ -129,6 +138,11 @@ serve(async (req) => {
         package_price: orderData.package_price,
         package_delivery_time: orderData.package_delivery_time,
         package_includes: orderData.package_includes,
+        currency: orderData.currency,
+        user_id: orderData.user_id,
+        gift_card_id: orderData.gift_card_id,
+        is_gift_redemption: orderData.is_gift_redemption,
+        gift_credit_applied: orderData.gift_credit_applied,
         smartbill_payment_status: 'pending'
       })
       .select()
@@ -170,7 +184,7 @@ serve(async (req) => {
     }
 
     // Validate SmartBill configuration
-    const { username, token, baseUrl, companyVat } = validateSmartBillConfig()
+    const { username, token, baseUrl, companyVat, seriesName } = validateSmartBillConfig()
 
     if (!username || !token) {
       console.warn('SmartBill credentials not configured - creating order without invoice')
@@ -202,36 +216,46 @@ serve(async (req) => {
       )
     }
 
-    // Create SmartBill invoice data
+    // Calculate dates
+    const issueDate = new Date().toISOString().split('T')[0]
+    const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+
+    // Create SmartBill invoice data using the simplified structure from your example
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
-      seriesName: 'MUSICGIFT',
+      seriesName: seriesName,
       client: {
         name: orderData.form_data.fullName || 'Customer',
-        address: orderData.form_data.address || '',
-        city: orderData.form_data.city || 'Bucharest',
-        county: orderData.form_data.county || 'Bucharest',
+        vatCode: '-',
+        address: orderData.form_data.address || '-',
+        city: orderData.form_data.city || 'Bucuresti - Sector 3',
+        county: orderData.form_data.county || 'Bucuresti',
         country: 'Romania',
         email: orderData.form_data.email || '',
-        isTaxPayer: false
+        isTaxPayer: false,
+        saveToDb: false
       },
-      issueDate: new Date().toISOString().split('T')[0],
-      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      issueDate: issueDate,
+      dueDate: dueDate,
+      deliveryDate: dueDate,
+      isDraft: false,
       language: 'RO',
+      sendEmail: true,
       precision: 2,
       currency: orderData.currency || 'RON',
       products: [
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
-          code: orderData.package_value || 'MUSICGIFT',
-          isUom: false,
-          qty: 1,
+          quantity: 1,
           price: orderData.total_price,
-          isService: true,
-          saveToDb: false,
-          productType: 'Serviciu',
+          measuringUnitName: 'buc',
+          currency: orderData.currency || 'RON',
+          isTaxIncluded: true,
           taxName: 'Normala',
-          taxPercentage: 19
+          taxPercentage: 19,
+          isDiscount: false,
+          saveToDb: false,
+          isService: true
         }
       ],
       observations: `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
@@ -239,7 +263,7 @@ serve(async (req) => {
 
     console.log('Creating SmartBill invoice with data:', invoiceData)
 
-    // Create invoice via SmartBill API with improved error handling
+    // Create invoice via SmartBill API with the authentication format from your example
     const smartBillAuth = btoa(`${username}:${token}`)
     
     let invoiceResponse: Response
@@ -251,9 +275,9 @@ serve(async (req) => {
       invoiceResponse = await fetch(`${baseUrl}/SBORO/api/invoice`, {
         method: 'POST',
         headers: {
-          'Authorization': `Basic ${smartBillAuth}`,
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Authorization': `Basic ${smartBillAuth}`
         },
         body: JSON.stringify(invoiceData)
       })
@@ -291,9 +315,9 @@ serve(async (req) => {
       )
     }
 
-    // Check if SmartBill returned an error
-    if (!invoiceResponse.ok || invoiceResult.errorText) {
-      const errorMessage = invoiceResult.errorText || `HTTP ${invoiceResponse.status}`
+    // Check if SmartBill returned an error - using the structure from your example
+    if (!invoiceResponse.ok || invoiceResult?.sbcResponse?.errorText || invoiceResult?.error) {
+      const errorMessage = invoiceResult?.sbcResponse?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
       console.error('SmartBill API returned error:', errorMessage)
       
       // Update order with error status
@@ -323,17 +347,25 @@ serve(async (req) => {
       )
     }
 
-    // Success - extract invoice details
-    const smartBillInvoiceId = invoiceResult.number || `INV-${Date.now()}`
-    // Fix the redirect URL to use the correct route
-    const paymentUrl = `${Deno.env.get('SITE_URL')}/payment/success?orderId=${savedOrder.id}&invoice=${smartBillInvoiceId}`
+    // Success - extract invoice details using the response structure from your example
+    const smartBillInvoiceId = invoiceResult?.sbcResponse?.number || invoiceResult?.invoiceNumber || `INV-${Date.now()}`
+    const smartBillPaymentUrl = invoiceResult?.sbcResponse?.url || invoiceResult?.paymentUrl
+    
+    // Use SmartBill's payment URL if available, otherwise redirect to success page
+    const finalPaymentUrl = smartBillPaymentUrl || `${Deno.env.get('SITE_URL')}/payment/success?orderId=${savedOrder.id}&invoice=${smartBillInvoiceId}`
+
+    console.log('SmartBill invoice created successfully:', {
+      invoiceId: smartBillInvoiceId,
+      paymentUrl: smartBillPaymentUrl,
+      finalUrl: finalPaymentUrl
+    })
 
     // Update order with SmartBill details
     const { error: updateError } = await supabaseClient
       .from('orders')
       .update({ 
         smartbill_invoice_id: smartBillInvoiceId,
-        smartbill_payment_url: paymentUrl,
+        smartbill_payment_url: finalPaymentUrl,
         smartbill_invoice_data: invoiceResult,
         smartbill_payment_status: 'pending'
       })
@@ -348,7 +380,7 @@ serve(async (req) => {
         success: true,
         orderId: savedOrder.id,
         smartBillInvoiceId: smartBillInvoiceId,
-        paymentUrl: paymentUrl,
+        paymentUrl: finalPaymentUrl,
         message: 'Invoice created successfully with SmartBill'
       }),
       { 
