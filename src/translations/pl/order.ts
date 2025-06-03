@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Ładowanie pakietów...",
   loadingSteps: "Ładowanie kroków...",
@@ -129,7 +130,7 @@ export const orderTranslations = {
   lyricsThemeLabel: "Temat Tekstu",
   lyricsThemePlaceholder: "Na czym powinien się skupić tekst?",
   styleReferenceLabel: "Odniesienie Stylistyczne",
-  styleReferenceLabel: "Konkretny artysta lub styl piosenki, do którego chciałbyś się odnieść?",
+  styleReferencePlaceholder: "Konkretny artysta lub styl piosenki, do którego chciałbyś się odnieść?",
   youtubeExampleLabel: "Przykład z YouTube",
   youtubeExamplePlaceholder: "Udostępnij link YouTube do stylu piosenki, który ci się podoba",
   
