@@ -1,136 +1,149 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import ScenarioHero from "@/components/ScenarioHero";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "react-router-dom";
-import { usePackages } from "@/hooks/usePackageData";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Check, Clock, Star, ArrowRight, Gift } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import { Link } from 'react-router-dom';
+import { usePackages } from '@/hooks/usePackageData';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 const Packages = () => {
-  const {
-    data: packages = [],
-    isLoading
-  } = usePackages();
-  const {
-    t
-  } = useLanguage();
-  const { t: tDb } = useLanguage();
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const { t } = useLanguage();
+  const { currency } = useCurrency();
+  const { data: packages, isLoading } = usePackages();
 
   if (isLoading) {
-    return <div className="min-h-screen">
+    return (
+      <div className="min-h-screen">
         <Navigation />
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">{t('loadingPackages')}</p>
-          </div>
+        <div className="container mx-auto py-8 px-4">
+          <div className="text-center">Loading packages...</div>
         </div>
         <Footer />
-      </div>;
+      </div>
+    );
   }
-  return <div className="min-h-screen">
+
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
-      {/* Dynamic Scenario Hero Section */}
-      <ScenarioHero />
-
-      {/* Enhanced Packages Section with Homepage Style */}
-      <section className="relative overflow-hidden py-16" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
-        {/* Overlay for better readability */}
-        <div className="absolute inset-0 bg-black/40"></div>
-        
-        <div className="container mx-auto relative z-10 px-[4px]">
-          {/* Section Title */}
-          <motion.div className="text-center mb-12" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6
-        }}>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('chooseYourPackage')}</h2>
-            <p className="text-lg md:text-xl text-white/90">{t('selectPerfectPackage')}</p>
+      {/* Hero Section */}
+      <section className="py-20 px-4 text-center bg-gradient-to-br from-purple-50 to-blue-50">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              {t('chooseYourPackage', 'Choose Your Package')}
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 mb-8">
+              {t('packagesSubtitle', 'Professional music creation tailored to your needs')}
+            </p>
           </motion.div>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
-            {packages.map((pkg, index) => <motion.div key={pkg.id || pkg.value} initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6,
-            delay: 0.1 * index
-          }}>
-                <Card className={`relative backdrop-blur-md bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl h-[400px] ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'ring-2 ring-purple-300/50 scale-105' : ''}`}>
-                  {(pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular') && <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
-                      <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white py-2 rounded-full text-sm font-bold shadow-xl animate-pulse px-[14px] text-justify">
-                        ⭐ {t('mostPopular')}
-                      </span>
-                    </div>}
-                  
-                  <CardContent className="p-4 relative z-10 text-white h-full flex flex-col justify-between px-[17px] py-[37px]">
-                    {/* Icon and Title */}
-                    <div className="text-center mb-4">
-                      <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">
-                        {pkg.value === 'personal' ? '🎁' : pkg.value === 'business' ? '💼' : pkg.value === 'premium' ? '🌟' : pkg.value === 'artist' ? '🎤' : pkg.value === 'instrumental' ? '🎶' : pkg.value === 'remix' ? '🔁' : '🎁'}
-                      </div>
-                      <h3 className="text-xl font-bold mb-2">
-                        {tDb(pkg.label_key)}
-                      </h3>
-                      {pkg.tagline_key && <p className="text-xs text-purple-200 font-semibold mb-3 bg-purple-500/20 px-2 py-1 rounded-full inline-block">
-                          {tDb(pkg.tagline_key)}
-                        </p>}
-                      
-                      {/* Enhanced Price Display */}
-                      <div className="mb-4">
-                        <div className="text-2xl font-bold text-white mb-1">
-                          {pkg.price}
-                          <span className="text-lg text-white/70 ml-1">RON</span>
-                        </div>
-                        {pkg.delivery_time_key && <div className="text-xs text-white/80 bg-white/10 px-2 py-1 rounded-full inline-block">
-                            ⏱️ {tDb(pkg.delivery_time_key)}
-                          </div>}
-                      </div>
+      {/* Packages Grid */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {packages?.map((pkg, index) => (
+              <motion.div
+                key={pkg.value}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                onHoverStart={() => setHoveredCard(pkg.value)}
+                onHoverEnd={() => setHoveredCard(null)}
+              >
+                <Card className={`h-full transition-all duration-300 ${
+                  hoveredCard === pkg.value ? 'shadow-xl scale-105' : 'shadow-lg'
+                } ${pkg.is_popular ? 'ring-2 ring-purple-500' : ''}`}>
+                  <CardHeader className="relative">
+                    {pkg.is_popular && (
+                      <Badge className="absolute -top-2 -right-2 bg-purple-500 hover:bg-purple-600">
+                        <Star className="w-4 h-4 mr-1" />
+                        {t('popular', 'Popular')}
+                      </Badge>
+                    )}
+                    <CardTitle className="text-xl mb-2">
+                      {t(pkg.label_key)}
+                    </CardTitle>
+                    <CardDescription>
+                      {t(pkg.description_key)}
+                    </CardDescription>
+                    <div className="text-3xl font-bold text-purple-600">
+                      {currency === 'EUR' ? '€' : 'RON'} {pkg.price}
                     </div>
-
-                    <div className="space-y-2 mt-auto">
-                      <Link to={`/packages/${pkg.value}`}>
-                        <Button variant="outline" className="w-full text-white border-white/30 hover:bg-white/10 backdrop-blur-md transition-all duration-300 text-sm py-2" size="sm">
-                          {t('learnMore') || 'Learn More'}
-                          <ArrowRight className="w-3 h-3 ml-1" />
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Clock className="w-4 h-4 mr-1" />
+                      {t(pkg.delivery_time_key)}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="flex-1 flex flex-col">
+                    <div className="flex-1">
+                      <h4 className="font-semibold mb-3">{t('whatsIncluded', 'What\'s included:')}</h4>
+                      <ul className="space-y-2 mb-6">
+                        {pkg.includes?.map((item, itemIndex) => (
+                          <li key={itemIndex} className="flex items-start">
+                            <Check className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm">{t(item.key)}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="space-y-3">
+                      <Link to={`/order?package=${pkg.value}`}>
+                        <Button className="w-full" size="lg">
+                          {t('orderNow')}
+                          <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
                       </Link>
-                      
-                      <Link to="/order">
-                        <Button className={`w-full text-sm py-2 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg ${pkg.tags?.some(tag => tag.tag_type === 'popular') || pkg.tag === 'popular' ? 'bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md' : 'bg-white/10 hover:bg-white/20 text-white border border-white/30 hover:border-white/50 backdrop-blur-md'}`} size="sm">
-                          <span className="mr-1">🚀</span>
-                          {t('orderNow')}
+                      <Link to={`/packages/${pkg.value}`}>
+                        <Button variant="outline" className="w-full">
+                          {t('learnMore', 'Learn More')}
                         </Button>
                       </Link>
                     </div>
                   </CardContent>
                 </Card>
-              </motion.div>)}
+              </motion.div>
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* Bottom border accent */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+      {/* Gift Card CTA */}
+      <section className="py-20 px-4 bg-gradient-to-br from-purple-600 to-blue-600 text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <Gift className="w-16 h-16 mx-auto mb-6 text-yellow-400" />
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            {t('giftCardTitle', 'Give the Gift of Music')}
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            {t('giftCardSubtitle', 'Perfect for any occasion - let them choose their perfect song')}
+          </p>
+          <Link to="/gift">
+            <Button size="lg" variant="secondary" className="bg-white text-purple-600 hover:bg-gray-100">
+              <Gift className="w-5 h-5 mr-2" />
+              {t('buyGiftCard', 'Buy Gift Card')}
+            </Button>
+          </Link>
+        </div>
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Packages;
