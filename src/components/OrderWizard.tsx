@@ -185,12 +185,23 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           variant: "default"
         });
 
-        // If SmartBill returns a payment URL, redirect user
-        if (smartBillResponse?.paymentUrl) {
+        // Handle different payment scenarios based on response
+        if (!smartBillResponse.paymentRequired) {
+          // No payment needed (free order)
+          console.log("Order completed successfully - no payment required");
+          navigate('/payment/success?orderId=' + smartBillResponse.orderId);
+        } else if (smartBillResponse.paymentUrl) {
+          // NETOPIA payment URL available - redirect to payment
+          console.log("Redirecting to NETOPIA payment:", smartBillResponse.paymentUrl);
           window.location.href = smartBillResponse.paymentUrl;
-        } else if (smartBillResponse?.success) {
-          // If no payment needed (e.g., fully covered by gift card), show success
-          console.log('Order completed successfully without payment needed');
+        } else if (smartBillResponse.requiresManualPayment) {
+          // Manual payment required (SmartBill integration issue or no NETOPIA URL)
+          console.log("Manual payment required - redirecting to manual payment page");
+          navigate(`/payment/manual?orderId=${smartBillResponse.orderId}&invoiceId=${smartBillResponse.invoiceId || ''}`);
+        } else {
+          // Fallback to success page
+          console.log("Order created successfully - redirecting to success page");
+          navigate('/payment/success?orderId=' + smartBillResponse.orderId);
         }
       }
     } catch (error) {
