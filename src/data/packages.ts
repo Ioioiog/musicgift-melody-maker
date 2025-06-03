@@ -1,51 +1,78 @@
 
-import type { PackageData, Addon } from '@/types/packages';
-
-enhance all stepts for all the packages. keep this format: import type { Package } from '@/types';
+import type { Package, Addon } from '@/types/packages';
+import { stepOneByPackage, stepTwoByPackage } from './enhancedSteps';
 
 // Define the addons configuration
-export const addons = {
-  rushDelivery: { 
-    price: 100, 
-    label_key: 'rushDeliveryLabel',
-    description_key: 'rushDeliveryDescription',
-    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
+export const addons: Record<string, Addon> = {
+  rushDelivery: {
+    label_key: "rushDelivery",
+    description_key: "rushDeliveryDesc",
+    price: 199,
+    packages: ["personal", "premium", "business", "artist", "remix", "instrumental"]
   },
-  commercialRights: { 
-    price: 100, 
-    label_key: 'commercialRightsLabel',
-    description_key: 'commercialRightsDescription',
-    availableFor: ['personal']
+  exclusiveMangoDistribution: {
+    label_key: "exclusiveMangoDistribution",
+    description_key: "exclusiveMangoDistributionDesc",
+    price: 299,
+    packages: ["premium", "artist"]
   },
-  distributieMangoRecords: {
-    price: 200, 
-    label_key: 'distributieMangoRecordsLabel',
-    description_key: 'distributieMangoRecordsDescription',
-    availableFor: ['personal', 'remix', 'instrumental']
+  customVideo: {
+    label_key: "customVideo",
+    description_key: "customVideoDesc",
+    price: 399,
+    packages: ["personal", "premium", "artist"]
   },
-  customVideo: { 
-    price: 149, 
-    label_key: 'customVideoLabel',
-    description_key: 'customVideoDescription',
-    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
-  },
-  audioMessageFromSender: { 
-    price: 100, 
-    label_key: 'audioMessageFromSenderLabel',
-    description_key: 'audioMessageFromSenderDescription',
-    availableFor: ['personal', 'business', 'premium']
+  audioMessageFromSender: {
+    label_key: "audioMessageFromSender",
+    description_key: "audioMessageFromSenderDesc",
+    price: 99,
+    packages: ["personal", "premium"]
   },
   commercialRightsUpgrade: {
-    price: 400,
-    label_key: 'commercialRightsUpgradeLabel',
-    description_key: 'commercialRightsUpgradeDescription',
-    availableFor: ['business']
+    label_key: "commercialRightsUpgrade",
+    description_key: "commercialRightsUpgradeDesc",
+    price: 249,
+    packages: ["personal", "instrumental"]
   },
   extendedSong: {
+    label_key: "extendedSong",
+    description_key: "extendedSongDesc",
+    price: 149,
+    packages: ["personal", "premium"]
+  },
+  additionalInstrument: {
+    label_key: "additionalInstrument",
+    description_key: "additionalInstrumentDesc",
+    price: 79,
+    packages: ["instrumental"],
+    trigger_field_type: "select",
+    trigger_config: {
+      options: [
+        { value: "guitar", label_key: "guitar" },
+        { value: "piano", label_key: "piano" },
+        { value: "drums", label_key: "drums" },
+        { value: "bass", label_key: "bass" }
+      ]
+    }
+  },
+  vocalTuning: {
+    label_key: "vocalTuning",
+    description_key: "vocalTuningDesc",
+    price: 99,
+    packages: ["artist"],
+    trigger_field_type: "checkbox"
+  },
+  remixStems: {
+    label_key: "remixStems",
+    description_key: "remixStemsDesc",
     price: 49,
-    label_key: 'extendedSongLabel',
-    description_key: 'extendedSongDescription',
-    availableFor: ['personal', 'premium', 'business']
+    packages: ["remix"],
+    trigger_field_type: "file",
+    trigger_config: {
+      allowedTypes: [".wav", ".mp3", ".zip"],
+      maxFiles: 5,
+      maxTotalSizeMb: 50
+    }
   }
 };
 
@@ -67,149 +94,8 @@ export const packages: Package[] = [
       { include_key: "personalInclude4" }
     ],
     steps: [
-      {
-        id: "personal-step-1",
-        step_number: 1,
-        title_key: "songStoryStep",
-        fields: [
-          {
-            id: "recipient",
-            field_name: "recipient",
-            field_type: "text",
-            label_key: "recipientLabel",
-            placeholder_key: "recipientPlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "includeNameInSong",
-            field_name: "includeNameInSong",
-            field_type: "checkbox",
-            label_key: "includeNameInSongLabel",
-            placeholder_key: "includeNameInSongPlaceholder",
-            required: false,
-            field_order: 2
-          },
-          {
-            id: "pronunciationAudio",
-            field_name: "pronunciationAudio",
-            field_type: "audio",
-            label_key: "pronunciationAudioLabel",
-            placeholder_key: "pronunciationAudioPlaceholder",
-            required: false,
-            field_order: 3
-          },
-          {
-            id: "relationshipText",
-            field_name: "relationshipText",
-            field_type: "text",
-            label_key: "relationshipTextLabel",
-            placeholder_key: "relationshipTextPlaceholder",
-            required: true,
-            field_order: 4
-          },
-          {
-            id: "storyDetailed",
-            field_name: "storyDetailed",
-            field_type: "textarea",
-            label_key: "storyDetailedLabel",
-            placeholder_key: "storyDetailedPlaceholder",
-            required: true,
-            field_order: 5
-          },
-          {
-            id: "keywords",
-            field_name: "keywords",
-            field_type: "text",
-            label_key: "keywordsLabel",
-            placeholder_key: "keywordsPlaceholder",
-            required: false,
-            field_order: 6
-          },
-          {
-            id: "keywordsAudio",
-            field_name: "keywordsAudio",
-            field_type: "audio",
-            label_key: "keywordsAudioLabel",
-            placeholder_key: "keywordsAudioPlaceholder",
-            required: false,
-            field_order: 7
-          }
-        ]
-      },
-      {
-        id: "personal-step-2",
-        step_number: 2,
-        title_key: "musicalPreferencesStep",
-        fields: [
-          {
-            id: "styleReference",
-            field_name: "styleReference",
-            field_type: "text",
-            label_key: "styleReferenceLabel",
-            placeholder_key: "styleReferencePlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "mood",
-            field_name: "mood",
-            field_type: "select",
-            label_key: "Atmosfera dorită",
-            placeholder_key: "Selectează atmosfera",
-            required: true,
-            field_order: 2,
-            options: [
-              { value: "romantic", label_key: "moodRomantic" },
-              { value: "cheerful", label_key: "moodCheerful" },
-              { value: "nostalgic", label_key: "moodNostalgic" },
-              { value: "energetic", label_key: "moodEnergetic" },
-              { value: "melancholic", label_key: "moodMelancholic" },
-              { value: "inspirational", label_key: "moodInspirational" },
-              { value: "emotional", label_key: "moodEmotional" },
-              { value: "uplifting", label_key: "moodUplifting" }
-            ]
-          },
-          {
-            id: "voiceGender",
-            field_name: "voiceGender",
-            field_type: "select",
-            label_key: "Tip de voce preferat",
-            placeholder_key: "Selectează tipul de voce",
-            required: true,
-            field_order: 3,
-            options: [
-              { value: "feminine", label_key: "voiceFeminine" },
-              { value: "masculine", label_key: "voiceMasculine" },
-              { value: "duet", label_key: "voiceDuet" },
-              { value: "musicgift_choice", label_key: "voiceMusicGiftChoice" }
-            ]
-          },
-          {
-            id: "youtubeExample",
-            field_name: "youtubeExample",
-            field_type: "url",
-            label_key: "youtubeExampleLabel",
-            placeholder_key: "youtubeExamplePlaceholder",
-            required: false,
-            field_order: 4
-          },
-          {
-            id: "language",
-            field_name: "language",
-            field_type: "select",
-            label_key: "Limba piesei",
-            placeholder_key: "Selectează limba",
-            required: true,
-            field_order: 5,
-            options: [
-              { value: "ro", label_key: "romanianLanguage" },
-              { value: "en", label_key: "englishLanguage" },
-              { value: "fr", label_key: "frenchLanguage" }
-            ]
-          }
-        ]
-      },
+      stepOneByPackage.personal,
+      stepTwoByPackage.personal,
       {
         id: "personal-step-3",
         step_number: 3,
@@ -312,113 +198,8 @@ export const packages: Package[] = [
       { include_key: "premiumInclude3" }
     ],
     steps: [
-      {
-        id: "premium-step-1",
-        step_number: 1,
-        title_key: "personalDetailsStep",
-        fields: [
-          {
-            id: "fullName",
-            field_name: "fullName",
-            field_type: "text",
-            placeholder_key: "fullNamePlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "email",
-            field_name: "email",
-            field_type: "email",
-            placeholder_key: "emailPlaceholder",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "phone",
-            field_name: "phone",
-            field_type: "tel",
-            placeholder_key: "phonePlaceholder",
-            required: true,
-            field_order: 3
-          },
-          {
-            id: "language",
-            field_name: "language",
-            field_type: "select",
-            placeholder_key: "songLanguagePlaceholder",
-            required: true,
-            field_order: 4,
-            options: [
-              { value: "ro", label_key: "Română" },
-              { value: "en", label_key: "English" },
-              { value: "fr", label_key: "Français" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "premium-step-2",
-        step_number: 2,
-        title_key: "yourStoryStep",
-        fields: [
-          {
-            id: "occasion",
-            field_name: "occasion",
-            field_type: "text",
-            placeholder_key: "occasionPlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "pronunciationRecording",
-            field_name: "pronunciationRecording",
-            field_type: "file",
-            placeholder_key: "pronunciationRecordingPlaceholder",
-            required: false,
-            field_order: 2
-          },
-          {
-            id: "story",
-            field_name: "story",
-            field_type: "textarea",
-            placeholder_key: "storyPlaceholder",
-            required: true,
-            field_order: 3
-          },
-          {
-            id: "vibe",
-            field_name: "vibe",
-            field_type: "text",
-            placeholder_key: "vibePlaceholder",
-            required: true,
-            field_order: 4
-          },
-          {
-            id: "youtubeLinks",
-            field_name: "youtubeLinks",
-            field_type: "textarea",
-            placeholder_key: "youtubeLinksPlaceholder",
-            required: false,
-            field_order: 5
-          },
-          {
-            id: "importantKeywords",
-            field_name: "importantKeywords",
-            field_type: "text",
-            placeholder_key: "importantKeywordsPlaceholder",
-            required: false,
-            field_order: 6
-          },
-          {
-            id: "keywordsPronunciation",
-            field_name: "keywordsPronunciation",
-            field_type: "file",
-            placeholder_key: "keywordsPronunciationPlaceholder",
-            required: false,
-            field_order: 7
-          }
-        ]
-      },
+      stepOneByPackage.premium,
+      stepTwoByPackage.premium,
       {
         id: "premium-step-3",
         step_number: 3,
@@ -476,84 +257,8 @@ export const packages: Package[] = [
       { include_key: "businessInclude4" }
     ],
     steps: [
-      {
-        id: "business-step-1",
-        step_number: 1,
-        title_key: "companyDetailsStep",
-        fields: [
-          {
-            id: "companyName",
-            field_name: "companyName",
-            field_type: "text",
-            placeholder_key: "companyNamePlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "contactPerson",
-            field_name: "contactPerson",
-            field_type: "text",
-            placeholder_key: "contactPersonPlaceholder",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "email",
-            field_name: "email",
-            field_type: "email",
-            placeholder_key: "emailPlaceholder",
-            required: true,
-            field_order: 3
-          },
-          {
-            id: "phone",
-            field_name: "phone",
-            field_type: "tel",
-            placeholder_key: "phonePlaceholder",
-            required: true,
-            field_order: 4
-          },
-          {
-            id: "companyPronunciation",
-            field_name: "companyPronunciation",
-            field_type: "file",
-            placeholder_key: "companyPronunciationPlaceholder",
-            required: false,
-            field_order: 5
-          }
-        ]
-      },
-      {
-        id: "business-step-2",
-        step_number: 2,
-        title_key: "brandStoryStep",
-        fields: [
-          {
-            id: "brandStory",
-            field_name: "brandStory",
-            field_type: "textarea",
-            placeholder_key: "brandStoryPlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "keyValues",
-            field_name: "keyValues",
-            field_type: "textarea",
-            placeholder_key: "keyValuesPlaceholder",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "inspirationLinks",
-            field_name: "inspirationLinks",
-            field_type: "textarea",
-            placeholder_key: "inspirationLinksPlaceholder",
-            required: false,
-            field_order: 3
-          }
-        ]
-      },
+      stepOneByPackage.business,
+      stepTwoByPackage.business,
       {
         id: "business-step-3",
         step_number: 3,
@@ -588,68 +293,8 @@ export const packages: Package[] = [
       { include_key: "artistInclude4" }
     ],
     steps: [
-      {
-        id: "artist-step-1",
-        step_number: 1,
-        title_key: "artisticDataStep",
-        fields: [
-          {
-            id: "artistName",
-            field_name: "artistName",
-            field_type: "text",
-            placeholder_key: "artistNamePlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "email",
-            field_name: "email",
-            field_type: "email",
-            placeholder_key: "emailPlaceholder",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "phone",
-            field_name: "phone",
-            field_type: "tel",
-            placeholder_key: "phonePlaceholder",
-            required: true,
-            field_order: 3
-          },
-          {
-            id: "mediaLinks",
-            field_name: "mediaLinks",
-            field_type: "textarea",
-            placeholder_key: "mediaLinksPlaceholder",
-            required: false,
-            field_order: 4
-          },
-          {
-            id: "pressLinks",
-            field_name: "pressLinks",
-            field_type: "textarea",
-            placeholder_key: "pressLinksPlaceholder",
-            required: false,
-            field_order: 5
-          }
-        ]
-      },
-      {
-        id: "artist-step-2",
-        step_number: 2,
-        title_key: "songConceptStep",
-        fields: [
-          {
-            id: "musicalVision",
-            field_name: "musicalVision",
-            field_type: "textarea",
-            placeholder_key: "musicalVisionPlaceholder",
-            required: true,
-            field_order: 1
-          }
-        ]
-      },
+      stepOneByPackage.artist,
+      stepTwoByPackage.artist,
       {
         id: "artist-step-3",
         step_number: 3,
@@ -694,76 +339,8 @@ export const packages: Package[] = [
       { include_key: "remixInclude6" }
     ],
     steps: [
-      {
-        id: "remix-step-1",
-        step_number: 1,
-        title_key: "remixInfoStep",
-        fields: [
-          {
-            id: "originalSongLink",
-            field_name: "originalSongLink",
-            field_type: "url",
-            placeholder_key: "originalSongLinkPlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "uploadWAV",
-            field_name: "uploadWAV",
-            field_type: "file",
-            placeholder_key: "uploadWAVPlaceholder",
-            required: false,
-            field_order: 2
-          },
-          {
-            id: "remixGenre",
-            field_name: "remixGenre",
-            field_type: "text",
-            placeholder_key: "remixGenrePlaceholder",
-            required: true,
-            field_order: 3
-          }
-        ]
-      },
-      {
-        id: "remix-step-2",
-        step_number: 2,
-        title_key: "legalityContactStep",
-        fields: [
-          {
-            id: "ownershipConfirmation",
-            field_name: "ownershipConfirmation",
-            field_type: "checkbox",
-            placeholder_key: "ownershipConfirmationPlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "fullName",
-            field_name: "fullName",
-            field_type: "text",
-            placeholder_key: "fullNamePlaceholder",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "email",
-            field_name: "email",
-            field_type: "email",
-            placeholder_key: "emailPlaceholder",
-            required: true,
-            field_order: 3
-          },
-          {
-            id: "phone",
-            field_name: "phone",
-            field_type: "tel",
-            placeholder_key: "phonePlaceholder",
-            required: true,
-            field_order: 4
-          }
-        ]
-      }
+      stepOneByPackage.remix,
+      stepTwoByPackage.remix
     ]
   },
   {
@@ -784,44 +361,8 @@ export const packages: Package[] = [
       { include_key: "instrumentalInclude5" }
     ],
     steps: [
-      {
-        id: "instrumental-step-1",
-        step_number: 1,
-        title_key: "artisticDetailsStep",
-        fields: [
-          {
-            id: "titleLanguage",
-            field_name: "titleLanguage",
-            field_type: "text",
-            placeholder_key: "titleLanguagePlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "instrumentalGenre",
-            field_name: "instrumentalGenre",
-            field_type: "text",
-            placeholder_key: "instrumentalGenrePlaceholder",
-            required: true,
-            field_order: 2
-          }
-        ]
-      },
-      {
-        id: "instrumental-step-2",
-        step_number: 2,
-        title_key: "visionStyleStep",
-        fields: [
-          {
-            id: "moodAtmosphere",
-            field_name: "moodAtmosphere",
-            field_type: "text",
-            placeholder_key: "moodAtmospherePlaceholder",
-            required: true,
-            field_order: 1
-          }
-        ]
-      },
+      stepOneByPackage.instrumental,
+      stepTwoByPackage.instrumental,
       {
         id: "instrumental-step-3",
         step_number: 3,
@@ -931,76 +472,3 @@ export const packages: Package[] = [
 
 // Export for compatibility with existing code
 export type PackageData = Package;
-
-export const addons: Record<string, Addon> = {
-  rushDelivery: {
-    label_key: "rushDelivery",
-    description_key: "rushDeliveryDesc",
-    price: 199,
-    packages: ["personal", "premium", "business", "artist", "remix", "instrumental"]
-  },
-  exclusiveMangoDistribution: {
-    label_key: "exclusiveMangoDistribution",
-    description_key: "exclusiveMangoDistributionDesc",
-    price: 299,
-    packages: ["premium", "artist"]
-  },
-  customVideo: {
-    label_key: "customVideo",
-    description_key: "customVideoDesc",
-    price: 399,
-    packages: ["personal", "premium", "artist"]
-  },
-  audioMessageFromSender: {
-    label_key: "audioMessageFromSender",
-    description_key: "audioMessageFromSenderDesc",
-    price: 99,
-    packages: ["personal", "premium"]
-  },
-  commercialRightsUpgrade: {
-    label_key: "commercialRightsUpgrade",
-    description_key: "commercialRightsUpgradeDesc",
-    price: 249,
-    packages: ["personal", "instrumental"]
-  },
-  extendedSong: {
-    label_key: "extendedSong",
-    description_key: "extendedSongDesc",
-    price: 149,
-    packages: ["personal", "premium"]
-  },
-  additionalInstrument: {
-    label_key: "additionalInstrument",
-    description_key: "additionalInstrumentDesc",
-    price: 79,
-    packages: ["instrumental"],
-    trigger_field_type: "select",
-    trigger_config: {
-      options: [
-        { value: "guitar", label_key: "guitar" },
-        { value: "piano", label_key: "piano" },
-        { value: "drums", label_key: "drums" },
-        { value: "bass", label_key: "bass" }
-      ]
-    }
-  },
-  vocalTuning: {
-    label_key: "vocalTuning",
-    description_key: "vocalTuningDesc",
-    price: 99,
-    packages: ["artist"],
-    trigger_field_type: "checkbox"
-  },
-  remixStems: {
-    label_key: "remixStems",
-    description_key: "remixStemsDesc",
-    price: 49,
-    packages: ["remix"],
-    trigger_field_type: "file",
-    trigger_config: {
-      allowedTypes: [".wav", ".mp3", ".zip"],
-      maxFiles: 5,
-      maxTotalSizeMb: 50
-    }
-  }
-};
