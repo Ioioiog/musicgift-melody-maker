@@ -26,12 +26,10 @@ const PaymentSuccess = () => {
       }
 
       try {
+        // Remove the invalid join with package_info table
         const { data, error } = await supabase
           .from('orders')
-          .select(`
-            *,
-            package:package_info(*)
-          `)
+          .select('*')
           .eq('id', orderId)
           .single();
 
