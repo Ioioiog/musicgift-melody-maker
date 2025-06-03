@@ -104,7 +104,7 @@ const TemplateDataHelper: React.FC<TemplateDataHelperProps> = ({
         </div>
 
         <div className="text-xs text-gray-500 space-y-1">
-          <p><strong>Tip:</strong> Use placeholders like <code>{{"{"}recipient_name{"}"}</code> to dynamically insert gift card data.</p>
+          <p><strong>Tip:</strong> Use placeholders like <code>{"{{recipient_name}}"}</code> to dynamically insert gift card data.</p>
           <p><strong>Available data:</strong> recipient_name, card_value, currency, sender_name, message</p>
         </div>
       </CardContent>
