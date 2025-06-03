@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -188,4 +187,18 @@ export const orderTranslations = {
   
   extendedSongLabel: "Versiune Extinsă a Cântecului",
   extendedSongDescription: "Primește o versiune mai lungă a cântecului tău personalizat cu versuri suplimentare și aranjamente muzicale extinse pentru o experiență mai completă. (149 RON / 29 EUR)",
+  
+  // Missing final step translations
+  mentionMusicGiftLabel: "Mențiune MusicGift",
+  termsMentionMusicGiftPlaceholder: "Sunt de acord să menționez MusicGift ca fiind creatorul acestui cântec personalizat",
+  confirmOrderLabel: "Confirmare comandă",
+  confirmOrderPlaceholder: "Confirm că toate informațiile furnizate sunt corecte și doresc să continui cu această comandă",
+  acceptTermsLabel: "Termeni și condiții",
+  acceptTermsAndConditionsPlaceholder: "Accept termenii și condițiile și politica de confidențialitate",
+  
+  // Additional add-on trigger translations
+  uploadPhotosVideos: "Încarcă Fotografii și Videoclipuri",
+  uploadPhotosVideosPlaceholder: "Încarcă fotografii și videoclipuri pentru videoclipul tău muzical personalizat",
+  recordPersonalMessage: "Înregistrează Mesaj Personal",
+  recordPersonalMessagePlaceholder: "Înregistrează un mesaj audio personal de inclus cu cântecul",
 };

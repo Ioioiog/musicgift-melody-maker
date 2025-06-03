@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Chargement des forfaits...",
   loadingSteps: "Chargement des étapes...",
@@ -194,4 +193,18 @@ export const orderTranslations = {
   
   extendedSongLabel: "Version Étendue de la Chanson",
   extendedSongDescription: "Obtenez une version plus longue de votre chanson personnalisée avec des couplets supplémentaires et des arrangements musicaux étendus pour une expérience plus complète. (149 RON / 29 EUR)",
+  
+  // Missing final step translations
+  mentionMusicGiftLabel: "Mention MusicGift",
+  termsMentionMusicGiftPlaceholder: "J'accepte de mentionner MusicGift comme créateur de cette chanson personnalisée",
+  confirmOrderLabel: "Confirmer la commande",
+  confirmOrderPlaceholder: "Je confirme que toutes les informations fournies sont correctes et je souhaite procéder à cette commande",
+  acceptTermsLabel: "Conditions générales",
+  acceptTermsAndConditionsPlaceholder: "J'accepte les conditions générales et la politique de confidentialité",
+  
+  // Additional add-on trigger translations
+  uploadPhotosVideos: "Télécharger Photos et Vidéos",
+  uploadPhotosVideosPlaceholder: "Téléchargez des photos et vidéos pour votre clip vidéo personnalisé",
+  recordPersonalMessage: "Enregistrer Message Personnel",
+  recordPersonalMessagePlaceholder: "Enregistrez un message audio personnel à inclure avec la chanson",
 };

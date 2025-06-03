@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Pakete werden geladen...",
   loadingSteps: "Schritte werden geladen...",
@@ -184,8 +183,22 @@ export const orderTranslations = {
   audioMessageFromSenderDescription: "Fügen Sie eine persönliche Audio-Nachricht von Ihnen an den Empfänger hinzu, die zusammen mit dem Lied geliefert wird. Fügen Sie Ihre Stimme hinzu, um das Geschenk noch persönlicher zu machen! (49 RON / 9 EUR)",
   
   commercialRightsUpgradeLabel: "Kommerzielle Rechte Upgrade",
-  commercialRightsUpgradeDescription: "Upgrade auf vollständige kommerzielle Rechte, die es Ihnen ermöglichen, Ihr personalisiertes Lied für jeden kommerziellen Zweck ohne Einschränkungen zu verwenden. (200 RON / 39 EUR)",
+  commercialRightsUpgradeDescription: "Upgrade auf vollständige kommerzielle Rechte, die es Ihnen ermöglicht, Ihr personalisiertes Lied für jeden kommerziellen Zweck ohne Einschränkungen zu verwenden. (200 RON / 39 EUR)",
   
   extendedSongLabel: "Erweiterte Lied-Version",
   extendedSongDescription: "Erhalten Sie eine längere Version Ihres personalisierten Liedes mit zusätzlichen Versen und erweiterten musikalischen Arrangements für ein vollständigeres Erlebnis. (149 RON / 29 EUR)",
+  
+  // Missing final step translations
+  mentionMusicGiftLabel: "MusicGift Erwähnung",
+  termsMentionMusicGiftPlaceholder: "Ich stimme zu, MusicGift als Ersteller dieses personalisierten Liedes zu erwähnen",
+  confirmOrderLabel: "Bestellung bestätigen",
+  confirmOrderPlaceholder: "Ich bestätige, dass alle angegebenen Informationen korrekt sind und ich mit dieser Bestellung fortfahren möchte",
+  acceptTermsLabel: "Geschäftsbedingungen",
+  acceptTermsAndConditionsPlaceholder: "Ich akzeptiere die Geschäftsbedingungen und Datenschutzrichtlinie",
+  
+  // Additional add-on trigger translations
+  uploadPhotosVideos: "Fotos & Videos Hochladen",
+  uploadPhotosVideosPlaceholder: "Laden Sie Fotos und Videos für Ihr personalisiertes Musikvideo hoch",
+  recordPersonalMessage: "Persönliche Nachricht Aufnehmen",
+  recordPersonalMessagePlaceholder: "Nehmen Sie eine persönliche Audio-Nachricht auf, die dem Lied beigefügt werden soll",
 };
