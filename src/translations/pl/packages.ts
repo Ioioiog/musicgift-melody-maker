@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Wybierz swój pakiet",
   selectPerfectPackage: "Wybierz idealny pakiet, który pasuje do twoich potrzeb i budżetu",
@@ -263,5 +262,47 @@ export const packagesTranslations = {
   radio_edit: "Wersja radiowa",
   full_version: "Pełna wersja",
   extended_mix: "Mix rozszerzony",
-  instrumental_version: "Wersja instrumentalna"
+  instrumental_version: "Wersja instrumentalna",
+
+  // Enhanced Step 1 translations
+  songStoryStep: "Historia Piosenki",
+  yourStoryStep: "Twoja Historia",
+  companyDetailsStep: "Szczegóły Firmy",
+  artistIntroStep: "Wprowadzenie Artysty",
+  instrumentalConceptStep: "Koncepcja Instrumentalu",
+  remixInfoStep: "Informacje o Remiksie",
+
+  // Field labels
+  recipientLabel: "Imię odbiorcy",
+  includeNameInSongLabel: "Uwzględnij imię w piosence",
+  relationshipTextLabel: "Wasz związek",
+  storyDetailedLabel: "Wasza szczegółowa historia",
+  occasionLabel: "Okazja",
+  storyLabel: "Twoja historia",
+  vibeLabel: "Pożądany klimat/nastrój",
+  companyNameLabel: "Nazwa Firmy",
+  brandMessageLabel: "Komunikat Marki",
+  artistNameLabel: "Nazwa Artysty",
+  musicalStyleLabel: "Styl Muzyczny",
+  instrumentalVibeLabel: "Klimat Instrumentalu",
+  instrumentalPurposeLabel: "Cel (opcjonalnie)",
+  originalSongLinkLabel: "Link do Oryginalnej Piosenki",
+  desiredRemixStyleLabel: "Pożądany Styl Remiksu",
+
+  // Field placeholders
+  recipientPlaceholder: "np. Maria, Jan, moja żona",
+  includeNameInSongPlaceholder: "Zaznacz, jeśli chcesz, aby imię odbiorcy zostało wymienione w piosence",
+  relationshipTextPlaceholder: "np. moja żona, mój najlepszy przyjaciel, moja córka",
+  storyDetailedPlaceholder: "Opowiedz nam swoją historię szczegółowo - co czyni tę osobę wyjątkową, wasze wspólne wspomnienia, co chcesz wyrazić...",
+  occasionPlaceholder: "np. urodziny, rocznica, ślub",
+  storyPlaceholder: "Opowiedz nam swoją historię...",
+  vibePlaceholder: "np. romantyczny, żywiołowy, emocjonalny, nostalgiczny",
+  companyNamePlaceholder: "np. Twoja Firma Sp. z o.o.",
+  brandMessagePlaceholder: "Jaki komunikat chcesz przekazać o swojej marce?",
+  artistNamePlaceholder: "np. Alex Music, Sarah Voice",
+  musicalStylePlaceholder: "np. pop, rock, indie, elektroniczny",
+  instrumentalVibePlaceholder: "np. energiczny, spokojny, dramatyczny, podnoszący na duchu",
+  instrumentalPurposePlaceholder: "Do czego użyjesz tego instrumentalu? (opcjonalnie)",
+  originalSongLinkPlaceholder: "Link YouTube, Spotify, SoundCloud",
+  desiredRemixStylePlaceholder: "np. elektroniczny, akustyczny, jazz, trap"
 };

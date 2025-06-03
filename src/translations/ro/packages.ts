@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -263,5 +262,47 @@ export const packagesTranslations = {
   radio_edit: "Edit radio",
   full_version: "Versiune completă",
   extended_mix: "Mix extins",
-  instrumental_version: "Versiune instrumentală"
+  instrumental_version: "Versiune instrumentală",
+  
+  // Enhanced Step 1 translations
+  songStoryStep: "Povestea Melodiei",
+  yourStoryStep: "Povestea Ta",
+  companyDetailsStep: "Detalii Companie",
+  artistIntroStep: "Introducere Artist",
+  instrumentalConceptStep: "Conceptul Instrumental",
+  remixInfoStep: "Informații Remix",
+
+  // Field labels
+  recipientLabel: "Numele destinatarului",
+  includeNameInSongLabel: "Include numele în melodie",
+  relationshipTextLabel: "Relația voastră",
+  storyDetailedLabel: "Povestea voastră detaliată",
+  occasionLabel: "Ocazia",
+  storyLabel: "Povestea ta",
+  vibeLabel: "Atmosfera dorită",
+  companyNameLabel: "Numele Companiei",
+  brandMessageLabel: "Mesajul Brandului",
+  artistNameLabel: "Numele Artistului",
+  musicalStyleLabel: "Stilul Muzical",
+  instrumentalVibeLabel: "Atmosfera Instrumental",
+  instrumentalPurposeLabel: "Scopul (opțional)",
+  originalSongLinkLabel: "Link-ul Melodiei Originale",
+  desiredRemixStyleLabel: "Stilul Remix Dorit",
+
+  // Field placeholders
+  recipientPlaceholder: "ex: Maria, Ion, soția mea",
+  includeNameInSongPlaceholder: "Bifează dacă vrei ca numele destinatarului să fie menționat în melodie",
+  relationshipTextPlaceholder: "ex: soția mea, cel mai bun prieten, fiica mea",
+  storyDetailedPlaceholder: "Spune-ne povestea ta în detaliu - ce face această persoană specială, amintirile voastre împreună, ce vrei să exprimi...",
+  occasionPlaceholder: "ex: aniversare, nuntă, zi de naștere",
+  storyPlaceholder: "Spune-ne povestea ta...",
+  vibePlaceholder: "ex: romantic, vesel, emoțional, nostalgic",
+  companyNamePlaceholder: "ex: Compania Ta SRL",
+  brandMessagePlaceholder: "Ce mesaj vrei să transmiți despre brandul tău?",
+  artistNamePlaceholder: "ex: Alex Music, Sarah Voice",
+  musicalStylePlaceholder: "ex: pop, rock, indie, electronic",
+  instrumentalVibePlaceholder: "ex: energic, calm, dramatic, inspirațional",
+  instrumentalPurposePlaceholder: "Pentru ce vei folosi acest instrumental? (opțional)",
+  originalSongLinkPlaceholder: "Link YouTube, Spotify, SoundCloud",
+  desiredRemixStylePlaceholder: "ex: electronic, acustic, jazz, trap"
 };

@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -89,7 +88,7 @@ export const packagesTranslations = {
   reload: "Reload",
   noPackagesAvailable: "No packages available at the moment.",
   checkBackLater: "Please check back later.",
-
+  
   // New field translations for enhanced packages
   // Personal Package Fields
   recipientName: "Recipient Name",
@@ -118,7 +117,7 @@ export const packagesTranslations = {
   phoneNumberPlaceholder: "e.g., +1234567890",
   legalAcceptance: "Terms and Conditions Acceptance",
   finalConfirmation: "Final Confirmation",
-
+  
   // Business Package Fields
   companyName: "Company Name",
   companyNamePlaceholder: "e.g., Example Corp LLC",
@@ -140,7 +139,7 @@ export const packagesTranslations = {
   billingDetails: "Billing Details",
   billingDetailsPlaceholder: "Address and billing information",
   businessTerms: "Business Terms",
-
+  
   // Premium Package Fields
   comprehensiveRecipientInfo: "Comprehensive Recipient Information",
   relationshipDetails: "Relationship Details",
@@ -159,7 +158,7 @@ export const packagesTranslations = {
   deliveryTimeline: "Delivery Timeline",
   communicationPreferences: "Communication Preferences",
   premiumServiceTerms: "Premium Service Terms",
-
+  
   // Artist Package Fields
   stageName: "Stage Name",
   stageNamePlaceholder: "e.g., Alex Music",
@@ -186,7 +185,7 @@ export const packagesTranslations = {
   teamMembersPlaceholder: "Manager, agent, producer",
   managementInfo: "Management Information",
   artistAgreement: "Artist Agreement",
-
+  
   // Instrumental Package Fields
   instrumentalTitle: "Instrumental Title",
   instrumentalTitlePlaceholder: "e.g., My Dream Melody",
@@ -207,7 +206,7 @@ export const packagesTranslations = {
   usageContext: "Usage Context",
   timelineRequirements: "Timeline Requirements",
   usageRights: "Usage Rights",
-
+  
   // Remix Package Fields
   originalSongLink: "Original Song Link",
   originalSongLinkPlaceholder: "YouTube, SoundCloud, Spotify",
@@ -225,7 +224,7 @@ export const packagesTranslations = {
   ownershipDocumentation: "Ownership Documentation",
   remixTimeline: "Remix Timeline",
   remixRights: "Remix Rights",
-
+  
   // Addon translations
   rushDelivery: "Rush Delivery",
   rushDeliveryDesc: "Get your song in 24-48 hours",
@@ -239,7 +238,7 @@ export const packagesTranslations = {
   commercialRightsUpgradeDesc: "Full rights for commercial use",
   extendedSong: "Extended Song",
   extendedSongDesc: "Extended version with 3 verses",
-
+  
   // Field options
   romantic: "Romantic",
   upbeat: "Upbeat",
@@ -283,5 +282,47 @@ export const packagesTranslations = {
   radio_edit: "Radio Edit",
   full_version: "Full Version",
   extended_mix: "Extended Mix",
-  instrumental_version: "Instrumental Version"
+  instrumental_version: "Instrumental Version",
+  
+  // Enhanced Step 1 translations
+  songStoryStep: "Song Story",
+  yourStoryStep: "Your Story",
+  companyDetailsStep: "Company Details",
+  artistIntroStep: "Artist Introduction",
+  instrumentalConceptStep: "Instrumental Concept",
+  remixInfoStep: "Remix Information",
+  
+  // Field labels
+  recipientLabel: "Recipient Name",
+  includeNameInSongLabel: "Include name in song",
+  relationshipTextLabel: "Your relationship",
+  storyDetailedLabel: "Your detailed story",
+  occasionLabel: "Occasion",
+  storyLabel: "Your story",
+  vibeLabel: "Desired vibe/mood",
+  companyNameLabel: "Company Name",
+  brandMessageLabel: "Brand Message",
+  artistNameLabel: "Artist Name",
+  musicalStyleLabel: "Musical Style",
+  instrumentalVibeLabel: "Instrumental Vibe",
+  instrumentalPurposeLabel: "Purpose (optional)",
+  originalSongLinkLabel: "Original Song Link",
+  desiredRemixStyleLabel: "Desired Remix Style",
+  
+  // Field placeholders
+  recipientPlaceholder: "e.g., Maria, John, my wife",
+  includeNameInSongPlaceholder: "Check if you want the recipient's name mentioned in the song",
+  relationshipTextPlaceholder: "e.g., my wife, my best friend, my daughter",
+  storyDetailedPlaceholder: "Tell us your story in detail - what makes this person special, your memories together, what you want to express...",
+  occasionPlaceholder: "e.g., birthday, anniversary, wedding",
+  storyPlaceholder: "Tell us your story...",
+  vibePlaceholder: "e.g., romantic, upbeat, emotional, nostalgic",
+  companyNamePlaceholder: "e.g., Your Company LLC",
+  brandMessagePlaceholder: "What message do you want to convey about your brand?",
+  artistNamePlaceholder: "e.g., Alex Music, Sarah Voice",
+  musicalStylePlaceholder: "e.g., pop, rock, indie, electronic",
+  instrumentalVibePlaceholder: "e.g., energetic, calm, dramatic, uplifting",
+  instrumentalPurposePlaceholder: "What will you use this instrumental for? (optional)",
+  originalSongLinkPlaceholder: "YouTube, Spotify, SoundCloud link",
+  desiredRemixStylePlaceholder: "e.g., electronic, acoustic, jazz, trap"
 };
