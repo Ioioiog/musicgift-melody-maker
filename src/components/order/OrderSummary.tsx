@@ -6,6 +6,7 @@ import { Clock, CheckCircle, Gift } from 'lucide-react';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { getPackagePrice } from '@/utils/pricing';
 
 interface OrderSummaryProps {
   selectedPackage: string;
@@ -24,7 +25,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
     addons.find(addon => addon.addon_key === addonKey)
   ).filter(Boolean);
 
-  const packagePrice = selectedPackageData?.price || 0;
+  const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
   const addonsPrice = selectedAddonsData.reduce((total, addon) => total + (addon?.price || 0), 0);
   const subtotal = packagePrice + addonsPrice;
   

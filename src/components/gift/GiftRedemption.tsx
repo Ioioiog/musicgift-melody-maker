@@ -9,6 +9,7 @@ import { useGiftCardByCode, useGiftCardBalance } from '@/hooks/useGiftCards';
 import { usePackages } from '@/hooks/usePackageData';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useNavigate } from 'react-router-dom';
+import { getPackagePrice } from '@/utils/pricing';
 
 interface GiftRedemptionProps {
   onRedemption: (giftCard: any, selectedPackage: string, upgradeAmount?: number) => void;
@@ -120,8 +121,9 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
                 <h3 className="font-semibold text-lg mb-4">Choose Your Package</h3>
                 <div className="grid gap-3">
                   {packages.map((pkg) => {
-                    const canAfford = canAffordPackage(pkg.price);
-                    const upgradeAmount = getUpgradeAmount(pkg.price);
+                    const packagePrice = getPackagePrice(pkg, currency);
+                    const canAfford = canAffordPackage(packagePrice);
+                    const upgradeAmount = getUpgradeAmount(packagePrice);
 
                     return (
                       <div
@@ -136,7 +138,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
                         <div className="flex justify-between items-center">
                           <div>
                             <h4 className="font-medium">{pkg.label_key}</h4>
-                            <p className="text-sm text-gray-600">{pkg.price} {currency}</p>
+                            <p className="text-sm text-gray-600">{packagePrice} {currency}</p>
                           </div>
                           <div className="text-right">
                             {canAfford ? (
@@ -162,8 +164,8 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
                 className="w-full"
                 size="lg"
               >
-                {selectedPackage && !canAffordPackage(packages.find(p => p.value === selectedPackage)?.price || 0)
-                  ? `Continue to Order (${getUpgradeAmount(packages.find(p => p.value === selectedPackage)?.price || 0)} ${currency} additional payment required)`
+                {selectedPackage && !canAffordPackage(getPackagePrice(packages.find(p => p.value === selectedPackage)!, currency))
+                  ? `Continue to Order (${getUpgradeAmount(getPackagePrice(packages.find(p => p.value === selectedPackage)!, currency))} ${currency} additional payment required)`
                   : 'Continue to Order'
                 }
               </Button>

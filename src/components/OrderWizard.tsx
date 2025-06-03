@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import FormFieldRenderer from './order/FormFieldRenderer';
 import StepIndicator from './order/StepIndicator';
 import OrderSummary from './order/OrderSummary';
+import { getPackagePrice } from '@/utils/pricing';
 
 interface OrderFormData {
   email?: string;
@@ -85,7 +85,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   };
 
   const calculateTotalPrice = () => {
-    const packagePrice = selectedPackageData?.price || 0;
+    const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
     const addonsPrice = selectedAddons.reduce((total, addonKey) => {
       const addon = addons.find(addon => addon.addon_key === addonKey);
       return total + (addon?.price || 0);
@@ -108,7 +108,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       // Default submission logic
       const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
       const package_name = selectedPackageData?.label_key;
-      const package_price = selectedPackageData?.price;
+      const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
       const package_delivery_time = selectedPackageData?.delivery_time_key;
       const package_includes = selectedPackageData?.includes;
 

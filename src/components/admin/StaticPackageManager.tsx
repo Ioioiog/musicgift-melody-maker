@@ -3,10 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { usePackages } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
+import { getPackagePrice } from '@/utils/pricing';
 
 const StaticPackageManager = () => {
   const { data: packages = [], isLoading } = usePackages();
   const { t } = useLanguage();
+  const { currency } = useCurrency();
 
   if (isLoading) {
     return (
@@ -55,7 +58,7 @@ const StaticPackageManager = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm font-medium text-gray-600">Price</p>
-                  <p className="text-lg font-bold text-purple-600">{pkg.price} RON</p>
+                  <p className="text-lg font-bold text-purple-600">{getPackagePrice(pkg, currency)} {currency}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-600">Steps</p>

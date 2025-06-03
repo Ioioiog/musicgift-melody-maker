@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
@@ -11,11 +10,14 @@ import { usePackages, useAddons } from "@/hooks/usePackageData";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useGiftCardByCode } from "@/hooks/useGiftCards";
+import { getPackagePrice } from "@/utils/pricing";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 const Order = () => {
   const { toast } = useToast();
   const { t } = useLanguage();
   const { user } = useAuth();
+  const { currency } = useCurrency();
   const navigate = useNavigate();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
@@ -41,7 +43,8 @@ const Order = () => {
   }, [giftCardCode, giftCard, toast]);
 
   const calculateTotalPrice = (packageValue: string, selectedAddons: string[]) => {
-    const packagePrice = packages.find(pkg => pkg.value === packageValue)?.price || 0;
+    const packageData = packages.find(pkg => pkg.value === packageValue);
+    const packagePrice = packageData ? getPackagePrice(packageData, currency) : 0;
     const addonsPrice = selectedAddons.reduce((total, addonKey) => {
       const addon = addons.find(a => a.addon_key === addonKey);
       return total + (addon?.price || 0);
@@ -91,7 +94,7 @@ const Order = () => {
         // Package detail columns
         package_value: selectedPackage.value,
         package_name: selectedPackage.label_key,
-        package_price: selectedPackage.price,
+        package_price: getPackagePrice(selectedPackage, currency),
         package_delivery_time: selectedPackage.delivery_time_key,
         package_includes: selectedPackage.includes ? JSON.parse(JSON.stringify(selectedPackage.includes)) : []
       };
