@@ -375,6 +375,10 @@ export type Database = {
           payment_status: string | null
           payment_url: string | null
           selected_addons: Json | null
+          smartbill_invoice_data: Json | null
+          smartbill_invoice_id: string | null
+          smartbill_payment_status: string | null
+          smartbill_payment_url: string | null
           status: string | null
           total_price: number | null
           updated_at: string | null
@@ -397,6 +401,10 @@ export type Database = {
           payment_status?: string | null
           payment_url?: string | null
           selected_addons?: Json | null
+          smartbill_invoice_data?: Json | null
+          smartbill_invoice_id?: string | null
+          smartbill_payment_status?: string | null
+          smartbill_payment_url?: string | null
           status?: string | null
           total_price?: number | null
           updated_at?: string | null
@@ -419,6 +427,10 @@ export type Database = {
           payment_status?: string | null
           payment_url?: string | null
           selected_addons?: Json | null
+          smartbill_invoice_data?: Json | null
+          smartbill_invoice_id?: string | null
+          smartbill_payment_status?: string | null
+          smartbill_payment_url?: string | null
           status?: string | null
           total_price?: number | null
           updated_at?: string | null

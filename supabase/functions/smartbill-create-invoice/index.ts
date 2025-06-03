@@ -21,6 +21,42 @@ interface OrderData {
   currency: string;
 }
 
+interface SmartBillInvoiceData {
+  companyVatCode: string;
+  seriesName: string;
+  client: {
+    name: string;
+    vatCode?: string;
+    regCom?: string;
+    address?: string;
+    isTaxPayer: boolean;
+    city?: string;
+    county?: string;
+    country: string;
+    email?: string;
+  };
+  issueDate: string;
+  dueDate: string;
+  language: string;
+  precision: number;
+  currency: string;
+  products: Array<{
+    name: string;
+    code?: string;
+    isUom: boolean;
+    qty: number;
+    price: number;
+    isService: boolean;
+    saveToDb: boolean;
+    productType: string;
+    taxName: string;
+    taxPercentage: number;
+  }>;
+  issuerName?: string;
+  issuerCnp?: string;
+  observations?: string;
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -49,7 +85,8 @@ serve(async (req) => {
         package_name: orderData.package_name,
         package_price: orderData.package_price,
         package_delivery_time: orderData.package_delivery_time,
-        package_includes: orderData.package_includes
+        package_includes: orderData.package_includes,
+        smartbill_payment_status: 'pending'
       })
       .select()
       .single()
@@ -67,7 +104,8 @@ serve(async (req) => {
         .from('orders')
         .update({ 
           payment_status: 'completed',
-          status: 'confirmed'
+          status: 'confirmed',
+          smartbill_payment_status: 'completed'
         })
         .eq('id', savedOrder.id)
 
@@ -88,26 +126,96 @@ serve(async (req) => {
       )
     }
 
-    // TODO: Implement actual SmartBill API integration
-    // For now, return a placeholder response
-    console.log('SmartBill integration placeholder - would create invoice for:', {
-      orderId: savedOrder.id,
-      amount: orderData.total_price,
-      currency: orderData.currency,
-      customerEmail: orderData.form_data.email,
-      customerName: orderData.form_data.fullName
+    // Get SmartBill credentials
+    const smartBillUsername = Deno.env.get('SMARTBILL_USERNAME')
+    const smartBillToken = Deno.env.get('SMARTBILL_TOKEN')
+    const smartBillBaseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
+
+    if (!smartBillUsername || !smartBillToken) {
+      console.error('SmartBill credentials not configured')
+      // Fallback to basic order creation
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          orderId: savedOrder.id,
+          message: 'Order created successfully - SmartBill credentials not configured'
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200 
+        }
+      )
+    }
+
+    // Create SmartBill invoice
+    const invoiceData: SmartBillInvoiceData = {
+      companyVatCode: Deno.env.get('SMARTBILL_COMPANY_VAT') || '',
+      seriesName: 'MUSICGIFT',
+      client: {
+        name: orderData.form_data.fullName || 'Customer',
+        address: orderData.form_data.address || '',
+        city: orderData.form_data.city || 'Bucharest',
+        county: orderData.form_data.county || 'Bucharest',
+        country: 'Romania',
+        email: orderData.form_data.email || '',
+        isTaxPayer: false
+      },
+      issueDate: new Date().toISOString().split('T')[0],
+      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+      language: 'RO',
+      precision: 2,
+      currency: orderData.currency || 'RON',
+      products: [
+        {
+          name: `${orderData.package_name} - Cadou Musical Personalizat`,
+          code: orderData.package_value || 'MUSICGIFT',
+          isUom: false,
+          qty: 1,
+          price: orderData.total_price,
+          isService: true,
+          saveToDb: false,
+          productType: 'Serviciu',
+          taxName: 'Normala',
+          taxPercentage: 19
+        }
+      ],
+      observations: `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
+    }
+
+    console.log('Creating SmartBill invoice with data:', invoiceData)
+
+    // Create invoice via SmartBill API
+    const smartBillAuth = btoa(`${smartBillUsername}:${smartBillToken}`)
+    
+    const invoiceResponse = await fetch(`${smartBillBaseUrl}/SBORO/api/invoice`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${smartBillAuth}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(invoiceData)
     })
 
-    // Placeholder SmartBill invoice creation
-    const smartBillInvoiceId = `INV-${Date.now()}`
+    const invoiceResult = await invoiceResponse.json()
+    console.log('SmartBill invoice response:', invoiceResult)
+
+    if (!invoiceResponse.ok) {
+      throw new Error(`SmartBill API error: ${invoiceResult.errorText || 'Unknown error'}`)
+    }
+
+    // Extract invoice ID and generate payment URL
+    const smartBillInvoiceId = invoiceResult.number || `INV-${Date.now()}`
     const paymentUrl = `${Deno.env.get('SITE_URL')}/payment-success?order=${savedOrder.id}&invoice=${smartBillInvoiceId}`
 
-    // Update order with SmartBill invoice ID
+    // Update order with SmartBill details
     const { error: updateError } = await supabaseClient
       .from('orders')
       .update({ 
         smartbill_invoice_id: smartBillInvoiceId,
-        smartbill_payment_url: paymentUrl
+        smartbill_payment_url: paymentUrl,
+        smartbill_invoice_data: invoiceResult,
+        smartbill_payment_status: 'pending'
       })
       .eq('id', savedOrder.id)
 

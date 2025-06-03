@@ -201,6 +201,11 @@ const OrdersManagement = () => {
             <Badge className={getPaymentStatusColor(order.payment_status)}>
               {t('payment', 'Payment')}: {t(order.payment_status, order.payment_status)}
             </Badge>
+            {order.smartbill_payment_status && (
+              <Badge className={getPaymentStatusColor(order.smartbill_payment_status)}>
+                SmartBill: {order.smartbill_payment_status}
+              </Badge>
+            )}
             <DeliveryCountdownBadge 
               orderCreatedAt={order.created_at}
               packageValue={packageValue}
@@ -221,6 +226,9 @@ const OrdersManagement = () => {
             <p><strong>{t('customer', 'Customer')}:</strong> {formData?.fullName || 'N/A'}</p>
             <p><strong>{t('email', 'Email')}:</strong> {formData?.email || 'N/A'}</p>
             <p><strong>{t('package', 'Package')}:</strong> {order.package_value || 'N/A'}</p>
+            {order.smartbill_invoice_id && (
+              <p><strong>SmartBill Invoice:</strong> {order.smartbill_invoice_id}</p>
+            )}
           </div>
           <div className="space-y-1">
             <p><strong>{t('created', 'Created')}:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
@@ -228,6 +236,20 @@ const OrdersManagement = () => {
             <p><strong>{t('occasion', 'Occasion')}:</strong> {formData?.occasion || 'N/A'}</p>
           </div>
         </div>
+
+        {/* SmartBill Payment URL */}
+        {order.smartbill_payment_url && order.smartbill_payment_status === 'pending' && (
+          <div className="mt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open(order.smartbill_payment_url, '_blank')}
+              className="w-full"
+            >
+              View SmartBill Payment
+            </Button>
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="flex flex-col space-y-2">
@@ -322,6 +344,9 @@ const OrdersManagement = () => {
         <td className="px-6 py-4">
           <div className="text-sm font-medium text-gray-900">#{order.id.slice(0, 8)}</div>
           <div className="text-sm text-gray-500">{formData?.email || 'N/A'}</div>
+          {order.smartbill_invoice_id && (
+            <div className="text-xs text-blue-600">SB: {order.smartbill_invoice_id}</div>
+          )}
         </td>
         <td className="px-6 py-4">
           <div className="text-sm text-gray-900">{formData?.fullName || 'N/A'}</div>
@@ -339,6 +364,11 @@ const OrdersManagement = () => {
             <Badge className={getPaymentStatusColor(order.payment_status)}>
               {t(order.payment_status, order.payment_status)}
             </Badge>
+            {order.smartbill_payment_status && (
+              <Badge className={getPaymentStatusColor(order.smartbill_payment_status)}>
+                SB: {order.smartbill_payment_status}
+              </Badge>
+            )}
             <DeliveryCountdownBadge 
               orderCreatedAt={order.created_at}
               packageValue={packageValue}
@@ -369,6 +399,17 @@ const OrdersManagement = () => {
               </SelectContent>
             </Select>
             
+            {order.smartbill_payment_url && order.smartbill_payment_status === 'pending' && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.open(order.smartbill_payment_url, '_blank')}
+                title="View SmartBill Payment"
+              >
+                💳
+              </Button>
+            )}
+            
             <Button
               variant="outline"
               size="sm"
@@ -389,6 +430,22 @@ const OrdersManagement = () => {
                   <DialogTitle>{t('orderDetails', 'Order Details')} #{order.id.slice(0, 8)}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
+                  {order.smartbill_invoice_id && (
+                    <div>
+                      <h4 className="font-semibold mb-2">SmartBill Information:</h4>
+                      <div className="bg-blue-50 p-4 rounded text-sm">
+                        <p><strong>Invoice ID:</strong> {order.smartbill_invoice_id}</p>
+                        <p><strong>Payment Status:</strong> {order.smartbill_payment_status || 'pending'}</p>
+                        {order.smartbill_payment_url && (
+                          <p><strong>Payment URL:</strong> 
+                            <a href={order.smartbill_payment_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline ml-1">
+                              View Payment
+                            </a>
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   <div>
                     <h4 className="font-semibold mb-2">{t('packageInformation', 'Package Information')}:</h4>
                     <div className="bg-gray-100 p-4 rounded text-sm">
