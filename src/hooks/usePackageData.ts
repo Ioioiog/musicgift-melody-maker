@@ -1,3 +1,4 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { packages, addons, type PackageData } from '@/data/packages';
@@ -121,7 +122,8 @@ export const useAddons = () => {
         addon_key: key,
         label_key: addon.label_key,
         description_key: addon.description_key,
-        price: addon.price,
+        price_ron: addon.price_ron,
+        price_eur: addon.price_eur,
         is_active: true,
         trigger_field_type: null,
         trigger_field_config: {},

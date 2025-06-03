@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,7 +13,7 @@ import FormFieldRenderer from './order/FormFieldRenderer';
 import StepIndicator from './order/StepIndicator';
 import OrderSummary from './order/OrderSummary';
 import PackageSelectionStep from './order/PackageSelectionStep';
-import { getPackagePrice } from '@/utils/pricing';
+import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 
 interface OrderFormData {
   email?: string;
@@ -258,4 +257,3 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 };
 
 export default OrderWizard;
-
