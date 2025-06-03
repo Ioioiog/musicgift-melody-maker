@@ -360,7 +360,6 @@ export type Database = {
       orders: {
         Row: {
           created_at: string | null
-          currency: string
           form_data: Json
           gift_card_id: string | null
           gift_credit_applied: number | null
@@ -387,7 +386,6 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
-          currency?: string
           form_data: Json
           gift_card_id?: string | null
           gift_credit_applied?: number | null
@@ -414,7 +412,6 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
-          currency?: string
           form_data?: Json
           gift_card_id?: string | null
           gift_credit_applied?: number | null

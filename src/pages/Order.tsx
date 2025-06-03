@@ -140,22 +140,13 @@ const Order = () => {
         variant: "default"
       });
 
-      // Handle different payment scenarios based on response
-      if (!smartBillResponse.paymentRequired) {
-        // No payment needed (free order)
-        console.log("Order completed successfully - no payment required");
-        navigate('/payment/success?orderId=' + smartBillResponse.orderId);
-      } else if (smartBillResponse.paymentUrl) {
-        // NETOPIA payment URL available - redirect to payment
-        console.log("Redirecting to NETOPIA payment:", smartBillResponse.paymentUrl);
+      // If SmartBill returns a payment URL and payment is needed, redirect user
+      if (smartBillResponse?.paymentUrl && finalPrice > 0) {
+        console.log("Redirecting to SmartBill payment:", smartBillResponse.paymentUrl);
         window.location.href = smartBillResponse.paymentUrl;
-      } else if (smartBillResponse.requiresManualPayment) {
-        // Manual payment required (SmartBill integration issue or no NETOPIA URL)
-        console.log("Manual payment required - redirecting to manual payment page");
-        navigate(`/payment/manual?orderId=${smartBillResponse.orderId}&invoiceId=${smartBillResponse.invoiceId || ''}`);
       } else {
-        // Fallback to success page
-        console.log("Order created successfully - redirecting to success page");
+        // If no payment needed, show completion message - use correct route
+        console.log("Order completed successfully - no payment required");
         navigate('/payment/success?orderId=' + smartBillResponse.orderId);
       }
 
