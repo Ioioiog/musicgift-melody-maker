@@ -1,5 +1,3 @@
-
-
 import type { Package } from '@/types';
 
 // Define the addons configuration
@@ -9,35 +7,35 @@ export const addons = {
     price_eur: 19,
     label_key: 'rushDeliveryLabel',
     description_key: 'rushDeliveryDescription',
-    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
+    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix', 'plus']
   },
   commercialRights: { 
     price_ron: 99,
     price_eur: 19,
     label_key: 'commercialRightsLabel',
     description_key: 'commercialRightsDescription',
-    availableFor: ['personal']
+    availableFor: ['personal', 'plus']
   },
   distributieMangoRecords: {
     price_ron: 199,
     price_eur: 39,
     label_key: 'distributieMangoRecordsLabel',
     description_key: 'distributieMangoRecordsDescription',
-    availableFor: ['personal', 'remix', 'instrumental']
+    availableFor: ['personal', 'remix', 'instrumental', 'plus']
   },
   customVideo: { 
     price_ron: 149,
     price_eur: 29,
     label_key: 'customVideoLabel',
     description_key: 'customVideoDescription',
-    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
+    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix', 'plus']
   },
   audioMessageFromSender: { 
     price_ron: 99,
     price_eur: 19,
     label_key: 'audioMessageFromSenderLabel',
     description_key: 'audioMessageFromSenderDescription',
-    availableFor: ['personal', 'business', 'premium']
+    availableFor: ['personal', 'business', 'premium', 'plus']
   },
   commercialRightsUpgrade: {
     price_ron: 399,
@@ -51,11 +49,79 @@ export const addons = {
     price_eur: 9,
     label_key: 'extendedSongLabel',
     description_key: 'extendedSongDescription',
-    availableFor: ['personal', 'premium', 'business']
+    availableFor: ['personal', 'premium', 'business', 'plus']
   }
 };
 
 export const packages: Package[] = [
+  {
+    id: "plus-package",
+    value: "plus",
+    label_key: "plusPackage",
+    tagline_key: "plusTagline",
+    description_key: "plusDescription",
+    price_ron: 1,
+    price_eur: 1,
+    delivery_time_key: "plusDelivery",
+    tag: "new",
+    includes: [
+      { include_key: "plusInclude1" },
+      { include_key: "plusInclude2" },
+      { include_key: "plusInclude3" }
+    ],
+    steps: [
+      {
+        id: "plus-step-1",
+        step_number: 1,
+        title_key: "contactDetailsStep",
+        fields: [
+          {
+            id: "fullName",
+            field_name: "fullName",
+            field_type: "text",
+            label_key: "fullNameLabel",
+            placeholder_key: "fullNamePlaceholder",
+            required: true,
+            field_order: 1
+          },
+          {
+            id: "email",
+            field_name: "email",
+            field_type: "email",
+            label_key: "emailLabel",
+            placeholder_key: "emailPlaceholder",
+            required: true,
+            field_order: 2
+          },
+          {
+            id: "phone",
+            field_name: "phone",
+            field_type: "tel",
+            label_key: "phoneLabel",
+            placeholder_key: "phonePlaceholder",
+            required: true,
+            field_order: 3
+          }
+        ]
+      },
+      {
+        id: "plus-step-2",
+        step_number: 2,
+        title_key: "legalAcceptancesStep",
+        fields: [
+          {
+            id: "acceptTermsAndConditions",
+            field_name: "acceptTermsAndConditions",
+            field_type: "checkbox",
+            label_key: "Termeni și condiții",
+            placeholder_key: "acceptTermsAndConditionsPlaceholder",
+            required: true,
+            field_order: 1
+          }
+        ]
+      }
+    ]
+  },
   {
     id: "personal-package",
     value: "personal",

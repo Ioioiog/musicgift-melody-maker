@@ -5,6 +5,7 @@ export const packagesTranslations = {
   viewAllPackages: "Voir tous les forfaits",
   
   // Package names
+  plusPackage: "Forfait Plus",
   personalPackage: "Forfait Personnel",
   premiumPackage: "Forfait Premium",
   businessPackage: "Forfait Business",
@@ -14,6 +15,7 @@ export const packagesTranslations = {
   giftPackage: "Forfait Cadeau",
   
   // Package taglines
+  plusTagline: "Surprise musicale rapide – simple et abordable",
   personalTagline: "Une chanson écrite avec âme – juste pour vous et vos proches",
   premiumTagline: "Sortie complète avec distribution mondiale",
   businessTagline: "Donnez à votre marque une voix mémorable",
@@ -23,6 +25,7 @@ export const packagesTranslations = {
   giftTagline: "Une histoire musicale offerte en cadeau",
   
   // Package descriptions
+  plusDescription: "Le moyen le plus simple de créer un message musical personnalisé. Parfait pour les surprises rapides et tester notre service.",
   personalDescription: "Parfait pour les anniversaires, mariages ou occasions spéciales – nous transformons votre histoire en un cadeau musical unique et émouvant.",
   premiumDescription: "Sortie complète. Exposez votre histoire au monde entier. Musique originale, vidéo animée DOMG et distribution mondiale via la chaîne Mango Records (+100k).",
   businessDescription: "Donnez à votre marque une voix mémorable. Créé pour les entreprises qui veulent une chanson originale pour le branding, les campagnes ou les publicités à impact émotionnel.",
@@ -32,6 +35,7 @@ export const packagesTranslations = {
   giftDescription: "Une histoire musicale offerte en cadeau. Parfait pour surprendre quelqu'un de cher – le destinataire choisit lui-même le style et l'atmosphère de la chanson.",
   
   // Delivery times
+  plusDelivery: "1–2 jours ouvrables",
   personalDelivery: "3–5 jours ouvrables",
   premiumDelivery: "5–7 jours",
   businessDelivery: "5–7 jours",
@@ -40,7 +44,11 @@ export const packagesTranslations = {
   instrumentalDelivery: "3–5 jours",
   giftDelivery: "Instantané",
   
-  // Package includes - same structure as English but translated
+  // Package includes
+  plusInclude1: "Message musical personnalisé simple",
+  plusInclude2: "Qualité de production de base",
+  plusInclude3: "Livraison numérique en 1–2 jours",
+  
   personalInclude1: "Chanson originale créée d'après votre histoire",
   personalInclude2: "Voix professionnelle de l'équipe MusicGift",
   personalInclude3: "Livraison numérique en 3–5 jours",

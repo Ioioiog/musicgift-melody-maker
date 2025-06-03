@@ -5,6 +5,7 @@ export const packagesTranslations = {
   viewAllPackages: "View All Packages",
   
   // Package names
+  plusPackage: "Plus Package",
   personalPackage: "Personal Package",
   premiumPackage: "Premium Package",
   businessPackage: "Business Package",
@@ -14,6 +15,7 @@ export const packagesTranslations = {
   giftPackage: "Gift Package",
   
   // Package taglines
+  plusTagline: "Quick musical surprise – simple and affordable",
   personalTagline: "A song written with soul – just for you and your loved ones",
   premiumTagline: "Complete release with global distribution",
   businessTagline: "Give your brand a memorable voice",
@@ -23,6 +25,7 @@ export const packagesTranslations = {
   giftTagline: "A musical story given as a gift",
   
   // Package descriptions
+  plusDescription: "The simplest way to create a personalized musical message. Perfect for quick surprises and testing our service.",
   personalDescription: "Perfect for birthdays, weddings or special occasions – we transform your story into a unique and emotional musical gift.",
   premiumDescription: "Complete release. Expose your story to the whole world. Original music, animated DOMG video and global distribution through Mango Records channel (+100k).",
   businessDescription: "Give your brand a memorable voice. Created for companies that want an original song for branding, campaigns or ads with emotional impact.",
@@ -32,6 +35,7 @@ export const packagesTranslations = {
   giftDescription: "A musical story given as a gift. Perfect for surprising someone dear – the recipient chooses the style and atmosphere of the song themselves.",
   
   // Delivery times
+  plusDelivery: "1–2 working days",
   personalDelivery: "3–5 working days",
   premiumDelivery: "5–7 days",
   businessDelivery: "5–7 days",
@@ -41,6 +45,10 @@ export const packagesTranslations = {
   giftDelivery: "Instant",
   
   // Package includes
+  plusInclude1: "Simple personalized musical message",
+  plusInclude2: "Basic production quality",
+  plusInclude3: "Digital delivery in 1–2 days",
+  
   personalInclude1: "Original song created after your story",
   personalInclude2: "Professional voice from MusicGift team",
   personalInclude3: "Digital delivery in 3–5 days",
