@@ -50,10 +50,10 @@ const LegalCompliance = () => {
           <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
             <img src="/lovable-uploads/318e18fe-b529-4525-8ddf-74bb1d3a3962.png" alt="Billionaire Boys Club" className="h-6 hover:opacity-80 transition" />
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
+          <a href="https://www.mgnews.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
             <img src="/lovable-uploads/2db89d5c-d0a3-4a0e-b17a-4969d3f1164f.png" alt="MG News" className="h-6 hover:opacity-80 transition" />
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
+          <a href="https://www.evonews.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
             <img src="/lovable-uploads/e48515de-2c58-4a30-819d-fa1862f6373f.png" alt="Evo News" className="h-6 hover:opacity-80 transition" />
           </a>
         </div>
