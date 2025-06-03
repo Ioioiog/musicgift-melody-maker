@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useTranslation } from '@/hooks/useTranslations';
 import { Gift, Heart, Users, Crown, Sparkles, Diamond, Car, Briefcase, Building, Mic, Music, RotateCcw, FileMusic, Star, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+
 const scenarios = [
 // Personal Package scenarios
 {
@@ -80,6 +80,7 @@ const scenarios = [
   text: "Stuck on gift ideas? Music never goes out of style! Give them something truly unique that shows you care. The gift that keeps on giving!",
   packageKey: 'giftPackage'
 }];
+
 const ScenarioHero = () => {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);

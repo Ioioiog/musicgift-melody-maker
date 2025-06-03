@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePackages, useAddons, usePackageSteps } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { supabase } from '@/integrations/supabase/client';
 import FormFieldRenderer from './order/FormFieldRenderer';
 import StepIndicator from './order/StepIndicator';
 import OrderSummary from './order/OrderSummary';
@@ -22,9 +24,11 @@ interface OrderFormData {
 
 interface OrderWizardProps {
   giftCard?: any;
+  onComplete?: (orderData: any) => Promise<void>;
+  preselectedPackage?: string;
 }
 
-const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard }) => {
+const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, preselectedPackage }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<OrderFormData>({});
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
@@ -44,10 +48,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard }) => {
 
   useEffect(() => {
     if (packages.length > 0 && !formData.package) {
-      // Set default package if none selected
-      setFormData(prev => ({ ...prev, package: packages[0].value }));
+      // Set default package if none selected, or use preselected
+      const packageToSet = preselectedPackage || packages[0].value;
+      setFormData(prev => ({ ...prev, package: packageToSet }));
     }
-  }, [packages, formData.package]);
+  }, [packages, formData.package, preselectedPackage]);
 
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
@@ -91,40 +96,51 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard }) => {
   const totalPrice = calculateTotalPrice();
 
   const handleSubmit = async () => {
-    const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
-    const package_name = selectedPackageData?.label_key;
-    const package_price = selectedPackageData?.price;
-    const package_delivery_time = selectedPackageData?.delivery_time_key;
-    const package_includes = selectedPackageData?.includes;
+    if (onComplete) {
+      await onComplete({
+        ...formData,
+        addons: selectedAddons,
+        addonFieldValues,
+        package: selectedPackage,
+        totalPrice
+      });
+    } else {
+      // Default submission logic
+      const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+      const package_name = selectedPackageData?.label_key;
+      const package_price = selectedPackageData?.price;
+      const package_delivery_time = selectedPackageData?.delivery_time_key;
+      const package_includes = selectedPackageData?.includes;
 
-    const orderData = {
-      form_data: formData,
-      selected_addons: selectedAddons,
-      total_price: totalPrice,
-      package_value: selectedPackage,
-      package_name: package_name,
-      package_price: package_price,
-      package_delivery_time: package_delivery_time,
-      package_includes: package_includes,
-      status: 'pending',
-      payment_status: 'pending'
-    };
+      const orderData = {
+        form_data: formData,
+        selected_addons: selectedAddons,
+        total_price: totalPrice,
+        package_value: selectedPackage,
+        package_name: package_name,
+        package_price: package_price,
+        package_delivery_time: package_delivery_time,
+        package_includes: package_includes,
+        status: 'pending',
+        payment_status: 'pending'
+      };
 
-    try {
-      const { data, error } = await supabase
-        .from('orders')
-        .insert([orderData]);
+      try {
+        const { data, error } = await supabase
+          .from('orders')
+          .insert([orderData]);
 
-      if (error) {
-        console.error('Error inserting order:', error);
-        // Handle error (e.g., show an error message)
-      } else {
-        console.log('Order inserted successfully:', data);
-        // Handle success (e.g., redirect to a success page)
+        if (error) {
+          console.error('Error inserting order:', error);
+          // Handle error (e.g., show an error message)
+        } else {
+          console.log('Order inserted successfully:', data);
+          // Handle success (e.g., redirect to a success page)
+        }
+      } catch (error) {
+        console.error('An unexpected error occurred:', error);
+        // Handle unexpected error
       }
-    } catch (error) {
-      console.error('An unexpected error occurred:', error);
-      // Handle unexpected error
     }
   };
 

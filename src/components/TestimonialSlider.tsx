@@ -1,3 +1,4 @@
+
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,6 +9,7 @@ import { useState, useCallback, useEffect } from "react";
 export default function TestimonialSlider() {
   const isMobile = useIsMobile();
   const { t } = useLanguage();
+  const [currentSlide, setCurrentSlide] = useState(0);
   
   const testimonials = [
     {

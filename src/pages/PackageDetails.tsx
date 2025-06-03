@@ -1,3 +1,4 @@
+
 import { useParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -11,7 +12,7 @@ import { ArrowLeft, Check, Clock, Star } from "lucide-react";
 const PackageDetails = () => {
   const { packageId } = useParams();
   const { data: packages = [], isLoading } = usePackages();
-  const { t: tDb } = useTranslation();
+  const { t: tDb } = useLanguage();
   const { t } = useLanguage();
 
   const selectedPackage = packages.find(pkg => pkg.value === packageId);

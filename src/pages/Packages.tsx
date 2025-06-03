@@ -17,6 +17,8 @@ const Packages = () => {
   const {
     t
   } = useLanguage();
+  const { t: tDb } = useLanguage();
+
   if (isLoading) {
     return <div className="min-h-screen">
         <Navigation />

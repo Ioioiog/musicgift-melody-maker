@@ -5,9 +5,10 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 interface StepIndicatorProps {
   currentStep: number;
+  totalSteps: number;
 }
 
-const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
+const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep, totalSteps }) => {
   const { t } = useLanguage();
   
   const steps = [
@@ -16,7 +17,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
     { number: 3, label: t('stepStory') },
     { number: 4, label: t('stepPreferences') },
     { number: 5, label: t('stepContact') }
-  ];
+  ].slice(0, totalSteps);
 
   return (
     <div className="mb-12">

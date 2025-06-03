@@ -23,7 +23,7 @@ const Index = () => {
   } = useLanguage();
   const {
     t: tDb
-  } = useTranslation();
+  } = useLanguage();
 
   // Video player state
   const [isMuted, setIsMuted] = useState(false);
