@@ -37,7 +37,7 @@ export interface GiftCard {
   updated_at: string;
 }
 
-// Enhanced insert type to include new currency fields
+// Updated insert type without code field (auto-generated)
 export interface GiftCardInsert {
   sender_user_id?: string | null;
   sender_name: string;

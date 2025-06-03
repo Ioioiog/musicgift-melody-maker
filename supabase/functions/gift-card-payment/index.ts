@@ -37,14 +37,14 @@ serve(async (req) => {
       throw new Error('Gift card not found')
     }
 
-    // Determine payment amount and currency
-    // Netopia only accepts RON, so we convert EUR payments to RON
+    // Use the stored amount in the selected currency
     let paymentAmount = giftCard.gift_amount || 0;
     let paymentCurrency = giftCard.currency || 'RON';
     
-    // If the gift card is in EUR, use the RON equivalent for payment
+    // For EUR payments, convert to RON for Netopia
     if (giftCard.currency === 'EUR') {
-      paymentAmount = giftCard.amount_ron || 0;
+      // Use the stored RON amount if available, otherwise use a conversion
+      paymentAmount = giftCard.amount_ron || (giftCard.gift_amount * 5); // fallback conversion
       paymentCurrency = 'RON';
     }
 
@@ -92,7 +92,7 @@ serve(async (req) => {
           orderId: giftCard.id,
           amount: finalAmount,
           currency: paymentCurrency,
-          orderDescription: `Gift Card - ${giftCard.code} (${giftCard.currency === 'EUR' ? 'EUR to RON conversion' : 'RON payment'})`,
+          orderDescription: `Gift Card - ${giftCard.code}`,
           products: [{
             name: 'Music Gift Card',
             code: giftCard.code,
