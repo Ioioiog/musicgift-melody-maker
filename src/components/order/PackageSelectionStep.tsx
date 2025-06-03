@@ -186,8 +186,8 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
               </div>
             </CardContent>
           </Card>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
