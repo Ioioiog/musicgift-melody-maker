@@ -33,6 +33,9 @@ export interface GiftCard {
   updated_at: string;
 }
 
+// Create a proper type for gift card creation (excluding auto-generated fields)
+export type GiftCardCreate = Omit<GiftCard, 'id' | 'code' | 'created_at' | 'updated_at'>;
+
 export const useGiftCardDesigns = () => {
   return useQuery({
     queryKey: ['gift-card-designs'],
@@ -54,7 +57,7 @@ export const useCreateGiftCard = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (giftCardData: Partial<GiftCard>) => {
+    mutationFn: async (giftCardData: GiftCardCreate) => {
       const { data, error } = await supabase
         .from('gift_cards')
         .insert(giftCardData)

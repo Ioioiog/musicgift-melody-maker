@@ -3,7 +3,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Gift, Heart, Users } from "lucide-react";
+import { Gift as GiftIcon, Heart, Users } from "lucide-react";
 import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
 import GiftRedemption from "@/components/gift/GiftRedemption";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -61,7 +61,7 @@ const Gift = () => {
             <div className="text-center mb-12">
               <div className="flex justify-center mb-6">
                 <div className="p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
-                  <Gift className="w-12 h-12 text-white" />
+                  <GiftIcon className="w-12 h-12 text-white" />
                 </div>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
@@ -92,7 +92,7 @@ const Gift = () => {
               <Card className="text-center bg-white/80 backdrop-blur-sm">
                 <CardHeader>
                   <div className="mx-auto w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mb-4">
-                    <Gift className="w-6 h-6 text-pink-600" />
+                    <GiftIcon className="w-6 h-6 text-pink-600" />
                   </div>
                   <CardTitle>Flexible Delivery</CardTitle>
                 </CardHeader>
@@ -123,7 +123,7 @@ const Gift = () => {
               <Tabs defaultValue="purchase" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-8">
                   <TabsTrigger value="purchase" className="text-lg py-3">
-                    <Gift className="w-5 h-5 mr-2" />
+                    <GiftIcon className="w-5 h-5 mr-2" />
                     Buy Gift Card
                   </TabsTrigger>
                   <TabsTrigger value="redeem" className="text-lg py-3">
