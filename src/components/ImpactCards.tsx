@@ -136,27 +136,29 @@ const ImpactCards = () => {
 
   return (
     <section className="py-16 bg-gradient-to-b from-[#f6f8ff] to-[#e9eeff]">
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {stats.map((item, idx) => {
-          const title = item.title[language as keyof typeof item.title] || item.title.ro;
-          const subtitle = item.subtitle[language as keyof typeof item.subtitle] || item.subtitle.ro;
-          const desc = item.desc[language as keyof typeof item.desc] || item.desc.ro;
+      <div className="max-w-7xl mx-auto px-6 overflow-x-auto">
+        <div className="flex gap-6 pb-4" style={{ minWidth: 'max-content' }}>
+          {stats.map((item, idx) => {
+            const title = item.title[language as keyof typeof item.title] || item.title.ro;
+            const subtitle = item.subtitle[language as keyof typeof item.subtitle] || item.subtitle.ro;
+            const desc = item.desc[language as keyof typeof item.desc] || item.desc.ro;
 
-          return (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
-              className="bg-white p-6 rounded-2xl shadow-xl text-center hover:scale-105 transition-transform"
-            >
-              <div className="text-5xl mb-3">{item.icon}</div>
-              <h3 className="text-4xl font-extrabold text-purple-600 mb-2">{title}</h3>
-              <p className="text-lg font-semibold text-gray-900 mb-1">{subtitle}</p>
-              <p className="text-sm text-gray-600">{desc}</p>
-            </motion.div>
-          );
-        })}
+            return (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                className="bg-white p-6 rounded-2xl shadow-xl text-center hover:scale-105 transition-transform flex-shrink-0 w-64"
+              >
+                <div className="text-5xl mb-3">{item.icon}</div>
+                <h3 className="text-4xl font-extrabold text-purple-600 mb-2">{title}</h3>
+                <p className="text-lg font-semibold text-gray-900 mb-1">{subtitle}</p>
+                <p className="text-sm text-gray-600">{desc}</p>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
