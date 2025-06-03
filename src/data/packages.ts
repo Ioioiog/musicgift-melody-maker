@@ -1,4 +1,3 @@
-
 import { Package, PackageInclude, Step, Field, FieldOption } from '@/types';
 
 export interface AddonConfig {
@@ -11,53 +10,41 @@ export interface AddonConfig {
 }
 
 export const addons: Record<string, AddonConfig> = {
-  expressDelivery: {
-    label_key: 'expressDelivery',
-    description_key: 'expressDeliveryDesc',
-    price: 50,
+  rushDelivery: {
+    label_key: 'rushDelivery',
+    description_key: 'rushDeliveryDesc',
+    price: 99, // RON price, will be converted based on currency
     packages: ['personal', 'business', 'premium', 'artist', 'instrumental', 'remix']
   },
-  extendedVersion: {
-    label_key: 'extendedVersion',
-    description_key: 'extendedVersionDesc',
-    price: 100,
-    packages: ['personal', 'premium', 'artist', 'instrumental']
+  exclusiveMangoDistribution: {
+    label_key: 'exclusiveMangoDistribution',
+    description_key: 'exclusiveMangoDistributionDesc',
+    price: 199,
+    packages: ['artist', 'business']
   },
-  vocalCoaching: {
-    label_key: 'vocalCoaching',
-    description_key: 'vocalCoachingDesc',
-    price: 150,
-    packages: ['premium', 'artist']
+  customVideo: {
+    label_key: 'customVideo',
+    description_key: 'customVideoDesc',
+    price: 149,
+    packages: ['personal', 'premium', 'business']
   },
-  multipleArrangements: {
-    label_key: 'multipleArrangements',
-    description_key: 'multipleArrangementsDesc',
-    price: 200,
-    packages: ['premium', 'artist', 'instrumental']
+  audioMessageFromSender: {
+    label_key: 'audioMessageFromSender',
+    description_key: 'audioMessageFromSenderDesc',
+    price: 99,
+    packages: ['personal', 'premium']
   },
-  commercialRights: {
-    label_key: 'commercialRights',
-    description_key: 'commercialRightsDesc',
-    price: 300,
+  commercialRightsUpgrade: {
+    label_key: 'commercialRightsUpgrade',
+    description_key: 'commercialRightsUpgradeDesc',
+    price: 399,
     packages: ['business', 'artist']
   },
-  stemFiles: {
-    label_key: 'stemFiles',
-    description_key: 'stemFilesDesc',
-    price: 120,
-    packages: ['premium', 'artist', 'remix', 'instrumental']
-  },
-  socialMediaVersions: {
-    label_key: 'socialMediaVersions',
-    description_key: 'socialMediaVersionsDesc',
-    price: 80,
-    packages: ['business', 'premium', 'artist', 'remix']
-  },
-  audioMastering: {
-    label_key: 'audioMastering',
-    description_key: 'audioMasteringDesc',
-    price: 100,
-    packages: ['instrumental', 'remix']
+  extendedSong: {
+    label_key: 'extendedSong',
+    description_key: 'extendedSongDesc',
+    price: 49,
+    packages: ['personal', 'premium', 'artist', 'instrumental']
   }
 };
 
@@ -305,8 +292,8 @@ export const packages: Package[] = [
     label_key: 'businessPackage',
     tagline_key: 'businessTagline',
     description_key: 'businessDescription',
-    price_ron: 899,
-    price_eur: 179,
+    price_ron: 499,
+    price_eur: 99,
     delivery_time_key: 'businessDelivery',
     tag: 'premium',
     includes: [
@@ -509,8 +496,8 @@ export const packages: Package[] = [
     label_key: 'premiumPackage',
     tagline_key: 'premiumTagline',
     description_key: 'premiumDescription',
-    price_ron: 599,
-    price_eur: 119,
+    price_ron: 499,
+    price_eur: 99,
     delivery_time_key: 'premiumDelivery',
     includes: [
       { include_key: 'premiumInclude1', include_order: 1 },
@@ -718,8 +705,8 @@ export const packages: Package[] = [
     label_key: 'artistPackage',
     tagline_key: 'artistTagline',
     description_key: 'artistDescription',
-    price_ron: 1299,
-    price_eur: 259,
+    price_ron: 7999,
+    price_eur: 1599,
     delivery_time_key: 'artistDelivery',
     includes: [
       { include_key: 'artistInclude1', include_order: 1 },
@@ -934,8 +921,8 @@ export const packages: Package[] = [
     label_key: 'instrumentalPackage',
     tagline_key: 'instrumentalTagline',
     description_key: 'instrumentalDescription',
-    price_ron: 399,
-    price_eur: 79,
+    price_ron: 499,
+    price_eur: 99,
     delivery_time_key: 'instrumentalDelivery',
     includes: [
       { include_key: 'instrumentalInclude1', include_order: 1 },
