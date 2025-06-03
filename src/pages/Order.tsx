@@ -145,9 +145,9 @@ const Order = () => {
         console.log("Redirecting to SmartBill payment:", smartBillResponse.paymentUrl);
         window.location.href = smartBillResponse.paymentUrl;
       } else {
-        // If no payment needed, show completion message
+        // If no payment needed, show completion message - use correct route
         console.log("Order completed successfully - no payment required");
-        navigate('/payment-success?order=' + smartBillResponse.orderId);
+        navigate('/payment/success?orderId=' + smartBillResponse.orderId);
       }
 
     } catch (error) {

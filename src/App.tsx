@@ -2,7 +2,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -43,6 +43,7 @@ const App = () => (
         <Route path="/auth" element={<Auth />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/payment-success" element={<Navigate to="/payment/success" replace />} />
         <Route path="/payment/error" element={<PaymentError />} />
         <Route path="/payment/cancel" element={<PaymentCancel />} />
         <Route path="/access-denied" element={<AccessDenied />} />

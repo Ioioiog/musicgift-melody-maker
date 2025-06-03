@@ -15,7 +15,8 @@ const PaymentSuccess = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const orderId = searchParams.get('orderId');
+  // Handle both 'orderId' and 'order' query parameters
+  const orderId = searchParams.get('orderId') || searchParams.get('order');
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -98,11 +99,11 @@ const PaymentSuccess = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Package:</span>
-                        <span>{orderDetails.package?.label_key || 'N/A'}</span>
+                        <span>{orderDetails.package_name || 'N/A'}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Amount:</span>
-                        <span className="font-semibold">{orderDetails.total_price} RON</span>
+                        <span className="font-semibold">{orderDetails.total_price} {orderDetails.currency || 'RON'}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Payment Status:</span>

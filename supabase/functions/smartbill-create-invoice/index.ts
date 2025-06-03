@@ -325,7 +325,8 @@ serve(async (req) => {
 
     // Success - extract invoice details
     const smartBillInvoiceId = invoiceResult.number || `INV-${Date.now()}`
-    const paymentUrl = `${Deno.env.get('SITE_URL')}/payment-success?order=${savedOrder.id}&invoice=${smartBillInvoiceId}`
+    // Fix the redirect URL to use the correct route
+    const paymentUrl = `${Deno.env.get('SITE_URL')}/payment/success?orderId=${savedOrder.id}&invoice=${smartBillInvoiceId}`
 
     // Update order with SmartBill details
     const { error: updateError } = await supabaseClient
