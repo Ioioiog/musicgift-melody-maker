@@ -171,40 +171,4 @@ export const orderTranslations = {
   // Dedication message
   dedicationMessageLabel: "Personal Dedication Message",
   dedicationMessagePlaceholder: "A personal message to include with your song",
-  
-  // Add-on labels and descriptions
-  rushDeliveryLabel: "Rush Delivery",
-  rushDeliveryDescription: "Get your personalized song delivered in just 3-5 business days instead of the standard delivery time. Perfect for last-minute gifts! (100 RON / 19 EUR)",
-  
-  commercialRightsLabel: "Commercial Rights",
-  commercialRightsDescription: "Obtain full commercial rights to use your personalized song for business purposes, advertising, or public performances. (200 RON / 39 EUR)",
-  
-  distributieMangoRecordsLabel: "Mango Records Distribution",
-  distributieMangoRecordsDescription: "Professional distribution of your song through Mango Records to major streaming platforms including Spotify, Apple Music, and more. (149 RON / 29 EUR)",
-  
-  customVideoLabel: "Custom Music Video",
-  customVideoDescription: "Transform your personalized song into a beautiful music video with custom visuals, lyrics display, and professional editing. Perfect for sharing on social media! (200 RON / 39 EUR)",
-  
-  audioMessageFromSenderLabel: "Audio Message from Sender",
-  audioMessageFromSenderDescription: "Include a personal audio message from you to the recipient, delivered alongside the song. Add your voice to make the gift even more personal! (49 RON / 9 EUR)",
-  
-  commercialRightsUpgradeLabel: "Commercial Rights Upgrade",
-  commercialRightsUpgradeDescription: "Upgrade to full commercial rights allowing you to use your personalized song for any commercial purpose without restrictions. (200 RON / 39 EUR)",
-  
-  extendedSongLabel: "Extended Song Version",
-  extendedSongDescription: "Get a longer version of your personalized song with additional verses and extended musical arrangements for a more complete experience. (149 RON / 29 EUR)",
-  
-  // Missing final step translations
-  mentionMusicGiftLabel: "Mention MusicGift",
-  termsMentionMusicGiftPlaceholder: "I agree to mention MusicGift as the creator of this personalized song",
-  confirmOrderLabel: "Confirm Order",
-  confirmOrderPlaceholder: "I confirm that all the information provided is correct and I want to proceed with this order",
-  acceptTermsLabel: "Terms and Conditions",
-  acceptTermsAndConditionsPlaceholder: "I accept the terms and conditions and privacy policy",
-  
-  // Additional add-on trigger translations
-  uploadPhotosVideos: "Upload Photos & Videos",
-  uploadPhotosVideosPlaceholder: "Upload photos and videos for your custom music video",
-  recordPersonalMessage: "Record Personal Message",
-  recordPersonalMessagePlaceholder: "Record a personal audio message to include with the song",
 };

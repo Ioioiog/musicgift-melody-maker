@@ -165,40 +165,4 @@ export const orderTranslations = {
   // Dedication message
   dedicationMessageLabel: "Persönliche Widmungsnachricht",
   dedicationMessagePlaceholder: "Eine persönliche Nachricht, die zu Ihrem Lied hinzugefügt werden soll",
-  
-  // Add-on labels and descriptions
-  rushDeliveryLabel: "Express-Lieferung",
-  rushDeliveryDescription: "Erhalten Sie Ihr personalisiertes Lied in nur 3-5 Werktagen statt der Standard-Lieferzeit. Perfekt für Last-Minute-Geschenke! (100 RON / 19 EUR)",
-  
-  commercialRightsLabel: "Kommerzielle Rechte",
-  commercialRightsDescription: "Erhalten Sie vollständige kommerzielle Rechte zur Nutzung Ihres personalisierten Liedes für geschäftliche Zwecke, Werbung oder öffentliche Aufführungen. (200 RON / 39 EUR)",
-  
-  distributieMangoRecordsLabel: "Mango Records Vertrieb",
-  distributieMangoRecordsDescription: "Professioneller Vertrieb Ihres Liedes durch Mango Records auf großen Streaming-Plattformen einschließlich Spotify, Apple Music und mehr. (149 RON / 29 EUR)",
-  
-  customVideoLabel: "Personalisiertes Musikvideo",
-  customVideoDescription: "Verwandeln Sie Ihr personalisiertes Lied in ein wunderschönes Musikvideo mit benutzerdefinierten Bildern, Textanzeige und professioneller Bearbeitung. Perfekt zum Teilen in sozialen Medien! (200 RON / 39 EUR)",
-  
-  audioMessageFromSenderLabel: "Audio-Nachricht vom Absender",
-  audioMessageFromSenderDescription: "Fügen Sie eine persönliche Audio-Nachricht von Ihnen an den Empfänger hinzu, die zusammen mit dem Lied geliefert wird. Fügen Sie Ihre Stimme hinzu, um das Geschenk noch persönlicher zu machen! (49 RON / 9 EUR)",
-  
-  commercialRightsUpgradeLabel: "Kommerzielle Rechte Upgrade",
-  commercialRightsUpgradeDescription: "Upgrade auf vollständige kommerzielle Rechte, die es Ihnen ermöglicht, Ihr personalisiertes Lied für jeden kommerziellen Zweck ohne Einschränkungen zu verwenden. (200 RON / 39 EUR)",
-  
-  extendedSongLabel: "Erweiterte Lied-Version",
-  extendedSongDescription: "Erhalten Sie eine längere Version Ihres personalisierten Liedes mit zusätzlichen Versen und erweiterten musikalischen Arrangements für ein vollständigeres Erlebnis. (149 RON / 29 EUR)",
-  
-  // Missing final step translations
-  mentionMusicGiftLabel: "MusicGift Erwähnung",
-  termsMentionMusicGiftPlaceholder: "Ich stimme zu, MusicGift als Ersteller dieses personalisierten Liedes zu erwähnen",
-  confirmOrderLabel: "Bestellung bestätigen",
-  confirmOrderPlaceholder: "Ich bestätige, dass alle angegebenen Informationen korrekt sind und ich mit dieser Bestellung fortfahren möchte",
-  acceptTermsLabel: "Geschäftsbedingungen",
-  acceptTermsAndConditionsPlaceholder: "Ich akzeptiere die Geschäftsbedingungen und Datenschutzrichtlinie",
-  
-  // Additional add-on trigger translations
-  uploadPhotosVideos: "Fotos & Videos Hochladen",
-  uploadPhotosVideosPlaceholder: "Laden Sie Fotos und Videos für Ihr personalisiertes Musikvideo hoch",
-  recordPersonalMessage: "Persönliche Nachricht Aufnehmen",
-  recordPersonalMessagePlaceholder: "Nehmen Sie eine persönliche Audio-Nachricht auf, die dem Lied beigefügt werden soll",
 };

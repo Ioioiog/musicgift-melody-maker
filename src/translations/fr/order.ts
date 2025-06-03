@@ -171,40 +171,4 @@ export const orderTranslations = {
   // Dedication message
   dedicationMessageLabel: "Message Personnel de Dédicace",
   dedicationMessagePlaceholder: "Un message personnel à inclure avec votre chanson",
-  
-  // Add-on labels and descriptions
-  rushDeliveryLabel: "Livraison Express",
-  rushDeliveryDescription: "Recevez votre chanson personnalisée en seulement 3-5 jours ouvrables au lieu du délai de livraison standard. Parfait pour les cadeaux de dernière minute ! (100 RON / 19 EUR)",
-  
-  commercialRightsLabel: "Droits Commerciaux",
-  commercialRightsDescription: "Obtenez des droits commerciaux complets pour utiliser votre chanson personnalisée à des fins commerciales, publicitaires ou pour des performances publiques. (200 RON / 39 EUR)",
-  
-  distributieMangoRecordsLabel: "Distribution Mango Records",
-  distributieMangoRecordsDescription: "Distribution professionnelle de votre chanson par Mango Records sur les principales plateformes de streaming, y compris Spotify, Apple Music et plus encore. (149 RON / 29 EUR)",
-  
-  customVideoLabel: "Clip Vidéo Personnalisé",
-  customVideoDescription: "Transformez votre chanson personnalisée en un beau clip vidéo avec des visuels personnalisés, l'affichage des paroles et un montage professionnel. Parfait pour partager sur les réseaux sociaux ! (200 RON / 39 EUR)",
-  
-  audioMessageFromSenderLabel: "Message Audio de l'Expéditeur",
-  audioMessageFromSenderDescription: "Incluez un message audio personnel de votre part au destinataire, livré avec la chanson. Ajoutez votre voix pour rendre le cadeau encore plus personnel ! (49 RON / 9 EUR)",
-  
-  commercialRightsUpgradeLabel: "Mise à Niveau Droits Commerciaux",
-  commercialRightsUpgradeDescription: "Mise à niveau vers des droits commerciaux complets vous permettant d'utiliser votre chanson personnalisée à toute fin commerciale sans restrictions. (200 RON / 39 EUR)",
-  
-  extendedSongLabel: "Version Étendue de la Chanson",
-  extendedSongDescription: "Obtenez une version plus longue de votre chanson personnalisée avec des couplets supplémentaires et des arrangements musicaux étendus pour une expérience plus complète. (149 RON / 29 EUR)",
-  
-  // Missing final step translations
-  mentionMusicGiftLabel: "Mention MusicGift",
-  termsMentionMusicGiftPlaceholder: "J'accepte de mentionner MusicGift comme créateur de cette chanson personnalisée",
-  confirmOrderLabel: "Confirmer la commande",
-  confirmOrderPlaceholder: "Je confirme que toutes les informations fournies sont correctes et je souhaite procéder à cette commande",
-  acceptTermsLabel: "Conditions générales",
-  acceptTermsAndConditionsPlaceholder: "J'accepte les conditions générales et la politique de confidentialité",
-  
-  // Additional add-on trigger translations
-  uploadPhotosVideos: "Télécharger Photos et Vidéos",
-  uploadPhotosVideosPlaceholder: "Téléchargez des photos et vidéos pour votre clip vidéo personnalisé",
-  recordPersonalMessage: "Enregistrer Message Personnel",
-  recordPersonalMessagePlaceholder: "Enregistrez un message audio personnel à inclure avec la chanson",
 };

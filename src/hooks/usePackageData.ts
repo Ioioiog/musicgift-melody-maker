@@ -1,8 +1,6 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { packages, addons } from '@/data/packages';
-import type { PackageData } from '@/types/packages';
+import { packages, addons, type PackageData } from '@/data/packages';
 
 export interface StepData {
   id: string;
@@ -125,10 +123,10 @@ export const useAddons = () => {
         description_key: addon.description_key,
         price: addon.price,
         is_active: true,
-        trigger_field_type: addon.trigger_field_type || null,
-        trigger_field_config: addon.trigger_config || {},
+        trigger_field_type: null,
+        trigger_field_config: {},
         trigger_condition: 'package_in',
-        trigger_condition_value: addon.packages.join(',')
+        trigger_condition_value: addon.availableFor.join(',')
       }));
       
       console.log('Transformed addons:', addonsArray);
