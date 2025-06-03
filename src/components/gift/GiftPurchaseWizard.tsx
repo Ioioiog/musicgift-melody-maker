@@ -21,8 +21,8 @@ interface GiftPurchaseWizardProps {
 }
 
 // Currency-specific amount options
-const AmountOptionsRON = [299, 499, 999];
-const AmountOptionsEUR = [79, 119, 199];
+const AmountOptionsRON = [299, 500, 7999];
+const AmountOptionsEUR = [59, 99, 1599];
 
 const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(1);
