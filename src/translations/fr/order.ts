@@ -65,7 +65,7 @@ export const orderTranslations = {
   // Form Field Renderer
   noAddonsAvailable: "Aucun supplément disponible pour ce forfait",
   fieldConfigurationError: "Erreur de configuration du champ : Aucune option disponible",
-  unknownFieldType: "Type de champ inconnu :",
+  unknownFieldType: "Type de champ inconnu : {fieldType}",
   uploadFiles: "Télécharger des Fichiers",
   clickToUploadFiles: "Cliquez pour télécharger des fichiers",
   maxFiles: "Max.",

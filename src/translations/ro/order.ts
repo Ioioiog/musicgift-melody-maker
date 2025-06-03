@@ -59,7 +59,7 @@ export const orderTranslations = {
   // Form Field Renderer
   noAddonsAvailable: "Nu sunt disponibile opțiuni suplimentare pentru acest pachet",
   fieldConfigurationError: "Eroare de configurare câmp: Nu sunt opțiuni disponibile",
-  unknownFieldType: "Tip de câmp necunoscut:",
+  unknownFieldType: "Tip de câmp necunoscut: {fieldType}",
   uploadFiles: "Încarcă Fișiere",
   clickToUploadFiles: "Click pentru a încărca fișiere",
   maxFiles: "Maxim",

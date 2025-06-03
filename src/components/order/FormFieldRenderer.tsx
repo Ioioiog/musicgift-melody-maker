@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -332,7 +331,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         return (
           <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md">
             <AlertCircle className="w-4 h-4" />
-            <span className="text-sm">{t('unknownFieldType')} {field.field_type}</span>
+            <span className="text-sm">{t('unknownFieldType').replace('{fieldType}', field.field_type)}</span>
           </div>
         );
     }

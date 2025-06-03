@@ -65,7 +65,7 @@ export const orderTranslations = {
   // Form Field Renderer
   noAddonsAvailable: "No add-ons available for this package",
   fieldConfigurationError: "Field configuration error: No options available",
-  unknownFieldType: "Unknown field type:",
+  unknownFieldType: "Unknown field type: {fieldType}",
   uploadFiles: "Upload Files",
   clickToUploadFiles: "Click to upload files",
   maxFiles: "Max",

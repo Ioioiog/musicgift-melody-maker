@@ -59,7 +59,7 @@ export const orderTranslations = {
   // Form Field Renderer
   noAddonsAvailable: "Brak dostępnych dodatków dla tego pakietu",
   fieldConfigurationError: "Błąd konfiguracji pola: Brak dostępnych opcji",
-  unknownFieldType: "Nieznany typ pola:",
+  unknownFieldType: "Nieznany typ pola: {fieldType}",
   uploadFiles: "Prześlij Pliki",
   clickToUploadFiles: "Kliknij, aby przesłać pliki",
   maxFiles: "Maks.",
