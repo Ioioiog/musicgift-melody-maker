@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -39,6 +38,8 @@ export interface GiftCard {
 
 // Use Supabase's generated insert type
 type GiftCardInsert = Database['public']['Tables']['gift_cards']['Insert'];
+type GiftCardDesignInsert = Database['public']['Tables']['gift_card_designs']['Insert'];
+type GiftCardDesignUpdate = Database['public']['Tables']['gift_card_designs']['Update'];
 
 export const useGiftCardDesigns = () => {
   return useQuery({
@@ -52,6 +53,73 @@ export const useGiftCardDesigns = () => {
 
       if (error) throw error;
       return data as GiftCardDesign[];
+    },
+  });
+};
+
+export const useCreateGiftCardDesign = () => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (designData: GiftCardDesignInsert) => {
+      const { data, error } = await supabase
+        .from('gift_card_designs')
+        .insert(designData)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as GiftCardDesign;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['gift-card-designs'] });
+      toast({
+        title: "Design Created",
+        description: "Gift card design has been created successfully!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to create gift card design. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Gift card design creation error:", error);
+    },
+  });
+};
+
+export const useUpdateGiftCardDesign = () => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, designData }: { id: string; designData: GiftCardDesignUpdate }) => {
+      const { data, error } = await supabase
+        .from('gift_card_designs')
+        .update(designData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as GiftCardDesign;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['gift-card-designs'] });
+      toast({
+        title: "Design Updated",
+        description: "Gift card design has been updated successfully!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to update gift card design. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Gift card design update error:", error);
     },
   });
 };

@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { useToast } from "@/hooks/use-toast";
+import { useCreateGiftCardDesign, useUpdateGiftCardDesign } from "@/hooks/useGiftCards";
 import TemplateDataHelper from "./TemplateDataHelper";
 
 interface GiftCardDesignFormProps {
@@ -31,12 +32,13 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
       }
     }, null, 2)
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { toast } = useToast();
+  const createDesignMutation = useCreateGiftCardDesign();
+  const updateDesignMutation = useUpdateGiftCardDesign();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
     try {
       // Parse template_data JSON
@@ -47,23 +49,32 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
         throw new Error('Invalid JSON in template data');
       }
 
-      // TODO: Implement save functionality
-      console.log('Saving design:', { ...formData, template_data: templateData });
-      
-      toast({
-        title: "Success",
-        description: `Design ${design ? 'updated' : 'created'} successfully!`,
-      });
+      const designData = {
+        name: formData.name,
+        theme: formData.theme,
+        preview_image_url: formData.preview_image_url,
+        is_active: formData.is_active,
+        template_data: templateData
+      };
+
+      if (design) {
+        // Update existing design
+        await updateDesignMutation.mutateAsync({
+          id: design.id,
+          designData
+        });
+      } else {
+        // Create new design
+        await createDesignMutation.mutateAsync(designData);
+      }
       
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
         description: error.message || "Failed to save design",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -91,6 +102,8 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
   const insertExample = (example: string) => {
     handleInputChange('template_data', example);
   };
+
+  const isSubmitting = createDesignMutation.isPending || updateDesignMutation.isPending;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
