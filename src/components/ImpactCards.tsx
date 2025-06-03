@@ -144,30 +144,75 @@ const ImpactCards = () => {
   return (
     <section className="py-16 relative overflow-hidden" style={backgroundStyle}>
       <div className="absolute inset-0 bg-black/20"></div>
-      <div className="max-w-7xl mx-auto px-6 overflow-x-auto relative z-10">
-        <div className="flex gap-4 pb-4" style={{ minWidth: 'max-content' }}>
-          {stats.map((item, idx) => {
-            const title = item.title[language as keyof typeof item.title] || item.title.ro;
-            const subtitle = item.subtitle[language as keyof typeof item.subtitle] || item.subtitle.ro;
-            const desc = item.desc[language as keyof typeof item.desc] || item.desc.ro;
+      <div className="max-w-full mx-auto px-0 relative z-10">
+        <div className="overflow-hidden">
+          <div 
+            className="flex gap-4 animate-scroll"
+            style={{ 
+              minWidth: 'max-content',
+              animation: 'scroll 30s linear infinite'
+            }}
+          >
+            {/* First set of cards */}
+            {stats.map((item, idx) => {
+              const title = item.title[language as keyof typeof item.title] || item.title.ro;
+              const subtitle = item.subtitle[language as keyof typeof item.subtitle] || item.subtitle.ro;
+              const desc = item.desc[language as keyof typeof item.desc] || item.desc.ro;
 
-            return (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.1 }}
-                className="bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg text-center hover:scale-105 transition-transform flex-shrink-0 w-48"
-              >
-                <div className="text-3xl mb-2">{item.icon}</div>
-                <h3 className="text-2xl font-extrabold text-purple-600 mb-1">{title}</h3>
-                <p className="text-sm font-semibold text-gray-900 mb-1">{subtitle}</p>
-                <p className="text-xs text-gray-600">{desc}</p>
-              </motion.div>
-            );
-          })}
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: idx * 0.1 }}
+                  className="bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg text-center hover:scale-105 transition-transform flex-shrink-0 w-48"
+                >
+                  <div className="text-3xl mb-2">{item.icon}</div>
+                  <h3 className="text-2xl font-extrabold text-purple-600 mb-1">{title}</h3>
+                  <p className="text-sm font-semibold text-gray-900 mb-1">{subtitle}</p>
+                  <p className="text-xs text-gray-600">{desc}</p>
+                </motion.div>
+              );
+            })}
+            {/* Duplicate set for seamless scrolling */}
+            {stats.map((item, idx) => {
+              const title = item.title[language as keyof typeof item.title] || item.title.ro;
+              const subtitle = item.subtitle[language as keyof typeof item.subtitle] || item.subtitle.ro;
+              const desc = item.desc[language as keyof typeof item.desc] || item.desc.ro;
+
+              return (
+                <motion.div
+                  key={`duplicate-${idx}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: idx * 0.1 }}
+                  className="bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg text-center hover:scale-105 transition-transform flex-shrink-0 w-48"
+                >
+                  <div className="text-3xl mb-2">{item.icon}</div>
+                  <h3 className="text-2xl font-extrabold text-purple-600 mb-1">{title}</h3>
+                  <p className="text-sm font-semibold text-gray-900 mb-1">{subtitle}</p>
+                  <p className="text-xs text-gray-600">{desc}</p>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
+      
+      <style jsx>{`
+        @keyframes scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        
+        .animate-scroll:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 };
