@@ -104,6 +104,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
   } = usePackageSteps(selectedPackage);
   const { data: addons = [] } = useAddons();
 
+  // Filter out gift packages from regular order flow
+  const regularPackages = packages.filter(pkg => pkg.value !== 'gift');
+
   // Set default values from user data if available
   useEffect(() => {
     if (user) {
@@ -117,14 +120,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
 
   // Set preselected package if provided
   useEffect(() => {
-    if (preselectedPackage && packages.length > 0) {
-      const packageExists = packages.find(p => p.value === preselectedPackage);
+    if (preselectedPackage && regularPackages.length > 0) {
+      const packageExists = regularPackages.find(p => p.value === preselectedPackage);
       if (packageExists) {
         setFormData(prev => ({ ...prev, package: preselectedPackage }));
         setSelectedPackage(preselectedPackage);
       }
     }
-  }, [preselectedPackage, packages]);
+  }, [preselectedPackage, regularPackages]);
 
   // Enhanced logging for debugging
   useEffect(() => {
@@ -316,11 +319,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
     const enhancedStep = {
       ...dbStep,
       fields: dbStep.fields.map(field => {
-        // Handle package field specifically - inject package options
+        // Handle package field specifically - inject regular package options only
         if (field.field_name === 'package' && field.field_type === 'select') {
           const packageField: Field = {
             ...field,
-            options: packages.map(pkg => ({
+            options: regularPackages.map(pkg => ({
               value: pkg.value,
               label_key: pkg.label_key
             }))
@@ -399,7 +402,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
 
   // If no package is selected yet or we're still waiting for steps to load, show package selection
   if (!selectedPackage || (selectedPackage && !stepsFetched)) {
-    // Create a mock first step for package selection
+    // Create a mock first step for package selection using regular packages only
     const packageSelectionStep = {
       id: 'package-selection',
       step_number: 1,
@@ -411,7 +414,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, presele
         placeholder_key: 'selectPackage',
         required: true,
         field_order: 1,
-        options: packages.map(pkg => ({
+        options: regularPackages.map(pkg => ({
           value: pkg.value,
           label_key: pkg.label_key
         }))

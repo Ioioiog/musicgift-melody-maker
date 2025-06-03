@@ -2,12 +2,13 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
+import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { usePackages, useAddons } from "@/hooks/usePackageData";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useGiftCardByCode } from "@/hooks/useGiftCards";
 
@@ -15,6 +16,7 @@ const Order = () => {
   const { toast } = useToast();
   const { t } = useLanguage();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
   const [searchParams] = useSearchParams();
@@ -25,6 +27,9 @@ const Order = () => {
   
   // Fetch gift card data if code is provided
   const { data: giftCard, isLoading: isLoadingGift } = useGiftCardByCode(giftCardCode || '');
+
+  // Check if the preselected package is the gift package
+  const isGiftPackage = preselectedPackage === 'gift';
 
   useEffect(() => {
     if (giftCardCode && giftCard) {
@@ -147,6 +152,12 @@ const Order = () => {
     }
   };
 
+  const handleGiftCardComplete = (data: any) => {
+    console.log("Gift card purchase completed:", data);
+    // The GiftPurchaseWizard handles its own completion flow with payment redirection
+    // No additional handling needed here
+  };
+
   if (isLoadingGift && giftCardCode) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -178,11 +189,15 @@ const Order = () => {
         
         <section className="pt-16 sm:pt-20 md:pt-24 py-4 sm:py-6 md:py-8">
           <div className="container mx-auto px-2 sm:px-4">
-            <OrderWizard 
-              onComplete={handleOrderComplete} 
-              giftCard={giftCard}
-              preselectedPackage={preselectedPackage}
-            />
+            {isGiftPackage ? (
+              <GiftPurchaseWizard onComplete={handleGiftCardComplete} />
+            ) : (
+              <OrderWizard 
+                onComplete={handleOrderComplete} 
+                giftCard={giftCard}
+                preselectedPackage={preselectedPackage}
+              />
+            )}
           </div>
         </section>
 
