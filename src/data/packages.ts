@@ -1,21 +1,22 @@
+
 import type { Package } from '@/types';
 
 // Define the addons configuration
 export const addons = {
   rushDelivery: { 
-    price: 100, 
+    price: 99, 
     label_key: 'rushDeliveryLabel',
     description_key: 'rushDeliveryDescription',
     availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
   },
   commercialRights: { 
-    price: 100, 
+    price: 99, 
     label_key: 'commercialRightsLabel',
     description_key: 'commercialRightsDescription',
     availableFor: ['personal']
   },
   distributieMangoRecords: {
-    price: 200, 
+    price: 199, 
     label_key: 'distributieMangoRecordsLabel',
     description_key: 'distributieMangoRecordsDescription',
     availableFor: ['personal', 'remix', 'instrumental']
@@ -27,13 +28,13 @@ export const addons = {
     availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
   },
   audioMessageFromSender: { 
-    price: 100, 
+    price: 99, 
     label_key: 'audioMessageFromSenderLabel',
     description_key: 'audioMessageFromSenderDescription',
     availableFor: ['personal', 'business', 'premium']
   },
   commercialRightsUpgrade: {
-    price: 400,
+    price: 399,
     label_key: 'commercialRightsUpgradeLabel',
     description_key: 'commercialRightsUpgradeDescription',
     availableFor: ['business']
