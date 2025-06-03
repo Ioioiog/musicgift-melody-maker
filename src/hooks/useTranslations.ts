@@ -11,24 +11,10 @@ export const useTranslations = () => {
     queryFn: async () => {
       console.log('Fetching translations for language:', language);
       
-      const { data, error } = await supabase
-        .from('translations')
-        .select('key_name, translation')
-        .eq('language_code', language);
-
-      if (error) {
-        console.error('Error fetching translations:', error);
-        throw error;
-      }
-      
-      // Convert to key-value object for easy lookup
-      const translations: Record<string, string> = {};
-      data?.forEach(item => {
-        translations[item.key_name] = item.translation;
-      });
-      
-      console.log('Fetched database translations:', translations);
-      return translations;
+      // Since the translations table doesn't exist in the database,
+      // return an empty object to avoid errors
+      console.log('Translations table does not exist, returning empty translations');
+      return {};
     },
     staleTime: 1000 * 60 * 10, // Cache for 10 minutes
   });

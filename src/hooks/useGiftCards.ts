@@ -37,25 +37,8 @@ export interface GiftCard {
   updated_at: string;
 }
 
-// Updated insert type - code is optional since it's auto-generated
-export interface GiftCardInsert {
-  sender_user_id?: string | null;
-  sender_name: string;
-  sender_email: string;
-  recipient_name: string;
-  recipient_email: string;
-  message_text?: string | null;
-  audio_message_url?: string | null;
-  currency: string;
-  gift_amount?: number | null;
-  amount_ron?: number | null;
-  amount_eur?: number | null;
-  package_type?: string | null;
-  design_id?: string | null;
-  delivery_date?: string | null;
-  status?: string | null;
-  payment_status?: string | null;
-}
+// Use Supabase's generated insert type
+type GiftCardInsert = Database['public']['Tables']['gift_cards']['Insert'];
 
 export const useGiftCardDesigns = () => {
   return useQuery({
@@ -81,7 +64,7 @@ export const useCreateGiftCard = () => {
     mutationFn: async (giftCardData: GiftCardInsert) => {
       const { data, error } = await supabase
         .from('gift_cards')
-        .insert([giftCardData])
+        .insert(giftCardData)
         .select()
         .single();
 
