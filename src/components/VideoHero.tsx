@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -10,6 +11,7 @@ const VideoHero = () => {
   const [showPlayButton, setShowPlayButton] = useState(false);
   const [hasAudio, setHasAudio] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentVideoSrc, setCurrentVideoSrc] = useState('');
 
   // Select video based on language with fallback
   const videoSrc = language === 'ro' 
@@ -28,7 +30,6 @@ const VideoHero = () => {
       video.muted = true;
       setHasAudio(false);
       setShowPlayButton(false);
-      setIsLoading(true);
     }
   };
 
@@ -37,10 +38,15 @@ const VideoHero = () => {
     const video = videoRef.current;
     if (!video) return;
 
+    // Only cleanup and reload if the video source actually changed
+    if (currentVideoSrc && currentVideoSrc !== videoSrc) {
+      console.log('VideoHero: Video source changed, cleaning up and reloading');
+      cleanupVideo();
+      setIsLoading(true);
+    }
+
     console.log('VideoHero: Setting up video for language:', language);
-    
-    // Reset video state when language changes
-    cleanupVideo();
+    setCurrentVideoSrc(videoSrc);
     
     const handleCanPlay = () => {
       console.log('VideoHero: Video can play, attempting autoplay');
@@ -85,15 +91,26 @@ const VideoHero = () => {
     video.addEventListener('error', handleError);
     video.addEventListener('loadstart', handleLoadStart);
 
-    // Force video to reload when language changes
-    video.load();
+    // Add timeout fallback to prevent infinite loading
+    const loadingTimeout = setTimeout(() => {
+      if (isLoading) {
+        console.log('VideoHero: Loading timeout, hiding loading screen');
+        setIsLoading(false);
+      }
+    }, 10000); // 10 second timeout
+
+    // Force video to reload only if source changed
+    if (currentVideoSrc !== videoSrc) {
+      video.load();
+    }
 
     return () => {
       video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('error', handleError);
       video.removeEventListener('loadstart', handleLoadStart);
+      clearTimeout(loadingTimeout);
     };
-  }, [videoSrc, language]);
+  }, [videoSrc, language, currentVideoSrc, isLoading]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -137,8 +154,6 @@ const VideoHero = () => {
       {/* Video Background */}
       <video
         ref={videoRef}
-        autoPlay
-        muted
         loop
         playsInline
         className="absolute top-0 left-0 w-full h-full object-cover"
