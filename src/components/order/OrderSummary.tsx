@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Clock, CheckCircle, Gift } from 'lucide-react';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
-import { useTranslation } from '@/hooks/useTranslations';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface OrderSummaryProps {
@@ -15,7 +14,7 @@ interface OrderSummaryProps {
 }
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAddons, giftCard }) => {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
   const { currency } = useCurrency();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
