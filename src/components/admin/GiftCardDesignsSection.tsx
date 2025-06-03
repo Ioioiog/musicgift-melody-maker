@@ -1,0 +1,194 @@
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Edit, Trash2, Eye } from "lucide-react";
+import { useGiftCardDesigns } from "@/hooks/useGiftCards";
+import { ResponsiveTable } from "@/components/ui/responsive-table";
+import { TableCell } from "@/components/ui/table";
+import GiftCardDesignForm from "./GiftCardDesignForm";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+
+const GiftCardDesignsSection = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingDesign, setEditingDesign] = useState(null);
+  const { data: designs = [], isLoading } = useGiftCardDesigns();
+
+  const handleEdit = (design: any) => {
+    setEditingDesign(design);
+    setIsFormOpen(true);
+  };
+
+  const handleAdd = () => {
+    setEditingDesign(null);
+    setIsFormOpen(true);
+  };
+
+  const handleDelete = async (designId: string) => {
+    // TODO: Implement delete functionality
+    console.log('Delete design:', designId);
+  };
+
+  const renderDesktopRow = (design: any, index: number) => (
+    <>
+      <TableCell>
+        <div className="flex items-center gap-3">
+          {design.preview_image_url ? (
+            <img 
+              src={design.preview_image_url} 
+              alt={design.name}
+              className="w-12 h-12 object-cover rounded"
+            />
+          ) : (
+            <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+              No Image
+            </div>
+          )}
+          <div>
+            <div className="font-medium">{design.name}</div>
+            <div className="text-sm text-gray-500">{design.theme}</div>
+          </div>
+        </div>
+      </TableCell>
+      <TableCell>
+        <Badge variant={design.is_active ? "default" : "secondary"}>
+          {design.is_active ? "Active" : "Inactive"}
+        </Badge>
+      </TableCell>
+      <TableCell>
+        <div className="text-sm text-gray-500">
+          {new Date(design.created_at).toLocaleDateString()}
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => handleEdit(design)}>
+            <Edit className="w-4 h-4" />
+          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete Design</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete "{design.name}"? This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => handleDelete(design.id)}>
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </TableCell>
+    </>
+  );
+
+  const renderMobileCard = (design: any, index: number) => (
+    <div className="space-y-3">
+      <div className="flex items-center gap-3">
+        {design.preview_image_url ? (
+          <img 
+            src={design.preview_image_url} 
+            alt={design.name}
+            className="w-16 h-16 object-cover rounded"
+          />
+        ) : (
+          <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+            No Image
+          </div>
+        )}
+        <div className="flex-1">
+          <h3 className="font-medium">{design.name}</h3>
+          <p className="text-sm text-gray-500">{design.theme}</p>
+          <Badge variant={design.is_active ? "default" : "secondary"} className="mt-1">
+            {design.is_active ? "Active" : "Inactive"}
+          </Badge>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-gray-500">
+          Created: {new Date(design.created_at).toLocaleDateString()}
+        </span>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => handleEdit(design)}>
+            <Edit className="w-4 h-4" />
+          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete Design</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete "{design.name}"? This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => handleDelete(design.id)}>
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (isLoading) {
+    return <div className="text-center py-8">Loading designs...</div>;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Gift Card Designs</CardTitle>
+          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={handleAdd}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Design
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingDesign ? 'Edit Design' : 'Add New Design'}
+                </DialogTitle>
+              </DialogHeader>
+              <GiftCardDesignForm 
+                design={editingDesign}
+                onSuccess={() => setIsFormOpen(false)}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <ResponsiveTable
+          headers={["Design", "Status", "Created", "Actions"]}
+          data={designs}
+          renderRow={renderDesktopRow}
+          renderMobileCard={renderMobileCard}
+        />
+      </CardContent>
+    </Card>
+  );
+};
+
+export default GiftCardDesignsSection;

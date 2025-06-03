@@ -8,6 +8,7 @@ import OrdersManagement from "@/components/admin/OrdersManagement";
 import PackageManagement from "@/components/admin/PackageManagement";
 import NewsletterManagement from "@/components/admin/NewsletterManagement";
 import CampaignsManagement from "@/components/admin/CampaignsManagement";
+import GiftCardsManagement from "@/components/admin/GiftCardsManagement";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 
@@ -29,7 +30,7 @@ const Admin = () => {
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
               {/* Mobile-optimized tab layout */}
               <div className="w-full overflow-x-auto">
-                <TabsList className="grid w-full grid-cols-5 min-w-[500px] sm:min-w-full h-auto p-1">
+                <TabsList className="grid w-full grid-cols-6 min-w-[600px] sm:min-w-full h-auto p-1">
                   <TabsTrigger 
                     value="packages" 
                     className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
@@ -41,6 +42,12 @@ const Admin = () => {
                     className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
                   >
                     Orders
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="gift-cards" 
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                  >
+                    Gift Cards
                   </TabsTrigger>
                   <TabsTrigger 
                     value="users" 
@@ -69,6 +76,10 @@ const Admin = () => {
 
               <TabsContent value="orders" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <OrdersManagement />
+              </TabsContent>
+
+              <TabsContent value="gift-cards" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
+                <GiftCardsManagement />
               </TabsContent>
 
               <TabsContent value="users" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
