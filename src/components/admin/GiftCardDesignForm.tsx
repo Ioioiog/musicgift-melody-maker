@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { useToast } from "@/hooks/use-toast";
+import TemplateDataHelper from "./TemplateDataHelper";
 
 interface GiftCardDesignFormProps {
   design?: any;
@@ -19,7 +20,16 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
     theme: design?.theme || '',
     preview_image_url: design?.preview_image_url || '',
     is_active: design?.is_active ?? true,
-    template_data: design?.template_data ? JSON.stringify(design.template_data, null, 2) : '{}'
+    template_data: design?.template_data ? JSON.stringify(design.template_data, null, 2) : JSON.stringify({
+      recipientName: "{{recipient_name}}",
+      cardValue: "{{card_value}}",
+      currency: "{{currency}}",
+      design: {
+        backgroundColor: "#4f46e5",
+        textColor: "#ffffff",
+        font: "Arial"
+      }
+    }, null, 2)
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -59,6 +69,27 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const insertPlaceholder = (placeholder: string) => {
+    const textarea = document.getElementById('template_data') as HTMLTextAreaElement;
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const currentValue = formData.template_data;
+      const newValue = currentValue.substring(0, start) + placeholder + currentValue.substring(end);
+      handleInputChange('template_data', newValue);
+      
+      // Focus back to textarea and set cursor position
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(start + placeholder.length, start + placeholder.length);
+      }, 0);
+    }
+  };
+
+  const insertExample = (example: string) => {
+    handleInputChange('template_data', example);
   };
 
   return (
@@ -108,8 +139,14 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
           id="template_data"
           value={formData.template_data}
           onChange={(e) => handleInputChange('template_data', e.target.value)}
-          placeholder='{"color": "#ff0000", "font": "Arial"}'
-          rows={6}
+          placeholder='{"recipientName": "{{recipient_name}}", "cardValue": "{{card_value}}"}'
+          rows={8}
+          className="font-mono text-sm"
+        />
+        
+        <TemplateDataHelper
+          onInsertPlaceholder={insertPlaceholder}
+          onInsertExample={insertExample}
         />
       </div>
 
