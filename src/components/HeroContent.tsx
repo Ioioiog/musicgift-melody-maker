@@ -10,9 +10,6 @@ const HeroContent = () => {
   return (
     <section className="py-20 px-4 bg-gradient-to-br from-purple-50 to-blue-50">
       <div className="max-w-4xl mx-auto text-center animate-fade-in">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-float bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-          {t('heroTitle')}
-        </h1>
         <p className="text-xl md:text-2xl mb-8 text-gray-600">
           {t('heroSubtitle')}
         </p>

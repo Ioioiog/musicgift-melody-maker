@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
@@ -195,6 +196,13 @@ const VideoHero = () => {
 
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/40"></div>
+
+      {/* Title at Bottom */}
+      <div className="absolute bottom-20 left-0 right-0 z-10 text-center text-white px-4">
+        <h1 className="text-4xl md:text-6xl font-bold animate-float bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+          {t('heroTitle')}
+        </h1>
+      </div>
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 scroll-indicator">
