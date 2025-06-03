@@ -6,7 +6,7 @@ export const navigationTranslations = {
   about: "Despre noi",
   testimonials: "Testimoniale",
   contact: "Contact",
-  getStarted: "Începe acum",
+  getStarted: "Începe",
   orderNow: "Comandă acum",
   admin: "Admin",
 };

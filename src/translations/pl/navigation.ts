@@ -6,7 +6,7 @@ export const navigationTranslations = {
   about: "O nas",
   testimonials: "Opinie",
   contact: "Kontakt",
-  getStarted: "Zacznij teraz",
+  getStarted: "Rozpocznij",
   orderNow: "Zamów teraz",
   admin: "Admin",
 };

@@ -6,8 +6,8 @@ export const orderTranslations = {
   errorLoadingStepsDesc: "Nu s-a putut încărca configurația pentru acest pachet. Te rugăm să încerci din nou sau să contactezi suportul.",
   chooseAnotherPackage: "Alege alt pachet",
   tryAgain: "Încearcă din nou",
-  noStepsConfigured: "Nu sunt configurați pași",
-  noStepsConfiguredDesc: "Acest pachet nu are pași configurați încă. Te rugăm să contactezi suportul sau să alegi un alt pachet.",
+  noStepsConfigured: "Nu sunt pași configurați",
+  noStepsConfiguredDesc: "Acest pachet nu are încă pași configurați. Te rugăm să contactezi suportul sau să alegi un pachet diferit.",
   selectYourPackage: "Selectează pachetul tău",
   selectOption: "Selectează o opțiune",
   completeRequiredFields: "Te rugăm să completezi toate câmpurile obligatorii",
@@ -17,7 +17,7 @@ export const orderTranslations = {
   stepPackage: "Pasul",
   of: "din",
   progress: "Progres",
-  whatsIncluded: "Ce include",
+  whatsIncluded: "Ce este inclus",
   professionalQuality: "Calitate profesională",
   previous: "Anterior",
   continue: "Continuă",
@@ -25,14 +25,10 @@ export const orderTranslations = {
   completeOrder: "Finalizează comanda",
   choosePackage: "Alege pachetul",
   pickDate: "Alege data",
-  
-  // Toast messages
   orderSuccess: "Comandă creată",
-  orderSuccessMessage: "Comanda ta a fost creată cu succes. Aceasta folosește date de demonstrație.",
+  orderSuccessMessage: "Comanda ta a fost creată cu succes. Aceasta folosește date demonstrative.",
   orderError: "Eroare",
   orderErrorMessage: "A apărut o eroare",
-  
-  // Help section
   needHelp: "Ai nevoie de ajutor?",
   mondayToFriday: "Luni - Vineri, 9:00 - 18:00",
 };

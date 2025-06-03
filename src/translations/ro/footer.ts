@@ -1,28 +1,24 @@
 
 export const footerTranslations = {
-  footerDescription: "Creăm cadouri muzicale personalizate. Transformă momentele tale speciale în melodii frumoase personalizate",
+  footerDescription: "Crearea de cadouri muzicale personalizate. Transformă momentele tale speciale în melodii frumoase și personalizate",
   quickLinks: "Link-uri rapide",
-  contactInfo: "Informații contact",
+  contactInfo: "Informații de contact",
   legal: "Legal",
   termsConditions: "Termeni și condiții",
   privacyPolicy: "Politica de confidențialitate",
   refundPolicy: "Politica de rambursare",
-  cookiePolicy: "Politica cookie-urilor",
+  cookiePolicy: "Politica de cookie-uri",
   stayUpdated: "Rămâi la curent",
   newsletterDescription: "Abonează-te pentru a primi oferte speciale, pachete noi și conținut muzical exclusiv direct în inbox",
   copyright: "© 2025 MusicGift.ro. Toate drepturile rezervate. Realizat de RED DOMAIN cu ❤️ pentru iubitorii de muzică",
   followUs: "Urmărește-ne",
-  
-  // Newsletter Form
   enterName: "Numele tău (opțional)",
   enterEmail: "Introdu adresa de email",
   subscribe: "Abonează-te",
   subscribing: "Se abonează...",
   subscribeDisclaimer: "Prin abonare, accepți Politica noastră de confidențialitate și consimți să primești actualizări de la compania noastră",
-  
-  // Legal Compliance
   legalCompliance: "Conformitate legală și parteneri",
-  consumerProtection: "Protecția consumatorului",
-  onlineDisputeResolution: "Soluționarea online a litigiilor",
+  consumerProtection: "Protecția consumatorilor",
+  onlineDisputeResolution: "Rezolvarea online a disputelor",
   paymentPartners: "Parteneri de plată",
 };
