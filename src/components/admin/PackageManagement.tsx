@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,10 +8,13 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Search, Package as PackageIcon, ChevronDown } from 'lucide-react';
 import { usePackages } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
+import { getPackagePrice } from '@/utils/pricing';
 
 const PackageManagement = () => {
   const { data: packages = [], isLoading } = usePackages();
   const { t } = useLanguage();
+  const { currency } = useCurrency();
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredPackages = packages.filter(pkg => 
@@ -91,7 +95,7 @@ const PackageManagement = () => {
                         <div className="text-left">
                           <h3 className="text-lg font-semibold">{t(pkg.label_key)}</h3>
                           <div className="flex items-center space-x-2 mt-1">
-                            <Badge variant="secondary">{pkg.price} RON</Badge>
+                            <Badge variant="secondary">{getPackagePrice(pkg, currency)} {currency}</Badge>
                             <Badge variant="outline">{pkg.value}</Badge>
                             {pkg.tag && (
                               <Badge className={getTagColor(pkg.tag)}>
@@ -115,7 +119,7 @@ const PackageManagement = () => {
                           <h4 className="font-medium text-gray-900">Package Info</h4>
                           <div className="text-sm space-y-1">
                             <p><span className="font-medium">Value:</span> {pkg.value}</p>
-                            <p><span className="font-medium">Price:</span> {pkg.price} RON</p>
+                            <p><span className="font-medium">Price:</span> {getPackagePrice(pkg, currency)} {currency}</p>
                             {pkg.tagline_key && (
                               <p><span className="font-medium">Tagline:</span> {t(pkg.tagline_key)}</p>
                             )}
