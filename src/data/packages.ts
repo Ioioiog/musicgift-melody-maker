@@ -152,8 +152,8 @@ export const packages: Package[] = [
             id: "mood",
             field_name: "mood",
             field_type: "select",
-            label_key: "Atmosfera dorită",
-            placeholder_key: "Selectează atmosfera",
+            label_key: "moodLabel",
+            placeholder_key: "moodPlaceholder",
             required: true,
             field_order: 2,
             options: [
@@ -171,8 +171,8 @@ export const packages: Package[] = [
             id: "voiceGender",
             field_name: "voiceGender",
             field_type: "select",
-            label_key: "Tip de voce preferat",
-            placeholder_key: "Selectează tipul de voce",
+            label_key: "voiceGenderLabel",
+            placeholder_key: "voiceGenderPlaceholder",
             required: true,
             field_order: 3,
             options: [
@@ -195,8 +195,8 @@ export const packages: Package[] = [
             id: "language",
             field_name: "language",
             field_type: "select",
-            label_key: "Limba piesei",
-            placeholder_key: "Selectează limba",
+            label_key: "songLanguageLabel",
+            placeholder_key: "songLanguagePlaceholder",
             required: true,
             field_order: 5,
             options: [
@@ -216,8 +216,8 @@ export const packages: Package[] = [
             id: "addons",
             field_name: "addons",
             field_type: "checkbox-group",
-            label_key: "Opțiuni suplimentare",
-            placeholder_key: "Selectează opțiunile dorite",
+            label_key: "addons",
+            placeholder_key: "selectOption",
             required: false,
             field_order: 1
           }
@@ -232,7 +232,7 @@ export const packages: Package[] = [
             id: "fullName",
             field_name: "fullName",
             field_type: "text",
-            label_key: "Numele complet",
+            label_key: "fullNameLabel",
             placeholder_key: "fullNamePlaceholder",
             required: true,
             field_order: 1
@@ -241,7 +241,7 @@ export const packages: Package[] = [
             id: "email",
             field_name: "email",
             field_type: "email",
-            label_key: "Adresa de email",
+            label_key: "emailLabel",
             placeholder_key: "emailPlaceholder",
             required: true,
             field_order: 2
@@ -250,7 +250,7 @@ export const packages: Package[] = [
             id: "phone",
             field_name: "phone",
             field_type: "tel",
-            label_key: "Telefon",
+            label_key: "phoneLabel",
             placeholder_key: "phonePlaceholder",
             required: true,
             field_order: 3

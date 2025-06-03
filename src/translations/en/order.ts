@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -139,6 +138,35 @@ export const orderTranslations = {
   styleReferencePlaceholder: "Any specific artist or song style you'd like us to reference?",
   youtubeExampleLabel: "YouTube Example",
   youtubeExamplePlaceholder: "Share a YouTube link of a song style you like",
+  
+  // Voice type fields
+  voiceGenderLabel: "Preferred Voice Type",
+  voiceGenderPlaceholder: "Select voice type",
+  
+  // Song language fields
+  songLanguageLabel: "Song Language",
+  songLanguagePlaceholder: "Select language",
+  
+  // Voice type options
+  voiceFeminine: "Feminine Voice",
+  voiceMasculine: "Masculine Voice",
+  voiceDuet: "Duet",
+  voiceMusicGiftChoice: "MusicGift's Choice",
+  
+  // Mood options
+  moodRomantic: "Romantic",
+  moodCheerful: "Cheerful",
+  moodNostalgic: "Nostalgic",
+  moodEnergetic: "Energetic",
+  moodMelancholic: "Melancholic",
+  moodInspirational: "Inspirational",
+  moodEmotional: "Emotional",
+  moodUplifting: "Uplifting",
+  
+  // Language options
+  romanianLanguage: "Romanian",
+  englishLanguage: "English",
+  frenchLanguage: "French",
   
   // Dedication message
   dedicationMessageLabel: "Personal Dedication Message",

@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Ładowanie pakietów...",
   loadingSteps: "Ładowanie kroków...",
@@ -133,6 +132,35 @@ export const orderTranslations = {
   styleReferencePlaceholder: "Konkretny artysta lub styl piosenki, do którego chciałbyś się odnieść?",
   youtubeExampleLabel: "Przykład z YouTube",
   youtubeExamplePlaceholder: "Udostępnij link YouTube do stylu piosenki, który ci się podoba",
+  
+  // Voice type fields
+  voiceGenderLabel: "Preferowany Typ Głosu",
+  voiceGenderPlaceholder: "Wybierz typ głosu",
+  
+  // Song language fields
+  songLanguageLabel: "Język Piosenki",
+  songLanguagePlaceholder: "Wybierz język",
+  
+  // Voice type options
+  voiceFeminine: "Głos Kobiecy",
+  voiceMasculine: "Głos Męski",
+  voiceDuet: "Duet",
+  voiceMusicGiftChoice: "Wybór MusicGift",
+  
+  // Mood options
+  moodRomantic: "Romantyczny",
+  moodCheerful: "Radosny",
+  moodNostalgic: "Nostalgiczny",
+  moodEnergetic: "Energiczny",
+  moodMelancholic: "Melancholijny",
+  moodInspirational: "Inspirujący",
+  moodEmotional: "Emocjonalny",
+  moodUplifting: "Podnoszący na duchu",
+  
+  // Language options
+  romanianLanguage: "Rumuński",
+  englishLanguage: "Angielski",
+  frenchLanguage: "Francuski",
   
   // Dedication message
   dedicationMessageLabel: "Osobista Wiadomość Dedykacyjna",

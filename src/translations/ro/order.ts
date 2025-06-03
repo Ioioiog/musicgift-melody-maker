@@ -133,6 +133,35 @@ export const orderTranslations = {
   youtubeExampleLabel: "Exemplu YouTube",
   youtubeExamplePlaceholder: "Împărtășește un link YouTube cu un stil de cântec care îți place",
   
+  // Voice type fields
+  voiceGenderLabel: "Tipul de Voce Preferat",
+  voiceGenderPlaceholder: "Selectează tipul de voce",
+  
+  // Song language fields
+  songLanguageLabel: "Limba Cântecului",
+  songLanguagePlaceholder: "Selectează limba",
+  
+  // Voice type options
+  voiceFeminine: "Voce Feminină",
+  voiceMasculine: "Voce Masculină",
+  voiceDuet: "Duet",
+  voiceMusicGiftChoice: "Alegerea MusicGift",
+  
+  // Mood options
+  moodRomantic: "Romantic",
+  moodCheerful: "Vesel",
+  moodNostalgic: "Nostalgic",
+  moodEnergetic: "Energic",
+  moodMelancholic: "Melancolic",
+  moodInspirational: "Inspirațional",
+  moodEmotional: "Emoțional",
+  moodUplifting: "Înălțător",
+  
+  // Language options
+  romanianLanguage: "Română",
+  englishLanguage: "Engleză",
+  frenchLanguage: "Franceză",
+  
   // Dedication message
   dedicationMessageLabel: "Mesaj Personal de Dedicație",
   dedicationMessagePlaceholder: "Un mesaj personal de inclus cu cântecul tău",

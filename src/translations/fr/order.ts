@@ -139,6 +139,35 @@ export const orderTranslations = {
   youtubeExampleLabel: "Exemple YouTube",
   youtubeExamplePlaceholder: "Partagez un lien YouTube d'un style de chanson que vous aimez",
   
+  // Voice type fields
+  voiceGenderLabel: "Type de Voix Préféré",
+  voiceGenderPlaceholder: "Sélectionnez le type de voix",
+  
+  // Song language fields
+  songLanguageLabel: "Langue de la Chanson",
+  songLanguagePlaceholder: "Sélectionnez la langue",
+  
+  // Voice type options
+  voiceFeminine: "Voix Féminine",
+  voiceMasculine: "Voix Masculine",
+  voiceDuet: "Duo",
+  voiceMusicGiftChoice: "Choix de MusicGift",
+  
+  // Mood options
+  moodRomantic: "Romantique",
+  moodCheerful: "Joyeux",
+  moodNostalgic: "Nostalgique",
+  moodEnergetic: "Énergique",
+  moodMelancholic: "Mélancolique",
+  moodInspirational: "Inspirant",
+  moodEmotional: "Émotionnel",
+  moodUplifting: "Revigorant",
+  
+  // Language options
+  romanianLanguage: "Roumain",
+  englishLanguage: "Anglais",
+  frenchLanguage: "Français",
+  
   // Dedication message
   dedicationMessageLabel: "Message Personnel de Dédicace",
   dedicationMessagePlaceholder: "Un message personnel à inclure avec votre chanson",

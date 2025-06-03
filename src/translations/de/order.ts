@@ -133,6 +133,35 @@ export const orderTranslations = {
   youtubeExampleLabel: "YouTube-Beispiel",
   youtubeExamplePlaceholder: "Teilen Sie einen YouTube-Link eines Liedstils, der Ihnen gefällt",
   
+  // Voice type fields
+  voiceGenderLabel: "Bevorzugter Stimmtyp",
+  voiceGenderPlaceholder: "Stimmtyp auswählen",
+  
+  // Song language fields
+  songLanguageLabel: "Liedsprache",
+  songLanguagePlaceholder: "Sprache auswählen",
+  
+  // Voice type options
+  voiceFeminine: "Weibliche Stimme",
+  voiceMasculine: "Männliche Stimme",
+  voiceDuet: "Duett",
+  voiceMusicGiftChoice: "MusicGifts Wahl",
+  
+  // Mood options
+  moodRomantic: "Romantisch",
+  moodCheerful: "Fröhlich",
+  moodNostalgic: "Nostalgisch",
+  moodEnergetic: "Energiegeladen",
+  moodMelancholic: "Melancholisch",
+  moodInspirational: "Inspirierend",
+  moodEmotional: "Emotional",
+  moodUplifting: "Aufbauend",
+  
+  // Language options
+  romanianLanguage: "Rumänisch",
+  englishLanguage: "Englisch",
+  frenchLanguage: "Französisch",
+  
   // Dedication message
   dedicationMessageLabel: "Persönliche Widmungsnachricht",
   dedicationMessagePlaceholder: "Eine persönliche Nachricht, die zu Ihrem Lied hinzugefügt werden soll",
