@@ -503,33 +503,6 @@ export type Database = {
         }
         Relationships: []
       }
-      translations: {
-        Row: {
-          created_at: string | null
-          id: string
-          key_name: string
-          language_code: string
-          translation: string
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          key_name: string
-          language_code: string
-          translation: string
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          key_name?: string
-          language_code?: string
-          translation?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
       user_roles: {
         Row: {
           assigned_at: string | null

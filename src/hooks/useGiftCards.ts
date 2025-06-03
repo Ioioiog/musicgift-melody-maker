@@ -37,7 +37,7 @@ export interface GiftCard {
   updated_at: string;
 }
 
-// Updated insert type without code field (auto-generated)
+// Updated insert type - code is optional since it's auto-generated
 export interface GiftCardInsert {
   sender_user_id?: string | null;
   sender_name: string;
@@ -81,7 +81,7 @@ export const useCreateGiftCard = () => {
     mutationFn: async (giftCardData: GiftCardInsert) => {
       const { data, error } = await supabase
         .from('gift_cards')
-        .insert(giftCardData)
+        .insert([giftCardData])
         .select()
         .single();
 
