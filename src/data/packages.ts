@@ -53,7 +53,8 @@ export const packages: Package[] = [
     label_key: "personalPackage",
     tagline_key: "personalTagline",
     description_key: "personalDescription",
-    price: 300,
+    price_ron: 299,
+    price_eur: 59,
     delivery_time_key: "personalDelivery",
     tag: "popular",
     includes: [
@@ -298,7 +299,8 @@ export const packages: Package[] = [
     label_key: "premiumPackage",
     tagline_key: "premiumTagline",
     description_key: "premiumDescription",
-    price: 500,
+    price_ron: 499,
+    price_eur: 99,
     delivery_time_key: "premiumDelivery",
     tag: "premium",
     includes: [
@@ -460,7 +462,8 @@ export const packages: Package[] = [
     label_key: "businessPackage",
     tagline_key: "businessTagline",
     description_key: "businessDescription",
-    price: 500,
+    price_ron: 499,
+    price_eur: 99,
     delivery_time_key: "businessDelivery",
     tag: "new",
     includes: [
@@ -571,7 +574,8 @@ export const packages: Package[] = [
     label_key: "artistPackage",
     tagline_key: "artistTagline",
     description_key: "artistDescription",
-    price: 8000,
+    price_ron: 7999,
+    price_eur: 1599,
     delivery_time_key: "artistDelivery",
     tag: "new",
     includes: [
@@ -674,7 +678,8 @@ export const packages: Package[] = [
     label_key: "remixPackage",
     tagline_key: "remixTagline",
     description_key: "remixDescription",
-    price: 500,
+    price_ron: 499,
+    price_eur: 99,
     delivery_time_key: "remixDelivery",
     tag: "new",
     includes: [
@@ -764,7 +769,8 @@ export const packages: Package[] = [
     label_key: "instrumentalPackage",
     tagline_key: "instrumentalTagline",
     description_key: "instrumentalDescription",
-    price: 500,
+    price_ron: 499,
+    price_eur: 99,
     delivery_time_key: "instrumentalDelivery",
     tag: "new",
     includes: [
@@ -852,7 +858,8 @@ export const packages: Package[] = [
     label_key: "giftPackage",
     tagline_key: "giftTagline",
     description_key: "giftDescription",
-    price: 350,
+    price_ron: 349,
+    price_eur: 69,
     delivery_time_key: "giftDelivery",
     tag: "gift",
     includes: [

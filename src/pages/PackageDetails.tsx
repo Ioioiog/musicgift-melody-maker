@@ -1,4 +1,3 @@
-
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Check, Clock, Star, Users, Mic, Music, FileText, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -52,6 +51,10 @@ const PackageDetails = () => {
       </div>
     );
   }
+
+  const getPackagePrice = (pkg: any) => {
+    return currency === 'EUR' ? pkg.price_eur : pkg.price_ron;
+  };
 
   // Enhanced package features based on package type
   const getPackageFeatures = (packageValue: string) => {
@@ -188,7 +191,7 @@ const PackageDetails = () => {
                 <CardContent>
                   <div className="mb-6">
                     <div className="text-4xl font-bold mb-2 text-white">
-                      {currency === 'EUR' ? '€' : 'RON'} {packageData.price}
+                      {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(packageData)}
                     </div>
                     <div className="flex items-center text-sm text-white/70">
                       <Clock className="w-4 h-4 mr-1" />
@@ -312,7 +315,7 @@ const PackageDetails = () => {
                 <CardContent className="space-y-4">
                   <Link to={`/order?package=${packageData.value}`}>
                     <Button className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm" size="lg">
-                      {t('orderNow')} - {currency === 'EUR' ? '€' : 'RON'} {packageData.price}
+                      {t('orderNow')} - {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(packageData)}
                     </Button>
                   </Link>
                   <p className="text-sm text-white/70 text-center">
@@ -339,7 +342,7 @@ const PackageDetails = () => {
                       <Link key={pkg.value} to={`/packages/${pkg.value}`}>
                         <div className="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                           <h4 className="font-semibold text-white text-sm">{t(pkg.label_key)}</h4>
-                          <p className="text-white/70 text-xs">{currency === 'EUR' ? '€' : 'RON'} {pkg.price}</p>
+                          <p className="text-white/70 text-xs">{currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}</p>
                         </div>
                       </Link>
                     ))}

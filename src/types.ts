@@ -40,7 +40,8 @@ export interface Package {
   label_key: string;
   tagline_key: string;
   description_key: string;
-  price: number;
+  price_ron: number;
+  price_eur: number;
   delivery_time_key: string;
   tag?: string; // Keep existing tag field
   tags?: PackageTag[]; // Add tags array for database packages

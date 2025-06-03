@@ -30,6 +30,10 @@ const Packages = () => {
     );
   }
 
+  const getPackagePrice = (pkg: any) => {
+    return currency === 'EUR' ? pkg.price_eur : pkg.price_ron;
+  };
+
   return (
     <div className="min-h-screen">
       <Navigation />
@@ -94,7 +98,7 @@ const Packages = () => {
                       {t(pkg.description_key)}
                     </CardDescription>
                     <div className="text-3xl font-bold text-white">
-                      {currency === 'EUR' ? '€' : 'RON'} {pkg.price}
+                      {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}
                     </div>
                     <div className="flex items-center text-sm text-white/70">
                       <Clock className="w-4 h-4 mr-1" />
