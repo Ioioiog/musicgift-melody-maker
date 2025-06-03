@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,9 +28,9 @@ interface DesignOption {
   preview_image_url?: string;
 }
 
-// Currency-specific amount options
-const AmountOptionsRON = [299, 499, 7999];
-const AmountOptionsEUR = [59, 99, 1599];
+// Currency-specific amount options with different prices
+const AmountOptionsRON = [299, 499, 999];
+const AmountOptionsEUR = [79, 119, 199];
 
 const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -68,13 +69,13 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
     return selectedAmount;
   };
 
-  // Convert amount to RON for backend (always store in RON)
-  const convertToRON = (amount: number) => {
-    if (currency === 'EUR') {
-      // Simple conversion rate - in production you'd use real exchange rates
-      return Math.round(amount * 5.0); // 1 EUR ≈ 5 RON
+  // Calculate equivalent amount in the other currency for display
+  const getEquivalentAmount = (amount: number, fromCurrency: string) => {
+    if (fromCurrency === 'EUR') {
+      return Math.round(amount * 4.2); // 1 EUR ≈ 4.2 RON (different exchange rate)
+    } else {
+      return Math.round(amount / 4.2); // 1 RON ≈ 0.24 EUR
     }
-    return amount;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -118,15 +119,22 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
       setIsSubmitting(true);
 
       const actualAmount = getActualAmount();
-      const amountInRON = convertToRON(actualAmount);
+      const amountInCents = actualAmount * 100;
 
-      // Create gift card with payment_status = 'pending'
+      // Calculate amounts for both currencies
+      const amountRon = currency === 'RON' ? amountInCents : getEquivalentAmount(actualAmount, 'EUR') * 100;
+      const amountEur = currency === 'EUR' ? amountInCents : getEquivalentAmount(actualAmount, 'RON') * 100;
+
+      // Create gift card with multi-currency support
       const giftCardData = {
         ...formData,
         sender_user_id: user?.id || null,
         payment_status: 'pending',
-        status: 'pending', // Will be activated after payment
-        gift_amount: amountInRON * 100, // Convert to cents
+        status: 'pending',
+        currency: currency,
+        gift_amount: amountInCents, // Amount in selected currency
+        amount_ron: amountRon,
+        amount_eur: amountEur,
         design_id: selectedDesign
       };
 
@@ -155,20 +163,31 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
       <div className="text-center">
         <h3 className="text-2xl font-bold mb-4">Choose Gift Card Amount</h3>
         <p className="text-gray-600">Select the value of the gift card you want to send.</p>
+        <p className="text-sm text-gray-500 mt-2">
+          Prices are optimized for {currency} payments
+        </p>
       </div>
       
       {/* Preset Amount Options */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {getAmountOptions().map(amount => (
-          <Button
-            key={amount}
-            variant={selectedAmountType === 'preset' && selectedAmount === amount ? "default" : "outline"}
-            onClick={() => handleAmountSelection(amount)}
-            className="h-16 text-lg font-semibold"
-          >
-            {amount} {currency}
-          </Button>
-        ))}
+        {getAmountOptions().map(amount => {
+          const equivalentAmount = getEquivalentAmount(amount, currency);
+          const otherCurrency = currency === 'EUR' ? 'RON' : 'EUR';
+          
+          return (
+            <Button
+              key={amount}
+              variant={selectedAmountType === 'preset' && selectedAmount === amount ? "default" : "outline"}
+              onClick={() => handleAmountSelection(amount)}
+              className="h-20 text-lg font-semibold flex flex-col"
+            >
+              <span>{amount} {currency}</span>
+              <span className="text-xs opacity-70">
+                (~{equivalentAmount} {otherCurrency})
+              </span>
+            </Button>
+          );
+        })}
       </div>
 
       {/* Custom Amount Option */}
@@ -200,6 +219,11 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
                 {currency}
               </span>
             </div>
+            {customAmount && (
+              <div className="text-sm text-gray-600">
+                Equivalent: ~{getEquivalentAmount(parseFloat(customAmount) || 0, currency)} {currency === 'EUR' ? 'RON' : 'EUR'}
+              </div>
+            )}
             {customAmount && !validateCustomAmount(customAmount) && (
               <p className="text-sm text-red-600">
                 Amount must be between {currency === 'EUR' ? '10-1000' : '50-5000'} {currency}
@@ -365,7 +389,8 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
 
   const renderStep4 = () => {
     const actualAmount = getActualAmount();
-    const amountInRON = convertToRON(actualAmount);
+    const equivalentAmount = getEquivalentAmount(actualAmount, currency);
+    const otherCurrency = currency === 'EUR' ? 'RON' : 'EUR';
     
     return (
       <div className="space-y-6">
@@ -380,14 +405,16 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
           <CardContent className="space-y-4">
             <div className="flex justify-between">
               <span>Amount:</span>
-              <span>
-                {actualAmount} {currency}
-                {currency === 'EUR' && (
-                  <span className="text-sm text-gray-500 ml-2">
-                    (~{amountInRON} RON)
-                  </span>
-                )}
-              </span>
+              <div className="text-right">
+                <div className="font-semibold">{actualAmount} {currency}</div>
+                <div className="text-sm text-gray-500">
+                  (~{equivalentAmount} {otherCurrency})
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <span>Payment Currency:</span>
+              <span className="font-semibold">{currency}</span>
             </div>
             <div className="flex justify-between">
               <span>Design:</span>
@@ -413,7 +440,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
             Back
           </Button>
           <Button 
-            onClick={handleFormSubmit} 
+            onClick={() => handleFormSubmit(formData)} 
             disabled={isSubmitting || isProcessingPayment}
             className="flex-1"
           >

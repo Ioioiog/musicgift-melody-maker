@@ -37,6 +37,27 @@ serve(async (req) => {
       throw new Error('Gift card not found')
     }
 
+    // Determine payment amount and currency
+    // Netopia only accepts RON, so we convert EUR payments to RON
+    let paymentAmount = giftCard.gift_amount || 0;
+    let paymentCurrency = giftCard.currency || 'RON';
+    
+    // If the gift card is in EUR, use the RON equivalent for payment
+    if (giftCard.currency === 'EUR') {
+      paymentAmount = giftCard.amount_ron || 0;
+      paymentCurrency = 'RON';
+    }
+
+    // Convert from cents to currency units
+    const finalAmount = paymentAmount / 100;
+
+    console.log(`Processing payment for gift card ${giftCard.code}:`, {
+      originalCurrency: giftCard.currency,
+      originalAmount: giftCard.gift_amount,
+      paymentCurrency,
+      paymentAmount: finalAmount
+    });
+
     // Prepare Netopia payment request
     const paymentData = {
       config: {
@@ -69,14 +90,14 @@ serve(async (req) => {
         },
         data: {
           orderId: giftCard.id,
-          amount: (giftCard.gift_amount || 0) / 100, // Convert from cents
-          currency: 'RON',
-          orderDescription: `Gift Card - ${giftCard.code}`,
+          amount: finalAmount,
+          currency: paymentCurrency,
+          orderDescription: `Gift Card - ${giftCard.code} (${giftCard.currency === 'EUR' ? 'EUR to RON conversion' : 'RON payment'})`,
           products: [{
             name: 'Music Gift Card',
             code: giftCard.code,
             category: 'Gift Cards',
-            price: (giftCard.gift_amount || 0) / 100,
+            price: finalAmount,
             vat: 19
           }]
         }
@@ -103,8 +124,6 @@ serve(async (req) => {
     const { error: updateError } = await supabaseClient
       .from('gift_cards')
       .update({
-        payment_id: paymentResult.orderId,
-        payment_url: paymentResult.paymentUrl,
         payment_status: 'pending'
       })
       .eq('id', giftCardId)
@@ -117,7 +136,9 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         paymentUrl: paymentResult.paymentUrl,
-        orderId: paymentResult.orderId
+        orderId: paymentResult.orderId,
+        paymentCurrency,
+        paymentAmount: finalAmount
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

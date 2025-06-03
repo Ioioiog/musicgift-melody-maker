@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -22,7 +23,10 @@ export interface GiftCard {
   recipient_email: string;
   message_text?: string;
   audio_message_url?: string;
+  currency: string;
   gift_amount?: number;
+  amount_ron?: number;
+  amount_eur?: number;
   package_type?: string;
   design_id?: string;
   delivery_date?: string;
@@ -33,8 +37,25 @@ export interface GiftCard {
   updated_at: string;
 }
 
-// Use Supabase's exact Insert type - the database trigger will handle code generation
-export type GiftCardInsert = Database['public']['Tables']['gift_cards']['Insert'];
+// Enhanced insert type to include new currency fields
+export interface GiftCardInsert {
+  sender_user_id?: string | null;
+  sender_name: string;
+  sender_email: string;
+  recipient_name: string;
+  recipient_email: string;
+  message_text?: string | null;
+  audio_message_url?: string | null;
+  currency: string;
+  gift_amount?: number | null;
+  amount_ron?: number | null;
+  amount_eur?: number | null;
+  package_type?: string | null;
+  design_id?: string | null;
+  delivery_date?: string | null;
+  status?: string | null;
+  payment_status?: string | null;
+}
 
 export const useGiftCardDesigns = () => {
   return useQuery({

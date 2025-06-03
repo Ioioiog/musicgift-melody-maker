@@ -195,9 +195,12 @@ export type Database = {
       }
       gift_cards: {
         Row: {
+          amount_eur: number | null
+          amount_ron: number | null
           audio_message_url: string | null
           code: string
           created_at: string
+          currency: string | null
           delivery_date: string | null
           design_id: string | null
           expires_at: string | null
@@ -215,9 +218,12 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          amount_eur?: number | null
+          amount_ron?: number | null
           audio_message_url?: string | null
           code: string
           created_at?: string
+          currency?: string | null
           delivery_date?: string | null
           design_id?: string | null
           expires_at?: string | null
@@ -235,9 +241,12 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          amount_eur?: number | null
+          amount_ron?: number | null
           audio_message_url?: string | null
           code?: string
           created_at?: string
+          currency?: string | null
           delivery_date?: string | null
           design_id?: string | null
           expires_at?: string | null
