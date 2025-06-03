@@ -160,6 +160,155 @@ export type Database = {
         }
         Relationships: []
       }
+      gift_card_designs: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          name: string
+          preview_image_url: string | null
+          template_data: Json | null
+          theme: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          preview_image_url?: string | null
+          template_data?: Json | null
+          theme: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          preview_image_url?: string | null
+          template_data?: Json | null
+          theme?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gift_cards: {
+        Row: {
+          audio_message_url: string | null
+          code: string
+          created_at: string
+          delivery_date: string | null
+          design_id: string | null
+          expires_at: string | null
+          gift_amount: number | null
+          id: string
+          message_text: string | null
+          package_type: string | null
+          payment_status: string | null
+          recipient_email: string
+          recipient_name: string
+          sender_email: string
+          sender_name: string
+          sender_user_id: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          audio_message_url?: string | null
+          code: string
+          created_at?: string
+          delivery_date?: string | null
+          design_id?: string | null
+          expires_at?: string | null
+          gift_amount?: number | null
+          id?: string
+          message_text?: string | null
+          package_type?: string | null
+          payment_status?: string | null
+          recipient_email: string
+          recipient_name: string
+          sender_email: string
+          sender_name: string
+          sender_user_id?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          audio_message_url?: string | null
+          code?: string
+          created_at?: string
+          delivery_date?: string | null
+          design_id?: string | null
+          expires_at?: string | null
+          gift_amount?: number | null
+          id?: string
+          message_text?: string | null
+          package_type?: string | null
+          payment_status?: string | null
+          recipient_email?: string
+          recipient_name?: string
+          sender_email?: string
+          sender_name?: string
+          sender_user_id?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_cards_design_id_fkey"
+            columns: ["design_id"]
+            isOneToOne: false
+            referencedRelation: "gift_card_designs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gift_redemptions: {
+        Row: {
+          created_at: string
+          gift_card_id: string
+          id: string
+          order_id: string | null
+          redeemed_amount: number
+          redemption_date: string
+          remaining_balance: number
+        }
+        Insert: {
+          created_at?: string
+          gift_card_id: string
+          id?: string
+          order_id?: string | null
+          redeemed_amount: number
+          redemption_date?: string
+          remaining_balance: number
+        }
+        Update: {
+          created_at?: string
+          gift_card_id?: string
+          id?: string
+          order_id?: string | null
+          redeemed_amount?: number
+          redemption_date?: string
+          remaining_balance?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_redemptions_gift_card_id_fkey"
+            columns: ["gift_card_id"]
+            isOneToOne: false
+            referencedRelation: "gift_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_redemptions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       newsletter_subscribers: {
         Row: {
           brevo_contact_id: string | null
@@ -203,7 +352,10 @@ export type Database = {
         Row: {
           created_at: string | null
           form_data: Json
+          gift_card_id: string | null
+          gift_credit_applied: number | null
           id: string
+          is_gift_redemption: boolean | null
           package_delivery_time: string | null
           package_id: string | null
           package_includes: Json | null
@@ -222,7 +374,10 @@ export type Database = {
         Insert: {
           created_at?: string | null
           form_data: Json
+          gift_card_id?: string | null
+          gift_credit_applied?: number | null
           id?: string
+          is_gift_redemption?: boolean | null
           package_delivery_time?: string | null
           package_id?: string | null
           package_includes?: Json | null
@@ -241,7 +396,10 @@ export type Database = {
         Update: {
           created_at?: string | null
           form_data?: Json
+          gift_card_id?: string | null
+          gift_credit_applied?: number | null
           id?: string
+          is_gift_redemption?: boolean | null
           package_delivery_time?: string | null
           package_id?: string | null
           package_includes?: Json | null
@@ -257,7 +415,15 @@ export type Database = {
           updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "orders_gift_card_id_fkey"
+            columns: ["gift_card_id"]
+            isOneToOne: false
+            referencedRelation: "gift_cards"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -390,6 +556,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_gift_card_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_gift_card_balance: {
+        Args: { card_id: string }
+        Returns: number
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]

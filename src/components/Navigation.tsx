@@ -31,6 +31,9 @@ const Navigation = () => {
     path: "/packages",
     label: t("packages") || "Packages"
   }, {
+    path: "/gift",
+    label: "Gift Cards"
+  }, {
     path: "/how-it-works",
     label: t("howItWorks") || "How It Works"
   }, {

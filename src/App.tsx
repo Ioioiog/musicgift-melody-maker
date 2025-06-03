@@ -14,6 +14,7 @@ import HowItWorks from "./pages/HowItWorks";
 import Testimonials from "./pages/Testimonials";
 import Contact from "./pages/Contact";
 import Order from "./pages/Order";
+import Gift from "./pages/Gift";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import Settings from "./pages/Settings";
@@ -38,6 +39,7 @@ const App = () => (
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/gift" element={<Gift />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/payment/success" element={<PaymentSuccess />} />
