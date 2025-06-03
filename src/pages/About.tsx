@@ -1,11 +1,9 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
-import ImpactCards from "@/components/ImpactCards";
 
 const About = () => {
   const { t } = useLanguage();
@@ -225,9 +223,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      {/* Impact Cards Section - Static Mode (after Our Story) */}
-      <ImpactCards />
 
       <Footer />
     </div>
