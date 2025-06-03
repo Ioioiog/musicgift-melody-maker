@@ -34,27 +34,39 @@ const Packages = () => {
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="py-20 px-4 text-center bg-gradient-to-br from-purple-50 to-blue-50">
-        <div className="max-w-4xl mx-auto">
+      {/* Hero Section with Music Background */}
+      <section className="py-20 px-4 text-center text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="max-w-4xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
               {t('chooseYourPackage', 'Choose Your Package')}
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8">
+            <p className="text-xl md:text-2xl mb-8 opacity-90">
               {t('packagesSubtitle', 'Professional music creation tailored to your needs')}
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Packages Grid */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
+      {/* Packages Grid with Music Background */}
+      <section className="py-20 px-4 relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {packages?.map((pkg, index) => (
               <motion.div
@@ -65,8 +77,8 @@ const Packages = () => {
                 onHoverStart={() => setHoveredCard(pkg.value)}
                 onHoverEnd={() => setHoveredCard(null)}
               >
-                <Card className={`h-full transition-all duration-300 ${
-                  hoveredCard === pkg.value ? 'shadow-xl scale-105' : 'shadow-lg'
+                <Card className={`h-full transition-all duration-300 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:shadow-xl ${
+                  hoveredCard === pkg.value ? 'scale-105' : ''
                 } ${pkg.tag === 'popular' ? 'ring-2 ring-purple-500' : ''}`}>
                   <CardHeader className="relative">
                     {pkg.tag === 'popular' && (
@@ -75,41 +87,41 @@ const Packages = () => {
                         {t('popular', 'Popular')}
                       </Badge>
                     )}
-                    <CardTitle className="text-xl mb-2">
+                    <CardTitle className="text-xl mb-2 text-white">
                       {t(pkg.label_key)}
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-white/80">
                       {t(pkg.description_key)}
                     </CardDescription>
-                    <div className="text-3xl font-bold text-purple-600">
+                    <div className="text-3xl font-bold text-white">
                       {currency === 'EUR' ? '€' : 'RON'} {pkg.price}
                     </div>
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-white/70">
                       <Clock className="w-4 h-4 mr-1" />
                       {t(pkg.delivery_time_key)}
                     </div>
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col">
                     <div className="flex-1">
-                      <h4 className="font-semibold mb-3">{t('whatsIncluded', 'What\'s included:')}</h4>
+                      <h4 className="font-semibold mb-3 text-white">{t('whatsIncluded', 'What\'s included:')}</h4>
                       <ul className="space-y-2 mb-6">
                         {pkg.includes?.map((item, itemIndex) => (
                           <li key={itemIndex} className="flex items-start">
-                            <Check className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                            <span className="text-sm">{t(item.include_key)}</span>
+                            <Check className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-white/90">{t(item.include_key)}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div className="space-y-3">
                       <Link to={`/order?package=${pkg.value}`}>
-                        <Button className="w-full" size="lg">
+                        <Button className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm" size="lg">
                           {t('orderNow')}
                           <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
                       </Link>
                       <Link to={`/packages/${pkg.value}`}>
-                        <Button variant="outline" className="w-full">
+                        <Button variant="outline" className="w-full border-white/30 text-white hover:bg-white/20 backdrop-blur-sm">
                           {t('learnMore', 'Learn More')}
                         </Button>
                       </Link>
