@@ -365,17 +365,17 @@ serve(async (req) => {
     // Success - extract invoice details and NETOPIA payment URL
     const smartBillInvoiceId = invoiceResult?.number || invoiceResult?.invoiceNumber || `INV-${Date.now()}`
     const smartBillSeries = invoiceResult?.series || seriesName
-    const netopiaPa​ymentUrl = invoiceResult?.url // NETOPIA payment link from SmartBill
+    const netopiaPaymentUrl = invoiceResult?.url // NETOPIA payment link from SmartBill
     
     console.log('SmartBill invoice created successfully:', {
       invoiceId: smartBillInvoiceId,
       series: smartBillSeries,
-      netopiaPa​ymentUrl: netopiaPa​ymentUrl,
-      hasPaymentUrl: !!netopiaPa​ymentUrl
+      netopiaPaymentUrl: netopiaPaymentUrl,
+      hasPaymentUrl: !!netopiaPaymentUrl
     })
 
     // Determine payment status based on URL availability
-    const hasValidPaymentUrl = netopiaPa​ymentUrl && netopiaPa​ymentUrl.trim() !== ''
+    const hasValidPaymentUrl = netopiaPaymentUrl && netopiaPaymentUrl.trim() !== ''
     const paymentStatus = hasValidPaymentUrl ? 'payment_pending' : 'invoice_created'
 
     // Update order with SmartBill details
@@ -383,7 +383,7 @@ serve(async (req) => {
       .from('orders')
       .update({ 
         smartbill_invoice_id: smartBillInvoiceId,
-        smartbill_payment_url: netopiaPa​ymentUrl || null,
+        smartbill_payment_url: netopiaPaymentUrl || null,
         smartbill_invoice_data: invoiceResult,
         smartbill_payment_status: paymentStatus
       })
@@ -399,7 +399,7 @@ serve(async (req) => {
         success: true,
         orderId: savedOrder.id,
         paymentRequired: true,
-        paymentUrl: hasValidPaymentUrl ? netopiaPa​ymentUrl : null,
+        paymentUrl: hasValidPaymentUrl ? netopiaPaymentUrl : null,
         invoiceCreated: true,
         invoiceId: smartBillInvoiceId,
         series: smartBillSeries,
