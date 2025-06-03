@@ -10,7 +10,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, Heart, Gift, TreePine, Star } from 'lucide-react';
 import { format } from 'date-fns';
-import { useGiftCardDesigns, useCreateGiftCard } from '@/hooks/useGiftCards';
+import { useGiftCardDesigns, useCreateGiftCard, type GiftCardInsert } from '@/hooks/useGiftCards';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -72,7 +72,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
   const handleSubmit = async () => {
     if (!user) return;
 
-    const giftCardData = {
+    const giftCardData: GiftCardInsert = {
       sender_user_id: user.id,
       sender_name: user.user_metadata?.full_name || 'Anonymous',
       sender_email: user.email!,
@@ -83,6 +83,8 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
       delivery_date: formData.instantDelivery ? null : formData.deliveryDate?.toISOString(),
       gift_amount: formData.giftType === 'amount' ? (formData.giftAmount! * 100) : null, // Convert to cents
       package_type: formData.giftType === 'package' ? formData.packageType : null,
+      status: 'active',
+      payment_status: 'pending',
     };
 
     try {
