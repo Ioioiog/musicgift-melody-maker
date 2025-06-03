@@ -50,4 +50,30 @@ export const orderTranslations = {
   premium: "Premium",
   new: "New",
   gift: "Gift",
+  
+  // Order Summary
+  orderSummary: "Order Summary",
+  addons: "Add-ons",
+  subtotal: "Subtotal",
+  total: "Total",
+  giftCardDiscount: "Gift Card Discount",
+  fullyCoveredByGiftCard: "Fully covered by gift card",
+  giftCardFrom: "From:",
+  giftCardBalance: "Balance:",
+  giftCardRemaining: "Remaining after order:",
+  
+  // Form Field Renderer
+  noAddonsAvailable: "No add-ons available for this package",
+  fieldConfigurationError: "Field configuration error: No options available",
+  unknownFieldType: "Unknown field type:",
+  uploadFiles: "Upload Files",
+  clickToUploadFiles: "Click to upload files",
+  maxFiles: "Max",
+  files: "files",
+  totalSize: "total",
+  recordAudioMessage: "Record Audio Message",
+  
+  // Testimonial
+  testimonialQuote: "\"The perfect gift for music lovers! The personalized song was absolutely beautiful and made our anniversary unforgettable.\"",
+  testimonialAuthor: "- Sarah M., Happy Customer",
 };

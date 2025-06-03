@@ -44,4 +44,30 @@ export const orderTranslations = {
   premium: "Premium",
   new: "Nowe",
   gift: "Prezent",
+  
+  // Order Summary
+  orderSummary: "Podsumowanie Zamówienia",
+  addons: "Dodatki",
+  subtotal: "Suma częściowa",
+  total: "Suma",
+  giftCardDiscount: "Zniżka z karty podarunkowej",
+  fullyCoveredByGiftCard: "W pełni pokryte kartą podarunkową",
+  giftCardFrom: "Od:",
+  giftCardBalance: "Saldo:",
+  giftCardRemaining: "Pozostało po zamówieniu:",
+  
+  // Form Field Renderer
+  noAddonsAvailable: "Brak dostępnych dodatków dla tego pakietu",
+  fieldConfigurationError: "Błąd konfiguracji pola: Brak dostępnych opcji",
+  unknownFieldType: "Nieznany typ pola:",
+  uploadFiles: "Prześlij Pliki",
+  clickToUploadFiles: "Kliknij, aby przesłać pliki",
+  maxFiles: "Maks.",
+  files: "plików",
+  totalSize: "łącznie",
+  recordAudioMessage: "Nagraj Wiadomość Audio",
+  
+  // Testimonial
+  testimonialQuote: "\"Idealny prezent dla miłośników muzyki! Spersonalizowana piosenka była absolutnie piękna i sprawiła, że nasza rocznica była niezapomniana.\"",
+  testimonialAuthor: "- Sarah M., Zadowolony Klient",
 };

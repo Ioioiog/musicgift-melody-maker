@@ -44,4 +44,30 @@ export const orderTranslations = {
   premium: "Premium",
   new: "Nou",
   gift: "Cadou",
+  
+  // Order Summary
+  orderSummary: "Rezumatul Comenzii",
+  addons: "Opțiuni Extra",
+  subtotal: "Subtotal",
+  total: "Total",
+  giftCardDiscount: "Reducere Card Cadou",
+  fullyCoveredByGiftCard: "Acoperit complet de cardul cadou",
+  giftCardFrom: "De la:",
+  giftCardBalance: "Sold:",
+  giftCardRemaining: "Rămas după comandă:",
+  
+  // Form Field Renderer
+  noAddonsAvailable: "Nu sunt disponibile opțiuni suplimentare pentru acest pachet",
+  fieldConfigurationError: "Eroare de configurare câmp: Nu sunt opțiuni disponibile",
+  unknownFieldType: "Tip de câmp necunoscut:",
+  uploadFiles: "Încarcă Fișiere",
+  clickToUploadFiles: "Click pentru a încărca fișiere",
+  maxFiles: "Maxim",
+  files: "fișiere",
+  totalSize: "total",
+  recordAudioMessage: "Înregistrează Mesaj Audio",
+  
+  // Testimonial
+  testimonialQuote: "\"Cadoul perfect pentru iubitorii de muzică! Cântecul personalizat a fost absolut frumos și ne-a făcut aniversarea de neuitat.\"",
+  testimonialAuthor: "- Sarah M., Client Mulțumit",
 };

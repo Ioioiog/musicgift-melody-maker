@@ -50,4 +50,30 @@ export const orderTranslations = {
   premium: "Premium",
   new: "Nouveau",
   gift: "Cadeau",
+  
+  // Order Summary
+  orderSummary: "Résumé de la Commande",
+  addons: "Suppléments",
+  subtotal: "Sous-total",
+  total: "Total",
+  giftCardDiscount: "Réduction Carte Cadeau",
+  fullyCoveredByGiftCard: "Entièrement couvert par la carte cadeau",
+  giftCardFrom: "De :",
+  giftCardBalance: "Solde :",
+  giftCardRemaining: "Restant après commande :",
+  
+  // Form Field Renderer
+  noAddonsAvailable: "Aucun supplément disponible pour ce forfait",
+  fieldConfigurationError: "Erreur de configuration du champ : Aucune option disponible",
+  unknownFieldType: "Type de champ inconnu :",
+  uploadFiles: "Télécharger des Fichiers",
+  clickToUploadFiles: "Cliquez pour télécharger des fichiers",
+  maxFiles: "Max.",
+  files: "fichiers",
+  totalSize: "total",
+  recordAudioMessage: "Enregistrer un Message Audio",
+  
+  // Testimonial
+  testimonialQuote: "\"Le cadeau parfait pour les amateurs de musique ! La chanson personnalisée était absolument magnifique et a rendu notre anniversaire inoubliable.\"",
+  testimonialAuthor: "- Sarah M., Cliente Satisfaite",
 };

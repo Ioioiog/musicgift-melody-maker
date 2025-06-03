@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -41,7 +42,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
           <CheckCircle className="w-5 h-5 text-green-500" />
-          {t('orderSummary', 'Rezumatul comenzii')}
+          {t('orderSummary')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -71,7 +72,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
             <Separator />
             <div className="space-y-2">
               <h4 className="font-medium text-gray-900">
-                {t('addons', 'Extra Services')}
+                {t('addons')}
               </h4>
               {selectedAddonsData.map((addon) => (
                 <div key={addon?.addon_key} className="flex justify-between items-center text-sm">
@@ -88,7 +89,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
         {/* Pricing Summary */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">{t('subtotal', 'Subtotal')}</span>
+            <span className="text-gray-600">{t('subtotal')}</span>
             <span className="font-medium">{subtotal} {currency}</span>
           </div>
           
@@ -97,7 +98,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
             <div className="flex justify-between items-center text-green-600">
               <div className="flex items-center gap-1">
                 <Gift className="w-4 h-4" />
-                <span>Gift Card Discount</span>
+                <span>{t('giftCardDiscount')}</span>
               </div>
               <span className="font-medium">-{giftDiscount.toFixed(2)} {currency}</span>
             </div>
@@ -106,12 +107,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
           <Separator />
           
           <div className="flex justify-between items-center text-lg font-bold">
-            <span className="text-gray-900">{t('total', 'Total')}</span>
+            <span className="text-gray-900">{t('total')}</span>
             <div className="text-right">
               <span className="text-purple-600">{finalTotal.toFixed(2)} {currency}</span>
               {finalTotal === 0 && (
                 <div className="text-xs text-green-600 font-normal">
-                  Fully covered by gift card
+                  {t('fullyCoveredByGiftCard')}
                 </div>
               )}
             </div>
@@ -125,14 +126,14 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
             <div className="bg-green-50 p-3 rounded-lg border border-green-200">
               <div className="flex items-center gap-2 mb-2">
                 <Gift className="w-4 h-4 text-green-600" />
-                <span className="font-medium text-green-800">Gift Card Applied</span>
+                <span className="font-medium text-green-800">{t('giftCardApplied')}</span>
               </div>
               <div className="text-sm text-green-700 space-y-1">
-                <div>From: {giftCard.sender_name}</div>
-                <div>Balance: {giftBalance.toFixed(2)} {currency}</div>
+                <div>{t('giftCardFrom')} {giftCard.sender_name}</div>
+                <div>{t('giftCardBalance')} {giftBalance.toFixed(2)} {currency}</div>
                 {giftBalance > subtotal && (
                   <div className="text-xs">
-                    Remaining after order: {(giftBalance - subtotal).toFixed(2)} {currency}
+                    {t('giftCardRemaining')} {(giftBalance - subtotal).toFixed(2)} {currency}
                   </div>
                 )}
               </div>
@@ -143,7 +144,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
         {/* Quality Badge */}
         <div className="pt-2">
           <Badge variant="secondary" className="w-full justify-center py-2 bg-purple-50 text-purple-700 border-purple-200">
-            {t('professionalQuality', 'Calitate profesională garantată')}
+            {t('professionalQuality')}
           </Badge>
         </div>
       </CardContent>

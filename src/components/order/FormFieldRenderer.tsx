@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -157,7 +158,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
           return (
             <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md">
               <AlertCircle className="w-4 h-4" />
-              <span className="text-sm">Field configuration error: No options available</span>
+              <span className="text-sm">{t('fieldConfigurationError')}</span>
             </div>
           );
         }
@@ -210,7 +211,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         if (filteredAddons.length === 0) {
           return (
             <div className="text-sm text-gray-500 italic">
-              {t('noAddonsAvailable', 'Nu sunt disponibile opțiuni suplimentare pentru acest pachet.')}
+              {t('noAddonsAvailable')}
             </div>
           );
         }
@@ -248,7 +249,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                             {addon.trigger_field_type === 'file' && (
                               <div>
                                 <Label className="text-sm font-medium mb-2 block">
-                                  Upload Files
+                                  {t('uploadFiles')}
                                 </Label>
                                 <div className="border-2 border-dashed border-gray-300 rounded-md p-4 text-center">
                                   <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
@@ -264,11 +265,11 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                                     htmlFor={`file-${addon.addon_key}`}
                                     className="cursor-pointer text-sm text-purple-600 hover:text-purple-700"
                                   >
-                                    Click to upload files
+                                    {t('clickToUploadFiles')}
                                   </label>
                                   <p className="text-xs text-gray-500 mt-1">
-                                    Max {addon.trigger_field_config?.maxFiles || 10} files, 
-                                    {addon.trigger_field_config?.maxTotalSizeMb || 150}MB total
+                                    {t('maxFiles')} {addon.trigger_field_config?.maxFiles || 10} {t('files')}, 
+                                    {addon.trigger_field_config?.maxTotalSizeMb || 150}MB {t('totalSize')}
                                   </p>
                                 </div>
                               </div>
@@ -277,7 +278,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                             {addon.trigger_field_type === 'audio-recorder' && (
                               <div>
                                 <Label className="text-sm font-medium mb-2 block">
-                                  Record Audio Message
+                                  {t('recordAudioMessage')}
                                 </Label>
                                 <AudioRecorder
                                   value={addonFieldValues[addon.addon_key] || null}
@@ -331,7 +332,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         return (
           <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md">
             <AlertCircle className="w-4 h-4" />
-            <span className="text-sm">Unknown field type: {field.field_type}</span>
+            <span className="text-sm">{t('unknownFieldType')} {field.field_type}</span>
           </div>
         );
     }

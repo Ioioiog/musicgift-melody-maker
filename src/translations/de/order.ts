@@ -44,4 +44,30 @@ export const orderTranslations = {
   premium: "Premium",
   new: "Neu",
   gift: "Geschenk",
+  
+  // Order Summary
+  orderSummary: "Bestellübersicht",
+  addons: "Zusatzleistungen",
+  subtotal: "Zwischensumme",
+  total: "Gesamt",
+  giftCardDiscount: "Geschenkkarten-Rabatt",
+  fullyCoveredByGiftCard: "Vollständig durch Geschenkkarte abgedeckt",
+  giftCardFrom: "Von:",
+  giftCardBalance: "Guthaben:",
+  giftCardRemaining: "Verbleibt nach Bestellung:",
+  
+  // Form Field Renderer
+  noAddonsAvailable: "Keine Zusatzleistungen für dieses Paket verfügbar",
+  fieldConfigurationError: "Feldkonfigurationsfehler: Keine Optionen verfügbar",
+  unknownFieldType: "Unbekannter Feldtyp:",
+  uploadFiles: "Dateien Hochladen",
+  clickToUploadFiles: "Klicken Sie, um Dateien hochzuladen",
+  maxFiles: "Max.",
+  files: "Dateien",
+  totalSize: "gesamt",
+  recordAudioMessage: "Audio-Nachricht Aufnehmen",
+  
+  // Testimonial
+  testimonialQuote: "\"Das perfekte Geschenk für Musikliebhaber! Das personalisierte Lied war absolut wunderschön und machte unseren Jahrestag unvergesslich.\"",
+  testimonialAuthor: "- Sarah M., Zufriedener Kunde",
 };
