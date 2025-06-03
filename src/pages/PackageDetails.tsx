@@ -75,10 +75,12 @@ const PackageDetails = () => {
                     {t(packageData.description_key)}
                   </CardDescription>
                 </div>
-                <Badge variant="secondary" className="ml-4">
-                  <Star className="w-4 h-4 mr-1" />
-                  Popular
-                </Badge>
+                {packageData.tag === 'popular' && (
+                  <Badge variant="secondary" className="ml-4">
+                    <Star className="w-4 h-4 mr-1" />
+                    Popular
+                  </Badge>
+                )}
               </div>
             </CardHeader>
             <CardContent>
@@ -98,7 +100,7 @@ const PackageDetails = () => {
                   {packageData.includes?.map((item, index) => (
                     <li key={index} className="flex items-start">
                       <Check className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>{t(item.key)}</span>
+                      <span>{t(item.include_key)}</span>
                     </li>
                   ))}
                 </ul>

@@ -67,9 +67,9 @@ const Packages = () => {
               >
                 <Card className={`h-full transition-all duration-300 ${
                   hoveredCard === pkg.value ? 'shadow-xl scale-105' : 'shadow-lg'
-                } ${pkg.is_popular ? 'ring-2 ring-purple-500' : ''}`}>
+                } ${pkg.tag === 'popular' ? 'ring-2 ring-purple-500' : ''}`}>
                   <CardHeader className="relative">
-                    {pkg.is_popular && (
+                    {pkg.tag === 'popular' && (
                       <Badge className="absolute -top-2 -right-2 bg-purple-500 hover:bg-purple-600">
                         <Star className="w-4 h-4 mr-1" />
                         {t('popular', 'Popular')}
@@ -96,7 +96,7 @@ const Packages = () => {
                         {pkg.includes?.map((item, itemIndex) => (
                           <li key={itemIndex} className="flex items-start">
                             <Check className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                            <span className="text-sm">{t(item.key)}</span>
+                            <span className="text-sm">{t(item.include_key)}</span>
                           </li>
                         ))}
                       </ul>
