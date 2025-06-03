@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -91,8 +92,8 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
     const parsed = parseFloat(amount);
     if (isNaN(parsed) || parsed <= 0) return false;
     
-    const minAmount = currency === 'EUR' ? 10 : 50;
-    const maxAmount = currency === 'EUR' ? 1000 : 5000;
+    const minAmount = currency === 'EUR' ? 59 : 299;
+    const maxAmount = currency === 'EUR' ? 1000 : 7999;
     
     return parsed >= minAmount && parsed <= maxAmount;
   };
@@ -178,8 +179,8 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
                 value={customAmount}
                 onChange={(e) => handleCustomAmountChange(e.target.value)}
                 placeholder={`Enter amount in ${currency}`}
-                min={currency === 'EUR' ? 10 : 50}
-                max={currency === 'EUR' ? 1000 : 5000}
+                min={currency === 'EUR' ? 59 : 299}
+                max={currency === 'EUR' ? 1000 : 7999}
                 step={currency === 'EUR' ? 1 : 10}
                 className="text-lg"
               />
@@ -189,7 +190,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
             </div>
             {customAmount && !validateCustomAmount(customAmount) && (
               <p className="text-sm text-red-600">
-                Amount must be between {currency === 'EUR' ? '10-1000' : '50-5000'} {currency}
+                Amount must be between {currency === 'EUR' ? '59-1000' : '299-7999'} {currency}
               </p>
             )}
           </div>
