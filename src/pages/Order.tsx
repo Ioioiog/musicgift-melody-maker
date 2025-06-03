@@ -119,6 +119,8 @@ const Order = () => {
 
         if (redemptionError) {
           console.error("Error creating gift redemption:", redemptionError);
+        } else {
+          console.log("Gift card redemption created successfully");
         }
       }
 
@@ -132,7 +134,7 @@ const Order = () => {
       // TODO: Redirect to payment if needed (when finalPrice > 0)
       if (finalPrice > 0) {
         console.log("Payment required:", finalPrice);
-        // In the future, integrate with Netopia payment gateway
+        // In the future, integrate with Netopia payment gateway for regular orders
       }
 
     } catch (error) {

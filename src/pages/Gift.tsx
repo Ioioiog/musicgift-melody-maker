@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,14 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gift as GiftIcon, Heart, Users } from "lucide-react";
 import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
 import GiftRedemption from "@/components/gift/GiftRedemption";
+import GiftPaymentSuccess from "@/components/gift/GiftPaymentSuccess";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useSearchParams } from "react-router-dom";
 
 const Gift = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+
+  // Check if returning from payment
+  const paymentStatus = searchParams.get('payment');
 
   const handleGiftPurchaseComplete = (data: any) => {
     console.log("Gift purchase completed:", data);
@@ -120,44 +125,48 @@ const Gift = () => {
 
             {/* Main Content */}
             <div className="max-w-4xl mx-auto">
-              <Tabs defaultValue="purchase" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-8">
-                  <TabsTrigger value="purchase" className="text-lg py-3">
-                    <GiftIcon className="w-5 h-5 mr-2" />
-                    Buy Gift Card
-                  </TabsTrigger>
-                  <TabsTrigger value="redeem" className="text-lg py-3">
-                    <Heart className="w-5 h-5 mr-2" />
-                    Redeem Gift Card
-                  </TabsTrigger>
-                </TabsList>
+              {paymentStatus === 'success' ? (
+                <GiftPaymentSuccess />
+              ) : (
+                <Tabs defaultValue="purchase" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 mb-8">
+                    <TabsTrigger value="purchase" className="text-lg py-3">
+                      <GiftIcon className="w-5 h-5 mr-2" />
+                      Buy Gift Card
+                    </TabsTrigger>
+                    <TabsTrigger value="redeem" className="text-lg py-3">
+                      <Heart className="w-5 h-5 mr-2" />
+                      Redeem Gift Card
+                    </TabsTrigger>
+                  </TabsList>
 
-                <TabsContent value="purchase">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6">
-                    {user ? (
-                      <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
-                    ) : (
-                      <div className="text-center py-12">
-                        <p className="text-lg text-gray-600 mb-6">
-                          Please sign in to purchase a gift card
-                        </p>
-                        <a
-                          href="/auth"
-                          className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                        >
-                          Sign In
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                </TabsContent>
+                  <TabsContent value="purchase">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6">
+                      {user ? (
+                        <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
+                      ) : (
+                        <div className="text-center py-12">
+                          <p className="text-lg text-gray-600 mb-6">
+                            Please sign in to purchase a gift card
+                          </p>
+                          <a
+                            href="/auth"
+                            className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                          >
+                            Sign In
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </TabsContent>
 
-                <TabsContent value="redeem">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6">
-                    <GiftRedemption onRedemption={handleGiftRedemption} />
-                  </div>
-                </TabsContent>
-              </Tabs>
+                  <TabsContent value="redeem">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6">
+                      <GiftRedemption onRedemption={handleGiftRedemption} />
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              )}
             </div>
           </div>
         </section>
