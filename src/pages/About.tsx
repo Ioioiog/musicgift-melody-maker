@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -225,7 +226,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Impact Cards Section - Static Mode */}
+      {/* Impact Cards Section - Static Mode (after Our Story) */}
       <ImpactCards />
 
       <Footer />
