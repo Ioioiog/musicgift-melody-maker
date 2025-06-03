@@ -48,6 +48,7 @@ interface SmartBillInvoiceData {
   sendEmail: boolean;
   precision: number;
   currency: string;
+  paymentUrl: string;
   products: Array<{
     name: string;
     quantity: number;
@@ -220,7 +221,7 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
-    // Create SmartBill invoice data using the simplified structure from your example
+    // Create SmartBill invoice data with payment URL generation
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
       seriesName: seriesName,
@@ -243,6 +244,7 @@ serve(async (req) => {
       sendEmail: true,
       precision: 2,
       currency: orderData.currency || 'RON',
+      paymentUrl: "Generate URL", // 👈 Key parameter for NETOPIA payment link
       products: [
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
@@ -261,9 +263,9 @@ serve(async (req) => {
       observations: `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
     }
 
-    console.log('Creating SmartBill invoice with data:', invoiceData)
+    console.log('Creating SmartBill invoice with payment URL generation:', invoiceData)
 
-    // Create invoice via SmartBill API with the authentication format from your example
+    // Create invoice via SmartBill API
     const smartBillAuth = btoa(`${username}:${token}`)
     
     let invoiceResponse: Response
@@ -315,7 +317,7 @@ serve(async (req) => {
       )
     }
 
-    // Check if SmartBill returned an error - using the structure from your example
+    // Check if SmartBill returned an error
     if (!invoiceResponse.ok || invoiceResult?.sbcResponse?.errorText || invoiceResult?.error) {
       const errorMessage = invoiceResult?.sbcResponse?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
       console.error('SmartBill API returned error:', errorMessage)
@@ -347,18 +349,18 @@ serve(async (req) => {
       )
     }
 
-    // Success - extract invoice details using the response structure from your example
+    // Success - extract invoice details and NETOPIA payment URL
     const smartBillInvoiceId = invoiceResult?.sbcResponse?.number || invoiceResult?.invoiceNumber || `INV-${Date.now()}`
-    const smartBillPaymentUrl = invoiceResult?.sbcResponse?.url || invoiceResult?.paymentUrl
+    const netopiaPa​ymentUrl = invoiceResult?.sbcResponse?.url // NETOPIA payment link from SmartBill
     
-    // Use SmartBill's payment URL if available, otherwise redirect to success page
-    const finalPaymentUrl = smartBillPaymentUrl || `${Deno.env.get('SITE_URL')}/payment/success?orderId=${savedOrder.id}&invoice=${smartBillInvoiceId}`
-
     console.log('SmartBill invoice created successfully:', {
       invoiceId: smartBillInvoiceId,
-      paymentUrl: smartBillPaymentUrl,
-      finalUrl: finalPaymentUrl
+      netopiaPa​ymentUrl: netopiaPa​ymentUrl,
+      hasPaymentUrl: !!netopiaPa​ymentUrl
     })
+
+    // Use NETOPIA payment URL if available, otherwise fallback to success page
+    const finalPaymentUrl = netopiaPa​ymentUrl || `${Deno.env.get('SITE_URL')}/payment/success?orderId=${savedOrder.id}&invoice=${smartBillInvoiceId}`
 
     // Update order with SmartBill details
     const { error: updateError } = await supabaseClient
@@ -367,7 +369,7 @@ serve(async (req) => {
         smartbill_invoice_id: smartBillInvoiceId,
         smartbill_payment_url: finalPaymentUrl,
         smartbill_invoice_data: invoiceResult,
-        smartbill_payment_status: 'pending'
+        smartbill_payment_status: netopiaPa​ymentUrl ? 'payment_pending' : 'completed'
       })
       .eq('id', savedOrder.id)
 
@@ -381,7 +383,8 @@ serve(async (req) => {
         orderId: savedOrder.id,
         smartBillInvoiceId: smartBillInvoiceId,
         paymentUrl: finalPaymentUrl,
-        message: 'Invoice created successfully with SmartBill'
+        hasNetopiaPa​yment: !!netopiaPa​ymentUrl,
+        message: netopiaPa​ymentUrl ? 'Invoice created with NETOPIA payment link' : 'Invoice created successfully'
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
