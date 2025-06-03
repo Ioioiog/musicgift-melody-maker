@@ -53,7 +53,7 @@ const PackageDetails = () => {
     );
   }
 
-  // Enhanced package details based on package type
+  // Enhanced package features based on package type
   const getPackageFeatures = (packageValue: string) => {
     const baseFeatures = [
       {
@@ -87,23 +87,54 @@ const PackageDetails = () => {
     return baseFeatures;
   };
 
+  // Package-specific delivery timeline
   const getDeliverySteps = (packageValue: string) => {
-    const baseSteps = [
-      { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
-      { step: 2, title: t('storyReview', 'Story Review'), time: t('24hours', '24 hours') },
-      { step: 3, title: t('songCreation', 'Song Creation'), time: t('2-3days', '2-3 days') },
-      { step: 4, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') }
-    ];
-
-    if (packageValue === 'premium') {
-      return [
-        ...baseSteps,
-        { step: 5, title: t('videoProduction', 'Video Production'), time: t('2-3days', '2-3 days') },
-        { step: 6, title: t('distribution', 'Distribution'), time: t('1-2days', '1-2 days') }
-      ];
+    switch (packageValue) {
+      case 'personal':
+        return [
+          { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
+          { step: 2, title: t('storyReview', 'Story Review'), time: t('24hours', '24 hours') },
+          { step: 3, title: t('songCreation', 'Song Creation'), time: t('3-4days', '3-4 days') },
+          { step: 4, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') }
+        ];
+      
+      case 'premium':
+        return [
+          { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
+          { step: 2, title: t('storyReview', 'Story Review'), time: t('24hours', '24 hours') },
+          { step: 3, title: t('songCreation', 'Song Creation'), time: t('3-4days', '3-4 days') },
+          { step: 4, title: t('videoProduction', 'Video Production'), time: t('5-7days', '5-7 days') },
+          { step: 5, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') },
+          { step: 6, title: t('distribution', 'Distribution'), time: t('2-3days', '2-3 days') }
+        ];
+      
+      case 'business':
+        return [
+          { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
+          { step: 2, title: t('briefingCall', 'Briefing Call'), time: t('48hours', '48 hours') },
+          { step: 3, title: t('conceptDevelopment', 'Concept Development'), time: t('2-3days', '2-3 days') },
+          { step: 4, title: t('songCreation', 'Song Creation'), time: t('4-5days', '4-5 days') },
+          { step: 5, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') }
+        ];
+      
+      case 'artist':
+        return [
+          { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
+          { step: 2, title: t('artistConsultation', 'Artist Consultation'), time: t('24hours', '24 hours') },
+          { step: 3, title: t('songwritingSession', 'Songwriting Session'), time: t('3-4days', '3-4 days') },
+          { step: 4, title: t('recording', 'Recording & Production'), time: t('5-6days', '5-6 days') },
+          { step: 5, title: t('mastering', 'Mastering'), time: t('2days', '2 days') },
+          { step: 6, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') }
+        ];
+      
+      default:
+        return [
+          { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
+          { step: 2, title: t('storyReview', 'Story Review'), time: t('24hours', '24 hours') },
+          { step: 3, title: t('songCreation', 'Song Creation'), time: t('2-3days', '2-3 days') },
+          { step: 4, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') }
+        ];
     }
-
-    return baseSteps;
   };
 
   const packageFeatures = getPackageFeatures(packageData.value);
@@ -290,7 +321,6 @@ const PackageDetails = () => {
                   <div className="border-t border-white/20 pt-4">
                     <h4 className="font-semibold text-white mb-2">{t('guarantees', 'Our Guarantees')}</h4>
                     <ul className="space-y-1 text-sm text-white/70">
-                      <li>✓ {t('moneyBack', 'Money-back guarantee')}</li>
                       <li>✓ {t('onTime', 'On-time delivery')}</li>
                       <li>✓ {t('support', '24/7 customer support')}</li>
                     </ul>
