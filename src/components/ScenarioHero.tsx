@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -84,12 +85,8 @@ const scenarios = [
 const ScenarioHero = () => {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
-  const {
-    t
-  } = useLanguage();
-  const {
-    t: tDb
-  } = useTranslation();
+  const { t } = useLanguage();
+
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false);
@@ -100,11 +97,13 @@ const ScenarioHero = () => {
     }, 4000);
     return () => clearInterval(interval);
   }, []);
+  
   const {
     icon: IconComponent,
     text,
     packageKey
   } = scenarios[index];
+  
   return <section className="relative h-30 overflow-hidden" style={{
     backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
@@ -121,4 +120,5 @@ const ScenarioHero = () => {
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
     </section>;
 };
+
 export default ScenarioHero;

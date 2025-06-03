@@ -120,7 +120,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         package_name: package_name,
         package_price: package_price,
         package_delivery_time: package_delivery_time,
-        package_includes: package_includes,
+        package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
         status: 'pending',
         payment_status: 'pending'
       };
@@ -128,7 +128,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       try {
         const { data, error } = await supabase
           .from('orders')
-          .insert([orderData]);
+          .insert(orderData);
 
         if (error) {
           console.error('Error inserting order:', error);
