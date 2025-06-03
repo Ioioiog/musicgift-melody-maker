@@ -34,6 +34,22 @@ const Packages = () => {
     return currency === 'EUR' ? pkg.price_eur : pkg.price_ron;
   };
 
+  const renderPackagePrice = (pkg: any) => {
+    if (pkg.value === 'gift') {
+      return (
+        <div className="text-2xl font-bold text-white">
+          {t('startingFrom', 'Starting from')} {currency === 'EUR' ? '€59' : '299 RON'}
+        </div>
+      );
+    }
+    
+    return (
+      <div className="text-3xl font-bold text-white">
+        {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen">
       <Navigation />
@@ -97,9 +113,7 @@ const Packages = () => {
                     <CardDescription className="text-white/80">
                       {t(pkg.description_key)}
                     </CardDescription>
-                    <div className="text-3xl font-bold text-white">
-                      {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}
-                    </div>
+                    {renderPackagePrice(pkg)}
                     <div className="flex items-center text-sm text-white/70">
                       <Clock className="w-4 h-4 mr-1" />
                       {t(pkg.delivery_time_key)}
