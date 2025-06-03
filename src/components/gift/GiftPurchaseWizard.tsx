@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,8 +28,8 @@ interface DesignOption {
 }
 
 // Currency-specific amount options
-const AmountOptionsRON = [299, 499, 799];
-const AmountOptionsEUR = [59, 99, 159];
+const AmountOptionsRON = [299, 499, 7999];
+const AmountOptionsEUR = [59, 99, 1599];
 
 const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(1);
