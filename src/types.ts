@@ -50,8 +50,17 @@ export interface Package {
 }
 
 export interface Addon {
-  labelKey: string;
-  price: number;
+  id?: string;
+  addon_key: string;
+  label_key: string;
+  description_key: string;
+  price_ron: number;
+  price_eur: number;
+  is_active?: boolean;
+  trigger_field_type?: any;
+  trigger_field_config?: any;
+  trigger_condition?: string;
+  trigger_condition_value?: string;
 }
 
 export type PackageData = Package;
