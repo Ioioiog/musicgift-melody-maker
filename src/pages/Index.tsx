@@ -7,6 +7,7 @@ import ScenarioHero from "@/components/ScenarioHero";
 import AnimatedStepFlow from "@/components/AnimatedStepFlow";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import ImpactCards from "@/components/ImpactCards";
+import ScenarioBanner from "@/components/ScenarioBanner";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
@@ -29,7 +30,7 @@ const Index = () => {
       {/* Video Hero Section */}
       <VideoHero />
 
-      {/* Hero Content Section (now includes scenario banner) */}
+      {/* Hero Content Section */}
       <HeroContent />
 
       {/* Scenario Hero Component */}
@@ -37,6 +38,14 @@ const Index = () => {
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative z-10">
           <ScenarioHero />
+        </div>
+      </div>
+
+      {/* Scenario Banner */}
+      <div className="relative overflow-hidden" style={backgroundStyle}>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative z-10">
+          <ScenarioBanner />
         </div>
       </div>
 

@@ -1,7 +1,6 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useEffect } from "react";
 
 const stats = [
   {
@@ -135,34 +134,6 @@ const stats = [
 const ImpactCards = () => {
   const { language } = useLanguage();
 
-  useEffect(() => {
-    // Inject the keyframes animation into the document head
-    const styleElement = document.createElement('style');
-    styleElement.textContent = `
-      @keyframes scroll {
-        0% {
-          transform: translateX(0);
-        }
-        100% {
-          transform: translateX(-50%);
-        }
-      }
-      
-      .animate-scroll {
-        animation: scroll 30s linear infinite;
-      }
-      
-      .animate-scroll:hover {
-        animation-play-state: paused;
-      }
-    `;
-    document.head.appendChild(styleElement);
-
-    return () => {
-      document.head.removeChild(styleElement);
-    };
-  }, []);
-
   const backgroundStyle = {
     backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
@@ -178,7 +149,8 @@ const ImpactCards = () => {
           <div 
             className="flex gap-4 animate-scroll"
             style={{ 
-              minWidth: 'max-content'
+              minWidth: 'max-content',
+              animation: 'scroll 30s linear infinite'
             }}
           >
             {/* First set of cards */}
@@ -226,6 +198,21 @@ const ImpactCards = () => {
           </div>
         </div>
       </div>
+      
+      <style jsx>{`
+        @keyframes scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        
+        .animate-scroll:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 };
