@@ -25,11 +25,4 @@ export const footerTranslations = {
   consumerProtection: "Consumer Protection",
   onlineDisputeResolution: "Online Dispute Resolution",
   paymentPartners: "Payment Partners",
-  
-  // Business Partners
-  businessPartners: "Business Partners",
-  businessPartnersDescription: "We work with industry-leading partners to deliver the best experience for our customers",
-  learnMore: "Learn More",
-  partnerWithUs: "Partner With Us",
-  partnerWithUsDescription: "Interested in partnering with MusicGift? We're always looking for innovative collaborations.",
 };
