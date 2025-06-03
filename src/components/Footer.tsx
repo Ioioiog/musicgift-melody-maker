@@ -74,7 +74,7 @@ const Footer = () => {
               <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
             </div>
             
-            <ul className="space-y-3">
+            <ul className="space-y-1">
               {[
                 { to: "/", label: t('home') },
                 { to: "/about", label: t('about') },
@@ -86,7 +86,7 @@ const Footer = () => {
                 <li key={to}>
                   <Link
                     to={to}
-                    className="text-gray-700 hover:text-gray-900 transition-all duration-300 relative group inline-block py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start"
+                    className="text-gray-700 hover:text-gray-900 transition-all duration-300 relative group inline-block py-1 px-2 rounded text-sm hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[36px] flex items-center justify-center sm:justify-start"
                   >
                     <span className="relative z-10">{label}</span>
                     <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
@@ -105,11 +105,11 @@ const Footer = () => {
               <div className="w-12 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
             </div>
             
-            <ul className="space-y-3">
+            <ul className="space-y-1">
               <li>
                 <button 
                   onClick={openTerms} 
-                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start w-full"
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-1 px-2 rounded text-sm hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[36px] flex items-center justify-center sm:justify-start w-full"
                 >
                   <span className="relative z-10">{t('termsConditions')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
@@ -118,7 +118,7 @@ const Footer = () => {
               <li>
                 <button 
                   onClick={openPrivacy} 
-                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start w-full"
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-1 px-2 rounded text-sm hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[36px] flex items-center justify-center sm:justify-start w-full"
                 >
                   <span className="relative z-10">{t('privacyPolicy')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
@@ -127,7 +127,7 @@ const Footer = () => {
               <li>
                 <button 
                   onClick={openRefund} 
-                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start w-full"
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-1 px-2 rounded text-sm hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[36px] flex items-center justify-center sm:justify-start w-full"
                 >
                   <span className="relative z-10">{t('refundPolicy')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
@@ -136,7 +136,7 @@ const Footer = () => {
               <li>
                 <button 
                   onClick={openCookie} 
-                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-2 px-3 rounded-lg hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[44px] flex items-center justify-center sm:justify-start w-full"
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-1 px-2 rounded text-sm hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[36px] flex items-center justify-center sm:justify-start w-full"
                 >
                   <span className="relative z-10">{t('cookiePolicy')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
