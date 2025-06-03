@@ -44,7 +44,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
   const { toast } = useToast();
   const { t } = useLanguage();
   const { user } = useAuth();
-  const { mutate: createGiftCard } = useCreateGiftCard();
+  const { mutateAsync: createGiftCard } = useCreateGiftCard();
   const { data: designs = [] } = useGiftCardDesigns();
   const { mutate: processPayment, isPending: isProcessingPayment } = useGiftCardPayment();
 
