@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ import { format } from "date-fns"
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { useCreateGiftCard, useGiftCardDesigns } from "@/hooks/useGiftCards";
 import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
 
@@ -26,11 +28,15 @@ interface DesignOption {
   preview_image_url?: string;
 }
 
-const AmountOptions = [50, 100, 200, 500];
+// Currency-specific amount options
+const AmountOptionsRON = [299, 499, 799];
+const AmountOptionsEUR = [59, 99, 159];
 
 const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedAmount, setSelectedAmount] = useState(100);
+  const [selectedAmountType, setSelectedAmountType] = useState<'preset' | 'custom'>('preset');
+  const [selectedAmount, setSelectedAmount] = useState<number>(299);
+  const [customAmount, setCustomAmount] = useState<string>('');
   const [selectedDesign, setSelectedDesign] = useState('');
   const [formData, setFormData] = useState({
     sender_name: '',
@@ -44,9 +50,33 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
   const { toast } = useToast();
   const { t } = useLanguage();
   const { user } = useAuth();
+  const { currency } = useCurrency();
   const { mutateAsync: createGiftCard } = useCreateGiftCard();
   const { data: designs = [] } = useGiftCardDesigns();
   const { mutate: processPayment, isPending: isProcessingPayment } = useGiftCardPayment();
+
+  // Get currency-specific amount options
+  const getAmountOptions = () => {
+    return currency === 'EUR' ? AmountOptionsEUR : AmountOptionsRON;
+  };
+
+  // Get the actual amount to use (preset or custom)
+  const getActualAmount = () => {
+    if (selectedAmountType === 'custom') {
+      const parsed = parseFloat(customAmount);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    return selectedAmount;
+  };
+
+  // Convert amount to RON for backend (always store in RON)
+  const convertToRON = (amount: number) => {
+    if (currency === 'EUR') {
+      // Simple conversion rate - in production you'd use real exchange rates
+      return Math.round(amount * 5.0); // 1 EUR ≈ 5 RON
+    }
+    return amount;
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -63,9 +93,33 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
     }));
   };
 
+  const handleAmountSelection = (amount: number) => {
+    setSelectedAmountType('preset');
+    setSelectedAmount(amount);
+    setCustomAmount('');
+  };
+
+  const handleCustomAmountChange = (value: string) => {
+    setSelectedAmountType('custom');
+    setCustomAmount(value);
+  };
+
+  const validateCustomAmount = (amount: string) => {
+    const parsed = parseFloat(amount);
+    if (isNaN(parsed) || parsed <= 0) return false;
+    
+    const minAmount = currency === 'EUR' ? 10 : 50;
+    const maxAmount = currency === 'EUR' ? 1000 : 5000;
+    
+    return parsed >= minAmount && parsed <= maxAmount;
+  };
+
   const handleFormSubmit = async (formData: any) => {
     try {
       setIsSubmitting(true);
+
+      const actualAmount = getActualAmount();
+      const amountInRON = convertToRON(actualAmount);
 
       // Create gift card with payment_status = 'pending'
       const giftCardData = {
@@ -73,7 +127,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
         sender_user_id: user?.id || null,
         payment_status: 'pending',
         status: 'pending', // Will be activated after payment
-        gift_amount: selectedAmount * 100, // Convert to cents
+        gift_amount: amountInRON * 100, // Convert to cents
         design_id: selectedDesign
       };
 
@@ -103,18 +157,64 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
         <h3 className="text-2xl font-bold mb-4">Choose Gift Card Amount</h3>
         <p className="text-gray-600">Select the value of the gift card you want to send.</p>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {AmountOptions.map(amount => (
+      
+      {/* Preset Amount Options */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {getAmountOptions().map(amount => (
           <Button
             key={amount}
-            variant={selectedAmount === amount ? "default" : "outline"}
-            onClick={() => setSelectedAmount(amount)}
+            variant={selectedAmountType === 'preset' && selectedAmount === amount ? "default" : "outline"}
+            onClick={() => handleAmountSelection(amount)}
+            className="h-16 text-lg font-semibold"
           >
-            {amount} RON
+            {amount} {currency}
           </Button>
         ))}
       </div>
-      <Button onClick={() => setCurrentStep(2)} className="w-full">
+
+      {/* Custom Amount Option */}
+      <div className="space-y-3">
+        <Button
+          variant={selectedAmountType === 'custom' ? "default" : "outline"}
+          onClick={() => setSelectedAmountType('custom')}
+          className="w-full h-16 text-lg font-semibold"
+        >
+          Enter a Custom Value
+        </Button>
+        
+        {selectedAmountType === 'custom' && (
+          <div className="space-y-2">
+            <Label htmlFor="customAmount">Custom Amount ({currency})</Label>
+            <div className="relative">
+              <Input
+                id="customAmount"
+                type="number"
+                value={customAmount}
+                onChange={(e) => handleCustomAmountChange(e.target.value)}
+                placeholder={`Enter amount in ${currency}`}
+                min={currency === 'EUR' ? 10 : 50}
+                max={currency === 'EUR' ? 1000 : 5000}
+                step={currency === 'EUR' ? 1 : 10}
+                className="text-lg"
+              />
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">
+                {currency}
+              </span>
+            </div>
+            {customAmount && !validateCustomAmount(customAmount) && (
+              <p className="text-sm text-red-600">
+                Amount must be between {currency === 'EUR' ? '10-1000' : '50-5000'} {currency}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      <Button 
+        onClick={() => setCurrentStep(2)} 
+        className="w-full"
+        disabled={selectedAmountType === 'custom' && (!customAmount || !validateCustomAmount(customAmount))}
+      >
         Next: Design
       </Button>
     </div>
@@ -264,54 +364,66 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
     </div>
   );
 
-  const renderStep4 = () => (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h3 className="text-2xl font-bold mb-4">Review Your Gift Card</h3>
-      </div>
+  const renderStep4 = () => {
+    const actualAmount = getActualAmount();
+    const amountInRON = convertToRON(actualAmount);
+    
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h3 className="text-2xl font-bold mb-4">Review Your Gift Card</h3>
+        </div>
 
-      <Card className="bg-white/90 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle>Gift Card Summary</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex justify-between">
-            <span>Amount:</span>
-            <span>{selectedAmount} RON</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Design:</span>
-            <span>{designs.find(d => d.id === selectedDesign)?.name || 'Default'}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Recipient:</span>
-            <span>{formData.recipient_name} ({formData.recipient_email})</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Delivery Date:</span>
-            <span>{formData.delivery_date ? format(formData.delivery_date, "PPP") : 'Immediate'}</span>
-          </div>
-        </CardContent>
-      </Card>
+        <Card className="bg-white/90 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle>Gift Card Summary</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-between">
+              <span>Amount:</span>
+              <span>
+                {actualAmount} {currency}
+                {currency === 'EUR' && (
+                  <span className="text-sm text-gray-500 ml-2">
+                    (~{amountInRON} RON)
+                  </span>
+                )}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span>Design:</span>
+              <span>{designs.find(d => d.id === selectedDesign)?.name || 'Default'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Recipient:</span>
+              <span>{formData.recipient_name} ({formData.recipient_email})</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Delivery Date:</span>
+              <span>{formData.delivery_date ? format(formData.delivery_date, "PPP") : 'Immediate'}</span>
+            </div>
+          </CardContent>
+        </Card>
 
-      <div className="flex gap-4">
-        <Button 
-          variant="outline" 
-          onClick={() => setCurrentStep(3)}
-          disabled={isSubmitting || isProcessingPayment}
-        >
-          Back
-        </Button>
-        <Button 
-          onClick={handleFormSubmit} 
-          disabled={isSubmitting || isProcessingPayment}
-          className="flex-1"
-        >
-          {isSubmitting || isProcessingPayment ? 'Processing...' : `Pay ${selectedAmount} RON`}
-        </Button>
+        <div className="flex gap-4">
+          <Button 
+            variant="outline" 
+            onClick={() => setCurrentStep(3)}
+            disabled={isSubmitting || isProcessingPayment}
+          >
+            Back
+          </Button>
+          <Button 
+            onClick={handleFormSubmit} 
+            disabled={isSubmitting || isProcessingPayment}
+            className="flex-1"
+          >
+            {isSubmitting || isProcessingPayment ? 'Processing...' : `Pay ${actualAmount} ${currency}`}
+          </Button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <Card className="bg-white/90 backdrop-blur-sm">
