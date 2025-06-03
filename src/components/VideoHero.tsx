@@ -11,16 +11,39 @@ const VideoHero = () => {
   const [hasAudio, setHasAudio] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Select video based on language
+  // Select video based on language with fallback
   const videoSrc = language === 'ro' 
     ? '/lovable-uploads/Jingle Musicgift master.mp4'
     : '/lovable-uploads/MusicGiftvideoENG.mp4';
 
+  console.log('VideoHero: Current language:', language, 'Video source:', videoSrc);
+
+  // Cleanup function to stop video and reset states
+  const cleanupVideo = () => {
+    const video = videoRef.current;
+    if (video) {
+      console.log('VideoHero: Cleaning up video');
+      video.pause();
+      video.currentTime = 0;
+      video.muted = true;
+      setHasAudio(false);
+      setShowPlayButton(false);
+      setIsLoading(true);
+    }
+  };
+
+  // Effect for language changes and initial setup
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    console.log('VideoHero: Setting up video for language:', language);
+    
+    // Reset video state when language changes
+    cleanupVideo();
+    
     const handleCanPlay = () => {
+      console.log('VideoHero: Video can play, attempting autoplay');
       setIsLoading(false);
       // Try to play with audio first
       video.muted = false;
@@ -29,45 +52,68 @@ const VideoHero = () => {
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
-            // Autoplay with audio succeeded
+            console.log('VideoHero: Autoplay with audio succeeded');
             setHasAudio(true);
             setShowPlayButton(false);
           })
-          .catch(() => {
+          .catch((error) => {
+            console.log('VideoHero: Autoplay with audio blocked, falling back to muted:', error);
             // Autoplay with audio blocked, fall back to muted
             video.muted = true;
             video.play().then(() => {
               setShowPlayButton(true);
               setHasAudio(false);
+            }).catch((muteError) => {
+              console.log('VideoHero: Even muted autoplay failed:', muteError);
+              setIsLoading(false);
             });
           });
       }
     };
 
     const handleError = () => {
+      console.log('VideoHero: Video failed to load');
       setIsLoading(false);
-      console.log('Video failed to load');
+    };
+
+    const handleLoadStart = () => {
+      console.log('VideoHero: Video load started');
+      setIsLoading(true);
     };
 
     video.addEventListener('canplay', handleCanPlay);
     video.addEventListener('error', handleError);
+    video.addEventListener('loadstart', handleLoadStart);
+
+    // Force video to reload when language changes
+    video.load();
 
     return () => {
       video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('error', handleError);
+      video.removeEventListener('loadstart', handleLoadStart);
     };
-  }, [videoSrc]);
+  }, [videoSrc, language]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      console.log('VideoHero: Component unmounting, cleaning up');
+      cleanupVideo();
+    };
+  }, []);
 
   const handlePlayWithAudio = () => {
     const video = videoRef.current;
     if (!video) return;
 
+    console.log('VideoHero: User clicked play with audio');
     video.muted = false;
     video.play().then(() => {
       setHasAudio(true);
       setShowPlayButton(false);
     }).catch((error) => {
-      console.log('Failed to play with audio:', error);
+      console.log('VideoHero: Failed to play with audio:', error);
       // Keep the play button if it still fails
     });
   };
@@ -76,6 +122,7 @@ const VideoHero = () => {
     const video = videoRef.current;
     if (!video) return;
 
+    console.log('VideoHero: Toggling audio, current hasAudio:', hasAudio);
     if (hasAudio) {
       video.muted = true;
       setHasAudio(false);
