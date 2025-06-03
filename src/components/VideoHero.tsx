@@ -1,8 +1,6 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { Gift, Music, Play, Volume2 } from 'lucide-react';
+import { Play, Volume2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 const VideoHero = () => {
@@ -150,7 +148,7 @@ const VideoHero = () => {
   };
 
   return (
-    <section className="video-hero relative overflow-hidden">
+    <section className="video-hero relative overflow-hidden h-screen">
       {/* Video Background */}
       <video
         ref={videoRef}
@@ -195,34 +193,8 @@ const VideoHero = () => {
         </button>
       )}
 
-      {/* Overlay */}
+      {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/40"></div>
-
-      {/* Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen text-center text-white px-4">
-        <div className="max-w-4xl mx-auto animate-fade-in">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-float">
-            {t('heroTitle')}
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 opacity-90">
-            {t('heroSubtitle')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mobile-button-spacing">
-            <Link to="/packages">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
-                <Gift className="w-5 h-5 mr-2" />
-                {t('seePackages')}
-              </Button>
-            </Link>
-            <Link to="/testimonials">
-              <Button size="lg" variant="secondary" className="bg-white/20 text-white border-white/30 hover:bg-white/30">
-                <Music className="w-5 h-5 mr-2" />
-                {t('listenToSamples')}
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 scroll-indicator">

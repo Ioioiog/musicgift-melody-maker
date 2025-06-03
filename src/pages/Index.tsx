@@ -2,6 +2,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
+import HeroContent from "@/components/HeroContent";
 import ScenarioHero from "@/components/ScenarioHero";
 import AnimatedStepFlow from "@/components/AnimatedStepFlow";
 import TestimonialSlider from "@/components/TestimonialSlider";
@@ -21,6 +22,9 @@ const Index = () => {
       
       {/* Video Hero Section */}
       <VideoHero />
+
+      {/* Hero Content Section */}
+      <HeroContent />
 
       {/* Scenario Hero Component */}
       <ScenarioHero />
