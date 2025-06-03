@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getAddonPrice } from '@/utils/pricing';
+import { Addon } from '@/types';
 import AudioRecorder from './AudioRecorder';
 
 interface FieldOption {
@@ -31,19 +33,6 @@ interface Field {
   required: boolean;
   field_order: number;
   options?: FieldOption[];
-}
-
-interface Addon {
-  id: string;
-  addon_key: string;
-  label_key: string;
-  description_key?: string;
-  price: number;
-  is_active: boolean;
-  trigger_field_type?: string;
-  trigger_field_config: any;
-  trigger_condition: string;
-  trigger_condition_value?: string;
 }
 
 interface FormFieldRendererProps {
