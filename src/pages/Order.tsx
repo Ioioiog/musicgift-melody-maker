@@ -76,16 +76,15 @@ const Order = () => {
         finalPrice = Math.max(0, (totalPrice * 100 - giftCreditApplied) / 100); // Convert back to currency units
       }
 
-      // Prepare order data for database with package details
+      // Prepare order data for SmartBill with package details
       const orderPayload = {
-        user_id: user?.id || null,
         form_data: {
           ...orderData,
           addons: orderData.addons || [],
           addonFieldValues: orderData.addonFieldValues || {},
         },
         selected_addons: orderData.addons || [],
-        total_price: totalPrice,
+        total_price: finalPrice, // Use final price after gift card discount
         status: 'pending',
         payment_status: finalPrice > 0 ? 'pending' : 'completed',
         // Gift card fields
@@ -97,23 +96,24 @@ const Order = () => {
         package_name: selectedPackage.label_key,
         package_price: getPackagePrice(selectedPackage, currency),
         package_delivery_time: selectedPackage.delivery_time_key,
-        package_includes: selectedPackage.includes ? JSON.parse(JSON.stringify(selectedPackage.includes)) : []
+        package_includes: selectedPackage.includes ? JSON.parse(JSON.stringify(selectedPackage.includes)) : [],
+        currency: currency,
+        user_id: user?.id || null
       };
 
-      console.log("Saving order to database:", orderPayload);
+      console.log("Sending order to SmartBill integration:", orderPayload);
 
-      // Save order to Supabase
-      const { data: savedOrder, error } = await supabase
-        .from('orders')
-        .insert(orderPayload)
-        .select()
-        .single();
+      // Call SmartBill integration edge function
+      const { data: smartBillResponse, error: smartBillError } = await supabase.functions.invoke('smartbill-create-invoice', {
+        body: orderPayload
+      });
 
-      if (error) {
-        throw error;
+      if (smartBillError) {
+        console.error('SmartBill integration error:', smartBillError);
+        throw new Error('Failed to process order with SmartBill');
       }
 
-      console.log("Order saved successfully:", savedOrder);
+      console.log('SmartBill integration response:', smartBillResponse);
 
       // If gift card was used, create redemption record
       if (giftCard && giftCreditApplied > 0) {
@@ -121,7 +121,7 @@ const Order = () => {
           .from('gift_redemptions')
           .insert({
             gift_card_id: giftCard.id,
-            order_id: savedOrder.id,
+            order_id: smartBillResponse.orderId,
             redeemed_amount: giftCreditApplied,
             remaining_balance: Math.max(0, (giftCard.gift_amount || 0) - giftCreditApplied)
           });
@@ -136,18 +136,22 @@ const Order = () => {
       // Show success message
       toast({
         title: t('orderSuccess'),
-        description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${savedOrder.id.slice(0, 8)}...`),
+        description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${smartBillResponse.orderId?.slice(0, 8)}...`),
         variant: "default"
       });
 
-      // TODO: Redirect to payment if needed (when finalPrice > 0)
-      if (finalPrice > 0) {
-        console.log("Payment required:", finalPrice);
-        // In the future, integrate with Netopia payment gateway for regular orders
+      // If SmartBill returns a payment URL and payment is needed, redirect user
+      if (smartBillResponse?.paymentUrl && finalPrice > 0) {
+        console.log("Redirecting to SmartBill payment:", smartBillResponse.paymentUrl);
+        window.location.href = smartBillResponse.paymentUrl;
+      } else {
+        // If no payment needed, show completion message
+        console.log("Order completed successfully - no payment required");
+        navigate('/payment-success?order=' + smartBillResponse.orderId);
       }
 
     } catch (error) {
-      console.error("Error saving order:", error);
+      console.error("Error processing order:", error);
       toast({
         title: t('orderError'),
         description: error.message || t('orderErrorMessage'),
@@ -212,4 +216,3 @@ const Order = () => {
 };
 
 export default Order;
-

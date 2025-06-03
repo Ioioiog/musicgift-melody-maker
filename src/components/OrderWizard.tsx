@@ -15,6 +15,7 @@ import StepIndicator from './order/StepIndicator';
 import OrderSummary from './order/OrderSummary';
 import PackageSelectionStep from './order/PackageSelectionStep';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
+import { useToast } from '@/hooks/use-toast';
 
 interface OrderFormData {
   email?: string;
@@ -36,8 +37,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const [formData, setFormData] = useState<OrderFormData>({});
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [addonFieldValues, setAddonFieldValues] = useState<Record<string, any>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
   const { currency } = useCurrency();
+  const { toast } = useToast();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
   
@@ -113,37 +116,43 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const totalPrice = calculateTotalPrice();
 
   const handleSubmit = async () => {
-    if (onComplete) {
-      await onComplete({
-        ...formData,
-        addons: selectedAddons,
-        addonFieldValues,
-        package: selectedPackage,
-        totalPrice
-      });
-    } else {
-      // Create order with SmartBill integration
-      const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
-      const package_name = selectedPackageData?.label_key;
-      const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
-      const package_delivery_time = selectedPackageData?.delivery_time_key;
-      const package_includes = selectedPackageData?.includes;
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      if (onComplete) {
+        await onComplete({
+          ...formData,
+          addons: selectedAddons,
+          addonFieldValues,
+          package: selectedPackage,
+          totalPrice
+        });
+      } else {
+        // Create order with SmartBill integration
+        const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+        const package_name = selectedPackageData?.label_key;
+        const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
+        const package_delivery_time = selectedPackageData?.delivery_time_key;
+        const package_includes = selectedPackageData?.includes;
 
-      const orderData = {
-        form_data: formData,
-        selected_addons: selectedAddons,
-        total_price: totalPrice,
-        package_value: selectedPackage,
-        package_name: package_name,
-        package_price: package_price,
-        package_delivery_time: package_delivery_time,
-        package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
-        status: 'pending',
-        payment_status: 'pending',
-        currency: currency
-      };
+        const orderData = {
+          form_data: formData,
+          selected_addons: selectedAddons,
+          total_price: totalPrice,
+          package_value: selectedPackage,
+          package_name: package_name,
+          package_price: package_price,
+          package_delivery_time: package_delivery_time,
+          package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
+          status: 'pending',
+          payment_status: 'pending',
+          currency: currency
+        };
 
-      try {
+        console.log('Creating order with SmartBill:', orderData);
+
         // Call SmartBill integration edge function
         const { data: smartBillResponse, error: smartBillError } = await supabase.functions.invoke('smartbill-create-invoice', {
           body: orderData
@@ -156,27 +165,30 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
         console.log('SmartBill response:', smartBillResponse);
 
+        // Show success message
+        toast({
+          title: t('orderSuccess'),
+          description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${smartBillResponse.orderId?.slice(0, 8)}...`),
+          variant: "default"
+        });
+
         // If SmartBill returns a payment URL, redirect user
         if (smartBillResponse?.paymentUrl) {
           window.location.href = smartBillResponse.paymentUrl;
-        } else {
+        } else if (smartBillResponse?.success) {
           // If no payment needed (e.g., fully covered by gift card), show success
           console.log('Order completed successfully without payment needed');
         }
-
-      } catch (error) {
-        console.error('Error processing order:', error);
-        // Fallback to basic order creation for now
-        const { data, error: dbError } = await supabase
-          .from('orders')
-          .insert(orderData);
-
-        if (dbError) {
-          console.error('Error inserting order:', dbError);
-        } else {
-          console.log('Order inserted successfully as fallback:', data);
-        }
       }
+    } catch (error) {
+      console.error('Error processing order:', error);
+      toast({
+        title: t('orderError'),
+        description: error.message || t('orderErrorMessage'),
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -249,17 +261,26 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
             <Button
               variant="secondary"
               onClick={handlePrev}
-              disabled={currentStep === 0}
+              disabled={currentStep === 0 || isSubmitting}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t('previous')}
             </Button>
             <Button
               onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
-              disabled={!canProceed() || (currentStep > 0 && isStepsLoading)}
+              disabled={!canProceed() || (currentStep > 0 && isStepsLoading) || isSubmitting}
             >
-              {currentStep === totalSteps - 1 ? t('submitOrder') : t('next')}
-              <ArrowRight className="w-4 h-4 ml-2" />
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  {t('processing', 'Processing...')}
+                </>
+              ) : (
+                <>
+                  {currentStep === totalSteps - 1 ? t('submitOrder') : t('next')}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </>
+              )}
             </Button>
           </div>
         </CardContent>
