@@ -7,6 +7,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { usePackages, useAddons } from "@/hooks/usePackageData";
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useGiftCardByCode } from "@/hooks/useGiftCards";
 
 const Order = () => {
   const { toast } = useToast();
@@ -14,6 +17,23 @@ const Order = () => {
   const { user } = useAuth();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
+  const [searchParams] = useSearchParams();
+  
+  // Extract gift card parameters from URL
+  const giftCardCode = searchParams.get('gift');
+  const preselectedPackage = searchParams.get('package');
+  
+  // Fetch gift card data if code is provided
+  const { data: giftCard, isLoading: isLoadingGift } = useGiftCardByCode(giftCardCode || '');
+
+  useEffect(() => {
+    if (giftCardCode && giftCard) {
+      toast({
+        title: "Gift Card Applied",
+        description: `Gift card ${giftCardCode} is ready to be used for your order.`,
+      });
+    }
+  }, [giftCardCode, giftCard, toast]);
 
   const calculateTotalPrice = (packageValue: string, selectedAddons: string[]) => {
     const packagePrice = packages.find(pkg => pkg.value === packageValue)?.price || 0;
@@ -36,6 +56,16 @@ const Order = () => {
 
       // Calculate total price
       const totalPrice = calculateTotalPrice(orderData.package, orderData.addons || []);
+      
+      // Calculate gift card application
+      let giftCreditApplied = 0;
+      let finalPrice = totalPrice;
+      
+      if (giftCard) {
+        const giftBalance = giftCard.gift_amount || 0;
+        giftCreditApplied = Math.min(giftBalance, totalPrice * 100); // Convert to cents
+        finalPrice = Math.max(0, (totalPrice * 100 - giftCreditApplied) / 100); // Convert back to currency units
+      }
 
       // Prepare order data for database with package details
       const orderPayload = {
@@ -48,8 +78,12 @@ const Order = () => {
         selected_addons: orderData.addons || [],
         total_price: totalPrice,
         status: 'pending',
-        payment_status: 'pending',
-        // New package detail columns
+        payment_status: finalPrice > 0 ? 'pending' : 'completed',
+        // Gift card fields
+        gift_card_id: giftCard?.id || null,
+        is_gift_redemption: !!giftCard,
+        gift_credit_applied: giftCreditApplied,
+        // Package detail columns
         package_value: selectedPackage.value,
         package_name: selectedPackage.label_key,
         package_price: selectedPackage.price,
@@ -72,6 +106,22 @@ const Order = () => {
 
       console.log("Order saved successfully:", savedOrder);
 
+      // If gift card was used, create redemption record
+      if (giftCard && giftCreditApplied > 0) {
+        const { error: redemptionError } = await supabase
+          .from('gift_redemptions')
+          .insert({
+            gift_card_id: giftCard.id,
+            order_id: savedOrder.id,
+            redeemed_amount: giftCreditApplied,
+            remaining_balance: Math.max(0, (giftCard.gift_amount || 0) - giftCreditApplied)
+          });
+
+        if (redemptionError) {
+          console.error("Error creating gift redemption:", redemptionError);
+        }
+      }
+
       // Show success message
       toast({
         title: t('orderSuccess') || 'Comandă creată cu succes',
@@ -79,9 +129,11 @@ const Order = () => {
         variant: "default"
       });
 
-      // TODO: Redirect to payment if needed
-      // For now, we'll just show the success message
-      // In the future, integrate with Netopia payment gateway
+      // TODO: Redirect to payment if needed (when finalPrice > 0)
+      if (finalPrice > 0) {
+        console.log("Payment required:", finalPrice);
+        // In the future, integrate with Netopia payment gateway
+      }
 
     } catch (error) {
       console.error("Error saving order:", error);
@@ -92,6 +144,17 @@ const Order = () => {
       });
     }
   };
+
+  if (isLoadingGift && giftCardCode) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading gift card...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={{
@@ -113,7 +176,11 @@ const Order = () => {
         
         <section className="pt-16 sm:pt-20 md:pt-24 py-4 sm:py-6 md:py-8">
           <div className="container mx-auto px-2 sm:px-4">
-            <OrderWizard onComplete={handleOrderComplete} />
+            <OrderWizard 
+              onComplete={handleOrderComplete} 
+              giftCard={giftCard}
+              preselectedPackage={preselectedPackage}
+            />
           </div>
         </section>
 

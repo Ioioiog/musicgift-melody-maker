@@ -14,6 +14,8 @@ import { useAuth } from '@/contexts/AuthContext';
 
 interface OrderWizardProps {
   onComplete: (data: any) => void;
+  giftCard?: any;
+  preselectedPackage?: string | null;
 }
 
 // Define the Field interface that FormFieldRenderer expects
@@ -50,11 +52,12 @@ const ensureFieldOptionFormat = (field: any): Field => {
   } as Field;
 };
 
-const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
+const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete, giftCard, preselectedPackage }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedPackage, setSelectedPackage] = useState('');
+  const [selectedPackage, setSelectedPackage] = useState(preselectedPackage || '');
+  
   const [formData, setFormData] = useState<any>({
     package: '',
     fullName: '',
@@ -112,11 +115,23 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     }
   }, [user]);
 
+  // Set preselected package if provided
+  useEffect(() => {
+    if (preselectedPackage && packages.length > 0) {
+      const packageExists = packages.find(p => p.value === preselectedPackage);
+      if (packageExists) {
+        setFormData(prev => ({ ...prev, package: preselectedPackage }));
+        setSelectedPackage(preselectedPackage);
+      }
+    }
+  }, [preselectedPackage, packages]);
+
   // Enhanced logging for debugging
   useEffect(() => {
     console.log('=== OrderWizard Debug Info ===');
     console.log('Current step:', currentStep);
     console.log('Selected package:', selectedPackage);
+    console.log('Gift card:', giftCard);
     console.log('Package steps data:', packageSteps);
     console.log('Package steps length:', packageSteps?.length || 0);
     console.log('Steps loading:', stepsLoading);
@@ -125,7 +140,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
     console.log('Steps error:', stepsError);
     console.log('Available packages:', packages.map(p => ({ value: p.value, originalValue: (p as any).originalValue })));
     console.log('================================');
-  }, [currentStep, selectedPackage, packageSteps, stepsLoading, stepsSuccess, stepsFetched, stepsError, packages]);
+  }, [currentStep, selectedPackage, packageSteps, stepsLoading, stepsSuccess, stepsFetched, stepsError, packages, giftCard]);
 
   // Calculate total steps from database steps only
   const totalSteps = packageSteps?.length || 0;
@@ -250,7 +265,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         ...formData,
         addons: selectedAddons,
         addonFieldValues,
-        package: selectedPackage
+        package: selectedPackage,
+        giftCard: giftCard
       };
 
       console.log('Submitting real order data:', finalData);
@@ -277,6 +293,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
       return total + (addon?.price || 0);
     }, 0);
     return packagePrice + addonsPrice;
+  };
+
+  const calculateFinalPrice = () => {
+    const totalPrice = calculateTotalPrice();
+    if (!giftCard) return totalPrice;
+    
+    const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
+    return Math.max(0, totalPrice - giftBalance);
   };
 
   // Get current step data from sample data with proper type transformation
@@ -402,6 +426,26 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             <div className="lg:col-span-3">
               <StepIndicator currentStep={1} />
+
+              {/* Gift Card Banner */}
+              {giftCard && (
+                <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm">🎁</span>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-green-800">Gift Card Applied</h3>
+                      <p className="text-sm text-green-600">
+                        From: {giftCard.sender_name} • Balance: {((giftCard.gift_amount || 0) / 100).toFixed(2)} RON
+                      </p>
+                      {giftCard.message_text && (
+                        <p className="text-sm text-green-600 italic">"{giftCard.message_text}"</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <Card className="border-0 shadow-xl sm:shadow-2xl bg-white/80 backdrop-blur-sm">
                 <CardContent className="p-4 sm:p-6 lg:p-8 xl:p-10">
@@ -535,6 +579,26 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           <div className="lg:col-span-3">
             <StepIndicator currentStep={currentStep} />
+
+            {/* Gift Card Banner */}
+            {giftCard && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm">🎁</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-green-800">Gift Card Applied</h3>
+                    <p className="text-sm text-green-600">
+                      From: {giftCard.sender_name} • Balance: {((giftCard.gift_amount || 0) / 100).toFixed(2)} RON
+                    </p>
+                    {giftCard.message_text && (
+                      <p className="text-sm text-green-600 italic">"{giftCard.message_text}"</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
 
             <Card className="border-0 shadow-xl sm:shadow-2xl bg-white/80 backdrop-blur-sm">
               <CardContent className="p-4 sm:p-6 lg:p-8 xl:p-10">
@@ -690,7 +754,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                           ) : (
                             <>
                               <CheckCircle className="w-4 h-4 mr-2" />
-                              {t('completeOrder', 'Finalizează comanda')}
+                              {giftCard && calculateFinalPrice() === 0 
+                                ? 'Complete Order (Free with Gift Card)' 
+                                : `Complete Order${giftCard ? ` (Pay ${calculateFinalPrice().toFixed(2)} RON)` : ''}`
+                              }
                             </>
                           )}
                         </Button>
@@ -718,7 +785,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ onComplete }) => {
                 <TestimonialSection />
               </div>
               {selectedPackage && (
-                <OrderSummary selectedPackage={selectedPackage} selectedAddons={selectedAddons} />
+                <OrderSummary 
+                  selectedPackage={selectedPackage} 
+                  selectedAddons={selectedAddons}
+                  giftCard={giftCard}
+                />
               )}
             </div>
           </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +8,7 @@ import { Gift, CheckCircle, AlertCircle } from 'lucide-react';
 import { useGiftCardByCode, useGiftCardBalance } from '@/hooks/useGiftCards';
 import { usePackages } from '@/hooks/usePackageData';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { useNavigate } from 'react-router-dom';
 
 interface GiftRedemptionProps {
   onRedemption: (giftCard: any, selectedPackage: string, upgradeAmount?: number) => void;
@@ -18,6 +18,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
   const [giftCode, setGiftCode] = useState('');
   const [selectedPackage, setSelectedPackage] = useState('');
   const [isValidating, setIsValidating] = useState(false);
+  const navigate = useNavigate();
 
   const { currency } = useCurrency();
   const { data: packages = [] } = usePackages();
@@ -35,13 +36,8 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
   const handleRedemption = () => {
     if (!giftCard || !selectedPackage) return;
     
-    const selectedPkg = packages.find(p => p.value === selectedPackage);
-    if (!selectedPkg) return;
-
-    const packagePrice = selectedPkg.price * 100; // Convert to cents
-    const upgradeAmount = packagePrice > balance ? packagePrice - balance : 0;
-
-    onRedemption(giftCard, selectedPackage, upgradeAmount);
+    // Redirect to order page with gift card and package parameters
+    navigate(`/order?gift=${giftCard.code}&package=${selectedPackage}`);
   };
 
   const getAvailableBalance = () => {
@@ -167,8 +163,8 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
                 size="lg"
               >
                 {selectedPackage && !canAffordPackage(packages.find(p => p.value === selectedPackage)?.price || 0)
-                  ? `Redeem & Pay Upgrade (${getUpgradeAmount(packages.find(p => p.value === selectedPackage)?.price || 0)} ${currency})`
-                  : 'Redeem Gift Card'
+                  ? `Continue to Order (${getUpgradeAmount(packages.find(p => p.value === selectedPackage)?.price || 0)} ${currency} additional payment required)`
+                  : 'Continue to Order'
                 }
               </Button>
             </div>

@@ -1,141 +1,149 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { Clock, CheckCircle, Gift } from 'lucide-react';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useTranslation } from '@/hooks/useTranslations';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface OrderSummaryProps {
   selectedPackage: string;
   selectedAddons: string[];
+  giftCard?: any;
 }
 
-const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAddons }) => {
+const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAddons, giftCard }) => {
   const { t } = useTranslation();
-  const [isIncludesOpen, setIsIncludesOpen] = useState(false);
-  const [isAddonsOpen, setIsAddonsOpen] = useState(true);
-  
+  const { currency } = useCurrency();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
-  
-  const packageDetails = packages.find(pkg => pkg.value === selectedPackage);
-  
-  if (!selectedPackage || !packageDetails) {
-    return (
-      <Card className="sticky top-8">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('orderSummary', 'Order Summary')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-500 text-sm">{t('selectPackageToSeeDetails', 'Select a package to see details')}</p>
-        </CardContent>
-      </Card>
-    );
-  }
 
-  const calculateTotal = () => {
-    let total = packageDetails.price;
-    selectedAddons.forEach(addonKey => {
-      const addon = addons.find(a => a.addon_key === addonKey);
-      if (addon) {
-        total += addon.price;
-      }
-    });
-    return total;
-  };
+  const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+  const selectedAddonsData = selectedAddons.map(addonKey => 
+    addons.find(addon => addon.addon_key === addonKey)
+  ).filter(Boolean);
+
+  const packagePrice = selectedPackageData?.price || 0;
+  const addonsPrice = selectedAddonsData.reduce((total, addon) => total + (addon?.price || 0), 0);
+  const subtotal = packagePrice + addonsPrice;
+  
+  // Calculate gift card discount
+  const giftBalance = giftCard ? (giftCard.gift_amount || 0) / 100 : 0; // Convert from cents
+  const giftDiscount = Math.min(giftBalance, subtotal);
+  const finalTotal = Math.max(0, subtotal - giftDiscount);
+
+  if (!selectedPackageData) return null;
 
   return (
-    <Card className="sticky top-8">
+    <Card className="bg-white/90 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle className="text-lg">{t('orderSummary', 'Order Summary')}</CardTitle>
+        <CardTitle className="text-lg flex items-center gap-2">
+          <CheckCircle className="w-5 h-5 text-green-500" />
+          {t('orderSummary', 'Rezumatul comenzii')}
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Package Summary */}
-        <div className="border-b pb-4">
-          <h4 className="font-semibold mb-2">{t(packageDetails.label_key)}</h4>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600">{t('package', 'Package')}</span>
-            <span className="font-semibold">{packageDetails.price} RON</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">{t('delivery', 'Delivery')}</span>
-            <span className="text-sm">{packageDetails.delivery_time_key ? t(packageDetails.delivery_time_key) : '3-5 days'}</span>
+        {/* Package Details */}
+        <div className="space-y-2">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <h4 className="font-medium text-gray-900">
+                {t(selectedPackageData.label_key)}
+              </h4>
+              {selectedPackageData.delivery_time_key && (
+                <div className="flex items-center text-sm text-gray-500 mt-1">
+                  <Clock className="w-3 h-3 mr-1" />
+                  {t(selectedPackageData.delivery_time_key)}
+                </div>
+              )}
+            </div>
+            <span className="font-medium text-gray-900">
+              {packagePrice} {currency}
+            </span>
           </div>
         </div>
-
-        {/* Package Includes - Collapsible */}
-        <Collapsible open={isIncludesOpen} onOpenChange={setIsIncludesOpen}>
-          <div className="border-b pb-4">
-            <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
-              <h5 className="font-medium text-sm">{t('whatsIncluded', "What's Included")}:</h5>
-              <ChevronDown className={`h-4 w-4 transition-transform ${isIncludesOpen ? 'rotate-180' : ''}`} />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="mt-2">
-              <ul className="space-y-1">
-                {packageDetails.includes && packageDetails.includes.map((include, index) => (
-                  <li key={index} className="text-xs text-gray-600 flex items-start">
-                    <span className="w-1 h-1 bg-purple-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
-                    <span>{t(include.include_key)}</span>
-                  </li>
-                ))}
-              </ul>
-            </CollapsibleContent>
-          </div>
-        </Collapsible>
 
         {/* Selected Addons */}
-        {selectedAddons.length > 0 && (
-          <Collapsible open={isAddonsOpen} onOpenChange={setIsAddonsOpen}>
-            <div className="border-b pb-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
-                <h5 className="font-medium mb-2 text-sm">{t('selectedAddons', 'Selected Add-ons')} ({selectedAddons.length}):</h5>
-                <ChevronDown className={`h-4 w-4 transition-transform ${isAddonsOpen ? 'rotate-180' : ''}`} />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-2">
-                <div className="space-y-3">
-                  {selectedAddons.map(addonKey => {
-                    const addon = addons.find(a => a.addon_key === addonKey);
-                    return addon ? (
-                      <div key={addonKey} className="space-y-1">
-                        <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <span className="text-sm font-medium text-gray-800">{t(addon.label_key, addon.label_key)}</span>
-                            {addon.description_key && (
-                              <p className="text-xs text-gray-500 mt-1">{t(addon.description_key, addon.description_key)}</p>
-                            )}
-                            {addon.trigger_field_type && (
-                              <Badge variant="outline" className="text-xs mt-1">
-                                {addon.trigger_field_type === 'audio-recorder' ? '🎤 Audio' : 
-                                 addon.trigger_field_type === 'file' ? '📁 File' : 
-                                 addon.trigger_field_type}
-                              </Badge>
-                            )}
-                          </div>
-                          <span className="text-sm font-semibold text-purple-600">+{addon.price} RON</span>
-                        </div>
-                      </div>
-                    ) : null;
-                  })}
+        {selectedAddonsData.length > 0 && (
+          <>
+            <Separator />
+            <div className="space-y-2">
+              <h4 className="font-medium text-gray-900">
+                {t('addons', 'Extra Services')}
+              </h4>
+              {selectedAddonsData.map((addon) => (
+                <div key={addon?.addon_key} className="flex justify-between items-center text-sm">
+                  <span className="text-gray-600">{t(addon?.label_key || '')}</span>
+                  <span className="font-medium">+{addon?.price} {currency}</span>
                 </div>
-              </CollapsibleContent>
+              ))}
             </div>
-          </Collapsible>
+          </>
         )}
 
-        {/* Total */}
-        <div className="pt-2">
+        <Separator />
+
+        {/* Pricing Summary */}
+        <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="font-semibold">{t('total', 'Total')}:</span>
-            <span className="font-bold text-lg text-purple-600">{calculateTotal()} RON</span>
+            <span className="text-gray-600">{t('subtotal', 'Subtotal')}</span>
+            <span className="font-medium">{subtotal} {currency}</span>
+          </div>
+          
+          {/* Gift Card Discount */}
+          {giftCard && giftDiscount > 0 && (
+            <div className="flex justify-between items-center text-green-600">
+              <div className="flex items-center gap-1">
+                <Gift className="w-4 h-4" />
+                <span>Gift Card Discount</span>
+              </div>
+              <span className="font-medium">-{giftDiscount.toFixed(2)} {currency}</span>
+            </div>
+          )}
+          
+          <Separator />
+          
+          <div className="flex justify-between items-center text-lg font-bold">
+            <span className="text-gray-900">{t('total', 'Total')}</span>
+            <div className="text-right">
+              <span className="text-purple-600">{finalTotal.toFixed(2)} {currency}</span>
+              {finalTotal === 0 && (
+                <div className="text-xs text-green-600 font-normal">
+                  Fully covered by gift card
+                </div>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Gift Card Info */}
+        {giftCard && (
+          <>
+            <Separator />
+            <div className="bg-green-50 p-3 rounded-lg border border-green-200">
+              <div className="flex items-center gap-2 mb-2">
+                <Gift className="w-4 h-4 text-green-600" />
+                <span className="font-medium text-green-800">Gift Card Applied</span>
+              </div>
+              <div className="text-sm text-green-700 space-y-1">
+                <div>From: {giftCard.sender_name}</div>
+                <div>Balance: {giftBalance.toFixed(2)} {currency}</div>
+                {giftBalance > subtotal && (
+                  <div className="text-xs">
+                    Remaining after order: {(giftBalance - subtotal).toFixed(2)} {currency}
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Quality Badge */}
         <div className="pt-2">
-          <Badge variant="secondary" className="w-full justify-center">
-            {t('professionalQualityGuaranteed', 'Professional Quality Guaranteed')}
+          <Badge variant="secondary" className="w-full justify-center py-2 bg-purple-50 text-purple-700 border-purple-200">
+            {t('professionalQuality', 'Calitate profesională garantată')}
           </Badge>
         </div>
       </CardContent>
