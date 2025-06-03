@@ -11,7 +11,7 @@ import { usePackages, useAddons } from "@/hooks/usePackageData";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useGiftCardByCode } from "@/hooks/useGiftCards";
-import { getPackagePrice } from "@/utils/pricing";
+import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
 import { useCurrency } from "@/contexts/CurrencyContext";
 
 const Order = () => {
@@ -48,7 +48,7 @@ const Order = () => {
     const packagePrice = packageData ? getPackagePrice(packageData, currency) : 0;
     const addonsPrice = selectedAddons.reduce((total, addonKey) => {
       const addon = addons.find(a => a.addon_key === addonKey);
-      return total + (addon?.price || 0);
+      return total + (addon ? getAddonPrice(addon, currency) : 0);
     }, 0);
     return packagePrice + addonsPrice;
   };
@@ -212,3 +212,4 @@ const Order = () => {
 };
 
 export default Order;
+

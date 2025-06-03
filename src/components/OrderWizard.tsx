@@ -105,7 +105,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
     const addonsPrice = selectedAddons.reduce((total, addonKey) => {
       const addon = addons.find(addon => addon.addon_key === addonKey);
-      return total + (addon?.price || 0);
+      return total + (addon ? getAddonPrice(addon, currency) : 0);
     }, 0);
     return packagePrice + addonsPrice;
   };
@@ -258,3 +258,4 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 };
 
 export default OrderWizard;
+

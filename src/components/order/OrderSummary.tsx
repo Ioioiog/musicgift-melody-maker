@@ -7,7 +7,7 @@ import { Clock, CheckCircle, Gift } from 'lucide-react';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
-import { getPackagePrice } from '@/utils/pricing';
+import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 
 interface OrderSummaryProps {
   selectedPackage: string;
@@ -27,7 +27,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
   ).filter(Boolean);
 
   const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
-  const addonsPrice = selectedAddonsData.reduce((total, addon) => total + (addon?.price || 0), 0);
+  const addonsPrice = selectedAddonsData.reduce((total, addon) => total + (addon ? getAddonPrice(addon, currency) : 0), 0);
   const subtotal = packagePrice + addonsPrice;
   
   // Calculate gift card discount
@@ -77,7 +77,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
               {selectedAddonsData.map((addon) => (
                 <div key={addon?.addon_key} className="flex justify-between items-center text-sm">
                   <span className="text-gray-600">{t(addon?.label_key || '')}</span>
-                  <span className="font-medium">+{addon?.price} {currency}</span>
+                  <span className="font-medium">+{addon ? getAddonPrice(addon, currency) : 0} {currency}</span>
                 </div>
               ))}
             </div>
@@ -153,3 +153,4 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
 };
 
 export default OrderSummary;
+

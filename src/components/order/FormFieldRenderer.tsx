@@ -13,6 +13,8 @@ import { CalendarIcon, Upload, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
+import { getAddonPrice } from '@/utils/pricing';
 import AudioRecorder from './AudioRecorder';
 
 interface FieldOption {
@@ -68,6 +70,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   selectedPackage = ''
 }) => {
   const { t } = useLanguage();
+  const { currency } = useCurrency();
   const [date, setDate] = useState<Date>();
 
   // Helper function to check if addon should be shown based on trigger condition
@@ -233,7 +236,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                             {t(addon.label_key)}
                           </Label>
                           <Badge variant="secondary" className="bg-purple-100 text-purple-700">
-                            +{addon.price} RON
+                            +{getAddonPrice(addon, currency)} {currency}
                           </Badge>
                         </div>
                         {addon.description_key && (

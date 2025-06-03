@@ -1,46 +1,54 @@
 
+
 import type { Package } from '@/types';
 
 // Define the addons configuration
 export const addons = {
   rushDelivery: { 
-    price: 99, 
+    price_ron: 99,
+    price_eur: 19,
     label_key: 'rushDeliveryLabel',
     description_key: 'rushDeliveryDescription',
     availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
   },
   commercialRights: { 
-    price: 99, 
+    price_ron: 99,
+    price_eur: 19,
     label_key: 'commercialRightsLabel',
     description_key: 'commercialRightsDescription',
     availableFor: ['personal']
   },
   distributieMangoRecords: {
-    price: 199, 
+    price_ron: 199,
+    price_eur: 39,
     label_key: 'distributieMangoRecordsLabel',
     description_key: 'distributieMangoRecordsDescription',
     availableFor: ['personal', 'remix', 'instrumental']
   },
   customVideo: { 
-    price: 149, 
+    price_ron: 149,
+    price_eur: 29,
     label_key: 'customVideoLabel',
     description_key: 'customVideoDescription',
     availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix']
   },
   audioMessageFromSender: { 
-    price: 99, 
+    price_ron: 99,
+    price_eur: 19,
     label_key: 'audioMessageFromSenderLabel',
     description_key: 'audioMessageFromSenderDescription',
     availableFor: ['personal', 'business', 'premium']
   },
   commercialRightsUpgrade: {
-    price: 399,
+    price_ron: 399,
+    price_eur: 79,
     label_key: 'commercialRightsUpgradeLabel',
     description_key: 'commercialRightsUpgradeDescription',
     availableFor: ['business']
   },
   extendedSong: {
-    price: 49,
+    price_ron: 49,
+    price_eur: 9,
     label_key: 'extendedSongLabel',
     description_key: 'extendedSongDescription',
     availableFor: ['personal', 'premium', 'business']
