@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -121,7 +122,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         totalPrice
       });
     } else {
-      // Default submission logic
+      // Create order with SmartBill integration
       const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
       const package_name = selectedPackageData?.label_key;
       const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
@@ -138,21 +139,43 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         package_delivery_time: package_delivery_time,
         package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
         status: 'pending',
-        payment_status: 'pending'
+        payment_status: 'pending',
+        currency: currency
       };
 
       try {
-        const { data, error } = await supabase
+        // Call SmartBill integration edge function
+        const { data: smartBillResponse, error: smartBillError } = await supabase.functions.invoke('smartbill-create-invoice', {
+          body: orderData
+        });
+
+        if (smartBillError) {
+          console.error('SmartBill error:', smartBillError);
+          throw new Error('Failed to create invoice with SmartBill');
+        }
+
+        console.log('SmartBill response:', smartBillResponse);
+
+        // If SmartBill returns a payment URL, redirect user
+        if (smartBillResponse?.paymentUrl) {
+          window.location.href = smartBillResponse.paymentUrl;
+        } else {
+          // If no payment needed (e.g., fully covered by gift card), show success
+          console.log('Order completed successfully without payment needed');
+        }
+
+      } catch (error) {
+        console.error('Error processing order:', error);
+        // Fallback to basic order creation for now
+        const { data, error: dbError } = await supabase
           .from('orders')
           .insert(orderData);
 
-        if (error) {
-          console.error('Error inserting order:', error);
+        if (dbError) {
+          console.error('Error inserting order:', dbError);
         } else {
-          console.log('Order inserted successfully:', data);
+          console.log('Order inserted successfully as fallback:', data);
         }
-      } catch (error) {
-        console.error('An unexpected error occurred:', error);
       }
     }
   };
