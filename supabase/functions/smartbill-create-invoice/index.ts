@@ -57,6 +57,49 @@ interface SmartBillInvoiceData {
   observations?: string;
 }
 
+const validateSmartBillConfig = () => {
+  const username = Deno.env.get('SMARTBILL_USERNAME')
+  const token = Deno.env.get('SMARTBILL_TOKEN')
+  const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
+  const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
+  
+  console.log('SmartBill Config Check:', {
+    username: username ? '***configured***' : 'MISSING',
+    token: token ? '***configured***' : 'MISSING',
+    baseUrl,
+    companyVat: companyVat ? '***configured***' : 'MISSING'
+  })
+  
+  return { username, token, baseUrl, companyVat }
+}
+
+const handleSmartBillResponse = async (response: Response) => {
+  const contentType = response.headers.get('content-type') || ''
+  console.log('SmartBill Response Status:', response.status)
+  console.log('SmartBill Response Content-Type:', contentType)
+  
+  // Get response as text first to inspect it
+  const responseText = await response.text()
+  console.log('SmartBill Raw Response (first 500 chars):', responseText.substring(0, 500))
+  
+  // Check if response is HTML (error page)
+  if (responseText.trim().startsWith('<!DOCTYPE') || responseText.trim().startsWith('<html')) {
+    console.error('SmartBill returned HTML error page instead of JSON')
+    throw new Error(`SmartBill API returned HTML error page. Status: ${response.status}`)
+  }
+  
+  // Try to parse as JSON
+  try {
+    const jsonResult = JSON.parse(responseText)
+    console.log('SmartBill JSON Response:', jsonResult)
+    return jsonResult
+  } catch (parseError) {
+    console.error('Failed to parse SmartBill response as JSON:', parseError)
+    console.error('Response text:', responseText)
+    throw new Error(`SmartBill API returned invalid JSON. Response: ${responseText.substring(0, 200)}...`)
+  }
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -126,19 +169,31 @@ serve(async (req) => {
       )
     }
 
-    // Get SmartBill credentials
-    const smartBillUsername = Deno.env.get('SMARTBILL_USERNAME')
-    const smartBillToken = Deno.env.get('SMARTBILL_TOKEN')
-    const smartBillBaseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
+    // Validate SmartBill configuration
+    const { username, token, baseUrl, companyVat } = validateSmartBillConfig()
 
-    if (!smartBillUsername || !smartBillToken) {
-      console.error('SmartBill credentials not configured')
-      // Fallback to basic order creation
+    if (!username || !token) {
+      console.warn('SmartBill credentials not configured - creating order without invoice')
+      
+      // Update order with fallback status
+      const { error: updateError } = await supabaseClient
+        .from('orders')
+        .update({ 
+          smartbill_payment_status: 'config_missing',
+          smartbill_error: 'SmartBill credentials not configured'
+        })
+        .eq('id', savedOrder.id)
+
+      if (updateError) {
+        console.error('Error updating order with fallback status:', updateError)
+      }
+
       return new Response(
         JSON.stringify({ 
           success: true, 
           orderId: savedOrder.id,
-          message: 'Order created successfully - SmartBill credentials not configured'
+          message: 'Order created successfully - invoice will be generated manually',
+          warning: 'SmartBill integration not configured'
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -147,9 +202,9 @@ serve(async (req) => {
       )
     }
 
-    // Create SmartBill invoice
+    // Create SmartBill invoice data
     const invoiceData: SmartBillInvoiceData = {
-      companyVatCode: Deno.env.get('SMARTBILL_COMPANY_VAT') || '',
+      companyVatCode: companyVat || '',
       seriesName: 'MUSICGIFT',
       client: {
         name: orderData.form_data.fullName || 'Customer',
@@ -161,7 +216,7 @@ serve(async (req) => {
         isTaxPayer: false
       },
       issueDate: new Date().toISOString().split('T')[0],
-      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       language: 'RO',
       precision: 2,
       currency: orderData.currency || 'RON',
@@ -184,27 +239,91 @@ serve(async (req) => {
 
     console.log('Creating SmartBill invoice with data:', invoiceData)
 
-    // Create invoice via SmartBill API
-    const smartBillAuth = btoa(`${smartBillUsername}:${smartBillToken}`)
+    // Create invoice via SmartBill API with improved error handling
+    const smartBillAuth = btoa(`${username}:${token}`)
     
-    const invoiceResponse = await fetch(`${smartBillBaseUrl}/SBORO/api/invoice`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${smartBillAuth}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(invoiceData)
-    })
+    let invoiceResponse: Response
+    let invoiceResult: any
+    
+    try {
+      console.log('Sending request to SmartBill API:', `${baseUrl}/SBORO/api/invoice`)
+      
+      invoiceResponse = await fetch(`${baseUrl}/SBORO/api/invoice`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${smartBillAuth}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(invoiceData)
+      })
+      
+      invoiceResult = await handleSmartBillResponse(invoiceResponse)
+      
+    } catch (smartBillError) {
+      console.error('SmartBill API Error:', smartBillError)
+      
+      // Update order with error status but don't fail the order
+      const { error: updateError } = await supabaseClient
+        .from('orders')
+        .update({ 
+          smartbill_payment_status: 'failed',
+          smartbill_error: smartBillError.message
+        })
+        .eq('id', savedOrder.id)
 
-    const invoiceResult = await invoiceResponse.json()
-    console.log('SmartBill invoice response:', invoiceResult)
+      if (updateError) {
+        console.error('Error updating order with SmartBill error:', updateError)
+      }
 
-    if (!invoiceResponse.ok) {
-      throw new Error(`SmartBill API error: ${invoiceResult.errorText || 'Unknown error'}`)
+      // Return success with manual invoice note
+      return new Response(
+        JSON.stringify({
+          success: true,
+          orderId: savedOrder.id,
+          message: 'Order created successfully - invoice will be generated manually',
+          warning: 'SmartBill integration temporarily unavailable'
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200 
+        }
+      )
     }
 
-    // Extract invoice ID and generate payment URL
+    // Check if SmartBill returned an error
+    if (!invoiceResponse.ok || invoiceResult.errorText) {
+      const errorMessage = invoiceResult.errorText || `HTTP ${invoiceResponse.status}`
+      console.error('SmartBill API returned error:', errorMessage)
+      
+      // Update order with error status
+      const { error: updateError } = await supabaseClient
+        .from('orders')
+        .update({ 
+          smartbill_payment_status: 'failed',
+          smartbill_error: errorMessage
+        })
+        .eq('id', savedOrder.id)
+
+      if (updateError) {
+        console.error('Error updating order with SmartBill error:', updateError)
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          orderId: savedOrder.id,
+          message: 'Order created successfully - invoice will be generated manually',
+          warning: `SmartBill error: ${errorMessage}`
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200 
+        }
+      )
+    }
+
+    // Success - extract invoice details
     const smartBillInvoiceId = invoiceResult.number || `INV-${Date.now()}`
     const paymentUrl = `${Deno.env.get('SITE_URL')}/payment-success?order=${savedOrder.id}&invoice=${smartBillInvoiceId}`
 
