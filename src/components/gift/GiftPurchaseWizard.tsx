@@ -16,6 +16,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useCreateGiftCard, useGiftCardDesigns } from "@/hooks/useGiftCards";
 import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
+import GiftCardPreview from './GiftCardPreview';
 
 interface GiftPurchaseWizardProps {
   onComplete: (data: any) => void;
@@ -202,51 +203,12 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
         className="w-full"
         disabled={selectedAmountType === 'custom' && (!customAmount || !validateCustomAmount(customAmount))}
       >
-        Next: Design
+        Next: Details
       </Button>
     </div>
   );
 
   const renderStep2 = () => (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h3 className="text-2xl font-bold mb-4">Select a Design</h3>
-        <p className="text-gray-600">Choose a design for your gift card.</p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {designs.map(design => (
-          <Card
-            key={design.id}
-            className={`cursor-pointer ${selectedDesign === design.id ? 'border-2 border-purple-500' : ''}`}
-            onClick={() => setSelectedDesign(design.id)}
-          >
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">{design.name}</CardTitle>
-            </CardHeader>
-            <CardContent className="p-2">
-              {design.preview_image_url ? (
-                <img src={design.preview_image_url} alt={design.name} className="w-full h-32 object-cover rounded-md" />
-              ) : (
-                <div className="w-full h-32 bg-gray-100 rounded-md flex items-center justify-center text-gray-500">
-                  No Preview
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <div className="flex gap-4">
-        <Button variant="outline" onClick={() => setCurrentStep(1)}>
-          Back
-        </Button>
-        <Button onClick={() => setCurrentStep(3)} className="flex-1">
-          Next: Details
-        </Button>
-      </div>
-    </div>
-  );
-
-  const renderStep3 = () => (
     <div className="space-y-6">
       <div className="text-center">
         <h3 className="text-2xl font-bold mb-4">Enter Gift Details</h3>
@@ -341,10 +303,77 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
         </Popover>
       </div>
       <div className="flex gap-4">
+        <Button variant="outline" onClick={() => setCurrentStep(1)}>
+          Back
+        </Button>
+        <Button onClick={() => setCurrentStep(3)} className="flex-1">
+          Next: Design
+        </Button>
+      </div>
+    </div>
+  );
+
+  const renderStep3 = () => (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h3 className="text-2xl font-bold mb-4">Select a Design</h3>
+        <p className="text-gray-600">Choose a design and see how your gift card will look.</p>
+      </div>
+
+      {/* Design Selection Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
+          <h4 className="text-lg font-semibold mb-4">Available Designs</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {designs.map(design => (
+              <Card
+                key={design.id}
+                className={`cursor-pointer transition-all ${selectedDesign === design.id ? 'border-2 border-purple-500 shadow-lg' : 'hover:shadow-md'}`}
+                onClick={() => setSelectedDesign(design.id)}
+              >
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">{design.name}</CardTitle>
+                </CardHeader>
+                <CardContent className="p-2">
+                  {design.preview_image_url ? (
+                    <img src={design.preview_image_url} alt={design.name} className="w-full h-24 object-cover rounded-md" />
+                  ) : (
+                    <div className="w-full h-24 bg-gray-100 rounded-md flex items-center justify-center text-gray-500 text-sm">
+                      {design.theme}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-lg font-semibold mb-4">Live Preview</h4>
+          <GiftCardPreview
+            design={designs.find(d => d.id === selectedDesign)}
+            formData={formData}
+            amount={getActualAmount()}
+            currency={currency}
+          />
+          <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+            <h5 className="font-medium mb-2">Your card will include:</h5>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• Card value: {getActualAmount()} {currency}</li>
+              <li>• Unique gift card code</li>
+              {formData.recipient_name && <li>• Recipient: {formData.recipient_name}</li>}
+              {formData.sender_name && <li>• From: {formData.sender_name}</li>}
+              {formData.message_text && <li>• Personal message</li>}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-4">
         <Button variant="outline" onClick={() => setCurrentStep(2)}>
           Back
         </Button>
-        <Button onClick={() => setCurrentStep(4)} className="flex-1">
+        <Button onClick={() => setCurrentStep(4)} className="flex-1" disabled={!selectedDesign}>
           Next: Review
         </Button>
       </div>
@@ -360,29 +389,41 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
           <h3 className="text-2xl font-bold mb-4">Review Your Gift Card</h3>
         </div>
 
-        <Card className="bg-white/90 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle>Gift Card Summary</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between">
-              <span>Amount:</span>
-              <span className="font-semibold">{actualAmount} {currency}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Design:</span>
-              <span>{designs.find(d => d.id === selectedDesign)?.name || 'Default'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Recipient:</span>
-              <span>{formData.recipient_name} ({formData.recipient_email})</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Delivery Date:</span>
-              <span>{formData.delivery_date ? format(formData.delivery_date, "PPP") : 'Immediate'}</span>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="bg-white/90 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle>Gift Card Summary</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between">
+                <span>Amount:</span>
+                <span className="font-semibold">{actualAmount} {currency}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Design:</span>
+                <span>{designs.find(d => d.id === selectedDesign)?.name || 'Default'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Recipient:</span>
+                <span>{formData.recipient_name} ({formData.recipient_email})</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Delivery Date:</span>
+                <span>{formData.delivery_date ? format(formData.delivery_date, "PPP") : 'Immediate'}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Final Preview</h4>
+            <GiftCardPreview
+              design={designs.find(d => d.id === selectedDesign)}
+              formData={formData}
+              amount={actualAmount}
+              currency={currency}
+            />
+          </div>
+        </div>
 
         <div className="flex gap-4">
           <Button 
@@ -411,6 +452,20 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
           <Gift className="w-6 h-6" />
           Purchase Gift Card
         </CardTitle>
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <span className={`px-2 py-1 rounded ${currentStep >= 1 ? 'bg-purple-100 text-purple-600' : 'bg-gray-100'}`}>
+            1. Amount
+          </span>
+          <span className={`px-2 py-1 rounded ${currentStep >= 2 ? 'bg-purple-100 text-purple-600' : 'bg-gray-100'}`}>
+            2. Details
+          </span>
+          <span className={`px-2 py-1 rounded ${currentStep >= 3 ? 'bg-purple-100 text-purple-600' : 'bg-gray-100'}`}>
+            3. Design
+          </span>
+          <span className={`px-2 py-1 rounded ${currentStep >= 4 ? 'bg-purple-100 text-purple-600' : 'bg-gray-100'}`}>
+            4. Review
+          </span>
+        </div>
       </CardHeader>
       <CardContent>
         {currentStep === 1 && renderStep1()}
