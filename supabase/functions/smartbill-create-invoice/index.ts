@@ -175,6 +175,9 @@ serve(async (req) => {
         JSON.stringify({ 
           success: true, 
           orderId: savedOrder.id,
+          paymentRequired: false,
+          paymentUrl: null,
+          invoiceCreated: false,
           message: 'Order completed successfully - no payment required'
         }),
         { 
@@ -207,8 +210,11 @@ serve(async (req) => {
         JSON.stringify({ 
           success: true, 
           orderId: savedOrder.id,
-          message: 'Order created successfully - invoice will be generated manually',
-          warning: 'SmartBill integration not configured'
+          paymentRequired: true,
+          paymentUrl: null,
+          invoiceCreated: false,
+          requiresManualPayment: true,
+          message: 'Order created successfully - manual payment required'
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -302,13 +308,16 @@ serve(async (req) => {
         console.error('Error updating order with SmartBill error:', updateError)
       }
 
-      // Return success with manual invoice note
       return new Response(
         JSON.stringify({
           success: true,
           orderId: savedOrder.id,
-          message: 'Order created successfully - invoice will be generated manually',
-          warning: 'SmartBill integration temporarily unavailable'
+          paymentRequired: true,
+          paymentUrl: null,
+          invoiceCreated: false,
+          requiresManualPayment: true,
+          error: smartBillError.message,
+          message: 'Order created - SmartBill integration unavailable, manual payment required'
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -318,8 +327,8 @@ serve(async (req) => {
     }
 
     // Check if SmartBill returned an error
-    if (!invoiceResponse.ok || invoiceResult?.sbcResponse?.errorText || invoiceResult?.error) {
-      const errorMessage = invoiceResult?.sbcResponse?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
+    if (!invoiceResponse.ok || invoiceResult?.errorText || invoiceResult?.error) {
+      const errorMessage = invoiceResult?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
       console.error('SmartBill API returned error:', errorMessage)
       
       // Update order with error status
@@ -339,8 +348,12 @@ serve(async (req) => {
         JSON.stringify({
           success: true,
           orderId: savedOrder.id,
-          message: 'Order created successfully - invoice will be generated manually',
-          warning: `SmartBill error: ${errorMessage}`
+          paymentRequired: true,
+          paymentUrl: null,
+          invoiceCreated: false,
+          requiresManualPayment: true,
+          error: errorMessage,
+          message: 'Order created - invoice generation failed, manual payment required'
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -350,26 +363,29 @@ serve(async (req) => {
     }
 
     // Success - extract invoice details and NETOPIA payment URL
-    const smartBillInvoiceId = invoiceResult?.sbcResponse?.number || invoiceResult?.invoiceNumber || `INV-${Date.now()}`
-    const netopiaPa​ymentUrl = invoiceResult?.sbcResponse?.url // NETOPIA payment link from SmartBill
+    const smartBillInvoiceId = invoiceResult?.number || invoiceResult?.invoiceNumber || `INV-${Date.now()}`
+    const smartBillSeries = invoiceResult?.series || seriesName
+    const netopiaPa​ymentUrl = invoiceResult?.url // NETOPIA payment link from SmartBill
     
     console.log('SmartBill invoice created successfully:', {
       invoiceId: smartBillInvoiceId,
+      series: smartBillSeries,
       netopiaPa​ymentUrl: netopiaPa​ymentUrl,
       hasPaymentUrl: !!netopiaPa​ymentUrl
     })
 
-    // Use NETOPIA payment URL if available, otherwise fallback to success page
-    const finalPaymentUrl = netopiaPa​ymentUrl || `${Deno.env.get('SITE_URL')}/payment/success?orderId=${savedOrder.id}&invoice=${smartBillInvoiceId}`
+    // Determine payment status based on URL availability
+    const hasValidPaymentUrl = netopiaPa​ymentUrl && netopiaPa​ymentUrl.trim() !== ''
+    const paymentStatus = hasValidPaymentUrl ? 'payment_pending' : 'invoice_created'
 
     // Update order with SmartBill details
     const { error: updateError } = await supabaseClient
       .from('orders')
       .update({ 
         smartbill_invoice_id: smartBillInvoiceId,
-        smartbill_payment_url: finalPaymentUrl,
+        smartbill_payment_url: netopiaPa​ymentUrl || null,
         smartbill_invoice_data: invoiceResult,
-        smartbill_payment_status: netopiaPa​ymentUrl ? 'payment_pending' : 'completed'
+        smartbill_payment_status: paymentStatus
       })
       .eq('id', savedOrder.id)
 
@@ -377,14 +393,20 @@ serve(async (req) => {
       console.error('Error updating order with SmartBill details:', updateError)
     }
 
+    // Return appropriate response based on payment URL availability
     return new Response(
       JSON.stringify({
         success: true,
         orderId: savedOrder.id,
-        smartBillInvoiceId: smartBillInvoiceId,
-        paymentUrl: finalPaymentUrl,
-        hasNetopiaPa​yment: !!netopiaPa​ymentUrl,
-        message: netopiaPa​ymentUrl ? 'Invoice created with NETOPIA payment link' : 'Invoice created successfully'
+        paymentRequired: true,
+        paymentUrl: hasValidPaymentUrl ? netopiaPa​ymentUrl : null,
+        invoiceCreated: true,
+        invoiceId: smartBillInvoiceId,
+        series: smartBillSeries,
+        requiresManualPayment: !hasValidPaymentUrl,
+        message: hasValidPaymentUrl 
+          ? 'Invoice created with NETOPIA payment link' 
+          : 'Invoice created successfully - NETOPIA payment link not available'
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -396,6 +418,7 @@ serve(async (req) => {
     console.error('Error in SmartBill integration:', error)
     return new Response(
       JSON.stringify({ 
+        success: false,
         error: error.message || 'Failed to process order with SmartBill'
       }),
       { 
