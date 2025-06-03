@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { useToast } from "@/hooks/use-toast";
 
 interface GiftCardDesignFormProps {
@@ -83,16 +84,14 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
         </div>
       </div>
 
-      <div>
-        <Label htmlFor="preview_image_url">Preview Image URL</Label>
-        <Input
-          id="preview_image_url"
-          type="url"
-          value={formData.preview_image_url}
-          onChange={(e) => handleInputChange('preview_image_url', e.target.value)}
-          placeholder="https://example.com/image.jpg"
-        />
-      </div>
+      <ImageUpload
+        label="Design Preview Image"
+        value={formData.preview_image_url}
+        onChange={(url) => handleInputChange('preview_image_url', url)}
+        bucketName="gift-card-designs"
+        maxSizeBytes={5 * 1024 * 1024} // 5MB
+        acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+      />
 
       <div className="flex items-center space-x-2">
         <Switch
