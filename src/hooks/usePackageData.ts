@@ -1,7 +1,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { packages, addons, type PackageData } from '@/data/packages';
+import { packages, addons } from '@/data/packages';
+import type { PackageData } from '@/types/packages';
 
 export interface StepData {
   id: string;

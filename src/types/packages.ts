@@ -34,6 +34,22 @@ export interface PackageTag {
   styling_class?: string;
 }
 
+export interface AddonTriggerConfig {
+  options?: FieldOption[];
+  allowedTypes?: string[];
+  maxFiles?: number;
+  maxTotalSizeMb?: number;
+}
+
+export interface Addon {
+  label_key: string;
+  description_key: string;
+  price: number;
+  packages: string[];
+  trigger_field_type?: string;
+  trigger_config?: AddonTriggerConfig;
+}
+
 export interface Package {
   id?: string;
   value: string;
@@ -47,11 +63,6 @@ export interface Package {
   tags?: string[];
   includes?: PackageInclude[];
   steps: Step[];
-}
-
-export interface Addon {
-  labelKey: string;
-  price: number;
 }
 
 export type PackageData = Package;

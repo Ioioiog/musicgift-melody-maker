@@ -1,4 +1,5 @@
 
+// Enhanced Step 1 for all packages 
 export const stepOneByPackage = {
   personal: {
     id: "personal-step-1",
@@ -172,6 +173,202 @@ export const stepOneByPackage = {
         field_type: "text",
         label_key: "desiredRemixStyleLabel",
         placeholder_key: "desiredRemixStylePlaceholder",
+        required: true,
+        field_order: 2
+      }
+    ]
+  }
+};
+
+// Enhanced Step 2 for all packages except 'gift'
+export const stepTwoByPackage = {
+  personal: {
+    id: "personal-step-2",
+    step_number: 2,
+    title_key: "musicalPreferencesStep",
+    fields: [
+      {
+        id: "styleReference",
+        field_name: "styleReference",
+        field_type: "text",
+        label_key: "styleReferenceLabel",
+        placeholder_key: "styleReferencePlaceholder",
+        required: true,
+        field_order: 1
+      },
+      {
+        id: "mood",
+        field_name: "mood",
+        field_type: "select",
+        label_key: "moodLabel",
+        placeholder_key: "moodPlaceholder",
+        required: true,
+        field_order: 2,
+        options: [
+          { value: "romantic", label_key: "moodRomantic" },
+          { value: "cheerful", label_key: "moodCheerful" },
+          { value: "nostalgic", label_key: "moodNostalgic" },
+          { value: "energetic", label_key: "moodEnergetic" },
+          { value: "melancholic", label_key: "moodMelancholic" },
+          { value: "inspirational", label_key: "moodInspirational" },
+          { value: "emotional", label_key: "moodEmotional" },
+          { value: "uplifting", label_key: "moodUplifting" }
+        ]
+      },
+      {
+        id: "voiceGender",
+        field_name: "voiceGender",
+        field_type: "select",
+        label_key: "voiceGenderLabel",
+        placeholder_key: "voiceGenderPlaceholder",
+        required: true,
+        field_order: 3,
+        options: [
+          { value: "feminine", label_key: "voiceFeminine" },
+          { value: "masculine", label_key: "voiceMasculine" },
+          { value: "duet", label_key: "voiceDuet" },
+          { value: "musicgift_choice", label_key: "voiceMusicGiftChoice" }
+        ]
+      }
+    ]
+  },
+  premium: {
+    id: "premium-step-2",
+    step_number: 2,
+    title_key: "distributionPreferencesStep",
+    fields: [
+      {
+        id: "targetPlatform",
+        field_name: "targetPlatform",
+        field_type: "checkbox-group",
+        label_key: "targetPlatformLabel",
+        placeholder_key: "targetPlatformPlaceholder",
+        required: true,
+        field_order: 1,
+        options: [
+          { value: "spotify", label_key: "platformSpotify" },
+          { value: "youtube", label_key: "platformYouTube" },
+          { value: "instagram", label_key: "platformInstagram" },
+          { value: "tiktok", label_key: "platformTikTok" }
+        ]
+      },
+      {
+        id: "artistBio",
+        field_name: "artistBio",
+        field_type: "textarea",
+        label_key: "artistBioLabel",
+        placeholder_key: "artistBioPlaceholder",
+        required: false,
+        field_order: 2
+      }
+    ]
+  },
+  business: {
+    id: "business-step-2",
+    step_number: 2,
+    title_key: "brandIdentityStep",
+    fields: [
+      {
+        id: "brandValues",
+        field_name: "brandValues",
+        field_type: "textarea",
+        label_key: "brandValuesLabel",
+        placeholder_key: "brandValuesPlaceholder",
+        required: true,
+        field_order: 1
+      },
+      {
+        id: "targetAudience",
+        field_name: "targetAudience",
+        field_type: "text",
+        label_key: "targetAudienceLabel",
+        placeholder_key: "targetAudiencePlaceholder",
+        required: true,
+        field_order: 2
+      }
+    ]
+  },
+  artist: {
+    id: "artist-step-2",
+    step_number: 2,
+    title_key: "creativeDirectionStep",
+    fields: [
+      {
+        id: "artisticInfluences",
+        field_name: "artisticInfluences",
+        field_type: "textarea",
+        label_key: "artisticInfluencesLabel",
+        placeholder_key: "artisticInfluencesPlaceholder",
+        required: false,
+        field_order: 1
+      },
+      {
+        id: "vocalRecordingMethod",
+        field_name: "vocalRecordingMethod",
+        field_type: "select",
+        label_key: "vocalRecordingMethodLabel",
+        placeholder_key: "vocalRecordingMethodPlaceholder",
+        required: true,
+        field_order: 2,
+        options: [
+          { value: "studio_visit", label_key: "studioVisit" },
+          { value: "local_studio", label_key: "localStudio" },
+          { value: "home_recording", label_key: "homeRecording" }
+        ]
+      }
+    ]
+  },
+  instrumental: {
+    id: "instrumental-step-2",
+    step_number: 2,
+    title_key: "instrumentalStyleStep",
+    fields: [
+      {
+        id: "instrumentalStyleRef",
+        field_name: "instrumentalStyleRef",
+        field_type: "text",
+        label_key: "instrumentalStyleRefLabel",
+        placeholder_key: "instrumentalStyleRefPlaceholder",
+        required: true,
+        field_order: 1
+      },
+      {
+        id: "instrumentType",
+        field_name: "instrumentType",
+        field_type: "select",
+        label_key: "instrumentTypeLabel",
+        placeholder_key: "instrumentTypePlaceholder",
+        required: false,
+        field_order: 2,
+        options: [
+          { value: "piano", label_key: "instrumentPiano" },
+          { value: "guitar", label_key: "instrumentGuitar" },
+          { value: "synth", label_key: "instrumentSynth" },
+          { value: "other", label_key: "instrumentOther" }
+        ]
+      }
+    ]
+  },
+  remix: {
+    id: "remix-step-2",
+    step_number: 2,
+    title_key: "remixArtistIntentStep",
+    fields: [
+      {
+        id: "remixGoal",
+        field_name: "remixGoal",
+        field_type: "textarea",
+        label_key: "remixGoalLabel",
+        placeholder_key: "remixGoalPlaceholder",
+        required: true,
+        field_order: 1
+      },
+      {
+        id: "creditsConfirmation",
+        field_name: "creditsConfirmation",
+        field_type: "checkbox",
+        label_key: "creditsConfirmationLabel",
+        placeholder_key: "creditsConfirmationPlaceholder",
         required: true,
         field_order: 2
       }

@@ -1,5 +1,6 @@
-import { PackageData } from '@/hooks/usePackageData';
-import { stepOneByPackage } from './enhancedSteps';
+
+import { stepOneByPackage, stepTwoByPackage } from './enhancedSteps';
+import type { PackageData, Addon } from '@/types/packages';
 
 export const packages: PackageData[] = [
   {
@@ -20,36 +21,7 @@ export const packages: PackageData[] = [
     ],
     steps: [
       stepOneByPackage.personal,
-      {
-        id: "personal-step-2",
-        step_number: 2,
-        title_key: "musicalPreferences",
-        fields: [
-          {
-            id: "musicStyle",
-            field_name: "musicStyle",
-            field_type: "select",
-            label_key: "preferredGenre",
-            placeholder_key: "preferredGenre",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "pop", label_key: "pop" },
-              { value: "rock", label_key: "rock" },
-              { value: "ballad", label_key: "ballad" },
-              { value: "folk", label_key: "folk" }
-            ]
-          },
-          {
-            id: "addons",
-            field_name: "addons",
-            field_type: "checkbox-group",
-            label_key: "selectAddons",
-            required: false,
-            field_order: 2
-          }
-        ]
-      },
+      stepTwoByPackage.personal,
       {
         id: "personal-step-3",
         step_number: 3,
@@ -94,28 +66,7 @@ export const packages: PackageData[] = [
     ],
     steps: [
       stepOneByPackage.premium,
-      {
-        id: "premium-step-2",
-        step_number: 2,
-        title_key: "musicalPreferences",
-        fields: [
-          {
-            id: "musicStyle",
-            field_name: "musicStyle",
-            field_type: "select",
-            label_key: "preferredGenre",
-            placeholder_key: "preferredGenre",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "pop", label_key: "pop" },
-              { value: "rock", label_key: "rock" },
-              { value: "ballad", label_key: "ballad" },
-              { value: "electronic", label_key: "electronic" }
-            ]
-          }
-        ]
-      },
+      stepTwoByPackage.premium,
       {
         id: "premium-step-3",
         step_number: 3,
@@ -161,9 +112,10 @@ export const packages: PackageData[] = [
     ],
     steps: [
       stepOneByPackage.business,
+      stepTwoByPackage.business,
       {
-        id: "business-step-2",
-        step_number: 2,
+        id: "business-step-3",
+        step_number: 3,
         title_key: "contactDetails",
         fields: [
           {
@@ -206,9 +158,10 @@ export const packages: PackageData[] = [
     ],
     steps: [
       stepOneByPackage.artist,
+      stepTwoByPackage.artist,
       {
-        id: "artist-step-2",
-        step_number: 2,
+        id: "artist-step-3",
+        step_number: 3,
         title_key: "contactDetails",
         fields: [
           {
@@ -252,9 +205,10 @@ export const packages: PackageData[] = [
     ],
     steps: [
       stepOneByPackage.instrumental,
+      stepTwoByPackage.instrumental,
       {
-        id: "instrumental-step-2",
-        step_number: 2,
+        id: "instrumental-step-3",
+        step_number: 3,
         title_key: "contactDetails",
         fields: [
           {
@@ -299,9 +253,10 @@ export const packages: PackageData[] = [
     ],
     steps: [
       stepOneByPackage.remix,
+      stepTwoByPackage.remix,
       {
-        id: "remix-step-2",
-        step_number: 2,
+        id: "remix-step-3",
+        step_number: 3,
         title_key: "contactDetails",
         fields: [
           {
@@ -328,7 +283,7 @@ export const packages: PackageData[] = [
   }
 ];
 
-export const addons = {
+export const addons: Record<string, Addon> = {
   rushDelivery: {
     label_key: "rushDelivery",
     description_key: "rushDeliveryDesc",
