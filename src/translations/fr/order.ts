@@ -10,6 +10,8 @@ export const orderTranslations = {
   noStepsConfiguredDesc: "Ce forfait n'a pas encore d'étapes configurées. Veuillez contacter le support ou choisir un forfait différent.",
   selectYourPackage: "Sélectionnez votre forfait",
   selectOption: "Sélectionnez une option",
+  selected: "Sélectionné",
+  more: "plus",
   completeRequiredFields: "Veuillez compléter tous les champs obligatoires",
   completeRequiredFieldsDesc: "Assurez-vous que tous les champs obligatoires sont remplis avant de continuer.",
   somethingWentWrong: "Quelque chose s'est mal passé",
@@ -42,4 +44,10 @@ export const orderTranslations = {
   // Help section
   needHelp: "Besoin d'aide ?",
   mondayToFriday: "Lundi - Vendredi, 9:00 - 18:00",
+  
+  // Package tags
+  popular: "Populaire",
+  premium: "Premium",
+  new: "Nouveau",
+  gift: "Cadeau",
 };

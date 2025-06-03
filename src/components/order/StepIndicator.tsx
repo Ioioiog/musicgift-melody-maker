@@ -11,13 +11,14 @@ interface StepIndicatorProps {
 const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep, totalSteps }) => {
   const { t } = useLanguage();
   
+  // Create steps array with package selection as first step
   const steps = [
-    { number: 1, label: t('stepPackage') },
-    { number: 2, label: t('stepDetails') },
-    { number: 3, label: t('stepStory') },
-    { number: 4, label: t('stepPreferences') },
-    { number: 5, label: t('stepContact') }
-  ].slice(0, totalSteps);
+    { number: 1, label: t('choosePackage') },
+    ...Array.from({ length: totalSteps - 1 }, (_, i) => ({
+      number: i + 2,
+      label: `${t('stepPackage')} ${i + 1}`
+    }))
+  ];
 
   return (
     <div className="mb-12">

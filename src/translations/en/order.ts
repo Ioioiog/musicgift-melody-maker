@@ -10,6 +10,8 @@ export const orderTranslations = {
   noStepsConfiguredDesc: "This package doesn't have any steps configured yet. Please contact support or choose a different package.",
   selectYourPackage: "Select your package",
   selectOption: "Select an option",
+  selected: "Selected",
+  more: "more",
   completeRequiredFields: "Please complete all required fields",
   completeRequiredFieldsDesc: "Make sure all required fields are filled out before proceeding.",
   somethingWentWrong: "Something went wrong",
@@ -42,4 +44,10 @@ export const orderTranslations = {
   // Help section
   needHelp: "Need Help?",
   mondayToFriday: "Monday - Friday, 9:00 - 18:00",
+  
+  // Package tags
+  popular: "Popular",
+  premium: "Premium",
+  new: "New",
+  gift: "Gift",
 };

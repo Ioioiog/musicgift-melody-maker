@@ -10,6 +10,8 @@ export const orderTranslations = {
   noStepsConfiguredDesc: "Acest pachet nu are încă pași configurați. Te rugăm să contactezi suportul sau să alegi un pachet diferit.",
   selectYourPackage: "Selectează pachetul tău",
   selectOption: "Selectează o opțiune",
+  selected: "Selectat",
+  more: "mai multe",
   completeRequiredFields: "Te rugăm să completezi toate câmpurile obligatorii",
   completeRequiredFieldsDesc: "Asigură-te că toate câmpurile obligatorii sunt completate înainte de a continua.",
   somethingWentWrong: "Ceva nu a mers bine",
@@ -38,4 +40,8 @@ export const orderTranslations = {
   orderErrorMessage: "A apărut o eroare",
   needHelp: "Ai nevoie de ajutor?",
   mondayToFriday: "Luni - Vineri, 9:00 - 18:00",
+  popular: "Popular",
+  premium: "Premium",
+  new: "Nou",
+  gift: "Cadou",
 };

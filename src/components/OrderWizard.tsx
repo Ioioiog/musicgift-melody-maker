@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import FormFieldRenderer from './order/FormFieldRenderer';
 import StepIndicator from './order/StepIndicator';
 import OrderSummary from './order/OrderSummary';
+import PackageSelectionStep from './order/PackageSelectionStep';
 import { getPackagePrice } from '@/utils/pricing';
 
 interface OrderFormData {
@@ -20,6 +21,7 @@ interface OrderFormData {
   fullName?: string;
   recipientName?: string;
   occasion?: string;
+  package?: string;
   [key: string]: any;
 }
 
@@ -38,25 +40,31 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const { currency } = useCurrency();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
-  const { data: steps = [], isLoading: isStepsLoading } = usePackageSteps(formData.package as string);
-  const totalSteps = steps?.length || 0;
-
-  // Derive selected package from form data
+  
+  // Get package-specific steps only when a package is selected
   const selectedPackage = formData.package as string;
+  const { data: packageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
+  
+  // Total steps = 1 (package selection) + package-specific steps
+  const totalSteps = 1 + (packageSteps?.length || 0);
 
   // Find the selected package data
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
 
   useEffect(() => {
-    if (packages.length > 0 && !formData.package) {
-      // Set default package if none selected, or use preselected
-      const packageToSet = preselectedPackage || packages[0].value;
-      setFormData(prev => ({ ...prev, package: packageToSet }));
+    if (preselectedPackage && packages.length > 0) {
+      // If there's a preselected package, set it and skip to step 1
+      setFormData(prev => ({ ...prev, package: preselectedPackage }));
+      setCurrentStep(1);
     }
-  }, [packages, formData.package, preselectedPackage]);
+  }, [packages, preselectedPackage]);
 
   const handleNext = () => {
-    if (currentStep < totalSteps - 1) {
+    if (currentStep === 0) {
+      // Moving from package selection to first package step
+      if (!formData.package) return;
+      setCurrentStep(1);
+    } else if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -69,6 +77,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handlePackageSelect = (packageValue: string) => {
+    // Clear package-specific data when changing package
+    const newFormData = { package: packageValue };
+    setFormData(newFormData);
+    setSelectedAddons([]);
+    setAddonFieldValues({});
   };
 
   const handleAddonChange = (addonId: string, checked: boolean) => {
@@ -133,19 +149,25 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
         if (error) {
           console.error('Error inserting order:', error);
-          // Handle error (e.g., show an error message)
         } else {
           console.log('Order inserted successfully:', data);
-          // Handle success (e.g., redirect to a success page)
         }
       } catch (error) {
         console.error('An unexpected error occurred:', error);
-        // Handle unexpected error
       }
     }
   };
 
-  const currentStepData = steps?.[currentStep];
+  // Get current step data (for package-specific steps)
+  const currentPackageStepIndex = currentStep - 1;
+  const currentStepData = currentStep > 0 ? packageSteps?.[currentPackageStepIndex] : null;
+
+  const canProceed = () => {
+    if (currentStep === 0) {
+      return !!formData.package;
+    }
+    return true; // Add validation logic for other steps if needed
+  };
 
   return (
     <div className="container mx-auto py-8">
@@ -164,16 +186,21 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           </div>
 
           <AnimatePresence initial={false} mode="wait">
-            {currentStepData && (
-              <motion.div
-                key={currentStep}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="space-y-4">
-                  {currentStepData.fields.map(field => (
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="space-y-4">
+                {currentStep === 0 ? (
+                  <PackageSelectionStep
+                    selectedPackage={formData.package}
+                    onPackageSelect={handlePackageSelect}
+                  />
+                ) : currentStepData ? (
+                  currentStepData.fields.map(field => (
                     <FormFieldRenderer
                       key={field.id}
                       field={field}
@@ -186,10 +213,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                       onAddonFieldChange={handleAddonFieldChange}
                       selectedPackage={selectedPackage}
                     />
-                  ))}
-                </div>
-              </motion.div>
-            )}
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">{t('loadingSteps')}</p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
           </AnimatePresence>
 
           <div className="flex justify-between mt-6">
@@ -203,7 +234,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
             </Button>
             <Button
               onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
-              disabled={isStepsLoading}
+              disabled={!canProceed() || (currentStep > 0 && isStepsLoading)}
             >
               {currentStep === totalSteps - 1 ? t('submitOrder') : t('next')}
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -212,14 +243,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         </CardContent>
       </Card>
 
-      {/* Order Summary */}
-      <div className="mt-8">
-        <OrderSummary
-          selectedPackage={selectedPackage}
-          selectedAddons={selectedAddons}
-          giftCard={giftCard}
-        />
-      </div>
+      {/* Order Summary - only show when package is selected */}
+      {selectedPackage && (
+        <div className="mt-8">
+          <OrderSummary
+            selectedPackage={selectedPackage}
+            selectedAddons={selectedAddons}
+            giftCard={giftCard}
+          />
+        </div>
+      )}
     </div>
   );
 };

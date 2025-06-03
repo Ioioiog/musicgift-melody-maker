@@ -10,6 +10,8 @@ export const orderTranslations = {
   noStepsConfiguredDesc: "Dieses Paket hat noch keine konfigurierten Schritte. Bitte kontaktieren Sie den Support oder wählen Sie ein anderes Paket.",
   selectYourPackage: "Wählen Sie Ihr Paket",
   selectOption: "Option auswählen",
+  selected: "Ausgewählt",
+  more: "mehr",
   completeRequiredFields: "Bitte füllen Sie alle Pflichtfelder aus",
   completeRequiredFieldsDesc: "Stellen Sie sicher, dass alle Pflichtfelder ausgefüllt sind, bevor Sie fortfahren.",
   somethingWentWrong: "Etwas ist schief gelaufen",
@@ -38,4 +40,8 @@ export const orderTranslations = {
   orderErrorMessage: "Ein Fehler ist aufgetreten",
   needHelp: "Brauchen Sie Hilfe?",
   mondayToFriday: "Montag - Freitag, 9:00 - 18:00",
+  popular: "Beliebt",
+  premium: "Premium",
+  new: "Neu",
+  gift: "Geschenk",
 };
