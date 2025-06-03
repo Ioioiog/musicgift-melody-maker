@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Check, Clock, Gift } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -51,6 +52,27 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-2">{t('selectYourPackage')}</h2>
         <p className="text-gray-600">{t('choosePackage')}</p>
+      </div>
+
+      {/* Package Select Dropdown */}
+      <div className="max-w-md mx-auto">
+        <Select value={selectedPackage} onValueChange={onPackageSelect}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder={t('selectOption')} />
+          </SelectTrigger>
+          <SelectContent>
+            {packages.map((pkg) => (
+              <SelectItem key={pkg.value} value={pkg.value}>
+                <div className="flex items-center justify-between w-full">
+                  <span>{t(pkg.label_key)}</span>
+                  <span className="ml-2 text-purple-600 font-semibold">
+                    {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg, currency)}
+                  </span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
