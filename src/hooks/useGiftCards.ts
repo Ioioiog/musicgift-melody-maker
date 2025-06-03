@@ -124,6 +124,37 @@ export const useUpdateGiftCardDesign = () => {
   });
 };
 
+export const useDeleteGiftCardDesign = () => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('gift_card_designs')
+        .update({ is_active: false })
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['gift-card-designs'] });
+      toast({
+        title: "Design Deleted",
+        description: "Gift card design has been deleted successfully!",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to delete gift card design. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Gift card design deletion error:", error);
+    },
+  });
+};
+
 export const useCreateGiftCard = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();

@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Eye } from "lucide-react";
-import { useGiftCardDesigns } from "@/hooks/useGiftCards";
+import { useGiftCardDesigns, useDeleteGiftCardDesign } from "@/hooks/useGiftCards";
 import { ResponsiveTable } from "@/components/ui/responsive-table";
 import { TableCell } from "@/components/ui/table";
 import GiftCardDesignForm from "./GiftCardDesignForm";
@@ -15,6 +14,7 @@ const GiftCardDesignsSection = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingDesign, setEditingDesign] = useState(null);
   const { data: designs = [], isLoading } = useGiftCardDesigns();
+  const deleteDesignMutation = useDeleteGiftCardDesign();
 
   const handleEdit = (design: any) => {
     setEditingDesign(design);
@@ -27,8 +27,12 @@ const GiftCardDesignsSection = () => {
   };
 
   const handleDelete = async (designId: string) => {
-    // TODO: Implement delete functionality
-    console.log('Delete design:', designId);
+    await deleteDesignMutation.mutateAsync(designId);
+  };
+
+  const handleFormSuccess = () => {
+    setIsFormOpen(false);
+    setEditingDesign(null);
   };
 
   const renderDesktopRow = (design: any, index: number) => (
@@ -173,7 +177,7 @@ const GiftCardDesignsSection = () => {
               </DialogHeader>
               <GiftCardDesignForm 
                 design={editingDesign}
-                onSuccess={() => setIsFormOpen(false)}
+                onSuccess={handleFormSuccess}
               />
             </DialogContent>
           </Dialog>
