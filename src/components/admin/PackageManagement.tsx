@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -102,9 +101,6 @@ const PackageManagement = () => {
                                 {pkg.tag}
                               </Badge>
                             )}
-                            {pkg.tags?.map((tag, index) => (
-                              <Badge key={index} variant="secondary">{tag.tag_type}</Badge>
-                            ))}
                           </div>
                         </div>
                       </div>
