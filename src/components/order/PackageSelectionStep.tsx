@@ -85,11 +85,9 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                     </div>
                   </div>
                   <div className="text-right">
-                    {selectedPackageData.value !== 'gift' && (
-                      <div className="text-lg font-bold text-purple-600">
-                        {currency === 'EUR' ? '€1' : '1 RON'}
-                      </div>
-                    )}
+                    <div className="text-lg font-bold text-purple-600">
+                      {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
+                    </div>
                     <div className="flex items-center gap-1 text-sm text-gray-500">
                       <Clock className="w-3 h-3" />
                       {t(selectedPackageData.delivery_time_key)}
@@ -130,11 +128,9 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                     </div>
                   </div>
                   <div className="text-right ml-4 shrink-0">
-                    {pkg.value !== 'gift' && (
-                      <div className="text-lg font-bold text-purple-600">
-                        {currency === 'EUR' ? '€1' : '1 RON'}
-                      </div>
-                    )}
+                    <div className="text-lg font-bold text-purple-600">
+                      {currency === 'EUR' ? '€' : ''}{getPackagePrice(pkg, currency)}{currency === 'RON' ? ' RON' : ''}
+                    </div>
                     {selectedPackage === pkg.value && (
                       <div className="flex items-center gap-1 text-green-600 text-sm mt-1">
                         <Check className="w-3 h-3" />
@@ -169,11 +165,9 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                   </div>
                 </div>
                 <div className="text-right">
-                  {selectedPackageData.value !== 'gift' && (
-                    <div className="text-2xl font-bold text-purple-600">
-                      {currency === 'EUR' ? '€1' : '1 RON'}
-                    </div>
-                  )}
+                  <div className="text-2xl font-bold text-purple-600">
+                    {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
+                  </div>
                   {selectedPackageData.tag && (
                     <Badge className={`${getTagColor(selectedPackageData.tag)} mt-2 inline-flex`}>
                       <div className="flex items-center gap-1">
