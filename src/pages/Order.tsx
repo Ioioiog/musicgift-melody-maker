@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
@@ -36,11 +37,11 @@ const Order = () => {
   useEffect(() => {
     if (giftCardCode && giftCard) {
       toast({
-        title: "Gift Card Applied",
-        description: `Gift card ${giftCardCode} is ready to be used for your order.`,
+        title: t('giftCardApplied'),
+        description: t('giftCardAppliedDesc', `Gift card ${giftCardCode} is ready to be used for your order.`),
       });
     }
-  }, [giftCardCode, giftCard, toast]);
+  }, [giftCardCode, giftCard, toast, t]);
 
   const calculateTotalPrice = (packageValue: string, selectedAddons: string[]) => {
     const packageData = packages.find(pkg => pkg.value === packageValue);
@@ -134,8 +135,8 @@ const Order = () => {
 
       // Show success message
       toast({
-        title: t('orderSuccess') || 'Comandă creată cu succes',
-        description: t('orderSuccessMessage') || `Comanda ta a fost creată cu succes. ID: ${savedOrder.id.slice(0, 8)}...`,
+        title: t('orderSuccess'),
+        description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${savedOrder.id.slice(0, 8)}...`),
         variant: "default"
       });
 
@@ -148,8 +149,8 @@ const Order = () => {
     } catch (error) {
       console.error("Error saving order:", error);
       toast({
-        title: t('orderError') || 'Eroare',
-        description: error.message || t('orderErrorMessage') || 'A apărut o eroare la salvarea comenzii',
+        title: t('orderError'),
+        description: error.message || t('orderErrorMessage'),
         variant: "destructive"
       });
     }
@@ -166,7 +167,7 @@ const Order = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading gift card...</p>
+          <p className="text-gray-600">{t('loadingGiftCard')}</p>
         </div>
       </div>
     );

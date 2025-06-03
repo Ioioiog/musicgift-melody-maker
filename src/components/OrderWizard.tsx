@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -151,10 +152,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       <Card className="bg-white/90 backdrop-blur-sm">
         <CardHeader className="pb-2 pt-6">
           <CardTitle className="text-2xl font-bold">
-            {t('orderDetails', 'Detalii Comandă')}
+            {t('orderDetails')}
           </CardTitle>
           <p className="text-gray-500">
-            {t('completeAllSteps', 'Completează toți pașii pentru a finaliza comanda.')}
+            {t('completeAllSteps')}
           </p>
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
@@ -198,13 +199,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
               disabled={currentStep === 0}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              {t('previous', 'Înapoi')}
+              {t('previous')}
             </Button>
             <Button
               onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
               disabled={isStepsLoading}
             >
-              {currentStep === totalSteps - 1 ? t('submitOrder', 'Trimite Comanda') : t('next', 'Înainte')}
+              {currentStep === totalSteps - 1 ? t('submitOrder') : t('next')}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>

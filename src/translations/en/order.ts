@@ -21,10 +21,17 @@ export const orderTranslations = {
   professionalQuality: "Professional Quality",
   previous: "Previous",
   continue: "Continue",
+  next: "Next",
   submitting: "Submitting...",
   completeOrder: "Complete order",
   choosePackage: "Choose package",
   pickDate: "Pick date",
+  orderDetails: "Order Details",
+  completeAllSteps: "Complete all steps to finalize your order.",
+  submitOrder: "Submit Order",
+  loadingGiftCard: "Loading gift card...",
+  giftCardApplied: "Gift Card Applied",
+  giftCardAppliedDesc: "Gift card is ready to be used for your order.",
   
   // Toast messages
   orderSuccess: "Order created",

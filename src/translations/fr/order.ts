@@ -21,10 +21,17 @@ export const orderTranslations = {
   professionalQuality: "Qualité professionnelle",
   previous: "Précédent",
   continue: "Continuer",
+  next: "Suivant",
   submitting: "Envoi en cours...",
   completeOrder: "Finaliser la commande",
   choosePackage: "Choisir le forfait",
   pickDate: "Choisir la date",
+  orderDetails: "Détails de la commande",
+  completeAllSteps: "Complétez toutes les étapes pour finaliser votre commande.",
+  submitOrder: "Soumettre la commande",
+  loadingGiftCard: "Chargement de la carte cadeau...",
+  giftCardApplied: "Carte cadeau appliquée",
+  giftCardAppliedDesc: "La carte cadeau est prête à être utilisée pour votre commande.",
   
   // Toast messages
   orderSuccess: "Commande créée",
