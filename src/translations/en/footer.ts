@@ -25,4 +25,5 @@ export const footerTranslations = {
   consumerProtection: "Consumer Protection",
   onlineDisputeResolution: "Online Dispute Resolution",
   paymentPartners: "Payment Partners",
+  businessPartners: "Business Partners",
 };

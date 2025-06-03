@@ -21,4 +21,5 @@ export const footerTranslations = {
   consumerProtection: "Ochrona konsumentów",
   onlineDisputeResolution: "Internetowe rozwiązywanie sporów",
   paymentPartners: "Partnerzy płatności",
+  businessPartners: "Partnerzy biznesowi",
 };

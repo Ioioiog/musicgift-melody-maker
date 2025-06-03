@@ -7,9 +7,24 @@ const LegalCompliance = () => {
   const { t } = useLanguage();
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-      {/* Registered Business Section - Now empty, could be used for other content */}
-      
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8">
+      {/* Business Partners Section */}
+      <div className="space-y-3">
+        <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider text-center md:text-left">
+          {t('businessPartners')}
+        </h4>
+        <div className="space-y-3">
+          <a href="#" target="_blank" rel="noopener noreferrer" className="block bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-3 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
+            <img src="/lovable-uploads/318e18fe-b529-4525-8ddf-74bb1d3a3962.png" alt="Billionaire Boys Club" className="max-w-[160px] w-full h-auto mx-auto hover:opacity-90 transition" />
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" className="block bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-3 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
+            <img src="/lovable-uploads/2db89d5c-d0a3-4a0e-b17a-4969d3f1164f.png" alt="MG News" className="max-w-[160px] w-full h-auto mx-auto hover:opacity-90 transition" />
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" className="block bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-3 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
+            <img src="/lovable-uploads/e48515de-2c58-4a30-819d-fa1862f6373f.png" alt="Evo News" className="max-w-[160px] w-full h-auto mx-auto hover:opacity-90 transition" />
+          </a>
+        </div>
+      </div>
 
       {/* ANPC Consumer Protection */}
       <div className="space-y-3">
@@ -42,6 +57,11 @@ const LegalCompliance = () => {
             <NTPLogo color="#ffffff" version="orizontal" secret="152227" />
           </div>
         </div>
+      </div>
+
+      {/* Empty fourth column for future use */}
+      <div className="space-y-3">
+        {/* This column can be used for additional partners or content in the future */}
       </div>
     </div>
   );
