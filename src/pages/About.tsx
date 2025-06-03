@@ -4,31 +4,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
-
 const About = () => {
-  const { t } = useLanguage();
-
-  return (
-    <div className="min-h-screen">
+  const {
+    t
+  } = useLanguage();
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Enhanced Hero Section with Purple Musical Background, Our Story Content and MusicGift Details */}
       <section className="py-20 text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/30"></div>
         
         {/* Floating Musical Notes */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-10 left-10 text-4xl opacity-30" style={{
-            transform: "translateX(35.2px) translateY(-17.6px) rotate(296.64deg)"
-          }}>♪</div>
+          transform: "translateX(35.2px) translateY(-17.6px) rotate(296.64deg)"
+        }}>♪</div>
           <div className="absolute bottom-10 right-10 text-6xl opacity-20" style={{
-            transform: "translateX(-69.12px) translateY(34.56px) rotate(-77.76deg)"
-          }}>🎵</div>
+          transform: "translateX(-69.12px) translateY(34.56px) rotate(-77.76deg)"
+        }}>🎵</div>
         </div>
         
         <div className="max-w-6xl mx-auto px-4 relative z-10">
@@ -120,20 +119,47 @@ const About = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
             {/* Left Column: Our Story */}
             <div>
-              <motion.div className="mb-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}>
+              <motion.div className="mb-8" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 0.4
+            }}>
                 <h2 className="text-3xl font-bold text-white mb-6">{t('ourStory')}</h2>
               </motion.div>
 
               <div className="space-y-6">
                 {/* Main Philosophy */}
-                <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>
+                <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 0.5
+              }}>
                   <p className="text-white/90 leading-relaxed">
                     {t('aboutMainPhilosophy')}
                   </p>
                 </motion.div>
 
                 {/* Company Story */}
-                <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.6 }}>
+                <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 0.6
+              }}>
                   <p className="text-white/90 leading-relaxed mb-4">
                     {t('aboutCompanyStory1')}
                   </p>
@@ -146,13 +172,31 @@ const About = () => {
 
             {/* Right Column: Our Creative Team */}
             <div>
-              <motion.div className="mb-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.7 }}>
+              <motion.div className="mb-8" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 0.7
+            }}>
                 <h3 className="text-3xl font-bold text-white mb-6">{t('ourCreativeTeam')}</h3>
               </motion.div>
               
               <div className="space-y-6">
                 {/* Mihai Gruia Card */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }}>
+                <motion.div initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 0.8
+              }}>
                   <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
@@ -169,7 +213,16 @@ const About = () => {
                 </motion.div>
 
                 {/* Mango Records Card */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.9 }}>
+                <motion.div initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 0.9
+              }}>
                   <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
@@ -186,7 +239,16 @@ const About = () => {
                 </motion.div>
 
                 {/* DOMG Studio Card */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0 }}>
+                <motion.div initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 1.0
+              }}>
                   <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
@@ -203,12 +265,21 @@ const About = () => {
                 </motion.div>
 
                 {/* Do Music for Good Band Card */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.1 }}>
+                <motion.div initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 1.1
+              }}>
                   <Card className="group bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden">
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
                         <div className="w-24 h-24 group-hover:w-32 group-hover:h-32 rounded-full mx-auto mb-3 overflow-hidden transition-all duration-300">
-                          <img src="/lovable-uploads/a9f2d1c2-3e76-4ff5-a071-c522efb3cd5d.png" alt="Do Music for Good Band" className="w-full h-full object-cover" />
+                          <img alt="Do Music for Good Band" className="w-full h-full object-cover" src="/lovable-uploads/147370e9-f8dd-43f1-8124-9d8f3a541805.png" />
                         </div>
                         <h4 className="text-lg group-hover:text-xl font-bold text-white mb-2 transition-all duration-300">Do Music for Good Band</h4>
                       </div>
@@ -225,8 +296,6 @@ const About = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
