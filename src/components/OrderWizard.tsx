@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePackages, useAddons, usePackageSteps } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import FormFieldRenderer from './order/FormFieldRenderer';
 import StepIndicator from './order/StepIndicator';
@@ -41,6 +41,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const { t } = useLanguage();
   const { currency } = useCurrency();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
   
@@ -56,11 +57,17 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
   useEffect(() => {
     if (preselectedPackage && packages.length > 0) {
+      // If preselected package is gift, redirect to gift page
+      if (preselectedPackage === 'gift') {
+        navigate('/gift');
+        return;
+      }
+      
       // If there's a preselected package, set it and skip to step 1
       setFormData(prev => ({ ...prev, package: preselectedPackage }));
       setCurrentStep(1);
     }
-  }, [packages, preselectedPackage]);
+  }, [packages, preselectedPackage, navigate]);
 
   const handleNext = () => {
     if (currentStep === 0) {
@@ -83,6 +90,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   };
 
   const handlePackageSelect = (packageValue: string) => {
+    // If gift package is selected, redirect to gift page
+    if (packageValue === 'gift') {
+      navigate('/gift');
+      return;
+    }
+    
     // Clear package-specific data when changing package
     const newFormData = { package: packageValue };
     setFormData(newFormData);
