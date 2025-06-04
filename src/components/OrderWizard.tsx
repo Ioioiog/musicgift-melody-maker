@@ -163,6 +163,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         throw new Error('Please select a payment method before proceeding');
       }
 
+      console.log(`🎯 Selected payment provider: "${selectedPaymentProvider}"`);
+
       // Create order with selected payment provider
       const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
       const package_name = selectedPackageData?.label_key;
@@ -184,32 +186,27 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         currency: currency
       };
 
-      console.log(`🎯 Payment provider selected: ${selectedPaymentProvider}`);
       console.log(`📦 Order data prepared:`, orderData);
 
-      // Determine edge function based on payment provider
-      let edgeFunctionName;
-      let paymentProviderLabel;
+      // Determine edge function based on payment provider with explicit validation
+      let edgeFunctionName: string;
+      let paymentProviderLabel: string;
       
-      switch (selectedPaymentProvider) {
-        case 'stripe':
-          edgeFunctionName = 'stripe-create-payment';
-          paymentProviderLabel = 'Stripe';
-          console.log('🟣 Using Stripe payment gateway');
-          break;
-        case 'revolut':
-          edgeFunctionName = 'revolut-create-payment';
-          paymentProviderLabel = 'Revolut';
-          console.log('🟠 Using Revolut payment gateway');
-          break;
-        case 'smartbill':
-          edgeFunctionName = 'smartbill-create-invoice';
-          paymentProviderLabel = 'SmartBill';
-          console.log('🔵 Using SmartBill payment gateway');
-          break;
-        default:
-          console.error(`❌ Unsupported payment provider: ${selectedPaymentProvider}`);
-          throw new Error(`Payment method "${selectedPaymentProvider}" is not supported. Please select a valid payment method.`);
+      if (selectedPaymentProvider === 'stripe') {
+        edgeFunctionName = 'stripe-create-payment';
+        paymentProviderLabel = 'Stripe';
+        console.log('🟣 Using Stripe payment gateway');
+      } else if (selectedPaymentProvider === 'revolut') {
+        edgeFunctionName = 'revolut-create-payment';
+        paymentProviderLabel = 'Revolut';
+        console.log('🟠 Using Revolut payment gateway');
+      } else if (selectedPaymentProvider === 'smartbill') {
+        edgeFunctionName = 'smartbill-create-invoice';
+        paymentProviderLabel = 'SmartBill';
+        console.log('🔵 Using SmartBill payment gateway');
+      } else {
+        console.error(`❌ Unsupported payment provider: "${selectedPaymentProvider}"`);
+        throw new Error(`Payment method "${selectedPaymentProvider}" is not supported. Please select a valid payment method.`);
       }
 
       console.log(`🚀 Calling edge function: ${edgeFunctionName} for ${paymentProviderLabel}`);
