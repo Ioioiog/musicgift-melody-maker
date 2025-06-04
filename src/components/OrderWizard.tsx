@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ArrowRight, CheckCircle, Clock, Gift } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePackages, useAddons, usePackageSteps } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -15,12 +13,14 @@ import StepIndicator from './order/StepIndicator';
 import OrderSummary from './order/OrderSummary';
 import PackageSelectionStep from './order/PackageSelectionStep';
 import PaymentProviderSelection from './order/PaymentProviderSelection';
+import EmbeddedStripeCheckout from './order/EmbeddedStripeCheckout';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useToast } from '@/hooks/use-toast';
 
 interface OrderFormData {
   email?: string;
   fullName?: string;
+  phone?: string;
   recipientName?: string;
   occasion?: string;
   package?: string;
@@ -44,8 +44,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const [formData, setFormData] = useState<OrderFormData>({});
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [addonFieldValues, setAddonFieldValues] = useState<Record<string, any>>({});
-  const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('smartbill');
+  const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('stripe');
+  const [selectedCheckoutMode, setSelectedCheckoutMode] = useState<string>('hosted');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>('');
+  const [showEmbeddedCheckout, setShowEmbeddedCheckout] = useState(false);
   const { t } = useLanguage();
   const { currency } = useCurrency();
   const { toast } = useToast();
@@ -53,25 +56,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
   
-  // Get package-specific steps only when a package is selected
   const selectedPackage = formData.package as string;
   const { data: packageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
   
-  // Total steps = 1 (package selection) + package-specific steps + 1 (payment provider selection)
   const totalSteps = 1 + (packageSteps?.length || 0) + 1;
-
-  // Find the selected package data
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
 
   useEffect(() => {
     if (preselectedPackage && packages.length > 0) {
-      // If preselected package is gift, redirect to gift page
       if (preselectedPackage === 'gift') {
         navigate('/gift');
         return;
       }
       
-      // If there's a preselected package, set it and skip to step 1
       setFormData(prev => ({ ...prev, package: preselectedPackage }));
       setCurrentStep(1);
     }
@@ -79,7 +76,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
   const handleNext = () => {
     if (currentStep === 0) {
-      // Moving from package selection to first package step
       if (!formData.package) return;
       setCurrentStep(1);
     } else if (currentStep < totalSteps - 1) {
@@ -88,6 +84,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   };
 
   const handlePrev = () => {
+    if (showEmbeddedCheckout) {
+      setShowEmbeddedCheckout(false);
+      return;
+    }
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
@@ -98,13 +98,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   };
 
   const handlePackageSelect = (packageValue: string) => {
-    // If gift package is selected, redirect to gift page
     if (packageValue === 'gift') {
       navigate('/gift');
       return;
     }
     
-    // Clear package-specific data when changing package
     const newFormData = { package: packageValue };
     setFormData(newFormData);
     setSelectedAddons([]);
@@ -138,27 +136,18 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
   const validateFormData = () => {
     console.log('🔍 Enhanced Form Data Validation Starting...');
-    console.log('📝 Current formData:', JSON.stringify(formData, null, 2));
-    console.log('🎯 Selected package:', selectedPackage);
-    console.log('🛒 Selected addons:', selectedAddons);
-    console.log('💰 Total price:', totalPrice);
     
-    // Check if formData exists and is an object
     if (!formData || typeof formData !== 'object') {
       console.error('❌ Form data is not a valid object:', formData);
       throw new Error('Form data is missing or invalid');
     }
 
-    // Check if we have a selected package
     if (!selectedPackage || selectedPackage === '') {
       console.error('❌ No package selected');
       throw new Error('Please select a package before proceeding');
     }
 
-    // Ensure we have required basic fields based on package steps
     const requiredFields = ['email', 'fullName'];
-    console.log('🔍 Checking required fields:', requiredFields);
-    
     const missingFields = requiredFields.filter(field => {
       const value = formData[field];
       const isEmpty = !value || value === '' || (typeof value === 'string' && value.trim() === '');
@@ -173,43 +162,32 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
     }
 
-    // Validate email format
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       console.error('❌ Invalid email format:', formData.email);
       throw new Error('Please enter a valid email address');
     }
 
-    // Validate fullName
     if (formData.fullName && formData.fullName.trim().length < 2) {
       console.error('❌ Full name too short:', formData.fullName);
       throw new Error('Please enter a valid full name (at least 2 characters)');
     }
 
-    // Validate total price
     if (totalPrice === null || totalPrice === undefined || totalPrice < 0) {
       console.error('❌ Invalid total price:', totalPrice);
       throw new Error('Invalid total price calculated');
     }
 
     console.log('✅ Enhanced form data validation passed');
-    console.log('📋 Final validated data structure:');
-    console.log('  - Email:', formData.email);
-    console.log('  - Full Name:', formData.fullName);
-    console.log('  - Package:', selectedPackage);
-    console.log('  - Total Price:', totalPrice);
-    console.log('  - Currency:', currency);
-    console.log('  - Payment Provider:', selectedPaymentProvider);
-    
     return true;
   };
 
   const prepareOrderData = () => {
     console.log('🏗️ Preparing enhanced order data...');
     
-    // Ensure form_data is properly structured and contains all required fields
     const structuredFormData = {
       email: (formData.email || '').trim(),
       fullName: (formData.fullName || '').trim(),
+      phone: (formData.phone || '').trim(),
       recipientName: (formData.recipientName || '').trim(),
       occasion: (formData.occasion || '').trim(),
       invoiceType: formData.invoiceType || '',
@@ -218,12 +196,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       registrationNumber: (formData.registrationNumber || '').trim(),
       companyAddress: (formData.companyAddress || '').trim(),
       representativeName: (formData.representativeName || '').trim(),
-      ...formData // Include any additional fields
+      ...formData
     };
 
-    console.log('📦 Enhanced structured form data:', JSON.stringify(structuredFormData, null, 2));
-
-    // Find package details
     const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
     
     if (!selectedPackageData) {
@@ -240,7 +215,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       form_data: structuredFormData,
       selected_addons: selectedAddons,
       addon_field_values: addonFieldValues,
-      total_price: totalPrice * 100, // Convert to cents for payment processing
+      total_price: totalPrice * 100,
       package_value: selectedPackage,
       package_name: package_name,
       package_price: package_price,
@@ -250,30 +225,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       payment_status: 'pending',
       currency: currency,
       payment_provider: selectedPaymentProvider,
-      // Enhanced metadata
       order_created_at: new Date().toISOString(),
       user_agent: navigator.userAgent,
       referrer: document.referrer || 'direct'
     };
 
     console.log('📦 Enhanced order data prepared:', JSON.stringify(orderData, null, 2));
-
-    // Final validation of orderData structure
-    if (!orderData.form_data || typeof orderData.form_data !== 'object') {
-      console.error('❌ Order data form_data is invalid:', orderData.form_data);
-      throw new Error('Order data structure is invalid');
-    }
-
-    // Validate critical fields in form_data
-    const criticalFields = ['email', 'fullName'];
-    for (const field of criticalFields) {
-      if (!orderData.form_data[field] || orderData.form_data[field] === '') {
-        console.error(`❌ Critical field missing in order data: ${field}`);
-        throw new Error(`Order data is missing required field: ${field}`);
-      }
-    }
-
-    console.log('✅ Enhanced order data validation passed');
     return orderData;
   };
 
@@ -284,9 +241,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     
     try {
       console.log(`🔄 Starting enhanced payment process with provider: ${selectedPaymentProvider}`);
-      console.log(`💰 Total price: ${totalPrice} ${currency}`);
       
-      // Enhanced validation
       validateFormData();
       
       if (onComplete) {
@@ -301,107 +256,68 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         return;
       }
 
-      // Validate that we have a payment provider selected
       if (!selectedPaymentProvider) {
-        console.error('❌ No payment provider selected');
         throw new Error('Please select a payment method before proceeding');
       }
 
-      console.log(`🎯 Selected payment provider: "${selectedPaymentProvider}"`);
-
-      // Prepare enhanced order data
       const orderData = prepareOrderData();
 
-      // Determine edge function based on payment provider with explicit validation
-      let edgeFunctionName: string;
-      let paymentProviderLabel: string;
-      
+      // For Stripe, handle both embedded and hosted modes
       if (selectedPaymentProvider === 'stripe') {
-        edgeFunctionName = 'stripe-create-payment';
-        paymentProviderLabel = 'Stripe';
-        console.log('🟣 Using enhanced Stripe payment gateway');
-      } else if (selectedPaymentProvider === 'revolut') {
-        edgeFunctionName = 'revolut-create-payment';
-        paymentProviderLabel = 'Revolut';
-        console.log('🟠 Using Revolut payment gateway');
-      } else if (selectedPaymentProvider === 'smartbill') {
-        edgeFunctionName = 'smartbill-create-invoice';
-        paymentProviderLabel = 'SmartBill';
-        console.log('🔵 Using SmartBill payment gateway');
-      } else {
-        console.error(`❌ Unsupported payment provider: "${selectedPaymentProvider}"`);
-        throw new Error(`Payment method "${selectedPaymentProvider}" is not supported. Please select a valid payment method.`);
-      }
-
-      console.log(`🚀 Calling enhanced edge function: ${edgeFunctionName} for ${paymentProviderLabel}`);
-
-      // Call the appropriate payment provider edge function
-      const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke(edgeFunctionName, {
-        body: {
-          orderData,
-          returnUrl: `${window.location.origin}/payment/success`
-        }
-      });
-
-      console.log(`📨 Enhanced ${paymentProviderLabel} edge function response:`, { data: paymentResponse, error: paymentError });
-
-      if (paymentError) {
-        console.error(`❌ ${paymentProviderLabel} edge function error:`, paymentError);
-        throw new Error(`Failed to initialize payment with ${paymentProviderLabel}: ${paymentError.message}`);
-      }
-
-      if (!paymentResponse) {
-        console.error(`❌ No response from ${paymentProviderLabel} edge function`);
-        throw new Error(`No response received from ${paymentProviderLabel} payment service`);
-      }
-
-      console.log(`✅ Enhanced ${paymentProviderLabel} response received:`, paymentResponse);
-
-      // Validate response structure
-      if (!paymentResponse.success) {
-        console.error(`❌ ${paymentProviderLabel} operation failed:`, paymentResponse);
-        const errorMessage = paymentResponse.error || paymentResponse.message || 'Payment initialization failed';
-        throw new Error(`${paymentProviderLabel} payment failed: ${errorMessage}`);
-      }
-
-      // Validate payment URL for Stripe and Revolut
-      if ((selectedPaymentProvider === 'stripe' || selectedPaymentProvider === 'revolut') && !paymentResponse.paymentUrl) {
-        console.error(`❌ Missing payment URL from ${paymentProviderLabel}:`, paymentResponse);
-        throw new Error(`${paymentProviderLabel} did not return a payment URL. Please try again or contact support.`);
-      }
-
-      // Show enhanced success message
-      const orderIdShort = paymentResponse.orderId?.slice(0, 8) || 'Unknown';
-      toast({
-        title: t('orderSuccess'),
-        description: `Your order has been created successfully. ID: ${orderIdShort}... ${paymentResponse.expiresAt ? `Session expires in 30 minutes.` : ''}`,
-        variant: "default"
-      });
-
-      // Handle redirection based on provider
-      if (paymentResponse.paymentUrl) {
-        console.log(`🔄 Redirecting to enhanced ${paymentProviderLabel} payment:`, paymentResponse.paymentUrl);
-        console.log(`⏰ Session expires at:`, paymentResponse.expiresAt ? new Date(paymentResponse.expiresAt * 1000) : 'No expiration');
-        console.log(`💳 Available payment methods:`, paymentResponse.paymentMethods || 'Standard');
+        console.log(`🟣 Using Stripe payment gateway in ${selectedCheckoutMode} mode`);
         
-        // Validate URL before redirecting
-        try {
-          new URL(paymentResponse.paymentUrl);
-          window.location.href = paymentResponse.paymentUrl;
-        } catch (urlError) {
-          console.error(`❌ Invalid payment URL from ${paymentProviderLabel}:`, paymentResponse.paymentUrl);
-          throw new Error(`Invalid payment URL received from ${paymentProviderLabel}. Please try again or contact support.`);
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('stripe-create-payment', {
+          body: {
+            orderData,
+            returnUrl: `${window.location.origin}/payment/success`,
+            checkoutMode: selectedCheckoutMode,
+            enableLink: true
+          }
+        });
+
+        if (paymentError || !paymentResponse?.success) {
+          throw new Error(paymentResponse?.error || 'Failed to initialize Stripe payment');
+        }
+
+        if (selectedCheckoutMode === 'embedded') {
+          // Show embedded checkout
+          setStripeClientSecret(paymentResponse.clientSecret);
+          setShowEmbeddedCheckout(true);
+        } else {
+          // Redirect to hosted checkout
+          if (paymentResponse.paymentUrl) {
+            window.location.href = paymentResponse.paymentUrl;
+          } else {
+            throw new Error('No payment URL received from Stripe');
+          }
         }
       } else {
-        // If no payment needed (e.g., fully covered by gift card), show success
-        console.log('✅ Enhanced order completed successfully without payment redirection needed');
-        navigate('/payment/success?orderId=' + paymentResponse.orderId);
+        // Handle other payment providers as before
+        let edgeFunctionName = selectedPaymentProvider === 'revolut' 
+          ? 'revolut-create-payment' 
+          : 'smartbill-create-invoice';
+
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke(edgeFunctionName, {
+          body: {
+            orderData,
+            returnUrl: `${window.location.origin}/payment/success`
+          }
+        });
+
+        if (paymentError || !paymentResponse?.success) {
+          throw new Error(paymentResponse?.error || `Failed to initialize ${selectedPaymentProvider} payment`);
+        }
+
+        if (paymentResponse.paymentUrl) {
+          window.location.href = paymentResponse.paymentUrl;
+        } else {
+          navigate('/payment/success?orderId=' + paymentResponse.orderId);
+        }
       }
 
     } catch (error) {
       console.error('💥 Enhanced payment processing error:', error);
       
-      // Show user-friendly error message
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       toast({
         title: t('orderError', 'Payment Error'),
@@ -413,7 +329,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     }
   };
 
-  // Get current step data (for package-specific steps)
+  const handleEmbeddedCheckoutComplete = (sessionId: string) => {
+    console.log('✅ Embedded checkout completed:', sessionId);
+    navigate(`/payment/success?session_id=${sessionId}`);
+  };
+
   const isPaymentStep = currentStep === totalSteps - 1;
   const currentPackageStepIndex = currentStep - 1;
   const currentStepData = currentStep > 0 && !isPaymentStep ? packageSteps?.[currentPackageStepIndex] : null;
@@ -425,8 +345,21 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     if (isPaymentStep) {
       return !!selectedPaymentProvider;
     }
-    return true; // Add validation logic for other steps if needed
+    return true;
   };
+
+  // Show embedded checkout if enabled
+  if (showEmbeddedCheckout && stripeClientSecret) {
+    return (
+      <div className="container mx-auto py-8">
+        <EmbeddedStripeCheckout
+          clientSecret={stripeClientSecret}
+          onBack={handlePrev}
+          onComplete={handleEmbeddedCheckoutComplete}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-8">
@@ -462,6 +395,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                   <PaymentProviderSelection
                     selectedProvider={selectedPaymentProvider}
                     onProviderSelect={setSelectedPaymentProvider}
+                    selectedCheckoutMode={selectedCheckoutMode}
+                    onCheckoutModeSelect={setSelectedCheckoutMode}
                   />
                 ) : currentStepData ? (
                   currentStepData.fields.map(field => (
@@ -517,7 +452,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         </CardContent>
       </Card>
 
-      {/* Order Summary - only show when package is selected */}
       {selectedPackage && (
         <div className="mt-8">
           <OrderSummary

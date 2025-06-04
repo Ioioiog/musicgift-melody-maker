@@ -52,38 +52,20 @@ serve(async (req) => {
       );
     }
 
-    // Validate request structure with detailed logging
-    if (!requestBody || typeof requestBody !== 'object') {
-      console.error('❌ Stripe: Request body is not a valid object:', requestBody);
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Request body must be a valid object',
-          errorCode: 'invalidRequestStructure',
-          provider: 'stripe'
-        }),
-        { 
-          status: 400,
-          headers: { 
-            ...corsHeaders, 
-            'Content-Type': 'application/json' 
-          } 
-        }
-      );
-    }
-
-    const { orderData, returnUrl } = requestBody;
+    // Extract orderData and additional options from request body
+    const { orderData, returnUrl, checkoutMode = 'hosted', enableLink = true } = requestBody;
     console.log('🟣 Stripe: Extracted orderData:', JSON.stringify(orderData, null, 2));
     console.log('🟣 Stripe: Return URL:', returnUrl);
+    console.log('🟣 Stripe: Checkout mode:', checkoutMode);
 
-    // Comprehensive orderData validation
-    if (!orderData) {
-      console.error('❌ Stripe: orderData is missing from request');
+    // Validate orderData structure
+    if (!orderData || typeof orderData !== 'object') {
+      console.error('❌ Stripe: orderData is missing or invalid:', orderData);
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'orderData is required but was not provided',
-          errorCode: 'missingOrderData',
+          error: 'orderData is required and must be a valid object',
+          errorCode: 'invalidOrderData',
           provider: 'stripe'
         }),
         { 
@@ -96,32 +78,13 @@ serve(async (req) => {
       );
     }
 
-    if (typeof orderData !== 'object') {
-      console.error('❌ Stripe: orderData is not an object:', typeof orderData);
+    // Validate form_data exists
+    if (!orderData.form_data || typeof orderData.form_data !== 'object') {
+      console.error('❌ Stripe: orderData.form_data is missing or invalid:', orderData.form_data);
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'orderData must be an object',
-          errorCode: 'invalidOrderDataType',
-          provider: 'stripe'
-        }),
-        { 
-          status: 400,
-          headers: { 
-            ...corsHeaders, 
-            'Content-Type': 'application/json' 
-          } 
-        }
-      );
-    }
-
-    // Critical form_data validation with detailed error reporting
-    if (!orderData.form_data) {
-      console.error('❌ Stripe: orderData.form_data is missing:', orderData);
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'orderData.form_data is required but was not provided',
+          error: 'orderData.form_data is required and must be a valid object',
           errorCode: 'missingFormData',
           provider: 'stripe'
         }),
@@ -134,27 +97,6 @@ serve(async (req) => {
         }
       );
     }
-
-    if (typeof orderData.form_data !== 'object') {
-      console.error('❌ Stripe: orderData.form_data is not an object:', typeof orderData.form_data);
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'orderData.form_data must be an object',
-          errorCode: 'invalidFormDataType',
-          provider: 'stripe'
-        }),
-        { 
-          status: 400,
-          headers: { 
-            ...corsHeaders, 
-            'Content-Type': 'application/json' 
-          } 
-        }
-      );
-    }
-
-    console.log('🟣 Stripe: form_data contents:', JSON.stringify(orderData.form_data, null, 2));
 
     // Validate required form_data fields
     const requiredFormFields = ['email', 'fullName'];
@@ -228,7 +170,7 @@ serve(async (req) => {
 
     console.log('✅ Stripe: All validations passed, proceeding with order creation');
 
-    // Create order in database first - ensure payment_provider is set to 'stripe'
+    // Create order in database first
     const orderInsertData = {
       ...orderData,
       payment_provider: 'stripe',
@@ -268,6 +210,7 @@ serve(async (req) => {
     // Enhanced customer information
     const customerEmail = orderData.form_data.email;
     const customerName = orderData.form_data.fullName;
+    const customerPhone = orderData.form_data.phone;
 
     // Determine regional payment methods based on currency
     const paymentMethodTypes = ['card'];
@@ -283,7 +226,8 @@ serve(async (req) => {
       package_value: orderData.package_value || '',
       customer_name: customerName,
       payment_provider: 'stripe',
-      created_via: 'order_wizard'
+      created_via: 'order_wizard',
+      checkout_mode: checkoutMode
     };
 
     // Enhanced line item with better product description
@@ -324,13 +268,29 @@ serve(async (req) => {
     sessionParams.append('mode', 'payment');
     sessionParams.append('expires_at', Math.floor((Date.now() / 1000) + (30 * 60)).toString()); // 30 minutes
     
+    // Determine UI mode and URLs based on checkout mode
+    if (checkoutMode === 'embedded') {
+      sessionParams.append('ui_mode', 'embedded');
+      sessionParams.append('return_url', `${returnUrl}?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}`);
+    } else {
+      // Hosted mode (default)
+      sessionParams.append('success_url', `${returnUrl}?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}&payment_status=success`);
+      sessionParams.append('cancel_url', `${returnUrl.replace('success', 'cancel')}?order_id=${order.id}&payment_status=cancelled`);
+    }
+    
     // Customer information
     sessionParams.append('customer_email', customerEmail);
     sessionParams.append('billing_address_collection', 'required');
     
-    // Enhanced URLs with more parameters
-    sessionParams.append('success_url', `${returnUrl}?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}&payment_status=success`);
-    sessionParams.append('cancel_url', `${returnUrl.replace('success', 'cancel')}?order_id=${order.id}&payment_status=cancelled`);
+    // Enhanced customer experience features
+    if (customerPhone) {
+      sessionParams.append('phone_number_collection[enabled]', 'true');
+    }
+    
+    // Enable Link for faster checkout if requested
+    if (enableLink) {
+      sessionParams.append('payment_method_configuration', 'pmc_1234567890'); // Replace with actual PMC ID from Stripe Dashboard
+    }
     
     // Metadata
     Object.entries(sessionMetadata).forEach(([key, value]) => {
@@ -340,8 +300,18 @@ serve(async (req) => {
     // Allow promotion codes
     sessionParams.append('allow_promotion_codes', 'true');
     
-    // Automatic tax calculation (if enabled in Stripe)
+    // Automatic tax calculation (configure in Stripe Dashboard)
     sessionParams.append('automatic_tax[enabled]', 'false');
+
+    // Enhanced invoice creation for B2B customers
+    if (orderData.form_data.invoiceType === 'company') {
+      sessionParams.append('invoice_creation[enabled]', 'true');
+      sessionParams.append('invoice_creation[invoice_data][description]', `Invoice for ${orderData.package_name}`);
+      if (orderData.form_data.companyName) {
+        sessionParams.append('invoice_creation[invoice_data][custom_fields][0][name]', 'Company');
+        sessionParams.append('invoice_creation[invoice_data][custom_fields][0][value]', orderData.form_data.companyName);
+      }
+    }
 
     console.log('🟣 Stripe: Creating enhanced checkout session with params:', sessionParams.toString());
 
@@ -350,7 +320,7 @@ serve(async (req) => {
       headers: {
         'Authorization': `Bearer ${stripeSecretKey}`,
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Idempotency-Key': `order-${order.id}-${Date.now()}` // Prevent duplicate sessions
+        'Idempotency-Key': `order-${order.id}-${Date.now()}`
       },
       body: sessionParams.toString(),
     });
@@ -362,7 +332,6 @@ serve(async (req) => {
     if (!stripeResponse.ok) {
       console.error('❌ Stripe API Error:', responseText);
       
-      // Parse Stripe error for better user feedback
       let errorMessage = `Stripe API error (${stripeResponse.status})`;
       try {
         const errorData = JSON.parse(responseText);
@@ -393,13 +362,36 @@ serve(async (req) => {
     const session = JSON.parse(responseText);
     console.log('✅ Stripe: Enhanced session created successfully:', {
       id: session.id,
+      ui_mode: session.ui_mode,
       url: session.url ? 'Present' : 'Missing',
+      client_secret: session.client_secret ? 'Present' : 'Missing',
       status: session.status,
       expires_at: session.expires_at,
       payment_method_types: session.payment_method_types
     });
 
-    if (!session.url) {
+    // For embedded mode, we need client_secret instead of URL
+    if (checkoutMode === 'embedded' && !session.client_secret) {
+      console.error('❌ Stripe: No client secret for embedded checkout');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Stripe did not return a client secret for embedded checkout',
+          errorCode: 'missingClientSecret',
+          provider: 'stripe'
+        }),
+        { 
+          status: 500,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
+    }
+
+    // For hosted mode, we need URL
+    if (checkoutMode === 'hosted' && !session.url) {
       console.error('❌ Stripe: No checkout URL in session response');
       return new Response(
         JSON.stringify({
@@ -419,19 +411,26 @@ serve(async (req) => {
     }
 
     // Update order with enhanced Stripe session details
+    const updateData = {
+      stripe_session_id: session.id,
+      session_expires_at: new Date(session.expires_at * 1000).toISOString(),
+      supported_payment_methods: session.payment_method_types,
+      checkout_mode: checkoutMode
+    };
+
+    if (checkoutMode === 'embedded') {
+      updateData.stripe_client_secret = session.client_secret;
+    } else {
+      updateData.payment_url = session.url;
+    }
+
     const { error: updateError } = await supabaseClient
       .from('orders')
-      .update({
-        stripe_session_id: session.id,
-        payment_url: session.url,
-        session_expires_at: new Date(session.expires_at * 1000).toISOString(),
-        supported_payment_methods: session.payment_method_types
-      })
+      .update(updateData)
       .eq('id', order.id);
 
     if (updateError) {
       console.error('⚠️ Stripe: Error updating order with session details:', updateError);
-      // Don't throw here as the payment session was created successfully
     } else {
       console.log('✅ Stripe: Order updated with enhanced session details');
     }
@@ -439,12 +438,19 @@ serve(async (req) => {
     const successResponse = {
       success: true,
       orderId: order.id,
-      paymentUrl: session.url,
       sessionId: session.id,
       expiresAt: session.expires_at,
       paymentMethods: session.payment_method_types,
-      provider: 'stripe'
+      provider: 'stripe',
+      checkoutMode: checkoutMode
     };
+
+    // Add appropriate response data based on checkout mode
+    if (checkoutMode === 'embedded') {
+      successResponse.clientSecret = session.client_secret;
+    } else {
+      successResponse.paymentUrl = session.url;
+    }
 
     console.log('🟣 Stripe: Returning enhanced success response:', successResponse);
 
