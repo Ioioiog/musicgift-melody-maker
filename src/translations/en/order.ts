@@ -1,25 +1,26 @@
+
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
   errorLoadingSteps: "Error loading steps",
-  errorLoadingStepsDesc: "Unable to load the configuration for this package. Please try again or contact support.",
+  errorLoadingStepsDesc: "Could not load configuration for this package. Please try again or contact support.",
   chooseAnotherPackage: "Choose another package",
   tryAgain: "Try again",
   noStepsConfigured: "No steps configured",
-  noStepsConfiguredDesc: "This package doesn't have any steps configured yet. Please contact support or choose a different package.",
+  noStepsConfiguredDesc: "This package doesn't have steps configured yet. Please contact support or choose a different package.",
   selectYourPackage: "Select your package",
   selectOption: "Select an option",
   selected: "Selected",
   more: "more",
   completeRequiredFields: "Please complete all required fields",
-  completeRequiredFieldsDesc: "Make sure all required fields are filled out before proceeding.",
+  completeRequiredFieldsDesc: "Make sure all required fields are filled before continuing.",
   somethingWentWrong: "Something went wrong",
   tryAgainSupport: "Please try again or contact support if the problem persists.",
   stepPackage: "Step",
   of: "of",
   progress: "Progress",
   whatsIncluded: "What's included",
-  professionalQuality: "Professional Quality",
+  professionalQuality: "Professional quality",
   previous: "Previous",
   continue: "Continue",
   next: "Next",
@@ -33,18 +34,16 @@ export const orderTranslations = {
   loadingGiftCard: "Loading gift card...",
   giftCardApplied: "Gift Card Applied",
   giftCardAppliedDesc: "Gift card is ready to be used for your order.",
-  
-  // Toast messages
-  orderSuccess: "Order created",
-  orderSuccessMessage: "Your order has been created successfully. This is using sample data for demonstration.",
+  orderSuccess: "Order Created",
+  orderSuccessMessage: "Your order has been created successfully.",
   orderError: "Error",
-  orderErrorMessage: "An error occurred",
-  
-  // Help section
-  needHelp: "Need Help?",
+  orderErrorMessage: "An error occurred while processing your order",
+  paymentError: "Payment Error",
+  paymentFailed: "Payment Failed",
+  paymentSystemError: "Payment system error occurred",
+  paymentUnavailable: "Payment system is temporarily unavailable",
+  needHelp: "Need help?",
   mondayToFriday: "Monday - Friday, 9:00 - 18:00",
-  
-  // Package tags
   popular: "Popular",
   premium: "Premium",
   new: "New",
@@ -73,7 +72,7 @@ export const orderTranslations = {
   recordAudioMessage: "Record Audio Message",
   
   // Testimonial
-  testimonialQuote: "\"The perfect gift for music lovers! The personalized song was absolutely beautiful and made our anniversary unforgettable.\"",
+  testimonialQuote: "\"Perfect gift for music lovers! The personalized song was absolutely beautiful and made our anniversary unforgettable.\"",
   testimonialAuthor: "- Sarah M., Happy Customer",
   
   // Form field labels and placeholders
@@ -86,7 +85,7 @@ export const orderTranslations = {
   occasionLabel: "Occasion",
   occasionPlaceholder: "What's the special occasion? (e.g., birthday, anniversary, graduation)",
   specialRequestsLabel: "Special Requests",
-  specialRequestsPlaceholder: "Any special messages, memories, or themes you'd like included?",
+  specialRequestsPlaceholder: "Any special messages, memories, or themes you'd like us to include?",
   deliveryInstructionsLabel: "Delivery Instructions",
   deliveryInstructionsPlaceholder: "Any specific delivery preferences or instructions?",
   
@@ -107,7 +106,7 @@ export const orderTranslations = {
   phoneLabel: "Phone Number",
   phonePlaceholder: "Your phone number",
   birthDateLabel: "Birth Date",
-  birthDatePlaceholder: "Select your birth date",
+  birthDatePlaceholder: "Select birth date",
   genderLabel: "Gender",
   genderPlaceholder: "Select gender",
   relationshipLabel: "Relationship to Recipient",
@@ -121,7 +120,7 @@ export const orderTranslations = {
   keywordsLabel: "Important Keywords",
   keywordsPlaceholder: "List important words, names, or phrases to include in the song",
   keywordsAudioLabel: "Keywords Pronunciation (Audio)",
-  keywordsAudioPlaceholder: "Record pronunciation for any difficult words or names",
+  keywordsAudioPlaceholder: "Record pronunciation for difficult words or names",
   
   // Musical preference fields
   favoriteGenreLabel: "Favorite Music Genre",
@@ -129,13 +128,13 @@ export const orderTranslations = {
   songLengthLabel: "Preferred Song Length",
   songLengthPlaceholder: "How long should the song be?",
   instrumentsLabel: "Preferred Instruments",
-  instrumentsPlaceholder: "Any specific instruments you'd like featured?",
+  instrumentsPlaceholder: "Any specific instruments you'd like us to include?",
   moodLabel: "Song Mood",
   moodPlaceholder: "What mood should the song have?",
   lyricsThemeLabel: "Lyrics Theme",
   lyricsThemePlaceholder: "What should the lyrics focus on?",
   styleReferenceLabel: "Style Reference",
-  styleReferencePlaceholder: "Any specific artist or song style you'd like us to reference?",
+  styleReferenceLabel: "Any specific artist or song style you'd like us to reference?",
   youtubeExampleLabel: "YouTube Example",
   youtubeExamplePlaceholder: "Share a YouTube link of a song style you like",
   
@@ -151,7 +150,7 @@ export const orderTranslations = {
   voiceFeminine: "Feminine Voice",
   voiceMasculine: "Masculine Voice",
   voiceDuet: "Duet",
-  voiceMusicGiftChoice: "MusicGift's Choice",
+  voiceMusicGiftChoice: "MusicGift Choice",
   
   // Mood options
   moodRomantic: "Romantic",

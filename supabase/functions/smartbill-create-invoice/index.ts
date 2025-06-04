@@ -187,9 +187,9 @@ serve(async (req) => {
     const { username, token, baseUrl, companyVat, seriesName } = validateSmartBillConfig()
 
     if (!username || !token) {
-      console.warn('SmartBill credentials not configured - creating order without invoice')
+      console.warn('SmartBill credentials not configured')
       
-      // Update order with fallback status
+      // Update order with config error
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -199,15 +199,15 @@ serve(async (req) => {
         .eq('id', savedOrder.id)
 
       if (updateError) {
-        console.error('Error updating order with fallback status:', updateError)
+        console.error('Error updating order with config error:', updateError)
       }
 
       return new Response(
         JSON.stringify({ 
-          success: true, 
+          success: false, 
           orderId: savedOrder.id,
-          message: 'Order created successfully - invoice will be generated manually',
-          warning: 'SmartBill integration not configured'
+          errorCode: 'paymentConfigError',
+          message: 'Payment system configuration error'
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -220,7 +220,7 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
-    // Create SmartBill invoice data using the simplified structure from your example
+    // Create SmartBill invoice data
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
       seriesName: seriesName,
@@ -264,7 +264,7 @@ serve(async (req) => {
 
     console.log('Creating SmartBill invoice with data:', invoiceData)
 
-    // Create invoice via SmartBill API with the authentication format from your example
+    // Create invoice via SmartBill API
     const smartBillAuth = btoa(`${username}:${token}`)
     
     let invoiceResponse: Response
@@ -288,7 +288,7 @@ serve(async (req) => {
     } catch (smartBillError) {
       console.error('SmartBill API Error:', smartBillError)
       
-      // Update order with error status but don't fail the order
+      // Update order with error status
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -301,13 +301,13 @@ serve(async (req) => {
         console.error('Error updating order with SmartBill error:', updateError)
       }
 
-      // Return success with manual invoice note
+      // Return failure response
       return new Response(
         JSON.stringify({
-          success: true,
+          success: false,
           orderId: savedOrder.id,
-          message: 'Order created successfully - invoice will be generated manually',
-          warning: 'SmartBill integration temporarily unavailable'
+          errorCode: 'paymentFailed',
+          message: 'Failed to generate payment link'
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -316,7 +316,7 @@ serve(async (req) => {
       )
     }
 
-    // Check if SmartBill returned an error - using the structure from your example
+    // Check if SmartBill returned an error
     if (!invoiceResponse.ok || invoiceResult?.sbcResponse?.errorText || invoiceResult?.error) {
       const errorMessage = invoiceResult?.sbcResponse?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
       console.error('SmartBill API returned error:', errorMessage)
@@ -336,10 +336,10 @@ serve(async (req) => {
 
       return new Response(
         JSON.stringify({
-          success: true,
+          success: false,
           orderId: savedOrder.id,
-          message: 'Order created successfully - invoice will be generated manually',
-          warning: `SmartBill error: ${errorMessage}`
+          errorCode: 'paymentFailed',
+          message: `Payment system error: ${errorMessage}`
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -348,17 +348,45 @@ serve(async (req) => {
       )
     }
 
-    // Success - extract invoice details using the response structure from your example
+    // Extract invoice details
     const smartBillInvoiceId = invoiceResult?.sbcResponse?.number || invoiceResult?.invoiceNumber || `INV-${Date.now()}`
     const smartBillPaymentUrl = invoiceResult?.sbcResponse?.url || invoiceResult?.paymentUrl
     
-    // Use SmartBill's payment URL if available, otherwise redirect to success page
-    const finalPaymentUrl = smartBillPaymentUrl || `${Deno.env.get('SITE_URL')}/payment/success?orderId=${savedOrder.id}&invoice=${smartBillInvoiceId}`
+    // Check if we got a valid payment URL
+    if (!smartBillPaymentUrl || smartBillPaymentUrl === 'Generate URL') {
+      console.error('SmartBill did not return a valid payment URL')
+      
+      // Update order with payment URL generation failure
+      const { error: updateError } = await supabaseClient
+        .from('orders')
+        .update({ 
+          smartbill_invoice_id: smartBillInvoiceId,
+          smartbill_payment_status: 'failed',
+          smartbill_error: 'Payment URL generation failed'
+        })
+        .eq('id', savedOrder.id)
+
+      if (updateError) {
+        console.error('Error updating order with payment URL failure:', updateError)
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          orderId: savedOrder.id,
+          errorCode: 'paymentUrlFailed',
+          message: 'Failed to generate payment link'
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200 
+        }
+      )
+    }
 
     console.log('SmartBill invoice created successfully:', {
       invoiceId: smartBillInvoiceId,
-      paymentUrl: smartBillPaymentUrl,
-      finalUrl: finalPaymentUrl
+      paymentUrl: smartBillPaymentUrl
     })
 
     // Update order with SmartBill details
@@ -366,7 +394,7 @@ serve(async (req) => {
       .from('orders')
       .update({ 
         smartbill_invoice_id: smartBillInvoiceId,
-        smartbill_payment_url: finalPaymentUrl,
+        smartbill_payment_url: smartBillPaymentUrl,
         smartbill_invoice_data: invoiceResult,
         smartbill_payment_status: 'pending'
       })
@@ -381,7 +409,7 @@ serve(async (req) => {
         success: true,
         orderId: savedOrder.id,
         smartBillInvoiceId: smartBillInvoiceId,
-        paymentUrl: finalPaymentUrl,
+        paymentUrl: smartBillPaymentUrl,
         message: 'Invoice created successfully with SmartBill'
       }),
       { 
@@ -394,6 +422,8 @@ serve(async (req) => {
     console.error('Error in SmartBill integration:', error)
     return new Response(
       JSON.stringify({ 
+        success: false,
+        errorCode: 'orderCreationFailed',
         error: error.message || 'Failed to process order with SmartBill'
       }),
       { 

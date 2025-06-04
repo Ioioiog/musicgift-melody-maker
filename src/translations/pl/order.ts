@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Ładowanie pakietów...",
   loadingSteps: "Ładowanie kroków...",
@@ -34,9 +35,13 @@ export const orderTranslations = {
   giftCardApplied: "Karta podarunkowa zastosowana",
   giftCardAppliedDesc: "Karta podarunkowa jest gotowa do użycia w zamówieniu.",
   orderSuccess: "Zamówienie utworzone",
-  orderSuccessMessage: "Twoje zamówienie zostało pomyślnie utworzone. Używa to danych demonstracyjnych.",
+  orderSuccessMessage: "Twoje zamówienie zostało pomyślnie utworzone.",
   orderError: "Błąd",
-  orderErrorMessage: "Wystąpił błąd",
+  orderErrorMessage: "Wystąpił błąd podczas przetwarzania zamówienia",
+  paymentError: "Błąd Płatności",
+  paymentFailed: "Płatność Nieudana",
+  paymentSystemError: "Wystąpił błąd systemu płatności",
+  paymentUnavailable: "System płatności jest tymczasowo niedostępny",
   needHelp: "Potrzebujesz pomocy?",
   mondayToFriday: "Poniedziałek - Piątek, 9:00 - 18:00",
   popular: "Popularne",
@@ -129,7 +134,7 @@ export const orderTranslations = {
   lyricsThemeLabel: "Temat Tekstu",
   lyricsThemePlaceholder: "Na czym powinien się skupić tekst?",
   styleReferenceLabel: "Odniesienie Stylistyczne",
-  styleReferencePlaceholder: "Konkretny artysta lub styl piosenki, do którego chciałbyś się odnieść?",
+  styleReferenceLabel: "Konkretny artysta lub styl piosenki, do którego chciałbyś się odnieść?",
   youtubeExampleLabel: "Przykład z YouTube",
   youtubeExamplePlaceholder: "Udostępnij link YouTube do stylu piosenki, który ci się podoba",
   

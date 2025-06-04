@@ -115,6 +115,32 @@ const Order = () => {
 
       console.log('SmartBill integration response:', smartBillResponse);
 
+      // Check if SmartBill operation failed
+      if (!smartBillResponse?.success) {
+        const errorCode = smartBillResponse?.errorCode || 'unknown';
+        const errorMessage = smartBillResponse?.message || 'Payment processing failed';
+        
+        console.error('SmartBill operation failed:', errorCode, errorMessage);
+        
+        // Show specific error based on error code
+        let userMessage = errorMessage;
+        if (errorCode === 'paymentFailed' || errorCode === 'paymentUrlFailed') {
+          userMessage = 'Unable to generate payment link. Please try again or contact support.';
+        } else if (errorCode === 'paymentConfigError') {
+          userMessage = 'Payment system is temporarily unavailable. Please try again later.';
+        }
+        
+        toast({
+          title: t('orderError', 'Payment Error'),
+          description: userMessage,
+          variant: "destructive"
+        });
+        
+        // Navigate to payment error page
+        navigate('/payment/error?orderId=' + smartBillResponse.orderId + '&error=' + errorCode);
+        return;
+      }
+
       // If gift card was used, create redemption record
       if (giftCard && giftCreditApplied > 0) {
         const { error: redemptionError } = await supabase
@@ -145,7 +171,7 @@ const Order = () => {
         console.log("Redirecting to SmartBill payment:", smartBillResponse.paymentUrl);
         window.location.href = smartBillResponse.paymentUrl;
       } else {
-        // If no payment needed, show completion message - use correct route
+        // If no payment needed, show completion message
         console.log("Order completed successfully - no payment required");
         navigate('/payment/success?orderId=' + smartBillResponse.orderId);
       }

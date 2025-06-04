@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -34,9 +35,13 @@ export const orderTranslations = {
   giftCardApplied: "Card Cadou Aplicat",
   giftCardAppliedDesc: "Cardul cadou este gata să fie folosit pentru comanda ta.",
   orderSuccess: "Comandă creată",
-  orderSuccessMessage: "Comanda ta a fost creată cu succes. Aceasta folosește date demonstrative.",
+  orderSuccessMessage: "Comanda ta a fost creată cu succes.",
   orderError: "Eroare",
-  orderErrorMessage: "A apărut o eroare",
+  orderErrorMessage: "A apărut o eroare la procesarea comenzii",
+  paymentError: "Eroare Plată",
+  paymentFailed: "Plata a Eșuat",
+  paymentSystemError: "Eroare în sistemul de plată",
+  paymentUnavailable: "Sistemul de plată este temporar indisponibil",
   needHelp: "Ai nevoie de ajutor?",
   mondayToFriday: "Luni - Vineri, 9:00 - 18:00",
   popular: "Popular",
@@ -129,7 +134,7 @@ export const orderTranslations = {
   lyricsThemeLabel: "Tema Versurilor",
   lyricsThemePlaceholder: "Pe ce să se concentreze versurile?",
   styleReferenceLabel: "Referință de Stil",
-  styleReferencePlaceholder: "Vreun artist sau stil de cântec specific pe care ai dori să îl referențiem?",
+  styleReferenceLabel: "Vreun artist sau stil de cântec specific pe care ai dori să îl referențiem?",
   youtubeExampleLabel: "Exemplu YouTube",
   youtubeExamplePlaceholder: "Împărtășește un link YouTube cu un stil de cântec care îți place",
   
