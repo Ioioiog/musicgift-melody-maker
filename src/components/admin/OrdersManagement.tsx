@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -31,6 +30,7 @@ const OrdersManagement = () => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [openPromptCards, setOpenPromptCards] = useState<Set<string>>(new Set());
   const [openPromptDetails, setOpenPromptDetails] = useState<Set<string>>(new Set());
+  const [refreshingOrders, setRefreshingOrders] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const { t } = useLanguage();
   const isMobile = useIsMobile();
@@ -114,13 +114,60 @@ const OrdersManagement = () => {
   };
 
   const refreshOrderStatus = async (orderId: string) => {
+    if (refreshingOrders.has(orderId)) return; // Prevent multiple simultaneous requests
+    
+    setRefreshingOrders(prev => new Set(prev).add(orderId));
+    
     try {
-      // For now, just refetch the data. Later this can call the SmartBill sync function
+      console.log(`Refreshing order status for: ${orderId}`);
+      
+      const { data, error } = await supabase.functions.invoke('smartbill-status-sync', {
+        body: { orderId }
+      });
+
+      if (error) {
+        console.error('SmartBill sync error:', error);
+        toast({ 
+          title: 'Error refreshing status', 
+          description: error.message || 'Failed to sync with SmartBill',
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      if (data?.error) {
+        console.error('SmartBill sync error:', data.error);
+        toast({ 
+          title: 'SmartBill sync error', 
+          description: data.error,
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      console.log('SmartBill sync result:', data);
+      
+      // Refetch orders to get updated data
       await refetch();
-      toast({ title: 'Order status refreshed' });
+      
+      toast({ 
+        title: data?.statusChanged ? 'Status updated' : 'Status checked',
+        description: data?.message || 'Payment status synced with SmartBill'
+      });
+      
     } catch (error) {
       console.error('Error refreshing order status:', error);
-      toast({ title: 'Error refreshing order status', variant: 'destructive' });
+      toast({ 
+        title: 'Error refreshing order status', 
+        description: 'Failed to connect to SmartBill',
+        variant: 'destructive' 
+      });
+    } finally {
+      setRefreshingOrders(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(orderId);
+        return newSet;
+      });
     }
   };
 
@@ -243,6 +290,7 @@ const OrdersManagement = () => {
     const isPromptCardOpen = openPromptCards.has(order.id);
     const packageValue = order.package_value || (formData as any)?.package || (formData as any)?.packageType;
     const overallPaymentStatus = getOverallPaymentStatus(order);
+    const isRefreshing = refreshingOrders.has(order.id);
 
     return (
       <div className="space-y-4">
@@ -262,7 +310,7 @@ const OrdersManagement = () => {
             </Badge>
             {order.payment_status && order.payment_status !== overallPaymentStatus.status && (
               <Badge className={getPaymentStatusColor(order.payment_status)} variant="outline">
-                {t('payment', 'Payment')}: {t(order.payment_status, order.payment_status)}
+                {t(order.payment_status, order.payment_status)}
               </Badge>
             )}
             {order.smartbill_payment_status && (
@@ -337,9 +385,10 @@ const OrdersManagement = () => {
               variant="outline"
               size="sm"
               onClick={() => refreshOrderStatus(order.id)}
+              disabled={isRefreshing}
               className="h-11 px-3"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
           </div>
 
@@ -414,6 +463,7 @@ const OrdersManagement = () => {
     const hasPrompts = hasSavedPrompts(order.id);
     const packageValue = order.package_value || (formData as any)?.package || (formData as any)?.packageType;
     const overallPaymentStatus = getOverallPaymentStatus(order);
+    const isRefreshing = refreshingOrders.has(order.id);
 
     return (
       <>
@@ -484,9 +534,10 @@ const OrdersManagement = () => {
               variant="outline"
               size="sm"
               onClick={() => refreshOrderStatus(order.id)}
-              title="Refresh payment status"
+              disabled={isRefreshing}
+              title="Sync payment status with SmartBill"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
             
             {order.smartbill_payment_url && order.smartbill_payment_status === 'pending' && (
