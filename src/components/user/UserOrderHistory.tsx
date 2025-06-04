@@ -1,12 +1,12 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Search, Filter, Package, Download, RotateCcw } from 'lucide-react';
+import { Search, Filter, Package, RotateCcw } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useUserOrders } from '@/hooks/useUserOrders';
+import { getOrderFormData, getCustomerName, getCustomerEmail } from '@/types/order';
 import EnhancedOrderTable from './EnhancedOrderTable';
 import OrderDetailsModal from './OrderDetailsModal';
 
@@ -37,12 +37,16 @@ const UserOrderHistory = () => {
   };
 
   const filteredOrders = orders.filter(order => {
+    const formData = getOrderFormData(order.form_data);
+    const customerName = getCustomerName(order.form_data);
+    const customerEmail = getCustomerEmail(order.form_data);
+    
     const matchesSearch = searchTerm === '' || 
       order.package_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.package_value?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.form_data?.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.form_data?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customerEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.smartbill_invoice_id?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;

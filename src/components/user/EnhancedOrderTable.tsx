@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Eye, Download, ChevronDown, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { getCustomerName, getCustomerEmail, getArrayFromJson } from '@/types/order';
 import OrderExpandedDetails from './OrderExpandedDetails';
 
 interface EnhancedOrderTableProps {
@@ -74,12 +75,9 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
     return `${currency} ${price.toFixed(2)}`;
   };
 
-  const getCustomerName = (formData: any) => {
-    return formData?.fullName || formData?.customerName || 'N/A';
-  };
-
-  const getAddonsCount = (addons: any[]) => {
-    return Array.isArray(addons) ? addons.length : 0;
+  const getAddonsCount = (addons: any) => {
+    const addonsArray = getArrayFromJson(addons);
+    return addonsArray.length;
   };
 
   if (isMobile) {
@@ -231,7 +229,7 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                   <TableCell>
                     <div>
                       <div className="font-medium">{getCustomerName(order.form_data)}</div>
-                      <div className="text-sm text-gray-500">{order.form_data?.email}</div>
+                      <div className="text-sm text-gray-500">{getCustomerEmail(order.form_data)}</div>
                     </div>
                   </TableCell>
                   <TableCell>

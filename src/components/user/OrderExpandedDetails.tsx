@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Calendar, Package, CreditCard, User, Mail, Phone, Clock, Gift } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { getOrderFormData, getArrayFromJson } from '@/types/order';
 
 interface OrderExpandedDetailsProps {
   order: any;
@@ -24,6 +25,10 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
       default: return 'secondary';
     }
   };
+
+  const formData = getOrderFormData(order.form_data);
+  const packageIncludes = getArrayFromJson(order.package_includes);
+  const selectedAddons = getArrayFromJson(order.selected_addons);
 
   return (
     <div className="space-y-4">
@@ -110,21 +115,21 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
               </div>
             </div>
           )}
-          {order.package_includes && order.package_includes.length > 0 && (
+          {packageIncludes.length > 0 && (
             <div className="md:col-span-2">
               <span className="text-gray-500">Package Includes:</span>
               <ul className="mt-1 list-disc list-inside text-gray-900">
-                {order.package_includes.map((item: string, index: number) => (
+                {packageIncludes.map((item: string, index: number) => (
                   <li key={index} className="text-xs">{item}</li>
                 ))}
               </ul>
             </div>
           )}
-          {order.selected_addons && order.selected_addons.length > 0 && (
+          {selectedAddons.length > 0 && (
             <div className="md:col-span-2">
               <span className="text-gray-500">Selected Add-ons:</span>
               <ul className="mt-1 list-disc list-inside text-gray-900">
-                {order.selected_addons.map((addon: string, index: number) => (
+                {selectedAddons.map((addon: string, index: number) => (
                   <li key={index} className="text-xs">{addon}</li>
                 ))}
               </ul>
@@ -136,41 +141,41 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
       <Separator />
 
       {/* Customer Information */}
-      {order.form_data && (
+      {Object.keys(formData).length > 0 && (
         <div>
           <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
             <User className="w-4 h-4" />
             Customer Information
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-            {order.form_data.fullName && (
+            {formData.fullName && (
               <div>
                 <span className="text-gray-500">Full Name:</span>
-                <div className="text-gray-900">{order.form_data.fullName}</div>
+                <div className="text-gray-900">{formData.fullName}</div>
               </div>
             )}
-            {order.form_data.email && (
+            {formData.email && (
               <div>
                 <span className="text-gray-500 flex items-center gap-1">
                   <Mail className="w-3 h-3" />
                   Email:
                 </span>
-                <div className="text-gray-900">{order.form_data.email}</div>
+                <div className="text-gray-900">{formData.email}</div>
               </div>
             )}
-            {order.form_data.phone && (
+            {formData.phone && (
               <div>
                 <span className="text-gray-500 flex items-center gap-1">
                   <Phone className="w-3 h-3" />
                   Phone:
                 </span>
-                <div className="text-gray-900">{order.form_data.phone}</div>
+                <div className="text-gray-900">{formData.phone}</div>
               </div>
             )}
-            {order.form_data.recipientName && (
+            {formData.recipientName && (
               <div>
                 <span className="text-gray-500">Recipient:</span>
-                <div className="text-gray-900">{order.form_data.recipientName}</div>
+                <div className="text-gray-900">{formData.recipientName}</div>
               </div>
             )}
           </div>
