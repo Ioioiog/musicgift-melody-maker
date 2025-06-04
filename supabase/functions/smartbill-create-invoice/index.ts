@@ -48,9 +48,6 @@ interface SmartBillInvoiceData {
   sendEmail: boolean;
   precision: number;
   currency: string;
-  paymentUrl?: string;
-  returnUrl?: string;
-  cancelUrl?: string;
   products: Array<{
     name: string;
     quantity: number;
@@ -246,8 +243,6 @@ serve(async (req) => {
       precision: 2,
       currency: orderData.currency || 'RON',
       paymentUrl: 'Generate URL',
-      returnUrl: 'https://www.musicgift.ro/payment/success?orderId=' + savedOrder.id,
-      cancelUrl: 'https://www.musicgift.ro/payment/cancel?orderId=' + savedOrder.id,
       products: [
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
