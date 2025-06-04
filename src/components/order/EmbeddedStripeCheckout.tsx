@@ -30,6 +30,15 @@ const EmbeddedStripeCheckout: React.FC<EmbeddedStripeCheckoutProps> = ({
   const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
 
+  // Auto-hide loading after a reasonable timeout
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000); // Hide loading after 3 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleComplete = () => {
     if (onComplete) {
       // Extract session ID from client secret
@@ -78,10 +87,6 @@ const EmbeddedStripeCheckout: React.FC<EmbeddedStripeCheckoutProps> = ({
         <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
           <EmbeddedCheckout 
             className={isLoading ? 'hidden' : 'block'}
-            onLoadError={(error) => {
-              console.error('Embedded checkout load error:', error);
-              setIsLoading(false);
-            }}
             onMount={() => setIsLoading(false)}
           />
         </EmbeddedCheckoutProvider>
