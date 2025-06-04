@@ -137,6 +137,34 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
   const totalPrice = calculateTotalPrice();
 
+  const validateFormData = () => {
+    console.log('🔍 Validating form data:', formData);
+    
+    // Check if formData exists and is an object
+    if (!formData || typeof formData !== 'object') {
+      console.error('❌ Form data is not a valid object:', formData);
+      throw new Error('Form data is missing or invalid');
+    }
+
+    // Ensure we have required basic fields based on package steps
+    const requiredFields = ['email', 'fullName'];
+    const missingFields = requiredFields.filter(field => !formData[field] || formData[field] === '');
+    
+    if (missingFields.length > 0) {
+      console.error('❌ Missing required fields:', missingFields);
+      throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+    }
+
+    // Validate email format
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      console.error('❌ Invalid email format:', formData.email);
+      throw new Error('Please enter a valid email address');
+    }
+
+    console.log('✅ Form data validation passed');
+    return true;
+  };
+
   const handleSubmit = async () => {
     if (isSubmitting) return;
     
@@ -145,6 +173,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     try {
       console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
       console.log(`💰 Total price: ${totalPrice} ${currency}`);
+      console.log('📝 Current form data:', JSON.stringify(formData, null, 2));
+      
+      // Validate form data before proceeding
+      validateFormData();
       
       if (onComplete) {
         await onComplete({
@@ -165,12 +197,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       }
 
       console.log(`🎯 Selected payment provider: "${selectedPaymentProvider}"`);
-
-      // Validate required form data
-      if (!formData || typeof formData !== 'object') {
-        console.error('❌ Form data is invalid:', formData);
-        throw new Error('Form data is missing or invalid');
-      }
 
       // Validate that we have a selected package
       if (!selectedPackage) {
@@ -197,8 +223,25 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         throw new Error('Invalid total price calculated');
       }
 
+      // Ensure form_data is properly structured and contains all required fields
+      const structuredFormData = {
+        email: formData.email || '',
+        fullName: formData.fullName || '',
+        recipientName: formData.recipientName || '',
+        occasion: formData.occasion || '',
+        invoiceType: formData.invoiceType || '',
+        companyName: formData.companyName || '',
+        vatCode: formData.vatCode || '',
+        registrationNumber: formData.registrationNumber || '',
+        companyAddress: formData.companyAddress || '',
+        representativeName: formData.representativeName || '',
+        ...formData // Include any additional fields
+      };
+
+      console.log('📦 Structured form data:', JSON.stringify(structuredFormData, null, 2));
+
       const orderData = {
-        form_data: formData, // Ensure this is properly structured
+        form_data: structuredFormData, // Use the structured form data
         selected_addons: selectedAddons,
         total_price: totalPrice * 100, // Convert to cents for payment processing
         package_value: selectedPackage,
@@ -212,12 +255,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         payment_provider: selectedPaymentProvider
       };
 
-      console.log(`📦 Order data prepared:`, orderData);
+      console.log(`📦 Order data prepared:`, JSON.stringify(orderData, null, 2));
 
-      // Validate orderData structure before sending
-      if (!orderData.form_data) {
-        console.error('❌ Order data missing form_data:', orderData);
-        throw new Error('Order data is missing required form information');
+      // Final validation of orderData structure
+      if (!orderData.form_data || typeof orderData.form_data !== 'object') {
+        console.error('❌ Order data form_data is invalid:', orderData.form_data);
+        throw new Error('Order data structure is invalid');
       }
 
       // Determine edge function based on payment provider with explicit validation

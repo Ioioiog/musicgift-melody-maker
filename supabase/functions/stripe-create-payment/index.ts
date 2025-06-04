@@ -21,61 +21,212 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
     );
 
-    // Parse and validate request body
+    // Parse and validate request body with comprehensive error handling
     let requestBody;
     try {
-      requestBody = await req.json();
-      console.log('🟣 Stripe: Raw request body:', JSON.stringify(requestBody, null, 2));
+      const requestText = await req.text();
+      console.log('🟣 Stripe: Raw request text:', requestText);
+      
+      if (!requestText || requestText.trim() === '') {
+        throw new Error('Request body is empty');
+      }
+      
+      requestBody = JSON.parse(requestText);
+      console.log('🟣 Stripe: Parsed request body:', JSON.stringify(requestBody, null, 2));
     } catch (parseError) {
       console.error('❌ Stripe: Failed to parse request body:', parseError);
-      throw new Error('Invalid JSON in request body');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `Invalid JSON in request body: ${parseError.message}`,
+          errorCode: 'invalidRequestBody',
+          provider: 'stripe'
+        }),
+        { 
+          status: 400,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
     }
 
-    // Validate request structure
+    // Validate request structure with detailed logging
     if (!requestBody || typeof requestBody !== 'object') {
       console.error('❌ Stripe: Request body is not a valid object:', requestBody);
-      throw new Error('Request body must be a valid object');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Request body must be a valid object',
+          errorCode: 'invalidRequestStructure',
+          provider: 'stripe'
+        }),
+        { 
+          status: 400,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
     }
 
     const { orderData, returnUrl } = requestBody;
+    console.log('🟣 Stripe: Extracted orderData:', JSON.stringify(orderData, null, 2));
+    console.log('🟣 Stripe: Return URL:', returnUrl);
 
-    // Validate orderData exists
+    // Comprehensive orderData validation
     if (!orderData) {
       console.error('❌ Stripe: orderData is missing from request');
-      throw new Error('orderData is required but was not provided');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'orderData is required but was not provided',
+          errorCode: 'missingOrderData',
+          provider: 'stripe'
+        }),
+        { 
+          status: 400,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
     }
 
-    // Validate orderData structure
     if (typeof orderData !== 'object') {
       console.error('❌ Stripe: orderData is not an object:', typeof orderData);
-      throw new Error('orderData must be an object');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'orderData must be an object',
+          errorCode: 'invalidOrderDataType',
+          provider: 'stripe'
+        }),
+        { 
+          status: 400,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
     }
 
-    // Validate form_data exists
+    // Critical form_data validation with detailed error reporting
     if (!orderData.form_data) {
       console.error('❌ Stripe: orderData.form_data is missing:', orderData);
-      throw new Error('orderData.form_data is required but was not provided');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'orderData.form_data is required but was not provided',
+          errorCode: 'missingFormData',
+          provider: 'stripe'
+        }),
+        { 
+          status: 400,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
+    }
+
+    if (typeof orderData.form_data !== 'object') {
+      console.error('❌ Stripe: orderData.form_data is not an object:', typeof orderData.form_data);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'orderData.form_data must be an object',
+          errorCode: 'invalidFormDataType',
+          provider: 'stripe'
+        }),
+        { 
+          status: 400,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
+    }
+
+    console.log('🟣 Stripe: form_data contents:', JSON.stringify(orderData.form_data, null, 2));
+
+    // Validate required form_data fields
+    const requiredFormFields = ['email', 'fullName'];
+    const missingFormFields = requiredFormFields.filter(field => 
+      !orderData.form_data[field] || orderData.form_data[field] === ''
+    );
+    
+    if (missingFormFields.length > 0) {
+      console.error('❌ Stripe: Missing required form fields:', missingFormFields);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `Missing required form fields: ${missingFormFields.join(', ')}`,
+          errorCode: 'missingRequiredFormFields',
+          provider: 'stripe'
+        }),
+        { 
+          status: 400,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
     }
 
     // Validate required orderData fields
-    const requiredFields = ['total_price', 'currency', 'package_name'];
-    for (const field of requiredFields) {
-      if (orderData[field] === undefined || orderData[field] === null) {
-        console.error(`❌ Stripe: Required field ${field} is missing from orderData`);
-        throw new Error(`Required field ${field} is missing from orderData`);
-      }
+    const requiredOrderFields = ['total_price', 'currency', 'package_name'];
+    const missingOrderFields = requiredOrderFields.filter(field => 
+      orderData[field] === undefined || orderData[field] === null
+    );
+    
+    if (missingOrderFields.length > 0) {
+      console.error('❌ Stripe: Missing required order fields:', missingOrderFields);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `Missing required order fields: ${missingOrderFields.join(', ')}`,
+          errorCode: 'missingRequiredOrderFields',
+          provider: 'stripe'
+        }),
+        { 
+          status: 400,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
     }
-
-    console.log('🟣 Stripe: Received order data:', JSON.stringify(orderData, null, 2));
-    console.log('🟣 Stripe: Return URL:', returnUrl);
 
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
       console.error('❌ Stripe: Secret key not configured');
-      throw new Error('Stripe secret key not configured');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Stripe secret key not configured',
+          errorCode: 'stripeConfigurationError',
+          provider: 'stripe'
+        }),
+        { 
+          status: 500,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
     }
 
-    console.log('✅ Stripe: Secret key found, proceeding...');
+    console.log('✅ Stripe: All validations passed, proceeding with order creation');
 
     // Create order in database first - ensure payment_provider is set to 'stripe'
     const orderInsertData = {
@@ -95,7 +246,21 @@ serve(async (req) => {
 
     if (orderError) {
       console.error('❌ Stripe: Error creating order in database:', orderError);
-      throw new Error(`Database error: ${orderError.message}`);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `Database error: ${orderError.message}`,
+          errorCode: 'databaseError',
+          provider: 'stripe'
+        }),
+        { 
+          status: 500,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
     }
 
     console.log('✅ Stripe: Order created in database:', order.id);
@@ -133,7 +298,21 @@ serve(async (req) => {
 
     if (!stripeResponse.ok) {
       console.error('❌ Stripe API Error:', responseText);
-      throw new Error(`Stripe API error (${stripeResponse.status}): ${responseText}`);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `Stripe API error (${stripeResponse.status}): ${responseText}`,
+          errorCode: 'stripeApiError',
+          provider: 'stripe'
+        }),
+        { 
+          status: 500,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
     }
 
     const session = JSON.parse(responseText);
@@ -145,7 +324,21 @@ serve(async (req) => {
 
     if (!session.url) {
       console.error('❌ Stripe: No checkout URL in session response');
-      throw new Error('Stripe did not return a checkout URL');
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Stripe did not return a checkout URL',
+          errorCode: 'missingCheckoutUrl',
+          provider: 'stripe'
+        }),
+        { 
+          status: 500,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
+      );
     }
 
     // Update order with Stripe session ID
@@ -197,7 +390,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify(errorResponse),
       { 
-        status: 400,
+        status: 500,
         headers: { 
           ...corsHeaders, 
           'Content-Type': 'application/json' 
