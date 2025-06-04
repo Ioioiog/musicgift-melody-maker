@@ -166,15 +166,39 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
       console.log(`🎯 Selected payment provider: "${selectedPaymentProvider}"`);
 
+      // Validate required form data
+      if (!formData || typeof formData !== 'object') {
+        console.error('❌ Form data is invalid:', formData);
+        throw new Error('Form data is missing or invalid');
+      }
+
+      // Validate that we have a selected package
+      if (!selectedPackage) {
+        console.error('❌ No package selected');
+        throw new Error('Please select a package before proceeding');
+      }
+
       // Create order with selected payment provider
       const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+      
+      if (!selectedPackageData) {
+        console.error('❌ Selected package data not found:', selectedPackage);
+        throw new Error('Selected package not found');
+      }
+
       const package_name = selectedPackageData?.label_key;
       const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
       const package_delivery_time = selectedPackageData?.delivery_time_key;
       const package_includes = selectedPackageData?.includes;
 
+      // Validate total price
+      if (totalPrice === null || totalPrice === undefined || totalPrice < 0) {
+        console.error('❌ Invalid total price:', totalPrice);
+        throw new Error('Invalid total price calculated');
+      }
+
       const orderData = {
-        form_data: formData,
+        form_data: formData, // Ensure this is properly structured
         selected_addons: selectedAddons,
         total_price: totalPrice * 100, // Convert to cents for payment processing
         package_value: selectedPackage,
@@ -185,10 +209,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         status: 'pending',
         payment_status: 'pending',
         currency: currency,
-        payment_provider: selectedPaymentProvider // Add this line to fix the issue!
+        payment_provider: selectedPaymentProvider
       };
 
       console.log(`📦 Order data prepared:`, orderData);
+
+      // Validate orderData structure before sending
+      if (!orderData.form_data) {
+        console.error('❌ Order data missing form_data:', orderData);
+        throw new Error('Order data is missing required form information');
+      }
 
       // Determine edge function based on payment provider with explicit validation
       let edgeFunctionName: string;

@@ -21,8 +21,51 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
     );
 
-    const { orderData, returnUrl } = await req.json();
-    
+    // Parse and validate request body
+    let requestBody;
+    try {
+      requestBody = await req.json();
+      console.log('🟣 Stripe: Raw request body:', JSON.stringify(requestBody, null, 2));
+    } catch (parseError) {
+      console.error('❌ Stripe: Failed to parse request body:', parseError);
+      throw new Error('Invalid JSON in request body');
+    }
+
+    // Validate request structure
+    if (!requestBody || typeof requestBody !== 'object') {
+      console.error('❌ Stripe: Request body is not a valid object:', requestBody);
+      throw new Error('Request body must be a valid object');
+    }
+
+    const { orderData, returnUrl } = requestBody;
+
+    // Validate orderData exists
+    if (!orderData) {
+      console.error('❌ Stripe: orderData is missing from request');
+      throw new Error('orderData is required but was not provided');
+    }
+
+    // Validate orderData structure
+    if (typeof orderData !== 'object') {
+      console.error('❌ Stripe: orderData is not an object:', typeof orderData);
+      throw new Error('orderData must be an object');
+    }
+
+    // Validate form_data exists
+    if (!orderData.form_data) {
+      console.error('❌ Stripe: orderData.form_data is missing:', orderData);
+      throw new Error('orderData.form_data is required but was not provided');
+    }
+
+    // Validate required orderData fields
+    const requiredFields = ['total_price', 'currency', 'package_name'];
+    for (const field of requiredFields) {
+      if (orderData[field] === undefined || orderData[field] === null) {
+        console.error(`❌ Stripe: Required field ${field} is missing from orderData`);
+        throw new Error(`Required field ${field} is missing from orderData`);
+      }
+    }
+
     console.log('🟣 Stripe: Received order data:', JSON.stringify(orderData, null, 2));
     console.log('🟣 Stripe: Return URL:', returnUrl);
 
@@ -35,14 +78,18 @@ serve(async (req) => {
     console.log('✅ Stripe: Secret key found, proceeding...');
 
     // Create order in database first - ensure payment_provider is set to 'stripe'
+    const orderInsertData = {
+      ...orderData,
+      payment_provider: 'stripe', // Explicitly set to stripe
+      status: 'pending',
+      payment_status: 'pending'
+    };
+
+    console.log('🟣 Stripe: Creating order with data:', JSON.stringify(orderInsertData, null, 2));
+
     const { data: order, error: orderError } = await supabaseClient
       .from('orders')
-      .insert([{
-        ...orderData,
-        payment_provider: 'stripe', // Explicitly set to stripe
-        status: 'pending',
-        payment_status: 'pending'
-      }])
+      .insert([orderInsertData])
       .select()
       .single();
 
@@ -143,6 +190,7 @@ serve(async (req) => {
     const errorResponse = {
       success: false,
       error: error.message || 'Unknown error occurred',
+      errorCode: 'orderCreationFailed',
       provider: 'stripe'
     };
 
