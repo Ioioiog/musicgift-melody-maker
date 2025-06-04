@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -163,7 +162,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         const orderData = {
           form_data: formData,
           selected_addons: selectedAddons,
-          total_price: totalPrice,
+          total_price: totalPrice * 100, // Convert to cents for payment processing
           package_value: selectedPackage,
           package_name: package_name,
           package_price: package_price,
@@ -203,6 +202,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
         console.log(`${selectedPaymentProvider} response:`, paymentResponse);
 
+        if (!paymentResponse?.success) {
+          throw new Error(paymentResponse?.error || 'Payment creation failed');
+        }
+
         // Show success message
         toast({
           title: t('orderSuccess'),
@@ -212,10 +215,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
         // If payment provider returns a payment URL, redirect user
         if (paymentResponse?.paymentUrl) {
+          console.log(`Redirecting to ${selectedPaymentProvider} payment:`, paymentResponse.paymentUrl);
           window.location.href = paymentResponse.paymentUrl;
-        } else if (paymentResponse?.success) {
+        } else {
           // If no payment needed (e.g., fully covered by gift card), show success
           console.log('Order completed successfully without payment needed');
+          navigate('/payment/success?orderId=' + paymentResponse.orderId);
         }
       }
     } catch (error) {

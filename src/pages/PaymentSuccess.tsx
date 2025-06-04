@@ -16,8 +16,10 @@ const PaymentSuccess = () => {
   const [paymentVerified, setPaymentVerified] = useState(false);
   const { toast } = useToast();
 
-  // Handle both 'orderId' and 'order' query parameters
-  const orderId = searchParams.get('orderId') || searchParams.get('order');
+  // Handle multiple query parameters for different payment providers
+  const orderId = searchParams.get('orderId') || searchParams.get('order') || searchParams.get('order_id');
+  const sessionId = searchParams.get('session_id');
+  const revolutOrderId = searchParams.get('revolut_order_id');
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -65,6 +67,19 @@ const PaymentSuccess = () => {
 
     return () => clearInterval(pollInterval);
   }, [orderId, toast, paymentVerified]);
+
+  const getProviderName = (provider: string) => {
+    switch (provider) {
+      case 'stripe':
+        return 'Stripe';
+      case 'revolut':
+        return 'Revolut Business';
+      case 'smartbill':
+        return 'SmartBill';
+      default:
+        return provider;
+    }
+  };
 
   if (loading) {
     return (
@@ -131,6 +146,10 @@ const PaymentSuccess = () => {
                       <div className="flex justify-between">
                         <span className="text-gray-600">Pachet:</span>
                         <span>{orderDetails.package_name || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Provider plată:</span>
+                        <span>{getProviderName(orderDetails.payment_provider || 'smartbill')}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Sumă:</span>
