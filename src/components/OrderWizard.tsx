@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -142,6 +143,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     setIsSubmitting(true);
     
     try {
+      console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
+      console.log(`💰 Total price: ${totalPrice} ${currency}`);
+      
       if (onComplete) {
         await onComplete({
           ...formData,
@@ -173,19 +177,27 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           currency: currency
         };
 
-        console.log(`Creating order with ${selectedPaymentProvider}:`, orderData);
+        console.log(`🎯 Payment provider selected: ${selectedPaymentProvider}`);
+        console.log(`📦 Order data prepared:`, orderData);
 
+        // Determine edge function based on payment provider
         let edgeFunctionName;
         switch (selectedPaymentProvider) {
           case 'stripe':
             edgeFunctionName = 'stripe-create-payment';
+            console.log('🟣 Using Stripe payment gateway');
             break;
           case 'revolut':
             edgeFunctionName = 'revolut-create-payment';
+            console.log('🟠 Using Revolut payment gateway');
             break;
+          case 'smartbill':
           default:
             edgeFunctionName = 'smartbill-create-invoice';
+            console.log('🔵 Using SmartBill payment gateway');
         }
+
+        console.log(`🚀 Calling edge function: ${edgeFunctionName}`);
 
         // Call the appropriate payment provider edge function
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke(edgeFunctionName, {
@@ -195,15 +207,31 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           }
         });
 
+        console.log(`📨 Edge function response:`, { data: paymentResponse, error: paymentError });
+
         if (paymentError) {
-          console.error(`${selectedPaymentProvider} error:`, paymentError);
-          throw new Error(`Failed to create payment with ${selectedPaymentProvider}`);
+          console.error(`❌ ${selectedPaymentProvider} edge function error:`, paymentError);
+          throw new Error(`Failed to initialize payment with ${selectedPaymentProvider}: ${paymentError.message}`);
         }
 
-        console.log(`${selectedPaymentProvider} response:`, paymentResponse);
+        if (!paymentResponse) {
+          console.error(`❌ No response from ${selectedPaymentProvider} edge function`);
+          throw new Error(`No response received from ${selectedPaymentProvider} payment service`);
+        }
 
-        if (!paymentResponse?.success) {
-          throw new Error(paymentResponse?.error || 'Payment creation failed');
+        console.log(`✅ ${selectedPaymentProvider} response received:`, paymentResponse);
+
+        // Validate response structure
+        if (!paymentResponse.success) {
+          console.error(`❌ ${selectedPaymentProvider} operation failed:`, paymentResponse);
+          const errorMessage = paymentResponse.error || paymentResponse.message || 'Payment initialization failed';
+          throw new Error(`${selectedPaymentProvider}: ${errorMessage}`);
+        }
+
+        // Validate payment URL for Stripe and Revolut
+        if ((selectedPaymentProvider === 'stripe' || selectedPaymentProvider === 'revolut') && !paymentResponse.paymentUrl) {
+          console.error(`❌ Missing payment URL from ${selectedPaymentProvider}:`, paymentResponse);
+          throw new Error(`${selectedPaymentProvider} did not return a payment URL`);
         }
 
         // Show success message
@@ -213,21 +241,32 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           variant: "default"
         });
 
-        // If payment provider returns a payment URL, redirect user
-        if (paymentResponse?.paymentUrl) {
-          console.log(`Redirecting to ${selectedPaymentProvider} payment:`, paymentResponse.paymentUrl);
-          window.location.href = paymentResponse.paymentUrl;
+        // Handle redirection based on provider
+        if (paymentResponse.paymentUrl) {
+          console.log(`🔄 Redirecting to ${selectedPaymentProvider} payment:`, paymentResponse.paymentUrl);
+          
+          // Validate URL before redirecting
+          try {
+            new URL(paymentResponse.paymentUrl);
+            window.location.href = paymentResponse.paymentUrl;
+          } catch (urlError) {
+            console.error(`❌ Invalid payment URL from ${selectedPaymentProvider}:`, paymentResponse.paymentUrl);
+            throw new Error(`Invalid payment URL received from ${selectedPaymentProvider}`);
+          }
         } else {
           // If no payment needed (e.g., fully covered by gift card), show success
-          console.log('Order completed successfully without payment needed');
+          console.log('✅ Order completed successfully without payment redirection needed');
           navigate('/payment/success?orderId=' + paymentResponse.orderId);
         }
       }
     } catch (error) {
-      console.error('Error processing order:', error);
+      console.error('💥 Payment processing error:', error);
+      
+      // Show user-friendly error message
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       toast({
-        title: t('orderError'),
-        description: error.message || t('orderErrorMessage'),
+        title: t('orderError', 'Payment Error'),
+        description: `Failed to process payment: ${errorMessage}`,
         variant: "destructive"
       });
     } finally {

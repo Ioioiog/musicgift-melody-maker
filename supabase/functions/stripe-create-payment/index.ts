@@ -14,6 +14,8 @@ serve(async (req) => {
   }
 
   try {
+    console.log('🟣 Stripe Create Payment: Starting process');
+    
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -21,12 +23,16 @@ serve(async (req) => {
 
     const { orderData, returnUrl } = await req.json();
     
-    console.log('Creating Stripe payment for order:', orderData);
+    console.log('🟣 Stripe: Received order data:', JSON.stringify(orderData, null, 2));
+    console.log('🟣 Stripe: Return URL:', returnUrl);
 
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
+      console.error('❌ Stripe: Secret key not configured');
       throw new Error('Stripe secret key not configured');
     }
+
+    console.log('✅ Stripe: Secret key found, proceeding...');
 
     // Create order in database first
     const { data: order, error: orderError } = await supabaseClient
@@ -41,11 +47,11 @@ serve(async (req) => {
       .single();
 
     if (orderError) {
-      console.error('Error creating order:', orderError);
-      throw orderError;
+      console.error('❌ Stripe: Error creating order in database:', orderError);
+      throw new Error(`Database error: ${orderError.message}`);
     }
 
-    console.log('Order created:', order.id);
+    console.log('✅ Stripe: Order created in database:', order.id);
 
     // Create Stripe checkout session
     const stripeUrl = 'https://api.stripe.com/v1/checkout/sessions';
@@ -62,16 +68,20 @@ serve(async (req) => {
       quantity: 1,
     }];
 
-    const sessionData = {
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      mode: 'payment',
-      success_url: `${returnUrl}?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}`,
-      cancel_url: `${returnUrl.replace('success', 'cancel')}?order_id=${order.id}`,
-      metadata: {
-        order_id: order.id,
-      },
-    };
+    const sessionParams = new URLSearchParams({
+      'payment_method_types[0]': 'card',
+      'line_items[0][price_data][currency]': orderData.currency.toLowerCase(),
+      'line_items[0][price_data][product_data][name]': orderData.package_name || 'Custom Song Package',
+      'line_items[0][price_data][product_data][description]': `Package: ${orderData.package_value}`,
+      'line_items[0][price_data][unit_amount]': orderData.total_price.toString(),
+      'line_items[0][quantity]': '1',
+      'mode': 'payment',
+      'success_url': `${returnUrl}?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}`,
+      'cancel_url': `${returnUrl.replace('success', 'cancel')}?order_id=${order.id}`,
+      'metadata[order_id]': order.id,
+    });
+
+    console.log('🟣 Stripe: Creating checkout session with params:', sessionParams.toString());
 
     const stripeResponse = await fetch(stripeUrl, {
       method: 'POST',
@@ -79,17 +89,29 @@ serve(async (req) => {
         'Authorization': `Bearer ${stripeSecretKey}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: new URLSearchParams(sessionData as any).toString(),
+      body: sessionParams.toString(),
     });
 
-    const session = await stripeResponse.json();
+    const responseText = await stripeResponse.text();
+    console.log('🟣 Stripe API Response Status:', stripeResponse.status);
+    console.log('🟣 Stripe API Response Text:', responseText);
 
     if (!stripeResponse.ok) {
-      console.error('Stripe error:', session);
-      throw new Error(`Stripe error: ${session.error?.message || 'Unknown error'}`);
+      console.error('❌ Stripe API Error:', responseText);
+      throw new Error(`Stripe API error (${stripeResponse.status}): ${responseText}`);
     }
 
-    console.log('Stripe session created:', session.id);
+    const session = JSON.parse(responseText);
+    console.log('✅ Stripe: Session created successfully:', {
+      id: session.id,
+      url: session.url ? 'Present' : 'Missing',
+      status: session.status
+    });
+
+    if (!session.url) {
+      console.error('❌ Stripe: No checkout URL in session response');
+      throw new Error('Stripe did not return a checkout URL');
+    }
 
     // Update order with Stripe session ID
     const { error: updateError } = await supabaseClient
@@ -101,16 +123,24 @@ serve(async (req) => {
       .eq('id', order.id);
 
     if (updateError) {
-      console.error('Error updating order with Stripe session:', updateError);
+      console.error('⚠️ Stripe: Error updating order with session details:', updateError);
+      // Don't throw here as the payment session was created successfully
+    } else {
+      console.log('✅ Stripe: Order updated with session details');
     }
 
+    const successResponse = {
+      success: true,
+      orderId: order.id,
+      paymentUrl: session.url,
+      sessionId: session.id,
+      provider: 'stripe'
+    };
+
+    console.log('🟣 Stripe: Returning success response:', successResponse);
+
     return new Response(
-      JSON.stringify({
-        success: true,
-        orderId: order.id,
-        paymentUrl: session.url,
-        sessionId: session.id,
-      }),
+      JSON.stringify(successResponse),
       { 
         headers: { 
           ...corsHeaders, 
@@ -120,12 +150,16 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Error in stripe-create-payment:', error);
+    console.error('💥 Stripe: Fatal error:', error);
+    
+    const errorResponse = {
+      success: false,
+      error: error.message || 'Unknown error occurred',
+      provider: 'stripe'
+    };
+
     return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message 
-      }),
+      JSON.stringify(errorResponse),
       { 
         status: 400,
         headers: { 

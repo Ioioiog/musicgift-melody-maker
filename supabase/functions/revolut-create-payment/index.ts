@@ -14,6 +14,8 @@ serve(async (req) => {
   }
 
   try {
+    console.log('🟠 Revolut Create Payment: Starting process');
+    
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -21,12 +23,16 @@ serve(async (req) => {
 
     const { orderData, returnUrl } = await req.json();
     
-    console.log('Creating Revolut payment for order:', orderData);
+    console.log('🟠 Revolut: Received order data:', JSON.stringify(orderData, null, 2));
+    console.log('🟠 Revolut: Return URL:', returnUrl);
 
     const revolutApiKey = Deno.env.get('REVOLUT_API_KEY');
     if (!revolutApiKey) {
+      console.error('❌ Revolut: API key not configured');
       throw new Error('Revolut API key not configured');
     }
+
+    console.log('✅ Revolut: API key found, proceeding...');
 
     // Create order in database first
     const { data: order, error: orderError } = await supabaseClient
@@ -41,11 +47,11 @@ serve(async (req) => {
       .single();
 
     if (orderError) {
-      console.error('Error creating order:', orderError);
-      throw orderError;
+      console.error('❌ Revolut: Error creating order in database:', orderError);
+      throw new Error(`Database error: ${orderError.message}`);
     }
 
-    console.log('Order created:', order.id);
+    console.log('✅ Revolut: Order created in database:', order.id);
 
     // Create Revolut Business order
     const revolutUrl = 'https://b2b.revolut.com/api/1.0/orders';
@@ -64,6 +70,8 @@ serve(async (req) => {
       }
     };
 
+    console.log('🟠 Revolut: Creating order with data:', JSON.stringify(revolutOrderData, null, 2));
+
     const revolutResponse = await fetch(revolutUrl, {
       method: 'POST',
       headers: {
@@ -73,14 +81,26 @@ serve(async (req) => {
       body: JSON.stringify(revolutOrderData),
     });
 
-    const revolutOrder = await revolutResponse.json();
+    const responseText = await revolutResponse.text();
+    console.log('🟠 Revolut API Response Status:', revolutResponse.status);
+    console.log('🟠 Revolut API Response Text:', responseText);
 
     if (!revolutResponse.ok) {
-      console.error('Revolut error:', revolutOrder);
-      throw new Error(`Revolut error: ${revolutOrder.message || 'Unknown error'}`);
+      console.error('❌ Revolut API Error:', responseText);
+      throw new Error(`Revolut API error (${revolutResponse.status}): ${responseText}`);
     }
 
-    console.log('Revolut order created:', revolutOrder.id);
+    const revolutOrder = JSON.parse(responseText);
+    console.log('✅ Revolut: Order created successfully:', {
+      id: revolutOrder.id,
+      checkout_url: revolutOrder.checkout_url ? 'Present' : 'Missing',
+      state: revolutOrder.state
+    });
+
+    if (!revolutOrder.checkout_url) {
+      console.error('❌ Revolut: No checkout URL in order response');
+      throw new Error('Revolut did not return a checkout URL');
+    }
 
     // Update order with Revolut order ID
     const { error: updateError } = await supabaseClient
@@ -92,16 +112,24 @@ serve(async (req) => {
       .eq('id', order.id);
 
     if (updateError) {
-      console.error('Error updating order with Revolut order:', updateError);
+      console.error('⚠️ Revolut: Error updating order with details:', updateError);
+      // Don't throw here as the payment order was created successfully
+    } else {
+      console.log('✅ Revolut: Order updated with order details');
     }
 
+    const successResponse = {
+      success: true,
+      orderId: order.id,
+      paymentUrl: revolutOrder.checkout_url,
+      revolutOrderId: revolutOrder.id,
+      provider: 'revolut'
+    };
+
+    console.log('🟠 Revolut: Returning success response:', successResponse);
+
     return new Response(
-      JSON.stringify({
-        success: true,
-        orderId: order.id,
-        paymentUrl: revolutOrder.checkout_url,
-        revolutOrderId: revolutOrder.id,
-      }),
+      JSON.stringify(successResponse),
       { 
         headers: { 
           ...corsHeaders, 
@@ -111,12 +139,16 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Error in revolut-create-payment:', error);
+    console.error('💥 Revolut: Fatal error:', error);
+    
+    const errorResponse = {
+      success: false,
+      error: error.message || 'Unknown error occurred',
+      provider: 'revolut'
+    };
+
     return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message 
-      }),
+      JSON.stringify(errorResponse),
       { 
         status: 400,
         headers: { 
