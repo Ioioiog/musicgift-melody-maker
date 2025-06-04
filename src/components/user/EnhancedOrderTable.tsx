@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
@@ -195,106 +194,104 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedOrders.map((order) => (
-              <React.Fragment key={order.id}>
-                <TableRow className="hover:bg-gray-50">
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => toggleRowExpansion(order.id)}
-                      className="p-1"
-                    >
-                      {expandedRows.has(order.id) ? (
-                        <ChevronDown className="w-4 h-4" />
-                      ) : (
-                        <ChevronRight className="w-4 h-4" />
-                      )}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{order.package_name || 'Order'}</div>
-                      <div className="text-sm text-gray-500">{order.package_value}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div>{order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}</div>
-                      <div className="text-sm text-gray-500">
-                        {order.created_at ? new Date(order.created_at).toLocaleTimeString() : ''}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{getCustomerName(order.form_data)}</div>
-                      <div className="text-sm text-gray-500">{getCustomerEmail(order.form_data)}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">
-                        {order.total_price ? formatPrice(order.total_price, order.currency) : 'N/A'}
-                      </div>
-                      {order.gift_credit_applied > 0 && (
-                        <div className="text-sm text-green-600">
-                          Gift: -{formatPrice(order.gift_credit_applied, order.currency)}
-                        </div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={getStatusColor(order.status)}>
-                      {order.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={getPaymentStatusColor(order.payment_status)}>
-                      {order.payment_status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {order.smartbill_invoice_id ? (
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">{order.smartbill_invoice_id}</span>
-                        {order.smartbill_payment_url && (
-                          <Button variant="ghost" size="sm" className="p-1">
-                            <Download className="w-3 h-3" />
-                          </Button>
-                        )}
-                      </div>
+            {sortedOrders.map((order) => [
+              <TableRow key={order.id} className="hover:bg-gray-50">
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleRowExpansion(order.id)}
+                    className="p-1"
+                  >
+                    {expandedRows.has(order.id) ? (
+                      <ChevronDown className="w-4 h-4" />
                     ) : (
-                      <span className="text-gray-400">-</span>
+                      <ChevronRight className="w-4 h-4" />
                     )}
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm">
-                      {getAddonsCount(order.selected_addons)} add-ons
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onViewDetails(order)}
-                    >
-                      <Eye className="w-4 h-4 mr-1" />
-                      {t('viewDetails')}
-                    </Button>
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <div>
+                    <div className="font-medium">{order.package_name || 'Order'}</div>
+                    <div className="text-sm text-gray-500">{order.package_value}</div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div>
+                    <div>{order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}</div>
+                    <div className="text-sm text-gray-500">
+                      {order.created_at ? new Date(order.created_at).toLocaleTimeString() : ''}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div>
+                    <div className="font-medium">{getCustomerName(order.form_data)}</div>
+                    <div className="text-sm text-gray-500">{getCustomerEmail(order.form_data)}</div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div>
+                    <div className="font-medium">
+                      {order.total_price ? formatPrice(order.total_price, order.currency) : 'N/A'}
+                    </div>
+                    {order.gift_credit_applied > 0 && (
+                      <div className="text-sm text-green-600">
+                        Gift: -{formatPrice(order.gift_credit_applied, order.currency)}
+                      </div>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge variant={getStatusColor(order.status)}>
+                    {order.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <Badge variant={getPaymentStatusColor(order.payment_status)}>
+                    {order.payment_status}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  {order.smartbill_invoice_id ? (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">{order.smartbill_invoice_id}</span>
+                      {order.smartbill_payment_url && (
+                        <Button variant="ghost" size="sm" className="p-1">
+                          <Download className="w-3 h-3" />
+                        </Button>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-gray-400">-</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <span className="text-sm">
+                    {getAddonsCount(order.selected_addons)} add-ons
+                  </span>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onViewDetails(order)}
+                  >
+                    <Eye className="w-4 h-4 mr-1" />
+                    {t('viewDetails')}
+                  </Button>
+                </TableCell>
+              </TableRow>,
+              ...(expandedRows.has(order.id) ? [
+                <TableRow key={`${order.id}-expanded`}>
+                  <TableCell colSpan={10} className="p-0">
+                    <div className="p-4 bg-gray-50 border-t">
+                      <OrderExpandedDetails order={order} />
+                    </div>
                   </TableCell>
                 </TableRow>
-                {expandedRows.has(order.id) && (
-                  <TableRow>
-                    <TableCell colSpan={10} className="p-0">
-                      <div className="p-4 bg-gray-50 border-t">
-                        <OrderExpandedDetails order={order} />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </React.Fragment>
-            ))}
+              ] : [])
+            ]).flat()}
           </TableBody>
         </Table>
       </div>
