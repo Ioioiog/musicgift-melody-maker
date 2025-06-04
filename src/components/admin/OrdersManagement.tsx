@@ -31,6 +31,7 @@ const OrdersManagement = () => {
   const [openPromptCards, setOpenPromptCards] = useState<Set<string>>(new Set());
   const [openPromptDetails, setOpenPromptDetails] = useState<Set<string>>(new Set());
   const [refreshingOrders, setRefreshingOrders] = useState<Set<string>>(new Set());
+  const [bulkRefreshing, setBulkRefreshing] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
   const isMobile = useIsMobile();
@@ -168,6 +169,68 @@ const OrdersManagement = () => {
         newSet.delete(orderId);
         return newSet;
       });
+    }
+  };
+
+  const bulkRefreshOrderStatus = async () => {
+    if (bulkRefreshing) return;
+    
+    setBulkRefreshing(true);
+    
+    try {
+      console.log('Starting bulk refresh of order statuses');
+      
+      const { data, error } = await supabase.functions.invoke('smartbill-bulk-status-sync');
+
+      if (error) {
+        console.error('Bulk SmartBill sync error:', error);
+        toast({ 
+          title: 'Bulk refresh failed', 
+          description: error.message || 'Failed to sync with SmartBill',
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      if (data?.error) {
+        console.error('Bulk SmartBill sync error:', data.error);
+        toast({ 
+          title: 'Bulk SmartBill sync error', 
+          description: data.error,
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      console.log('Bulk SmartBill sync result:', data);
+      
+      // Refetch orders to get updated data
+      await refetch();
+      
+      const { totalOrders, successCount, changedCount, errorCount } = data;
+      
+      if (errorCount > 0) {
+        toast({ 
+          title: `Bulk refresh completed with errors`,
+          description: `${successCount}/${totalOrders} orders synced successfully. ${changedCount} status changes. ${errorCount} errors.`,
+          variant: 'destructive'
+        });
+      } else {
+        toast({ 
+          title: 'Bulk refresh completed',
+          description: `${successCount} orders synced successfully. ${changedCount} status changes.`
+        });
+      }
+      
+    } catch (error) {
+      console.error('Error during bulk refresh:', error);
+      toast({ 
+        title: 'Bulk refresh failed', 
+        description: 'Failed to connect to SmartBill for bulk sync',
+        variant: 'destructive' 
+      });
+    } finally {
+      setBulkRefreshing(false);
     }
   };
 
@@ -670,9 +733,19 @@ const OrdersManagement = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
             <CardTitle className="text-xl sm:text-2xl">{t('ordersManagement', 'Orders Management')}</CardTitle>
             <div className="flex gap-2">
+              <Button 
+                onClick={bulkRefreshOrderStatus} 
+                variant="outline" 
+                size="sm" 
+                disabled={bulkRefreshing}
+                className="relative"
+              >
+                <RefreshCw className={`w-4 h-4 mr-2 ${bulkRefreshing ? 'animate-spin' : ''}`} />
+                {bulkRefreshing ? 'Bulk Syncing...' : 'Bulk Refresh'}
+              </Button>
               <Button onClick={() => refetch()} variant="outline" size="sm" disabled={isLoading}>
                 <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-                Refresh All
+                Refresh
               </Button>
               <Button onClick={exportOrders} variant="outline" size="sm" className="w-full sm:w-auto">
                 <Download className="w-4 h-4 mr-2" />
