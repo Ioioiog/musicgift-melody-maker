@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -34,7 +33,7 @@ const OrderHistoryCard: React.FC<OrderHistoryCardProps> = ({ order, onViewDetail
   };
 
   const formatPrice = (price: number, currency: string) => {
-    return `${currency} ${(price / 100).toFixed(2)}`;
+    return `${currency} ${price.toFixed(2)}`;
   };
 
   return (

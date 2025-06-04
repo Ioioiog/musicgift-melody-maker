@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Dialog,
@@ -23,7 +22,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ order, isOpen, on
   if (!order) return null;
 
   const formatPrice = (price: number, currency: string) => {
-    return `${currency} ${(price / 100).toFixed(2)}`;
+    return `${currency} ${price.toFixed(2)}`;
   };
 
   const getStatusColor = (status: string) => {
