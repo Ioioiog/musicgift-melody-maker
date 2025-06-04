@@ -18,6 +18,14 @@ interface SmartBillPaymentStatusResponse {
   };
 }
 
+interface SmartBillInvoiceData {
+  url?: string;
+  number?: string;
+  series?: string;
+  message?: string;
+  errorText?: string;
+}
+
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -41,10 +49,10 @@ Deno.serve(async (req) => {
 
     console.log(`Syncing SmartBill status for order: ${orderId}`);
 
-    // Get the order to find the SmartBill invoice ID
+    // Get the order including SmartBill invoice data
     const { data: order, error: orderError } = await supabase
       .from('orders')
-      .select('smartbill_invoice_id, smartbill_payment_status, payment_status')
+      .select('smartbill_invoice_id, smartbill_invoice_data, smartbill_payment_status, payment_status')
       .eq('id', orderId)
       .single();
 
@@ -56,15 +64,32 @@ Deno.serve(async (req) => {
       );
     }
 
-    if (!order.smartbill_invoice_id) {
-      console.log('Order has no SmartBill invoice ID');
-      return new Response(
-        JSON.stringify({ 
-          error: 'Order has no SmartBill invoice ID',
-          currentStatus: order.smartbill_payment_status 
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    // Extract series and number from smartbill_invoice_data
+    let invoiceSeries = '';
+    let invoiceNumber = '';
+
+    if (order.smartbill_invoice_data) {
+      const invoiceData = order.smartbill_invoice_data as SmartBillInvoiceData;
+      invoiceSeries = invoiceData.series || '';
+      invoiceNumber = invoiceData.number || '';
+      console.log(`Extracted from invoice data - Series: "${invoiceSeries}", Number: "${invoiceNumber}"`);
+    }
+
+    // Fallback to smartbill_invoice_id if invoice data doesn't have the required fields
+    if (!invoiceSeries || !invoiceNumber) {
+      if (order.smartbill_invoice_id) {
+        invoiceNumber = order.smartbill_invoice_id;
+        console.log(`Using fallback - Invoice ID: "${invoiceNumber}", Series: empty`);
+      } else {
+        console.log('Order has no SmartBill invoice data');
+        return new Response(
+          JSON.stringify({ 
+            error: 'Order has no SmartBill invoice data',
+            currentStatus: order.smartbill_payment_status 
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
     }
 
     // Call SmartBill API to get invoice payment status
@@ -82,15 +107,19 @@ Deno.serve(async (req) => {
 
     const smartbillAuth = btoa(`${smartbillUsername}:${smartbillToken}`);
     
-    console.log(`Checking SmartBill payment status for invoice: ${order.smartbill_invoice_id}`);
+    // Construct the URL with proper series and number parameters
+    const paymentStatusUrl = `https://ws.smartbill.ro/SBORO/api/invoice/paymentstatus?cif=${smartbillCompanyVat}&seriesname=${encodeURIComponent(invoiceSeries)}&number=${encodeURIComponent(invoiceNumber)}`;
+    
+    console.log(`Checking SmartBill payment status with URL: ${paymentStatusUrl}`);
+    console.log(`Using series: "${invoiceSeries}", number: "${invoiceNumber}"`);
     
     // Get invoice payment status from SmartBill using the correct endpoint
-    const smartbillResponse = await fetch(`https://ws.smartbill.ro/SBORO/api/invoice/paymentstatus?cif=${smartbillCompanyVat}&seriesname=&number=${order.smartbill_invoice_id}`, {
+    const smartbillResponse = await fetch(paymentStatusUrl, {
       method: 'GET',
       headers: {
         'Authorization': `Basic ${smartbillAuth}`,
-        'Accept': 'application/xml',
-        'Content-Type': 'application/xml',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
       },
     });
 
@@ -103,7 +132,9 @@ Deno.serve(async (req) => {
         JSON.stringify({ 
           error: 'Failed to check SmartBill payment status',
           details: `HTTP ${smartbillResponse.status}: ${smartbillResponse.statusText}`,
-          smartbillError: errorText
+          smartbillError: errorText,
+          usedSeries: invoiceSeries,
+          usedNumber: invoiceNumber
         }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -120,7 +151,9 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: 'SmartBill API error',
-          details: paymentData.errorText
+          details: paymentData.errorText,
+          usedSeries: invoiceSeries,
+          usedNumber: invoiceNumber
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -194,6 +227,8 @@ Deno.serve(async (req) => {
           paidAmount,
           unpaidAmount
         },
+        usedSeries: invoiceSeries,
+        usedNumber: invoiceNumber,
         message: statusChanged ? 'Status updated successfully' : 'Status checked - no changes needed'
       }),
       { 
