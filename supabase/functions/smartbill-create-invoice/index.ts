@@ -193,8 +193,7 @@ serve(async (req) => {
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
-          smartbill_payment_status: 'config_missing',
-          smartbill_error: 'SmartBill credentials not configured'
+          smartbill_payment_status: 'config_missing'
         })
         .eq('id', savedOrder.id)
 
@@ -292,8 +291,7 @@ serve(async (req) => {
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
-          smartbill_payment_status: 'failed',
-          smartbill_error: smartBillError.message
+          smartbill_payment_status: 'failed'
         })
         .eq('id', savedOrder.id)
 
@@ -317,16 +315,15 @@ serve(async (req) => {
     }
 
     // Check if SmartBill returned an error
-    if (!invoiceResponse.ok || invoiceResult?.sbcResponse?.errorText || invoiceResult?.error) {
-      const errorMessage = invoiceResult?.sbcResponse?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
+    if (!invoiceResponse.ok || invoiceResult?.errorText || invoiceResult?.error) {
+      const errorMessage = invoiceResult?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
       console.error('SmartBill API returned error:', errorMessage)
       
       // Update order with error status
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
-          smartbill_payment_status: 'failed',
-          smartbill_error: errorMessage
+          smartbill_payment_status: 'failed'
         })
         .eq('id', savedOrder.id)
 
@@ -348,21 +345,27 @@ serve(async (req) => {
       )
     }
 
-    // Extract invoice details
-    const smartBillInvoiceId = invoiceResult?.sbcResponse?.number || invoiceResult?.invoiceNumber || `INV-${Date.now()}`
-    const smartBillPaymentUrl = invoiceResult?.sbcResponse?.url || invoiceResult?.paymentUrl
+    // Extract invoice details - FIXED: Use the correct path for payment URL
+    const smartBillInvoiceId = invoiceResult?.number || `INV-${Date.now()}`
+    const smartBillPaymentUrl = invoiceResult?.url  // FIXED: Get URL directly from response root
+    
+    console.log('Extracted invoice details:', {
+      invoiceId: smartBillInvoiceId,
+      paymentUrl: smartBillPaymentUrl,
+      fullResponse: invoiceResult
+    })
     
     // Check if we got a valid payment URL
     if (!smartBillPaymentUrl || smartBillPaymentUrl === 'Generate URL') {
       console.error('SmartBill did not return a valid payment URL')
+      console.error('Response structure:', JSON.stringify(invoiceResult, null, 2))
       
       // Update order with payment URL generation failure
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
           smartbill_invoice_id: smartBillInvoiceId,
-          smartbill_payment_status: 'failed',
-          smartbill_error: 'Payment URL generation failed'
+          smartbill_payment_status: 'failed'
         })
         .eq('id', savedOrder.id)
 
@@ -403,6 +406,8 @@ serve(async (req) => {
     if (updateError) {
       console.error('Error updating order with SmartBill details:', updateError)
     }
+
+    console.log('Returning successful response with payment URL:', smartBillPaymentUrl)
 
     return new Response(
       JSON.stringify({
