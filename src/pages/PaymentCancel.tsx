@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { XCircle, ArrowLeft, CreditCard } from 'lucide-react';
+import { XCircle, ArrowLeft, CreditCard, HelpCircle } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
@@ -20,18 +20,26 @@ const PaymentCancel = () => {
                 <div className="mb-6">
                   <XCircle className="w-20 h-20 text-yellow-500 mx-auto mb-4" />
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Payment Cancelled
+                    Plata a fost anulată
                   </h1>
                   <p className="text-gray-600 text-lg">
-                    Your payment was cancelled. No charges were made to your account.
+                    Plata dumneavoastră a fost anulată. Nu au fost efectuate debităti din contul dumneavoastră.
                   </p>
                 </div>
 
                 <div className="bg-yellow-50 rounded-lg p-6 mb-6">
-                  <p className="text-gray-700">
-                    Don't worry! Your order is still saved and you can complete the payment later. 
-                    If you experienced any issues during the payment process, please try again or contact our support team.
+                  <p className="text-gray-700 mb-4">
+                    Nu vă faceți griji! Comanda dumneavoastră este încă salvată și puteți finaliza plata mai târziu.
                   </p>
+                  <div className="text-left text-sm text-gray-600 space-y-2">
+                    <h4 className="font-semibold text-gray-800 mb-2">Motive posibile pentru anulare:</h4>
+                    <ul className="space-y-1">
+                      <li>• Ați închis fereastra de plată</li>
+                      <li>• Ați apăsat butonul "Anulează" în procesul de plată</li>
+                      <li>• A expirat timpul limită pentru finalizarea plății</li>
+                      <li>• Probleme tehnice temporare</li>
+                    </ul>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
@@ -39,21 +47,29 @@ const PaymentCancel = () => {
                     <Button asChild className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
                       <Link to="/order">
                         <CreditCard className="w-4 h-4 mr-2" />
-                        Try Payment Again
+                        Încearcă din nou plata
                       </Link>
                     </Button>
                     
                     <Button asChild variant="outline">
-                      <Link to="/">
+                      <Link to="/packages">
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back to Home
+                        Înapoi la pachete
                       </Link>
                     </Button>
                   </div>
                   
-                  <p className="text-sm text-gray-500">
-                    Need help? <Link to="/contact" className="text-purple-600 hover:underline">Contact our support team</Link>
-                  </p>
+                  <div className="pt-4 border-t border-gray-200">
+                    <p className="text-sm text-gray-500 mb-2">
+                      Aveți nevoie de ajutor?
+                    </p>
+                    <Button asChild variant="ghost" size="sm">
+                      <Link to="/contact" className="text-purple-600 hover:underline">
+                        <HelpCircle className="w-4 h-4 mr-2" />
+                        Contactați echipa noastră de suport
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>

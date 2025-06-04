@@ -42,10 +42,15 @@ const App = () => (
         <Route path="/gift" element={<Gift />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
+        
+        {/* Standardized payment routes */}
         <Route path="/payment/success" element={<PaymentSuccess />} />
-        <Route path="/payment-success" element={<Navigate to="/payment/success" replace />} />
         <Route path="/payment/error" element={<PaymentError />} />
         <Route path="/payment/cancel" element={<PaymentCancel />} />
+        
+        {/* Legacy redirect for old payment-success route */}
+        <Route path="/payment-success" element={<Navigate to="/payment/success" replace />} />
+        
         <Route path="/access-denied" element={<AccessDenied />} />
         <Route 
           path="/settings" 

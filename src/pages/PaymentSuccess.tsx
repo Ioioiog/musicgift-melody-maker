@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Home, Package } from 'lucide-react';
+import { CheckCircle, Home, Package, Clock, AlertCircle } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { useToast } from '@/hooks/use-toast';
@@ -13,6 +13,7 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const [orderDetails, setOrderDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [paymentVerified, setPaymentVerified] = useState(false);
   const { toast } = useToast();
 
   // Handle both 'orderId' and 'order' query parameters
@@ -26,7 +27,6 @@ const PaymentSuccess = () => {
       }
 
       try {
-        // Remove the invalid join with package_info table
         const { data, error } = await supabase
           .from('orders')
           .select('*')
@@ -36,12 +36,13 @@ const PaymentSuccess = () => {
         if (error) {
           console.error('Error fetching order:', error);
           toast({
-            title: 'Error loading order details',
-            description: 'Unable to retrieve your order information.',
+            title: 'Eroare la încărcarea detaliilor comenzii',
+            description: 'Nu am putut prelua informațiile comenzii dumneavoastră.',
             variant: 'destructive'
           });
         } else {
           setOrderDetails(data);
+          setPaymentVerified(data.payment_status === 'completed');
         }
       } catch (error) {
         console.error('Error:', error);
@@ -51,7 +52,19 @@ const PaymentSuccess = () => {
     };
 
     fetchOrderDetails();
-  }, [orderId, toast]);
+
+    // Poll for payment status updates in case webhook is delayed
+    const pollInterval = setInterval(() => {
+      if (orderId && !paymentVerified) {
+        fetchOrderDetails();
+      }
+    }, 5000);
+
+    // Clear interval after 2 minutes
+    setTimeout(() => clearInterval(pollInterval), 120000);
+
+    return () => clearInterval(pollInterval);
+  }, [orderId, toast, paymentVerified]);
 
   if (loading) {
     return (
@@ -60,7 +73,7 @@ const PaymentSuccess = () => {
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading order details...</p>
+            <p className="text-gray-600">Se încarcă detaliile comenzii...</p>
           </div>
         </div>
         <Footer />
@@ -78,35 +91,59 @@ const PaymentSuccess = () => {
             <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
               <CardContent className="p-8 text-center">
                 <div className="mb-6">
-                  <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-4" />
+                  {paymentVerified ? (
+                    <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-4" />
+                  ) : (
+                    <Clock className="w-20 h-20 text-orange-500 mx-auto mb-4" />
+                  )}
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Payment Successful!
+                    {paymentVerified ? 'Plata a fost finalizată cu succes!' : 'Plata este în procesare'}
                   </h1>
                   <p className="text-gray-600 text-lg">
-                    Thank you for your payment. Your order has been confirmed.
+                    {paymentVerified 
+                      ? 'Vă mulțumim pentru plată. Comanda dumneavoastră a fost confirmată.'
+                      : 'Plata dumneavoastră este în curs de procesare. Vă vom informa când va fi confirmată.'
+                    }
                   </p>
                 </div>
 
+                {!paymentVerified && (
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+                    <div className="flex items-center gap-2 text-orange-800 mb-2">
+                      <AlertCircle className="w-5 h-5" />
+                      <span className="font-semibold">Plata în procesare</span>
+                    </div>
+                    <p className="text-sm text-orange-700">
+                      Plata dumneavoastră este în curs de verificare. Acest proces poate dura câteva minute. 
+                      Veți primi un email de confirmare când plata va fi finalizată.
+                    </p>
+                  </div>
+                )}
+
                 {orderDetails && (
                   <div className="bg-gray-50 rounded-lg p-6 mb-6 text-left">
-                    <h3 className="font-semibold text-gray-900 mb-4">Order Details</h3>
+                    <h3 className="font-semibold text-gray-900 mb-4">Detalii comandă</h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Order ID:</span>
+                        <span className="text-gray-600">ID Comandă:</span>
                         <span className="font-mono">#{orderDetails.id.slice(0, 8)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Package:</span>
+                        <span className="text-gray-600">Pachet:</span>
                         <span>{orderDetails.package_name || 'N/A'}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Amount:</span>
+                        <span className="text-gray-600">Sumă:</span>
                         <span className="font-semibold">{orderDetails.total_price} {orderDetails.currency || 'RON'}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Payment Status:</span>
-                        <span className="capitalize text-green-600 font-semibold">
-                          {orderDetails.payment_status}
+                        <span className="text-gray-600">Status plată:</span>
+                        <span className={`capitalize font-semibold ${
+                          paymentVerified ? 'text-green-600' : 'text-orange-600'
+                        }`}>
+                          {orderDetails.payment_status === 'completed' ? 'Finalizată' : 
+                           orderDetails.payment_status === 'pending' ? 'În procesare' : 
+                           orderDetails.payment_status}
                         </span>
                       </div>
                     </div>
@@ -115,22 +152,24 @@ const PaymentSuccess = () => {
 
                 <div className="space-y-4">
                   <p className="text-gray-600">
-                    We've received your payment and your order is now being processed. 
-                    You'll receive an email confirmation shortly with all the details.
+                    {paymentVerified 
+                      ? 'Am primit plata dumneavoastră și comanda este acum în curs de procesare. Veți primi în scurt timp un email de confirmare cu toate detaliile.'
+                      : 'Vă vom informa prin email când plata va fi confirmată și comanda va intra în procesare.'
+                    }
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Button asChild className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
                       <Link to="/">
                         <Home className="w-4 h-4 mr-2" />
-                        Back to Home
+                        Înapoi la pagina principală
                       </Link>
                     </Button>
                     
                     <Button asChild variant="outline">
                       <Link to="/packages">
                         <Package className="w-4 h-4 mr-2" />
-                        View Packages
+                        Vezi pachete
                       </Link>
                     </Button>
                   </div>
