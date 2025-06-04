@@ -26,6 +26,33 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
     }
   };
 
+  // Helper function to safely extract display value from item
+  const getDisplayValue = (item: any): string => {
+    if (typeof item === 'string') {
+      return item;
+    }
+    if (typeof item === 'object' && item !== null) {
+      // Handle objects with include_key or similar structure
+      if (item.include_key) {
+        return item.include_key;
+      }
+      // Handle other possible object structures
+      if (item.label) {
+        return item.label;
+      }
+      if (item.name) {
+        return item.name;
+      }
+      if (item.value) {
+        return item.value;
+      }
+      // If it's an object but we can't extract a meaningful value, stringify it
+      return JSON.stringify(item);
+    }
+    // Fallback for any other data type
+    return String(item);
+  };
+
   const formData = getOrderFormData(order.form_data);
   const packageIncludes = getArrayFromJson(order.package_includes);
   const selectedAddons = getArrayFromJson(order.selected_addons);
@@ -119,8 +146,10 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
             <div className="md:col-span-2">
               <span className="text-gray-500">Package Includes:</span>
               <ul className="mt-1 list-disc list-inside text-gray-900">
-                {packageIncludes.map((item: string, index: number) => (
-                  <li key={index} className="text-xs">{item}</li>
+                {packageIncludes.map((item: any, index: number) => (
+                  <li key={index} className="text-xs">
+                    {getDisplayValue(item)}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -129,8 +158,10 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
             <div className="md:col-span-2">
               <span className="text-gray-500">Selected Add-ons:</span>
               <ul className="mt-1 list-disc list-inside text-gray-900">
-                {selectedAddons.map((addon: string, index: number) => (
-                  <li key={index} className="text-xs">{addon}</li>
+                {selectedAddons.map((addon: any, index: number) => (
+                  <li key={index} className="text-xs">
+                    {getDisplayValue(addon)}
+                  </li>
                 ))}
               </ul>
             </div>
