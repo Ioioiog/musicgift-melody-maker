@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Home, Package } from 'lucide-react';
+import { CheckCircle, Home, Package, RefreshCw } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { useToast } from '@/hooks/use-toast';
@@ -13,43 +13,51 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const [orderDetails, setOrderDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const { toast } = useToast();
 
   // Handle both 'orderId' and 'order' query parameters
   const orderId = searchParams.get('orderId') || searchParams.get('order');
 
-  useEffect(() => {
-    const fetchOrderDetails = async () => {
-      if (!orderId) {
-        setLoading(false);
-        return;
-      }
+  const fetchOrderDetails = async () => {
+    if (!orderId) {
+      setLoading(false);
+      return;
+    }
 
-      try {
-        // Remove the invalid join with package_info table
-        const { data, error } = await supabase
-          .from('orders')
-          .select('*')
-          .eq('id', orderId)
-          .single();
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', orderId)
+        .single();
 
-        if (error) {
-          console.error('Error fetching order:', error);
-          toast({
-            title: 'Error loading order details',
-            description: 'Unable to retrieve your order information.',
-            variant: 'destructive'
-          });
-        } else {
-          setOrderDetails(data);
+      if (error) {
+        console.error('Error fetching order:', error);
+        toast({
+          title: 'Error loading order details',
+          description: 'Unable to retrieve your order information.',
+          variant: 'destructive'
+        });
+      } else {
+        setOrderDetails(data);
+        
+        // Check if payment is confirmed
+        if (data.payment_status === 'completed') {
+          setPaymentConfirmed(true);
+        } else if (data.payment_status === 'pending') {
+          // If payment is still pending, poll for updates
+          setTimeout(fetchOrderDetails, 3000); // Check again in 3 seconds
         }
-      } catch (error) {
-        console.error('Error:', error);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchOrderDetails();
   }, [orderId, toast]);
 
@@ -78,12 +86,19 @@ const PaymentSuccess = () => {
             <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
               <CardContent className="p-8 text-center">
                 <div className="mb-6">
-                  <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-4" />
+                  {paymentConfirmed ? (
+                    <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-4" />
+                  ) : (
+                    <RefreshCw className="w-20 h-20 text-yellow-500 mx-auto mb-4 animate-spin" />
+                  )}
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Payment Successful!
+                    {paymentConfirmed ? 'Payment Successful!' : 'Processing Payment...'}
                   </h1>
                   <p className="text-gray-600 text-lg">
-                    Thank you for your payment. Your order has been confirmed.
+                    {paymentConfirmed 
+                      ? 'Thank you for your payment. Your order has been confirmed.'
+                      : 'We\'re confirming your payment. This should take just a moment.'
+                    }
                   </p>
                 </div>
 
@@ -105,18 +120,28 @@ const PaymentSuccess = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Payment Status:</span>
-                        <span className="capitalize text-green-600 font-semibold">
-                          {orderDetails.payment_status}
+                        <span className={`capitalize font-semibold ${
+                          paymentConfirmed ? 'text-green-600' : 'text-yellow-600'
+                        }`}>
+                          {paymentConfirmed ? 'Completed' : orderDetails.payment_status}
                         </span>
                       </div>
+                      {orderDetails.smartbill_invoice_id && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Invoice #:</span>
+                          <span className="font-mono">{orderDetails.smartbill_invoice_id}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
 
                 <div className="space-y-4">
                   <p className="text-gray-600">
-                    We've received your payment and your order is now being processed. 
-                    You'll receive an email confirmation shortly with all the details.
+                    {paymentConfirmed 
+                      ? "We've received your payment and your order is now being processed. You'll receive an email confirmation shortly with all the details."
+                      : "Please wait while we confirm your payment. You'll receive an email confirmation once it's processed."
+                    }
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -133,6 +158,17 @@ const PaymentSuccess = () => {
                         View Packages
                       </Link>
                     </Button>
+                    
+                    {!paymentConfirmed && (
+                      <Button 
+                        variant="outline" 
+                        onClick={fetchOrderDetails}
+                        className="border-yellow-300 text-yellow-700 hover:bg-yellow-50"
+                      >
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Refresh Status
+                      </Button>
+                    )}
                   </div>
                 </div>
               </CardContent>

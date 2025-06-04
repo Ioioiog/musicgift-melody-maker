@@ -48,6 +48,8 @@ interface SmartBillInvoiceData {
   sendEmail: boolean;
   precision: number;
   currency: string;
+  returnUrl?: string;
+  cancelUrl?: string;
   products: Array<{
     name: string;
     quantity: number;
@@ -219,6 +221,15 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
+    // Get site URL from environment
+    const siteUrl = Deno.env.get('SITE_URL') || 'https://musicgift-ai.lovableproject.com'
+    
+    // Configure return URLs for payment success/failure redirects
+    const returnUrl = `${siteUrl}/payment/success?orderId=${savedOrder.id}`
+    const cancelUrl = `${siteUrl}/payment/error?orderId=${savedOrder.id}`
+    
+    console.log('Configured return URLs:', { returnUrl, cancelUrl })
+
     // Create SmartBill invoice data
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
@@ -242,7 +253,8 @@ serve(async (req) => {
       sendEmail: true,
       precision: 2,
       currency: orderData.currency || 'RON',
-      paymentUrl: 'Generate URL',
+      returnUrl: returnUrl,
+      cancelUrl: cancelUrl,
       products: [
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
