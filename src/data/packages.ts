@@ -134,22 +134,13 @@ export const packages: Package[] = [
             field_order: 6
           },
           {
-            id: "registrationNumber",
-            field_name: "registrationNumber",
-            field_type: "text",
-            label_key: "registrationNumberLabel",
-            placeholder_key: "registrationNumberPlaceholder",
-            required: true,
-            field_order: 7
-          },
-          {
             id: "companyAddress",
             field_name: "companyAddress",
             field_type: "text",
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 8
+            field_order: 7
           },
           {
             id: "representativeName",
@@ -158,7 +149,7 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 9
+            field_order: 8
           }
         ]
       },
@@ -420,22 +411,13 @@ export const packages: Package[] = [
             field_order: 6
           },
           {
-            id: "registrationNumber",
-            field_name: "registrationNumber",
-            field_type: "text",
-            label_key: "registrationNumberLabel",
-            placeholder_key: "registrationNumberPlaceholder",
-            required: true,
-            field_order: 7
-          },
-          {
             id: "companyAddress",
             field_name: "companyAddress",
             field_type: "text",
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 8
+            field_order: 7
           },
           {
             id: "representativeName",
@@ -444,7 +426,7 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 9
+            field_order: 8
           }
         ]
       },
@@ -655,22 +637,13 @@ export const packages: Package[] = [
             field_order: 6
           },
           {
-            id: "registrationNumber",
-            field_name: "registrationNumber",
-            field_type: "text",
-            label_key: "registrationNumberLabel",
-            placeholder_key: "registrationNumberPlaceholder",
-            required: true,
-            field_order: 7
-          },
-          {
             id: "companyAddress",
             field_name: "companyAddress",
             field_type: "text",
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 8
+            field_order: 7
           },
           {
             id: "representativeName",
@@ -679,7 +652,7 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 9
+            field_order: 8
           }
         ]
       },
@@ -855,22 +828,13 @@ export const packages: Package[] = [
             field_order: 3
           },
           {
-            id: "registrationNumber",
-            field_name: "registrationNumber",
-            field_type: "text",
-            label_key: "registrationNumberLabel",
-            placeholder_key: "registrationNumberPlaceholder",
-            required: true,
-            field_order: 4
-          },
-          {
             id: "companyAddress",
             field_name: "companyAddress",
             field_type: "text",
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 5
+            field_order: 4
           },
           {
             id: "representativeName",
@@ -879,7 +843,7 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 6
+            field_order: 5
           }
         ]
       }
@@ -1001,22 +965,13 @@ export const packages: Package[] = [
             field_order: 3
           },
           {
-            id: "registrationNumber",
-            field_name: "registrationNumber",
-            field_type: "text",
-            label_key: "registrationNumberLabel",
-            placeholder_key: "registrationNumberPlaceholder",
-            required: true,
-            field_order: 4
-          },
-          {
             id: "companyAddress",
             field_name: "companyAddress",
             field_type: "text",
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 5
+            field_order: 4
           },
           {
             id: "representativeName",
@@ -1025,7 +980,7 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 6
+            field_order: 5
           }
         ]
       },
@@ -1165,22 +1120,13 @@ export const packages: Package[] = [
             field_order: 6
           },
           {
-            id: "registrationNumber",
-            field_name: "registrationNumber",
-            field_type: "text",
-            label_key: "registrationNumberLabel",
-            placeholder_key: "registrationNumberPlaceholder",
-            required: true,
-            field_order: 7
-          },
-          {
             id: "companyAddress",
             field_name: "companyAddress",
             field_type: "text",
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 8
+            field_order: 7
           },
           {
             id: "representativeName",
@@ -1189,7 +1135,7 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 9
+            field_order: 8
           }
         ]
       },
@@ -1327,22 +1273,13 @@ export const packages: Package[] = [
             field_order: 6
           },
           {
-            id: "registrationNumber",
-            field_name: "registrationNumber",
-            field_type: "text",
-            label_key: "registrationNumberLabel",
-            placeholder_key: "registrationNumberPlaceholder",
-            required: true,
-            field_order: 7
-          },
-          {
             id: "companyAddress",
             field_name: "companyAddress",
             field_type: "text",
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 8
+            field_order: 7
           },
           {
             id: "representativeName",
@@ -1351,7 +1288,7 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 9
+            field_order: 8
           }
         ]
       }
@@ -1457,22 +1394,13 @@ export const packages: Package[] = [
             field_order: 5
           },
           {
-            id: "registrationNumber",
-            field_name: "registrationNumber",
-            field_type: "text",
-            label_key: "registrationNumberLabel",
-            placeholder_key: "registrationNumberPlaceholder",
-            required: true,
-            field_order: 6
-          },
-          {
             id: "companyAddress",
             field_name: "companyAddress",
             field_type: "text",
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 7
+            field_order: 6
           },
           {
             id: "representativeName",
@@ -1481,7 +1409,7 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 8
+            field_order: 7
           }
         ]
       }
