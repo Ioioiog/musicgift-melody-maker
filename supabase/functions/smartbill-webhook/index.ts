@@ -14,6 +14,7 @@ interface SmartBillWebhookPayload {
   currency?: string;
   transactionId?: string;
   paymentDate?: string;
+  paymentUrl: "Generate URL"
 }
 
 serve(async (req) => {
