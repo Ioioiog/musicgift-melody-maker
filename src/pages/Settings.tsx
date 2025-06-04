@@ -7,12 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, User, Mail, Save, Package, Info } from 'lucide-react';
+import { ArrowLeft, User, Mail, Save, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
-import UserOrderHistory from '@/components/user/UserOrderHistory';
 
 const Settings = () => {
   const { user } = useAuth();
@@ -134,14 +133,10 @@ const Settings = () => {
 
           <div className="space-y-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="profile" className="flex items-center gap-2">
                   <User className="w-4 h-4" />
                   {t('profile')}
-                </TabsTrigger>
-                <TabsTrigger value="orders" className="flex items-center gap-2">
-                  <Package className="w-4 h-4" />
-                  {t('orders')}
                 </TabsTrigger>
                 <TabsTrigger value="account" className="flex items-center gap-2">
                   <Info className="w-4 h-4" />
@@ -216,10 +211,6 @@ const Settings = () => {
                     </form>
                   </CardContent>
                 </Card>
-              </TabsContent>
-
-              <TabsContent value="orders">
-                <UserOrderHistory />
               </TabsContent>
 
               <TabsContent value="account">

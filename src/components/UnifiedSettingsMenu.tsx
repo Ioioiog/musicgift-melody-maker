@@ -11,7 +11,7 @@ import {
 import { useLanguage, languageNames, Language } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { Settings, Check, Globe, LogOut, UserCircle, User } from 'lucide-react';
+import { Settings, Check, Globe, LogOut, UserCircle, User, History } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CurrencyIcon from '@/components/CurrencyIcon';
 
@@ -105,6 +105,15 @@ const UnifiedSettingsMenu = () => {
               >
                 <User className="w-4 h-4 mr-3" />
                 <span className="font-medium">{t('accountSettings')}</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link 
+                to="/history" 
+                className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-green-50 hover:to-green-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-green-700 px-3 py-2 transform hover:scale-105 min-h-[40px] touch-manipulation"
+              >
+                <History className="w-4 h-4 mr-3" />
+                <span className="font-medium">{t('history')}</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem 

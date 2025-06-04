@@ -9,4 +9,6 @@ export const navigationTranslations = {
   getStarted: "Jetzt starten",
   orderNow: "Jetzt bestellen",
   admin: "Admin",
+  history: "Verlauf",
+  viewManageOrders: "Bestellhistorie anzeigen und verwalten",
 };

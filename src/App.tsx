@@ -18,6 +18,7 @@ import Gift from "./pages/Gift";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import Settings from "./pages/Settings";
+import History from "./pages/History";
 import AccessDenied from "./pages/AccessDenied";
 import NotFound from "./pages/NotFound";
 import PaymentSuccess from "./pages/PaymentSuccess";
@@ -57,6 +58,14 @@ const App = () => (
           element={
             <AuthGuard>
               <Settings />
+            </AuthGuard>
+          } 
+        />
+        <Route 
+          path="/history" 
+          element={
+            <AuthGuard>
+              <History />
             </AuthGuard>
           } 
         />

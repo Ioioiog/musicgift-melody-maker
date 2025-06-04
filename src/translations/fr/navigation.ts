@@ -9,4 +9,6 @@ export const navigationTranslations = {
   getStarted: "Commencer",
   orderNow: "Commander maintenant",
   admin: "Admin",
+  history: "Historique",
+  viewManageOrders: "Voir et gérer votre historique de commandes",
 };
