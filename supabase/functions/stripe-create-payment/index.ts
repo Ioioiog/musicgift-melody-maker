@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('🟣 Stripe Create Payment: Starting process');
+    console.log('🟣 Stripe Create Payment: Starting enhanced process');
     
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -231,7 +231,7 @@ serve(async (req) => {
     // Create order in database first - ensure payment_provider is set to 'stripe'
     const orderInsertData = {
       ...orderData,
-      payment_provider: 'stripe', // Explicitly set to stripe
+      payment_provider: 'stripe',
       status: 'pending',
       payment_status: 'pending'
     };
@@ -265,29 +265,92 @@ serve(async (req) => {
 
     console.log('✅ Stripe: Order created in database:', order.id);
 
-    // Create Stripe checkout session
+    // Enhanced customer information
+    const customerEmail = orderData.form_data.email;
+    const customerName = orderData.form_data.fullName;
+
+    // Determine regional payment methods based on currency
+    const paymentMethodTypes = ['card'];
+    if (orderData.currency === 'eur') {
+      paymentMethodTypes.push('sepa_debit', 'ideal', 'bancontact', 'giropay');
+    } else if (orderData.currency === 'gbp') {
+      paymentMethodTypes.push('bacs_debit');
+    }
+
+    // Enhanced metadata for better tracking
+    const sessionMetadata = {
+      order_id: order.id,
+      package_value: orderData.package_value || '',
+      customer_name: customerName,
+      payment_provider: 'stripe',
+      created_via: 'order_wizard'
+    };
+
+    // Enhanced line item with better product description
+    const lineItem = {
+      price_data: {
+        currency: orderData.currency.toLowerCase(),
+        product_data: {
+          name: orderData.package_name || 'Custom Song Package',
+          description: `${orderData.package_value} - Delivery: ${orderData.package_delivery_time || 'Standard'}`,
+          metadata: {
+            package_type: orderData.package_value || '',
+            includes: orderData.package_includes ? JSON.stringify(orderData.package_includes) : ''
+          }
+        },
+        unit_amount: orderData.total_price
+      },
+      quantity: 1
+    };
+
+    // Create Stripe checkout session with enhanced parameters
     const stripeUrl = 'https://api.stripe.com/v1/checkout/sessions';
     
-    const sessionParams = new URLSearchParams({
-      'payment_method_types[0]': 'card',
-      'line_items[0][price_data][currency]': orderData.currency.toLowerCase(),
-      'line_items[0][price_data][product_data][name]': orderData.package_name || 'Custom Song Package',
-      'line_items[0][price_data][product_data][description]': `Package: ${orderData.package_value}`,
-      'line_items[0][price_data][unit_amount]': orderData.total_price.toString(),
-      'line_items[0][quantity]': '1',
-      'mode': 'payment',
-      'success_url': `${returnUrl}?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}`,
-      'cancel_url': `${returnUrl.replace('success', 'cancel')}?order_id=${order.id}`,
-      'metadata[order_id]': order.id,
+    const sessionParams = new URLSearchParams();
+    
+    // Core session parameters
+    paymentMethodTypes.forEach((type, index) => {
+      sessionParams.append(`payment_method_types[${index}]`, type);
     });
+    
+    // Line item parameters
+    sessionParams.append('line_items[0][price_data][currency]', lineItem.price_data.currency);
+    sessionParams.append('line_items[0][price_data][product_data][name]', lineItem.price_data.product_data.name);
+    sessionParams.append('line_items[0][price_data][product_data][description]', lineItem.price_data.product_data.description);
+    sessionParams.append('line_items[0][price_data][unit_amount]', lineItem.price_data.unit_amount.toString());
+    sessionParams.append('line_items[0][quantity]', '1');
+    
+    // Session configuration
+    sessionParams.append('mode', 'payment');
+    sessionParams.append('expires_at', Math.floor((Date.now() / 1000) + (30 * 60)).toString()); // 30 minutes
+    
+    // Customer information
+    sessionParams.append('customer_email', customerEmail);
+    sessionParams.append('billing_address_collection', 'required');
+    
+    // Enhanced URLs with more parameters
+    sessionParams.append('success_url', `${returnUrl}?session_id={CHECKOUT_SESSION_ID}&order_id=${order.id}&payment_status=success`);
+    sessionParams.append('cancel_url', `${returnUrl.replace('success', 'cancel')}?order_id=${order.id}&payment_status=cancelled`);
+    
+    // Metadata
+    Object.entries(sessionMetadata).forEach(([key, value]) => {
+      sessionParams.append(`metadata[${key}]`, value);
+    });
+    
+    // Allow promotion codes
+    sessionParams.append('allow_promotion_codes', 'true');
+    
+    // Automatic tax calculation (if enabled in Stripe)
+    sessionParams.append('automatic_tax[enabled]', 'false');
 
-    console.log('🟣 Stripe: Creating checkout session with params:', sessionParams.toString());
+    console.log('🟣 Stripe: Creating enhanced checkout session with params:', sessionParams.toString());
 
     const stripeResponse = await fetch(stripeUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${stripeSecretKey}`,
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Idempotency-Key': `order-${order.id}-${Date.now()}` // Prevent duplicate sessions
       },
       body: sessionParams.toString(),
     });
@@ -298,10 +361,22 @@ serve(async (req) => {
 
     if (!stripeResponse.ok) {
       console.error('❌ Stripe API Error:', responseText);
+      
+      // Parse Stripe error for better user feedback
+      let errorMessage = `Stripe API error (${stripeResponse.status})`;
+      try {
+        const errorData = JSON.parse(responseText);
+        if (errorData.error && errorData.error.message) {
+          errorMessage = errorData.error.message;
+        }
+      } catch (e) {
+        errorMessage += `: ${responseText}`;
+      }
+      
       return new Response(
         JSON.stringify({
           success: false,
-          error: `Stripe API error (${stripeResponse.status}): ${responseText}`,
+          error: errorMessage,
           errorCode: 'stripeApiError',
           provider: 'stripe'
         }),
@@ -316,10 +391,12 @@ serve(async (req) => {
     }
 
     const session = JSON.parse(responseText);
-    console.log('✅ Stripe: Session created successfully:', {
+    console.log('✅ Stripe: Enhanced session created successfully:', {
       id: session.id,
       url: session.url ? 'Present' : 'Missing',
-      status: session.status
+      status: session.status,
+      expires_at: session.expires_at,
+      payment_method_types: session.payment_method_types
     });
 
     if (!session.url) {
@@ -341,12 +418,14 @@ serve(async (req) => {
       );
     }
 
-    // Update order with Stripe session ID
+    // Update order with enhanced Stripe session details
     const { error: updateError } = await supabaseClient
       .from('orders')
       .update({
         stripe_session_id: session.id,
         payment_url: session.url,
+        session_expires_at: new Date(session.expires_at * 1000).toISOString(),
+        supported_payment_methods: session.payment_method_types
       })
       .eq('id', order.id);
 
@@ -354,7 +433,7 @@ serve(async (req) => {
       console.error('⚠️ Stripe: Error updating order with session details:', updateError);
       // Don't throw here as the payment session was created successfully
     } else {
-      console.log('✅ Stripe: Order updated with session details');
+      console.log('✅ Stripe: Order updated with enhanced session details');
     }
 
     const successResponse = {
@@ -362,10 +441,12 @@ serve(async (req) => {
       orderId: order.id,
       paymentUrl: session.url,
       sessionId: session.id,
+      expiresAt: session.expires_at,
+      paymentMethods: session.payment_method_types,
       provider: 'stripe'
     };
 
-    console.log('🟣 Stripe: Returning success response:', successResponse);
+    console.log('🟣 Stripe: Returning enhanced success response:', successResponse);
 
     return new Response(
       JSON.stringify(successResponse),

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -138,7 +137,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const totalPrice = calculateTotalPrice();
 
   const validateFormData = () => {
-    console.log('🔍 Validating form data:', formData);
+    console.log('🔍 Enhanced Form Data Validation Starting...');
+    console.log('📝 Current formData:', JSON.stringify(formData, null, 2));
+    console.log('🎯 Selected package:', selectedPackage);
+    console.log('🛒 Selected addons:', selectedAddons);
+    console.log('💰 Total price:', totalPrice);
     
     // Check if formData exists and is an object
     if (!formData || typeof formData !== 'object') {
@@ -146,9 +149,24 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       throw new Error('Form data is missing or invalid');
     }
 
+    // Check if we have a selected package
+    if (!selectedPackage || selectedPackage === '') {
+      console.error('❌ No package selected');
+      throw new Error('Please select a package before proceeding');
+    }
+
     // Ensure we have required basic fields based on package steps
     const requiredFields = ['email', 'fullName'];
-    const missingFields = requiredFields.filter(field => !formData[field] || formData[field] === '');
+    console.log('🔍 Checking required fields:', requiredFields);
+    
+    const missingFields = requiredFields.filter(field => {
+      const value = formData[field];
+      const isEmpty = !value || value === '' || (typeof value === 'string' && value.trim() === '');
+      if (isEmpty) {
+        console.error(`❌ Missing or empty field: ${field} = "${value}"`);
+      }
+      return isEmpty;
+    });
     
     if (missingFields.length > 0) {
       console.error('❌ Missing required fields:', missingFields);
@@ -161,8 +179,102 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       throw new Error('Please enter a valid email address');
     }
 
-    console.log('✅ Form data validation passed');
+    // Validate fullName
+    if (formData.fullName && formData.fullName.trim().length < 2) {
+      console.error('❌ Full name too short:', formData.fullName);
+      throw new Error('Please enter a valid full name (at least 2 characters)');
+    }
+
+    // Validate total price
+    if (totalPrice === null || totalPrice === undefined || totalPrice < 0) {
+      console.error('❌ Invalid total price:', totalPrice);
+      throw new Error('Invalid total price calculated');
+    }
+
+    console.log('✅ Enhanced form data validation passed');
+    console.log('📋 Final validated data structure:');
+    console.log('  - Email:', formData.email);
+    console.log('  - Full Name:', formData.fullName);
+    console.log('  - Package:', selectedPackage);
+    console.log('  - Total Price:', totalPrice);
+    console.log('  - Currency:', currency);
+    console.log('  - Payment Provider:', selectedPaymentProvider);
+    
     return true;
+  };
+
+  const prepareOrderData = () => {
+    console.log('🏗️ Preparing enhanced order data...');
+    
+    // Ensure form_data is properly structured and contains all required fields
+    const structuredFormData = {
+      email: (formData.email || '').trim(),
+      fullName: (formData.fullName || '').trim(),
+      recipientName: (formData.recipientName || '').trim(),
+      occasion: (formData.occasion || '').trim(),
+      invoiceType: formData.invoiceType || '',
+      companyName: (formData.companyName || '').trim(),
+      vatCode: (formData.vatCode || '').trim(),
+      registrationNumber: (formData.registrationNumber || '').trim(),
+      companyAddress: (formData.companyAddress || '').trim(),
+      representativeName: (formData.representativeName || '').trim(),
+      ...formData // Include any additional fields
+    };
+
+    console.log('📦 Enhanced structured form data:', JSON.stringify(structuredFormData, null, 2));
+
+    // Find package details
+    const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+    
+    if (!selectedPackageData) {
+      console.error('❌ Selected package data not found:', selectedPackage);
+      throw new Error('Selected package not found');
+    }
+
+    const package_name = selectedPackageData?.label_key;
+    const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
+    const package_delivery_time = selectedPackageData?.delivery_time_key;
+    const package_includes = selectedPackageData?.includes;
+
+    const orderData = {
+      form_data: structuredFormData,
+      selected_addons: selectedAddons,
+      addon_field_values: addonFieldValues,
+      total_price: totalPrice * 100, // Convert to cents for payment processing
+      package_value: selectedPackage,
+      package_name: package_name,
+      package_price: package_price,
+      package_delivery_time: package_delivery_time,
+      package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
+      status: 'pending',
+      payment_status: 'pending',
+      currency: currency,
+      payment_provider: selectedPaymentProvider,
+      // Enhanced metadata
+      order_created_at: new Date().toISOString(),
+      user_agent: navigator.userAgent,
+      referrer: document.referrer || 'direct'
+    };
+
+    console.log('📦 Enhanced order data prepared:', JSON.stringify(orderData, null, 2));
+
+    // Final validation of orderData structure
+    if (!orderData.form_data || typeof orderData.form_data !== 'object') {
+      console.error('❌ Order data form_data is invalid:', orderData.form_data);
+      throw new Error('Order data structure is invalid');
+    }
+
+    // Validate critical fields in form_data
+    const criticalFields = ['email', 'fullName'];
+    for (const field of criticalFields) {
+      if (!orderData.form_data[field] || orderData.form_data[field] === '') {
+        console.error(`❌ Critical field missing in order data: ${field}`);
+        throw new Error(`Order data is missing required field: ${field}`);
+      }
+    }
+
+    console.log('✅ Enhanced order data validation passed');
+    return orderData;
   };
 
   const handleSubmit = async () => {
@@ -171,11 +283,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     setIsSubmitting(true);
     
     try {
-      console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
+      console.log(`🔄 Starting enhanced payment process with provider: ${selectedPaymentProvider}`);
       console.log(`💰 Total price: ${totalPrice} ${currency}`);
-      console.log('📝 Current form data:', JSON.stringify(formData, null, 2));
       
-      // Validate form data before proceeding
+      // Enhanced validation
       validateFormData();
       
       if (onComplete) {
@@ -198,70 +309,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
       console.log(`🎯 Selected payment provider: "${selectedPaymentProvider}"`);
 
-      // Validate that we have a selected package
-      if (!selectedPackage) {
-        console.error('❌ No package selected');
-        throw new Error('Please select a package before proceeding');
-      }
-
-      // Create order with selected payment provider
-      const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
-      
-      if (!selectedPackageData) {
-        console.error('❌ Selected package data not found:', selectedPackage);
-        throw new Error('Selected package not found');
-      }
-
-      const package_name = selectedPackageData?.label_key;
-      const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
-      const package_delivery_time = selectedPackageData?.delivery_time_key;
-      const package_includes = selectedPackageData?.includes;
-
-      // Validate total price
-      if (totalPrice === null || totalPrice === undefined || totalPrice < 0) {
-        console.error('❌ Invalid total price:', totalPrice);
-        throw new Error('Invalid total price calculated');
-      }
-
-      // Ensure form_data is properly structured and contains all required fields
-      const structuredFormData = {
-        email: formData.email || '',
-        fullName: formData.fullName || '',
-        recipientName: formData.recipientName || '',
-        occasion: formData.occasion || '',
-        invoiceType: formData.invoiceType || '',
-        companyName: formData.companyName || '',
-        vatCode: formData.vatCode || '',
-        registrationNumber: formData.registrationNumber || '',
-        companyAddress: formData.companyAddress || '',
-        representativeName: formData.representativeName || '',
-        ...formData // Include any additional fields
-      };
-
-      console.log('📦 Structured form data:', JSON.stringify(structuredFormData, null, 2));
-
-      const orderData = {
-        form_data: structuredFormData, // Use the structured form data
-        selected_addons: selectedAddons,
-        total_price: totalPrice * 100, // Convert to cents for payment processing
-        package_value: selectedPackage,
-        package_name: package_name,
-        package_price: package_price,
-        package_delivery_time: package_delivery_time,
-        package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
-        status: 'pending',
-        payment_status: 'pending',
-        currency: currency,
-        payment_provider: selectedPaymentProvider
-      };
-
-      console.log(`📦 Order data prepared:`, JSON.stringify(orderData, null, 2));
-
-      // Final validation of orderData structure
-      if (!orderData.form_data || typeof orderData.form_data !== 'object') {
-        console.error('❌ Order data form_data is invalid:', orderData.form_data);
-        throw new Error('Order data structure is invalid');
-      }
+      // Prepare enhanced order data
+      const orderData = prepareOrderData();
 
       // Determine edge function based on payment provider with explicit validation
       let edgeFunctionName: string;
@@ -270,7 +319,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       if (selectedPaymentProvider === 'stripe') {
         edgeFunctionName = 'stripe-create-payment';
         paymentProviderLabel = 'Stripe';
-        console.log('🟣 Using Stripe payment gateway');
+        console.log('🟣 Using enhanced Stripe payment gateway');
       } else if (selectedPaymentProvider === 'revolut') {
         edgeFunctionName = 'revolut-create-payment';
         paymentProviderLabel = 'Revolut';
@@ -284,7 +333,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         throw new Error(`Payment method "${selectedPaymentProvider}" is not supported. Please select a valid payment method.`);
       }
 
-      console.log(`🚀 Calling edge function: ${edgeFunctionName} for ${paymentProviderLabel}`);
+      console.log(`🚀 Calling enhanced edge function: ${edgeFunctionName} for ${paymentProviderLabel}`);
 
       // Call the appropriate payment provider edge function
       const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke(edgeFunctionName, {
@@ -294,7 +343,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         }
       });
 
-      console.log(`📨 ${paymentProviderLabel} edge function response:`, { data: paymentResponse, error: paymentError });
+      console.log(`📨 Enhanced ${paymentProviderLabel} edge function response:`, { data: paymentResponse, error: paymentError });
 
       if (paymentError) {
         console.error(`❌ ${paymentProviderLabel} edge function error:`, paymentError);
@@ -306,7 +355,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         throw new Error(`No response received from ${paymentProviderLabel} payment service`);
       }
 
-      console.log(`✅ ${paymentProviderLabel} response received:`, paymentResponse);
+      console.log(`✅ Enhanced ${paymentProviderLabel} response received:`, paymentResponse);
 
       // Validate response structure
       if (!paymentResponse.success) {
@@ -321,16 +370,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         throw new Error(`${paymentProviderLabel} did not return a payment URL. Please try again or contact support.`);
       }
 
-      // Show success message
+      // Show enhanced success message
+      const orderIdShort = paymentResponse.orderId?.slice(0, 8) || 'Unknown';
       toast({
         title: t('orderSuccess'),
-        description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${paymentResponse.orderId?.slice(0, 8)}...`),
+        description: `Your order has been created successfully. ID: ${orderIdShort}... ${paymentResponse.expiresAt ? `Session expires in 30 minutes.` : ''}`,
         variant: "default"
       });
 
       // Handle redirection based on provider
       if (paymentResponse.paymentUrl) {
-        console.log(`🔄 Redirecting to ${paymentProviderLabel} payment:`, paymentResponse.paymentUrl);
+        console.log(`🔄 Redirecting to enhanced ${paymentProviderLabel} payment:`, paymentResponse.paymentUrl);
+        console.log(`⏰ Session expires at:`, paymentResponse.expiresAt ? new Date(paymentResponse.expiresAt * 1000) : 'No expiration');
+        console.log(`💳 Available payment methods:`, paymentResponse.paymentMethods || 'Standard');
         
         // Validate URL before redirecting
         try {
@@ -342,12 +394,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         }
       } else {
         // If no payment needed (e.g., fully covered by gift card), show success
-        console.log('✅ Order completed successfully without payment redirection needed');
+        console.log('✅ Enhanced order completed successfully without payment redirection needed');
         navigate('/payment/success?orderId=' + paymentResponse.orderId);
       }
 
     } catch (error) {
-      console.error('💥 Payment processing error:', error);
+      console.error('💥 Enhanced payment processing error:', error);
       
       // Show user-friendly error message
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
