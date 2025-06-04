@@ -1,5 +1,3 @@
-
-
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -177,5 +175,10 @@ export const orderTranslations = {
   paymentUrlErrorDesc: "We couldn't create a payment link for your order. Please try again or contact support.",
   orderCreationFailed: "Order creation failed",
   orderCreationFailedDesc: "There was an error creating your order. Please try again.",
+  
+  // VAT and Registration fields
+  vatCodeLabel: "VAT Code",
+  vatCodePlaceholder: "GB123456789",
+  registrationNumberLabel: "Registration Number",
+  registrationNumberPlaceholder: "Company registration number",
 };
-
