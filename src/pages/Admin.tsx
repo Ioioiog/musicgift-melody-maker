@@ -9,6 +9,7 @@ import PackageManagement from "@/components/admin/PackageManagement";
 import NewsletterManagement from "@/components/admin/NewsletterManagement";
 import CampaignsManagement from "@/components/admin/CampaignsManagement";
 import GiftCardsManagement from "@/components/admin/GiftCardsManagement";
+import PaymentProvidersManagement from "@/components/admin/PaymentProvidersManagement";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 
@@ -30,7 +31,7 @@ const Admin = () => {
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
               {/* Mobile-optimized tab layout */}
               <div className="w-full overflow-x-auto">
-                <TabsList className="grid w-full grid-cols-6 min-w-[600px] sm:min-w-full h-auto p-1">
+                <TabsList className="grid w-full grid-cols-7 min-w-[700px] sm:min-w-full h-auto p-1">
                   <TabsTrigger 
                     value="packages" 
                     className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
@@ -48,6 +49,12 @@ const Admin = () => {
                     className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
                   >
                     Gift Cards
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="payments" 
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                  >
+                    Payments
                   </TabsTrigger>
                   <TabsTrigger 
                     value="users" 
@@ -80,6 +87,10 @@ const Admin = () => {
 
               <TabsContent value="gift-cards" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <GiftCardsManagement />
+              </TabsContent>
+
+              <TabsContent value="payments" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
+                <PaymentProvidersManagement />
               </TabsContent>
 
               <TabsContent value="users" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">

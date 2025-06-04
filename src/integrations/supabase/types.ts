@@ -373,14 +373,19 @@ export type Database = {
           package_price: number | null
           package_value: string | null
           payment_id: string | null
+          payment_provider: string | null
           payment_status: string | null
           payment_url: string | null
+          revolut_order_id: string | null
+          revolut_payment_id: string | null
           selected_addons: Json | null
           smartbill_invoice_data: Json | null
           smartbill_invoice_id: string | null
           smartbill_payment_status: string | null
           smartbill_payment_url: string | null
           status: string | null
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
           total_price: number | null
           updated_at: string | null
           user_id: string | null
@@ -400,14 +405,19 @@ export type Database = {
           package_price?: number | null
           package_value?: string | null
           payment_id?: string | null
+          payment_provider?: string | null
           payment_status?: string | null
           payment_url?: string | null
+          revolut_order_id?: string | null
+          revolut_payment_id?: string | null
           selected_addons?: Json | null
           smartbill_invoice_data?: Json | null
           smartbill_invoice_id?: string | null
           smartbill_payment_status?: string | null
           smartbill_payment_url?: string | null
           status?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
           total_price?: number | null
           updated_at?: string | null
           user_id?: string | null
@@ -427,14 +437,19 @@ export type Database = {
           package_price?: number | null
           package_value?: string | null
           payment_id?: string | null
+          payment_provider?: string | null
           payment_status?: string | null
           payment_url?: string | null
+          revolut_order_id?: string | null
+          revolut_payment_id?: string | null
           selected_addons?: Json | null
           smartbill_invoice_data?: Json | null
           smartbill_invoice_id?: string | null
           smartbill_payment_status?: string | null
           smartbill_payment_url?: string | null
           status?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
           total_price?: number | null
           updated_at?: string | null
           user_id?: string | null
@@ -448,6 +463,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      payment_providers: {
+        Row: {
+          config: Json | null
+          created_at: string | null
+          display_name: string
+          id: string
+          is_enabled: boolean | null
+          logo_url: string | null
+          provider_name: string
+          supported_currencies: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string | null
+          display_name: string
+          id?: string
+          is_enabled?: boolean | null
+          logo_url?: string | null
+          provider_name: string
+          supported_currencies?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string | null
+          display_name?: string
+          id?: string
+          is_enabled?: boolean | null
+          logo_url?: string | null
+          provider_name?: string
+          supported_currencies?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       profiles: {
         Row: {

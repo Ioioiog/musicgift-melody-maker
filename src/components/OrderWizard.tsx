@@ -15,6 +15,7 @@ import FormFieldRenderer from './order/FormFieldRenderer';
 import StepIndicator from './order/StepIndicator';
 import OrderSummary from './order/OrderSummary';
 import PackageSelectionStep from './order/PackageSelectionStep';
+import PaymentProviderSelection from './order/PaymentProviderSelection';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useToast } from '@/hooks/use-toast';
 
@@ -44,6 +45,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const [formData, setFormData] = useState<OrderFormData>({});
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [addonFieldValues, setAddonFieldValues] = useState<Record<string, any>>({});
+  const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('smartbill');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
   const { currency } = useCurrency();
@@ -56,8 +58,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const selectedPackage = formData.package as string;
   const { data: packageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
   
-  // Total steps = 1 (package selection) + package-specific steps
-  const totalSteps = 1 + (packageSteps?.length || 0);
+  // Total steps = 1 (package selection) + package-specific steps + 1 (payment provider selection)
+  const totalSteps = 1 + (packageSteps?.length || 0) + 1;
 
   // Find the selected package data
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
@@ -147,10 +149,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           addons: selectedAddons,
           addonFieldValues,
           package: selectedPackage,
+          paymentProvider: selectedPaymentProvider,
           totalPrice
         });
       } else {
-        // Create order with SmartBill integration
+        // Create order with selected payment provider
         const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
         const package_name = selectedPackageData?.label_key;
         const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
@@ -171,31 +174,46 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           currency: currency
         };
 
-        console.log('Creating order with SmartBill:', orderData);
+        console.log(`Creating order with ${selectedPaymentProvider}:`, orderData);
 
-        // Call SmartBill integration edge function
-        const { data: smartBillResponse, error: smartBillError } = await supabase.functions.invoke('smartbill-create-invoice', {
-          body: orderData
-        });
-
-        if (smartBillError) {
-          console.error('SmartBill error:', smartBillError);
-          throw new Error('Failed to create invoice with SmartBill');
+        let edgeFunctionName;
+        switch (selectedPaymentProvider) {
+          case 'stripe':
+            edgeFunctionName = 'stripe-create-payment';
+            break;
+          case 'revolut':
+            edgeFunctionName = 'revolut-create-payment';
+            break;
+          default:
+            edgeFunctionName = 'smartbill-create-invoice';
         }
 
-        console.log('SmartBill response:', smartBillResponse);
+        // Call the appropriate payment provider edge function
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke(edgeFunctionName, {
+          body: {
+            orderData,
+            returnUrl: `${window.location.origin}/payment/success`
+          }
+        });
+
+        if (paymentError) {
+          console.error(`${selectedPaymentProvider} error:`, paymentError);
+          throw new Error(`Failed to create payment with ${selectedPaymentProvider}`);
+        }
+
+        console.log(`${selectedPaymentProvider} response:`, paymentResponse);
 
         // Show success message
         toast({
           title: t('orderSuccess'),
-          description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${smartBillResponse.orderId?.slice(0, 8)}...`),
+          description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${paymentResponse.orderId?.slice(0, 8)}...`),
           variant: "default"
         });
 
-        // If SmartBill returns a payment URL, redirect user
-        if (smartBillResponse?.paymentUrl) {
-          window.location.href = smartBillResponse.paymentUrl;
-        } else if (smartBillResponse?.success) {
+        // If payment provider returns a payment URL, redirect user
+        if (paymentResponse?.paymentUrl) {
+          window.location.href = paymentResponse.paymentUrl;
+        } else if (paymentResponse?.success) {
           // If no payment needed (e.g., fully covered by gift card), show success
           console.log('Order completed successfully without payment needed');
         }
@@ -213,12 +231,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   };
 
   // Get current step data (for package-specific steps)
+  const isPaymentStep = currentStep === totalSteps - 1;
   const currentPackageStepIndex = currentStep - 1;
-  const currentStepData = currentStep > 0 ? packageSteps?.[currentPackageStepIndex] : null;
+  const currentStepData = currentStep > 0 && !isPaymentStep ? packageSteps?.[currentPackageStepIndex] : null;
 
   const canProceed = () => {
     if (currentStep === 0) {
       return !!formData.package;
+    }
+    if (isPaymentStep) {
+      return !!selectedPaymentProvider;
     }
     return true; // Add validation logic for other steps if needed
   };
@@ -252,6 +274,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                   <PackageSelectionStep
                     selectedPackage={formData.package}
                     onPackageSelect={handlePackageSelect}
+                  />
+                ) : isPaymentStep ? (
+                  <PaymentProviderSelection
+                    selectedProvider={selectedPaymentProvider}
+                    onProviderSelect={setSelectedPaymentProvider}
                   />
                 ) : currentStepData ? (
                   currentStepData.fields.map(field => (
@@ -289,7 +316,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
             </Button>
             <Button
               onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
-              disabled={!canProceed() || (currentStep > 0 && isStepsLoading) || isSubmitting}
+              disabled={!canProceed() || (currentStep > 0 && !isPaymentStep && isStepsLoading) || isSubmitting}
             >
               {isSubmitting ? (
                 <>
