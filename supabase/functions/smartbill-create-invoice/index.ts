@@ -243,6 +243,7 @@ serve(async (req) => {
       sendEmail: true,
       precision: 2,
       currency: orderData.currency || 'RON',
+      paymentUrl: 'Generate URL',
       products: [
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
