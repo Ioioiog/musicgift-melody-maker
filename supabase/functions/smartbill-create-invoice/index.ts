@@ -243,6 +243,8 @@ serve(async (req) => {
       precision: 2,
       currency: orderData.currency || 'RON',
       paymentUrl: 'Generate URL',
+      returnUrl: 'https://www.musicgift.ro/payment/success?orderId=' + savedOrder.id,
+      cancelUrl: 'https://www.musicgift.ro/payment/cancelled?orderId=' + savedOrder.id,
       products: [
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
