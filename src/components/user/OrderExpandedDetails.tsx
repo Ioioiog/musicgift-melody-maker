@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Calendar, Package, CreditCard, User, Mail, Phone, Clock, Gift } from 'lucide-react';
+import { Calendar, Package, CreditCard, User, Mail, Phone, Clock, Gift, ListChecks } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getOrderFormData, getArrayFromJson } from '@/types/order';
+import StepProgress from './StepProgress';
 
 interface OrderExpandedDetailsProps {
   order: any;
@@ -173,6 +173,24 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
 
   return (
     <div className="space-y-4">
+      {/* Order Steps Section */}
+      {order.package_value && (
+        <>
+          <div>
+            <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
+              <ListChecks className="w-4 h-4" />
+              Order Steps Completed
+            </h4>
+            <StepProgress
+              packageValue={order.package_value}
+              formData={formData}
+              className="bg-gray-50 p-3 rounded-lg"
+            />
+          </div>
+          <Separator />
+        </>
+      )}
+
       {/* Payment & Invoice Details */}
       <div>
         <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
