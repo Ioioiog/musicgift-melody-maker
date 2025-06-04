@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,6 @@ import StepIndicator from './order/StepIndicator';
 import OrderSummary from './order/OrderSummary';
 import PackageSelectionStep from './order/PackageSelectionStep';
 import PaymentProviderSelection from './order/PaymentProviderSelection';
-import EmbeddedStripeCheckout from './order/EmbeddedStripeCheckout';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useToast } from '@/hooks/use-toast';
 
@@ -45,10 +45,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [addonFieldValues, setAddonFieldValues] = useState<Record<string, any>>({});
   const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('stripe');
-  const [selectedCheckoutMode, setSelectedCheckoutMode] = useState<string>('hosted');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [stripeClientSecret, setStripeClientSecret] = useState<string>('');
-  const [showEmbeddedCheckout, setShowEmbeddedCheckout] = useState(false);
   const { t } = useLanguage();
   const { currency } = useCurrency();
   const { toast } = useToast();
@@ -84,10 +81,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   };
 
   const handlePrev = () => {
-    if (showEmbeddedCheckout) {
-      setShowEmbeddedCheckout(false);
-      return;
-    }
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
@@ -240,7 +233,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     setIsSubmitting(true);
     
     try {
-      console.log(`🔄 Starting enhanced payment process with provider: ${selectedPaymentProvider}`);
+      console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
       
       validateFormData();
       
@@ -262,16 +255,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
       const orderData = prepareOrderData();
 
-      // For Stripe, handle both embedded and hosted modes
+      // For Stripe, always use redirect mode
       if (selectedPaymentProvider === 'stripe') {
-        console.log(`🟣 Using Stripe payment gateway in ${selectedCheckoutMode} mode`);
+        console.log('🟣 Using Stripe payment gateway in redirect mode');
         
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('stripe-create-payment', {
           body: {
             orderData,
-            returnUrl: `${window.location.origin}/payment/success`,
-            checkoutMode: selectedCheckoutMode,
-            enableLink: true
+            returnUrl: `${window.location.origin}/payment/success`
           }
         });
 
@@ -279,20 +270,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           throw new Error(paymentResponse?.error || 'Failed to initialize Stripe payment');
         }
 
-        if (selectedCheckoutMode === 'embedded') {
-          // Show embedded checkout
-          setStripeClientSecret(paymentResponse.clientSecret);
-          setShowEmbeddedCheckout(true);
+        // Redirect to Stripe Checkout
+        if (paymentResponse.paymentUrl) {
+          window.location.href = paymentResponse.paymentUrl;
         } else {
-          // Redirect to hosted checkout
-          if (paymentResponse.paymentUrl) {
-            window.location.href = paymentResponse.paymentUrl;
-          } else {
-            throw new Error('No payment URL received from Stripe');
-          }
+          throw new Error('No payment URL received from Stripe');
         }
       } else {
-        // Handle other payment providers as before
+        // Handle other payment providers
         let edgeFunctionName = selectedPaymentProvider === 'revolut' 
           ? 'revolut-create-payment' 
           : 'smartbill-create-invoice';
@@ -316,7 +301,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       }
 
     } catch (error) {
-      console.error('💥 Enhanced payment processing error:', error);
+      console.error('💥 Payment processing error:', error);
       
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       toast({
@@ -327,11 +312,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleEmbeddedCheckoutComplete = (sessionId: string) => {
-    console.log('✅ Embedded checkout completed:', sessionId);
-    navigate(`/payment/success?session_id=${sessionId}`);
   };
 
   const isPaymentStep = currentStep === totalSteps - 1;
@@ -347,19 +327,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     }
     return true;
   };
-
-  // Show embedded checkout if enabled
-  if (showEmbeddedCheckout && stripeClientSecret) {
-    return (
-      <div className="container mx-auto py-8">
-        <EmbeddedStripeCheckout
-          clientSecret={stripeClientSecret}
-          onBack={handlePrev}
-          onComplete={handleEmbeddedCheckoutComplete}
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto py-8">
@@ -395,8 +362,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                   <PaymentProviderSelection
                     selectedProvider={selectedPaymentProvider}
                     onProviderSelect={setSelectedPaymentProvider}
-                    selectedCheckoutMode={selectedCheckoutMode}
-                    onCheckoutModeSelect={setSelectedCheckoutMode}
                   />
                 ) : currentStepData ? (
                   currentStepData.fields.map(field => (
