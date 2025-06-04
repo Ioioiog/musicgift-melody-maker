@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -155,110 +154,126 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           paymentProvider: selectedPaymentProvider,
           totalPrice
         });
-      } else {
-        // Create order with selected payment provider
-        const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
-        const package_name = selectedPackageData?.label_key;
-        const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
-        const package_delivery_time = selectedPackageData?.delivery_time_key;
-        const package_includes = selectedPackageData?.includes;
-
-        const orderData = {
-          form_data: formData,
-          selected_addons: selectedAddons,
-          total_price: totalPrice * 100, // Convert to cents for payment processing
-          package_value: selectedPackage,
-          package_name: package_name,
-          package_price: package_price,
-          package_delivery_time: package_delivery_time,
-          package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
-          status: 'pending',
-          payment_status: 'pending',
-          currency: currency
-        };
-
-        console.log(`🎯 Payment provider selected: ${selectedPaymentProvider}`);
-        console.log(`📦 Order data prepared:`, orderData);
-
-        // Determine edge function based on payment provider
-        let edgeFunctionName;
-        switch (selectedPaymentProvider) {
-          case 'stripe':
-            edgeFunctionName = 'stripe-create-payment';
-            console.log('🟣 Using Stripe payment gateway');
-            break;
-          case 'revolut':
-            edgeFunctionName = 'revolut-create-payment';
-            console.log('🟠 Using Revolut payment gateway');
-            break;
-          case 'smartbill':
-          default:
-            edgeFunctionName = 'smartbill-create-invoice';
-            console.log('🔵 Using SmartBill payment gateway');
-        }
-
-        console.log(`🚀 Calling edge function: ${edgeFunctionName}`);
-
-        // Call the appropriate payment provider edge function
-        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke(edgeFunctionName, {
-          body: {
-            orderData,
-            returnUrl: `${window.location.origin}/payment/success`
-          }
-        });
-
-        console.log(`📨 Edge function response:`, { data: paymentResponse, error: paymentError });
-
-        if (paymentError) {
-          console.error(`❌ ${selectedPaymentProvider} edge function error:`, paymentError);
-          throw new Error(`Failed to initialize payment with ${selectedPaymentProvider}: ${paymentError.message}`);
-        }
-
-        if (!paymentResponse) {
-          console.error(`❌ No response from ${selectedPaymentProvider} edge function`);
-          throw new Error(`No response received from ${selectedPaymentProvider} payment service`);
-        }
-
-        console.log(`✅ ${selectedPaymentProvider} response received:`, paymentResponse);
-
-        // Validate response structure
-        if (!paymentResponse.success) {
-          console.error(`❌ ${selectedPaymentProvider} operation failed:`, paymentResponse);
-          const errorMessage = paymentResponse.error || paymentResponse.message || 'Payment initialization failed';
-          throw new Error(`${selectedPaymentProvider}: ${errorMessage}`);
-        }
-
-        // Validate payment URL for Stripe and Revolut
-        if ((selectedPaymentProvider === 'stripe' || selectedPaymentProvider === 'revolut') && !paymentResponse.paymentUrl) {
-          console.error(`❌ Missing payment URL from ${selectedPaymentProvider}:`, paymentResponse);
-          throw new Error(`${selectedPaymentProvider} did not return a payment URL`);
-        }
-
-        // Show success message
-        toast({
-          title: t('orderSuccess'),
-          description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${paymentResponse.orderId?.slice(0, 8)}...`),
-          variant: "default"
-        });
-
-        // Handle redirection based on provider
-        if (paymentResponse.paymentUrl) {
-          console.log(`🔄 Redirecting to ${selectedPaymentProvider} payment:`, paymentResponse.paymentUrl);
-          
-          // Validate URL before redirecting
-          try {
-            new URL(paymentResponse.paymentUrl);
-            window.location.href = paymentResponse.paymentUrl;
-          } catch (urlError) {
-            console.error(`❌ Invalid payment URL from ${selectedPaymentProvider}:`, paymentResponse.paymentUrl);
-            throw new Error(`Invalid payment URL received from ${selectedPaymentProvider}`);
-          }
-        } else {
-          // If no payment needed (e.g., fully covered by gift card), show success
-          console.log('✅ Order completed successfully without payment redirection needed');
-          navigate('/payment/success?orderId=' + paymentResponse.orderId);
-        }
+        return;
       }
+
+      // Validate that we have a payment provider selected
+      if (!selectedPaymentProvider) {
+        console.error('❌ No payment provider selected');
+        throw new Error('Please select a payment method before proceeding');
+      }
+
+      // Create order with selected payment provider
+      const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+      const package_name = selectedPackageData?.label_key;
+      const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
+      const package_delivery_time = selectedPackageData?.delivery_time_key;
+      const package_includes = selectedPackageData?.includes;
+
+      const orderData = {
+        form_data: formData,
+        selected_addons: selectedAddons,
+        total_price: totalPrice * 100, // Convert to cents for payment processing
+        package_value: selectedPackage,
+        package_name: package_name,
+        package_price: package_price,
+        package_delivery_time: package_delivery_time,
+        package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
+        status: 'pending',
+        payment_status: 'pending',
+        currency: currency
+      };
+
+      console.log(`🎯 Payment provider selected: ${selectedPaymentProvider}`);
+      console.log(`📦 Order data prepared:`, orderData);
+
+      // Determine edge function based on payment provider
+      let edgeFunctionName;
+      let paymentProviderLabel;
+      
+      switch (selectedPaymentProvider) {
+        case 'stripe':
+          edgeFunctionName = 'stripe-create-payment';
+          paymentProviderLabel = 'Stripe';
+          console.log('🟣 Using Stripe payment gateway');
+          break;
+        case 'revolut':
+          edgeFunctionName = 'revolut-create-payment';
+          paymentProviderLabel = 'Revolut';
+          console.log('🟠 Using Revolut payment gateway');
+          break;
+        case 'smartbill':
+          edgeFunctionName = 'smartbill-create-invoice';
+          paymentProviderLabel = 'SmartBill';
+          console.log('🔵 Using SmartBill payment gateway');
+          break;
+        default:
+          console.error(`❌ Unsupported payment provider: ${selectedPaymentProvider}`);
+          throw new Error(`Payment method "${selectedPaymentProvider}" is not supported. Please select a valid payment method.`);
+      }
+
+      console.log(`🚀 Calling edge function: ${edgeFunctionName} for ${paymentProviderLabel}`);
+
+      // Call the appropriate payment provider edge function
+      const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke(edgeFunctionName, {
+        body: {
+          orderData,
+          returnUrl: `${window.location.origin}/payment/success`
+        }
+      });
+
+      console.log(`📨 ${paymentProviderLabel} edge function response:`, { data: paymentResponse, error: paymentError });
+
+      if (paymentError) {
+        console.error(`❌ ${paymentProviderLabel} edge function error:`, paymentError);
+        throw new Error(`Failed to initialize payment with ${paymentProviderLabel}: ${paymentError.message}`);
+      }
+
+      if (!paymentResponse) {
+        console.error(`❌ No response from ${paymentProviderLabel} edge function`);
+        throw new Error(`No response received from ${paymentProviderLabel} payment service`);
+      }
+
+      console.log(`✅ ${paymentProviderLabel} response received:`, paymentResponse);
+
+      // Validate response structure
+      if (!paymentResponse.success) {
+        console.error(`❌ ${paymentProviderLabel} operation failed:`, paymentResponse);
+        const errorMessage = paymentResponse.error || paymentResponse.message || 'Payment initialization failed';
+        throw new Error(`${paymentProviderLabel} payment failed: ${errorMessage}`);
+      }
+
+      // Validate payment URL for Stripe and Revolut
+      if ((selectedPaymentProvider === 'stripe' || selectedPaymentProvider === 'revolut') && !paymentResponse.paymentUrl) {
+        console.error(`❌ Missing payment URL from ${paymentProviderLabel}:`, paymentResponse);
+        throw new Error(`${paymentProviderLabel} did not return a payment URL. Please try again or contact support.`);
+      }
+
+      // Show success message
+      toast({
+        title: t('orderSuccess'),
+        description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${paymentResponse.orderId?.slice(0, 8)}...`),
+        variant: "default"
+      });
+
+      // Handle redirection based on provider
+      if (paymentResponse.paymentUrl) {
+        console.log(`🔄 Redirecting to ${paymentProviderLabel} payment:`, paymentResponse.paymentUrl);
+        
+        // Validate URL before redirecting
+        try {
+          new URL(paymentResponse.paymentUrl);
+          window.location.href = paymentResponse.paymentUrl;
+        } catch (urlError) {
+          console.error(`❌ Invalid payment URL from ${paymentProviderLabel}:`, paymentResponse.paymentUrl);
+          throw new Error(`Invalid payment URL received from ${paymentProviderLabel}. Please try again or contact support.`);
+        }
+      } else {
+        // If no payment needed (e.g., fully covered by gift card), show success
+        console.log('✅ Order completed successfully without payment redirection needed');
+        navigate('/payment/success?orderId=' + paymentResponse.orderId);
+      }
+
     } catch (error) {
       console.error('💥 Payment processing error:', error);
       
