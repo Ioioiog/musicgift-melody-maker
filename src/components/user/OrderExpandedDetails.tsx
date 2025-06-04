@@ -26,36 +26,150 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
     }
   };
 
-  // Helper function to safely extract display value from item
-  const getDisplayValue = (item: any): string => {
-    if (typeof item === 'string') {
-      return item;
+  // Enhanced helper function with extensive debugging and error handling
+  const getDisplayValue = (item: any, context: string = 'unknown'): string => {
+    console.log(`[OrderExpandedDetails] Processing item in ${context}:`, item);
+    console.log(`[OrderExpandedDetails] Item type:`, typeof item);
+    
+    try {
+      if (item === null || item === undefined) {
+        console.warn(`[OrderExpandedDetails] Null/undefined item in ${context}`);
+        return 'N/A';
+      }
+      
+      if (typeof item === 'string') {
+        console.log(`[OrderExpandedDetails] String item: "${item}"`);
+        return item;
+      }
+      
+      if (typeof item === 'number') {
+        console.log(`[OrderExpandedDetails] Number item: ${item}`);
+        return String(item);
+      }
+      
+      if (typeof item === 'boolean') {
+        console.log(`[OrderExpandedDetails] Boolean item: ${item}`);
+        return String(item);
+      }
+      
+      if (typeof item === 'object' && item !== null) {
+        console.log(`[OrderExpandedDetails] Object item keys:`, Object.keys(item));
+        
+        // Handle objects with include_key or similar structure
+        if (item.include_key && typeof item.include_key === 'string') {
+          console.log(`[OrderExpandedDetails] Found include_key: "${item.include_key}"`);
+          return item.include_key;
+        }
+        
+        // Handle other possible object structures
+        if (item.label && typeof item.label === 'string') {
+          console.log(`[OrderExpandedDetails] Found label: "${item.label}"`);
+          return item.label;
+        }
+        
+        if (item.name && typeof item.name === 'string') {
+          console.log(`[OrderExpandedDetails] Found name: "${item.name}"`);
+          return item.name;
+        }
+        
+        if (item.value && typeof item.value === 'string') {
+          console.log(`[OrderExpandedDetails] Found value: "${item.value}"`);
+          return item.value;
+        }
+        
+        if (item.title && typeof item.title === 'string') {
+          console.log(`[OrderExpandedDetails] Found title: "${item.title}"`);
+          return item.title;
+        }
+        
+        // Try to extract any string value from the object
+        const stringValues = Object.values(item).filter(val => typeof val === 'string');
+        if (stringValues.length > 0) {
+          console.log(`[OrderExpandedDetails] Using first string value: "${stringValues[0]}"`);
+          return String(stringValues[0]);
+        }
+        
+        // If it's an object but we can't extract a meaningful value, stringify it safely
+        console.warn(`[OrderExpandedDetails] Stringifying complex object in ${context}:`, item);
+        try {
+          return JSON.stringify(item);
+        } catch (jsonError) {
+          console.error(`[OrderExpandedDetails] JSON.stringify failed:`, jsonError);
+          return '[Complex Object]';
+        }
+      }
+      
+      // Fallback for any other data type
+      console.log(`[OrderExpandedDetails] Fallback conversion for type ${typeof item}:`, item);
+      return String(item);
+    } catch (error) {
+      console.error(`[OrderExpandedDetails] Error in getDisplayValue for ${context}:`, error, 'Item was:', item);
+      return `[Error: ${context}]`;
     }
-    if (typeof item === 'object' && item !== null) {
-      // Handle objects with include_key or similar structure
-      if (item.include_key) {
-        return item.include_key;
+  };
+
+  // Safe array processing with extensive validation
+  const processArraySafely = (data: any, context: string): any[] => {
+    console.log(`[OrderExpandedDetails] Processing array for ${context}:`, data);
+    
+    try {
+      const arrayData = getArrayFromJson(data);
+      console.log(`[OrderExpandedDetails] Array data for ${context}:`, arrayData);
+      console.log(`[OrderExpandedDetails] Array length for ${context}:`, arrayData?.length);
+      
+      if (!Array.isArray(arrayData)) {
+        console.warn(`[OrderExpandedDetails] ${context} is not an array:`, arrayData);
+        return [];
       }
-      // Handle other possible object structures
-      if (item.label) {
-        return item.label;
-      }
-      if (item.name) {
-        return item.name;
-      }
-      if (item.value) {
-        return item.value;
-      }
-      // If it's an object but we can't extract a meaningful value, stringify it
-      return JSON.stringify(item);
+      
+      return arrayData;
+    } catch (error) {
+      console.error(`[OrderExpandedDetails] Error processing array for ${context}:`, error);
+      return [];
     }
-    // Fallback for any other data type
-    return String(item);
   };
 
   const formData = getOrderFormData(order.form_data);
-  const packageIncludes = getArrayFromJson(order.package_includes);
-  const selectedAddons = getArrayFromJson(order.selected_addons);
+  const packageIncludes = processArraySafely(order.package_includes, 'packageIncludes');
+  const selectedAddons = processArraySafely(order.selected_addons, 'selectedAddons');
+
+  console.log(`[OrderExpandedDetails] Final packageIncludes:`, packageIncludes);
+  console.log(`[OrderExpandedDetails] Final selectedAddons:`, selectedAddons);
+
+  // Safe list renderer component
+  const SafeListRenderer = ({ items, context }: { items: any[], context: string }) => {
+    console.log(`[OrderExpandedDetails] Rendering list for ${context} with ${items.length} items`);
+    
+    if (!Array.isArray(items) || items.length === 0) {
+      return <li className="text-xs text-gray-500">None</li>;
+    }
+
+    return (
+      <>
+        {items.map((item: any, index: number) => {
+          console.log(`[OrderExpandedDetails] Rendering item ${index} for ${context}:`, item);
+          
+          try {
+            const displayValue = getDisplayValue(item, `${context}[${index}]`);
+            console.log(`[OrderExpandedDetails] Display value for ${context}[${index}]:`, displayValue);
+            
+            return (
+              <li key={`${context}-${index}-${Date.now()}`} className="text-xs">
+                {displayValue}
+              </li>
+            );
+          } catch (renderError) {
+            console.error(`[OrderExpandedDetails] Error rendering item ${index} in ${context}:`, renderError);
+            return (
+              <li key={`${context}-error-${index}`} className="text-xs text-red-500">
+                [Render Error]
+              </li>
+            );
+          }
+        })}
+      </>
+    );
+  };
 
   return (
     <div className="space-y-4">
@@ -146,11 +260,7 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
             <div className="md:col-span-2">
               <span className="text-gray-500">Package Includes:</span>
               <ul className="mt-1 list-disc list-inside text-gray-900">
-                {packageIncludes.map((item: any, index: number) => (
-                  <li key={index} className="text-xs">
-                    {getDisplayValue(item)}
-                  </li>
-                ))}
+                <SafeListRenderer items={packageIncludes} context="packageIncludes" />
               </ul>
             </div>
           )}
@@ -158,11 +268,7 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
             <div className="md:col-span-2">
               <span className="text-gray-500">Selected Add-ons:</span>
               <ul className="mt-1 list-disc list-inside text-gray-900">
-                {selectedAddons.map((addon: any, index: number) => (
-                  <li key={index} className="text-xs">
-                    {getDisplayValue(addon)}
-                  </li>
-                ))}
+                <SafeListRenderer items={selectedAddons} context="selectedAddons" />
               </ul>
             </div>
           )}
