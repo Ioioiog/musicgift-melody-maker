@@ -176,9 +176,7 @@ export const orderTranslations = {
   orderCreationFailed: "Tworzenie zamówienia nie powiodło się",
   orderCreationFailedDesc: "Wystąpił błąd podczas tworzenia zamówienia. Spróbuj ponownie.",
   
-  // VAT and Registration fields
+  // VAT field
   vatCodeLabel: "Kod VAT",
   vatCodePlaceholder: "PL1234567890",
-  registrationNumberLabel: "Numer Rejestracyjny",
-  registrationNumberPlaceholder: "Numer rejestracyjny firmy",
 };

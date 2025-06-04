@@ -176,9 +176,7 @@ export const orderTranslations = {
   orderCreationFailed: "Crearea comenzii a eșuat",
   orderCreationFailedDesc: "A apărut o eroare la crearea comenzii. Te rugăm să încerci din nou.",
   
-  // VAT and Registration fields
+  // VAT field
   vatCodeLabel: "VAT Code",
   vatCodePlaceholder: "RO12345678",
-  registrationNumberLabel: "Numărul de Înregistrare",
-  registrationNumberPlaceholder: "Numar de inregistrare firma",
 };

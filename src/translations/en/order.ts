@@ -176,9 +176,7 @@ export const orderTranslations = {
   orderCreationFailed: "Order creation failed",
   orderCreationFailedDesc: "There was an error creating your order. Please try again.",
   
-  // VAT and Registration fields
+  // VAT field
   vatCodeLabel: "VAT Code",
   vatCodePlaceholder: "GB123456789",
-  registrationNumberLabel: "Registration Number",
-  registrationNumberPlaceholder: "Company registration number",
 };

@@ -172,9 +172,7 @@ export const orderTranslations = {
   dedicationMessageLabel: "Message Personnel de Dédicace",
   dedicationMessagePlaceholder: "Un message personnel à inclure avec votre chanson",
   
-  // VAT and Registration fields
+  // VAT field
   vatCodeLabel: "Code TVA",
   vatCodePlaceholder: "FR12345678901",
-  registrationNumberLabel: "Numéro d'Enregistrement",
-  registrationNumberPlaceholder: "Numéro d'enregistrement de l'entreprise",
 };
