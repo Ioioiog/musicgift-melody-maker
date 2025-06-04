@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -183,7 +184,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
         status: 'pending',
         payment_status: 'pending',
-        currency: currency
+        currency: currency,
+        payment_provider: selectedPaymentProvider // Add this line to fix the issue!
       };
 
       console.log(`📦 Order data prepared:`, orderData);

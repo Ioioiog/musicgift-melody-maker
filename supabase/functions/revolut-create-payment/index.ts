@@ -34,12 +34,12 @@ serve(async (req) => {
 
     console.log('✅ Revolut: API key found, proceeding...');
 
-    // Create order in database first
+    // Create order in database first - ensure payment_provider is set to 'revolut'
     const { data: order, error: orderError } = await supabaseClient
       .from('orders')
       .insert([{
         ...orderData,
-        payment_provider: 'revolut',
+        payment_provider: 'revolut', // Explicitly set to revolut
         status: 'pending',
         payment_status: 'pending'
       }])

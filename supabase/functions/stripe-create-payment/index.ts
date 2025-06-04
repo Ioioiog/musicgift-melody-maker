@@ -34,12 +34,12 @@ serve(async (req) => {
 
     console.log('✅ Stripe: Secret key found, proceeding...');
 
-    // Create order in database first
+    // Create order in database first - ensure payment_provider is set to 'stripe'
     const { data: order, error: orderError } = await supabaseClient
       .from('orders')
       .insert([{
         ...orderData,
-        payment_provider: 'stripe',
+        payment_provider: 'stripe', // Explicitly set to stripe
         status: 'pending',
         payment_status: 'pending'
       }])
@@ -56,18 +56,6 @@ serve(async (req) => {
     // Create Stripe checkout session
     const stripeUrl = 'https://api.stripe.com/v1/checkout/sessions';
     
-    const lineItems = [{
-      price_data: {
-        currency: orderData.currency.toLowerCase(),
-        product_data: {
-          name: orderData.package_name || 'Custom Song Package',
-          description: `Package: ${orderData.package_value}`,
-        },
-        unit_amount: orderData.total_price, // Amount in cents
-      },
-      quantity: 1,
-    }];
-
     const sessionParams = new URLSearchParams({
       'payment_method_types[0]': 'card',
       'line_items[0][price_data][currency]': orderData.currency.toLowerCase(),
