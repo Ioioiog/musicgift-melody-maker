@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -5,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy } from 'lucide-react';
+import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy, RefreshCw } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -25,6 +26,7 @@ interface OrderFormData {
 
 const OrdersManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [selectedPaymentStatus, setSelectedPaymentStatus] = useState<string>('all');
   const [sunoDialogOpen, setSunoDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [openPromptCards, setOpenPromptCards] = useState<Set<string>>(new Set());
@@ -33,16 +35,32 @@ const OrdersManagement = () => {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
 
-  const { data: orders = [], refetch } = useQuery({
-    queryKey: ['admin-orders', selectedStatus],
+  const { data: orders = [], refetch, isLoading } = useQuery({
+    queryKey: ['admin-orders', selectedStatus, selectedPaymentStatus],
     queryFn: async () => {
       let query = supabase
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false });
 
+      // Apply order status filter
       if (selectedStatus !== 'all') {
         query = query.eq('status', selectedStatus);
+      }
+
+      // Apply payment status filter
+      if (selectedPaymentStatus !== 'all') {
+        if (selectedPaymentStatus === 'paid') {
+          // Show both completed payments and SmartBill paid status
+          query = query.or('payment_status.eq.completed,smartbill_payment_status.eq.paid');
+        } else if (selectedPaymentStatus === 'pending') {
+          query = query.or('payment_status.eq.pending,smartbill_payment_status.eq.pending');
+        } else if (selectedPaymentStatus === 'failed') {
+          query = query.or('payment_status.eq.failed,smartbill_payment_status.eq.failed');
+        } else {
+          // For specific payment statuses
+          query = query.or(`payment_status.eq.${selectedPaymentStatus},smartbill_payment_status.eq.${selectedPaymentStatus}`);
+        }
       }
 
       const { data, error } = await query;
@@ -65,6 +83,20 @@ const OrdersManagement = () => {
     }
   });
 
+  // Calculate payment statistics
+  const paymentStats = {
+    total: orders.length,
+    paid: orders.filter(order => 
+      order.payment_status === 'completed' || order.smartbill_payment_status === 'paid'
+    ).length,
+    pending: orders.filter(order => 
+      order.payment_status === 'pending' || order.smartbill_payment_status === 'pending'
+    ).length,
+    failed: orders.filter(order => 
+      order.payment_status === 'failed' || order.smartbill_payment_status === 'failed'
+    ).length
+  };
+
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
       const { error } = await supabase
@@ -81,12 +113,23 @@ const OrdersManagement = () => {
     }
   };
 
+  const refreshOrderStatus = async (orderId: string) => {
+    try {
+      // For now, just refetch the data. Later this can call the SmartBill sync function
+      await refetch();
+      toast({ title: 'Order status refreshed' });
+    } catch (error) {
+      console.error('Error refreshing order status:', error);
+      toast({ title: 'Error refreshing order status', variant: 'destructive' });
+    }
+  };
+
   const exportOrders = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
-      + "ID,Package Value,Package Name,Total Price,Status,Created At,Customer Email\n"
+      + "ID,Package Value,Package Name,Total Price,Status,Payment Status,SmartBill Status,Created At,Customer Email\n"
       + orders.map(order => {
           const formData = order.form_data as OrderFormData;
-          return `${order.id},${order.package_value || 'N/A'},${order.package_name || 'N/A'},${order.total_price},${order.status},${order.created_at},${formData?.email || 'N/A'}`;
+          return `${order.id},${order.package_value || 'N/A'},${order.package_name || 'N/A'},${order.total_price},${order.status},${order.payment_status || 'N/A'},${order.smartbill_payment_status || 'N/A'},${order.created_at},${formData?.email || 'N/A'}`;
         }).join("\n");
 
     const encodedUri = encodeURI(csvContent);
@@ -112,11 +155,26 @@ const OrdersManagement = () => {
   const getPaymentStatusColor = (paymentStatus: string) => {
     switch (paymentStatus) {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'completed': return 'bg-green-100 text-green-800';
+      case 'completed': 
+      case 'paid': return 'bg-green-100 text-green-800';
       case 'failed': return 'bg-red-100 text-red-800';
       case 'cancelled': return 'bg-gray-100 text-gray-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const getOverallPaymentStatus = (order: any) => {
+    // Determine the most relevant payment status
+    if (order.payment_status === 'completed' || order.smartbill_payment_status === 'paid') {
+      return { status: 'paid', label: 'Paid' };
+    }
+    if (order.payment_status === 'failed' || order.smartbill_payment_status === 'failed') {
+      return { status: 'failed', label: 'Failed' };
+    }
+    if (order.payment_status === 'pending' || order.smartbill_payment_status === 'pending') {
+      return { status: 'pending', label: 'Pending' };
+    }
+    return { status: order.payment_status || 'unknown', label: order.payment_status || 'Unknown' };
   };
 
   const openSunoDialog = (order: any) => {
@@ -184,6 +242,7 @@ const OrdersManagement = () => {
     const savedPrompt = getSavedPrompt(order.id);
     const isPromptCardOpen = openPromptCards.has(order.id);
     const packageValue = order.package_value || (formData as any)?.package || (formData as any)?.packageType;
+    const overallPaymentStatus = getOverallPaymentStatus(order);
 
     return (
       <div className="space-y-4">
@@ -198,11 +257,16 @@ const OrdersManagement = () => {
             <Badge className={getStatusColor(order.status)}>
               {t(order.status, order.status)}
             </Badge>
-            <Badge className={getPaymentStatusColor(order.payment_status)}>
-              {t('payment', 'Payment')}: {t(order.payment_status, order.payment_status)}
+            <Badge className={getPaymentStatusColor(overallPaymentStatus.status)}>
+              {overallPaymentStatus.label}
             </Badge>
+            {order.payment_status && order.payment_status !== overallPaymentStatus.status && (
+              <Badge className={getPaymentStatusColor(order.payment_status)} variant="outline">
+                {t('payment', 'Payment')}: {t(order.payment_status, order.payment_status)}
+              </Badge>
+            )}
             {order.smartbill_payment_status && (
-              <Badge className={getPaymentStatusColor(order.smartbill_payment_status)}>
+              <Badge className={getPaymentStatusColor(order.smartbill_payment_status)} variant="outline">
                 SmartBill: {order.smartbill_payment_status}
               </Badge>
             )}
@@ -253,20 +317,31 @@ const OrdersManagement = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-col space-y-2">
-          <Select 
-            value={order.status} 
-            onValueChange={(value) => updateOrderStatus(order.id, value)}
-          >
-            <SelectTrigger className="w-full h-11">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="pending">{t('pending', 'Pending')}</SelectItem>
-              <SelectItem value="in_progress">{t('inProgress', 'In Progress')}</SelectItem>
-              <SelectItem value="completed">{t('completed', 'Completed')}</SelectItem>
-              <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex gap-2">
+            <Select 
+              value={order.status} 
+              onValueChange={(value) => updateOrderStatus(order.id, value)}
+            >
+              <SelectTrigger className="flex-1 h-11">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pending">{t('pending', 'Pending')}</SelectItem>
+                <SelectItem value="in_progress">{t('inProgress', 'In Progress')}</SelectItem>
+                <SelectItem value="completed">{t('completed', 'Completed')}</SelectItem>
+                <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => refreshOrderStatus(order.id)}
+              className="h-11 px-3"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </Button>
+          </div>
 
           <div className="flex flex-col space-y-2">
             <Button
@@ -338,6 +413,7 @@ const OrdersManagement = () => {
     const formData = order.form_data as OrderFormData;
     const hasPrompts = hasSavedPrompts(order.id);
     const packageValue = order.package_value || (formData as any)?.package || (formData as any)?.packageType;
+    const overallPaymentStatus = getOverallPaymentStatus(order);
 
     return (
       <>
@@ -361,11 +437,16 @@ const OrdersManagement = () => {
             <Badge className={getStatusColor(order.status)}>
               {t(order.status, order.status)}
             </Badge>
-            <Badge className={getPaymentStatusColor(order.payment_status)}>
-              {t(order.payment_status, order.payment_status)}
+            <Badge className={getPaymentStatusColor(overallPaymentStatus.status)}>
+              {overallPaymentStatus.label}
             </Badge>
+            {order.payment_status && order.payment_status !== overallPaymentStatus.status && (
+              <Badge className={getPaymentStatusColor(order.payment_status)} variant="outline">
+                {t(order.payment_status, order.payment_status)}
+              </Badge>
+            )}
             {order.smartbill_payment_status && (
-              <Badge className={getPaymentStatusColor(order.smartbill_payment_status)}>
+              <Badge className={getPaymentStatusColor(order.smartbill_payment_status)} variant="outline">
                 SB: {order.smartbill_payment_status}
               </Badge>
             )}
@@ -398,6 +479,15 @@ const OrdersManagement = () => {
                 <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
               </SelectContent>
             </Select>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => refreshOrderStatus(order.id)}
+              title="Refresh payment status"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </Button>
             
             {order.smartbill_payment_url && order.smartbill_payment_status === 'pending' && (
               <Button
@@ -488,18 +578,60 @@ const OrdersManagement = () => {
 
   return (
     <div className="space-y-6">
+      {/* Payment Statistics Dashboard */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">{paymentStats.total}</div>
+              <div className="text-sm text-gray-600">Total Orders</div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">{paymentStats.paid}</div>
+              <div className="text-sm text-gray-600">Paid Orders</div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-yellow-600">{paymentStats.pending}</div>
+              <div className="text-sm text-gray-600">Pending Payments</div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-red-600">{paymentStats.failed}</div>
+              <div className="text-sm text-gray-600">Failed Payments</div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card>
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
             <CardTitle className="text-xl sm:text-2xl">{t('ordersManagement', 'Orders Management')}</CardTitle>
-            <Button onClick={exportOrders} variant="outline" size="sm" className="w-full sm:w-auto">
-              <Download className="w-4 h-4 mr-2" />
-              {t('exportCSV', 'Export CSV')}
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => refetch()} variant="outline" size="sm" disabled={isLoading}>
+                <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                Refresh All
+              </Button>
+              <Button onClick={exportOrders} variant="outline" size="sm" className="w-full sm:w-auto">
+                <Download className="w-4 h-4 mr-2" />
+                {t('exportCSV', 'Export CSV')}
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="mb-4">
+          <div className="flex flex-col sm:flex-row gap-4 mb-4">
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
               <SelectTrigger className="w-full sm:w-[200px]">
                 <SelectValue placeholder={t('filterByStatus', 'Filter by status')} />
@@ -511,6 +643,19 @@ const OrdersManagement = () => {
                 <SelectItem value="completed">{t('completed', 'Completed')}</SelectItem>
                 <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
                 <SelectItem value="paid">{t('paid', 'Paid')}</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedPaymentStatus} onValueChange={setSelectedPaymentStatus}>
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="Filter by payment status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Payment Statuses</SelectItem>
+                <SelectItem value="paid">Paid</SelectItem>
+                <SelectItem value="pending">Payment Pending</SelectItem>
+                <SelectItem value="failed">Payment Failed</SelectItem>
+                <SelectItem value="cancelled">Payment Cancelled</SelectItem>
               </SelectContent>
             </Select>
           </div>
