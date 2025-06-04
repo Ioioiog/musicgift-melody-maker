@@ -1,4 +1,3 @@
-
 import type { Package } from '@/types';
 
 // Define the addons configuration
@@ -74,7 +73,7 @@ export const packages: Package[] = [
       {
         id: "plus-step-1",
         step_number: 1,
-        title_key: "contactDetailsStep",
+        title_key: "contactAndInvoiceDetailsStep",
         fields: [
           {
             id: "fullName",
@@ -102,14 +101,7 @@ export const packages: Package[] = [
             placeholder_key: "phonePlaceholder",
             required: true,
             field_order: 3
-          }
-        ]
-      },
-      {
-        id: "plus-step-2",
-        step_number: 2,
-        title_key: "invoiceDetailsStep",
-        fields: [
+          },
           {
             id: "invoiceType",
             field_name: "invoiceType",
@@ -117,7 +109,7 @@ export const packages: Package[] = [
             label_key: "invoiceTypeLabel",
             placeholder_key: "invoiceTypePlaceholder",
             required: true,
-            field_order: 1,
+            field_order: 4,
             options: [
               { value: "personal", label_key: "personalInvoice" },
               { value: "company", label_key: "companyInvoice" }
@@ -130,7 +122,7 @@ export const packages: Package[] = [
             label_key: "companyNameLabel",
             placeholder_key: "companyNamePlaceholder",
             required: true,
-            field_order: 2
+            field_order: 5
           },
           {
             id: "vatCode",
@@ -139,7 +131,7 @@ export const packages: Package[] = [
             label_key: "vatCodeLabel",
             placeholder_key: "vatCodePlaceholder",
             required: true,
-            field_order: 3
+            field_order: 6
           },
           {
             id: "registrationNumber",
@@ -148,7 +140,7 @@ export const packages: Package[] = [
             label_key: "registrationNumberLabel",
             placeholder_key: "registrationNumberPlaceholder",
             required: true,
-            field_order: 4
+            field_order: 7
           },
           {
             id: "companyAddress",
@@ -157,7 +149,7 @@ export const packages: Package[] = [
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 5
+            field_order: 8
           },
           {
             id: "representativeName",
@@ -166,13 +158,13 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 6
+            field_order: 9
           }
         ]
       },
       {
-        id: "plus-step-3",
-        step_number: 3,
+        id: "plus-step-2",
+        step_number: 2,
         title_key: "legalAcceptancesStep",
         fields: [
           {
@@ -367,7 +359,7 @@ export const packages: Package[] = [
       {
         id: "personal-step-4",
         step_number: 4,
-        title_key: "contactDetailsStep",
+        title_key: "contactAndInvoiceDetailsStep",
         fields: [
           {
             id: "fullName",
@@ -395,14 +387,7 @@ export const packages: Package[] = [
             placeholder_key: "phonePlaceholder",
             required: true,
             field_order: 3
-          }
-        ]
-      },
-      {
-        id: "personal-step-5",
-        step_number: 5,
-        title_key: "invoiceDetailsStep",
-        fields: [
+          },
           {
             id: "invoiceType",
             field_name: "invoiceType",
@@ -410,7 +395,7 @@ export const packages: Package[] = [
             label_key: "invoiceTypeLabel",
             placeholder_key: "invoiceTypePlaceholder",
             required: true,
-            field_order: 1,
+            field_order: 4,
             options: [
               { value: "personal", label_key: "personalInvoice" },
               { value: "company", label_key: "companyInvoice" }
@@ -423,7 +408,7 @@ export const packages: Package[] = [
             label_key: "companyNameLabel",
             placeholder_key: "companyNamePlaceholder",
             required: true,
-            field_order: 2
+            field_order: 5
           },
           {
             id: "vatCode",
@@ -432,7 +417,7 @@ export const packages: Package[] = [
             label_key: "vatCodeLabel",
             placeholder_key: "vatCodePlaceholder",
             required: true,
-            field_order: 3
+            field_order: 6
           },
           {
             id: "registrationNumber",
@@ -441,7 +426,7 @@ export const packages: Package[] = [
             label_key: "registrationNumberLabel",
             placeholder_key: "registrationNumberPlaceholder",
             required: true,
-            field_order: 4
+            field_order: 7
           },
           {
             id: "companyAddress",
@@ -450,7 +435,7 @@ export const packages: Package[] = [
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 5
+            field_order: 8
           },
           {
             id: "representativeName",
@@ -459,13 +444,13 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 6
+            field_order: 9
           }
         ]
       },
       {
-        id: "personal-step-6",
-        step_number: 6,
+        id: "personal-step-5",
+        step_number: 5,
         title_key: "legalAcceptancesStep",
         fields: [
           {
@@ -518,50 +503,6 @@ export const packages: Package[] = [
       {
         id: "premium-step-1",
         step_number: 1,
-        title_key: "personalDetailsStep",
-        fields: [
-          {
-            id: "fullName",
-            field_name: "fullName",
-            field_type: "text",
-            placeholder_key: "fullNamePlaceholder",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "email",
-            field_name: "email",
-            field_type: "email",
-            placeholder_key: "emailPlaceholder",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "phone",
-            field_name: "phone",
-            field_type: "tel",
-            placeholder_key: "phonePlaceholder",
-            required: true,
-            field_order: 3
-          },
-          {
-            id: "language",
-            field_name: "language",
-            field_type: "select",
-            placeholder_key: "songLanguagePlaceholder",
-            required: true,
-            field_order: 4,
-            options: [
-              { value: "ro", label_key: "Română" },
-              { value: "en", label_key: "English" },
-              { value: "fr", label_key: "Français" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "premium-step-2",
-        step_number: 2,
         title_key: "yourStoryStep",
         fields: [
           {
@@ -619,12 +560,25 @@ export const packages: Package[] = [
             placeholder_key: "keywordsPronunciationPlaceholder",
             required: false,
             field_order: 7
+          },
+          {
+            id: "language",
+            field_name: "language",
+            field_type: "select",
+            placeholder_key: "songLanguagePlaceholder",
+            required: true,
+            field_order: 8,
+            options: [
+              { value: "ro", label_key: "Română" },
+              { value: "en", label_key: "English" },
+              { value: "fr", label_key: "Français" }
+            ]
           }
         ]
       },
       {
-        id: "premium-step-3",
-        step_number: 3,
+        id: "premium-step-2",
+        step_number: 2,
         title_key: "addonsStep",
         fields: [
           {
@@ -638,10 +592,37 @@ export const packages: Package[] = [
         ]
       },
       {
-        id: "premium-step-4",
-        step_number: 4,
-        title_key: "invoiceDetailsStep",
+        id: "premium-step-3",
+        step_number: 3,
+        title_key: "contactAndInvoiceDetailsStep",
         fields: [
+          {
+            id: "fullName",
+            field_name: "fullName",
+            field_type: "text",
+            label_key: "fullNameLabel",
+            placeholder_key: "fullNamePlaceholder",
+            required: true,
+            field_order: 1
+          },
+          {
+            id: "email",
+            field_name: "email",
+            field_type: "email",
+            label_key: "emailLabel",
+            placeholder_key: "emailPlaceholder",
+            required: true,
+            field_order: 2
+          },
+          {
+            id: "phone",
+            field_name: "phone",
+            field_type: "tel",
+            label_key: "phoneLabel",
+            placeholder_key: "phonePlaceholder",
+            required: true,
+            field_order: 3
+          },
           {
             id: "invoiceType",
             field_name: "invoiceType",
@@ -649,7 +630,7 @@ export const packages: Package[] = [
             label_key: "invoiceTypeLabel",
             placeholder_key: "invoiceTypePlaceholder",
             required: true,
-            field_order: 1,
+            field_order: 4,
             options: [
               { value: "personal", label_key: "personalInvoice" },
               { value: "company", label_key: "companyInvoice" }
@@ -662,7 +643,7 @@ export const packages: Package[] = [
             label_key: "companyNameLabel",
             placeholder_key: "companyNamePlaceholder",
             required: true,
-            field_order: 2
+            field_order: 5
           },
           {
             id: "vatCode",
@@ -671,7 +652,7 @@ export const packages: Package[] = [
             label_key: "vatCodeLabel",
             placeholder_key: "vatCodePlaceholder",
             required: true,
-            field_order: 3
+            field_order: 6
           },
           {
             id: "registrationNumber",
@@ -680,7 +661,7 @@ export const packages: Package[] = [
             label_key: "registrationNumberLabel",
             placeholder_key: "registrationNumberPlaceholder",
             required: true,
-            field_order: 4
+            field_order: 7
           },
           {
             id: "companyAddress",
@@ -689,7 +670,7 @@ export const packages: Package[] = [
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 5
+            field_order: 8
           },
           {
             id: "representativeName",
@@ -698,13 +679,13 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 6
+            field_order: 9
           }
         ]
       },
       {
-        id: "premium-step-5",
-        step_number: 5,
+        id: "premium-step-4",
+        step_number: 4,
         title_key: "distributionConfirmationStep",
         fields: [
           {
@@ -1126,8 +1107,32 @@ export const packages: Package[] = [
       {
         id: "remix-step-2",
         step_number: 2,
-        title_key: "invoiceDetailsStep",
+        title_key: "contactAndInvoiceDetailsStep",
         fields: [
+          {
+            id: "fullName",
+            field_name: "fullName",
+            field_type: "text",
+            placeholder_key: "fullNamePlaceholder",
+            required: true,
+            field_order: 1
+          },
+          {
+            id: "email",
+            field_name: "email",
+            field_type: "email",
+            placeholder_key: "emailPlaceholder",
+            required: true,
+            field_order: 2
+          },
+          {
+            id: "phone",
+            field_name: "phone",
+            field_type: "tel",
+            placeholder_key: "phonePlaceholder",
+            required: true,
+            field_order: 3
+          },
           {
             id: "invoiceType",
             field_name: "invoiceType",
@@ -1135,7 +1140,7 @@ export const packages: Package[] = [
             label_key: "invoiceTypeLabel",
             placeholder_key: "invoiceTypePlaceholder",
             required: true,
-            field_order: 1,
+            field_order: 4,
             options: [
               { value: "personal", label_key: "personalInvoice" },
               { value: "company", label_key: "companyInvoice" }
@@ -1148,7 +1153,7 @@ export const packages: Package[] = [
             label_key: "companyNameLabel",
             placeholder_key: "companyNamePlaceholder",
             required: true,
-            field_order: 2
+            field_order: 5
           },
           {
             id: "vatCode",
@@ -1157,7 +1162,7 @@ export const packages: Package[] = [
             label_key: "vatCodeLabel",
             placeholder_key: "vatCodePlaceholder",
             required: true,
-            field_order: 3
+            field_order: 6
           },
           {
             id: "registrationNumber",
@@ -1166,7 +1171,7 @@ export const packages: Package[] = [
             label_key: "registrationNumberLabel",
             placeholder_key: "registrationNumberPlaceholder",
             required: true,
-            field_order: 4
+            field_order: 7
           },
           {
             id: "companyAddress",
@@ -1175,7 +1180,7 @@ export const packages: Package[] = [
             label_key: "companyAddressLabel",
             placeholder_key: "companyAddressPlaceholder",
             required: true,
-            field_order: 5
+            field_order: 8
           },
           {
             id: "representativeName",
@@ -1184,7 +1189,7 @@ export const packages: Package[] = [
             label_key: "representativeNameLabel",
             placeholder_key: "representativeNamePlaceholder",
             required: true,
-            field_order: 6
+            field_order: 9
           }
         ]
       },
@@ -1200,30 +1205,6 @@ export const packages: Package[] = [
             placeholder_key: "ownershipConfirmationPlaceholder",
             required: true,
             field_order: 1
-          },
-          {
-            id: "fullName",
-            field_name: "fullName",
-            field_type: "text",
-            placeholder_key: "fullNamePlaceholder",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "email",
-            field_name: "email",
-            field_type: "email",
-            placeholder_key: "emailPlaceholder",
-            required: true,
-            field_order: 3
-          },
-          {
-            id: "phone",
-            field_name: "phone",
-            field_type: "tel",
-            placeholder_key: "phonePlaceholder",
-            required: true,
-            field_order: 4
           }
         ]
       }
@@ -1288,72 +1269,7 @@ export const packages: Package[] = [
       {
         id: "instrumental-step-3",
         step_number: 3,
-        title_key: "invoiceDetailsStep",
-        fields: [
-          {
-            id: "invoiceType",
-            field_name: "invoiceType",
-            field_type: "select",
-            label_key: "invoiceTypeLabel",
-            placeholder_key: "invoiceTypePlaceholder",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "personal", label_key: "personalInvoice" },
-              { value: "company", label_key: "companyInvoice" }
-            ]
-          },
-          {
-            id: "companyName",
-            field_name: "companyName",
-            field_type: "text",
-            label_key: "companyNameLabel",
-            placeholder_key: "companyNamePlaceholder",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "vatCode",
-            field_name: "vatCode",
-            field_type: "text",
-            label_key: "vatCodeLabel",
-            placeholder_key: "vatCodePlaceholder",
-            required: true,
-            field_order: 3
-          },
-          {
-            id: "registrationNumber",
-            field_name: "registrationNumber",
-            field_type: "text",
-            label_key: "registrationNumberLabel",
-            placeholder_key: "registrationNumberPlaceholder",
-            required: true,
-            field_order: 4
-          },
-          {
-            id: "companyAddress",
-            field_name: "companyAddress",
-            field_type: "text",
-            label_key: "companyAddressLabel",
-            placeholder_key: "companyAddressPlaceholder",
-            required: true,
-            field_order: 5
-          },
-          {
-            id: "representativeName",
-            field_name: "representativeName",
-            field_type: "text",
-            label_key: "representativeNameLabel",
-            placeholder_key: "representativeNamePlaceholder",
-            required: true,
-            field_order: 6
-          }
-        ]
-      },
-      {
-        id: "instrumental-step-4",
-        step_number: 4,
-        title_key: "extraOptionsStep",
+        title_key: "contactAndInvoiceDetailsStep",
         fields: [
           {
             id: "fullName",
@@ -1378,6 +1294,64 @@ export const packages: Package[] = [
             placeholder_key: "phonePlaceholder",
             required: true,
             field_order: 3
+          },
+          {
+            id: "invoiceType",
+            field_name: "invoiceType",
+            field_type: "select",
+            label_key: "invoiceTypeLabel",
+            placeholder_key: "invoiceTypePlaceholder",
+            required: true,
+            field_order: 4,
+            options: [
+              { value: "personal", label_key: "personalInvoice" },
+              { value: "company", label_key: "companyInvoice" }
+            ]
+          },
+          {
+            id: "companyName",
+            field_name: "companyName",
+            field_type: "text",
+            label_key: "companyNameLabel",
+            placeholder_key: "companyNamePlaceholder",
+            required: true,
+            field_order: 5
+          },
+          {
+            id: "vatCode",
+            field_name: "vatCode",
+            field_type: "text",
+            label_key: "vatCodeLabel",
+            placeholder_key: "vatCodePlaceholder",
+            required: true,
+            field_order: 6
+          },
+          {
+            id: "registrationNumber",
+            field_name: "registrationNumber",
+            field_type: "text",
+            label_key: "registrationNumberLabel",
+            placeholder_key: "registrationNumberPlaceholder",
+            required: true,
+            field_order: 7
+          },
+          {
+            id: "companyAddress",
+            field_name: "companyAddress",
+            field_type: "text",
+            label_key: "companyAddressLabel",
+            placeholder_key: "companyAddressPlaceholder",
+            required: true,
+            field_order: 8
+          },
+          {
+            id: "representativeName",
+            field_name: "representativeName",
+            field_type: "text",
+            label_key: "representativeNameLabel",
+            placeholder_key: "representativeNamePlaceholder",
+            required: true,
+            field_order: 9
           }
         ]
       }
@@ -1433,72 +1407,7 @@ export const packages: Package[] = [
       {
         id: "gift-step-2",
         step_number: 2,
-        title_key: "invoiceDetailsStep",
-        fields: [
-          {
-            id: "invoiceType",
-            field_name: "invoiceType",
-            field_type: "select",
-            label_key: "invoiceTypeLabel",
-            placeholder_key: "invoiceTypePlaceholder",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "personal", label_key: "personalInvoice" },
-              { value: "company", label_key: "companyInvoice" }
-            ]
-          },
-          {
-            id: "companyName",
-            field_name: "companyName",
-            field_type: "text",
-            label_key: "companyNameLabel",
-            placeholder_key: "companyNamePlaceholder",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "vatCode",
-            field_name: "vatCode",
-            field_type: "text",
-            label_key: "vatCodeLabel",
-            placeholder_key: "vatCodePlaceholder",
-            required: true,
-            field_order: 3
-          },
-          {
-            id: "registrationNumber",
-            field_name: "registrationNumber",
-            field_type: "text",
-            label_key: "registrationNumberLabel",
-            placeholder_key: "registrationNumberPlaceholder",
-            required: true,
-            field_order: 4
-          },
-          {
-            id: "companyAddress",
-            field_name: "companyAddress",
-            field_type: "text",
-            label_key: "companyAddressLabel",
-            placeholder_key: "companyAddressPlaceholder",
-            required: true,
-            field_order: 5
-          },
-          {
-            id: "representativeName",
-            field_name: "representativeName",
-            field_type: "text",
-            label_key: "representativeNameLabel",
-            placeholder_key: "representativeNamePlaceholder",
-            required: true,
-            field_order: 6
-          }
-        ]
-      },
-      {
-        id: "gift-step-3",
-        step_number: 3,
-        title_key: "deliveryConfirmationStep",
+        title_key: "contactAndInvoiceDetailsStep",
         fields: [
           {
             id: "senderName",
@@ -1515,6 +1424,64 @@ export const packages: Package[] = [
             placeholder_key: "senderEmailPlaceholder",
             required: true,
             field_order: 2
+          },
+          {
+            id: "invoiceType",
+            field_name: "invoiceType",
+            field_type: "select",
+            label_key: "invoiceTypeLabel",
+            placeholder_key: "invoiceTypePlaceholder",
+            required: true,
+            field_order: 3,
+            options: [
+              { value: "personal", label_key: "personalInvoice" },
+              { value: "company", label_key: "companyInvoice" }
+            ]
+          },
+          {
+            id: "companyName",
+            field_name: "companyName",
+            field_type: "text",
+            label_key: "companyNameLabel",
+            placeholder_key: "companyNamePlaceholder",
+            required: true,
+            field_order: 4
+          },
+          {
+            id: "vatCode",
+            field_name: "vatCode",
+            field_type: "text",
+            label_key: "vatCodeLabel",
+            placeholder_key: "vatCodePlaceholder",
+            required: true,
+            field_order: 5
+          },
+          {
+            id: "registrationNumber",
+            field_name: "registrationNumber",
+            field_type: "text",
+            label_key: "registrationNumberLabel",
+            placeholder_key: "registrationNumberPlaceholder",
+            required: true,
+            field_order: 6
+          },
+          {
+            id: "companyAddress",
+            field_name: "companyAddress",
+            field_type: "text",
+            label_key: "companyAddressLabel",
+            placeholder_key: "companyAddressPlaceholder",
+            required: true,
+            field_order: 7
+          },
+          {
+            id: "representativeName",
+            field_name: "representativeName",
+            field_type: "text",
+            label_key: "representativeNameLabel",
+            placeholder_key: "representativeNamePlaceholder",
+            required: true,
+            field_order: 8
           }
         ]
       }
