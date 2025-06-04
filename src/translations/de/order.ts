@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Pakete werden geladen...",
   loadingSteps: "Schritte werden geladen...",
@@ -169,4 +170,8 @@ export const orderTranslations = {
   // VAT field
   vatCodeLabel: "VAT Code",
   vatCodePlaceholder: "DE123456789",
+  
+  // VAT validation errors
+  vatCodeTooShort: "VAT-Code zu kurz",
+  vatCodeInvalidFormat: "Ungültiger VAT-Code für das ausgewählte Land",
 };

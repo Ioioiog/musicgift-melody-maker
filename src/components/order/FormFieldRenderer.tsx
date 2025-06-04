@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,6 +17,7 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { getAddonPrice } from '@/utils/pricing';
 import { Addon } from '@/types';
 import AudioRecorder from './AudioRecorder';
+import { getVatValidationError } from '@/utils/vatValidation';
 
 interface FieldOption {
   value: string;
@@ -63,6 +63,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   const { t } = useLanguage();
   const { currency } = useCurrency();
   const [date, setDate] = useState<Date>();
+  const [vatError, setVatError] = useState<string | null>(null);
 
   // Helper function to check if addon should be shown based on trigger condition
   const shouldShowAddon = (addon: Addon, selectedPackage: string) => {
@@ -100,6 +101,18 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
     onAddonFieldChange(addonKey, audioBlob);
   };
 
+  const handleVatCodeChange = (vatCode: string) => {
+    onChange(vatCode);
+    
+    // Only validate if the field is VAT code and there's a value
+    if (field.field_name === 'vatCode' && vatCode) {
+      const error = getVatValidationError(vatCode);
+      setVatError(error);
+    } else {
+      setVatError(null);
+    }
+  };
+
   // Check if current field is a company field and if invoice type is company
   const isCompanyField = ['companyName', 'vatCode', 'registrationNumber', 'companyAddress', 'representativeName'].includes(field.field_name);
   const isCompanyInvoice = formData?.invoiceType === 'company';
@@ -115,15 +128,27 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       case 'email':
       case 'tel':
       case 'url':
+        const isVatField = field.field_name === 'vatCode';
         return (
-          <Input
-            type={field.field_type}
-            value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
-            required={field.required}
-            className="w-full"
-          />
+          <div className="space-y-2">
+            <Input
+              type={field.field_type}
+              value={value || ''}
+              onChange={(e) => isVatField ? handleVatCodeChange(e.target.value) : onChange(e.target.value)}
+              placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
+              required={field.required}
+              className={cn(
+                "w-full",
+                isVatField && vatError && "border-red-500 focus:border-red-500"
+              )}
+            />
+            {isVatField && vatError && (
+              <div className="flex items-center space-x-2 text-red-600 text-sm">
+                <AlertCircle className="w-4 h-4" />
+                <span>{t(vatError === 'Cod TVA prea scurt' ? 'vatCodeTooShort' : 'vatCodeInvalidFormat')}</span>
+              </div>
+            )}
+          </div>
         );
 
       case 'textarea':
