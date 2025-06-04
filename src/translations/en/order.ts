@@ -1,4 +1,5 @@
 
+
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -134,7 +135,7 @@ export const orderTranslations = {
   lyricsThemeLabel: "Lyrics Theme",
   lyricsThemePlaceholder: "What should the lyrics focus on?",
   styleReferenceLabel: "Style Reference",
-  styleReferenceLabel: "Any specific artist or song style you'd like us to reference?",
+  styleReferencePlaceholder: "Any specific artist or song style you'd like us to reference?",
   youtubeExampleLabel: "YouTube Example",
   youtubeExamplePlaceholder: "Share a YouTube link of a song style you like",
   
@@ -170,4 +171,11 @@ export const orderTranslations = {
   // Dedication message
   dedicationMessageLabel: "Personal Dedication Message",
   dedicationMessagePlaceholder: "A personal message to include with your song",
+  
+  // Payment errors
+  paymentUrlError: "Unable to generate payment link",
+  paymentUrlErrorDesc: "We couldn't create a payment link for your order. Please try again or contact support.",
+  orderCreationFailed: "Order creation failed",
+  orderCreationFailedDesc: "There was an error creating your order. Please try again.",
 };
+

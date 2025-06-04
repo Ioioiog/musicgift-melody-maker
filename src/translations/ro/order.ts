@@ -1,4 +1,5 @@
 
+
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -134,7 +135,7 @@ export const orderTranslations = {
   lyricsThemeLabel: "Tema Versurilor",
   lyricsThemePlaceholder: "Pe ce să se concentreze versurile?",
   styleReferenceLabel: "Referință de Stil",
-  styleReferenceLabel: "Vreun artist sau stil de cântec specific pe care ai dori să îl referențiem?",
+  styleReferencePlaceholder: "Vreun artist sau stil de cântec specific pe care ai dori să îl referențiem?",
   youtubeExampleLabel: "Exemplu YouTube",
   youtubeExamplePlaceholder: "Împărtășește un link YouTube cu un stil de cântec care îți place",
   
@@ -170,4 +171,11 @@ export const orderTranslations = {
   // Dedication message
   dedicationMessageLabel: "Mesaj Personal de Dedicație",
   dedicationMessagePlaceholder: "Un mesaj personal de inclus cu cântecul tău",
+  
+  // Payment errors
+  paymentUrlError: "Nu se poate genera linkul de plată",
+  paymentUrlErrorDesc: "Nu am putut crea un link de plată pentru comanda ta. Te rugăm să încerci din nou sau să contactezi suportul.",
+  orderCreationFailed: "Crearea comenzii a eșuat",
+  orderCreationFailedDesc: "A apărut o eroare la crearea comenzii. Te rugăm să încerci din nou.",
 };
+
