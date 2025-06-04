@@ -219,21 +219,35 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
+    // Determine if this is a company invoice
+    const isCompanyInvoice = orderData.form_data.invoiceType === 'company'
+    console.log('Invoice type:', orderData.form_data.invoiceType, 'Is company invoice:', isCompanyInvoice)
+
+    // Prepare client data based on invoice type
+    const clientData = {
+      name: isCompanyInvoice ? 
+        (orderData.form_data.companyName || 'Company Name') : 
+        (orderData.form_data.fullName || 'Customer'),
+      vatCode: isCompanyInvoice ? (orderData.form_data.vatCode || '-') : '-',
+      regCom: isCompanyInvoice ? (orderData.form_data.registrationNumber || '') : '',
+      address: isCompanyInvoice ? 
+        (orderData.form_data.companyAddress || orderData.form_data.address || '-') : 
+        (orderData.form_data.address || '-'),
+      city: orderData.form_data.city || 'Bucuresti - Sector 3',
+      county: orderData.form_data.county || 'Bucuresti',
+      country: 'Romania',
+      email: orderData.form_data.email || '',
+      isTaxPayer: true, // Always true as requested
+      saveToDb: false
+    }
+
+    console.log('Client data for SmartBill:', clientData)
+
     // Create SmartBill invoice data
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
       seriesName: seriesName,
-      client: {
-        name: orderData.form_data.fullName || 'Customer',
-        vatCode: '-',
-        address: orderData.form_data.address || '-',
-        city: orderData.form_data.city || 'Bucuresti - Sector 3',
-        county: orderData.form_data.county || 'Bucuresti',
-        country: 'Romania',
-        email: orderData.form_data.email || '',
-        isTaxPayer: false,
-        saveToDb: false
-      },
+      client: clientData,
       issueDate: issueDate,
       dueDate: dueDate,
       deliveryDate: dueDate,
@@ -258,7 +272,9 @@ serve(async (req) => {
           isService: true
         }
       ],
-      observations: `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
+      observations: isCompanyInvoice && orderData.form_data.representativeName ?
+        `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}. Reprezentant companie: ${orderData.form_data.representativeName}` :
+        `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
     }
 
     console.log('Creating SmartBill invoice with data:', invoiceData)

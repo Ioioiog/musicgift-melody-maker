@@ -45,6 +45,7 @@ interface FormFieldRendererProps {
   addonFieldValues: any;
   onAddonFieldChange: (addonKey: string, fieldValue: any) => void;
   selectedPackage?: string;
+  formData?: any; // Add formData to access other field values
 }
 
 const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
@@ -56,7 +57,8 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   availableAddons,
   addonFieldValues,
   onAddonFieldChange,
-  selectedPackage = ''
+  selectedPackage = '',
+  formData = {}
 }) => {
   const { t } = useLanguage();
   const { currency } = useCurrency();
@@ -97,6 +99,15 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   const handleAudioRecording = (audioBlob: Blob, addonKey: string) => {
     onAddonFieldChange(addonKey, audioBlob);
   };
+
+  // Check if current field is a company field and if invoice type is company
+  const isCompanyField = ['companyName', 'vatCode', 'registrationNumber', 'companyAddress', 'representativeName'].includes(field.field_name);
+  const isCompanyInvoice = formData?.invoiceType === 'company';
+
+  // Don't render company fields if invoice type is not company
+  if (isCompanyField && !isCompanyInvoice) {
+    return null;
+  }
 
   const renderField = () => {
     switch (field.field_type) {

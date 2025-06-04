@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,12 @@ interface OrderFormData {
   recipientName?: string;
   occasion?: string;
   package?: string;
+  invoiceType?: string;
+  companyName?: string;
+  vatCode?: string;
+  registrationNumber?: string;
+  companyAddress?: string;
+  representativeName?: string;
   [key: string]: any;
 }
 
@@ -259,6 +266,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                       addonFieldValues={addonFieldValues}
                       onAddonFieldChange={handleAddonFieldChange}
                       selectedPackage={selectedPackage}
+                      formData={formData}
                     />
                   ))
                 ) : (
