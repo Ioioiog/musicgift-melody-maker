@@ -255,9 +255,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
       const orderData = prepareOrderData();
 
-      // For Stripe, always use redirect mode
+      // Handle payment based on selected provider - NO FALLBACKS
       if (selectedPaymentProvider === 'stripe') {
-        console.log('🟣 Using Stripe payment gateway in redirect mode');
+        console.log('🟣 Processing payment with Stripe in redirect mode');
         
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('stripe-create-payment', {
           body: {
@@ -266,47 +266,98 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           }
         });
 
-        if (paymentError || !paymentResponse?.success) {
-          throw new Error(paymentResponse?.error || 'Failed to initialize Stripe payment');
+        console.log('🟣 Stripe response:', paymentResponse);
+        console.log('🟣 Stripe error:', paymentError);
+
+        if (paymentError) {
+          console.error('❌ Stripe Edge Function Error:', paymentError);
+          throw new Error(`Stripe payment failed: ${paymentError.message}`);
+        }
+
+        if (!paymentResponse?.success) {
+          console.error('❌ Stripe Payment Response Error:', paymentResponse);
+          throw new Error(paymentResponse?.error || 'Stripe payment initialization failed');
         }
 
         // Redirect to Stripe Checkout
         if (paymentResponse.paymentUrl) {
+          console.log('✅ Redirecting to Stripe Checkout:', paymentResponse.paymentUrl);
           window.location.href = paymentResponse.paymentUrl;
         } else {
           throw new Error('No payment URL received from Stripe');
         }
-      } else {
-        // Handle other payment providers
-        let edgeFunctionName = selectedPaymentProvider === 'revolut' 
-          ? 'revolut-create-payment' 
-          : 'smartbill-create-invoice';
 
-        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke(edgeFunctionName, {
+      } else if (selectedPaymentProvider === 'revolut') {
+        console.log('🟠 Processing payment with Revolut');
+        
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('revolut-create-payment', {
           body: {
             orderData,
             returnUrl: `${window.location.origin}/payment/success`
           }
         });
 
-        if (paymentError || !paymentResponse?.success) {
-          throw new Error(paymentResponse?.error || `Failed to initialize ${selectedPaymentProvider} payment`);
+        console.log('🟠 Revolut response:', paymentResponse);
+        console.log('🟠 Revolut error:', paymentError);
+
+        if (paymentError) {
+          console.error('❌ Revolut Edge Function Error:', paymentError);
+          throw new Error(`Revolut payment failed: ${paymentError.message}`);
+        }
+
+        if (!paymentResponse?.success) {
+          console.error('❌ Revolut Payment Response Error:', paymentResponse);
+          throw new Error(paymentResponse?.error || 'Revolut payment initialization failed');
         }
 
         if (paymentResponse.paymentUrl) {
+          console.log('✅ Redirecting to Revolut payment:', paymentResponse.paymentUrl);
           window.location.href = paymentResponse.paymentUrl;
         } else {
           navigate('/payment/success?orderId=' + paymentResponse.orderId);
         }
+
+      } else if (selectedPaymentProvider === 'smartbill') {
+        console.log('🔵 Processing payment with SmartBill');
+        
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('smartbill-create-invoice', {
+          body: {
+            orderData,
+            returnUrl: `${window.location.origin}/payment/success`
+          }
+        });
+
+        console.log('🔵 SmartBill response:', paymentResponse);
+        console.log('🔵 SmartBill error:', paymentError);
+
+        if (paymentError) {
+          console.error('❌ SmartBill Edge Function Error:', paymentError);
+          throw new Error(`SmartBill payment failed: ${paymentError.message}`);
+        }
+
+        if (!paymentResponse?.success) {
+          console.error('❌ SmartBill Payment Response Error:', paymentResponse);
+          throw new Error(paymentResponse?.error || 'SmartBill payment initialization failed');
+        }
+
+        if (paymentResponse.paymentUrl) {
+          console.log('✅ Redirecting to SmartBill payment:', paymentResponse.paymentUrl);
+          window.location.href = paymentResponse.paymentUrl;
+        } else {
+          navigate('/payment/success?orderId=' + paymentResponse.orderId);
+        }
+
+      } else {
+        throw new Error(`Unsupported payment provider: ${selectedPaymentProvider}`);
       }
 
     } catch (error) {
-      console.error('💥 Payment processing error:', error);
+      console.error(`💥 ${selectedPaymentProvider.toUpperCase()} Payment Error:`, error);
       
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       toast({
         title: t('orderError', 'Payment Error'),
-        description: `Failed to process payment: ${errorMessage}`,
+        description: `${selectedPaymentProvider.toUpperCase()} payment failed: ${errorMessage}`,
         variant: "destructive"
       });
     } finally {
