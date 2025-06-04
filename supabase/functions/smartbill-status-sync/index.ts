@@ -7,15 +7,14 @@ const corsHeaders = {
 }
 
 interface SmartBillPaymentStatusResponse {
-  sbcInvoicePaymentStatusResponse: {
-    errorText: string;
-    message: string;
-    number: string;
-    series: string;
-    invoiceTotalAmount: number;
-    paidAmount: number;
-    unpaidAmount: number;
-  };
+  errorText: string;
+  message: string;
+  number: string;
+  series: string;
+  invoiceTotalAmount: number;
+  paidAmount: number;
+  unpaidAmount: number;
+  paid?: boolean;
 }
 
 interface SmartBillInvoiceData {
@@ -143,7 +142,8 @@ Deno.serve(async (req) => {
     const responseData: SmartBillPaymentStatusResponse = await smartbillResponse.json();
     console.log('SmartBill payment status response:', responseData);
 
-    const paymentData = responseData.sbcInvoicePaymentStatusResponse;
+    // The response is direct, not wrapped in sbcInvoicePaymentStatusResponse
+    const paymentData = responseData;
     
     // Check for SmartBill errors
     if (paymentData.errorText) {
