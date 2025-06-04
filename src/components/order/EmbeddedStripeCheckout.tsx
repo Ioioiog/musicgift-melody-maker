@@ -87,7 +87,6 @@ const EmbeddedStripeCheckout: React.FC<EmbeddedStripeCheckoutProps> = ({
         <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
           <EmbeddedCheckout 
             className={isLoading ? 'hidden' : 'block'}
-            onMount={() => setIsLoading(false)}
           />
         </EmbeddedCheckoutProvider>
       </CardContent>
