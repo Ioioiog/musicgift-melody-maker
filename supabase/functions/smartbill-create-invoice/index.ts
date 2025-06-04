@@ -221,8 +221,8 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
-    // Get site URL from environment
-    const siteUrl = Deno.env.get('SITE_URL') || 'https://musicgift-ai.lovableproject.com'
+    // Get site URL from environment - UPDATED to use correct domain
+    const siteUrl = Deno.env.get('SITE_URL') || 'https://www.musicgift.ro'
     
     // Configure return URLs for payment success/failure redirects
     const returnUrl = `${siteUrl}/payment/success?orderId=${savedOrder.id}`
