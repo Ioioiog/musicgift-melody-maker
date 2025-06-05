@@ -160,6 +160,139 @@ export type Database = {
         }
         Relationships: []
       }
+      email_accounts: {
+        Row: {
+          created_at: string
+          email_address: string
+          encrypted_password: string
+          id: string
+          imap_port: number
+          imap_server: string
+          is_active: boolean
+          last_sync_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_address: string
+          encrypted_password: string
+          id?: string
+          imap_port?: number
+          imap_server?: string
+          is_active?: boolean
+          last_sync_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_address?: string
+          encrypted_password?: string
+          id?: string
+          imap_port?: number
+          imap_server?: string
+          is_active?: boolean
+          last_sync_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      email_attachments: {
+        Row: {
+          attachment_data: string | null
+          content_type: string
+          created_at: string
+          filename: string
+          id: string
+          message_id: string
+          size_bytes: number
+        }
+        Insert: {
+          attachment_data?: string | null
+          content_type: string
+          created_at?: string
+          filename: string
+          id?: string
+          message_id: string
+          size_bytes: number
+        }
+        Update: {
+          attachment_data?: string | null
+          content_type?: string
+          created_at?: string
+          filename?: string
+          id?: string
+          message_id?: string
+          size_bytes?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_attachments_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "email_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_messages: {
+        Row: {
+          account_id: string
+          body_preview: string | null
+          created_at: string
+          full_body: string | null
+          has_attachments: boolean
+          id: string
+          is_read: boolean
+          message_id: string
+          raw_headers: Json | null
+          received_date: string
+          sender_email: string
+          sender_name: string | null
+          subject: string
+        }
+        Insert: {
+          account_id: string
+          body_preview?: string | null
+          created_at?: string
+          full_body?: string | null
+          has_attachments?: boolean
+          id?: string
+          is_read?: boolean
+          message_id: string
+          raw_headers?: Json | null
+          received_date: string
+          sender_email: string
+          sender_name?: string | null
+          subject: string
+        }
+        Update: {
+          account_id?: string
+          body_preview?: string | null
+          created_at?: string
+          full_body?: string | null
+          has_attachments?: boolean
+          id?: string
+          is_read?: boolean
+          message_id?: string
+          raw_headers?: Json | null
+          received_date?: string
+          sender_email?: string
+          sender_name?: string | null
+          subject?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_messages_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "email_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gift_card_designs: {
         Row: {
           created_at: string
