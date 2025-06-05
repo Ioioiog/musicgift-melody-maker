@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
@@ -55,7 +54,8 @@ const Order = () => {
 
   const handleOrderComplete = async (orderData: any) => {
     try {
-      console.log("Processing order:", orderData);
+      console.log("🔄 Processing order with selected payment provider:", orderData.paymentProvider);
+      console.log("📦 Full order data:", orderData);
 
       // Find the selected package details
       const selectedPackage = packages.find(pkg => pkg.value === orderData.package);
@@ -76,15 +76,19 @@ const Order = () => {
         finalPrice = Math.max(0, (totalPrice * 100 - giftCreditApplied) / 100); // Convert back to currency units
       }
 
-      // Prepare order data for SmartBill with package details
-      const orderPayload = {
+      // Get the selected payment provider
+      const paymentProvider = orderData.paymentProvider || 'smartbill';
+      console.log(`💳 Selected payment provider: ${paymentProvider}`);
+
+      // Prepare base order payload
+      const baseOrderPayload = {
         form_data: {
           ...orderData,
           addons: orderData.addons || [],
           addonFieldValues: orderData.addonFieldValues || {},
         },
         selected_addons: orderData.addons || [],
-        total_price: finalPrice, // Use final price after gift card discount
+        total_price: finalPrice * 100, // Convert to cents for consistency
         status: 'pending',
         payment_status: finalPrice > 0 ? 'pending' : 'completed',
         // Gift card fields
@@ -98,46 +102,71 @@ const Order = () => {
         package_delivery_time: selectedPackage.delivery_time_key,
         package_includes: selectedPackage.includes ? JSON.parse(JSON.stringify(selectedPackage.includes)) : [],
         currency: currency,
-        user_id: user?.id || null
+        user_id: user?.id || null,
+        payment_provider: paymentProvider
       };
 
-      console.log("Sending order to SmartBill integration:", orderPayload);
+      let paymentResponse;
+      let paymentError;
 
-      // Call SmartBill integration edge function
-      const { data: smartBillResponse, error: smartBillError } = await supabase.functions.invoke('smartbill-create-invoice', {
-        body: orderPayload
-      });
+      // Route to the correct payment provider
+      if (paymentProvider === 'stripe') {
+        console.log('🟣 Processing with Stripe');
+        const { data, error } = await supabase.functions.invoke('stripe-create-payment', {
+          body: {
+            orderData: baseOrderPayload,
+            returnUrl: `${window.location.origin}/payment/success`
+          }
+        });
+        paymentResponse = data;
+        paymentError = error;
 
-      if (smartBillError) {
-        console.error('SmartBill integration error:', smartBillError);
-        throw new Error('Failed to process order with SmartBill');
+      } else if (paymentProvider === 'revolut') {
+        console.log('🟠 Processing with Revolut');
+        const { data, error } = await supabase.functions.invoke('revolut-create-payment', {
+          body: {
+            orderData: baseOrderPayload,
+            returnUrl: `${window.location.origin}/payment/success`
+          }
+        });
+        paymentResponse = data;
+        paymentError = error;
+
+      } else if (paymentProvider === 'smartbill') {
+        console.log('🔵 Processing with SmartBill');
+        const { data, error } = await supabase.functions.invoke('smartbill-create-invoice', {
+          body: { orderData: baseOrderPayload }
+        });
+        paymentResponse = data;
+        paymentError = error;
+
+      } else {
+        throw new Error(`Unsupported payment provider: ${paymentProvider}`);
       }
 
-      console.log('SmartBill integration response:', smartBillResponse);
+      // Handle payment provider errors
+      if (paymentError) {
+        console.error(`❌ ${paymentProvider.toUpperCase()} integration error:`, paymentError);
+        throw new Error(`Failed to process order with ${paymentProvider.toUpperCase()}`);
+      }
 
-      // Check if SmartBill operation failed
-      if (!smartBillResponse?.success) {
-        const errorCode = smartBillResponse?.errorCode || 'unknown';
-        const errorMessage = smartBillResponse?.message || 'Payment processing failed';
+      console.log(`✅ ${paymentProvider.toUpperCase()} integration response:`, paymentResponse);
+
+      // Check if payment provider operation failed
+      if (!paymentResponse?.success) {
+        const errorCode = paymentResponse?.errorCode || 'unknown';
+        const errorMessage = paymentResponse?.message || paymentResponse?.error || 'Payment processing failed';
         
-        console.error('SmartBill operation failed:', errorCode, errorMessage);
-        
-        // Show specific error based on error code
-        let userMessage = errorMessage;
-        if (errorCode === 'paymentFailed' || errorCode === 'paymentUrlFailed') {
-          userMessage = 'Unable to generate payment link. Please try again or contact support.';
-        } else if (errorCode === 'paymentConfigError') {
-          userMessage = 'Payment system is temporarily unavailable. Please try again later.';
-        }
+        console.error(`❌ ${paymentProvider.toUpperCase()} operation failed:`, errorCode, errorMessage);
         
         toast({
           title: t('orderError', 'Payment Error'),
-          description: userMessage,
+          description: `${paymentProvider.toUpperCase()} payment failed: ${errorMessage}`,
           variant: "destructive"
         });
         
         // Navigate to payment error page
-        navigate('/payment/error?orderId=' + smartBillResponse.orderId + '&error=' + errorCode);
+        navigate('/payment/error?orderId=' + paymentResponse?.orderId + '&error=' + errorCode);
         return;
       }
 
@@ -147,7 +176,7 @@ const Order = () => {
           .from('gift_redemptions')
           .insert({
             gift_card_id: giftCard.id,
-            order_id: smartBillResponse.orderId,
+            order_id: paymentResponse.orderId,
             redeemed_amount: giftCreditApplied,
             remaining_balance: Math.max(0, (giftCard.gift_amount || 0) - giftCreditApplied)
           });
@@ -162,22 +191,22 @@ const Order = () => {
       // Show success message
       toast({
         title: t('orderSuccess'),
-        description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${smartBillResponse.orderId?.slice(0, 8)}...`),
+        description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${paymentResponse.orderId?.slice(0, 8)}...`),
         variant: "default"
       });
 
-      // If SmartBill returns a payment URL and payment is needed, redirect user
-      if (smartBillResponse?.paymentUrl && finalPrice > 0) {
-        console.log("Redirecting to SmartBill payment:", smartBillResponse.paymentUrl);
-        window.location.href = smartBillResponse.paymentUrl;
+      // Handle payment redirection based on provider
+      if (paymentResponse?.paymentUrl && finalPrice > 0) {
+        console.log(`🔗 Redirecting to ${paymentProvider.toUpperCase()} payment:`, paymentResponse.paymentUrl);
+        window.location.href = paymentResponse.paymentUrl;
       } else {
-        // If no payment needed, show completion message
-        console.log("Order completed successfully - no payment required");
-        navigate('/payment/success?orderId=' + smartBillResponse.orderId);
+        // If no payment needed or no payment URL, show completion
+        console.log("✅ Order completed successfully - no payment required or direct completion");
+        navigate('/payment/success?orderId=' + paymentResponse.orderId);
       }
 
     } catch (error) {
-      console.error("Error processing order:", error);
+      console.error("💥 Error processing order:", error);
       toast({
         title: t('orderError'),
         description: error.message || t('orderErrorMessage'),
