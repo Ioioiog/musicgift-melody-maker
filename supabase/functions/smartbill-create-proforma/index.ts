@@ -1,4 +1,3 @@
-// Supabase Edge Function (Deno) - smartbill-create-proforma.ts
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -7,94 +6,109 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders })
-  }
+function buildSmartBillXMLProforma(order: any, client: any, series: string, companyVat: string): string {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<estimate>
+  <companyVatCode>${companyVat}</companyVatCode>
+  <seriesName>${series}</seriesName>
+  <client>
+    <name>${client.name}</name>
+    <vatCode>${client.vatCode || ''}</vatCode>
+    <regCom>${client.regCom || ''}</regCom>
+    <address>${client.address || ''}</address>
+    <city>${client.city || ''}</city>
+    <county>${client.county || ''}</county>
+    <country>${client.country}</country>
+    <email>${client.email || ''}</email>
+    <isTaxPayer>true</isTaxPayer>
+    <saveToDb>false</saveToDb>
+  </client>
+  <issueDate>${order.issueDate}</issueDate>
+  <dueDate>${order.dueDate}</dueDate>
+  <deliveryDate>${order.dueDate}</deliveryDate>
+  <isDraft>false</isDraft>
+  <language>RO</language>
+  <sendEmail>true</sendEmail>
+  <precision>2</precision>
+  <currency>${order.currency}</currency>
+  <estimateProducts>
+    <estimateProduct>
+      <name>${order.package_name} - Cadou Musical</name>
+      <quantity>1</quantity>
+      <price>${order.total_price}</price>
+      <currency>${order.currency}</currency>
+      <measuringUnitName>buc</measuringUnitName>
+      <isTaxIncluded>true</isTaxIncluded>
+      <taxName>Normala</taxName>
+      <taxPercentage>19</taxPercentage>
+      <isDiscount>false</isDiscount>
+      <saveToDb>false</saveToDb>
+      <isService>true</isService>
+    </estimateProduct>
+  </estimateProducts>
+</estimate>`
+}
 
-  const supabase = createClient(
-    Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-  )
+serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders })
 
   try {
     const { orderData } = await req.json()
-    const username = Deno.env.get('SMARTBILL_USERNAME')
-    const token = Deno.env.get('SMARTBILL_TOKEN')
-    const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
-    const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
-    const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'STRP'
+    const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
 
-    if (!username || !token || !companyVat) {
-      throw new Error('SmartBill credentials/config missing')
+    const { SMARTBILL_USERNAME, SMARTBILL_TOKEN, SMARTBILL_BASE_URL, SMARTBILL_COMPANY_VAT, SMARTBILL_SERIES } = Deno.env.toObject()
+    const series = SMARTBILL_SERIES || 'STRP'
+    const auth = btoa(`${SMARTBILL_USERNAME}:${SMARTBILL_TOKEN}`)
+
+    const issueDate = new Date().toISOString().split('T')[0]
+    const dueDate = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
+
+    const client = {
+      name: orderData.form_data?.fullName || 'Client',
+      vatCode: '-',
+      regCom: '',
+      address: orderData.form_data?.address || '-',
+      city: orderData.form_data?.city || 'Bucuresti',
+      county: orderData.form_data?.county || 'Bucuresti',
+      country: 'Romania',
+      email: orderData.form_data?.email || ''
     }
 
-    const auth = btoa(`${username}:${token}`)
+    const xmlPayload = buildSmartBillXMLProforma({
+      ...orderData,
+      issueDate,
+      dueDate
+    }, client, series, SMARTBILL_COMPANY_VAT || '')
 
-    const estimateData = {
-      companyVatCode: companyVat,
-      seriesName: seriesName,
-      client: {
-        name: orderData.form_data.fullName || 'Client MusicGift',
-        email: orderData.form_data.email,
-        country: 'Romania',
-        isTaxPayer: false
-      },
-      currency: orderData.currency || 'RON',
-      issueDate: new Date().toISOString().split('T')[0],
-      language: 'RO',
-      sendEmail: false,
-      precision: 2,
-      estimateProducts: [
-        {
-          name: `${orderData.package_name} - Cadou Muzical Personalizat`,
-          isService: true,
-          isDiscount: false,
-          quantity: 1,
-          price: orderData.total_price,
-          measuringUnitName: 'buc',
-          isTaxIncluded: true,
-          taxPercentage: 19
-        }
-      ]
-    }
-
-    const response = await fetch(`${baseUrl}/SBORO/api/estimate`, {
+    const res = await fetch(`${SMARTBILL_BASE_URL || 'https://ws.smartbill.ro'}/SBORO/api/estimate`, {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Content-Type': 'application/xml',
+        'Accept': 'application/xml'
       },
-      body: JSON.stringify(estimateData)
+      body: xmlPayload
     })
 
-    const text = await response.text()
-    let parsed
-    try {
-      parsed = JSON.parse(text)
-    } catch {
-      throw new Error(`SmartBill proforma creation failed (${response.status}): ${text}`)
+    const text = await res.text()
+    console.log('SmartBill XML Response:', text)
+
+    if (!res.ok || text.includes('<errorText>')) {
+      await supabase.from('orders').update({ smartbill_payment_status: 'failed' }).eq('id', orderData.id)
+      return new Response(JSON.stringify({ success: false, error: 'SmartBill XML error', message: text }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 400
+      })
     }
 
-    if (!response.ok || parsed?.errorText) {
-      throw new Error(`SmartBill proforma creation failed (${response.status}): ${text}`)
-    }
-
-    await supabase.from('orders').update({
-      smartbill_proforma_url: parsed.url,
-      smartbill_proforma_status: 'success',
-      smartbill_proforma_data: parsed
-    }).eq('id', orderData.id)
-
-    return new Response(JSON.stringify({ success: true, url: parsed.url }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 200
+    await supabase.from('orders').update({ smartbill_payment_status: 'pending', smartbill_invoice_data: text }).eq('id', orderData.id)
+    return new Response(JSON.stringify({ success: true, message: 'SmartBill proforma created (XML)', response: text }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
 
-  } catch (e) {
-    console.error('SmartBill Proforma Error:', e.message)
-    return new Response(JSON.stringify({ success: false, error: e.message }), {
+  } catch (err) {
+    console.error('Error:', err)
+    return new Response(JSON.stringify({ success: false, error: err.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 500
     })
