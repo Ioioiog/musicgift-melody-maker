@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -71,6 +72,10 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
     return "/lovable-uploads/c2fa4958-8447-4873-81b0-7c4ce43e678b.png";
   };
 
+  const getRevolutLogo = () => {
+    return "/lovable-uploads/351bae23-e0e6-4f76-97c1-140c628569bf.png";
+  };
+
   if (isLoading) {
     return (
       <Card>
@@ -140,6 +145,17 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                             e.currentTarget.nextElementSibling?.classList.remove('hidden');
                           }}
                         />
+                      ) : provider.provider_name === 'revolut' ? (
+                        <img 
+                          src={getRevolutLogo()}
+                          alt="Revolut"
+                          className="w-12 h-12 object-contain"
+                          onError={(e) => {
+                            // Fallback to icon if image fails to load
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
                       ) : provider.logo_url ? (
                         <img 
                           src={provider.logo_url} 
@@ -149,7 +165,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                       ) : (
                         getProviderIcon(provider.provider_name)
                       )}
-                      {(provider.provider_name === 'smartbill' || provider.provider_name === 'stripe') && (
+                      {(provider.provider_name === 'smartbill' || provider.provider_name === 'stripe' || provider.provider_name === 'revolut') && (
                         <div className="hidden">
                           {getProviderIcon(provider.provider_name)}
                         </div>
