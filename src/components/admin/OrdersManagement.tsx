@@ -372,9 +372,8 @@ const OrdersManagement = () => {
     }
     
     if (currency === 'EUR') {
-      // If amount is likely in cents (> 1000), convert to euros
-      const eurAmount = numAmount > 1000 ? numAmount / 100 : numAmount;
-      return `${eurAmount.toFixed(2)} EUR`;
+      // For non-Stripe EUR payments, display amount as-is
+      return `${numAmount.toFixed(2)} EUR`;
     } else {
       // For RON or other currencies, display as-is
       return `${numAmount} ${currency}`;
