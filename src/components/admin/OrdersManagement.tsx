@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy, RefreshCw } from 'lucide-react';
+import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy, RefreshCw, FileText } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -32,6 +32,7 @@ const OrdersManagement = () => {
   const [openPromptDetails, setOpenPromptDetails] = useState<Set<string>>(new Set());
   const [refreshingOrders, setRefreshingOrders] = useState<Set<string>>(new Set());
   const [bulkRefreshing, setBulkRefreshing] = useState(false);
+  const [creatingProforma, setCreatingProforma] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const { t } = useLanguage();
   const isMobile = useIsMobile();
@@ -111,6 +112,77 @@ const OrdersManagement = () => {
     } catch (error) {
       console.error('Error updating order status:', error);
       toast({ title: 'Error updating order status', variant: 'destructive' });
+    }
+  };
+
+  const createProforma = async (orderId: string) => {
+    if (creatingProforma.has(orderId)) return;
+    
+    setCreatingProforma(prev => new Set(prev).add(orderId));
+    
+    try {
+      console.log(`Creating SmartBill proforma for order: ${orderId}`);
+      
+      // Find the order data
+      const order = orders.find(o => o.id === orderId);
+      if (!order) {
+        throw new Error('Order not found');
+      }
+
+      const { data, error } = await supabase.functions.invoke('smartbill-create-proforma', {
+        body: { orderData: order }
+      });
+
+      if (error) {
+        console.error('SmartBill proforma creation error:', error);
+        toast({ 
+          title: 'Error creating proforma', 
+          description: error.message || 'Failed to create SmartBill proforma',
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      if (data?.error) {
+        console.error('SmartBill proforma creation error:', data.error);
+        toast({ 
+          title: 'SmartBill proforma error', 
+          description: data.error,
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      console.log('SmartBill proforma creation result:', data);
+      
+      // Refetch orders to get updated data
+      await refetch();
+      
+      if (data?.duplicate) {
+        toast({ 
+          title: 'Proforma already exists',
+          description: `Proforma ${data.proformaId} already exists for this order`
+        });
+      } else {
+        toast({ 
+          title: 'Proforma created successfully',
+          description: `SmartBill proforma ${data.proformaId} has been created`
+        });
+      }
+      
+    } catch (error) {
+      console.error('Error creating proforma:', error);
+      toast({ 
+        title: 'Error creating proforma', 
+        description: 'Failed to create SmartBill proforma',
+        variant: 'destructive' 
+      });
+    } finally {
+      setCreatingProforma(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(orderId);
+        return newSet;
+      });
     }
   };
 
@@ -354,6 +426,8 @@ const OrdersManagement = () => {
     const packageValue = order.package_value || (formData as any)?.package || (formData as any)?.packageType;
     const overallPaymentStatus = getOverallPaymentStatus(order);
     const isRefreshing = refreshingOrders.has(order.id);
+    const isCreatingProforma = creatingProforma.has(order.id);
+    const hasProforma = order.smartbill_proforma_id || order.smartbill_invoice_id;
 
     return (
       <div className="space-y-4">
@@ -456,6 +530,19 @@ const OrdersManagement = () => {
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
+
+            {!hasProforma && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => createProforma(order.id)}
+                disabled={isCreatingProforma}
+                className="h-11 px-3"
+                title="Create SmartBill Proforma"
+              >
+                <FileText className={`w-4 h-4 ${isCreatingProforma ? 'animate-spin' : ''}`} />
+              </Button>
+            )}
           </div>
 
           <div className="flex flex-col space-y-2">
@@ -530,6 +617,8 @@ const OrdersManagement = () => {
     const packageValue = order.package_value || (formData as any)?.package || (formData as any)?.packageType;
     const overallPaymentStatus = getOverallPaymentStatus(order);
     const isRefreshing = refreshingOrders.has(order.id);
+    const isCreatingProforma = creatingProforma.has(order.id);
+    const hasProforma = order.smartbill_proforma_id || order.smartbill_invoice_id;
 
     return (
       <>
@@ -608,6 +697,18 @@ const OrdersManagement = () => {
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
+            
+            {!hasProforma && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => createProforma(order.id)}
+                disabled={isCreatingProforma}
+                title="Create SmartBill Proforma"
+              >
+                <FileText className={`w-4 h-4 ${isCreatingProforma ? 'animate-spin' : ''}`} />
+              </Button>
+            )}
             
             {order.smartbill_payment_url && order.smartbill_payment_status === 'pending' && (
               <Button
