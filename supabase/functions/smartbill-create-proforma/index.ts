@@ -48,14 +48,16 @@ const parseSmartBillError = (htmlResponse: string): string => {
   }
 }
 
-const generateSmartBillEstimateXML = (data: any) => {
-  const { companyVatCode, seriesName, client, issueDate, dueDate, currency, products } = data
+const generateSmartBillProformaXML = (data: any) => {
+  const { companyVatCode, seriesName, client, issueDate, dueDate, currency, products, observations } = data
   
-  // Validate and clean all client fields (simplified structure)
+  // Validate and clean all client fields
   const clientName = validateAndCleanField(client.name, 'Client Necunoscut');
   const clientVatCode = validateAndCleanField(client.vatCode);
+  const clientRegCom = validateAndCleanField(client.regCom);
   const clientAddress = validateAndCleanField(client.address);
   const clientCity = validateAndCleanField(client.city, 'Bucuresti');
+  const clientCounty = validateAndCleanField(client.county, 'Bucuresti');
   const clientCountry = validateAndCleanField(client.country, 'Romania');
   const clientEmail = validateEmail(client.email);
   
@@ -68,66 +70,81 @@ const generateSmartBillEstimateXML = (data: any) => {
     email: clientEmail,
     isTaxPayer,
     city: clientCity,
-    country: clientCountry
+    county: clientCounty
   });
+  
+  const clientXml = `
+    <client>
+      <name>${escapeXml(clientName)}</name>
+      <vatCode>${escapeXml(clientVatCode)}</vatCode>
+      <regCom>${escapeXml(clientRegCom)}</regCom>
+      <address>${escapeXml(clientAddress)}</address>
+      <city>${escapeXml(clientCity)}</city>
+      <county>${escapeXml(clientCounty)}</county>
+      <country>${escapeXml(clientCountry)}</country>
+      <email>${escapeXml(clientEmail)}</email>
+      <isTaxPayer>${isTaxPayer}</isTaxPayer>
+    </client>`
 
-  // Generate products XML (direct under estimate, no wrapper)
   const productsXml = products.map((product: any) => {
     const productName = validateAndCleanField(product.name, 'Produs Necunoscut');
+    const productCode = validateAndCleanField(product.code);
+    const measuringUnit = validateAndCleanField(product.measuringUnit, 'buc');
     const quantity = Number(product.quantity) || 1;
     const price = Number(product.price) || 0;
-    const isService = product.productType === 'Serviciu' ? 'true' : 'false';
+    const productType = validateAndCleanField(product.productType, 'Serviciu');
     
     console.log('🔍 Validated product data:', {
       name: productName,
       quantity,
       price,
-      isService
+      measuringUnit,
+      productType
     });
     
-    return `  <product>
-    <name>${escapeXml(productName)}</name>
-    <isDiscount>false</isDiscount>
-    <measuringUnitName>buc</measuringUnitName>
-    <currency>${escapeXml(currency)}</currency>
-    <quantity>${quantity}</quantity>
-    <price>${price}</price>
-    <isTaxIncluded>true</isTaxIncluded>
-    <taxName>Normala</taxName>
-    <taxPercentage>19</taxPercentage>
-    <saveToDb>false</saveToDb>
-    <isService>${isService}</isService>
-  </product>`
-  }).join('\n')
+    return `
+    <product>
+      <name>${escapeXml(productName)}</name>
+      <code>${escapeXml(productCode)}</code>
+      <isDiscount>false</isDiscount>
+      <measuringUnit>${escapeXml(measuringUnit)}</measuringUnit>
+      <quantity>${quantity}</quantity>
+      <price>${price}</price>
+      <productType>${escapeXml(productType)}</productType>
+      <currency>${escapeXml(currency)}</currency>
+      <isTaxIncluded>true</isTaxIncluded>
+      <taxName>Normala</taxName>
+      <taxPercentage>19</taxPercentage>
+      <isService>true</isService>
+    </product>`
+  }).join('')
 
-  // Generate XML with exact structure from sample
   const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
-<estimate>
+<request>
   <companyVatCode>${escapeXml(companyVatCode)}</companyVatCode>
-  <client>
-    <name>${escapeXml(clientName)}</name>
-    <vatCode>${escapeXml(clientVatCode)}</vatCode>
-    <isTaxPayer>${isTaxPayer}</isTaxPayer>
-    <address>${escapeXml(clientAddress)}</address>
-    <city>${escapeXml(clientCity)}</city>
-    <country>${escapeXml(clientCountry)}</country>
-    <email>${escapeXml(clientEmail)}</email>
-  </client>
-  <issueDate>${escapeXml(issueDate)}</issueDate>
   <seriesName>${escapeXml(seriesName)}</seriesName>
+  ${clientXml}
+  <issueDate>${escapeXml(issueDate)}</issueDate>
   <dueDate>${escapeXml(dueDate)}</dueDate>
-${productsXml}
-</estimate>`
+  <deliveryDate>${escapeXml(dueDate)}</deliveryDate>
+  <isDraft>false</isDraft>
+  <language>RO</language>
+  <sendEmail>true</sendEmail>
+  <precision>2</precision>
+  <currency>${escapeXml(currency)}</currency>
+  <products>
+    ${productsXml}
+  </products>
+  <observations>${escapeXml(observations || '')}</observations>
+</request>`
 
   console.log('📋 Generated XML structure validation:');
-  console.log('- Root element: estimate');
   console.log('- Company VAT Code:', companyVatCode);
   console.log('- Series Name:', seriesName);
   console.log('- Issue Date:', issueDate);
   console.log('- Due Date:', dueDate);
   console.log('- Currency:', currency);
   console.log('- Products count:', products.length);
-  console.log('- Products directly under estimate: true');
 
   return xmlContent;
 }
@@ -139,13 +156,13 @@ serve(async (req) => {
     const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
     const { orderData } = await req.json()
 
-    console.log('📦 Processing SmartBill estimate for order:', orderData.id)
+    console.log('📦 Processing SmartBill proforma for order:', orderData.id)
 
     const username = Deno.env.get('SMARTBILL_USERNAME')
     const token = Deno.env.get('SMARTBILL_TOKEN')
     const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
     const companyVatCode = Deno.env.get('SMARTBILL_COMPANY_VAT')!
-    const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'PFC'
+    const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'STRP'
 
     console.log('🔧 SmartBill config:', { 
       baseUrl, 
@@ -185,8 +202,10 @@ serve(async (req) => {
         ? validateAndCleanField(orderData.form_data?.companyName, 'Firma Necunoscuta') 
         : validateAndCleanField(orderData.form_data?.fullName, 'Client Necunoscut'),
       vatCode: isCompany ? validateAndCleanField(orderData.form_data?.vatCode) : '',
+      regCom: isCompany ? validateAndCleanField(orderData.form_data?.registrationNumber) : '',
       address: validateAndCleanField(orderData.form_data?.address),
       city: validateAndCleanField(orderData.form_data?.city, 'Bucuresti'),
+      county: validateAndCleanField(orderData.form_data?.county, 'Bucuresti'),
       country: 'Romania',
       email: validateEmail(orderData.form_data?.email || ''),
       isTaxPayer: isCompany && orderData.form_data?.vatCode
@@ -203,32 +222,28 @@ serve(async (req) => {
 
     const products = [{
       name: validateAndCleanField(`${orderData.package_name || 'Pachet Muzical'} - Cadou Muzical Personalizat`),
+      code: '',
       quantity: 1,
       price: totalPrice,
+      measuringUnit: 'buc',
       productType: 'Serviciu'
     }]
 
-    const xmlBody = generateSmartBillEstimateXML({
+    const xmlBody = generateSmartBillProformaXML({
       companyVatCode,
       seriesName,
       client,
       issueDate,
       dueDate,
       currency,
-      products
+      products,
+      observations: validateAndCleanField(`Comanda pentru ${orderData.form_data?.recipientName || 'client'} - Pachet: ${orderData.package_name || 'Necunoscut'}`)
     })
 
     const apiUrl = `${baseUrl}/SBORO/api/estimate`
     console.log('🔗 Calling SmartBill API:', apiUrl)
     console.log('📤 Complete XML being sent to SmartBill:')
     console.log(xmlBody)
-    console.log('📤 XML Length:', xmlBody.length, 'characters')
-    console.log('📤 XML Validation:')
-    console.log('- Has <?xml declaration:', xmlBody.includes('<?xml'))
-    console.log('- Root element is <estimate>:', xmlBody.includes('<estimate>'))
-    console.log('- Has client section:', xmlBody.includes('<client>'))
-    console.log('- Has product section:', xmlBody.includes('<product>'))
-    console.log('- Ends with </estimate>:', xmlBody.includes('</estimate>'))
 
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -254,8 +269,7 @@ serve(async (req) => {
         error: 'SmartBill API error', 
         message: errorMessage,
         status: response.status,
-        rawResponse: responseText.substring(0, 1000), // Include part of raw response for debugging
-        sentXML: xmlBody // Include the XML we sent for debugging
+        rawResponse: responseText.substring(0, 1000) // Include part of raw response for debugging
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200
@@ -281,20 +295,20 @@ serve(async (req) => {
       console.warn('⚠️ Could not parse SmartBill response:', parseError)
     }
 
-    // Update order with SmartBill estimate information
+    // Update order with SmartBill proforma information
     const { error: updateError } = await supabase
       .from('orders')
       .update({
-        smartbill_proforma_id: estimateNumber,
+        smartbill_invoice_id: estimateNumber,
         smartbill_payment_url: estimateUrl,
-        smartbill_proforma_status: 'pending'
+        smartbill_payment_status: 'pending'
       })
       .eq('id', orderData.id)
 
     if (updateError) {
       console.error('❌ Error updating order:', updateError)
     } else {
-      console.log('✅ Order updated with SmartBill estimate data')
+      console.log('✅ Order updated with SmartBill data')
     }
 
     return new Response(JSON.stringify({ 
@@ -302,7 +316,7 @@ serve(async (req) => {
       estimateNumber, 
       estimateUrl, 
       series,
-      message: 'Estimate created successfully' 
+      message: 'Proforma created successfully' 
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200
