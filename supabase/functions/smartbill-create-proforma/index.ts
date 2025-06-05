@@ -9,6 +9,7 @@ const corsHeaders = {
 
 // Helper function to escape XML special characters
 function escapeXml(text: string): string {
+  if (!text) return '';
   return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -17,10 +18,35 @@ function escapeXml(text: string): string {
     .replace(/'/g, '&#39;');
 }
 
+// Helper function to validate XML structure before sending
+function validateXmlFields(data: any): string[] {
+  const errors: string[] = [];
+  
+  if (!data.companyVatCode) errors.push('Missing companyVatCode');
+  if (!data.client?.name) errors.push('Missing client name');
+  if (!data.client?.email) errors.push('Missing client email');
+  if (!data.seriesName) errors.push('Missing seriesName');
+  if (!data.issueDate) errors.push('Missing issueDate');
+  if (!data.dueDate) errors.push('Missing dueDate');
+  if (!data.currency) errors.push('Missing currency');
+  if (!data.products || !Array.isArray(data.products) || data.products.length === 0) {
+    errors.push('Missing products array or empty products');
+  }
+  
+  data.products?.forEach((product: any, index: number) => {
+    if (!product.name) errors.push(`Product ${index}: Missing name`);
+    if (!product.code) errors.push(`Product ${index}: Missing code`);
+    if (product.price === undefined || product.price === null) errors.push(`Product ${index}: Missing price`);
+    if (!product.measuringUnit) errors.push(`Product ${index}: Missing measuringUnit`);
+    if (product.quantity === undefined || product.quantity === null) errors.push(`Product ${index}: Missing quantity`);
+  });
+  
+  return errors;
+}
+
 // Helper function to parse XML response
 function parseXmlResponse(xmlText: string): any {
   // Simple XML parsing for SmartBill response
-  // Look for key elements in the response
   const result: any = {};
   
   // Extract proforma number/ID
@@ -169,49 +195,94 @@ serve(async (req) => {
     const escapedPackageName = escapeXml(`${orderData.package_name || orderData.package_value} - Pachet Cadou Muzical`);
     const escapedPackageCode = escapeXml(orderData.package_value || "MUSIC-GIFT");
 
-    // Build XML request body according to SmartBill API documentation
+    // Prepare XML data structure for validation
+    const xmlData = {
+      companyVatCode: smartbillCompanyVAT,
+      client: {
+        name: customerName,
+        email: customerEmail,
+        phone: customerPhone,
+        address: customerAddress,
+        city: customerCity,
+        county: customerCounty,
+        country: 'Romania',
+        isTaxPayer: 'false',
+        saveToDb: 'true'
+      },
+      seriesName: 'STRP',
+      issueDate: issueDate,
+      dueDate: dueDate,
+      language: 'RO',
+      precision: '2',
+      currency: orderData.currency || 'RON',
+      isDraft: 'false',
+      mentions: escapedMentions,
+      observations: escapedObservations,
+      products: [{
+        name: escapedPackageName,
+        code: escapedPackageCode,
+        price: totalPriceInCurrency,
+        measuringUnit: 'buc',
+        quantity: 1,
+        productType: 'Serviciu',
+        isService: 'true',
+        taxName: 'Fara TVA',
+        taxPercentage: 0,
+        isDiscount: 'false'
+      }]
+    };
+
+    // Validate XML structure before sending
+    const validationErrors = validateXmlFields(xmlData);
+    if (validationErrors.length > 0) {
+      console.error('❌ XML validation errors:', validationErrors);
+      throw new Error(`XML validation failed: ${validationErrors.join(', ')}`);
+    }
+
+    // Build XML request body with corrected field names and structure
     const xmlBody = `<?xml version="1.0" encoding="UTF-8"?>
 <request>
-  <companyVatCode>${smartbillCompanyVAT}</companyVatCode>
+  <companyVatCode>${xmlData.companyVatCode}</companyVatCode>
   <client>
-    <name>${customerName}</name>
-    <email>${customerEmail}</email>
-    <phone>${customerPhone}</phone>
-    <address>${customerAddress}</address>
-    <city>${customerCity}</city>
-    <county>${customerCounty}</county>
-    <country>Romania</country>
-    <isTaxPayer>false</isTaxPayer>
-    <saveToDb>true</saveToDb>
+    <name>${xmlData.client.name}</name>
+    <email>${xmlData.client.email}</email>
+    <phone>${xmlData.client.phone}</phone>
+    <address>${xmlData.client.address}</address>
+    <city>${xmlData.client.city}</city>
+    <county>${xmlData.client.county}</county>
+    <country>${xmlData.client.country}</country>
+    <isTaxPayer>${xmlData.client.isTaxPayer}</isTaxPayer>
+    <saveToDb>${xmlData.client.saveToDb}</saveToDb>
   </client>
-  <seriesName>STRP</seriesName>
-  <issueDate>${issueDate}</issueDate>
-  <dueDate>${dueDate}</dueDate>
-  <language>RO</language>
-  <precision>2</precision>
-  <currency>${orderData.currency || "RON"}</currency>
-  <isDraft>false</isDraft>
-  <mentions>${escapedMentions}</mentions>
-  <observations>${escapedObservations}</observations>
+  <seriesName>${xmlData.seriesName}</seriesName>
+  <issueDate>${xmlData.issueDate}</issueDate>
+  <dueDate>${xmlData.dueDate}</dueDate>
+  <language>${xmlData.language}</language>
+  <precision>${xmlData.precision}</precision>
+  <currency>${xmlData.currency}</currency>
+  <isDraft>${xmlData.isDraft}</isDraft>
+  <mentions>${xmlData.mentions}</mentions>
+  <observations>${xmlData.observations}</observations>
   <products>
     <product>
-      <name>${escapedPackageName}</name>
-      <code>${escapedPackageCode}</code>
-      <price>${totalPriceInCurrency}</price>
-      <measuringUnitName>buc</measuringUnitName>
-      <quantity>1</quantity>
-      <isService>true</isService>
-      <taxName>Fara TVA</taxName>
-      <taxPercentage>0</taxPercentage>
-      <isDiscount>false</isDiscount>
+      <name>${xmlData.products[0].name}</name>
+      <code>${xmlData.products[0].code}</code>
+      <price>${xmlData.products[0].price}</price>
+      <measuringUnit>${xmlData.products[0].measuringUnit}</measuringUnit>
+      <quantity>${xmlData.products[0].quantity}</quantity>
+      <productType>${xmlData.products[0].productType}</productType>
+      <isService>${xmlData.products[0].isService}</isService>
+      <taxName>${xmlData.products[0].taxName}</taxName>
+      <taxPercentage>${xmlData.products[0].taxPercentage}</taxPercentage>
+      <isDiscount>${xmlData.products[0].isDiscount}</isDiscount>
     </product>
   </products>
 </request>`;
 
-    console.log('📋 SmartBill XML request body:', xmlBody);
+    console.log('📋 SmartBill XML request body (validated):', xmlBody);
 
     // Create proforma in SmartBill using the correct endpoint with XML
-    console.log('🚀 Sending XML request to SmartBill API...');
+    console.log('🚀 Sending validated XML request to SmartBill API...');
     const smartbillResponse = await fetch('https://ws.smartbill.ro/SBORO/api/estimate', {
       method: 'POST',
       headers: {
