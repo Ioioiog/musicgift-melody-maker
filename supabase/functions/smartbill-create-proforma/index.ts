@@ -79,9 +79,16 @@ serve(async (req) => {
 
     const username = Deno.env.get('SMARTBILL_USERNAME')
     const token = Deno.env.get('SMARTBILL_TOKEN')
-    const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://api.smartbill.ro'
+    const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
     const companyVatCode = Deno.env.get('SMARTBILL_COMPANY_VAT')!
     const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'PROV'
+
+    console.log('🔧 SmartBill config:', { 
+      baseUrl, 
+      username: username ? 'SET' : 'MISSING', 
+      token: token ? 'SET' : 'MISSING',
+      companyVatCode 
+    })
 
     if (!username || !token) {
       throw new Error('SmartBill credentials not configured')
@@ -132,9 +139,11 @@ serve(async (req) => {
       observations: `Comanda pentru ${orderData.form_data?.recipientName || 'client'} - Pachet: ${orderData.package_name || 'Necunoscut'}`
     })
 
+    const apiUrl = `${baseUrl}/SBORO/api/estimate`
+    console.log('🔗 Calling SmartBill API:', apiUrl)
     console.log('📤 Sending XML to SmartBill:', xmlBody.substring(0, 500) + '...')
 
-    const response = await fetch(`${baseUrl}/estimate`, {
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${btoa(`${username}:${token}`)}`,
