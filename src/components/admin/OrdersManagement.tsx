@@ -418,6 +418,19 @@ const OrdersManagement = () => {
     });
   };
 
+  const formatCurrency = (amount: number | string, currency: string = 'RON') => {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    
+    if (currency === 'EUR') {
+      // If amount is likely in cents (> 1000), convert to euros
+      const eurAmount = numAmount > 1000 ? numAmount / 100 : numAmount;
+      return `${eurAmount.toFixed(2)} EUR`;
+    } else {
+      // For RON or other currencies, display as-is
+      return `${numAmount} ${currency}`;
+    }
+  };
+
   const renderMobileOrderCard = (order: any, index: number) => {
     const formData = order.form_data as OrderFormData;
     const hasPrompts = hasSavedPrompts(order.id);
@@ -435,7 +448,9 @@ const OrdersManagement = () => {
         <div className="flex flex-col space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">#{order.id.slice(0, 8)}</h3>
-            <span className="text-lg font-bold text-purple-600">{order.total_price} RON</span>
+            <span className="text-lg font-bold text-purple-600">
+              {formatCurrency(order.total_price, order.currency)}
+            </span>
           </div>
           
           <div className="flex flex-wrap gap-2">
@@ -637,7 +652,9 @@ const OrdersManagement = () => {
           <div className="text-sm text-gray-500">{order.package_value || 'N/A'}</div>
         </td>
         <td className="px-6 py-4">
-          <div className="text-sm font-medium text-gray-900">{order.total_price} RON</div>
+          <div className="text-sm font-medium text-gray-900">
+            {formatCurrency(order.total_price, order.currency)}
+          </div>
           <div className="text-sm text-gray-500">{new Date(order.created_at).toLocaleDateString()}</div>
         </td>
         <td className="px-6 py-4">
