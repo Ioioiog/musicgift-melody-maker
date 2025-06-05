@@ -51,6 +51,19 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
     return providerName === 'revolut';
   };
 
+  const getProviderOrder = (providerName: string) => {
+    switch (providerName) {
+      case 'smartbill':
+        return 1; // Netopia first
+      case 'stripe':
+        return 2; // Stripe second
+      case 'revolut':
+        return 3; // Revolut third
+      default:
+        return 999; // Others last
+    }
+  };
+
   if (isLoading) {
     return (
       <Card>
@@ -63,9 +76,9 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
     );
   }
 
-  const supportedProviders = providers.filter(provider => 
-    provider.supported_currencies.includes(currency)
-  );
+  const supportedProviders = providers
+    .filter(provider => provider.supported_currencies.includes(currency))
+    .sort((a, b) => getProviderOrder(a.provider_name) - getProviderOrder(b.provider_name));
 
   return (
     <Card>
