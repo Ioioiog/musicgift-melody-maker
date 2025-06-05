@@ -42,6 +42,12 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0];
     const dueDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 30 days from now
 
+    // Determine payment status context
+    const isPaymentCompleted = orderData.payment_completed_via || orderData.payment_status === 'completed';
+    const paymentProvider = orderData.payment_completed_via || orderData.payment_provider || 'online';
+    
+    console.log('💳 Payment context - Completed via:', paymentProvider, 'Status:', orderData.payment_status);
+
     // Prepare proforma data for SmartBill API according to documentation
     const proformaData = {
       companyVatCode: smartbillCompanyVAT, // Corrected parameter name
@@ -63,8 +69,8 @@ serve(async (req) => {
       precision: 2,
       currency: orderData.currency || "RON",
       isDraft: false, // Final proforma, not draft
-      mentions: `Comanda #${orderData.id?.slice(0, 8)} - Cadou muzical personalizat. Pachet: ${orderData.package_name || orderData.package_value}`,
-      observations: `Plata efectuata prin ${orderData.payment_provider || 'online'}. Status: ${orderData.payment_status}`,
+      mentions: `Comanda #${orderData.id?.slice(0, 8)} - Cadou muzical personalizat. Pachet: ${orderData.package_name || orderData.package_value}${isPaymentCompleted ? ` | Plată finalizată prin ${paymentProvider.toUpperCase()}` : ''}`,
+      observations: `Plata ${isPaymentCompleted ? 'finalizată' : 'în procesare'} prin ${paymentProvider}. Status: ${orderData.payment_status}`,
       products: [
         {
           name: `${orderData.package_name || orderData.package_value} - Pachet Cadou Muzical`,
@@ -116,13 +122,21 @@ serve(async (req) => {
     const proformaResult = JSON.parse(responseText);
     console.log('SmartBill proforma created successfully:', proformaResult);
 
-    // Update order with proforma information
+    // Determine SmartBill payment status based on actual payment status
+    let smartbillPaymentStatus = 'pending';
+    if (isPaymentCompleted) {
+      smartbillPaymentStatus = 'completed';
+      console.log('💳 Setting SmartBill payment status to completed - payment already processed via', paymentProvider);
+    }
+
+    // Update order with proforma information and payment status
     const { error: updateError } = await supabaseClient
       .from('orders')
       .update({
         smartbill_proforma_id: proformaResult.number || proformaResult.id,
         smartbill_proforma_status: 'created',
         smartbill_proforma_data: proformaResult,
+        smartbill_payment_status: smartbillPaymentStatus,
         updated_at: new Date().toISOString()
       })
       .eq('id', orderData.id);
@@ -132,13 +146,18 @@ serve(async (req) => {
       throw updateError;
     }
 
-    console.log('SmartBill proforma created and order updated successfully:', proformaResult.number || proformaResult.id);
+    console.log('✅ SmartBill proforma created and order updated successfully:', {
+      proformaId: proformaResult.number || proformaResult.id,
+      orderId: orderData.id,
+      paymentStatus: smartbillPaymentStatus
+    });
 
     return new Response(JSON.stringify({
       success: true,
       proformaId: proformaResult.number || proformaResult.id,
       proformaData: proformaResult,
-      orderId: orderData.id
+      orderId: orderData.id,
+      smartbillPaymentStatus: smartbillPaymentStatus
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

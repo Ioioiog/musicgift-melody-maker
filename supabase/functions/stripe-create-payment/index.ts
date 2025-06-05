@@ -352,13 +352,14 @@ serve(async (req) => {
       );
     }
 
-    // Update order with Stripe session details
+    // Update order with Stripe session details - THIS IS THE KEY FIX
     const updateData = {
       stripe_session_id: session.id,
       session_expires_at: new Date(session.expires_at * 1000).toISOString(),
-      supported_payment_methods: session.payment_method_types,
       payment_url: session.url
     };
+
+    console.log('🟣 Stripe: Updating order with session details:', updateData);
 
     const { error: updateError } = await supabaseClient
       .from('orders')
@@ -367,8 +368,9 @@ serve(async (req) => {
 
     if (updateError) {
       console.error('⚠️ Stripe: Error updating order with session details:', updateError);
+      // Don't fail here - order was created, just log the error
     } else {
-      console.log('✅ Stripe: Order updated with session details');
+      console.log('✅ Stripe: Order updated with session details successfully');
     }
 
     const successResponse = {

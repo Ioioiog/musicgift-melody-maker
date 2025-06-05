@@ -379,6 +379,7 @@ export type Database = {
           revolut_order_id: string | null
           revolut_payment_id: string | null
           selected_addons: Json | null
+          session_expires_at: string | null
           smartbill_invoice_data: Json | null
           smartbill_invoice_id: string | null
           smartbill_payment_status: string | null
@@ -414,6 +415,7 @@ export type Database = {
           revolut_order_id?: string | null
           revolut_payment_id?: string | null
           selected_addons?: Json | null
+          session_expires_at?: string | null
           smartbill_invoice_data?: Json | null
           smartbill_invoice_id?: string | null
           smartbill_payment_status?: string | null
@@ -449,6 +451,7 @@ export type Database = {
           revolut_order_id?: string | null
           revolut_payment_id?: string | null
           selected_addons?: Json | null
+          session_expires_at?: string | null
           smartbill_invoice_data?: Json | null
           smartbill_invoice_id?: string | null
           smartbill_payment_status?: string | null
