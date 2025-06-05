@@ -33,7 +33,7 @@ serve(async (req) => {
     const dueDate = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
 
     const totalPrice = parseFloat(orderData.total_price) || 0
-    const currency = ['RON', 'EUR'].includes(orderData.currency) ? orderData.currency : 'RON'
+    const currency = ['RON', 'EUR'].includes(orderData.currency) ? orderData.currency : 'EUR'
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <estimate>
