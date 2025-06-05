@@ -64,6 +64,11 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
     }
   };
 
+  const getNetopiaLogo = () => {
+    // Use a placeholder Netopia logo from Unsplash
+    return "https://images.unsplash.com/photo-1551038247-3d9af20df552?w=200&h=100&fit=crop&crop=center";
+  };
+
   if (isLoading) {
     return (
       <Card>
@@ -111,7 +116,18 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
-                      {provider.logo_url ? (
+                      {provider.provider_name === 'smartbill' ? (
+                        <img 
+                          src={getNetopiaLogo()}
+                          alt="Netopia Payments"
+                          className="w-12 h-12 object-contain rounded"
+                          onError={(e) => {
+                            // Fallback to icon if image fails to load
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                      ) : provider.logo_url ? (
                         <img 
                           src={provider.logo_url} 
                           alt={provider.display_name}
@@ -119,6 +135,11 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                         />
                       ) : (
                         getProviderIcon(provider.provider_name)
+                      )}
+                      {provider.provider_name === 'smartbill' && (
+                        <div className="hidden">
+                          {getProviderIcon(provider.provider_name)}
+                        </div>
                       )}
                     </div>
                     <div>
