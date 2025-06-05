@@ -1,4 +1,3 @@
-
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
@@ -6,6 +5,81 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Custom async signature verification for Deno
+async function verifyStripeSignature(payload: string, signature: string, secret: string): Promise<boolean> {
+  try {
+    console.log('🔐 Starting async signature verification...');
+    
+    // Parse the signature header
+    const elements = signature.split(',');
+    let timestamp: string | null = null;
+    let v1Signature: string | null = null;
+
+    for (const element of elements) {
+      const [key, value] = element.split('=');
+      if (key === 't') {
+        timestamp = value;
+      } else if (key === 'v1') {
+        v1Signature = value;
+      }
+    }
+
+    if (!timestamp || !v1Signature) {
+      console.error('❌ Invalid signature format - missing timestamp or v1 signature');
+      return false;
+    }
+
+    // Check timestamp tolerance (5 minutes)
+    const currentTime = Math.floor(Date.now() / 1000);
+    const webhookTime = parseInt(timestamp);
+    const tolerance = 300; // 5 minutes in seconds
+
+    if (Math.abs(currentTime - webhookTime) > tolerance) {
+      console.error('❌ Signature timestamp outside tolerance window');
+      return false;
+    }
+
+    // Create the signed payload
+    const signedPayload = `${timestamp}.${payload}`;
+    
+    // Import the secret key for HMAC
+    const key = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+
+    // Compute the expected signature
+    const signature_bytes = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signedPayload));
+    const expectedSignature = Array.from(new Uint8Array(signature_bytes))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    // Timing-safe comparison
+    const providedSignature = v1Signature.toLowerCase();
+    
+    if (expectedSignature.length !== providedSignature.length) {
+      console.error('❌ Signature length mismatch');
+      return false;
+    }
+
+    let result = 0;
+    for (let i = 0; i < expectedSignature.length; i++) {
+      result |= expectedSignature.charCodeAt(i) ^ providedSignature.charCodeAt(i);
+    }
+
+    const isValid = result === 0;
+    console.log(`${isValid ? '✅' : '❌'} Signature verification ${isValid ? 'successful' : 'failed'}`);
+    
+    return isValid;
+  } catch (error) {
+    console.error('❌ Error during signature verification:', error);
+    return false;
+  }
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -23,20 +97,28 @@ serve(async (req) => {
     
     console.log('🔔 Received Stripe webhook');
 
-    // Initialize Stripe for webhook verification
-    const Stripe = (await import('https://esm.sh/stripe@14.21.0')).default;
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
-      apiVersion: '2023-10-16',
-    });
-
     let event;
     const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
     
-    // Verify webhook signature if secret is configured
+    // Async signature verification for Deno compatibility
     if (webhookSecret && signature) {
       try {
-        event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-        console.log('✅ Webhook signature verified successfully');
+        console.log('🔐 Using async signature verification for Deno compatibility');
+        const isValidSignature = await verifyStripeSignature(body, signature, webhookSecret);
+        
+        if (!isValidSignature) {
+          console.error('❌ Webhook signature verification failed');
+          return new Response(
+            JSON.stringify({ error: 'Invalid signature' }),
+            { 
+              status: 400,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            }
+          );
+        }
+        
+        console.log('✅ Webhook signature verified successfully with async method');
+        event = JSON.parse(body);
       } catch (signatureError) {
         console.error('❌ Webhook signature verification failed:', signatureError);
         return new Response(
