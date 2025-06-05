@@ -359,6 +359,28 @@ const OrdersManagement = () => {
     return { status: order.payment_status || 'unknown', label: order.payment_status || 'Unknown' };
   };
 
+  const formatCurrency = (amount: number | string, currency: string = 'RON', order: any = null) => {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    
+    // Check if this is a Stripe payment (has stripe_session_id)
+    const isStripePayment = order?.stripe_session_id;
+    
+    if (isStripePayment) {
+      // Stripe always stores amounts in cents, so always divide by 100
+      const displayAmount = numAmount / 100;
+      return `${displayAmount.toFixed(2)} ${currency}`;
+    }
+    
+    if (currency === 'EUR') {
+      // If amount is likely in cents (> 1000), convert to euros
+      const eurAmount = numAmount > 1000 ? numAmount / 100 : numAmount;
+      return `${eurAmount.toFixed(2)} EUR`;
+    } else {
+      // For RON or other currencies, display as-is
+      return `${numAmount} ${currency}`;
+    }
+  };
+
   const openSunoDialog = (order: any) => {
     setSelectedOrder(order);
     setSunoDialogOpen(true);
@@ -418,19 +440,6 @@ const OrdersManagement = () => {
     });
   };
 
-  const formatCurrency = (amount: number | string, currency: string = 'RON') => {
-    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-    
-    if (currency === 'EUR') {
-      // If amount is likely in cents (> 1000), convert to euros
-      const eurAmount = numAmount > 1000 ? numAmount / 100 : numAmount;
-      return `${eurAmount.toFixed(2)} EUR`;
-    } else {
-      // For RON or other currencies, display as-is
-      return `${numAmount} ${currency}`;
-    }
-  };
-
   const renderMobileOrderCard = (order: any, index: number) => {
     const formData = order.form_data as OrderFormData;
     const hasPrompts = hasSavedPrompts(order.id);
@@ -449,7 +458,7 @@ const OrdersManagement = () => {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">#{order.id.slice(0, 8)}</h3>
             <span className="text-lg font-bold text-purple-600">
-              {formatCurrency(order.total_price, order.currency)}
+              {formatCurrency(order.total_price, order.currency, order)}
             </span>
           </div>
           
@@ -653,7 +662,7 @@ const OrdersManagement = () => {
         </td>
         <td className="px-6 py-4">
           <div className="text-sm font-medium text-gray-900">
-            {formatCurrency(order.total_price, order.currency)}
+            {formatCurrency(order.total_price, order.currency, order)}
           </div>
           <div className="text-sm text-gray-500">{new Date(order.created_at).toLocaleDateString()}</div>
         </td>
