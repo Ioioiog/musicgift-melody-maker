@@ -383,6 +383,9 @@ export type Database = {
           smartbill_invoice_id: string | null
           smartbill_payment_status: string | null
           smartbill_payment_url: string | null
+          smartbill_proforma_data: Json | null
+          smartbill_proforma_id: string | null
+          smartbill_proforma_status: string | null
           status: string | null
           stripe_payment_intent_id: string | null
           stripe_session_id: string | null
@@ -415,6 +418,9 @@ export type Database = {
           smartbill_invoice_id?: string | null
           smartbill_payment_status?: string | null
           smartbill_payment_url?: string | null
+          smartbill_proforma_data?: Json | null
+          smartbill_proforma_id?: string | null
+          smartbill_proforma_status?: string | null
           status?: string | null
           stripe_payment_intent_id?: string | null
           stripe_session_id?: string | null
@@ -447,6 +453,9 @@ export type Database = {
           smartbill_invoice_id?: string | null
           smartbill_payment_status?: string | null
           smartbill_payment_url?: string | null
+          smartbill_proforma_data?: Json | null
+          smartbill_proforma_id?: string | null
+          smartbill_proforma_status?: string | null
           status?: string | null
           stripe_payment_intent_id?: string | null
           stripe_session_id?: string | null

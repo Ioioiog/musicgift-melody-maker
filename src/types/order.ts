@@ -25,6 +25,9 @@ export interface OrderData {
   smartbill_payment_status?: string;
   smartbill_payment_url?: string;
   smartbill_invoice_data?: any;
+  smartbill_proforma_id?: string;
+  smartbill_proforma_status?: string;
+  smartbill_proforma_data?: any;
   gift_credit_applied?: number;
   is_gift_redemption?: boolean;
   gift_card_id?: string;

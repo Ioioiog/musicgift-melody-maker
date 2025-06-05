@@ -404,6 +404,9 @@ const OrdersManagement = () => {
             {order.smartbill_invoice_id && (
               <p><strong>SmartBill Invoice:</strong> {order.smartbill_invoice_id}</p>
             )}
+            {order.smartbill_proforma_id && (
+              <p><strong>SmartBill Proforma:</strong> {order.smartbill_proforma_id}</p>
+            )}
           </div>
           <div className="space-y-1">
             <p><strong>{t('created', 'Created')}:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
@@ -536,6 +539,9 @@ const OrdersManagement = () => {
           {order.smartbill_invoice_id && (
             <div className="text-xs text-blue-600">SB: {order.smartbill_invoice_id}</div>
           )}
+          {order.smartbill_proforma_id && (
+            <div className="text-xs text-green-600">Proforma: {order.smartbill_proforma_id}</div>
+          )}
         </td>
         <td className="px-6 py-4">
           <div className="text-sm text-gray-900">{formData?.fullName || 'N/A'}</div>
@@ -634,12 +640,22 @@ const OrdersManagement = () => {
                   <DialogTitle>{t('orderDetails', 'Order Details')} #{order.id.slice(0, 8)}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
-                  {order.smartbill_invoice_id && (
+                  {(order.smartbill_invoice_id || order.smartbill_proforma_id) && (
                     <div>
                       <h4 className="font-semibold mb-2">SmartBill Information:</h4>
                       <div className="bg-blue-50 p-4 rounded text-sm">
-                        <p><strong>Invoice ID:</strong> {order.smartbill_invoice_id}</p>
-                        <p><strong>Payment Status:</strong> {order.smartbill_payment_status || 'pending'}</p>
+                        {order.smartbill_proforma_id && (
+                          <>
+                            <p><strong>Proforma ID:</strong> {order.smartbill_proforma_id}</p>
+                            <p><strong>Proforma Status:</strong> {order.smartbill_proforma_status || 'created'}</p>
+                          </>
+                        )}
+                        {order.smartbill_invoice_id && (
+                          <>
+                            <p><strong>Invoice ID:</strong> {order.smartbill_invoice_id}</p>
+                            <p><strong>Payment Status:</strong> {order.smartbill_payment_status || 'pending'}</p>
+                          </>
+                        )}
                         {order.smartbill_payment_url && (
                           <p><strong>Payment URL:</strong> 
                             <a href={order.smartbill_payment_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline ml-1">

@@ -68,6 +68,32 @@ serve(async (req) => {
           }
 
           console.log('Order updated successfully:', order.id);
+
+          // Create SmartBill proforma after successful payment
+          try {
+            console.log('Creating SmartBill proforma for order:', order.id);
+            
+            const proformaResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/smartbill-create-proforma`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
+              },
+              body: JSON.stringify({ orderData: order })
+            });
+
+            if (proformaResponse.ok) {
+              const proformaResult = await proformaResponse.json();
+              console.log('SmartBill proforma created successfully:', proformaResult.proformaId);
+            } else {
+              const proformaError = await proformaResponse.text();
+              console.error('Failed to create SmartBill proforma:', proformaError);
+              // Don't fail the webhook - log error and continue
+            }
+          } catch (proformaError) {
+            console.error('Error calling SmartBill proforma function:', proformaError);
+            // Don't fail the webhook - log error and continue
+          }
         }
         break;
 
