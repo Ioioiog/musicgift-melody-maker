@@ -30,54 +30,54 @@ const Admin = () => {
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-              {/* Mobile-optimized tab layout */}
+              {/* Updated tab layout to ensure email tab is visible */}
               <div className="w-full overflow-x-auto">
-                <TabsList className="grid w-full grid-cols-8 min-w-[800px] sm:min-w-full h-auto p-1">
+                <TabsList className="flex w-full min-w-[900px] sm:min-w-full h-auto p-1 justify-start">
                   <TabsTrigger 
                     value="packages" 
-                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap flex-shrink-0"
                   >
                     Packages
                   </TabsTrigger>
                   <TabsTrigger 
                     value="orders" 
-                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap flex-shrink-0"
                   >
                     Orders
                   </TabsTrigger>
                   <TabsTrigger 
                     value="gift-cards" 
-                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap flex-shrink-0"
                   >
                     Gift Cards
                   </TabsTrigger>
                   <TabsTrigger 
                     value="payments" 
-                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap flex-shrink-0"
                   >
                     Payments
                   </TabsTrigger>
                   <TabsTrigger 
                     value="email" 
-                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap flex-shrink-0"
                   >
                     Email
                   </TabsTrigger>
                   <TabsTrigger 
                     value="users" 
-                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap flex-shrink-0"
                   >
                     Users
                   </TabsTrigger>
                   <TabsTrigger 
                     value="newsletter" 
-                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap flex-shrink-0"
                   >
                     Newsletter
                   </TabsTrigger>
                   <TabsTrigger 
                     value="campaigns" 
-                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap flex-shrink-0"
                   >
                     Campaigns
                   </TabsTrigger>
