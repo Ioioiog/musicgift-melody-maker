@@ -45,7 +45,7 @@ const EmailFolderSidebar = ({
                 
                 {counts && (
                   <div className="flex gap-1">
-                    {counts.unread > 0 && (
+                    {counts.unread > 0 && folder.id !== 'Sent' && (
                       <Badge 
                         variant="secondary" 
                         className="bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5"

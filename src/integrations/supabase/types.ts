@@ -171,6 +171,9 @@ export type Database = {
           imap_server: string
           is_active: boolean
           last_sync_at: string | null
+          smtp_port: number | null
+          smtp_security: string | null
+          smtp_server: string | null
           updated_at: string
           user_id: string
         }
@@ -184,6 +187,9 @@ export type Database = {
           imap_server?: string
           is_active?: boolean
           last_sync_at?: string | null
+          smtp_port?: number | null
+          smtp_security?: string | null
+          smtp_server?: string | null
           updated_at?: string
           user_id: string
         }
@@ -197,6 +203,9 @@ export type Database = {
           imap_server?: string
           is_active?: boolean
           last_sync_at?: string | null
+          smtp_port?: number | null
+          smtp_security?: string | null
+          smtp_server?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -236,6 +245,65 @@ export type Database = {
             columns: ["message_id"]
             isOneToOne: false
             referencedRelation: "email_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_drafts: {
+        Row: {
+          account_id: string
+          attachments: Json | null
+          auto_saved_at: string | null
+          bcc_emails: string[] | null
+          body_html: string | null
+          body_plain: string | null
+          cc_emails: string[] | null
+          created_at: string
+          id: string
+          is_template: boolean | null
+          subject: string
+          template_name: string | null
+          to_emails: string[]
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          attachments?: Json | null
+          auto_saved_at?: string | null
+          bcc_emails?: string[] | null
+          body_html?: string | null
+          body_plain?: string | null
+          cc_emails?: string[] | null
+          created_at?: string
+          id?: string
+          is_template?: boolean | null
+          subject?: string
+          template_name?: string | null
+          to_emails: string[]
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          attachments?: Json | null
+          auto_saved_at?: string | null
+          bcc_emails?: string[] | null
+          body_html?: string | null
+          body_plain?: string | null
+          cc_emails?: string[] | null
+          created_at?: string
+          id?: string
+          is_template?: boolean | null
+          subject?: string
+          template_name?: string | null
+          to_emails?: string[]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_drafts_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "email_accounts"
             referencedColumns: ["id"]
           },
         ]
@@ -680,6 +748,72 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      sent_emails: {
+        Row: {
+          account_id: string
+          bcc_emails: string[] | null
+          body_html: string | null
+          body_plain: string | null
+          cc_emails: string[] | null
+          created_at: string
+          delivery_status: string | null
+          draft_id: string | null
+          error_message: string | null
+          id: string
+          message_id: string
+          sent_at: string
+          subject: string
+          to_emails: string[]
+        }
+        Insert: {
+          account_id: string
+          bcc_emails?: string[] | null
+          body_html?: string | null
+          body_plain?: string | null
+          cc_emails?: string[] | null
+          created_at?: string
+          delivery_status?: string | null
+          draft_id?: string | null
+          error_message?: string | null
+          id?: string
+          message_id: string
+          sent_at?: string
+          subject: string
+          to_emails: string[]
+        }
+        Update: {
+          account_id?: string
+          bcc_emails?: string[] | null
+          body_html?: string | null
+          body_plain?: string | null
+          cc_emails?: string[] | null
+          created_at?: string
+          delivery_status?: string | null
+          draft_id?: string | null
+          error_message?: string | null
+          id?: string
+          message_id?: string
+          sent_at?: string
+          subject?: string
+          to_emails?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sent_emails_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "email_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sent_emails_draft_id_fkey"
+            columns: ["draft_id"]
+            isOneToOne: false
+            referencedRelation: "email_drafts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       stripe_webhook_events: {
         Row: {

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Mail, Plus, RefreshCw, Settings, Trash2, Eye, Paperclip, Archive, RotateCcw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +18,7 @@ import {
 import EmailAccountForm from "./EmailAccountForm";
 import EmailDetailsModal from "./EmailDetailsModal";
 import EmailFolderSidebar from "./EmailFolderSidebar";
+import EmailComposer from "./EmailComposer";
 
 const EmailManagement = () => {
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
@@ -26,6 +26,7 @@ const EmailManagement = () => {
   const [selectedEmail, setSelectedEmail] = useState<EmailMessage | null>(null);
   const [showAccountForm, setShowAccountForm] = useState(false);
   const [showEmailDetails, setShowEmailDetails] = useState(false);
+  const [showEmailComposer, setShowEmailComposer] = useState(false);
 
   const { data: accounts = [], isLoading: accountsLoading } = useEmailAccounts();
   const { data: messages = [], isLoading: messagesLoading, refetch: refetchMessages } = useEmailMessages(selectedAccountId, selectedFolder);
@@ -67,6 +68,15 @@ const EmailManagement = () => {
 
   const handleRestoreFromTrash = async (messageId: string) => {
     await moveEmail.mutateAsync({ messageId, targetFolder: 'INBOX' });
+  };
+
+  const handleComposeEmail = () => {
+    setShowEmailComposer(true);
+  };
+
+  const handleReplyToEmail = (email: EmailMessage) => {
+    setSelectedEmail(email);
+    setShowEmailComposer(true);
   };
 
   const formatDate = (dateString: string) => {
@@ -119,15 +129,25 @@ const EmailManagement = () => {
                 </CardTitle>
                 <div className="flex items-center gap-2">
                   {selectedAccountId && (
-                    <Button
-                      onClick={handleRefreshEmails}
-                      disabled={fetchEmails.isPending}
-                      size="sm"
-                      variant="outline"
-                    >
-                      <RefreshCw className={`w-4 h-4 mr-2 ${fetchEmails.isPending ? 'animate-spin' : ''}`} />
-                      Refresh
-                    </Button>
+                    <>
+                      <Button
+                        onClick={handleComposeEmail}
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Compose
+                      </Button>
+                      <Button
+                        onClick={handleRefreshEmails}
+                        disabled={fetchEmails.isPending}
+                        size="sm"
+                        variant="outline"
+                      >
+                        <RefreshCw className={`w-4 h-4 mr-2 ${fetchEmails.isPending ? 'animate-spin' : ''}`} />
+                        Refresh
+                      </Button>
+                    </>
                   )}
                 </div>
               </div>
@@ -239,6 +259,18 @@ const EmailManagement = () => {
                                       }}
                                     >
                                       <Eye className="w-3 h-3" />
+                                    </Button>
+                                    
+                                    <Button 
+                                      size="sm" 
+                                      variant="ghost" 
+                                      className="h-6 w-6 p-0 text-blue-600 hover:text-blue-700"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleReplyToEmail(email);
+                                      }}
+                                    >
+                                      <RefreshCw className="w-3 h-3" />
                                     </Button>
                                     
                                     {selectedFolder === 'Trash' ? (
@@ -353,6 +385,13 @@ const EmailManagement = () => {
         open={showEmailDetails}
         onOpenChange={setShowEmailDetails}
         email={selectedEmail}
+      />
+
+      <EmailComposer
+        accountId={selectedAccountId}
+        open={showEmailComposer}
+        onOpenChange={setShowEmailComposer}
+        replyTo={selectedEmail}
       />
     </div>
   );

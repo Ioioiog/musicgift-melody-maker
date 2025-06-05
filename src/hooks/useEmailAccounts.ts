@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -282,6 +281,138 @@ export const useMoveEmail = () => {
     },
     onError: (error: any) => {
       toast.error(`Error moving email: ${error.message}`);
+    }
+  });
+};
+
+// NEW HOOKS FOR EMAIL SENDING
+
+export const useSendEmail = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (emailData: {
+      accountId: string;
+      to: string[];
+      cc?: string[];
+      bcc?: string[];
+      subject: string;
+      bodyHtml?: string;
+      bodyPlain?: string;
+      draftId?: string;
+    }) => {
+      const { data, error } = await supabase.functions.invoke('smtp-send-email', {
+        body: emailData
+      });
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['email-messages'] });
+      queryClient.invalidateQueries({ queryKey: ['email-folder-counts'] });
+      queryClient.invalidateQueries({ queryKey: ['email-drafts'] });
+      toast.success('Email sent successfully');
+    },
+    onError: (error: any) => {
+      toast.error(`Error sending email: ${error.message}`);
+    }
+  });
+};
+
+export const useEmailDrafts = (accountId: string | null) => {
+  return useQuery({
+    queryKey: ['email-drafts', accountId],
+    queryFn: async () => {
+      if (!accountId) return [];
+      
+      const { data, error } = await supabase
+        .from('email_drafts')
+        .select('*')
+        .eq('account_id', accountId)
+        .order('updated_at', { ascending: false });
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!accountId
+  });
+};
+
+export const useSaveEmailDraft = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (draftData: {
+      accountId: string;
+      to: string[];
+      cc?: string[];
+      bcc?: string[];
+      subject: string;
+      bodyHtml?: string;
+      bodyPlain?: string;
+      id?: string;
+    }) => {
+      const { id, ...data } = draftData;
+      
+      if (id) {
+        // Update existing draft
+        const { data: updatedDraft, error } = await supabase
+          .from('email_drafts')
+          .update(data)
+          .eq('id', id)
+          .select()
+          .single();
+
+        if (error) throw error;
+        return updatedDraft;
+      } else {
+        // Create new draft
+        const { data: newDraft, error } = await supabase
+          .from('email_drafts')
+          .insert({
+            account_id: draftData.accountId,
+            to_emails: draftData.to,
+            cc_emails: draftData.cc || [],
+            bcc_emails: draftData.bcc || [],
+            subject: draftData.subject,
+            body_html: draftData.bodyHtml,
+            body_plain: draftData.bodyPlain
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        return newDraft;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['email-drafts'] });
+    },
+    onError: (error: any) => {
+      toast.error(`Error saving draft: ${error.message}`);
+    }
+  });
+};
+
+export const useDeleteEmailDraft = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (draftId: string) => {
+      const { error } = await supabase
+        .from('email_drafts')
+        .delete()
+        .eq('id', draftId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['email-drafts'] });
+      toast.success('Draft deleted successfully');
+    },
+    onError: (error: any) => {
+      toast.error(`Error deleting draft: ${error.message}`);
     }
   });
 };
