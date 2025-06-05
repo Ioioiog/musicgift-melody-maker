@@ -7,6 +7,24 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+interface OrderData {
+  form_data: any;
+  selected_addons: string[];
+  total_price: number;
+  package_value: string;
+  package_name: string;
+  package_price: number;
+  package_delivery_time: string;
+  package_includes: any[];
+  status: string;
+  payment_status: string;
+  currency: string;
+  user_id?: string;
+  gift_card_id?: string;
+  is_gift_redemption?: boolean;
+  gift_credit_applied?: number;
+}
+
 // Helper function to escape XML special characters
 function escapeXml(text: string): string {
   if (!text) return '';
@@ -18,35 +36,45 @@ function escapeXml(text: string): string {
     .replace(/'/g, '&#39;');
 }
 
-// Helper function to validate XML structure before sending
-function validateXmlFields(data: any): string[] {
-  const errors: string[] = [];
-  
-  if (!data.companyVatCode) errors.push('Missing companyVatCode');
-  if (!data.client?.name) errors.push('Missing client name');
-  if (!data.client?.email) errors.push('Missing client email');
-  if (!data.seriesName) errors.push('Missing seriesName');
-  if (!data.issueDate) errors.push('Missing issueDate');
-  if (!data.dueDate) errors.push('Missing dueDate');
-  if (!data.currency) errors.push('Missing currency');
-  if (!data.products || !Array.isArray(data.products) || data.products.length === 0) {
-    errors.push('Missing products array or empty products');
-  }
-  
-  data.products?.forEach((product: any, index: number) => {
-    if (!product.name) errors.push(`Product ${index}: Missing name`);
-    if (!product.code) errors.push(`Product ${index}: Missing code`);
-    if (product.price === undefined || product.price === null) errors.push(`Product ${index}: Missing price`);
-    if (!product.measuringUnit) errors.push(`Product ${index}: Missing measuringUnit`);
-    if (product.quantity === undefined || product.quantity === null) errors.push(`Product ${index}: Missing quantity`);
-  });
-  
-  return errors;
+function convertEstimateDataToXML(data: any): string {
+  const productXML = data.products.map((p: any) => `
+    <product>
+      <name>${escapeXml(p.name)}</name>
+      <quantity>${p.quantity}</quantity>
+      <price>${p.price}</price>
+      <currency>${p.currency}</currency>
+      <measuringUnitName>${p.measuringUnitName}</measuringUnitName>
+      <isTaxIncluded>${p.isTaxIncluded}</isTaxIncluded>
+      <taxName>${p.taxName}</taxName>
+      <taxPercentage>${p.taxPercentage}</taxPercentage>
+      <isService>${p.isService}</isService>
+    </product>`).join('')
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<estimate>
+  <companyVatCode>${data.companyVatCode}</companyVatCode>
+  <seriesName>${data.seriesName}</seriesName>
+  <client>
+    <name>${escapeXml(data.client.name)}</name>
+    <country>${data.client.country}</country>
+    <isTaxPayer>${data.client.isTaxPayer}</isTaxPayer>
+    <email>${escapeXml(data.client.email || '')}</email>
+  </client>
+  <issueDate>${data.issueDate}</issueDate>
+  <dueDate>${data.dueDate}</dueDate>
+  <deliveryDate>${data.deliveryDate}</deliveryDate>
+  <isDraft>${data.isDraft}</isDraft>
+  <language>${data.language}</language>
+  <sendEmail>${data.sendEmail}</sendEmail>
+  <precision>${data.precision}</precision>
+  <currency>${data.currency}</currency>
+  <products>${productXML}</products>
+  <observations>${escapeXml(data.observations || '')}</observations>
+</estimate>`
 }
 
 // Helper function to parse XML response
 function parseXmlResponse(xmlText: string): any {
-  // Simple XML parsing for SmartBill response
   const result: any = {};
   
   // Extract proforma number/ID
@@ -145,16 +173,12 @@ serve(async (req) => {
 
     // Extract form data safely
     const formData = orderData.form_data || {};
-    const customerName = escapeXml(formData.fullName || formData.customerName || 'N/A');
-    const customerEmail = escapeXml(formData.email || '');
-    const customerPhone = escapeXml(formData.phone || '');
-    const customerAddress = escapeXml(formData.address || '');
-    const customerCity = escapeXml(formData.city || '');
-    const customerCounty = escapeXml(formData.county || '');
+    const customerName = formData.fullName || formData.customerName || 'N/A';
+    const customerEmail = formData.email || '';
 
     // Calculate dates
     const issueDate = new Date().toISOString().split('T')[0];
-    const dueDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 30 days from now
+    const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 7 days from now
 
     // Determine payment status context
     const isPaymentCompleted = orderData.payment_completed_via || orderData.payment_status === 'completed';
@@ -166,123 +190,60 @@ serve(async (req) => {
     const totalPriceInCurrency = orderData.total_price ? (orderData.total_price / 100) : 0;
     console.log('💰 Price conversion:', orderData.total_price, 'cents ->', totalPriceInCurrency, orderData.currency || 'RON');
 
-    // Enhanced mentions with payment tracking information
-    let mentions = `Comanda #${orderData.id?.slice(0, 8)} - Cadou muzical personalizat. Pachet: ${orderData.package_name || orderData.package_value}`;
+    // Prepare client data
+    const client = {
+      name: customerName,
+      country: 'Romania',
+      email: customerEmail,
+      isTaxPayer: true
+    };
+
+    // Enhanced observations with payment tracking information
+    let observations = `Comanda #${orderData.id?.slice(0, 8)} - Cadou muzical personalizat. Pachet: ${orderData.package_name || orderData.package_value}`;
     
     if (isPaymentCompleted) {
-      mentions += ` | Plată finalizată prin ${paymentProvider.toUpperCase()}`;
+      observations += ` | Plată finalizată prin ${paymentProvider.toUpperCase()}`;
       
       // Add Stripe-specific payment details
       if (paymentProvider === 'stripe' && orderData.stripe_payment_intent_id) {
-        mentions += ` (${orderData.stripe_payment_intent_id.slice(0, 16)}...)`;
+        observations += ` (${orderData.stripe_payment_intent_id.slice(0, 16)}...)`;
       }
     }
 
-    // Enhanced observations with more payment details
-    let observations = `Plata ${isPaymentCompleted ? 'finalizată' : 'în procesare'} prin ${paymentProvider}. Status: ${orderData.payment_status}`;
-    
-    if (orderData.stripe_customer_id) {
-      observations += ` | Client Stripe: ${orderData.stripe_customer_id}`;
-    }
-    
-    if (orderData.webhook_processed_at) {
-      observations += ` | Processat: ${orderData.webhook_processed_at}`;
-    }
-
-    // Escape mentions and observations for XML
-    const escapedMentions = escapeXml(mentions);
-    const escapedObservations = escapeXml(observations);
-    const escapedPackageName = escapeXml(`${orderData.package_name || orderData.package_value} - Pachet Cadou Muzical`);
-    const escapedPackageCode = escapeXml(orderData.package_value || "MUSIC-GIFT");
-
-    // Prepare XML data structure for validation
-    const xmlData = {
+    // Prepare estimate data using the working structure
+    const estimate = {
       companyVatCode: smartbillCompanyVAT,
-      client: {
-        name: customerName,
-        email: customerEmail,
-        phone: customerPhone,
-        address: customerAddress,
-        city: customerCity,
-        county: customerCounty,
-        country: 'Romania',
-        isTaxPayer: 'false',
-        saveToDb: 'true'
-      },
-      seriesName: 'STRP',
-      issueDate: issueDate,
-      dueDate: dueDate,
+      seriesName: 'mng',
+      client,
+      issueDate,
+      dueDate,
+      deliveryDate: dueDate,
+      isDraft: false,
       language: 'RO',
-      precision: '2',
+      sendEmail: true,
+      precision: 2,
       currency: orderData.currency || 'RON',
-      isDraft: 'false',
-      mentions: escapedMentions,
-      observations: escapedObservations,
       products: [{
-        name: escapedPackageName,
-        code: escapedPackageCode,
-        price: totalPriceInCurrency,
-        measuringUnit: 'buc',
+        name: `${orderData.package_name || orderData.package_value} - Cadou Muzical`,
         quantity: 1,
-        productType: 'Serviciu',
-        isService: 'true',
-        taxName: 'Fara TVA',
-        taxPercentage: 0,
-        isDiscount: 'false'
-      }]
+        price: totalPriceInCurrency,
+        measuringUnitName: 'buc',
+        currency: orderData.currency || 'RON',
+        isTaxIncluded: true,
+        taxName: 'Normala',
+        taxPercentage: 19,
+        isService: true
+      }],
+      observations: observations
     };
 
-    // Validate XML structure before sending
-    const validationErrors = validateXmlFields(xmlData);
-    if (validationErrors.length > 0) {
-      console.error('❌ XML validation errors:', validationErrors);
-      throw new Error(`XML validation failed: ${validationErrors.join(', ')}`);
-    }
+    // Build XML request body using the working function
+    const xmlBody = convertEstimateDataToXML(estimate);
 
-    // Build XML request body with corrected field names and structure
-    const xmlBody = `<?xml version="1.0" encoding="UTF-8"?>
-<request>
-  <companyVatCode>${xmlData.companyVatCode}</companyVatCode>
-  <client>
-    <name>${xmlData.client.name}</name>
-    <email>${xmlData.client.email}</email>
-    <phone>${xmlData.client.phone}</phone>
-    <address>${xmlData.client.address}</address>
-    <city>${xmlData.client.city}</city>
-    <county>${xmlData.client.county}</county>
-    <country>${xmlData.client.country}</country>
-    <isTaxPayer>${xmlData.client.isTaxPayer}</isTaxPayer>
-    <saveToDb>${xmlData.client.saveToDb}</saveToDb>
-  </client>
-  <seriesName>${xmlData.seriesName}</seriesName>
-  <issueDate>${xmlData.issueDate}</issueDate>
-  <dueDate>${xmlData.dueDate}</dueDate>
-  <language>${xmlData.language}</language>
-  <precision>${xmlData.precision}</precision>
-  <currency>${xmlData.currency}</currency>
-  <isDraft>${xmlData.isDraft}</isDraft>
-  <mentions>${xmlData.mentions}</mentions>
-  <observations>${xmlData.observations}</observations>
-  <products>
-    <product>
-      <name>${xmlData.products[0].name}</name>
-      <code>${xmlData.products[0].code}</code>
-      <price>${xmlData.products[0].price}</price>
-      <measuringUnit>${xmlData.products[0].measuringUnit}</measuringUnit>
-      <quantity>${xmlData.products[0].quantity}</quantity>
-      <productType>${xmlData.products[0].productType}</productType>
-      <isService>${xmlData.products[0].isService}</isService>
-      <taxName>${xmlData.products[0].taxName}</taxName>
-      <taxPercentage>${xmlData.products[0].taxPercentage}</taxPercentage>
-      <isDiscount>${xmlData.products[0].isDiscount}</isDiscount>
-    </product>
-  </products>
-</request>`;
-
-    console.log('📋 SmartBill XML request body (validated):', xmlBody);
+    console.log('📋 SmartBill XML request body (using working structure):', xmlBody);
 
     // Create proforma in SmartBill using the correct endpoint with XML
-    console.log('🚀 Sending validated XML request to SmartBill API...');
+    console.log('🚀 Sending XML request to SmartBill API...');
     const smartbillResponse = await fetch('https://ws.smartbill.ro/SBORO/api/estimate', {
       method: 'POST',
       headers: {
