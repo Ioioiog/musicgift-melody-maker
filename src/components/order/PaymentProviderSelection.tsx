@@ -47,6 +47,10 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
     }
   };
 
+  const isProviderComingSoon = (providerName: string) => {
+    return providerName === 'revolut';
+  };
+
   if (isLoading) {
     return (
       <Card>
@@ -72,53 +76,69 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
-        {supportedProviders.map((provider) => (
-          <Card
-            key={provider.id}
-            className={`cursor-pointer transition-all hover:shadow-md ${
-              selectedProvider === provider.provider_name
-                ? 'border-2 border-purple-500 shadow-lg'
-                : 'border border-gray-200'
-            }`}
-            onClick={() => onProviderSelect(provider.provider_name)}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="flex-shrink-0">
-                    {provider.logo_url ? (
-                      <img 
-                        src={provider.logo_url} 
-                        alt={provider.display_name}
-                        className="w-12 h-12 object-contain"
-                      />
-                    ) : (
-                      getProviderIcon(provider.provider_name)
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">{provider.display_name}</h3>
-                    <p className="text-sm text-gray-600">
-                      {getProviderDescription(provider.provider_name)}
-                    </p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {provider.supported_currencies.map((curr) => (
-                        <Badge key={curr} variant="outline" className="text-xs">
-                          {curr}
-                        </Badge>
-                      ))}
+        {supportedProviders.map((provider) => {
+          const isComingSoon = isProviderComingSoon(provider.provider_name);
+          const isDisabled = isComingSoon;
+          
+          return (
+            <Card
+              key={provider.id}
+              className={`transition-all ${
+                isDisabled 
+                  ? 'opacity-60 cursor-not-allowed border border-gray-200' 
+                  : `cursor-pointer hover:shadow-md ${
+                      selectedProvider === provider.provider_name
+                        ? 'border-2 border-purple-500 shadow-lg'
+                        : 'border border-gray-200'
+                    }`
+              }`}
+              onClick={() => !isDisabled && onProviderSelect(provider.provider_name)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-shrink-0">
+                      {provider.logo_url ? (
+                        <img 
+                          src={provider.logo_url} 
+                          alt={provider.display_name}
+                          className="w-12 h-12 object-contain"
+                        />
+                      ) : (
+                        getProviderIcon(provider.provider_name)
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-lg">{provider.display_name}</h3>
+                        {isComingSoon && (
+                          <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-200">
+                            Coming Soon
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        {getProviderDescription(provider.provider_name)}
+                      </p>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {provider.supported_currencies.map((curr) => (
+                          <Badge key={curr} variant="outline" className="text-xs">
+                            {curr}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   </div>
+                  {selectedProvider === provider.provider_name && !isDisabled && (
+                    <Badge className="bg-purple-100 text-purple-700">
+                      {t('selected', 'Selected')}
+                    </Badge>
+                  )}
                 </div>
-                {selectedProvider === provider.provider_name && (
-                  <Badge className="bg-purple-100 text-purple-700">
-                    {t('selected', 'Selected')}
-                  </Badge>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
 
         {supportedProviders.length === 0 && (
           <div className="text-center py-8">
