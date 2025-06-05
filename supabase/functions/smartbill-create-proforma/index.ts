@@ -87,7 +87,7 @@ serve(async (req) => {
 
     const estimate = {
       companyVatCode: SMARTBILL_COMPANY_VAT,
-      seriesName: SMARTBILL_SERIES || 'mng',
+      seriesName: SMARTBILL_SERIES || 'STRP',
       client,
       issueDate,
       dueDate,
