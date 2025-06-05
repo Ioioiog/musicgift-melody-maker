@@ -1,40 +1,46 @@
 
 import { useState } from "react";
-import { Mail, Plus, RefreshCw, Settings, Trash2, Eye, Paperclip } from "lucide-react";
+import { Mail, Plus, RefreshCw, Settings, Trash2, Eye, Paperclip, Archive, RotateCcw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   useEmailAccounts, 
   useEmailMessages, 
   useFetchEmails, 
   useDeleteEmailAccount,
-  type EmailMessage 
+  useMoveEmail,
+  type EmailMessage,
+  EMAIL_FOLDERS
 } from "@/hooks/useEmailAccounts";
 import EmailAccountForm from "./EmailAccountForm";
 import EmailDetailsModal from "./EmailDetailsModal";
+import EmailFolderSidebar from "./EmailFolderSidebar";
 
 const EmailManagement = () => {
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<string>('INBOX');
   const [selectedEmail, setSelectedEmail] = useState<EmailMessage | null>(null);
   const [showAccountForm, setShowAccountForm] = useState(false);
   const [showEmailDetails, setShowEmailDetails] = useState(false);
 
   const { data: accounts = [], isLoading: accountsLoading } = useEmailAccounts();
-  const { data: messages = [], isLoading: messagesLoading, refetch: refetchMessages } = useEmailMessages(selectedAccountId);
+  const { data: messages = [], isLoading: messagesLoading, refetch: refetchMessages } = useEmailMessages(selectedAccountId, selectedFolder);
   const fetchEmails = useFetchEmails();
   const deleteAccount = useDeleteEmailAccount();
+  const moveEmail = useMoveEmail();
 
   const selectedAccount = accounts.find(acc => acc.id === selectedAccountId);
+  const currentFolder = EMAIL_FOLDERS.find(f => f.id === selectedFolder);
 
   const handleRefreshEmails = async () => {
     if (selectedAccountId) {
       await fetchEmails.mutateAsync({ 
-        accountId: selectedAccountId, 
+        accountId: selectedAccountId,
+        folder: selectedFolder,
         forceRefresh: true 
       });
       refetchMessages();
@@ -53,6 +59,14 @@ const EmailManagement = () => {
   const handleViewEmail = (email: EmailMessage) => {
     setSelectedEmail(email);
     setShowEmailDetails(true);
+  };
+
+  const handleMoveToTrash = async (messageId: string) => {
+    await moveEmail.mutateAsync({ messageId, targetFolder: 'Trash' });
+  };
+
+  const handleRestoreFromTrash = async (messageId: string) => {
+    await moveEmail.mutateAsync({ messageId, targetFolder: 'INBOX' });
   };
 
   const formatDate = (dateString: string) => {
@@ -83,7 +97,7 @@ const EmailManagement = () => {
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="inbox" className="flex items-center gap-2">
             <Mail className="w-4 h-4" />
-            Inbox
+            Email Client
           </TabsTrigger>
           <TabsTrigger value="accounts" className="flex items-center gap-2">
             <Settings className="w-4 h-4" />
@@ -95,7 +109,14 @@ const EmailManagement = () => {
           <Card>
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Email Inbox</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  {currentFolder && (
+                    <>
+                      <span className="text-xl">{currentFolder.icon}</span>
+                      {currentFolder.name}
+                    </>
+                  )}
+                </CardTitle>
                 <div className="flex items-center gap-2">
                   {selectedAccountId && (
                     <Button
@@ -130,9 +151,9 @@ const EmailManagement = () => {
               )}
             </CardHeader>
             
-            <CardContent>
+            <CardContent className="p-0">
               {accounts.length === 0 ? (
-                <div className="text-center py-8">
+                <div className="text-center py-8 px-4">
                   <Mail className="w-16 h-16 mx-auto text-gray-400 mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No email accounts</h3>
                   <p className="text-gray-600 mb-4">Add an email account to start viewing messages</p>
@@ -142,69 +163,119 @@ const EmailManagement = () => {
                   </Button>
                 </div>
               ) : !selectedAccountId ? (
-                <div className="text-center py-8">
+                <div className="text-center py-8 px-4">
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Select an account</h3>
                   <p className="text-gray-600">Choose an email account to view messages</p>
                 </div>
-              ) : messagesLoading ? (
-                <div className="text-center py-8">
-                  <div className="w-8 h-8 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto" />
-                  <p className="text-gray-600 mt-2">Loading messages...</p>
-                </div>
-              ) : messages.length === 0 ? (
-                <div className="text-center py-8">
-                  <Mail className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No messages</h3>
-                  <p className="text-gray-600 mb-4">No emails found for this account</p>
-                  <Button onClick={handleRefreshEmails} disabled={fetchEmails.isPending}>
-                    <RefreshCw className={`w-4 h-4 mr-2 ${fetchEmails.isPending ? 'animate-spin' : ''}`} />
-                    Refresh
-                  </Button>
-                </div>
               ) : (
-                <ScrollArea className="h-96">
-                  <div className="space-y-2">
-                    {messages.map((email) => (
-                      <div
-                        key={email.id}
-                        className={`p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${
-                          !email.is_read ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200'
-                        }`}
-                        onClick={() => handleViewEmail(email)}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className={`text-sm ${!email.is_read ? 'font-semibold' : 'font-medium'}`}>
-                                {email.sender_name || email.sender_email}
-                              </span>
-                              {!email.is_read && (
-                                <Badge variant="secondary" className="text-xs">New</Badge>
-                              )}
-                              {email.has_attachments && (
-                                <Paperclip className="w-4 h-4 text-gray-400" />
-                              )}
-                            </div>
-                            <h4 className={`text-sm truncate ${!email.is_read ? 'font-semibold' : 'font-medium'}`}>
-                              {email.subject}
-                            </h4>
-                            <p className="text-xs text-gray-600 truncate mt-1">
-                              {getEmailPreview(email)}
-                            </p>
-                          </div>
-                          <div className="flex flex-col items-end gap-2 ml-4">
-                            <span className="text-xs text-gray-500">
-                              {formatDate(email.received_date)}
-                            </span>
-                            <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
-                              <Eye className="w-3 h-3" />
-                            </Button>
-                          </div>
+                <div className="flex h-[600px]">
+                  <EmailFolderSidebar
+                    accountId={selectedAccountId}
+                    selectedFolder={selectedFolder}
+                    onFolderSelect={setSelectedFolder}
+                  />
+                  
+                  <div className="flex-1 flex flex-col">
+                    {messagesLoading ? (
+                      <div className="flex-1 flex items-center justify-center">
+                        <div className="w-8 h-8 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
+                        <p className="text-gray-600 ml-3">Loading messages...</p>
+                      </div>
+                    ) : messages.length === 0 ? (
+                      <div className="flex-1 flex items-center justify-center">
+                        <div className="text-center">
+                          <span className="text-6xl mb-4 block">{currentFolder?.icon}</span>
+                          <h3 className="text-lg font-medium text-gray-900 mb-2">No messages</h3>
+                          <p className="text-gray-600 mb-4">No emails found in {currentFolder?.name}</p>
+                          <Button onClick={handleRefreshEmails} disabled={fetchEmails.isPending}>
+                            <RefreshCw className={`w-4 h-4 mr-2 ${fetchEmails.isPending ? 'animate-spin' : ''}`} />
+                            Refresh
+                          </Button>
                         </div>
                       </div>
-                    ))}
+                    ) : (
+                      <ScrollArea className="flex-1">
+                        <div className="p-4 space-y-2">
+                          {messages.map((email) => (
+                            <div
+                              key={email.id}
+                              className={`p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${
+                                !email.is_read ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200'
+                              }`}
+                              onClick={() => handleViewEmail(email)}
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <span className={`text-sm ${!email.is_read ? 'font-semibold' : 'font-medium'}`}>
+                                      {email.sender_name || email.sender_email}
+                                    </span>
+                                    {!email.is_read && (
+                                      <Badge variant="secondary" className="text-xs">New</Badge>
+                                    )}
+                                    {email.has_attachments && (
+                                      <Paperclip className="w-4 h-4 text-gray-400" />
+                                    )}
+                                  </div>
+                                  <h4 className={`text-sm truncate ${!email.is_read ? 'font-semibold' : 'font-medium'}`}>
+                                    {email.subject}
+                                  </h4>
+                                  <p className="text-xs text-gray-600 truncate mt-1">
+                                    {getEmailPreview(email)}
+                                  </p>
+                                </div>
+                                <div className="flex flex-col items-end gap-2 ml-4">
+                                  <span className="text-xs text-gray-500">
+                                    {formatDate(email.received_date)}
+                                  </span>
+                                  <div className="flex gap-1">
+                                    <Button 
+                                      size="sm" 
+                                      variant="ghost" 
+                                      className="h-6 w-6 p-0"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleViewEmail(email);
+                                      }}
+                                    >
+                                      <Eye className="w-3 h-3" />
+                                    </Button>
+                                    
+                                    {selectedFolder === 'Trash' ? (
+                                      <Button 
+                                        size="sm" 
+                                        variant="ghost" 
+                                        className="h-6 w-6 p-0 text-green-600 hover:text-green-700"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleRestoreFromTrash(email.id);
+                                        }}
+                                      >
+                                        <RotateCcw className="w-3 h-3" />
+                                      </Button>
+                                    ) : (
+                                      <Button 
+                                        size="sm" 
+                                        variant="ghost" 
+                                        className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleMoveToTrash(email.id);
+                                        }}
+                                      >
+                                        <Archive className="w-3 h-3" />
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </ScrollArea>
+                    )}
                   </div>
-                </ScrollArea>
+                </div>
               )}
             </CardContent>
           </Card>

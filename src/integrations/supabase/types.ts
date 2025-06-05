@@ -162,6 +162,7 @@ export type Database = {
       }
       email_accounts: {
         Row: {
+          available_folders: Json | null
           created_at: string
           email_address: string
           encrypted_password: string
@@ -174,6 +175,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          available_folders?: Json | null
           created_at?: string
           email_address: string
           encrypted_password: string
@@ -186,6 +188,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          available_folders?: Json | null
           created_at?: string
           email_address?: string
           encrypted_password?: string
@@ -242,6 +245,7 @@ export type Database = {
           account_id: string
           body_preview: string | null
           created_at: string
+          folder: string
           full_body: string | null
           has_attachments: boolean
           id: string
@@ -257,6 +261,7 @@ export type Database = {
           account_id: string
           body_preview?: string | null
           created_at?: string
+          folder?: string
           full_body?: string | null
           has_attachments?: boolean
           id?: string
@@ -272,6 +277,7 @@ export type Database = {
           account_id?: string
           body_preview?: string | null
           created_at?: string
+          folder?: string
           full_body?: string | null
           has_attachments?: boolean
           id?: string

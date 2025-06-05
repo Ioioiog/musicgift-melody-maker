@@ -9,6 +9,7 @@ const corsHeaders = {
 
 interface FetchEmailsRequest {
   accountId: string;
+  folder?: string;
   forceRefresh?: boolean;
 }
 
@@ -37,7 +38,7 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Unauthorized');
     }
 
-    const { accountId, forceRefresh = false }: FetchEmailsRequest = await req.json();
+    const { accountId, folder = 'INBOX', forceRefresh = false }: FetchEmailsRequest = await req.json();
 
     // Get the email account
     const { data: account, error: accountError } = await supabase
@@ -60,6 +61,7 @@ const handler = async (req: Request): Promise<Response> => {
           email_attachments (*)
         `)
         .eq('account_id', accountId)
+        .eq('folder', folder)
         .order('received_date', { ascending: false })
         .limit(10);
 
@@ -69,10 +71,11 @@ const handler = async (req: Request): Promise<Response> => {
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
         
         if (lastSync > fiveMinutesAgo) {
-          console.log('Returning cached emails for account:', accountId);
+          console.log(`Returning cached emails for account: ${accountId}, folder: ${folder}`);
           return new Response(JSON.stringify({ 
             success: true, 
             emails: cachedEmails,
+            folder,
             fromCache: true 
           }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -81,48 +84,16 @@ const handler = async (req: Request): Promise<Response> => {
       }
     }
 
-    console.log('Fetching fresh emails from IMAP for account:', accountId);
+    console.log(`Fetching fresh emails from IMAP for account: ${accountId}, folder: ${folder}`);
 
-    // Simulate IMAP connection and email fetching
-    // In a real implementation, you would use an IMAP library like node-imap
-    // For now, we'll create mock data to demonstrate the structure
-    const mockEmails = [
-      {
-        message_id: `msg_${Date.now()}_1@musicgift.ro`,
-        sender_email: 'test@example.com',
-        sender_name: 'Test Sender',
-        subject: 'Test Email 1',
-        body_preview: 'This is a preview of the first test email...',
-        full_body: 'This is the full content of the first test email. It contains more detailed information.',
-        received_date: new Date().toISOString(),
-        has_attachments: false,
-        raw_headers: {
-          'message-id': `msg_${Date.now()}_1@musicgift.ro`,
-          'from': 'test@example.com',
-          'to': account.email_address
-        }
-      },
-      {
-        message_id: `msg_${Date.now()}_2@musicgift.ro`,
-        sender_email: 'support@musicgift.ro',
-        sender_name: 'Music Gift Support',
-        subject: 'Welcome to Music Gift',
-        body_preview: 'Welcome to our platform! Here are some getting started tips...',
-        full_body: 'Welcome to our platform! We are excited to have you on board. Here are some tips to get you started with creating amazing musical gifts.',
-        received_date: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-        has_attachments: true,
-        raw_headers: {
-          'message-id': `msg_${Date.now()}_2@musicgift.ro`,
-          'from': 'support@musicgift.ro',
-          'to': account.email_address
-        }
-      }
-    ];
+    // Generate folder-specific mock data
+    const mockEmails = generateMockEmailsForFolder(folder, account.email_address);
 
     // Insert/update emails in the database
     const emailsToInsert = mockEmails.map(email => ({
       ...email,
       account_id: accountId,
+      folder,
       is_read: false
     }));
 
@@ -151,6 +122,7 @@ const handler = async (req: Request): Promise<Response> => {
         email_attachments (*)
       `)
       .eq('account_id', accountId)
+      .eq('folder', folder)
       .order('received_date', { ascending: false })
       .limit(10);
 
@@ -158,11 +130,12 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error(`Error fetching updated emails: ${fetchError.message}`);
     }
 
-    console.log('Successfully fetched and cached emails for account:', accountId);
+    console.log(`Successfully fetched and cached emails for account: ${accountId}, folder: ${folder}`);
 
     return new Response(JSON.stringify({ 
       success: true, 
       emails: updatedEmails || [],
+      folder,
       fromCache: false 
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -179,5 +152,105 @@ const handler = async (req: Request): Promise<Response> => {
     );
   }
 };
+
+function generateMockEmailsForFolder(folder: string, emailAddress: string) {
+  const baseTimestamp = Date.now();
+  
+  switch (folder) {
+    case 'INBOX':
+      return [
+        {
+          message_id: `inbox_${baseTimestamp}_1@musicgift.ro`,
+          sender_email: 'customer@example.com',
+          sender_name: 'Jane Customer',
+          subject: 'Order Inquiry - Music Gift Package',
+          body_preview: 'Hi, I have a question about my recent order...',
+          full_body: 'Hi, I have a question about my recent order for the Premium Music Gift package. When can I expect delivery?',
+          received_date: new Date(baseTimestamp - 1800000).toISOString(), // 30 min ago
+          has_attachments: false,
+          raw_headers: {
+            'message-id': `inbox_${baseTimestamp}_1@musicgift.ro`,
+            'from': 'customer@example.com',
+            'to': emailAddress
+          }
+        },
+        {
+          message_id: `inbox_${baseTimestamp}_2@musicgift.ro`,
+          sender_email: 'support@stripe.com',
+          sender_name: 'Stripe',
+          subject: 'Payment Confirmation',
+          body_preview: 'Your payment has been processed successfully...',
+          full_body: 'Your payment of €49.99 has been processed successfully for Music Gift order #12345.',
+          received_date: new Date(baseTimestamp - 7200000).toISOString(), // 2 hours ago
+          has_attachments: true,
+          raw_headers: {
+            'message-id': `inbox_${baseTimestamp}_2@musicgift.ro`,
+            'from': 'support@stripe.com',
+            'to': emailAddress
+          }
+        }
+      ];
+      
+    case 'Sent':
+      return [
+        {
+          message_id: `sent_${baseTimestamp}_1@musicgift.ro`,
+          sender_email: emailAddress,
+          sender_name: 'Music Gift Support',
+          subject: 'Re: Order Inquiry - Music Gift Package',
+          body_preview: 'Thank you for your inquiry. Your order will be delivered...',
+          full_body: 'Thank you for your inquiry. Your order will be delivered within 2-3 business days. Here are the tracking details...',
+          received_date: new Date(baseTimestamp - 900000).toISOString(), // 15 min ago
+          has_attachments: false,
+          raw_headers: {
+            'message-id': `sent_${baseTimestamp}_1@musicgift.ro`,
+            'from': emailAddress,
+            'to': 'customer@example.com'
+          }
+        }
+      ];
+      
+    case 'Drafts':
+      return [
+        {
+          message_id: `draft_${baseTimestamp}_1@musicgift.ro`,
+          sender_email: emailAddress,
+          sender_name: 'Music Gift Support',
+          subject: 'Weekly Newsletter - Music Gift Updates',
+          body_preview: 'Dear valued customers, this week we are excited to announce...',
+          full_body: 'Dear valued customers, this week we are excited to announce new features and improvements to our Music Gift platform.',
+          received_date: new Date(baseTimestamp - 3600000).toISOString(), // 1 hour ago
+          has_attachments: false,
+          raw_headers: {
+            'message-id': `draft_${baseTimestamp}_1@musicgift.ro`,
+            'from': emailAddress,
+            'to': ''
+          }
+        }
+      ];
+      
+    case 'Trash':
+      return [
+        {
+          message_id: `trash_${baseTimestamp}_1@musicgift.ro`,
+          sender_email: 'spam@example.com',
+          sender_name: 'Spam Sender',
+          subject: 'You have won a million dollars!',
+          body_preview: 'Congratulations! You are our lucky winner...',
+          full_body: 'Congratulations! You are our lucky winner. Click here to claim your prize (this is obviously spam).',
+          received_date: new Date(baseTimestamp - 86400000).toISOString(), // 1 day ago
+          has_attachments: false,
+          raw_headers: {
+            'message-id': `trash_${baseTimestamp}_1@musicgift.ro`,
+            'from': 'spam@example.com',
+            'to': emailAddress
+          }
+        }
+      ];
+      
+    default:
+      return [];
+  }
+}
 
 serve(handler);

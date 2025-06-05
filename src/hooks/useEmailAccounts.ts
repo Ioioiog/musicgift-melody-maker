@@ -13,6 +13,7 @@ export interface EmailAccount {
   imap_port: number;
   is_active: boolean;
   last_sync_at: string | null;
+  available_folders: string[];
   created_at: string;
   updated_at: string;
 }
@@ -29,6 +30,7 @@ export interface EmailMessage {
   received_date: string;
   is_read: boolean;
   has_attachments: boolean;
+  folder: string;
   raw_headers: any;
   created_at: string;
   email_attachments?: EmailAttachment[];
@@ -43,6 +45,13 @@ export interface EmailAttachment {
   attachment_data: string | null;
   created_at: string;
 }
+
+export const EMAIL_FOLDERS = [
+  { id: 'INBOX', name: 'Inbox', icon: '📥' },
+  { id: 'Sent', name: 'Sent', icon: '📤' },
+  { id: 'Drafts', name: 'Drafts', icon: '📝' },
+  { id: 'Trash', name: 'Trash', icon: '🗑️' }
+];
 
 export const useEmailAccounts = () => {
   const { user } = useAuth();
@@ -65,9 +74,9 @@ export const useEmailAccounts = () => {
   });
 };
 
-export const useEmailMessages = (accountId: string | null) => {
+export const useEmailMessages = (accountId: string | null, folder: string = 'INBOX') => {
   return useQuery({
-    queryKey: ['email-messages', accountId],
+    queryKey: ['email-messages', accountId, folder],
     queryFn: async () => {
       if (!accountId) return [];
       
@@ -78,11 +87,46 @@ export const useEmailMessages = (accountId: string | null) => {
           email_attachments (*)
         `)
         .eq('account_id', accountId)
+        .eq('folder', folder)
         .order('received_date', { ascending: false })
-        .limit(10);
+        .limit(50);
 
       if (error) throw error;
       return data as EmailMessage[];
+    },
+    enabled: !!accountId
+  });
+};
+
+export const useEmailFolderCounts = (accountId: string | null) => {
+  return useQuery({
+    queryKey: ['email-folder-counts', accountId],
+    queryFn: async () => {
+      if (!accountId) return {};
+      
+      const folderCounts: Record<string, { total: number; unread: number }> = {};
+      
+      for (const folder of EMAIL_FOLDERS) {
+        const { count: totalCount } = await supabase
+          .from('email_messages')
+          .select('*', { count: 'exact', head: true })
+          .eq('account_id', accountId)
+          .eq('folder', folder.id);
+          
+        const { count: unreadCount } = await supabase
+          .from('email_messages')
+          .select('*', { count: 'exact', head: true })
+          .eq('account_id', accountId)
+          .eq('folder', folder.id)
+          .eq('is_read', false);
+          
+        folderCounts[folder.id] = {
+          total: totalCount || 0,
+          unread: unreadCount || 0
+        };
+      }
+      
+      return folderCounts;
     },
     enabled: !!accountId
   });
@@ -112,6 +156,7 @@ export const useAddEmailAccount = () => {
           encrypted_password,
           imap_server: accountData.imap_server || 'mail.musicgift.ro',
           imap_port: accountData.imap_port || 993,
+          available_folders: ['INBOX', 'Sent', 'Drafts', 'Trash'],
         })
         .select()
         .single();
@@ -144,6 +189,7 @@ export const useDeleteEmailAccount = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['email-accounts'] });
       queryClient.invalidateQueries({ queryKey: ['email-messages'] });
+      queryClient.invalidateQueries({ queryKey: ['email-folder-counts'] });
       toast.success('Email account deleted successfully');
     },
     onError: (error: any) => {
@@ -156,21 +202,31 @@ export const useFetchEmails = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ accountId, forceRefresh = false }: { 
+    mutationFn: async ({ 
+      accountId, 
+      folder = 'INBOX', 
+      forceRefresh = false 
+    }: { 
       accountId: string; 
+      folder?: string;
       forceRefresh?: boolean; 
     }) => {
       const { data, error } = await supabase.functions.invoke('imap-fetch-emails', {
-        body: { accountId, forceRefresh }
+        body: { accountId, folder, forceRefresh }
       });
 
       if (error) throw error;
       return data;
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['email-messages', variables.accountId] });
+      queryClient.invalidateQueries({ 
+        queryKey: ['email-messages', variables.accountId, variables.folder] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ['email-folder-counts', variables.accountId] 
+      });
       if (!data.fromCache) {
-        toast.success('Emails refreshed successfully');
+        toast.success(`${variables.folder} emails refreshed successfully`);
       }
     },
     onError: (error: any) => {
@@ -193,9 +249,39 @@ export const useMarkEmailAsRead = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['email-messages'] });
+      queryClient.invalidateQueries({ queryKey: ['email-folder-counts'] });
     },
     onError: (error: any) => {
       toast.error(`Error updating email: ${error.message}`);
+    }
+  });
+};
+
+export const useMoveEmail = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ 
+      messageId, 
+      targetFolder 
+    }: { 
+      messageId: string; 
+      targetFolder: string; 
+    }) => {
+      const { error } = await supabase
+        .from('email_messages')
+        .update({ folder: targetFolder })
+        .eq('id', messageId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['email-messages'] });
+      queryClient.invalidateQueries({ queryKey: ['email-folder-counts'] });
+      toast.success('Email moved successfully');
+    },
+    onError: (error: any) => {
+      toast.error(`Error moving email: ${error.message}`);
     }
   });
 };
