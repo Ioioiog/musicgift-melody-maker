@@ -7,6 +7,51 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Helper function to escape XML special characters
+function escapeXml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Helper function to parse XML response
+function parseXmlResponse(xmlText: string): any {
+  // Simple XML parsing for SmartBill response
+  // Look for key elements in the response
+  const result: any = {};
+  
+  // Extract proforma number/ID
+  const numberMatch = xmlText.match(/<number[^>]*>([^<]+)<\/number>/i);
+  if (numberMatch) {
+    result.number = numberMatch[1];
+  }
+  
+  const idMatch = xmlText.match(/<id[^>]*>([^<]+)<\/id>/i);
+  if (idMatch) {
+    result.id = idMatch[1];
+  }
+  
+  // Extract series
+  const seriesMatch = xmlText.match(/<series[^>]*>([^<]+)<\/series>/i);
+  if (seriesMatch) {
+    result.series = seriesMatch[1];
+  }
+  
+  // Extract URL if present
+  const urlMatch = xmlText.match(/<url[^>]*>([^<]+)<\/url>/i);
+  if (urlMatch) {
+    result.url = urlMatch[1];
+  }
+  
+  // Store raw XML for reference
+  result.rawXml = xmlText;
+  
+  return result;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -74,12 +119,12 @@ serve(async (req) => {
 
     // Extract form data safely
     const formData = orderData.form_data || {};
-    const customerName = formData.fullName || formData.customerName || 'N/A';
-    const customerEmail = formData.email || '';
-    const customerPhone = formData.phone || '';
-    const customerAddress = formData.address || '';
-    const customerCity = formData.city || '';
-    const customerCounty = formData.county || '';
+    const customerName = escapeXml(formData.fullName || formData.customerName || 'N/A');
+    const customerEmail = escapeXml(formData.email || '');
+    const customerPhone = escapeXml(formData.phone || '');
+    const customerAddress = escapeXml(formData.address || '');
+    const customerCity = escapeXml(formData.city || '');
+    const customerCounty = escapeXml(formData.county || '');
 
     // Calculate dates
     const issueDate = new Date().toISOString().split('T')[0];
@@ -118,56 +163,63 @@ serve(async (req) => {
       observations += ` | Processat: ${orderData.webhook_processed_at}`;
     }
 
-    // Prepare proforma data for SmartBill API according to documentation
-    const proformaData = {
-      companyVatCode: smartbillCompanyVAT,
-      client: {
-        name: customerName,
-        email: customerEmail,
-        phone: customerPhone,
-        address: customerAddress,
-        city: customerCity,
-        county: customerCounty,
-        country: "Romania",
-        isTaxPayer: false,
-        saveToDb: true
-      },
-      seriesName: "STRP",
-      issueDate: issueDate,
-      dueDate: dueDate,
-      language: "RO",
-      precision: 2,
-      currency: orderData.currency || "RON",
-      isDraft: false,
-      mentions: mentions,
-      observations: observations,
-      products: [
-        {
-          name: `${orderData.package_name || orderData.package_value} - Pachet Cadou Muzical`,
-          code: orderData.package_value || "MUSIC-GIFT",
-          price: totalPriceInCurrency,
-          measuringUnit: "buc",
-          quantity: 1,
-          productType: "Serviciu",
-          taxName: "Fara TVA",
-          taxPercentage: 0,
-          isDiscount: false
-        }
-      ]
-    };
+    // Escape mentions and observations for XML
+    const escapedMentions = escapeXml(mentions);
+    const escapedObservations = escapeXml(observations);
+    const escapedPackageName = escapeXml(`${orderData.package_name || orderData.package_value} - Pachet Cadou Muzical`);
+    const escapedPackageCode = escapeXml(orderData.package_value || "MUSIC-GIFT");
 
-    console.log('📋 SmartBill proforma data:', JSON.stringify(proformaData, null, 2));
+    // Build XML request body according to SmartBill API documentation
+    const xmlBody = `<?xml version="1.0" encoding="UTF-8"?>
+<request>
+  <companyVatCode>${smartbillCompanyVAT}</companyVatCode>
+  <client>
+    <name>${customerName}</name>
+    <email>${customerEmail}</email>
+    <phone>${customerPhone}</phone>
+    <address>${customerAddress}</address>
+    <city>${customerCity}</city>
+    <county>${customerCounty}</county>
+    <country>Romania</country>
+    <isTaxPayer>false</isTaxPayer>
+    <saveToDb>true</saveToDb>
+  </client>
+  <seriesName>STRP</seriesName>
+  <issueDate>${issueDate}</issueDate>
+  <dueDate>${dueDate}</dueDate>
+  <language>RO</language>
+  <precision>2</precision>
+  <currency>${orderData.currency || "RON"}</currency>
+  <isDraft>false</isDraft>
+  <mentions>${escapedMentions}</mentions>
+  <observations>${escapedObservations}</observations>
+  <products>
+    <product>
+      <name>${escapedPackageName}</name>
+      <code>${escapedPackageCode}</code>
+      <price>${totalPriceInCurrency}</price>
+      <measuringUnitName>buc</measuringUnitName>
+      <quantity>1</quantity>
+      <isService>true</isService>
+      <taxName>Fara TVA</taxName>
+      <taxPercentage>0</taxPercentage>
+      <isDiscount>false</isDiscount>
+    </product>
+  </products>
+</request>`;
 
-    // Create proforma in SmartBill using the correct endpoint
-    console.log('🚀 Sending request to SmartBill API...');
+    console.log('📋 SmartBill XML request body:', xmlBody);
+
+    // Create proforma in SmartBill using the correct endpoint with XML
+    console.log('🚀 Sending XML request to SmartBill API...');
     const smartbillResponse = await fetch('https://ws.smartbill.ro/SBORO/api/estimate', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        'Accept': 'application/xml',
+        'Content-Type': 'application/xml',
         'Authorization': `Basic ${btoa(`${smartbillUsername}:${smartbillToken}`)}`
       },
-      body: JSON.stringify(proformaData)
+      body: xmlBody
     });
 
     const responseText = await smartbillResponse.text();
@@ -175,26 +227,26 @@ serve(async (req) => {
     console.log('📄 SmartBill proforma response:', responseText);
 
     if (!smartbillResponse.ok) {
-      // Parse SmartBill error response for better error handling
+      // Parse SmartBill XML error response for better error handling
       let errorMessage = `SmartBill proforma creation failed (${smartbillResponse.status}): ${responseText}`;
-      try {
-        const errorData = JSON.parse(responseText);
-        if (errorData.errorText) {
-          errorMessage = `SmartBill Error: ${errorData.errorText}`;
-        } else if (errorData.message) {
-          errorMessage = `SmartBill Error: ${errorData.message}`;
-        } else if (errorData.error) {
-          errorMessage = `SmartBill Error: ${errorData.error}`;
+      
+      // Try to extract error from XML
+      const errorTextMatch = responseText.match(/<errorText[^>]*>([^<]+)<\/errorText>/i);
+      if (errorTextMatch) {
+        errorMessage = `SmartBill Error: ${errorTextMatch[1]}`;
+      } else {
+        const messageMatch = responseText.match(/<message[^>]*>([^<]+)<\/message>/i);
+        if (messageMatch) {
+          errorMessage = `SmartBill Error: ${messageMatch[1]}`;
         }
-      } catch (parseError) {
-        console.log('⚠️ Could not parse SmartBill error response');
       }
       
       console.error('❌ SmartBill API Error:', errorMessage);
       throw new Error(errorMessage);
     }
 
-    const proformaResult = JSON.parse(responseText);
+    // Parse XML response
+    const proformaResult = parseXmlResponse(responseText);
     console.log('✅ SmartBill proforma created successfully:', proformaResult);
 
     // Determine SmartBill payment status based on actual payment status
