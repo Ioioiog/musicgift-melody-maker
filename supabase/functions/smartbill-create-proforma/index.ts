@@ -9,7 +9,6 @@ const corsHeaders = {
 
 const generateSmartBillProformaXML = (data: any) => {
   const { companyVatCode, seriesName, client, issueDate, dueDate, currency, products, observations } = data
-
   const clientXml = `
     <client>
       <name>${client.name}</name>
@@ -24,18 +23,20 @@ const generateSmartBillProformaXML = (data: any) => {
     </client>`
 
   const productsXml = products.map(p => `
-    <estimateProduct>
-      <name>${p.name}</name>
-      <code></code>
-      <isDiscount>false</isDiscount>
-      <quantity>${p.quantity}</quantity>
-      <price>${p.price}</price>
-      <currency>${currency}</currency>
-      <isTaxIncluded>true</isTaxIncluded>
-      <taxName>Normala</taxName>
-      <taxPercentage>19</taxPercentage>
-      <isService>true</isService>
-    </estimateProduct>`).join('\n')
+<estimateProducts>
+  <estimateProduct>
+    <name>plusPackage - Cadou Muzical Personalizat</name>
+    <code></code>
+    <isDiscount>false</isDiscount>
+    <quantity>1</quantity>
+    <price>100</price>
+    <currency>EUR</currency>
+    <isTaxIncluded>true</isTaxIncluded>
+    <taxName>Normala</taxName>
+    <taxPercentage>19</taxPercentage>
+    <isService>true</isService>
+  </estimateProduct>
+</estimateProducts>
 
   return `<?xml version="1.0" encoding="UTF-8"?>
   <estimate>
@@ -63,48 +64,35 @@ serve(async (req) => {
   const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
   const { orderData } = await req.json()
 
-  if (!orderData || !orderData.total_price || !orderData.package_name) {
-    return new Response(JSON.stringify({
-      success: false,
-      error: 'Missing or incomplete orderData',
-      details: { orderData }
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 400
-    })
-  }
-
   const username = Deno.env.get('SMARTBILL_USERNAME')
   const token = Deno.env.get('SMARTBILL_TOKEN')
   const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
   const companyVatCode = Deno.env.get('SMARTBILL_COMPANY_VAT')!
   const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'STRP'
 
-  const invoiceType = orderData.form_data?.invoiceType || 'individual'
+  const invoiceType = orderData.form_data.invoiceType
   const isCompany = invoiceType === 'company'
   const currency = ['RON', 'EUR'].includes(orderData.currency) ? orderData.currency : 'RON'
   const issueDate = new Date().toISOString().split('T')[0]
   const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
   const client = {
-    name: isCompany ? orderData.form_data?.companyName || 'Firma' : orderData.form_data?.fullName || 'Client',
-    vatCode: isCompany ? orderData.form_data?.vatCode || '-' : '-',
-    regCom: isCompany ? orderData.form_data?.registrationNumber || '' : '',
-    address: orderData.form_data?.address || '-',
-    city: orderData.form_data?.city || 'Bucuresti',
-    county: orderData.form_data?.county || 'Bucuresti',
+    name: isCompany ? orderData.form_data.companyName || 'Firma' : orderData.form_data.fullName || 'Client',
+    vatCode: isCompany ? orderData.form_data.vatCode || '-' : '-',
+    regCom: isCompany ? orderData.form_data.registrationNumber || '' : '',
+    address: orderData.form_data.address || '-',
+    city: orderData.form_data.city || 'Bucuresti',
+    county: orderData.form_data.county || 'Bucuresti',
     country: 'Romania',
-    email: orderData.form_data?.email || ''
+    email: orderData.form_data.email || ''
   }
 
   const products = [{
-    name: `${orderData.package_name || 'Pachet'} - Cadou Muzical Personalizat`,
+    name: `${orderData.package_name} - Cadou Muzical Personalizat`,
     quantity: 1,
-    price: orderData.total_price || 1,
+    price: orderData.total_price,
     currency
   }]
-
-  console.log('✅ SmartBill proforma: products =', products)
 
   const xmlBody = generateSmartBillProformaXML({
     companyVatCode,
@@ -114,7 +102,7 @@ serve(async (req) => {
     dueDate,
     currency,
     products,
-    observations: `Comanda pentru ${orderData.form_data?.recipientName || 'client'}`
+    observations: `Comanda pentru ${orderData.form_data.recipientName || 'client'}`
   })
 
   const response = await fetch(`${baseUrl}/SBORO/api/estimate`, {
@@ -128,8 +116,6 @@ serve(async (req) => {
   })
 
   const text = await response.text()
-  console.log('📨 SmartBill response:', text)
-
   if (!response.ok) {
     return new Response(JSON.stringify({ success: false, error: 'SmartBill XML error', message: text }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
