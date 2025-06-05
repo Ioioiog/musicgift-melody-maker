@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -127,7 +126,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                         <img 
                           src={getNetopiaLogo()}
                           alt="Netopia Payments"
-                          className="w-12 h-12 object-contain rounded"
+                          className="w-16 h-16 object-contain rounded"
                           onError={(e) => {
                             // Fallback to icon if image fails to load
                             e.currentTarget.style.display = 'none';
@@ -138,7 +137,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                         <img 
                           src={getStripeLogo()}
                           alt="Stripe"
-                          className="w-12 h-12 object-contain"
+                          className="w-16 h-16 object-contain"
                           onError={(e) => {
                             // Fallback to icon if image fails to load
                             e.currentTarget.style.display = 'none';
@@ -149,7 +148,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                         <img 
                           src={getRevolutLogo()}
                           alt="Revolut"
-                          className="w-12 h-12 object-contain"
+                          className="w-16 h-16 object-contain"
                           onError={(e) => {
                             // Fallback to icon if image fails to load
                             e.currentTarget.style.display = 'none';
@@ -160,7 +159,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                         <img 
                           src={provider.logo_url} 
                           alt={provider.display_name}
-                          className="w-12 h-12 object-contain"
+                          className="w-16 h-16 object-contain"
                         />
                       ) : (
                         getProviderIcon(provider.provider_name)
