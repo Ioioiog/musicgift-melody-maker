@@ -1,14 +1,12 @@
-
 import React from 'react';
 import NTPLogo from 'ntp-logo-react';
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Badge } from "@/components/ui/badge";
-
 const LegalCompliance = () => {
-  const { t } = useLanguage();
-  
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8">
+  const {
+    t
+  } = useLanguage();
+  return <div className="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8">
       {/* ANPC Consumer Protection */}
       <div className="space-y-3">
         <h4 className="text-gray-900 font-bold text-sm uppercase tracking-wider text-center md:text-left">
@@ -35,7 +33,7 @@ const LegalCompliance = () => {
           </a>
           <div className="relative flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg min-h-[80px]">
             <img alt="Revolut Business" src="/lovable-uploads/e0dec0a1-3977-42e6-a9fa-9addebc53ead.png" className="max-w-[120px] max-h-[60px] w-full h-auto object-contain hover:opacity-80 transition" />
-            <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1">
+            <Badge className="absolute -top-2 -right-2 text-white text-xs px-2 py-1 bg-stone-950">
               Coming Soon
             </Badge>
           </div>
@@ -69,8 +67,6 @@ const LegalCompliance = () => {
       <div className="space-y-3">
         {/* This column can be used for additional partners or content in the future */}
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default LegalCompliance;
