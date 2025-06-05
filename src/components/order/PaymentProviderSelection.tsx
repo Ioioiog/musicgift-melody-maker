@@ -41,7 +41,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
       case 'revolut':
         return 'Revolut Business Payments';
       case 'smartbill':
-        return 'Romanian Invoice & Payment System';
+        return 'Netopia Payments - Secure Online Payment Processing';
       default:
         return 'Payment Processing';
     }
