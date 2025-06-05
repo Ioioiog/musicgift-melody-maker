@@ -55,7 +55,7 @@ serve(async (req) => {
     <name>${escapeXml(orderData.package_name || 'Produs MusicGift')}</name>
     <isDiscount>false</isDiscount>
     <measuringUnitName>buc</measuringUnitName>
-    <currency>${currency}</currency>
+    <currency>EUR</currency>
     <quantity>1</quantity>
     <price>${totalPrice}</price>
     <isTaxIncluded>true</isTaxIncluded>
