@@ -1,3 +1,4 @@
+
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -58,12 +59,14 @@ serve(async (req) => {
     <quantity>1</quantity>
     <price>${totalPrice}</price>
     <isTaxIncluded>true</isTaxIncluded>
-    <taxName>Redusa</taxName>
+    <taxName>Normala</taxName>
     <taxPercentage>19</taxPercentage>
     <saveToDb>false</saveToDb>
     <isService>false</isService>
   </product>
 </estimate>`
+
+    console.log('Generated XML for SmartBill:', xml)
 
     const response = await fetch(`${baseUrl}/SBORO/api/estimate`, {
       method: 'POST',
@@ -76,11 +79,19 @@ serve(async (req) => {
     })
 
     const responseText = await response.text()
+    console.log('SmartBill API Response:', responseText)
+    
     if (!response.ok) {
+      console.error('SmartBill API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        response: responseText
+      })
       return new Response(JSON.stringify({
         success: false,
         error: 'SmartBill API error',
-        message: responseText
+        message: responseText,
+        status: response.status
       }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 })
     }
 
@@ -99,6 +110,7 @@ serve(async (req) => {
       url: urlMatch?.[1] || null
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 })
   } catch (err) {
+    console.error('Edge function error:', err)
     return new Response(JSON.stringify({ success: false, error: err.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200
