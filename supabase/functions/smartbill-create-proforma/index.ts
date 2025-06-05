@@ -19,15 +19,24 @@ serve(async (req) => {
     );
 
     const { orderData } = await req.json();
-    console.log('Creating SmartBill proforma for order:', orderData.id);
+    console.log('📄 Creating SmartBill proforma for order:', orderData.id);
 
     const smartbillUsername = Deno.env.get('SMARTBILL_USERNAME');
     const smartbillToken = Deno.env.get('SMARTBILL_TOKEN');
     const smartbillCompanyVAT = Deno.env.get('SMARTBILL_COMPANY_VAT');
 
     if (!smartbillUsername || !smartbillToken || !smartbillCompanyVAT) {
-      throw new Error('Missing SmartBill credentials');
+      const missingSecrets = [];
+      if (!smartbillUsername) missingSecrets.push('SMARTBILL_USERNAME');
+      if (!smartbillToken) missingSecrets.push('SMARTBILL_TOKEN');
+      if (!smartbillCompanyVAT) missingSecrets.push('SMARTBILL_COMPANY_VAT');
+      
+      const errorMessage = `Missing SmartBill credentials: ${missingSecrets.join(', ')}`;
+      console.error('❌', errorMessage);
+      throw new Error(errorMessage);
     }
+
+    console.log('🔑 SmartBill credentials found - proceeding with proforma creation');
 
     // Extract form data safely
     const formData = orderData.form_data || {};
@@ -48,9 +57,13 @@ serve(async (req) => {
     
     console.log('💳 Payment context - Completed via:', paymentProvider, 'Status:', orderData.payment_status);
 
+    // Convert total_price from cents to currency units
+    const totalPriceInCurrency = orderData.total_price ? (orderData.total_price / 100) : 0;
+    console.log('💰 Price conversion:', orderData.total_price, 'cents ->', totalPriceInCurrency, orderData.currency || 'RON');
+
     // Prepare proforma data for SmartBill API according to documentation
     const proformaData = {
-      companyVatCode: smartbillCompanyVAT, // Corrected parameter name
+      companyVatCode: smartbillCompanyVAT,
       client: {
         name: customerName,
         email: customerEmail,
@@ -59,23 +72,23 @@ serve(async (req) => {
         city: customerCity,
         county: customerCounty,
         country: "Romania",
-        isTaxPayer: false, // Individual person (not VAT payer)
-        saveToDb: true // Save client to nomenclator
+        isTaxPayer: false,
+        saveToDb: true
       },
-      seriesName: "STRP", // Required series for proformas
+      seriesName: "STRP",
       issueDate: issueDate,
       dueDate: dueDate,
-      language: "RO", // Romanian language
+      language: "RO",
       precision: 2,
       currency: orderData.currency || "RON",
-      isDraft: false, // Final proforma, not draft
+      isDraft: false,
       mentions: `Comanda #${orderData.id?.slice(0, 8)} - Cadou muzical personalizat. Pachet: ${orderData.package_name || orderData.package_value}${isPaymentCompleted ? ` | Plată finalizată prin ${paymentProvider.toUpperCase()}` : ''}`,
       observations: `Plata ${isPaymentCompleted ? 'finalizată' : 'în procesare'} prin ${paymentProvider}. Status: ${orderData.payment_status}`,
       products: [
         {
           name: `${orderData.package_name || orderData.package_value} - Pachet Cadou Muzical`,
           code: orderData.package_value || "MUSIC-GIFT",
-          price: (orderData.total_price || 0) / 100, // Convert from cents to currency units
+          price: totalPriceInCurrency,
           measuringUnit: "buc",
           quantity: 1,
           productType: "Serviciu",
@@ -86,9 +99,10 @@ serve(async (req) => {
       ]
     };
 
-    console.log('SmartBill proforma data:', JSON.stringify(proformaData, null, 2));
+    console.log('📋 SmartBill proforma data:', JSON.stringify(proformaData, null, 2));
 
     // Create proforma in SmartBill using the correct endpoint
+    console.log('🚀 Sending request to SmartBill API...');
     const smartbillResponse = await fetch('https://ws.smartbill.ro/SBORO/api/estimate', {
       method: 'POST',
       headers: {
@@ -100,27 +114,31 @@ serve(async (req) => {
     });
 
     const responseText = await smartbillResponse.text();
-    console.log('SmartBill proforma response status:', smartbillResponse.status);
-    console.log('SmartBill proforma response:', responseText);
+    console.log('📄 SmartBill proforma response status:', smartbillResponse.status);
+    console.log('📄 SmartBill proforma response:', responseText);
 
     if (!smartbillResponse.ok) {
       // Parse SmartBill error response for better error handling
-      let errorMessage = `SmartBill proforma creation failed: ${responseText}`;
+      let errorMessage = `SmartBill proforma creation failed (${smartbillResponse.status}): ${responseText}`;
       try {
         const errorData = JSON.parse(responseText);
         if (errorData.errorText) {
           errorMessage = `SmartBill Error: ${errorData.errorText}`;
         } else if (errorData.message) {
           errorMessage = `SmartBill Error: ${errorData.message}`;
+        } else if (errorData.error) {
+          errorMessage = `SmartBill Error: ${errorData.error}`;
         }
       } catch (parseError) {
-        console.log('Could not parse SmartBill error response');
+        console.log('⚠️ Could not parse SmartBill error response');
       }
+      
+      console.error('❌ SmartBill API Error:', errorMessage);
       throw new Error(errorMessage);
     }
 
     const proformaResult = JSON.parse(responseText);
-    console.log('SmartBill proforma created successfully:', proformaResult);
+    console.log('✅ SmartBill proforma created successfully:', proformaResult);
 
     // Determine SmartBill payment status based on actual payment status
     let smartbillPaymentStatus = 'pending';
@@ -142,7 +160,7 @@ serve(async (req) => {
       .eq('id', orderData.id);
 
     if (updateError) {
-      console.error('Error updating order with proforma data:', updateError);
+      console.error('❌ Error updating order with proforma data:', updateError);
       throw updateError;
     }
 
@@ -163,7 +181,7 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Error in smartbill-create-proforma:', error);
+    console.error('💥 Error in smartbill-create-proforma:', error);
     return new Response(
       JSON.stringify({ 
         error: error.message,
