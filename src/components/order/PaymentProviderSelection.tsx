@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -65,8 +64,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
   };
 
   const getNetopiaLogo = () => {
-    // Use a placeholder Netopia logo from Unsplash
-    return "https://images.unsplash.com/photo-1551038247-3d9af20df552?w=200&h=100&fit=crop&crop=center";
+    return "/lovable-uploads/3862e26e-cb46-45d9-8e43-4fd26ad7cf96.png";
   };
 
   if (isLoading) {
