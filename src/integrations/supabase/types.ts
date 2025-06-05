@@ -388,11 +388,13 @@ export type Database = {
           smartbill_proforma_id: string | null
           smartbill_proforma_status: string | null
           status: string | null
+          stripe_customer_id: string | null
           stripe_payment_intent_id: string | null
           stripe_session_id: string | null
           total_price: number | null
           updated_at: string | null
           user_id: string | null
+          webhook_processed_at: string | null
         }
         Insert: {
           created_at?: string | null
@@ -424,11 +426,13 @@ export type Database = {
           smartbill_proforma_id?: string | null
           smartbill_proforma_status?: string | null
           status?: string | null
+          stripe_customer_id?: string | null
           stripe_payment_intent_id?: string | null
           stripe_session_id?: string | null
           total_price?: number | null
           updated_at?: string | null
           user_id?: string | null
+          webhook_processed_at?: string | null
         }
         Update: {
           created_at?: string | null
@@ -460,11 +464,13 @@ export type Database = {
           smartbill_proforma_id?: string | null
           smartbill_proforma_status?: string | null
           status?: string | null
+          stripe_customer_id?: string | null
           stripe_payment_intent_id?: string | null
           stripe_session_id?: string | null
           total_price?: number | null
           updated_at?: string | null
           user_id?: string | null
+          webhook_processed_at?: string | null
         }
         Relationships: [
           {
@@ -535,6 +541,50 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      stripe_webhook_events: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          event_id: string
+          event_type: string
+          id: string
+          order_id: string | null
+          payload: Json | null
+          processed_at: string | null
+          processing_status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          event_id: string
+          event_type: string
+          id?: string
+          order_id?: string | null
+          payload?: Json | null
+          processed_at?: string | null
+          processing_status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          event_id?: string
+          event_type?: string
+          id?: string
+          order_id?: string | null
+          payload?: Json | null
+          processed_at?: string | null
+          processing_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stripe_webhook_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       suno_prompts: {
         Row: {

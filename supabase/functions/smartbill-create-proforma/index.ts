@@ -21,6 +21,40 @@ serve(async (req) => {
     const { orderData } = await req.json();
     console.log('📄 Creating SmartBill proforma for order:', orderData.id);
 
+    // Enhanced idempotency check - verify proforma doesn't already exist
+    console.log('🔍 Checking for existing proforma/invoice for order:', orderData.id);
+    
+    // Refresh order data from database to get latest state
+    const { data: currentOrder, error: fetchError } = await supabaseClient
+      .from('orders')
+      .select('smartbill_proforma_id, smartbill_invoice_id, smartbill_proforma_status')
+      .eq('id', orderData.id)
+      .single();
+
+    if (fetchError) {
+      console.error('❌ Error fetching current order state:', fetchError);
+      throw new Error(`Could not fetch order: ${fetchError.message}`);
+    }
+
+    if (currentOrder.smartbill_proforma_id || currentOrder.smartbill_invoice_id) {
+      console.log('⚠️ Proforma/Invoice already exists for order:', {
+        order_id: orderData.id,
+        proforma_id: currentOrder.smartbill_proforma_id,
+        invoice_id: currentOrder.smartbill_invoice_id,
+        status: currentOrder.smartbill_proforma_status
+      });
+      
+      return new Response(JSON.stringify({
+        success: true,
+        message: 'Proforma already exists',
+        proformaId: currentOrder.smartbill_proforma_id,
+        orderId: orderData.id,
+        duplicate: true
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const smartbillUsername = Deno.env.get('SMARTBILL_USERNAME');
     const smartbillToken = Deno.env.get('SMARTBILL_TOKEN');
     const smartbillCompanyVAT = Deno.env.get('SMARTBILL_COMPANY_VAT');
@@ -61,6 +95,29 @@ serve(async (req) => {
     const totalPriceInCurrency = orderData.total_price ? (orderData.total_price / 100) : 0;
     console.log('💰 Price conversion:', orderData.total_price, 'cents ->', totalPriceInCurrency, orderData.currency || 'RON');
 
+    // Enhanced mentions with payment tracking information
+    let mentions = `Comanda #${orderData.id?.slice(0, 8)} - Cadou muzical personalizat. Pachet: ${orderData.package_name || orderData.package_value}`;
+    
+    if (isPaymentCompleted) {
+      mentions += ` | Plată finalizată prin ${paymentProvider.toUpperCase()}`;
+      
+      // Add Stripe-specific payment details
+      if (paymentProvider === 'stripe' && orderData.stripe_payment_intent_id) {
+        mentions += ` (${orderData.stripe_payment_intent_id.slice(0, 16)}...)`;
+      }
+    }
+
+    // Enhanced observations with more payment details
+    let observations = `Plata ${isPaymentCompleted ? 'finalizată' : 'în procesare'} prin ${paymentProvider}. Status: ${orderData.payment_status}`;
+    
+    if (orderData.stripe_customer_id) {
+      observations += ` | Client Stripe: ${orderData.stripe_customer_id}`;
+    }
+    
+    if (orderData.webhook_processed_at) {
+      observations += ` | Processat: ${orderData.webhook_processed_at}`;
+    }
+
     // Prepare proforma data for SmartBill API according to documentation
     const proformaData = {
       companyVatCode: smartbillCompanyVAT,
@@ -82,8 +139,8 @@ serve(async (req) => {
       precision: 2,
       currency: orderData.currency || "RON",
       isDraft: false,
-      mentions: `Comanda #${orderData.id?.slice(0, 8)} - Cadou muzical personalizat. Pachet: ${orderData.package_name || orderData.package_value}${isPaymentCompleted ? ` | Plată finalizată prin ${paymentProvider.toUpperCase()}` : ''}`,
-      observations: `Plata ${isPaymentCompleted ? 'finalizată' : 'în procesare'} prin ${paymentProvider}. Status: ${orderData.payment_status}`,
+      mentions: mentions,
+      observations: observations,
       products: [
         {
           name: `${orderData.package_name || orderData.package_value} - Pachet Cadou Muzical`,
@@ -148,15 +205,26 @@ serve(async (req) => {
     }
 
     // Update order with proforma information and payment status
+    const updateData = {
+      smartbill_proforma_id: proformaResult.number || proformaResult.id,
+      smartbill_proforma_status: 'created',
+      smartbill_proforma_data: proformaResult,
+      smartbill_payment_status: smartbillPaymentStatus,
+      updated_at: new Date().toISOString()
+    };
+
+    // Include additional Stripe tracking data if available
+    if (orderData.stripe_customer_id && !currentOrder.stripe_customer_id) {
+      updateData.stripe_customer_id = orderData.stripe_customer_id;
+    }
+
+    if (orderData.stripe_payment_intent_id && !currentOrder.stripe_payment_intent_id) {
+      updateData.stripe_payment_intent_id = orderData.stripe_payment_intent_id;
+    }
+
     const { error: updateError } = await supabaseClient
       .from('orders')
-      .update({
-        smartbill_proforma_id: proformaResult.number || proformaResult.id,
-        smartbill_proforma_status: 'created',
-        smartbill_proforma_data: proformaResult,
-        smartbill_payment_status: smartbillPaymentStatus,
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', orderData.id);
 
     if (updateError) {
@@ -167,7 +235,8 @@ serve(async (req) => {
     console.log('✅ SmartBill proforma created and order updated successfully:', {
       proformaId: proformaResult.number || proformaResult.id,
       orderId: orderData.id,
-      paymentStatus: smartbillPaymentStatus
+      paymentStatus: smartbillPaymentStatus,
+      stripeCustomerId: orderData.stripe_customer_id
     });
 
     return new Response(JSON.stringify({
@@ -175,7 +244,9 @@ serve(async (req) => {
       proformaId: proformaResult.number || proformaResult.id,
       proformaData: proformaResult,
       orderId: orderData.id,
-      smartbillPaymentStatus: smartbillPaymentStatus
+      smartbillPaymentStatus: smartbillPaymentStatus,
+      paymentProvider: paymentProvider,
+      duplicate: false
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

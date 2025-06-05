@@ -1,3 +1,4 @@
+
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
@@ -13,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('🟣 Stripe Create Payment: Starting redirect checkout process');
+    console.log('🟣 Stripe Create Payment: Starting enhanced checkout process');
     
     // Use service role key for database operations to bypass RLS
     const supabaseClient = createClient(
@@ -169,12 +170,54 @@ serve(async (req) => {
 
     console.log('✅ Stripe: All validations passed, proceeding with order creation');
 
+    // Initialize Stripe
+    const Stripe = (await import('https://esm.sh/stripe@14.21.0')).default;
+    const stripe = new Stripe(stripeSecretKey, {
+      apiVersion: '2023-10-16',
+    });
+
+    // Customer information
+    const customerEmail = orderData.form_data.email;
+    const customerName = orderData.form_data.fullName;
+
+    // Check if customer already exists in Stripe
+    console.log('🔍 Checking for existing Stripe customer:', customerEmail);
+    let stripeCustomerId = null;
+    try {
+      const customers = await stripe.customers.list({
+        email: customerEmail,
+        limit: 1
+      });
+      
+      if (customers.data.length > 0) {
+        stripeCustomerId = customers.data[0].id;
+        console.log('✅ Found existing Stripe customer:', stripeCustomerId);
+      } else {
+        // Create new customer
+        console.log('➕ Creating new Stripe customer');
+        const customer = await stripe.customers.create({
+          email: customerEmail,
+          name: customerName,
+          metadata: {
+            source: 'order_wizard',
+            created_via: 'stripe_payment'
+          }
+        });
+        stripeCustomerId = customer.id;
+        console.log('✅ Created new Stripe customer:', stripeCustomerId);
+      }
+    } catch (customerError) {
+      console.error('⚠️ Error handling Stripe customer:', customerError);
+      // Continue without customer ID - not critical for payment
+    }
+
     // Create order in database first
     const orderInsertData = {
       ...orderData,
       payment_provider: 'stripe',
       status: 'pending',
-      payment_status: 'pending'
+      payment_status: 'pending',
+      stripe_customer_id: stripeCustomerId
     };
 
     console.log('🟣 Stripe: Creating order with data:', JSON.stringify(orderInsertData, null, 2));
@@ -205,10 +248,6 @@ serve(async (req) => {
     }
 
     console.log('✅ Stripe: Order created in database:', order.id);
-
-    // Customer information
-    const customerEmail = orderData.form_data.email;
-    const customerName = orderData.form_data.fullName;
 
     // Determine regional payment methods based on currency
     const paymentMethodTypes = ['card'];
@@ -266,7 +305,11 @@ serve(async (req) => {
     sessionParams.append('cancel_url', `${returnUrl.replace('success', 'cancel')}?order_id=${order.id}&payment_status=cancelled`);
     
     // Customer information
-    sessionParams.append('customer_email', customerEmail);
+    if (stripeCustomerId) {
+      sessionParams.append('customer', stripeCustomerId);
+    } else {
+      sessionParams.append('customer_email', customerEmail);
+    }
     sessionParams.append('billing_address_collection', 'required');
     
     // Metadata
@@ -329,7 +372,8 @@ serve(async (req) => {
       url: session.url ? 'Present' : 'Missing',
       status: session.status,
       expires_at: session.expires_at,
-      payment_method_types: session.payment_method_types
+      payment_method_types: session.payment_method_types,
+      customer: session.customer
     });
 
     // Validate that we got a checkout URL
@@ -352,9 +396,10 @@ serve(async (req) => {
       );
     }
 
-    // Update order with Stripe session details - THIS IS THE KEY FIX
+    // Update order with Stripe session details
     const updateData = {
       stripe_session_id: session.id,
+      stripe_customer_id: session.customer || stripeCustomerId,
       session_expires_at: new Date(session.expires_at * 1000).toISOString(),
       payment_url: session.url
     };
@@ -380,6 +425,7 @@ serve(async (req) => {
       paymentUrl: session.url,
       expiresAt: session.expires_at,
       paymentMethods: session.payment_method_types,
+      customerId: session.customer || stripeCustomerId,
       provider: 'stripe'
     };
 

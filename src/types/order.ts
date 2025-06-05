@@ -21,6 +21,10 @@ export interface OrderData {
   status: string;
   payment_status: string;
   payment_id?: string;
+  stripe_customer_id?: string;
+  stripe_session_id?: string;
+  stripe_payment_intent_id?: string;
+  webhook_processed_at?: string;
   smartbill_invoice_id?: string;
   smartbill_payment_status?: string;
   smartbill_payment_url?: string;
