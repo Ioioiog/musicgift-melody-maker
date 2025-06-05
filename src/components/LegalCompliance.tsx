@@ -1,3 +1,4 @@
+
 import React from 'react';
 import NTPLogo from 'ntp-logo-react';
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -28,7 +29,7 @@ const LegalCompliance = () => {
         </h4>
         <div className="space-y-3">
           <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
-            <img src="https://seeklogo.com/images/S/stripe-logo-8D1337D8CE-seeklogo.com.png" alt="Stripe" className="h-6 hover:opacity-80 transition" />
+            <img src="/lovable-uploads/a83ec5e1-01f2-4010-9224-fb7860ad66be.png" alt="Stripe" className="h-6 hover:opacity-80 transition" />
           </a>
           <a href="https://www.revolut.com/business/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg">
             <img alt="Revolut Business" src="/lovable-uploads/e0dec0a1-3977-42e6-a9fa-9addebc53ead.png" className="h-6 hover:opacity-80 transition object-fill" />
