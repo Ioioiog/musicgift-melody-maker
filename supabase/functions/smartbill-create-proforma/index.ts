@@ -34,25 +34,40 @@ serve(async (req) => {
     const customerName = formData.fullName || formData.customerName || 'N/A';
     const customerEmail = formData.email || '';
     const customerPhone = formData.phone || '';
+    const customerAddress = formData.address || '';
+    const customerCity = formData.city || '';
+    const customerCounty = formData.county || '';
 
-    // Prepare proforma data for SmartBill
+    // Calculate dates
+    const issueDate = new Date().toISOString().split('T')[0];
+    const dueDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 30 days from now
+
+    // Prepare proforma data for SmartBill API according to documentation
     const proformaData = {
-      companyVat: smartbillCompanyVAT,
+      companyVatCode: smartbillCompanyVAT, // Corrected parameter name
       client: {
         name: customerName,
         email: customerEmail,
         phone: customerPhone,
-        type: "pf", // person fizică (individual)
-        isTaxPayer: false
+        address: customerAddress,
+        city: customerCity,
+        county: customerCounty,
+        country: "Romania",
+        isTaxPayer: false, // Individual person (not VAT payer)
+        saveToDb: true // Save client to nomenclator
       },
-      issueDate: new Date().toISOString().split('T')[0],
-      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
-      language: "ro",
+      seriesName: "STRP", // Required series for proformas
+      issueDate: issueDate,
+      dueDate: dueDate,
+      language: "RO", // Romanian language
       precision: 2,
       currency: orderData.currency || "RON",
+      isDraft: false, // Final proforma, not draft
+      mentions: `Comanda #${orderData.id?.slice(0, 8)} - Cadou muzical personalizat. Pachet: ${orderData.package_name || orderData.package_value}`,
+      observations: `Plata efectuata prin ${orderData.payment_provider || 'online'}. Status: ${orderData.payment_status}`,
       products: [
         {
-          name: `${orderData.package_name || orderData.package_value} - Music Gift Package`,
+          name: `${orderData.package_name || orderData.package_value} - Pachet Cadou Muzical`,
           code: orderData.package_value || "MUSIC-GIFT",
           price: (orderData.total_price || 0) / 100, // Convert from cents to currency units
           measuringUnit: "buc",
@@ -62,14 +77,12 @@ serve(async (req) => {
           taxPercentage: 0,
           isDiscount: false
         }
-      ],
-      textBeforeProducts: `Comanda #${orderData.id?.slice(0, 8)} - Cadou muzical personalizat`,
-      textAfterProducts: "Multumim pentru comanda!"
+      ]
     };
 
     console.log('SmartBill proforma data:', JSON.stringify(proformaData, null, 2));
 
-    // Create proforma in SmartBill
+    // Create proforma in SmartBill using the correct endpoint
     const smartbillResponse = await fetch('https://ws.smartbill.ro/SBORO/api/estimate', {
       method: 'POST',
       headers: {
@@ -85,16 +98,29 @@ serve(async (req) => {
     console.log('SmartBill proforma response:', responseText);
 
     if (!smartbillResponse.ok) {
-      throw new Error(`SmartBill proforma creation failed: ${responseText}`);
+      // Parse SmartBill error response for better error handling
+      let errorMessage = `SmartBill proforma creation failed: ${responseText}`;
+      try {
+        const errorData = JSON.parse(responseText);
+        if (errorData.errorText) {
+          errorMessage = `SmartBill Error: ${errorData.errorText}`;
+        } else if (errorData.message) {
+          errorMessage = `SmartBill Error: ${errorData.message}`;
+        }
+      } catch (parseError) {
+        console.log('Could not parse SmartBill error response');
+      }
+      throw new Error(errorMessage);
     }
 
     const proformaResult = JSON.parse(responseText);
+    console.log('SmartBill proforma created successfully:', proformaResult);
 
     // Update order with proforma information
     const { error: updateError } = await supabaseClient
       .from('orders')
       .update({
-        smartbill_proforma_id: proformaResult.number,
+        smartbill_proforma_id: proformaResult.number || proformaResult.id,
         smartbill_proforma_status: 'created',
         smartbill_proforma_data: proformaResult,
         updated_at: new Date().toISOString()
@@ -106,11 +132,11 @@ serve(async (req) => {
       throw updateError;
     }
 
-    console.log('SmartBill proforma created successfully:', proformaResult.number);
+    console.log('SmartBill proforma created and order updated successfully:', proformaResult.number || proformaResult.id);
 
     return new Response(JSON.stringify({
       success: true,
-      proformaId: proformaResult.number,
+      proformaId: proformaResult.number || proformaResult.id,
       proformaData: proformaResult,
       orderId: orderData.id
     }), {
