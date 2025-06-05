@@ -2,6 +2,7 @@
 import React from 'react';
 import NTPLogo from 'ntp-logo-react';
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Badge } from "@/components/ui/badge";
 
 const LegalCompliance = () => {
   const { t } = useLanguage();
@@ -32,9 +33,12 @@ const LegalCompliance = () => {
           <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg min-h-[80px]">
             <img src="/lovable-uploads/a83ec5e1-01f2-4010-9224-fb7860ad66be.png" alt="Stripe" className="max-w-[120px] max-h-[60px] w-full h-auto object-contain hover:opacity-80 transition" />
           </a>
-          <a href="https://www.revolut.com/business/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg min-h-[80px]">
+          <div className="relative flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg min-h-[80px]">
             <img alt="Revolut Business" src="/lovable-uploads/e0dec0a1-3977-42e6-a9fa-9addebc53ead.png" className="max-w-[120px] max-h-[60px] w-full h-auto object-contain hover:opacity-80 transition" />
-          </a>
+            <Badge className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1">
+              Coming Soon
+            </Badge>
+          </div>
           <div className="flex items-center justify-center bg-white/20 backdrop-blur-sm border border-black/10 rounded-xl p-4 hover:bg-white/30 transition-all duration-300 hover:scale-105 shadow-lg min-h-[80px]">
             <div className="max-w-[120px] max-h-[60px] flex items-center justify-center">
               <NTPLogo color="#ffffff" version="orizontal" secret="152227" />
