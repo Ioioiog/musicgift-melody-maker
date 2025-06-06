@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,7 +46,6 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
     }
   };
 
-  // Modified: Removed revolut from "coming soon" providers
   const isProviderComingSoon = (providerName: string) => {
     return false; // No providers are coming soon anymore
   };
@@ -130,7 +128,6 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                           alt="Netopia Payments"
                           className="w-20 h-20 object-contain rounded"
                           onError={(e) => {
-                            // Fallback to icon if image fails to load
                             e.currentTarget.style.display = 'none';
                             e.currentTarget.nextElementSibling?.classList.remove('hidden');
                           }}
@@ -141,7 +138,6 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                           alt="Stripe"
                           className="w-20 h-20 object-contain"
                           onError={(e) => {
-                            // Fallback to icon if image fails to load
                             e.currentTarget.style.display = 'none';
                             e.currentTarget.nextElementSibling?.classList.remove('hidden');
                           }}
@@ -152,7 +148,6 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                           alt="Revolut"
                           className="w-20 h-20 object-contain"
                           onError={(e) => {
-                            // Fallback to icon if image fails to load
                             e.currentTarget.style.display = 'none';
                             e.currentTarget.nextElementSibling?.classList.remove('hidden');
                           }}
@@ -174,7 +169,9 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-lg">{provider.display_name}</h3>
+                        <h3 className="font-semibold text-lg">
+                          {provider.provider_name === 'smartbill' ? 'Netopia Payments' : provider.display_name}
+                        </h3>
                         {isComingSoon && (
                           <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-200">
                             Coming Soon

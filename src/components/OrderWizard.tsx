@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -255,7 +254,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
       const orderData = prepareOrderData();
 
-      // Handle payment based on selected provider - NO FALLBACKS
+      // Handle payment based on selected provider
       if (selectedPaymentProvider === 'stripe') {
         console.log('🟣 Processing payment with Stripe in redirect mode');
         
@@ -279,7 +278,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           throw new Error(paymentResponse?.error || 'Stripe payment initialization failed');
         }
 
-        // Redirect to Stripe Checkout
         if (paymentResponse.paymentUrl) {
           console.log('✅ Redirecting to Stripe Checkout:', paymentResponse.paymentUrl);
           window.location.href = paymentResponse.paymentUrl;
@@ -318,7 +316,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         }
 
       } else if (selectedPaymentProvider === 'smartbill') {
-        console.log('🔵 Processing payment with SmartBill');
+        console.log('🔵 Processing payment with SmartBill Netopia');
         
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('smartbill-create-invoice', {
           body: {
@@ -327,21 +325,21 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
           }
         });
 
-        console.log('🔵 SmartBill response:', paymentResponse);
-        console.log('🔵 SmartBill error:', paymentError);
+        console.log('🔵 SmartBill Netopia response:', paymentResponse);
+        console.log('🔵 SmartBill Netopia error:', paymentError);
 
         if (paymentError) {
-          console.error('❌ SmartBill Edge Function Error:', paymentError);
-          throw new Error(`SmartBill payment failed: ${paymentError.message}`);
+          console.error('❌ SmartBill Netopia Edge Function Error:', paymentError);
+          throw new Error(`SmartBill Netopia payment failed: ${paymentError.message}`);
         }
 
         if (!paymentResponse?.success) {
-          console.error('❌ SmartBill Payment Response Error:', paymentResponse);
-          throw new Error(paymentResponse?.error || 'SmartBill payment initialization failed');
+          console.error('❌ SmartBill Netopia Payment Response Error:', paymentResponse);
+          throw new Error(paymentResponse?.error || 'SmartBill Netopia payment initialization failed');
         }
 
         if (paymentResponse.paymentUrl) {
-          console.log('✅ Redirecting to SmartBill payment:', paymentResponse.paymentUrl);
+          console.log('✅ Redirecting to Netopia payment:', paymentResponse.paymentUrl);
           window.location.href = paymentResponse.paymentUrl;
         } else {
           navigate('/payment/success?orderId=' + paymentResponse.orderId);

@@ -72,8 +72,8 @@ const Order = () => {
       
       if (giftCard) {
         const giftBalance = giftCard.gift_amount || 0;
-        giftCreditApplied = Math.min(giftBalance, totalPrice * 100); // Convert to cents
-        finalPrice = Math.max(0, (totalPrice * 100 - giftCreditApplied) / 100); // Convert back to currency units
+        giftCreditApplied = Math.min(giftBalance, totalPrice * 100);
+        finalPrice = Math.max(0, (totalPrice * 100 - giftCreditApplied) / 100);
       }
 
       // Get the selected payment provider
@@ -88,14 +88,12 @@ const Order = () => {
           addonFieldValues: orderData.addonFieldValues || {},
         },
         selected_addons: orderData.addons || [],
-        total_price: finalPrice * 100, // Convert to cents for consistency
+        total_price: finalPrice * 100,
         status: 'pending',
         payment_status: finalPrice > 0 ? 'pending' : 'completed',
-        // Gift card fields
         gift_card_id: giftCard?.id || null,
         is_gift_redemption: !!giftCard,
         gift_credit_applied: giftCreditApplied,
-        // Package detail columns
         package_value: selectedPackage.value,
         package_name: selectedPackage.label_key,
         package_price: getPackagePrice(selectedPackage, currency),
@@ -133,7 +131,7 @@ const Order = () => {
         paymentError = error;
 
       } else if (paymentProvider === 'smartbill') {
-        console.log('🔵 Processing with SmartBill');
+        console.log('🔵 Processing with SmartBill Netopia');
         const { data, error } = await supabase.functions.invoke('smartbill-create-invoice', {
           body: { orderData: baseOrderPayload }
         });
@@ -165,7 +163,6 @@ const Order = () => {
           variant: "destructive"
         });
         
-        // Navigate to payment error page
         navigate('/payment/error?orderId=' + paymentResponse?.orderId + '&error=' + errorCode);
         return;
       }
@@ -200,7 +197,6 @@ const Order = () => {
         console.log(`🔗 Redirecting to ${paymentProvider.toUpperCase()} payment:`, paymentResponse.paymentUrl);
         window.location.href = paymentResponse.paymentUrl;
       } else {
-        // If no payment needed or no payment URL, show completion
         console.log("✅ Order completed successfully - no payment required or direct completion");
         navigate('/payment/success?orderId=' + paymentResponse.orderId);
       }
