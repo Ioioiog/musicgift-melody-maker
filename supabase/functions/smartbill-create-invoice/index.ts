@@ -121,38 +121,33 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const orderData: OrderData = await req.json()
-    console.log('Processing order with SmartBill:', orderData)
+    const { orderData } = await req.json()
+    console.log('Processing order with SmartBill:', { orderData })
 
-    // First, save the order to database
+    // Validate that form_data exists
+    if (!orderData.form_data) {
+      console.error('Missing form_data in orderData:', orderData)
+      throw new Error('Order form_data is required but missing')
+    }
+
+    console.log('form_data validation passed:', orderData.form_data)
+
+    // First, save the order to database using spread operator to preserve all fields
     const { data: savedOrder, error: orderError } = await supabaseClient
       .from('orders')
       .insert({
-        form_data: orderData.form_data,
-        selected_addons: orderData.selected_addons,
-        total_price: orderData.total_price,
-        status: orderData.status,
-        payment_status: orderData.payment_status,
-        package_value: orderData.package_value,
-        package_name: orderData.package_name,
-        package_price: orderData.package_price,
-        package_delivery_time: orderData.package_delivery_time,
-        package_includes: orderData.package_includes,
-        currency: orderData.currency,
-        user_id: orderData.user_id,
-        gift_card_id: orderData.gift_card_id,
-        is_gift_redemption: orderData.is_gift_redemption,
-        gift_credit_applied: orderData.gift_credit_applied,
+        ...orderData,
         smartbill_payment_status: 'pending'
       })
       .select()
       .single()
 
     if (orderError) {
+      console.error('Database insertion error:', orderError)
       throw new Error(`Failed to save order: ${orderError.message}`)
     }
 
-    console.log('Order saved to database:', savedOrder.id)
+    console.log('Order saved to database successfully:', savedOrder.id)
 
     // Check if payment is needed
     if (orderData.total_price <= 0) {
@@ -256,7 +251,6 @@ serve(async (req) => {
       sendEmail: true,
       precision: 2,
       currency: orderData.currency || 'RON',
-      paymentUrl: 'Generate URL',
       products: [
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
