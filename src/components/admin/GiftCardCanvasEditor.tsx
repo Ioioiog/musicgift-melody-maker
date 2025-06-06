@@ -79,7 +79,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           selectable: false,
           evented: false
         });
-        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+        canvas.backgroundImage = img;
+        canvas.renderAll();
       });
     }
 
@@ -219,7 +220,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           selectable: false,
           evented: false
         });
-        fabricCanvas.setBackgroundImage(img, fabricCanvas.renderAll.bind(canvas));
+        fabricCanvas.backgroundImage = img;
+        fabricCanvas.renderAll();
       });
     }
     updateCanvasData(fabricCanvas);
