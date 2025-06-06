@@ -79,6 +79,7 @@ serve(async (req) => {
       headers: {
         'Authorization': `Bearer ${revolutApiKey}`,
         'Content-Type': 'application/json',
+        'Revolut-Api-Version': '2024-09-01',
       },
       body: JSON.stringify(revolutOrderData),
     });
