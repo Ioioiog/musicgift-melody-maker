@@ -1,3 +1,4 @@
+
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -44,6 +45,7 @@ interface SmartBillInvoiceData {
   dueDate: string;
   deliveryDate: string;
   isDraft: boolean;
+  paymentUrl: string;
   language: string;
   sendEmail: boolean;
   precision: number;
@@ -69,7 +71,7 @@ const validateSmartBillConfig = () => {
   const token = Deno.env.get('SMARTBILL_TOKEN')
   const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
   const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
-  const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'mng'
+  const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'FCT'
   
   console.log('SmartBill Config Check:', {
     username: username ? '***configured***' : 'MISSING',
@@ -143,7 +145,7 @@ serve(async (req) => {
         gift_card_id: orderData.gift_card_id,
         is_gift_redemption: orderData.is_gift_redemption,
         gift_credit_applied: orderData.gift_credit_applied,
-        payment_provider: 'smartbill', // Explicitly set to smartbill
+        payment_provider: 'smartbill',
         smartbill_payment_status: 'pending'
       })
       .select()
@@ -229,22 +231,22 @@ serve(async (req) => {
       name: isCompanyInvoice ? 
         (orderData.form_data.companyName || 'Company Name') : 
         (orderData.form_data.fullName || 'Customer'),
-      vatCode: isCompanyInvoice ? (orderData.form_data.vatCode || '-') : '-',
+      vatCode: isCompanyInvoice ? (orderData.form_data.vatCode || '') : '',
       regCom: isCompanyInvoice ? (orderData.form_data.registrationNumber || '') : '',
       address: isCompanyInvoice ? 
         (orderData.form_data.companyAddress || orderData.form_data.address || '-') : 
         (orderData.form_data.address || '-'),
-      city: orderData.form_data.city || 'Bucuresti - Sector 3',
+      city: orderData.form_data.city || 'Bucuresti',
       county: orderData.form_data.county || 'Bucuresti',
       country: 'Romania',
       email: orderData.form_data.email || '',
-      isTaxPayer: true,
+      isTaxPayer: isCompanyInvoice,
       saveToDb: false
     }
 
     console.log('Client data for SmartBill:', clientData)
 
-    // Create SmartBill invoice data
+    // Create SmartBill invoice data with the required paymentUrl field
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
       seriesName: seriesName,
@@ -253,6 +255,7 @@ serve(async (req) => {
       dueDate: dueDate,
       deliveryDate: dueDate,
       isDraft: false,
+      paymentUrl: "Generate URL", // This is the key field for Netopia integration
       language: 'RO',
       sendEmail: true,
       precision: 2,
@@ -261,7 +264,7 @@ serve(async (req) => {
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
           quantity: 1,
-          price: orderData.total_price,
+          price: orderData.total_price / 100, // Convert from cents to currency units
           measuringUnitName: 'buc',
           currency: orderData.currency || 'RON',
           isTaxIncluded: true,
@@ -277,7 +280,7 @@ serve(async (req) => {
         `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
     }
 
-    console.log('Creating SmartBill invoice with data:', invoiceData)
+    console.log('Creating SmartBill invoice with data (including paymentUrl):', JSON.stringify(invoiceData, null, 2))
 
     // Create invoice via SmartBill API
     const smartBillAuth = btoa(`${username}:${token}`)
