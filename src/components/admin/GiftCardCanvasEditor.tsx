@@ -63,8 +63,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!canvasRef.current) return;
 
     const canvas = new FabricCanvas(canvasRef.current, {
-      width: 600,
-      height: 375,
+      width: 800,
+      height: 500,
       backgroundColor: '#ffffff',
     });
 
@@ -247,7 +247,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
       {/* Element Library */}
       <div className="space-y-4">
         <Card>
@@ -328,7 +328,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       </div>
 
       {/* Canvas Area */}
-      <div className="lg:col-span-2">
+      <div className="lg:col-span-3">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm flex items-center justify-between">
@@ -344,7 +344,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           <CardContent>
             <div className="border border-gray-200 rounded-lg overflow-hidden bg-white p-4">
               <div className="flex justify-center">
-                <canvas ref={canvasRef} className="border border-gray-300 rounded shadow-sm" />
+                <canvas ref={canvasRef} className="border border-gray-300 rounded shadow-sm max-w-full" />
               </div>
             </div>
           </CardContent>
