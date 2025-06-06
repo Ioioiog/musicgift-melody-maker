@@ -276,13 +276,15 @@ serve(async (req) => {
     // Create invoice via SmartBill API
     const smartBillAuth = btoa(`${username}:${token}`)
     
+    // FIXED: Construct the correct URL
+    const smartBillApiUrl = `${baseUrl}/SBORO/api/invoice`
+    console.log('Sending request to SmartBill API:', smartBillApiUrl)
+    
     let invoiceResponse: Response
     let invoiceResult: any
     
     try {
-      console.log('Sending request to SmartBill API:', `${baseUrl}/SBORO/api/invoice`)
-      
-      invoiceResponse = await fetch(`${baseUrl}/SBORO/api/invoice`, {
+      invoiceResponse = await fetch(smartBillApiUrl, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
