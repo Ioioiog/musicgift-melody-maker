@@ -72,14 +72,55 @@ const validateSmartBillConfig = () => {
   const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'mng'
   
   console.log('SmartBill Config Check:', {
-    username: username ? '***configured***' : 'MISSING',
-    token: token ? '***configured***' : 'MISSING',
+    username: username ? `***${username.slice(-3)}***` : 'MISSING',
+    token: token ? `***${token.slice(0, 4)}...${token.slice(-4)}***` : 'MISSING',
     baseUrl,
-    companyVat: companyVat ? '***configured***' : 'MISSING',
-    seriesName
+    companyVat: companyVat ? `***${companyVat}***` : 'MISSING',
+    seriesName,
+    usernameLength: username?.length || 0,
+    tokenLength: token?.length || 0,
+    companyVatLength: companyVat?.length || 0
   })
   
   return { username, token, baseUrl, companyVat, seriesName }
+}
+
+const testSmartBillAuth = async (username: string, token: string, baseUrl: string) => {
+  console.log('Testing SmartBill authentication...')
+  
+  const smartBillAuth = btoa(`${username}:${token}`)
+  console.log('Auth string length:', smartBillAuth.length)
+  
+  // Test with a simple API call first - get company info
+  const testUrl = `${baseUrl}/SBORO/api/company`
+  console.log('Testing authentication with URL:', testUrl)
+  
+  try {
+    const response = await fetch(testUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Basic ${smartBillAuth}`
+      }
+    })
+    
+    console.log('Auth test response status:', response.status)
+    console.log('Auth test response headers:', Object.fromEntries(response.headers.entries()))
+    
+    const responseText = await response.text()
+    console.log('Auth test response (first 200 chars):', responseText.substring(0, 200))
+    
+    if (response.ok) {
+      console.log('✅ SmartBill authentication successful!')
+      return { success: true, data: responseText }
+    } else {
+      console.log('❌ SmartBill authentication failed:', response.status, responseText)
+      return { success: false, error: responseText, status: response.status }
+    }
+  } catch (error) {
+    console.error('❌ SmartBill auth test error:', error)
+    return { success: false, error: error.message }
+  }
 }
 
 const handleSmartBillResponse = async (response: Response) => {
@@ -210,6 +251,43 @@ serve(async (req) => {
       )
     }
 
+    // Test authentication first
+    const authTest = await testSmartBillAuth(username, token, baseUrl)
+    if (!authTest.success) {
+      console.error('SmartBill authentication test failed:', authTest)
+      
+      // Update order with auth error
+      const { error: updateError } = await supabaseClient
+        .from('orders')
+        .update({ 
+          smartbill_payment_status: 'auth_failed'
+        })
+        .eq('id', savedOrder.id)
+
+      if (updateError) {
+        console.error('Error updating order with auth error:', updateError)
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          orderId: savedOrder.id,
+          errorCode: 'authenticationFailed',
+          message: `SmartBill authentication failed: ${authTest.error}`,
+          debugInfo: {
+            status: authTest.status,
+            error: authTest.error
+          }
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200 
+        }
+      )
+    }
+
+    console.log('✅ SmartBill authentication successful, proceeding with invoice creation...')
+
     // Calculate dates
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
@@ -276,7 +354,7 @@ serve(async (req) => {
     // Create invoice via SmartBill API
     const smartBillAuth = btoa(`${username}:${token}`)
     
-    // FIXED: Construct the correct URL
+    // Construct the correct URL
     const smartBillApiUrl = `${baseUrl}/SBORO/api/invoice`
     console.log('Sending request to SmartBill API:', smartBillApiUrl)
     
@@ -357,9 +435,9 @@ serve(async (req) => {
       )
     }
 
-    // Extract invoice details - FIXED: Use the correct path for payment URL
+    // Extract invoice details
     const smartBillInvoiceId = invoiceResult?.number || `INV-${Date.now()}`
-    const smartBillPaymentUrl = invoiceResult?.url  // FIXED: Get URL directly from response root
+    const smartBillPaymentUrl = invoiceResult?.url
     
     console.log('Extracted invoice details:', {
       invoiceId: smartBillInvoiceId,
