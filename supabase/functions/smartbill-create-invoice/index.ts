@@ -71,7 +71,7 @@ const validateSmartBillConfig = () => {
   const token = Deno.env.get('SMARTBILL_TOKEN')
   const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
   const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
-  const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'FCT'
+  const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'mng'
   
   console.log('SmartBill Config Check:', {
     username: username ? '***configured***' : 'MISSING',
