@@ -1,89 +1,156 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import Stripe from 'npm:stripe';
-
-const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
-  apiVersion: '2023-10-16',
-});
+import { serve } from 'https://deno.land/std/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+  'Content-Type': 'application/json'
+}
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
-  }
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders })
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    )
 
-    const orderData = await req.json();
-    console.log('Submitting order for payment via Stripe:', orderData);
+    const body = await req.json()
+    const order = body.orderData
 
-    const { data: savedOrder, error: orderError } = await supabaseClient.from('orders').insert({
-      form_data: orderData.form_data,
-      selected_addons: orderData.selected_addons,
-      total_price: orderData.total_price,
-      status: 'pending',
-      payment_status: 'pending',
-      package_value: orderData.package_value,
-      package_name: orderData.package_name,
-      package_price: orderData.package_price,
-      package_delivery_time: orderData.package_delivery_time,
-      package_includes: orderData.package_includes,
-      currency: orderData.currency,
-      user_id: orderData.user_id,
-      gift_card_id: orderData.gift_card_id,
-      is_gift_redemption: orderData.is_gift_redemption,
-      gift_credit_applied: orderData.gift_credit_applied,
-      provider: 'stripe'
-    }).select().single();
+    if (!order?.form_data?.fullName || !order?.form_data?.email) {
+      throw new Error('Invalid order data: fullName and email are required')
+    }
 
-    if (orderError) throw new Error(`Failed to save order: ${orderError.message}`);
+    const { data: savedOrder, error: insertError } = await supabase
+      .from('orders')
+      .insert({
+        ...order,
+        status: 'pending',
+        payment_status: 'pending',
+        smartbill_payment_status: 'pending',
+        payment_provider: 'smartbill'
+      })
+      .select()
+      .single()
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'payment',
-      success_url: `https://www.musicgift.ro/payment/success?orderId=${savedOrder.id}`,
-      cancel_url: `https://www.musicgift.ro/payment/cancelled?orderId=${savedOrder.id}`,
-      customer_email: orderData.form_data.email,
-      line_items: [
-        {
-          price_data: {
-            currency: orderData.currency.toLowerCase(),
-            product_data: {
-              name: `${orderData.package_name} - Cadou muzical personalizat`,
-              description: `Livrare: ${orderData.package_delivery_time}`
-            },
-            unit_amount: Math.round(orderData.total_price * 100)
-          },
-          quantity: 1
-        }
-      ],
-      metadata: {
-        order_id: savedOrder.id
-      }
-    });
+    if (insertError) throw insertError
 
-    await supabaseClient.from('orders').update({
-      stripe_session_id: session.id,
-      payment_url: session.url
-    }).eq('id', savedOrder.id);
+    // SmartBill Config
+    const SMARTBILL_EMAIL = Deno.env.get('SMARTBILL_EMAIL')!
+    const SMARTBILL_TOKEN = Deno.env.get('SMARTBILL_TOKEN')!
+    const SMARTBILL_VAT = Deno.env.get('SMARTBILL_COMPANY_VAT')!
+    const SMARTBILL_SERIES = Deno.env.get('SMARTBILL_SERIES') || 'mng'
+    const BASE_URL = 'https://ws.smartbill.ro'
 
-    return new Response(
-      JSON.stringify({ success: true, orderId: savedOrder.id, paymentUrl: session.url }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-    );
+    const today = new Date().toISOString().split('T')[0]
+    const dueDate = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
+    const priceRON = order.total_price
+
+    const invoiceData = {
+      companyVatCode: SMARTBILL_VAT,
+      seriesName: SMARTBILL_SERIES,
+      client: {
+        name: order.form_data.fullName,
+        vatCode: '',
+        regCom: '',
+        address: order.form_data.address ?? 'Adresa nespecificata',
+        city: order.form_data.city ?? 'Bucuresti',
+        county: order.form_data.county ?? 'Bucuresti',
+        country: 'Romania',
+        email: order.form_data.email,
+        isTaxPayer: false,
+        saveToDb: false
+      },
+      issueDate: today,
+      dueDate,
+      deliveryDate: dueDate,
+      isDraft: false,
+      language: 'RO',
+      sendEmail: true,
+      precision: 2,
+      currency: order.currency,
+      products: [{
+        name: `${order.package_name} - Cântec Personalizat`,
+        quantity: 1,
+        price: priceRON,
+        measuringUnitName: 'buc',
+        currency: order.currency,
+        isTaxIncluded: true,
+        taxName: 'Normala',
+        taxPercentage: 19,
+        isDiscount: false,
+        saveToDb: false,
+        isService: true
+      }],
+      observations: `Cântec personalizat pentru ${order.form_data.recipientName ?? 'destinatar'}`
+    }
+
+    const auth = btoa(`${SMARTBILL_EMAIL}:${SMARTBILL_TOKEN}`)
+
+    const smartbillRes = await fetch(`${BASE_URL}/SBORO/api/invoice`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(invoiceData)
+    })
+
+    const resultText = await smartbillRes.text()
+    let result
+    try {
+      result = JSON.parse(resultText)
+    } catch {
+      throw new Error(`SmartBill returned invalid response: ${resultText.substring(0, 200)}`)
+    }
+
+    if (!smartbillRes.ok || result?.errorText || result?.error) {
+      const errorMsg = result?.errorText || result?.error || `HTTP ${smartbillRes.status}`
+      await supabase
+        .from('orders')
+        .update({
+          smartbill_payment_status: 'failed',
+          smartbill_error: errorMsg
+        })
+        .eq('id', savedOrder.id)
+
+      return new Response(JSON.stringify({
+        success: true,
+        orderId: savedOrder.id,
+        message: 'Order created successfully - invoice will be generated manually',
+        warning: `SmartBill error: ${errorMsg}`
+      }), { headers: corsHeaders })
+    }
+
+    const invoiceNumber = result?.number ?? 'UNKNOWN'
+    const paymentUrl = result?.url
+
+    await supabase
+      .from('orders')
+      .update({
+        smartbill_invoice_id: invoiceNumber,
+        smartbill_payment_url: paymentUrl,
+        smartbill_invoice_data: result,
+        smartbill_payment_status: 'created'
+      })
+      .eq('id', savedOrder.id)
+
+    return new Response(JSON.stringify({
+      success: true,
+      orderId: savedOrder.id,
+      smartBillInvoiceId: invoiceNumber,
+      paymentUrl,
+      message: 'Invoice created successfully with SmartBill'
+    }), { headers: corsHeaders })
+
   } catch (err) {
-    console.error('Order submission error:', err);
-    return new Response(
-      JSON.stringify({ success: false, error: err.message }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
-    );
+    console.error('❌ SmartBill Integration Error:', err)
+    return new Response(JSON.stringify({
+      success: false,
+      error: err.message
+    }), { headers: corsHeaders, status: 500 })
   }
-});
+})
