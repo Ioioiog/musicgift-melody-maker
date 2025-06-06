@@ -63,8 +63,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!canvasRef.current) return;
 
     const canvas = new FabricCanvas(canvasRef.current, {
-      width: 840,
-      height: 480,
+      width: 240,
+      height: 140,
       backgroundColor: '#ffffff',
     });
 
@@ -350,7 +350,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           <Card>
             <CardHeader>
               <CardTitle className="text-sm flex items-center justify-between">
-                Design Canvas (840 × 480px - Web/Digital 7:4)
+                Design Canvas (240 × 140px - Compact)
                 <Button onClick={clearCanvas} variant="outline" size="sm">
                   <RotateCcw className="w-4 h-4 mr-1" />
                   Clear
