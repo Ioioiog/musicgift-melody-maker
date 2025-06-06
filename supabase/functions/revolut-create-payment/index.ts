@@ -16,10 +16,10 @@ serve(async (req) => {
   try {
     console.log('🟠 Revolut Create Payment: Starting process');
     
-    // Update: Use service role key instead of anon key to bypass RLS
+    // Use service role key to bypass RLS
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '', // Changed from SUPABASE_ANON_KEY
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
     const { orderData, returnUrl } = await req.json();
@@ -40,7 +40,7 @@ serve(async (req) => {
       .from('orders')
       .insert([{
         ...orderData,
-        payment_provider: 'revolut', // Explicitly set to revolut
+        payment_provider: 'revolut',
         status: 'pending',
         payment_status: 'pending'
       }])
@@ -54,24 +54,25 @@ serve(async (req) => {
 
     console.log('✅ Revolut: Order created in database:', order.id);
 
-    // Create Revolut Business order
-    const revolutUrl = 'https://b2b.revolut.com/api/1.0/orders';
+    // Create Revolut Business payment link
+    const revolutUrl = 'https://b2b.revolut.com/api/1.0/payment-links';
     
+    // Ensure amount is properly handled - convert to minor units if needed
+    const paymentAmount = typeof orderData.total_price === 'number'
+      ? Math.round(orderData.total_price)
+      : 0;
+
     const revolutOrderData = {
-      amount: orderData.total_price, // Amount in minor units (cents)
-      currency: orderData.currency,
-      merchant_order_ext_ref: order.id,
+      amount: paymentAmount,
+      currency: orderData.currency || 'EUR',
       description: `${orderData.package_name || 'Custom Song Package'} - ${orderData.package_value}`,
+      capture_mode: 'AUTOMATIC',
+      merchant_order_ext_ref: order.id,
       customer_email: orderData.form_data?.email,
-      settlement_currency: orderData.currency,
-      redirect_urls: {
-        success: `${returnUrl}?revolut_order_id={ORDER_ID}&order_id=${order.id}`,
-        failure: `${returnUrl.replace('success', 'cancel')}?order_id=${order.id}`,
-        cancel: `${returnUrl.replace('success', 'cancel')}?order_id=${order.id}`,
-      }
+      callback_url: `${returnUrl}?revolut_payment_link_id={PAYMENT_LINK_ID}&order_id=${order.id}`
     };
 
-    console.log('🟠 Revolut: Creating order with data:', JSON.stringify(revolutOrderData, null, 2));
+    console.log('🟠 Revolut: Creating payment link with data:', JSON.stringify(revolutOrderData, null, 2));
 
     const revolutResponse = await fetch(revolutUrl, {
       method: 'POST',
@@ -91,39 +92,40 @@ serve(async (req) => {
       throw new Error(`Revolut API error (${revolutResponse.status}): ${responseText}`);
     }
 
-    const revolutOrder = JSON.parse(responseText);
-    console.log('✅ Revolut: Order created successfully:', {
-      id: revolutOrder.id,
-      checkout_url: revolutOrder.checkout_url ? 'Present' : 'Missing',
-      state: revolutOrder.state
+    const revolutResult = JSON.parse(responseText);
+    console.log('✅ Revolut: Payment link created successfully:', {
+      id: revolutResult.id,
+      link: revolutResult.link ? 'Present' : 'Missing',
+      state: revolutResult.state
     });
 
-    if (!revolutOrder.checkout_url) {
-      console.error('❌ Revolut: No checkout URL in order response');
-      throw new Error('Revolut did not return a checkout URL');
+    const paymentUrl = revolutResult.link;
+    if (!paymentUrl) {
+      console.error('❌ Revolut: No payment link in response');
+      throw new Error('Revolut did not return a payment link');
     }
 
-    // Update order with Revolut order ID
+    // Update order with Revolut payment link ID and URL
     const { error: updateError } = await supabaseClient
       .from('orders')
       .update({
-        revolut_order_id: revolutOrder.id,
-        payment_url: revolutOrder.checkout_url,
+        revolut_order_id: revolutResult.id,
+        payment_url: paymentUrl,
       })
       .eq('id', order.id);
 
     if (updateError) {
-      console.error('⚠️ Revolut: Error updating order with details:', updateError);
-      // Don't throw here as the payment order was created successfully
+      console.error('⚠️ Revolut: Error updating order with payment link details:', updateError);
+      // Don't throw here as the payment link was created successfully
     } else {
-      console.log('✅ Revolut: Order updated with order details');
+      console.log('✅ Revolut: Order updated with payment link details');
     }
 
     const successResponse = {
       success: true,
       orderId: order.id,
-      paymentUrl: revolutOrder.checkout_url,
-      revolutOrderId: revolutOrder.id,
+      paymentUrl,
+      revolutOrderId: revolutResult.id,
       provider: 'revolut'
     };
 
