@@ -40,23 +40,23 @@ serve(async (req) => {
     if (insertError) throw insertError
 
     // === SmartBill invoice setup ===
-    const SMARTBILL_USERNAME = Deno.env.get('SMARTBILL_USERNAME')!
+    const SMARTBILL_EMAIL = Deno.env.get('SMARTBILL_EMAIL')!
     const SMARTBILL_TOKEN = Deno.env.get('SMARTBILL_TOKEN')!
     const SMARTBILL_VAT = Deno.env.get('SMARTBILL_COMPANY_VAT')!
-    const SMARTBILL_SERIES = Deno.env.get('SMARTBILL_SERIES') ?? 'mng'
-    const BASE_URL = Deno.env.get('SMARTBILL_BASE_URL') ?? 'https://ws.smartbill.ro'
+    const SMARTBILL_SERIES = 'mng'
+    const BASE_URL = 'https://ws.smartbill.ro'
 
     console.log('🔐 SmartBill Config Check:', {
-      username: SMARTBILL_USERNAME ? '***configured***' : 'MISSING',
-      token: SMARTBILL_TOKEN ? '***configured***' : 'MISSING',
-      companyVat: SMARTBILL_VAT ? '***configured***' : 'MISSING',
+      username: SMARTBILL_EMAIL 
+      token: SMARTBILL_TOKEN 
+      companyVat: SMARTBILL_VAT 
       series: SMARTBILL_SERIES
     })
 
     const today = new Date().toISOString().split('T')[0]
-    const dueDate = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
+    const dueDate = new Date(Date.now()
 
-    const priceRON = order.total_price / 100
+    const priceRON = order.total_price
     const invoiceData = {
       companyVatCode: SMARTBILL_VAT,
       seriesName: SMARTBILL_SERIES,
@@ -80,16 +80,15 @@ serve(async (req) => {
       sendEmail: true,
       precision: 2,
       currency: order.currency,
-      paymentUrl: "Generate URL",
       products: [{
         name: `${order.package_name} - Cântec Personalizat`,
         quantity: 1,
-        price: priceRON,
+        price: RON,
         measuringUnitName: 'buc',
         currency: order.currency,
         isTaxIncluded: true,
-        taxName: 'Redusa',
-        taxPercentage: 9,
+        taxName: 'Normala',
+        taxPercentage: 19,
         isDiscount: false,
         saveToDb: false,
         isService: true
