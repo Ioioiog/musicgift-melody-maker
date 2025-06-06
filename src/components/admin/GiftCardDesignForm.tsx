@@ -79,66 +79,77 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
   const isSubmitting = createDesignMutation.isPending || updateDesignMutation.isPending;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="name">Design Name</Label>
-          <Input
-            id="name"
-            value={formData.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
-            required
-          />
+    <div className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Form fields section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1 space-y-4">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Design Name</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="theme">Theme</Label>
+                <Input
+                  id="theme"
+                  value={formData.theme}
+                  onChange={(e) => handleInputChange('theme', e.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="is_active"
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => handleInputChange('is_active', checked)}
+                />
+                <Label htmlFor="is_active">Active</Label>
+              </div>
+            </div>
+
+            <div>
+              <ImageUpload
+                label="Background Image"
+                value={formData.preview_image_url}
+                onChange={(url) => handleInputChange('preview_image_url', url)}
+                bucketName="gift-card-designs"
+                maxSizeBytes={5 * 1024 * 1024}
+                acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+              />
+            </div>
+          </div>
+
+          {/* Canvas editor section */}
+          <div className="lg:col-span-2">
+            <div>
+              <Label>Canvas Design</Label>
+              <div className="mt-2 border rounded-lg p-4 bg-gray-50">
+                <GiftCardCanvasEditor
+                  value={formData.template_data}
+                  onChange={handleCanvasDataChange}
+                  backgroundImage={formData.preview_image_url}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <Label htmlFor="theme">Theme</Label>
-          <Input
-            id="theme"
-            value={formData.theme}
-            onChange={(e) => handleInputChange('theme', e.target.value)}
-            required
-          />
+
+        <div className="flex justify-end gap-2 pt-4 border-t">
+          <Button type="button" variant="outline" onClick={onSuccess}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : design ? 'Update' : 'Create'}
+          </Button>
         </div>
-      </div>
-
-      <ImageUpload
-        label="Background Image"
-        value={formData.preview_image_url}
-        onChange={(url) => handleInputChange('preview_image_url', url)}
-        bucketName="gift-card-designs"
-        maxSizeBytes={5 * 1024 * 1024}
-        acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
-      />
-
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="is_active"
-          checked={formData.is_active}
-          onCheckedChange={(checked) => handleInputChange('is_active', checked)}
-        />
-        <Label htmlFor="is_active">Active</Label>
-      </div>
-
-      <div>
-        <Label>Canvas Design</Label>
-        <div className="mt-2 border rounded-lg p-4 bg-gray-50">
-          <GiftCardCanvasEditor
-            value={formData.template_data}
-            onChange={handleCanvasDataChange}
-            backgroundImage={formData.preview_image_url}
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onSuccess}>
-          Cancel
-        </Button>
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Saving...' : design ? 'Update' : 'Create'}
-        </Button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 
