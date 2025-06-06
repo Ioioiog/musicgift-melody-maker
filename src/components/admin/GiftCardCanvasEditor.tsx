@@ -63,8 +63,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!canvasRef.current) return;
 
     const canvas = new FabricCanvas(canvasRef.current, {
-      width: 1200,
-      height: 675,
+      width: 1050,
+      height: 600,
       backgroundColor: '#ffffff',
     });
 
@@ -344,13 +344,13 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       </div>
 
       {/* Canvas and Properties Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Canvas Area - Takes 3/4 of the width */}
-        <div className="lg:col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Canvas Area - Takes 4/5 of the width */}
+        <div className="lg:col-span-4">
           <Card>
             <CardHeader>
               <CardTitle className="text-sm flex items-center justify-between">
-                Design Canvas (1200 × 675px - Landscape)
+                Design Canvas (1050 × 600px - Web/Digital 7:4)
                 <Button onClick={clearCanvas} variant="outline" size="sm">
                   <RotateCcw className="w-4 h-4 mr-1" />
                   Clear
@@ -373,7 +373,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           </Card>
         </div>
 
-        {/* Properties Panel - Takes 1/4 of the width */}
+        {/* Properties Panel - Takes 1/5 of the width */}
         <div>
           <Card>
             <CardHeader>
