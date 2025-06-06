@@ -63,8 +63,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!canvasRef.current) return;
 
     const canvas = new FabricCanvas(canvasRef.current, {
-      width: 800,
-      height: 500,
+      width: 1200,
+      height: 675,
       backgroundColor: '#ffffff',
     });
 
@@ -233,12 +233,28 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       FabricImage.fromURL(backgroundImage, {
         crossOrigin: 'anonymous'
       }).then((img) => {
+        const canvasAspect = fabricCanvas.width! / fabricCanvas.height!;
+        const imageAspect = img.width! / img.height!;
+        
+        let scaleX, scaleY;
+        
+        if (imageAspect > canvasAspect) {
+          scaleX = fabricCanvas.width! / img.width!;
+          scaleY = scaleX;
+        } else {
+          scaleY = fabricCanvas.height! / img.height!;
+          scaleX = scaleY;
+        }
+        
         img.set({
-          scaleX: fabricCanvas.width! / img.width!,
-          scaleY: fabricCanvas.height! / img.height!,
+          scaleX: scaleX,
+          scaleY: scaleY,
+          left: (fabricCanvas.width! - img.width! * scaleX) / 2,
+          top: (fabricCanvas.height! - img.height! * scaleY) / 2,
           selectable: false,
           evented: false
         });
+        
         fabricCanvas.backgroundImage = img;
         fabricCanvas.renderAll();
       });
@@ -247,33 +263,32 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-      {/* Element Library */}
-      <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Top Toolbar - Element Library and Default Settings */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm">Add Elements</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <Button
-              onClick={addText}
-              variant="outline"
-              className="w-full justify-start"
-              size="sm"
-            >
-              <Type className="w-4 h-4 mr-2" />
-              Add Text
-            </Button>
-            
-            <div className="space-y-2">
-              <Label className="text-xs font-medium">Placeholders</Label>
+          <CardContent>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <Button
+                onClick={addText}
+                variant="outline"
+                size="sm"
+                className="flex items-center"
+              >
+                <Type className="w-4 h-4 mr-2" />
+                Add Text
+              </Button>
+              
               {PLACEHOLDERS.map(placeholder => (
                 <Button
                   key={placeholder.id}
                   onClick={() => addPlaceholder(placeholder)}
                   variant="ghost"
-                  className="w-full justify-start text-xs"
                   size="sm"
+                  className="text-xs"
                 >
                   {placeholder.label}
                 </Button>
@@ -282,163 +297,171 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           </CardContent>
         </Card>
 
-        {/* Global Settings */}
         <Card>
           <CardHeader>
             <CardTitle className="text-sm">Default Settings</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div>
-              <Label className="text-xs">Font</Label>
-              <Select value={selectedFont} onValueChange={setSelectedFont}>
-                <SelectTrigger className="h-8">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {FONTS.map(font => (
-                    <SelectItem key={font} value={font}>{font}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label className="text-xs">Color</Label>
-              <Input
-                type="color"
-                value={selectedColor}
-                onChange={(e) => setSelectedColor(e.target.value)}
-                className="h-8"
-              />
-            </div>
-            
-            <div>
-              <Label className="text-xs">Size: {selectedSize[0]}px</Label>
-              <Slider
-                value={selectedSize}
-                onValueChange={setSelectedSize}
-                min={12}
-                max={72}
-                step={1}
-                className="mt-1"
-              />
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label className="text-xs">Font</Label>
+                <Select value={selectedFont} onValueChange={setSelectedFont}>
+                  <SelectTrigger className="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {FONTS.map(font => (
+                      <SelectItem key={font} value={font}>{font}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label className="text-xs">Color</Label>
+                <Input
+                  type="color"
+                  value={selectedColor}
+                  onChange={(e) => setSelectedColor(e.target.value)}
+                  className="h-8"
+                />
+              </div>
+              
+              <div>
+                <Label className="text-xs">Size: {selectedSize[0]}px</Label>
+                <Slider
+                  value={selectedSize}
+                  onValueChange={setSelectedSize}
+                  min={12}
+                  max={72}
+                  step={1}
+                  className="mt-1"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Canvas Area */}
-      <div className="lg:col-span-3">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm flex items-center justify-between">
-              Design Canvas
-              <div className="flex gap-2">
+      {/* Canvas and Properties Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Canvas Area - Takes 3/4 of the width */}
+        <div className="lg:col-span-3">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm flex items-center justify-between">
+                Design Canvas (1200 × 675px - Landscape)
                 <Button onClick={clearCanvas} variant="outline" size="sm">
                   <RotateCcw className="w-4 h-4 mr-1" />
                   Clear
                 </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="border border-gray-200 rounded-lg overflow-hidden bg-white p-4">
+                <div className="flex justify-center">
+                  <div className="overflow-auto max-w-full">
+                    <canvas 
+                      ref={canvasRef} 
+                      className="border border-gray-300 rounded shadow-sm" 
+                      style={{ maxWidth: '100%', height: 'auto' }}
+                    />
+                  </div>
+                </div>
               </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white p-4">
-              <div className="flex justify-center">
-                <canvas ref={canvasRef} className="border border-gray-300 rounded shadow-sm max-w-full" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Properties Panel */}
-      <div>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">
-              {selectedObject ? 'Element Properties' : 'Select an element'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {selectedObject ? (
-              <div className="space-y-3">
-                <div>
-                  <Label className="text-xs">Font Family</Label>
-                  <Select
-                    value={selectedObject.fontFamily}
-                    onValueChange={(value) => updateSelectedObject('fontFamily', value)}
-                  >
-                    <SelectTrigger className="h-8">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {FONTS.map(font => (
-                        <SelectItem key={font} value={font}>{font}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <Label className="text-xs">Font Size</Label>
-                  <Input
-                    type="number"
-                    value={selectedObject.fontSize}
-                    onChange={(e) => updateSelectedObject('fontSize', parseInt(e.target.value))}
-                    className="h-8"
-                    min="8"
-                    max="100"
-                  />
-                </div>
-                
-                <div>
-                  <Label className="text-xs">Color</Label>
-                  <Input
-                    type="color"
-                    value={selectedObject.fill}
-                    onChange={(e) => updateSelectedObject('fill', e.target.value)}
-                    className="h-8"
-                  />
-                </div>
-                
-                <div className="flex gap-2">
+        {/* Properties Panel - Takes 1/4 of the width */}
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">
+                {selectedObject ? 'Element Properties' : 'Select an element'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {selectedObject ? (
+                <div className="space-y-3">
+                  <div>
+                    <Label className="text-xs">Font Family</Label>
+                    <Select
+                      value={selectedObject.fontFamily}
+                      onValueChange={(value) => updateSelectedObject('fontFamily', value)}
+                    >
+                      <SelectTrigger className="h-8">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {FONTS.map(font => (
+                          <SelectItem key={font} value={font}>{font}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-xs">Font Size</Label>
+                    <Input
+                      type="number"
+                      value={selectedObject.fontSize}
+                      onChange={(e) => updateSelectedObject('fontSize', parseInt(e.target.value))}
+                      className="h-8"
+                      min="8"
+                      max="100"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label className="text-xs">Color</Label>
+                    <Input
+                      type="color"
+                      value={selectedObject.fill}
+                      onChange={(e) => updateSelectedObject('fill', e.target.value)}
+                      className="h-8"
+                    />
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => updateSelectedObject('fontWeight', 
+                        selectedObject.fontWeight === 'bold' ? 'normal' : 'bold'
+                      )}
+                      variant={selectedObject.fontWeight === 'bold' ? 'default' : 'outline'}
+                      size="sm"
+                      className="flex-1"
+                    >
+                      B
+                    </Button>
+                    <Button
+                      onClick={() => updateSelectedObject('fontStyle', 
+                        selectedObject.fontStyle === 'italic' ? 'normal' : 'italic'
+                      )}
+                      variant={selectedObject.fontStyle === 'italic' ? 'default' : 'outline'}
+                      size="sm"
+                      className="flex-1"
+                    >
+                      I
+                    </Button>
+                  </div>
+                  
                   <Button
-                    onClick={() => updateSelectedObject('fontWeight', 
-                      selectedObject.fontWeight === 'bold' ? 'normal' : 'bold'
-                    )}
-                    variant={selectedObject.fontWeight === 'bold' ? 'default' : 'outline'}
+                    onClick={deleteSelectedObject}
+                    variant="destructive"
                     size="sm"
-                    className="flex-1"
+                    className="w-full"
                   >
-                    B
-                  </Button>
-                  <Button
-                    onClick={() => updateSelectedObject('fontStyle', 
-                      selectedObject.fontStyle === 'italic' ? 'normal' : 'italic'
-                    )}
-                    variant={selectedObject.fontStyle === 'italic' ? 'default' : 'outline'}
-                    size="sm"
-                    className="flex-1"
-                  >
-                    I
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Delete
                   </Button>
                 </div>
-                
-                <Button
-                  onClick={deleteSelectedObject}
-                  variant="destructive"
-                  size="sm"
-                  className="w-full"
-                >
-                  <Trash2 className="w-4 h-4 mr-1" />
-                  Delete
-                </Button>
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500">Click on an element to edit its properties</p>
-            )}
-          </CardContent>
-        </Card>
+              ) : (
+                <p className="text-sm text-gray-500">Click on an element to edit its properties</p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
