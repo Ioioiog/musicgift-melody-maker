@@ -63,8 +63,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!canvasRef.current) return;
 
     const canvas = new FabricCanvas(canvasRef.current, {
-      width: 400,
-      height: 250,
+      width: 600,
+      height: 375,
       backgroundColor: '#ffffff',
     });
 
@@ -73,12 +73,31 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       FabricImage.fromURL(backgroundImage, {
         crossOrigin: 'anonymous'
       }).then((img) => {
+        // Calculate scale to fit image within canvas while maintaining aspect ratio
+        const canvasAspect = canvas.width! / canvas.height!;
+        const imageAspect = img.width! / img.height!;
+        
+        let scaleX, scaleY;
+        
+        if (imageAspect > canvasAspect) {
+          // Image is wider - fit to width
+          scaleX = canvas.width! / img.width!;
+          scaleY = scaleX;
+        } else {
+          // Image is taller - fit to height
+          scaleY = canvas.height! / img.height!;
+          scaleX = scaleY;
+        }
+        
         img.set({
-          scaleX: canvas.width! / img.width!,
-          scaleY: canvas.height! / img.height!,
+          scaleX: scaleX,
+          scaleY: scaleY,
+          left: (canvas.width! - img.width! * scaleX) / 2,
+          top: (canvas.height! - img.height! * scaleY) / 2,
           selectable: false,
           evented: false
         });
+        
         canvas.backgroundImage = img;
         canvas.renderAll();
       });
@@ -323,8 +342,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
-              <canvas ref={canvasRef} className="max-w-full" />
+            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white p-4">
+              <div className="flex justify-center">
+                <canvas ref={canvasRef} className="border border-gray-300 rounded shadow-sm" />
+              </div>
             </div>
           </CardContent>
         </Card>
