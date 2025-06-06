@@ -47,8 +47,9 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
     }
   };
 
+  // Modified: Removed revolut from "coming soon" providers
   const isProviderComingSoon = (providerName: string) => {
-    return providerName === 'revolut';
+    return false; // No providers are coming soon anymore
   };
 
   const getProviderOrder = (providerName: string) => {
