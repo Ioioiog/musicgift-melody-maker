@@ -1,20 +1,28 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Eye } from "lucide-react";
-import { useGiftCardDesigns, useDeleteGiftCardDesign } from "@/hooks/useGiftCards";
+import { Plus, Edit, Trash2, Eye, ToggleLeft, ToggleRight } from "lucide-react";
+import { useGiftCardDesigns, useDeleteGiftCardDesign, useUpdateGiftCardDesign } from "@/hooks/useGiftCards";
 import { ResponsiveTable } from "@/components/ui/responsive-table";
 import { TableCell } from "@/components/ui/table";
 import GiftCardDesignForm from "./GiftCardDesignForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const GiftCardDesignsSection = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingDesign, setEditingDesign] = useState(null);
-  const { data: designs = [], isLoading } = useGiftCardDesigns();
+  const [showInactive, setShowInactive] = useState(true);
+  const { data: allDesigns = [], isLoading } = useGiftCardDesigns();
   const deleteDesignMutation = useDeleteGiftCardDesign();
+  const updateDesignMutation = useUpdateGiftCardDesign();
+  const { toast } = useToast();
+
+  // Filter designs based on showInactive toggle
+  const designs = showInactive ? allDesigns : allDesigns.filter(design => design.is_active);
 
   const handleEdit = (design: any) => {
     setEditingDesign(design);
@@ -27,7 +35,26 @@ const GiftCardDesignsSection = () => {
   };
 
   const handleDelete = async (designId: string) => {
-    await deleteDesignMutation.mutateAsync(designId);
+    try {
+      await deleteDesignMutation.mutateAsync(designId);
+    } catch (error) {
+      console.error("Error deleting design:", error);
+    }
+  };
+
+  const handleToggleStatus = async (design: any) => {
+    try {
+      await updateDesignMutation.mutateAsync({
+        id: design.id,
+        designData: { is_active: !design.is_active }
+      });
+      toast({
+        title: design.is_active ? "Design Deactivated" : "Design Activated",
+        description: `Design has been ${design.is_active ? "deactivated" : "activated"} successfully!`,
+      });
+    } catch (error) {
+      console.error("Error toggling design status:", error);
+    }
   };
 
   const handleFormSuccess = () => {
@@ -68,6 +95,14 @@ const GiftCardDesignsSection = () => {
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => handleToggleStatus(design)}
+            disabled={updateDesignMutation.isPending}
+          >
+            {design.is_active ? <ToggleRight className="w-4 h-4" /> : <ToggleLeft className="w-4 h-4" />}
+          </Button>
           <Button variant="outline" size="sm" onClick={() => handleEdit(design)}>
             <Edit className="w-4 h-4" />
           </Button>
@@ -81,13 +116,16 @@ const GiftCardDesignsSection = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Design</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete "{design.name}"? This action cannot be undone.
+                  Are you sure you want to permanently delete "{design.name}"? This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => handleDelete(design.id)}>
-                  Delete
+                <AlertDialogAction 
+                  onClick={() => handleDelete(design.id)}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  Delete Permanently
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -124,6 +162,14 @@ const GiftCardDesignsSection = () => {
           Created: {new Date(design.created_at).toLocaleDateString()}
         </span>
         <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => handleToggleStatus(design)}
+            disabled={updateDesignMutation.isPending}
+          >
+            {design.is_active ? <ToggleRight className="w-4 h-4" /> : <ToggleLeft className="w-4 h-4" />}
+          </Button>
           <Button variant="outline" size="sm" onClick={() => handleEdit(design)}>
             <Edit className="w-4 h-4" />
           </Button>
@@ -137,13 +183,16 @@ const GiftCardDesignsSection = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Design</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete "{design.name}"? This action cannot be undone.
+                  Are you sure you want to permanently delete "{design.name}"? This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => handleDelete(design.id)}>
-                  Delete
+                <AlertDialogAction 
+                  onClick={() => handleDelete(design.id)}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  Delete Permanently
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -162,25 +211,36 @@ const GiftCardDesignsSection = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Gift Card Designs</CardTitle>
-          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={handleAdd}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Design
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowInactive(!showInactive)}
+              >
+                {showInactive ? "Hide Inactive" : "Show All"}
               </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingDesign ? 'Edit Design' : 'Add New Design'}
-                </DialogTitle>
-              </DialogHeader>
-              <GiftCardDesignForm 
-                design={editingDesign}
-                onSuccess={handleFormSuccess}
-              />
-            </DialogContent>
-          </Dialog>
+            </div>
+            <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={handleAdd}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Design
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>
+                    {editingDesign ? 'Edit Design' : 'Add New Design'}
+                  </DialogTitle>
+                </DialogHeader>
+                <GiftCardDesignForm 
+                  design={editingDesign}
+                  onSuccess={handleFormSuccess}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -190,6 +250,11 @@ const GiftCardDesignsSection = () => {
           renderRow={renderDesktopRow}
           renderMobileCard={renderMobileCard}
         />
+        {designs.length === 0 && (
+          <div className="text-center py-8 text-gray-500">
+            {showInactive ? "No gift card designs found." : "No active gift card designs found."}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
