@@ -1,4 +1,3 @@
-
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -49,8 +48,6 @@ interface SmartBillInvoiceData {
   sendEmail: boolean;
   precision: number;
   currency: string;
-  successUrl?: string;
-  cancelUrl?: string;
   products: Array<{
     name: string;
     quantity: number;
@@ -247,14 +244,7 @@ serve(async (req) => {
 
     console.log('Client data for SmartBill:', clientData)
 
-    // Construct return URLs with order ID
-    const siteUrl = 'https://www.musicgift.ro'
-    const successUrl = `${siteUrl}/payment/success?orderId=${savedOrder.id}`
-    const cancelUrl = `${siteUrl}/payment/cancel?orderId=${savedOrder.id}`
-
-    console.log('Return URLs configured:', { successUrl, cancelUrl })
-
-    // Create SmartBill invoice data with return URLs
+    // Create SmartBill invoice data (without return URLs)
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
       seriesName: seriesName,
@@ -267,8 +257,6 @@ serve(async (req) => {
       sendEmail: true,
       precision: 2,
       currency: orderData.currency || 'RON',
-      successUrl: successUrl,
-      cancelUrl: cancelUrl,
       products: [
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
@@ -289,11 +277,7 @@ serve(async (req) => {
         `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
     }
 
-    console.log('Creating SmartBill invoice with return URLs:', {
-      successUrl: invoiceData.successUrl,
-      cancelUrl: invoiceData.cancelUrl,
-      orderId: savedOrder.id
-    })
+    console.log('Creating SmartBill invoice without return URLs to fix authentication')
 
     // Create invoice via SmartBill API
     const smartBillAuth = btoa(`${username}:${token}`)
