@@ -1,4 +1,3 @@
-
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -72,21 +71,28 @@ interface SmartBillInvoiceData {
 }
 
 const validateSmartBillConfig = () => {
-  const username = Deno.env.get('SMARTBILL_USERNAME')
+  // Updated to expect email instead of username as per SmartBill documentation
+  const email = Deno.env.get('SMARTBILL_EMAIL') || Deno.env.get('SMARTBILL_USERNAME')
   const token = Deno.env.get('SMARTBILL_TOKEN')
   const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
   const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
   const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'mng'
   
   console.log('SmartBill Config Check:', {
-    username: username ? '***configured***' : 'MISSING',
+    email: email ? '***configured***' : 'MISSING',
+    emailFormat: email ? (email.includes('@') ? 'Valid email format' : 'NOT AN EMAIL - This may cause auth failure') : 'N/A',
     token: token ? '***configured***' : 'MISSING',
     baseUrl,
     companyVat: companyVat ? '***configured***' : 'MISSING',
     seriesName
   })
   
-  return { username, token, baseUrl, companyVat, seriesName }
+  // Validate email format
+  if (email && !email.includes('@')) {
+    console.warn('⚠️ SMARTBILL_EMAIL should be an email address, not a username. Current value does not contain @')
+  }
+  
+  return { email, token, baseUrl, companyVat, seriesName }
 }
 
 const validateOrderData = (orderData: any): OrderData => {
@@ -249,9 +255,9 @@ serve(async (req) => {
     }
 
     // Validate SmartBill configuration
-    const { username, token, baseUrl, companyVat, seriesName } = validateSmartBillConfig()
+    const { email, token, baseUrl, companyVat, seriesName } = validateSmartBillConfig()
 
-    if (!username || !token) {
+    if (!email || !token) {
       console.warn('SmartBill credentials not configured - creating order without invoice')
       
       const { error: updateError } = await supabaseClient
@@ -293,7 +299,7 @@ serve(async (req) => {
     const clientCity = validatedOrderData.form_data.city || 'Bucuresti'
     const clientCounty = validatedOrderData.form_data.county || 'Bucuresti'
 
-    // Create SmartBill invoice data matching the working sample format
+    // Create SmartBill invoice data matching the documentation format exactly
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
       seriesName: seriesName,
@@ -311,12 +317,12 @@ serve(async (req) => {
       issueDate: issueDate,
       dueDate: dueDate,
       deliveryDate: dueDate,
-      isDraft: false,
+      isDraft: false, // Required field from documentation
       language: 'RO',
       sendEmail: true,
       precision: 2,
       currency: validatedOrderData.currency,
-      paymentUrl: 'Generate URL',
+      paymentUrl: 'Generate URL', // Required field from documentation
       products: [
         {
           name: `${validatedOrderData.package_name} - Cadou Musical Personalizat`,
@@ -337,8 +343,9 @@ serve(async (req) => {
 
     console.log('📋 SmartBill invoice data:', JSON.stringify(invoiceData, null, 2))
 
-    // Create invoice via SmartBill API
-    const smartBillAuth = btoa(`${username}:${token}`)
+    // Create invoice via SmartBill API with corrected authentication
+    const smartBillAuth = btoa(`${email}:${token}`) // Using email:token as per documentation
+    console.log('🔐 Authentication format: email:token (email format validated)')
     
     let invoiceResponse: Response
     let invoiceResult: any
@@ -349,8 +356,8 @@ serve(async (req) => {
       invoiceResponse = await fetch(`${baseUrl}/SBORO/api/invoice`, {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
+          'Accept': 'application/json', // Required header from documentation
+          'Content-Type': 'application/json', // Required header from documentation
           'Authorization': `Basic ${smartBillAuth}`
         },
         body: JSON.stringify(invoiceData)
@@ -391,6 +398,16 @@ serve(async (req) => {
     if (!invoiceResponse.ok || invoiceResult?.errorText || invoiceResult?.error) {
       const errorMessage = invoiceResult?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
       console.error('❌ SmartBill API returned error:', errorMessage)
+      
+      // Enhanced error logging for authentication issues
+      if (errorMessage.includes('535') || errorMessage.includes('authentication') || errorMessage.includes('Incorrect authentication data')) {
+        console.error('🔍 Authentication Debug Info:')
+        console.error('- Using email format for username:', email?.includes('@') ? 'YES' : 'NO')
+        console.error('- Email configured:', email ? 'YES' : 'NO')
+        console.error('- Token configured:', token ? 'YES' : 'NO')
+        console.error('- Full error:', errorMessage)
+        console.error('- Suggestion: Verify that SMARTBILL_EMAIL is set to the email address associated with your SmartBill account')
+      }
       
       const { error: updateError } = await supabaseClient
         .from('orders')
