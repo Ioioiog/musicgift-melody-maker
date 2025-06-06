@@ -16,9 +16,10 @@ serve(async (req) => {
   try {
     console.log('🟠 Revolut Create Payment: Starting process');
     
+    // Update: Use service role key instead of anon key to bypass RLS
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '', // Changed from SUPABASE_ANON_KEY
     );
 
     const { orderData, returnUrl } = await req.json();
