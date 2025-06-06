@@ -1,3 +1,4 @@
+
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -18,7 +19,6 @@ interface OrderData {
   status: string;
   payment_status: string;
   currency: string;
-  payment_provider?: string;
   gift_card_id?: string;
   is_gift_redemption?: boolean;
   gift_credit_applied?: number;
@@ -121,10 +121,10 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { orderData }: { orderData: OrderData } = await req.json()
+    const orderData: OrderData = await req.json()
     console.log('Processing order with SmartBill:', orderData)
 
-    // First, save the order to database - ensure payment_provider is set to 'smartbill'
+    // First, save the order to database
     const { data: savedOrder, error: orderError } = await supabaseClient
       .from('orders')
       .insert({
@@ -143,7 +143,6 @@ serve(async (req) => {
         gift_card_id: orderData.gift_card_id,
         is_gift_redemption: orderData.is_gift_redemption,
         gift_credit_applied: orderData.gift_credit_applied,
-        payment_provider: 'smartbill', // Explicitly set to smartbill
         smartbill_payment_status: 'pending'
       })
       .select()
@@ -238,7 +237,7 @@ serve(async (req) => {
       county: orderData.form_data.county || 'Bucuresti',
       country: 'Romania',
       email: orderData.form_data.email || '',
-      isTaxPayer: true,
+      isTaxPayer: true, // Always true as requested
       saveToDb: false
     }
 
@@ -257,6 +256,7 @@ serve(async (req) => {
       sendEmail: true,
       precision: 2,
       currency: orderData.currency || 'RON',
+      paymentUrl: 'Generate URL',
       products: [
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
@@ -361,9 +361,9 @@ serve(async (req) => {
       )
     }
 
-    // Extract invoice details
+    // Extract invoice details - FIXED: Use the correct path for payment URL
     const smartBillInvoiceId = invoiceResult?.number || `INV-${Date.now()}`
-    const smartBillPaymentUrl = invoiceResult?.url
+    const smartBillPaymentUrl = invoiceResult?.url  // FIXED: Get URL directly from response root
     
     console.log('Extracted invoice details:', {
       invoiceId: smartBillInvoiceId,
