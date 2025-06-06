@@ -23,6 +23,12 @@ interface OrderData {
   is_gift_redemption?: boolean;
   gift_credit_applied?: number;
   user_id?: string;
+  payment_provider?: string;
+}
+
+interface RequestBody {
+  orderData?: OrderData;
+  returnUrl?: string;
 }
 
 interface SmartBillInvoiceData {
@@ -48,6 +54,7 @@ interface SmartBillInvoiceData {
   sendEmail: boolean;
   precision: number;
   currency: string;
+  paymentUrl?: string;
   products: Array<{
     name: string;
     quantity: number;
@@ -82,22 +89,54 @@ const validateSmartBillConfig = () => {
   return { username, token, baseUrl, companyVat, seriesName }
 }
 
+const validateOrderData = (orderData: any): OrderData => {
+  console.log('🔍 Validating order data structure:', JSON.stringify(orderData, null, 2))
+  
+  if (!orderData || typeof orderData !== 'object') {
+    throw new Error('Order data is missing or invalid')
+  }
+
+  if (!orderData.form_data || typeof orderData.form_data !== 'object') {
+    throw new Error('form_data is required and must be an object')
+  }
+
+  if (!orderData.form_data.fullName || typeof orderData.form_data.fullName !== 'string') {
+    throw new Error('form_data.fullName is required')
+  }
+
+  if (!orderData.form_data.email || typeof orderData.form_data.email !== 'string') {
+    throw new Error('form_data.email is required')
+  }
+
+  if (typeof orderData.total_price !== 'number' || orderData.total_price < 0) {
+    throw new Error('total_price must be a valid positive number')
+  }
+
+  if (!orderData.package_name || typeof orderData.package_name !== 'string') {
+    throw new Error('package_name is required')
+  }
+
+  if (!orderData.currency || typeof orderData.currency !== 'string') {
+    throw new Error('currency is required')
+  }
+
+  console.log('✅ Order data validation passed')
+  return orderData as OrderData
+}
+
 const handleSmartBillResponse = async (response: Response) => {
   const contentType = response.headers.get('content-type') || ''
   console.log('SmartBill Response Status:', response.status)
   console.log('SmartBill Response Content-Type:', contentType)
   
-  // Get response as text first to inspect it
   const responseText = await response.text()
   console.log('SmartBill Raw Response (first 500 chars):', responseText.substring(0, 500))
   
-  // Check if response is HTML (error page)
   if (responseText.trim().startsWith('<!DOCTYPE') || responseText.trim().startsWith('<html')) {
     console.error('SmartBill returned HTML error page instead of JSON')
     throw new Error(`SmartBill API returned HTML error page. Status: ${response.status}`)
   }
   
-  // Try to parse as JSON
   try {
     const jsonResult = JSON.parse(responseText)
     console.log('SmartBill JSON Response:', jsonResult)
@@ -110,7 +149,6 @@ const handleSmartBillResponse = async (response: Response) => {
 }
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -121,42 +159,69 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const orderData: OrderData = await req.json()
-    console.log('Processing order with SmartBill:', orderData)
+    // Parse and validate request body structure
+    const requestBody: RequestBody = await req.json()
+    console.log('🔄 Raw request body:', JSON.stringify(requestBody, null, 2))
 
-    // First, save the order to database
+    // Extract orderData from the request structure
+    let orderData: OrderData
+    if (requestBody.orderData) {
+      // New structure: { orderData: {...}, returnUrl?: "..." }
+      orderData = requestBody.orderData
+      console.log('📦 Using nested orderData structure')
+    } else if (requestBody.form_data) {
+      // Legacy structure: direct order data
+      orderData = requestBody as OrderData
+      console.log('📦 Using direct order data structure (legacy)')
+    } else {
+      throw new Error('Invalid request structure: orderData or form_data is required')
+    }
+
+    // Validate the extracted order data
+    const validatedOrderData = validateOrderData(orderData)
+    console.log('✅ Processing validated order:', {
+      fullName: validatedOrderData.form_data.fullName,
+      email: validatedOrderData.form_data.email,
+      totalPrice: validatedOrderData.total_price,
+      currency: validatedOrderData.currency,
+      packageName: validatedOrderData.package_name
+    })
+
+    // Save order to database
     const { data: savedOrder, error: orderError } = await supabaseClient
       .from('orders')
       .insert({
-        form_data: orderData.form_data,
-        selected_addons: orderData.selected_addons,
-        total_price: orderData.total_price,
-        status: orderData.status,
-        payment_status: orderData.payment_status,
-        package_value: orderData.package_value,
-        package_name: orderData.package_name,
-        package_price: orderData.package_price,
-        package_delivery_time: orderData.package_delivery_time,
-        package_includes: orderData.package_includes,
-        currency: orderData.currency,
-        user_id: orderData.user_id,
-        gift_card_id: orderData.gift_card_id,
-        is_gift_redemption: orderData.is_gift_redemption,
-        gift_credit_applied: orderData.gift_credit_applied,
+        form_data: validatedOrderData.form_data,
+        selected_addons: validatedOrderData.selected_addons || [],
+        total_price: validatedOrderData.total_price,
+        status: validatedOrderData.status || 'pending',
+        payment_status: validatedOrderData.payment_status || 'pending',
+        package_value: validatedOrderData.package_value,
+        package_name: validatedOrderData.package_name,
+        package_price: validatedOrderData.package_price || 0,
+        package_delivery_time: validatedOrderData.package_delivery_time,
+        package_includes: validatedOrderData.package_includes || [],
+        currency: validatedOrderData.currency,
+        user_id: validatedOrderData.user_id,
+        gift_card_id: validatedOrderData.gift_card_id,
+        is_gift_redemption: validatedOrderData.is_gift_redemption || false,
+        gift_credit_applied: validatedOrderData.gift_credit_applied || 0,
+        payment_provider: validatedOrderData.payment_provider || 'smartbill',
         smartbill_payment_status: 'pending'
       })
       .select()
       .single()
 
     if (orderError) {
+      console.error('❌ Database error:', orderError)
       throw new Error(`Failed to save order: ${orderError.message}`)
     }
 
-    console.log('Order saved to database:', savedOrder.id)
+    console.log('✅ Order saved to database:', savedOrder.id)
 
     // Check if payment is needed
-    if (orderData.total_price <= 0) {
-      // No payment needed, mark as completed
+    const totalPriceInCents = typeof validatedOrderData.total_price === 'number' ? validatedOrderData.total_price : 0
+    if (totalPriceInCents <= 0) {
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -189,7 +254,6 @@ serve(async (req) => {
     if (!username || !token) {
       console.warn('SmartBill credentials not configured - creating order without invoice')
       
-      // Update order with fallback status
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -220,18 +284,27 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
-    // Create SmartBill invoice data using the simplified structure from your example
+    // Convert price from cents to RON (assuming total_price is in cents)
+    const priceInRON = totalPriceInCents / 100
+    console.log(`💰 Price conversion: ${totalPriceInCents} cents -> ${priceInRON} RON`)
+
+    // Format address properly
+    const clientAddress = validatedOrderData.form_data.address || 'Adresa nespecificata'
+    const clientCity = validatedOrderData.form_data.city || 'Bucuresti'
+    const clientCounty = validatedOrderData.form_data.county || 'Bucuresti'
+
+    // Create SmartBill invoice data matching the working sample format
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
       seriesName: seriesName,
       client: {
-        name: orderData.form_data.fullName || 'Customer',
-        vatCode: '-',
-        address: orderData.form_data.address || '-',
-        city: orderData.form_data.city || 'Bucuresti - Sector 3',
-        county: orderData.form_data.county || 'Bucuresti',
+        name: validatedOrderData.form_data.fullName,
+        vatCode: '',
+        address: clientAddress,
+        city: clientCity,
+        county: clientCounty,
         country: 'Romania',
-        email: orderData.form_data.email || '',
+        email: validatedOrderData.form_data.email,
         isTaxPayer: false,
         saveToDb: false
       },
@@ -242,36 +315,36 @@ serve(async (req) => {
       language: 'RO',
       sendEmail: true,
       precision: 2,
-      currency: orderData.currency || 'RON',
+      currency: validatedOrderData.currency,
       paymentUrl: 'Generate URL',
       products: [
         {
-          name: `${orderData.package_name} - Cadou Musical Personalizat`,
+          name: `${validatedOrderData.package_name} - Cadou Musical Personalizat`,
           quantity: 1,
-          price: orderData.total_price,
+          price: priceInRON,
           measuringUnitName: 'buc',
-          currency: orderData.currency || 'RON',
+          currency: validatedOrderData.currency,
           isTaxIncluded: true,
-          taxName: 'Normala',
-          taxPercentage: 19,
+          taxName: 'Redusa',
+          taxPercentage: 9,
           isDiscount: false,
           saveToDb: false,
           isService: true
         }
       ],
-      observations: `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
+      observations: `Comandă cadou musical personalizat pentru ${validatedOrderData.form_data.recipientName || 'destinatar'}`
     }
 
-    console.log('Creating SmartBill invoice with data:', invoiceData)
+    console.log('📋 SmartBill invoice data:', JSON.stringify(invoiceData, null, 2))
 
-    // Create invoice via SmartBill API with the authentication format from your example
+    // Create invoice via SmartBill API
     const smartBillAuth = btoa(`${username}:${token}`)
     
     let invoiceResponse: Response
     let invoiceResult: any
     
     try {
-      console.log('Sending request to SmartBill API:', `${baseUrl}/SBORO/api/invoice`)
+      console.log('🚀 Sending request to SmartBill API:', `${baseUrl}/SBORO/api/invoice`)
       
       invoiceResponse = await fetch(`${baseUrl}/SBORO/api/invoice`, {
         method: 'POST',
@@ -286,9 +359,8 @@ serve(async (req) => {
       invoiceResult = await handleSmartBillResponse(invoiceResponse)
       
     } catch (smartBillError) {
-      console.error('SmartBill API Error:', smartBillError)
+      console.error('❌ SmartBill API Error:', smartBillError)
       
-      // Update order with error status but don't fail the order
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -301,7 +373,6 @@ serve(async (req) => {
         console.error('Error updating order with SmartBill error:', updateError)
       }
 
-      // Return success with manual invoice note
       return new Response(
         JSON.stringify({
           success: true,
@@ -316,12 +387,11 @@ serve(async (req) => {
       )
     }
 
-    // Check if SmartBill returned an error - using the structure from your example
-    if (!invoiceResponse.ok || invoiceResult?.sbcResponse?.errorText || invoiceResult?.error) {
-      const errorMessage = invoiceResult?.sbcResponse?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
-      console.error('SmartBill API returned error:', errorMessage)
+    // Check if SmartBill returned an error
+    if (!invoiceResponse.ok || invoiceResult?.errorText || invoiceResult?.error) {
+      const errorMessage = invoiceResult?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
+      console.error('❌ SmartBill API returned error:', errorMessage)
       
-      // Update order with error status
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -348,14 +418,13 @@ serve(async (req) => {
       )
     }
 
-    // Success - extract invoice details using the response structure from your example
-    const smartBillInvoiceId = invoiceResult?.sbcResponse?.number || invoiceResult?.invoiceNumber || `INV-${Date.now()}`
-    const smartBillPaymentUrl = invoiceResult?.sbcResponse?.url || invoiceResult?.paymentUrl
+    // Success - extract invoice details
+    const smartBillInvoiceId = invoiceResult?.number || `INV-${Date.now()}`
+    const smartBillPaymentUrl = invoiceResult?.url
     
-    // Use SmartBill's payment URL if available, otherwise redirect to success page
     const finalPaymentUrl = smartBillPaymentUrl || `${Deno.env.get('SITE_URL')}/payment/success?orderId=${savedOrder.id}&invoice=${smartBillInvoiceId}`
 
-    console.log('SmartBill invoice created successfully:', {
+    console.log('✅ SmartBill invoice created successfully:', {
       invoiceId: smartBillInvoiceId,
       paymentUrl: smartBillPaymentUrl,
       finalUrl: finalPaymentUrl
@@ -391,7 +460,7 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Error in SmartBill integration:', error)
+    console.error('💥 Error in SmartBill integration:', error)
     return new Response(
       JSON.stringify({ 
         error: error.message || 'Failed to process order with SmartBill'
