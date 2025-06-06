@@ -3,9 +3,3 @@ project_id = "ehvzhnzqcbzuirovwjsr"
 
 [functions.stripe-webhook]
 verify_jwt = false
-
-[functions.imap-fetch-emails]
-verify_jwt = true
-
-[functions.smtp-send-email]
-verify_jwt = true

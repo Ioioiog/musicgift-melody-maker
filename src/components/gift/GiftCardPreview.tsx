@@ -38,10 +38,11 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
     );
   }
 
+  // Parse template data and replace placeholders
   const templateData = design.template_data || {};
-  const previewCode = "GIFT-XXXX-XXXX";
+  const previewCode = "GIFT-XXXX-XXXX"; // Preview code
 
-  // Function to replace placeholders in text
+  // Function to replace placeholders in template strings
   const replacePlaceholders = (text: string) => {
     if (!text) return '';
     return text
@@ -53,52 +54,7 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
       .replace(/\{\{code\}\}/g, previewCode);
   };
 
-  // Handle new canvas-based design structure
-  if (templateData.elements && Array.isArray(templateData.elements)) {
-    const cardWidth = templateData.canvasWidth || 400;
-    const cardHeight = templateData.canvasHeight || 250;
-    const scale = 320 / cardWidth; // Scale to fit preview
-
-    return (
-      <Card 
-        className="w-full max-w-md mx-auto relative overflow-hidden"
-        style={{ 
-          height: cardHeight * scale,
-          backgroundImage: design.preview_image_url ? `url(${design.preview_image_url})` : undefined,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
-        <CardContent className="p-0 h-full relative">
-          {design.preview_image_url && (
-            <div className="absolute inset-0 bg-black/10"></div>
-          )}
-          
-          {/* Render canvas elements */}
-          {templateData.elements.map((element: any, index: number) => (
-            <div
-              key={element.id || index}
-              className="absolute whitespace-nowrap"
-              style={{
-                left: element.x * scale,
-                top: element.y * scale,
-                fontSize: element.fontSize * scale,
-                fontFamily: element.fontFamily,
-                color: element.color,
-                fontWeight: element.bold ? 'bold' : 'normal',
-                fontStyle: element.italic ? 'italic' : 'normal',
-                zIndex: 10
-              }}
-            >
-              {replacePlaceholders(element.text)}
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // Fallback to old template format for backward compatibility
+  // Get design styling
   const designStyle = templateData.design || {};
   const backgroundColor = designStyle.backgroundColor || '#4f46e5';
   const textColor = designStyle.textColor || '#ffffff';
@@ -117,6 +73,7 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
       }}
     >
       <CardContent className="p-6 h-full flex flex-col justify-between relative">
+        {/* Background overlay for text readability */}
         {design.preview_image_url && (
           <div className="absolute inset-0 bg-black/30"></div>
         )}

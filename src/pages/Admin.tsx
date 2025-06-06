@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -9,7 +10,6 @@ import NewsletterManagement from "@/components/admin/NewsletterManagement";
 import CampaignsManagement from "@/components/admin/CampaignsManagement";
 import GiftCardsManagement from "@/components/admin/GiftCardsManagement";
 import PaymentProvidersManagement from "@/components/admin/PaymentProvidersManagement";
-import EmailManagement from "@/components/admin/EmailManagement";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 
@@ -29,56 +29,50 @@ const Admin = () => {
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-              {/* Enhanced responsive tab layout with better styling */}
-              <div className="w-full overflow-x-auto bg-white rounded-lg border shadow-sm">
-                <TabsList className="flex w-full min-w-[900px] sm:min-w-full h-auto p-2 justify-start gap-1 bg-gray-50/50">
+              {/* Mobile-optimized tab layout */}
+              <div className="w-full overflow-x-auto">
+                <TabsList className="grid w-full grid-cols-7 min-w-[700px] sm:min-w-full h-auto p-1">
                   <TabsTrigger 
                     value="packages" 
-                    className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
                   >
-                    📦 Packages
+                    Packages
                   </TabsTrigger>
                   <TabsTrigger 
                     value="orders" 
-                    className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
                   >
-                    📋 Orders
+                    Orders
                   </TabsTrigger>
                   <TabsTrigger 
                     value="gift-cards" 
-                    className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
                   >
-                    🎁 Gift Cards
+                    Gift Cards
                   </TabsTrigger>
                   <TabsTrigger 
                     value="payments" 
-                    className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
                   >
-                    💳 Payments
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="email" 
-                    className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
-                  >
-                    📧 Email
+                    Payments
                   </TabsTrigger>
                   <TabsTrigger 
                     value="users" 
-                    className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
                   >
-                    👥 Users
+                    Users
                   </TabsTrigger>
                   <TabsTrigger 
                     value="newsletter" 
-                    className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
                   >
-                    📰 Newsletter
+                    Newsletter
                   </TabsTrigger>
                   <TabsTrigger 
                     value="campaigns" 
-                    className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
+                    className="text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap"
                   >
-                    📢 Campaigns
+                    Campaigns
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -97,10 +91,6 @@ const Admin = () => {
 
               <TabsContent value="payments" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <PaymentProvidersManagement />
-              </TabsContent>
-
-              <TabsContent value="email" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
-                <EmailManagement />
               </TabsContent>
 
               <TabsContent value="users" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">

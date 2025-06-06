@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -49,7 +48,8 @@ export const useGiftCardDesigns = () => {
       const { data, error } = await supabase
         .from('gift_card_designs')
         .select('*')
-        .order('created_at', { ascending: false });
+        .eq('is_active', true)
+        .order('created_at');
 
       if (error) throw error;
       return data as GiftCardDesign[];
@@ -132,7 +132,7 @@ export const useDeleteGiftCardDesign = () => {
     mutationFn: async (id: string) => {
       const { error } = await supabase
         .from('gift_card_designs')
-        .delete()
+        .update({ is_active: false })
         .eq('id', id);
 
       if (error) throw error;
@@ -141,7 +141,7 @@ export const useDeleteGiftCardDesign = () => {
       queryClient.invalidateQueries({ queryKey: ['gift-card-designs'] });
       toast({
         title: "Design Deleted",
-        description: "Gift card design has been permanently deleted!",
+        description: "Gift card design has been deleted successfully!",
       });
     },
     onError: (error) => {
