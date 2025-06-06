@@ -1,4 +1,3 @@
-
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -19,6 +18,7 @@ interface OrderData {
   status: string;
   payment_status: string;
   currency: string;
+  payment_provider?: string;
   gift_card_id?: string;
   is_gift_redemption?: boolean;
   gift_credit_applied?: number;
@@ -72,55 +72,14 @@ const validateSmartBillConfig = () => {
   const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'mng'
   
   console.log('SmartBill Config Check:', {
-    username: username ? `***${username.slice(-3)}***` : 'MISSING',
-    token: token ? `***${token.slice(0, 4)}...${token.slice(-4)}***` : 'MISSING',
+    username: username ? '***configured***' : 'MISSING',
+    token: token ? '***configured***' : 'MISSING',
     baseUrl,
-    companyVat: companyVat ? `***${companyVat}***` : 'MISSING',
-    seriesName,
-    usernameLength: username?.length || 0,
-    tokenLength: token?.length || 0,
-    companyVatLength: companyVat?.length || 0
+    companyVat: companyVat ? '***configured***' : 'MISSING',
+    seriesName
   })
   
   return { username, token, baseUrl, companyVat, seriesName }
-}
-
-const testSmartBillAuth = async (username: string, token: string, baseUrl: string) => {
-  console.log('Testing SmartBill authentication...')
-  
-  const smartBillAuth = btoa(`${username}:${token}`)
-  console.log('Auth string length:', smartBillAuth.length)
-  
-  // Test with a simple API call first - get company info
-  const testUrl = `${baseUrl}/SBORO/api/company`
-  console.log('Testing authentication with URL:', testUrl)
-  
-  try {
-    const response = await fetch(testUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Basic ${smartBillAuth}`
-      }
-    })
-    
-    console.log('Auth test response status:', response.status)
-    console.log('Auth test response headers:', Object.fromEntries(response.headers.entries()))
-    
-    const responseText = await response.text()
-    console.log('Auth test response (first 200 chars):', responseText.substring(0, 200))
-    
-    if (response.ok) {
-      console.log('✅ SmartBill authentication successful!')
-      return { success: true, data: responseText }
-    } else {
-      console.log('❌ SmartBill authentication failed:', response.status, responseText)
-      return { success: false, error: responseText, status: response.status }
-    }
-  } catch (error) {
-    console.error('❌ SmartBill auth test error:', error)
-    return { success: false, error: error.message }
-  }
 }
 
 const handleSmartBillResponse = async (response: Response) => {
@@ -162,33 +121,39 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { orderData } = await req.json()
-    console.log('Processing order with SmartBill:', { orderData })
+    const { orderData }: { orderData: OrderData } = await req.json()
+    console.log('Processing order with SmartBill:', orderData)
 
-    // Validate that form_data exists
-    if (!orderData.form_data) {
-      console.error('Missing form_data in orderData:', orderData)
-      throw new Error('Order form_data is required but missing')
-    }
-
-    console.log('form_data validation passed:', orderData.form_data)
-
-    // First, save the order to database using spread operator to preserve all fields
+    // First, save the order to database - ensure payment_provider is set to 'smartbill'
     const { data: savedOrder, error: orderError } = await supabaseClient
       .from('orders')
       .insert({
-        ...orderData,
+        form_data: orderData.form_data,
+        selected_addons: orderData.selected_addons,
+        total_price: orderData.total_price,
+        status: orderData.status,
+        payment_status: orderData.payment_status,
+        package_value: orderData.package_value,
+        package_name: orderData.package_name,
+        package_price: orderData.package_price,
+        package_delivery_time: orderData.package_delivery_time,
+        package_includes: orderData.package_includes,
+        currency: orderData.currency,
+        user_id: orderData.user_id,
+        gift_card_id: orderData.gift_card_id,
+        is_gift_redemption: orderData.is_gift_redemption,
+        gift_credit_applied: orderData.gift_credit_applied,
+        payment_provider: 'smartbill', // Explicitly set to smartbill
         smartbill_payment_status: 'pending'
       })
       .select()
       .single()
 
     if (orderError) {
-      console.error('Database insertion error:', orderError)
       throw new Error(`Failed to save order: ${orderError.message}`)
     }
 
-    console.log('Order saved to database successfully:', savedOrder.id)
+    console.log('Order saved to database:', savedOrder.id)
 
     // Check if payment is needed
     if (orderData.total_price <= 0) {
@@ -251,43 +216,6 @@ serve(async (req) => {
       )
     }
 
-    // Test authentication first
-    const authTest = await testSmartBillAuth(username, token, baseUrl)
-    if (!authTest.success) {
-      console.error('SmartBill authentication test failed:', authTest)
-      
-      // Update order with auth error
-      const { error: updateError } = await supabaseClient
-        .from('orders')
-        .update({ 
-          smartbill_payment_status: 'auth_failed'
-        })
-        .eq('id', savedOrder.id)
-
-      if (updateError) {
-        console.error('Error updating order with auth error:', updateError)
-      }
-
-      return new Response(
-        JSON.stringify({
-          success: false,
-          orderId: savedOrder.id,
-          errorCode: 'authenticationFailed',
-          message: `SmartBill authentication failed: ${authTest.error}`,
-          debugInfo: {
-            status: authTest.status,
-            error: authTest.error
-          }
-        }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 200 
-        }
-      )
-    }
-
-    console.log('✅ SmartBill authentication successful, proceeding with invoice creation...')
-
     // Calculate dates
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
@@ -310,7 +238,7 @@ serve(async (req) => {
       county: orderData.form_data.county || 'Bucuresti',
       country: 'Romania',
       email: orderData.form_data.email || '',
-      isTaxPayer: true, // Always true as requested
+      isTaxPayer: true,
       saveToDb: false
     }
 
@@ -354,15 +282,13 @@ serve(async (req) => {
     // Create invoice via SmartBill API
     const smartBillAuth = btoa(`${username}:${token}`)
     
-    // Construct the correct URL
-    const smartBillApiUrl = `${baseUrl}/SBORO/api/invoice`
-    console.log('Sending request to SmartBill API:', smartBillApiUrl)
-    
     let invoiceResponse: Response
     let invoiceResult: any
     
     try {
-      invoiceResponse = await fetch(smartBillApiUrl, {
+      console.log('Sending request to SmartBill API:', `${baseUrl}/SBORO/api/invoice`)
+      
+      invoiceResponse = await fetch(`${baseUrl}/SBORO/api/invoice`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
