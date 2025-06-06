@@ -1,4 +1,3 @@
-
 import { serve } from 'https://deno.land/std/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -98,7 +97,7 @@ serve(async (req) => {
         issueDate: today,
         dueDate,
         deliveryDate: dueDate,
-        isDraft: true, // Create draft invoice initially
+        isDraft: false, // Create final invoice directly
         language: 'RO',
         sendEmail: true,
         precision: 2,
@@ -118,7 +117,7 @@ serve(async (req) => {
           saveToDb: false,
           isService: true
         }],
-        observations: `DRAFT - Cântec personalizat pentru ${order.form_data.recipientName ?? 'destinatar'}. ID comandă: ${savedOrder.id}. Convertit în factură după plată.`
+        observations: `Cântec personalizat pentru ${order.form_data.recipientName ?? 'destinatar'}. ID comandă: ${savedOrder.id}`
       }
 
       const auth = btoa(`${SMARTBILL_EMAIL}:${SMARTBILL_TOKEN}`)
@@ -150,51 +149,86 @@ serve(async (req) => {
       if (!smartbillRes.ok || result?.errorText || result?.error) {
         const errorMsg = result?.errorText || result?.error || `HTTP ${smartbillRes.status}: ${resultText}`
         
-        await supabase
-          .from('orders')
-          .update({
-            smartbill_payment_status: 'failed',
-            smartbill_invoice_data: JSON.stringify({ 
-              error: errorMsg, 
-              timestamp: new Date().toISOString(),
-              response: result
+        // SmartBill returns empty errorText for success, so check if it's actually an error
+        if (smartbillRes.status !== 200 || (result?.errorText && result.errorText.trim() !== "")) {
+          await supabase
+            .from('orders')
+            .update({
+              smartbill_payment_status: 'failed',
+              smartbill_invoice_data: JSON.stringify({ 
+                error: errorMsg, 
+                timestamp: new Date().toISOString(),
+                response: result
+              })
             })
-          })
-          .eq('id', savedOrder.id)
+            .eq('id', savedOrder.id)
 
-        throw new Error(`SmartBill invoice creation failed: ${errorMsg}`)
+          throw new Error(`SmartBill invoice creation failed: ${errorMsg}`)
+        }
       }
 
+      // Extract invoice details from SmartBill response
       const invoiceNumber = result?.number ?? 'UNKNOWN'
       const invoiceSeries = result?.series ?? SMARTBILL_SERIES
-      const paymentUrl = result?.url // Netopia payment URL
-      const message = result?.message || 'Draft invoice created successfully'
+      const paymentUrl = result?.url // Direct URL from SmartBill response
+      const message = result?.message || 'Invoice created successfully'
+      const errorText = result?.errorText || ''
 
-      // Update order with invoice and payment info
+      // Determine document type based on series
+      const isProforma = invoiceSeries === 'STRP' || invoiceSeries === 'Prof' || invoiceSeries.toLowerCase().includes('prof')
+      const documentType = isProforma ? 'proforma' : 'invoice'
+
+      console.log('SmartBill response details:', {
+        number: invoiceNumber,
+        series: invoiceSeries, 
+        documentType: documentType,
+        url: paymentUrl,
+        message: message,
+        errorText: errorText
+      })
+
+      // Update order with proforma/invoice and payment info
+      const updateData = {
+        smartbill_payment_url: paymentUrl,
+        payment_url: paymentUrl,
+        smartbill_invoice_data: JSON.stringify({
+          ...result,
+          created_at: new Date().toISOString(),
+          document_type: documentType
+        }),
+        smartbill_payment_status: paymentUrl ? 'proforma_created_with_payment_link' : 'document_created_no_payment_link'
+      }
+
+      if (isProforma) {
+        // Store as proforma
+        updateData.smartbill_proforma_id = `${invoiceSeries}${invoiceNumber}`
+        updateData.smartbill_proforma_data = JSON.stringify(result)
+        updateData.smartbill_proforma_status = 'created'
+      } else {
+        // Store as final invoice
+        updateData.smartbill_invoice_id = `${invoiceSeries}${invoiceNumber}`
+      }
+
       await supabase
         .from('orders')
-        .update({
-          smartbill_invoice_id: `${invoiceSeries}${invoiceNumber}`,
-          smartbill_payment_url: paymentUrl,
-          payment_url: paymentUrl,
-          smartbill_invoice_data: JSON.stringify({
-            ...result,
-            created_at: new Date().toISOString()
-          }),
-          smartbill_payment_status: 'draft_created_with_payment_link'
-        })
+        .update(updateData)
         .eq('id', savedOrder.id)
 
-      console.log(`✅ Draft invoice ${invoiceSeries}${invoiceNumber} created successfully`)
+      console.log(`✅ ${documentType} ${invoiceSeries}${invoiceNumber} created successfully`)
+      console.log(`🔗 Payment URL: ${paymentUrl || 'NOT GENERATED'}`)
 
       return new Response(JSON.stringify({
         success: true,
         orderId: savedOrder.id,
-        invoiceNumber: `${invoiceSeries}${invoiceNumber}`,
+        documentType: documentType,
+        documentNumber: `${invoiceSeries}${invoiceNumber}`,
+        invoiceNumber: `${invoiceSeries}${invoiceNumber}`, // Keep for backwards compatibility
         paymentUrl,
-        redirectToPayment: true,
+        redirectToPayment: !!paymentUrl,
         pollForStatus: true,
-        message: 'Factură draft creată cu succes. Vei fi redirecționat către pagina de plată.',
+        message: paymentUrl 
+          ? `${isProforma ? 'Proforma' : 'Factură'} creată cu succes. Vei fi redirecționat către pagina de plată.`
+          : `${isProforma ? 'Proforma' : 'Factură'} creată cu succes.`,
         invoiceMessage: message
       }), { headers: corsHeaders })
 
@@ -220,8 +254,12 @@ serve(async (req) => {
         throw new Error('Order not found')
       }
 
-      if (!order.smartbill_invoice_id) {
-        throw new Error('No SmartBill invoice found for this order')
+      // Check what document we have (proforma or invoice)
+      const hasProforma = !!order.smartbill_proforma_id
+      const hasInvoice = !!order.smartbill_invoice_id
+      
+      if (!hasProforma && !hasInvoice) {
+        throw new Error('No SmartBill document found for this order')
       }
 
       // If already confirmed, return immediately
@@ -233,13 +271,16 @@ serve(async (req) => {
         }), { headers: corsHeaders })
       }
 
-      // Extract series and number from invoice ID
-      const invoiceId = order.smartbill_invoice_id
-      const seriesMatch = invoiceId.match(/^([a-zA-Z]+)/)
-      const numberMatch = invoiceId.match(/(\d+)$/)
+      // Determine which document to check
+      const documentId = hasProforma ? order.smartbill_proforma_id : order.smartbill_invoice_id
+      const documentType = hasProforma ? 'proforma' : 'invoice'
+      
+      // Extract series and number from document ID
+      const seriesMatch = documentId.match(/^([a-zA-Z]+)/)
+      const numberMatch = documentId.match(/(\d+)$/)
       
       if (!seriesMatch || !numberMatch) {
-        throw new Error('Invalid invoice ID format')
+        throw new Error(`Invalid ${documentType} ID format: ${documentId}`)
       }
 
       const series = seriesMatch[1]
@@ -253,11 +294,11 @@ serve(async (req) => {
       
       const auth = btoa(`${SMARTBILL_EMAIL}:${SMARTBILL_TOKEN}`)
 
-      console.log(`Checking invoice status: ${series}${number}`)
+      console.log(`Checking ${documentType} payment status: ${series}${number}`)
 
-      // Query invoice status from SmartBill - WITH RATE LIMITING
+      // Query payment status from SmartBill - WITH RATE LIMITING
       const statusCheckRes = await rateLimitedFetch(
-        `${BASE_URL}/SBORO/api/invoice?cif=${SMARTBILL_VAT}&seriesName=${series}&number=${number}`, {
+        `${BASE_URL}/SBORO/api/invoice/paymentstatus?cif=${SMARTBILL_VAT}&seriesname=${series}&number=${number}`, {
         method: 'GET',
         headers: {
           'Authorization': `Basic ${auth}`,
@@ -267,29 +308,114 @@ serve(async (req) => {
 
       if (statusCheckRes.ok) {
         const statusResult = await statusCheckRes.json()
-        console.log('Invoice status response:', statusResult)
+        console.log(`${documentType} payment status response:`, statusResult)
         
-        // Check if invoice is marked as paid
-        const isPaid = statusResult?.status === 'paid' || 
-                      statusResult?.paid === true || 
-                      statusResult?.paymentStatus === 'paid' ||
-                      statusResult?.collected === true
+        // Check if document is fully paid using the correct SmartBill response structure
+        const invoiceTotalAmount = statusResult?.invoiceTotalAmount || 0
+        const paidAmount = statusResult?.paidAmount || 0
+        const unpaidAmount = statusResult?.unpaidAmount || 0
+        
+        // Document is paid if paidAmount equals invoiceTotalAmount OR unpaidAmount is 0
+        const isPaid = (paidAmount > 0 && unpaidAmount === 0) || (paidAmount >= invoiceTotalAmount && invoiceTotalAmount > 0)
+        
+        console.log(`Payment status: Total=${invoiceTotalAmount}, Paid=${paidAmount}, Unpaid=${unpaidAmount}, IsPaid=${isPaid}`)
 
         if (isPaid && order.payment_status !== 'completed') {
-          // Payment confirmed - update order
+          // Payment confirmed - now create final invoice if we only have proforma
+          let finalInvoiceCreated = false
+          let finalInvoiceNumber = null
+
+          if (hasProforma && !hasInvoice) {
+            console.log('Payment confirmed on proforma - creating final invoice...')
+            
+            try {
+              // Create final invoice with "mng" series
+              const finalInvoiceData = {
+                companyVatCode: SMARTBILL_VAT,
+                seriesName: 'mng', // Final invoice series
+                client: {
+                  name: order.form_data.fullName,
+                  vatCode: '',
+                  regCom: '',
+                  address: order.form_data.address ?? 'Adresa nespecificata',
+                  city: order.form_data.city ?? 'Bucuresti',
+                  county: order.form_data.county ?? 'Bucuresti',
+                  country: 'Romania',
+                  email: order.form_data.email,
+                  phone: order.form_data.phone || '',
+                  isTaxPayer: false,
+                  saveToDb: false
+                },
+                issueDate: new Date().toISOString().split('T')[0],
+                dueDate: new Date().toISOString().split('T')[0], // Already paid
+                deliveryDate: new Date().toISOString().split('T')[0],
+                isDraft: false,
+                language: 'RO',
+                sendEmail: true,
+                precision: 2,
+                currency: order.currency || 'RON',
+                products: [{
+                  name: `${order.package_name} - Cântec Personalizat`,
+                  quantity: 1,
+                  price: order.total_price,
+                  measuringUnitName: 'buc',
+                  currency: order.currency || 'RON',
+                  isTaxIncluded: true,
+                  taxName: 'Normala',
+                  taxPercentage: 19,
+                  isDiscount: false,
+                  saveToDb: false,
+                  isService: true
+                }],
+                observations: `Cântec personalizat pentru ${order.form_data.recipientName ?? 'destinatar'}. Plată confirmată prin Netopia. Proforma: ${documentId}`
+              }
+
+              const finalInvoiceRes = await rateLimitedFetch(`${BASE_URL}/SBORO/api/invoice`, {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Basic ${auth}`,
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify(finalInvoiceData)
+              })
+
+              if (finalInvoiceRes.ok) {
+                const finalInvoiceText = await finalInvoiceRes.text()
+                const finalInvoiceResult = JSON.parse(finalInvoiceText)
+                
+                if (!finalInvoiceResult?.errorText || finalInvoiceResult.errorText.trim() === "") {
+                  finalInvoiceNumber = `${finalInvoiceResult.series || 'mng'}${finalInvoiceResult.number}`
+                  finalInvoiceCreated = true
+                  console.log(`✅ Final invoice created: ${finalInvoiceNumber}`)
+                }
+              }
+            } catch (invoiceError) {
+              console.error('Failed to create final invoice:', invoiceError)
+            }
+          }
+
+          // Update order with payment confirmation and final invoice (if created)
+          const updateData = {
+            payment_status: 'completed',
+            smartbill_payment_status: 'confirmed',
+            status: 'completed',
+            webhook_processed_at: new Date().toISOString(),
+            smartbill_invoice_data: JSON.stringify({
+              ...JSON.parse(order.smartbill_invoice_data || '{}'),
+              payment_confirmed: statusResult,
+              confirmed_at: new Date().toISOString(),
+              final_invoice_created: finalInvoiceCreated
+            })
+          }
+
+          if (finalInvoiceCreated && finalInvoiceNumber) {
+            updateData.smartbill_invoice_id = finalInvoiceNumber
+          }
+
           await supabase
             .from('orders')
-            .update({
-              payment_status: 'completed',
-              smartbill_payment_status: 'confirmed',
-              status: 'completed',
-              webhook_processed_at: new Date().toISOString(),
-              smartbill_invoice_data: JSON.stringify({
-                ...JSON.parse(order.smartbill_invoice_data || '{}'),
-                payment_confirmed: statusResult,
-                confirmed_at: new Date().toISOString()
-              })
-            })
+            .update(updateData)
             .eq('id', orderId)
 
           console.log(`✅ Payment confirmed for order ${orderId}`)
@@ -297,7 +423,13 @@ serve(async (req) => {
           return new Response(JSON.stringify({
             success: true,
             paymentStatus: 'completed',
-            message: 'Plata confirmată cu succes!'
+            message: 'Plata confirmată cu succes!',
+            finalInvoice: finalInvoiceNumber,
+            paymentDetails: {
+              total: invoiceTotalAmount,
+              paid: paidAmount,
+              unpaid: unpaidAmount
+            }
           }), { headers: corsHeaders })
         }
 
@@ -305,7 +437,13 @@ serve(async (req) => {
           success: true,
           paymentStatus: isPaid ? 'completed' : 'pending',
           message: isPaid ? 'Plata confirmată!' : 'Plata în așteptare...',
-          invoiceStatus: statusResult
+          documentType: documentType,
+          documentNumber: documentId,
+          paymentDetails: {
+            total: invoiceTotalAmount,
+            paid: paidAmount,
+            unpaid: unpaidAmount
+          }
         }), { headers: corsHeaders })
       }
 
@@ -319,209 +457,9 @@ serve(async (req) => {
         apiError: `Status check failed: ${statusCheckRes.status}`
       }), { headers: corsHeaders })
 
-    // Handle payment confirmation webhook from Netopia
-    } else if (pathname.includes('payment-webhook')) {
-      const body = await req.json()
-      console.log('Payment webhook received:', JSON.stringify(body, null, 2))
-      
-      // Extract order ID from webhook data using multiple methods
-      let orderId = body.orderId || body.order_id || body.customOrderId || body.orderNumber
-      
-      // Method 2: Extract from invoice observations/description
-      if (!orderId && body.description) {
-        const match = body.description.match(/ID comandă: ([a-f0-9-]+)/)
-        if (match) orderId = match[1]
-      }
-      
-      // Method 3: Extract from invoice number
-      if (!orderId && body.invoiceNumber && body.invoiceNumber.includes('-')) {
-        const parts = body.invoiceNumber.split('-')
-        if (parts.length > 1) orderId = parts[parts.length - 1]
-      }
-      
-      // Method 4: Search database by invoice ID
-      if (!orderId && (body.invoiceId || body.invoice_id)) {
-        const invoiceId = body.invoiceId || body.invoice_id
-        const { data: orderByInvoice } = await supabase
-          .from('orders')
-          .select('id')
-          .eq('smartbill_invoice_id', invoiceId)
-          .single()
-        
-        if (orderByInvoice) orderId = orderByInvoice.id
-      }
-      
-      const errorCode = body.errorCode || body.status || body.error_code
-      const errorMessage = body.errorMessage || body.message || body.error_message
-      
-      if (!orderId) {
-        console.log('Payment webhook received but no order ID found. Webhook data:', JSON.stringify(body, null, 2))
-        
-        // Try to create webhook_logs table entry if it exists
-        try {
-          await supabase
-            .from('webhook_logs')
-            .insert({
-              type: 'payment_webhook_unmatched',
-              data: body,
-              timestamp: new Date().toISOString()
-            })
-        } catch (webhookLogError) {
-          console.log('Could not log webhook (table may not exist):', webhookLogError)
-        }
-        
-        return new Response('OK - No order ID found', { headers: corsHeaders })
-      }
-
-      // Get order from database
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('id', orderId)
-        .single()
-
-      if (orderError || !order) {
-        console.error('Order not found for payment webhook:', orderId)
-        return new Response('Order not found', { headers: corsHeaders, status: 404 })
-      }
-
-      // Check if payment was successful
-      const isPaymentSuccessful = errorCode === '0' || errorCode === 0 || errorCode === 'confirmed' || errorCode === 'success'
-
-      if (isPaymentSuccessful) {
-        // Payment successful - create final invoice
-        const SMARTBILL_EMAIL = Deno.env.get('SMARTBILL_EMAIL')!
-        const SMARTBILL_TOKEN = Deno.env.get('SMARTBILL_TOKEN')!
-        const SMARTBILL_VAT = Deno.env.get('SMARTBILL_COMPANY_VAT')!
-        const SMARTBILL_SERIES = Deno.env.get('SMARTBILL_SERIES') || 'mng'
-        const BASE_URL = 'https://ws.smartbill.ro'
-
-        const today = new Date().toISOString().split('T')[0]
-        const priceRON = order.total_price
-
-        const finalInvoiceData = {
-          companyVatCode: SMARTBILL_VAT,
-          seriesName: SMARTBILL_SERIES,
-          client: {
-            name: order.form_data.fullName,
-            vatCode: '',
-            regCom: '',
-            address: order.form_data.address ?? 'Adresa nespecificata',
-            city: order.form_data.city ?? 'Bucuresti',
-            county: order.form_data.county ?? 'Bucuresti',
-            country: 'Romania',
-            email: order.form_data.email,
-            phone: order.form_data.phone || '',
-            isTaxPayer: false,
-            saveToDb: false
-          },
-          issueDate: today,
-          dueDate: today,
-          deliveryDate: today,
-          isDraft: false, // Create final invoice
-          language: 'RO',
-          sendEmail: true,
-          precision: 2,
-          currency: order.currency || 'RON',
-          products: [{
-            name: `${order.package_name} - Cântec Personalizat`,
-            quantity: 1,
-            price: priceRON,
-            measuringUnitName: 'buc',
-            currency: order.currency || 'RON',
-            isTaxIncluded: true,
-            taxName: 'Normala',
-            taxPercentage: 19,
-            isDiscount: false,
-            saveToDb: false,
-            isService: true
-          }],
-          observations: `Cântec personalizat pentru ${order.form_data.recipientName ?? 'destinatar'}. Plată confirmată prin Netopia. ID comandă: ${orderId}`
-        }
-
-        const auth = btoa(`${SMARTBILL_EMAIL}:${SMARTBILL_TOKEN}`)
-
-        // Create final invoice with rate limiting
-        const finalInvoiceRes = await rateLimitedFetch(`${BASE_URL}/SBORO/api/invoice`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Basic ${auth}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(finalInvoiceData)
-        })
-
-        const finalInvoiceText = await finalInvoiceRes.text()
-        let finalInvoiceResult
-        try {
-          finalInvoiceResult = JSON.parse(finalInvoiceText)
-        } catch {
-          console.error('Failed to parse final invoice response:', finalInvoiceText)
-        }
-
-        const updateData = {
-          payment_status: 'completed',
-          smartbill_payment_status: 'confirmed',
-          status: 'confirmed',
-          webhook_processed_at: new Date().toISOString()
-        }
-
-        if (finalInvoiceRes.ok && finalInvoiceResult && !finalInvoiceResult.errorText && !finalInvoiceResult.error) {
-          const finalInvoiceNumber = finalInvoiceResult?.number ?? 'UNKNOWN'
-          const finalInvoiceSeries = finalInvoiceResult?.series
-          
-          updateData.smartbill_invoice_id = `${finalInvoiceSeries}${finalInvoiceNumber}`
-          updateData.smartbill_invoice_data = JSON.stringify({
-            draft: JSON.parse(order.smartbill_invoice_data || '{}'),
-            final: finalInvoiceResult,
-            timestamp: new Date().toISOString()
-          })
-
-          console.log(`✅ Payment confirmed and final invoice ${finalInvoiceSeries}${finalInvoiceNumber} created for order ${orderId}`)
-        } else {
-          const invoiceError = finalInvoiceResult?.errorText || finalInvoiceResult?.error || 'Unknown invoice error'
-          console.error(`⚠️ Payment confirmed but final invoice creation failed for order ${orderId}:`, invoiceError)
-          
-          updateData.smartbill_invoice_data = JSON.stringify({
-            draft: JSON.parse(order.smartbill_invoice_data || '{}'),
-            final_error: invoiceError,
-            timestamp: new Date().toISOString()
-          })
-          updateData.status = 'payment_confirmed_invoice_pending'
-        }
-
-        await supabase
-          .from('orders')
-          .update(updateData)
-          .eq('id', orderId)
-
-        console.log(`✅ Payment confirmed for order ${orderId}`)
-
-      } else {
-        // Payment failed
-        await supabase
-          .from('orders')
-          .update({
-            payment_status: 'failed',
-            smartbill_payment_status: 'failed',
-            smartbill_invoice_data: JSON.stringify({ 
-              error: errorMessage || `Error code: ${errorCode}`, 
-              timestamp: new Date().toISOString(),
-              webhook_data: body 
-            }),
-            webhook_processed_at: new Date().toISOString()
-          })
-          .eq('id', orderId)
-
-        console.log(`❌ Payment failed for order ${orderId}. Error: ${errorCode} - ${errorMessage}`)
-      }
-
-      return new Response('OK', { headers: corsHeaders })
-
     } else {
       // Invalid endpoint
-      throw new Error(`Invalid endpoint: ${pathname}. Use /create-invoice-with-payment, /check-payment-status, or /payment-webhook`)
+      throw new Error(`Invalid endpoint: ${pathname}. Use /create-invoice-with-payment or /check-payment-status`)
     }
 
   } catch (err) {
