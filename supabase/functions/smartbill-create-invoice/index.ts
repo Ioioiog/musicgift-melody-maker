@@ -226,6 +226,16 @@ serve(async (req) => {
     const isCompanyInvoice = orderData.form_data.invoiceType === 'company'
     console.log('Invoice type:', orderData.form_data.invoiceType, 'Is company invoice:', isCompanyInvoice)
 
+    // Calculate the correct price - check if it's already in RON or needs conversion
+    const totalPriceInCents = orderData.total_price
+    const priceInRON = totalPriceInCents / 100 // Convert from cents to RON
+    
+    console.log('Price calculation:', {
+      totalPriceInCents,
+      priceInRON,
+      currency: orderData.currency
+    })
+
     // Prepare client data based on invoice type
     const clientData = {
       name: isCompanyInvoice ? 
@@ -234,8 +244,8 @@ serve(async (req) => {
       vatCode: isCompanyInvoice ? (orderData.form_data.vatCode || '') : '',
       regCom: isCompanyInvoice ? (orderData.form_data.registrationNumber || '') : '',
       address: isCompanyInvoice ? 
-        (orderData.form_data.companyAddress || orderData.form_data.address || '-') : 
-        (orderData.form_data.address || '-'),
+        (orderData.form_data.companyAddress || orderData.form_data.address || 'Adresa necunoscuta') : 
+        (orderData.form_data.address || 'Adresa necunoscuta'),
       city: orderData.form_data.city || 'Bucuresti',
       county: orderData.form_data.county || 'Bucuresti',
       country: 'Romania',
@@ -246,7 +256,7 @@ serve(async (req) => {
 
     console.log('Client data for SmartBill:', clientData)
 
-    // Create SmartBill invoice data with the required paymentUrl field
+    // Create SmartBill invoice data matching the working sample format
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
       seriesName: seriesName,
@@ -255,7 +265,7 @@ serve(async (req) => {
       dueDate: dueDate,
       deliveryDate: dueDate,
       isDraft: false,
-      paymentUrl: "Generate URL", // This is the key field for Netopia integration
+      paymentUrl: "Generate URL",
       language: 'RO',
       sendEmail: true,
       precision: 2,
@@ -264,12 +274,12 @@ serve(async (req) => {
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
           quantity: 1,
-          price: orderData.total_price / 100, // Convert from cents to currency units
+          price: priceInRON,
           measuringUnitName: 'buc',
           currency: orderData.currency || 'RON',
           isTaxIncluded: true,
-          taxName: 'Normala',
-          taxPercentage: 19,
+          taxName: 'Redusa', // Changed from 'Normala' to match working sample
+          taxPercentage: 9, // Changed from 19% to 9% to match working sample
           isDiscount: false,
           saveToDb: false,
           isService: true
@@ -280,7 +290,20 @@ serve(async (req) => {
         `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
     }
 
-    console.log('Creating SmartBill invoice with data (including paymentUrl):', JSON.stringify(invoiceData, null, 2))
+    console.log('Creating SmartBill invoice with corrected data format:', JSON.stringify(invoiceData, null, 2))
+
+    // Validate critical fields before sending
+    if (!invoiceData.companyVatCode) {
+      throw new Error('Company VAT code is missing from configuration')
+    }
+
+    if (!invoiceData.client.name || invoiceData.client.name.trim() === '') {
+      throw new Error('Client name is required but missing')
+    }
+
+    if (invoiceData.products[0].price <= 0) {
+      throw new Error('Product price must be greater than 0')
+    }
 
     // Create invoice via SmartBill API
     const smartBillAuth = btoa(`${username}:${token}`)
