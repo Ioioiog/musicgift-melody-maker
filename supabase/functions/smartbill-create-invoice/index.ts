@@ -244,7 +244,7 @@ serve(async (req) => {
 
     console.log('Client data for SmartBill:', clientData)
 
-    // Create SmartBill invoice data (without return URLs)
+    // Create SmartBill invoice data
     const invoiceData: SmartBillInvoiceData = {
       companyVatCode: companyVat || '',
       seriesName: seriesName,
@@ -277,7 +277,7 @@ serve(async (req) => {
         `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
     }
 
-    console.log('Creating SmartBill invoice without return URLs to fix authentication')
+    console.log('Creating SmartBill invoice with data:', invoiceData)
 
     // Create invoice via SmartBill API
     const smartBillAuth = btoa(`${username}:${token}`)
