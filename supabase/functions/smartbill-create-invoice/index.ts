@@ -1,4 +1,3 @@
-
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -117,92 +116,44 @@ serve(async (req) => {
   }
 
   try {
-    // Create Supabase client using service role key for bypassing RLS
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    console.log('Supabase client created with service role key')
-
     const { orderData }: { orderData: OrderData } = await req.json()
-    console.log('Processing order with SmartBill:', {
-      ...orderData,
-      form_data: orderData.form_data ? 'present' : 'missing'
-    })
+    console.log('Processing order with SmartBill:', orderData)
 
-    // Extract and validate user_id
-    let userId = orderData.user_id
-    console.log('Initial user_id from orderData:', userId)
-
-    // Try to get user_id from authorization header if not in orderData
-    if (!userId) {
-      const authHeader = req.headers.get('authorization')
-      console.log('Authorization header present:', !!authHeader)
-      
-      if (authHeader) {
-        try {
-          // Extract token from Bearer header
-          const token = authHeader.replace('Bearer ', '')
-          const { data: { user }, error } = await supabaseClient.auth.getUser(token)
-          if (user && !error) {
-            userId = user.id
-            console.log('Extracted user_id from auth token:', userId)
-          } else {
-            console.log('Could not extract user from auth token:', error)
-          }
-        } catch (authError) {
-          console.log('Error extracting user from auth:', authError)
-        }
-      }
-    }
-
-    // Fallback: Allow order creation without user_id for guest orders
-    if (!userId) {
-      console.log('No user_id found - proceeding with guest order')
-    } else {
-      console.log('Using user_id for order:', userId)
-    }
-
-    // Prepare order data for database insertion
-    const orderToInsert = {
-      form_data: orderData.form_data,
-      selected_addons: orderData.selected_addons,
-      total_price: orderData.total_price,
-      status: orderData.status,
-      payment_status: orderData.payment_status,
-      package_value: orderData.package_value,
-      package_name: orderData.package_name,
-      package_price: orderData.package_price,
-      package_delivery_time: orderData.package_delivery_time,
-      package_includes: orderData.package_includes,
-      currency: orderData.currency,
-      user_id: userId, // This can be null for guest orders
-      gift_card_id: orderData.gift_card_id,
-      is_gift_redemption: orderData.is_gift_redemption,
-      gift_credit_applied: orderData.gift_credit_applied,
-      payment_provider: 'smartbill', // Explicitly set to smartbill
-      smartbill_payment_status: 'pending'
-    }
-
-    console.log('Inserting order with data:', {
-      ...orderToInsert,
-      form_data: orderToInsert.form_data ? 'present' : 'missing'
-    })
-
-    // First, save the order to database - service role should bypass RLS
+    // First, save the order to database - ensure payment_provider is set to 'smartbill'
     const { data: savedOrder, error: orderError } = await supabaseClient
       .from('orders')
-      .insert(orderToInsert)
+      .insert({
+        form_data: orderData.form_data,
+        selected_addons: orderData.selected_addons,
+        total_price: orderData.total_price,
+        status: orderData.status,
+        payment_status: orderData.payment_status,
+        package_value: orderData.package_value,
+        package_name: orderData.package_name,
+        package_price: orderData.package_price,
+        package_delivery_time: orderData.package_delivery_time,
+        package_includes: orderData.package_includes,
+        currency: orderData.currency,
+        user_id: orderData.user_id,
+        gift_card_id: orderData.gift_card_id,
+        is_gift_redemption: orderData.is_gift_redemption,
+        gift_credit_applied: orderData.gift_credit_applied,
+        payment_provider: 'smartbill', // Explicitly set to smartbill
+        smartbill_payment_status: 'pending'
+      })
       .select()
       .single()
 
     if (orderError) {
-      console.error('Database error details:', orderError)
       throw new Error(`Failed to save order: ${orderError.message}`)
     }
 
-    console.log('Order saved to database successfully:', savedOrder.id)
+    console.log('Order saved to database:', savedOrder.id)
 
     // Check if payment is needed
     if (orderData.total_price <= 0) {

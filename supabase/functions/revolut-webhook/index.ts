@@ -19,15 +19,15 @@ serve(async (req) => {
     );
 
     const body = await req.json();
-    console.log('Received Revolut webhook:', body);
+    console.log('Received Revolut webhook:', JSON.stringify(body, null, 2));
 
     const { event, data } = body;
 
     switch (event) {
-      case 'ORDER_COMPLETED':
-        console.log('Revolut payment completed for order:', data.merchant_order_ext_ref);
+      case 'PAYMENT_LINK_PAID':
+        console.log('Revolut payment link paid for order:', data.merchant_order_ext_ref);
 
-        // Find order by revolut order ID
+        // Find order by revolut payment link ID
         const { data: order, error: findError } = await supabaseClient
           .from('orders')
           .select('*')
@@ -40,13 +40,13 @@ serve(async (req) => {
         }
 
         if (order) {
-          // Update order status
+          // Update order status to completed
           const { error: updateError } = await supabaseClient
             .from('orders')
             .update({
               payment_status: 'completed',
               status: 'processing',
-              revolut_payment_id: data.id,
+              revolut_payment_id: data.payment_id || data.id,
               updated_at: new Date().toISOString()
             })
             .eq('id', order.id);
@@ -60,21 +60,38 @@ serve(async (req) => {
         }
         break;
 
-      case 'ORDER_CANCELLED':
-      case 'ORDER_FAILED':
-        console.log('Revolut payment failed/cancelled for order:', data.merchant_order_ext_ref);
+      case 'PAYMENT_LINK_FAILED':
+      case 'PAYMENT_LINK_CANCELLED':
+        console.log('Revolut payment link failed/cancelled for order:', data.merchant_order_ext_ref);
 
         // Update failed payment
         const { error: failedError } = await supabaseClient
           .from('orders')
           .update({
-            payment_status: event === 'ORDER_CANCELLED' ? 'cancelled' : 'failed',
+            payment_status: event === 'PAYMENT_LINK_CANCELLED' ? 'cancelled' : 'failed',
             updated_at: new Date().toISOString()
           })
           .eq('revolut_order_id', data.id);
 
         if (failedError) {
           console.error('Error updating failed payment:', failedError);
+        }
+        break;
+
+      case 'PAYMENT_LINK_EXPIRED':
+        console.log('Revolut payment link expired for order:', data.merchant_order_ext_ref);
+
+        // Update expired payment
+        const { error: expiredError } = await supabaseClient
+          .from('orders')
+          .update({
+            payment_status: 'expired',
+            updated_at: new Date().toISOString()
+          })
+          .eq('revolut_order_id', data.id);
+
+        if (expiredError) {
+          console.error('Error updating expired payment:', expiredError);
         }
         break;
 

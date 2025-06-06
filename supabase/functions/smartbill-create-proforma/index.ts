@@ -16,6 +16,15 @@ function escapeXml(value: string): string {
     .replace(/'/g, '&apos;');
 }
 
+/**
+ * Converts amount from cents to actual currency units for SmartBill
+ * Stripe uses cents (e.g., 2500 cents = 25.00 EUR)
+ * SmartBill expects actual currency values (e.g., 25.00 EUR)
+ */
+function convertCentsToEur(amountInCents: number): number {
+  return amountInCents / 100;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders })
 
@@ -33,7 +42,12 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
 
-    const totalPrice = parseFloat(orderData.total_price) || 0
+    // Convert from cents to EUR - Stripe sends amounts in cents, SmartBill expects EUR
+    const totalPriceInCents = parseFloat(orderData.total_price) || 0
+    const totalPrice = convertCentsToEur(totalPriceInCents)
+    
+    console.log(`Converting amount: ${totalPriceInCents} cents -> ${totalPrice} EUR`)
+
     const currency = ['RON', 'EUR'].includes(orderData.currency) 
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
