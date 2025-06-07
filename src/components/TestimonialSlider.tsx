@@ -69,55 +69,56 @@ export default function TestimonialSlider() {
 
   // Determine testimonial type
   const getTestimonialType = (testimonial: any) => {
+    if (testimonial.video_url && testimonial.youtube_link) return 'both-videos'; // Type 4: Both videos
     if (testimonial.video_url) return 'uploaded-video'; // Type 3: Uploaded video
     if (testimonial.youtube_link) return 'youtube'; // Type 1: YouTube video
     return 'text-only'; // Type 2: Text only
   };
 
-  // Render video content based on type and position
-  const renderVideo = (testimonial: any, position: 'top' | 'bottom') => {
-    const type = getTestimonialType(testimonial);
-    
-    if (type === 'uploaded-video' && position === 'top') {
-      return (
-        <div className="relative h-2/3 group flex-shrink-0">
-          <video
-            className="absolute top-0 left-0 w-full h-full object-cover"
-            controls
-            preload="metadata"
-            poster={testimonial.video_url + '#t=0.5'}
-          >
-            <source src={testimonial.video_url} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-        </div>
-      );
-    }
-    
-    if (type === 'youtube' && position === 'bottom') {
-      return (
-        <div className="relative h-1/3 group flex-shrink-0">
-          <iframe
-            className="absolute top-0 left-0 w-full h-full"
-            src={testimonial.youtube_link}
-            allowFullScreen
-            loading="lazy"
-            title={`Video testimonial from ${testimonial.name}`}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-        </div>
-      );
-    }
-    
-    return null;
+  // Render uploaded video
+  const renderUploadedVideo = (testimonial: any, heightClass = 'h-1/3') => {
+    return (
+      <div className={`relative ${heightClass} group flex-shrink-0`}>
+        <video
+          className="absolute top-0 left-0 w-full h-full object-cover"
+          controls
+          preload="metadata"
+          poster={testimonial.video_url + '#t=0.5'}
+        >
+          <source src={testimonial.video_url} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      </div>
+    );
+  };
+
+  // Render YouTube video
+  const renderYouTubeVideo = (testimonial: any, heightClass = 'h-1/3') => {
+    return (
+      <div className={`relative ${heightClass} group flex-shrink-0`}>
+        <iframe
+          className="absolute top-0 left-0 w-full h-full"
+          src={testimonial.youtube_link}
+          allowFullScreen
+          loading="lazy"
+          title={`Video testimonial from ${testimonial.name}`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      </div>
+    );
   };
 
   // Render text content with appropriate sizing
   const renderTextContent = (testimonial: any) => {
     const type = getTestimonialType(testimonial);
+    let heightClass = 'h-full';
+    
+    if (type === 'both-videos') heightClass = 'h-1/3';
+    else if (type === 'youtube') heightClass = 'h-2/3';
+    else if (type === 'uploaded-video') heightClass = 'h-1/3';
+    
     const isFullHeight = type === 'text-only';
-    const heightClass = type === 'youtube' ? 'h-2/3' : type === 'uploaded-video' ? 'h-1/3' : 'h-full';
     
     return (
       <div className={`p-4 md:p-6 text-center bg-gradient-to-br from-purple-50 to-pink-50 ${heightClass} flex flex-col justify-between`}>
@@ -180,20 +181,20 @@ export default function TestimonialSlider() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: index * 0.1 }}
                     >
-                      {/* Type 3: Uploaded video - video at top */}
-                      {type === 'uploaded-video' && renderVideo(testimonial, 'top')}
+                      {/* Type 4: Both videos - uploaded video at top */}
+                      {type === 'both-videos' && renderUploadedVideo(testimonial, 'h-1/3')}
                       
-                      {/* Type 1: YouTube - text content first */}
-                      {type === 'youtube' && renderTextContent(testimonial)}
+                      {/* Type 3: Uploaded video only - video at top */}
+                      {type === 'uploaded-video' && renderUploadedVideo(testimonial, 'h-2/3')}
                       
-                      {/* Type 2: Text only - full height text content */}
-                      {type === 'text-only' && renderTextContent(testimonial)}
+                      {/* Text content - positioned based on type */}
+                      {renderTextContent(testimonial)}
                       
-                      {/* Type 3: Uploaded video - text content at bottom */}
-                      {type === 'uploaded-video' && renderTextContent(testimonial)}
+                      {/* Type 1: YouTube only - video at bottom */}
+                      {type === 'youtube' && renderYouTubeVideo(testimonial, 'h-1/3')}
                       
-                      {/* Type 1: YouTube - video at bottom */}
-                      {type === 'youtube' && renderVideo(testimonial, 'bottom')}
+                      {/* Type 4: Both videos - YouTube video at bottom */}
+                      {type === 'both-videos' && renderYouTubeVideo(testimonial, 'h-1/3')}
                     </motion.div>
                   </CarouselItem>
                 );
