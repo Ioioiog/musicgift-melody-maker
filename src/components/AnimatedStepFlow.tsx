@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, MessageSquare, Music, Gift, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { stepContentData } from '@/data/stepContent';
 import { Button } from '@/components/ui/button';
 
 interface Step {
-  icon: React.ComponentType<any>;
+  emoji: string;
   title: string;
   description: string;
   details: {
@@ -23,10 +23,10 @@ const AnimatedStepFlow = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  const stepIcons = [ShoppingCart, MessageSquare, Music, Gift];
+  const stepEmojis = ['🛒', '📝', '🎙️', '🎁'];
   
   const steps: Step[] = stepContentData.map((stepContent, index) => ({
-    icon: stepIcons[index],
+    emoji: stepEmojis[index],
     title: stepContent.getTitle(t),
     description: stepContent.getDescription(t),
     details: stepContent.getDetails(t)
@@ -70,31 +70,19 @@ const AnimatedStepFlow = () => {
     setProgress(0);
   };
 
-  // Get 3D style classes for each step
-  const get3DIconClasses = (stepIndex: number, isActive: boolean) => {
-    const baseClasses = "transition-all duration-300 transform";
-    const activeClasses = isActive ? "scale-110" : "hover:scale-105";
+  // Get circle classes for each step state
+  const getCircleClasses = (stepIndex: number) => {
+    const isActive = stepIndex === activeStep;
+    const isPrevious = stepIndex < activeStep;
     
-    switch (stepIndex) {
-      case 0: // Order button
-        return `${baseClasses} ${activeClasses} shadow-lg hover:shadow-xl bg-gradient-to-br from-blue-400 to-blue-600 
-                border-2 border-blue-300 hover:from-blue-500 hover:to-blue-700 active:scale-95 
-                hover:-translate-y-0.5 active:translate-y-0.5 hover:shadow-blue-500/25`;
-      case 1: // Message/Form
-        return `${baseClasses} ${activeClasses} shadow-lg hover:shadow-xl bg-gradient-to-br from-green-400 to-green-600 
-                border-2 border-green-300 hover:from-green-500 hover:to-green-700 
-                hover:-translate-y-1 hover:-rotate-1 hover:shadow-green-500/25 
-                relative before:absolute before:inset-0 before:bg-white/10 before:rounded-lg`;
-      case 2: // Recording/Microphone
-        return `${baseClasses} ${activeClasses} shadow-lg hover:shadow-xl bg-gradient-to-br from-purple-400 to-purple-600 
-                border-2 border-purple-300 hover:from-purple-500 hover:to-purple-700 
-                hover:-translate-y-0.5 hover:shadow-purple-500/25`;
-      case 3: // Gift
-        return `${baseClasses} ${activeClasses} shadow-lg hover:shadow-xl bg-gradient-to-br from-orange-400 to-orange-600 
-                border-2 border-orange-300 hover:from-orange-500 hover:to-orange-700 
-                hover:-translate-y-1 hover:rotate-1 hover:shadow-orange-500/25`;
-      default:
-        return baseClasses;
+    const baseClasses = "w-20 h-20 flex items-center justify-center rounded-full text-xl font-semibold transition-all duration-300 cursor-pointer";
+    
+    if (isActive) {
+      return `${baseClasses} bg-purple-600 text-white shadow-xl scale-105`;
+    } else if (isPrevious) {
+      return `${baseClasses} bg-green-500 text-white shadow-lg hover:scale-105`;
+    } else {
+      return `${baseClasses} bg-white shadow-md text-gray-700 hover:scale-105`;
     }
   };
 
@@ -125,111 +113,48 @@ const AnimatedStepFlow = () => {
               </p>
             </div>
 
-            {/* Enhanced Step Indicators */}
-            {steps.map((step, index) => {
-              const isActive = index === activeStep;
-              const isPrevious = index < activeStep;
-              const isNext = index > activeStep;
-              
-              return (
-                <motion.div 
-                  key={index}
-                  onClick={() => handleStepClick(index)}
-                  className={`relative group cursor-pointer transition-all duration-300 ${
-                    isActive 
-                      ? 'transform scale-[1.02]' 
-                      : 'hover:transform hover:scale-[1.01]'
-                  }`}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {/* Connection Line */}
-                  {index < steps.length - 1 && (
-                    <div className="absolute left-5 top-16 w-0.5 h-8 bg-gradient-to-b from-gray-300 to-transparent z-0" />
-                  )}
-                  
-                  {/* Step Card */}
-                  <div className={`relative z-10 p-4 rounded-xl transition-all duration-300 ${
-                    isActive 
-                      ? 'bg-gradient-to-r from-purple-50 to-indigo-50 shadow-lg border-2 border-purple-200/50 backdrop-blur-sm' 
-                      : isPrevious
-                      ? 'bg-white/70 shadow-md border border-green-200/50 backdrop-blur-sm'
-                      : 'bg-white/50 shadow-sm border border-gray-200/50 backdrop-blur-sm hover:bg-white/70 hover:shadow-md'
-                  }`}>
-                    
-                    {/* Step Number and Icon */}
-                    <div className="flex items-center gap-4 mb-3">
-                      <div className={`relative w-12 h-12 rounded-xl flex items-center justify-center font-bold transition-all duration-300 ${
-                        isActive 
-                          ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg' 
-                          : isPrevious
-                          ? 'bg-gradient-to-r from-green-400 to-emerald-400 text-white shadow-md'
-                          : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'
-                      }`}>
-                        {isPrevious ? (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="w-5 h-5 bg-white rounded-full flex items-center justify-center"
-                          >
-                            <div className="w-2 h-2 bg-green-500 rounded-full" />
-                          </motion.div>
-                        ) : (
-                          <span className="text-sm">{index + 1}</span>
-                        )}
-                        
-                        {/* Active Step Pulse Effect */}
-                        {isActive && (
-                          <motion.div
-                            className="absolute inset-0 rounded-xl bg-purple-400/30"
-                            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          />
-                        )}
-                      </div>
-                      
-                      {/* Step Icon */}
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
-                        isActive ? 'bg-white shadow-md' : 'bg-gray-50 group-hover:bg-white'
-                      }`}>
-                        {React.createElement(step.icon, {
-                          className: `w-5 h-5 ${isActive ? 'text-purple-600' : 'text-gray-500'}`
-                        })}
-                      </div>
-                    </div>
-                    
-                    {/* Step Content */}
-                    <div className="space-y-2">
-                      <h4 className={`font-semibold transition-colors duration-300 ${
-                        isActive ? 'text-purple-700' : isPrevious ? 'text-green-700' : 'text-gray-700'
-                      }`}>
-                        {step.title}
-                      </h4>
-                      
-                      <p className={`text-sm leading-relaxed transition-colors duration-300 ${
-                        isActive ? 'text-purple-600' : isPrevious ? 'text-green-600' : 'text-gray-600'
-                      }`}>
-                        {step.description.length > 80 ? 
-                          `${step.description.substring(0, 80)}...` : 
-                          step.description
-                        }
-                      </p>
-                    </div>
-
-                    {/* Active Step Indicator */}
-                    {isActive && (
-                      <motion.div
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                      >
-                        <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full shadow-lg" />
-                      </motion.div>
+            {/* Circular Step Indicators */}
+            <div className="flex flex-col items-center space-y-8">
+              {steps.map((step, index) => {
+                const isActive = index === activeStep;
+                const isPrevious = index < activeStep;
+                
+                return (
+                  <div key={index} className="relative flex flex-col items-center">
+                    {/* Connection Line */}
+                    {index < steps.length - 1 && (
+                      <div className="absolute top-20 w-0.5 h-8 bg-gradient-to-b from-gray-300 to-transparent z-0" />
                     )}
+                    
+                    {/* Circular Step */}
+                    <motion.div
+                      onClick={() => handleStepClick(index)}
+                      className={getCircleClasses(index)}
+                      whileHover={{ scale: isActive ? 1.05 : 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {step.emoji}
+                      
+                      {/* Active Step Pulse Effect */}
+                      {isActive && (
+                        <motion.div
+                          className="absolute inset-0 rounded-full bg-purple-400/30"
+                          animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0, 0.5] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                      )}
+                    </motion.div>
+                    
+                    {/* Step Number */}
+                    <div className={`mt-2 text-sm font-medium transition-colors duration-300 ${
+                      isActive ? 'text-purple-600' : isPrevious ? 'text-green-600' : 'text-gray-500'
+                    }`}>
+                      Step {index + 1}
+                    </div>
                   </div>
-                </motion.div>
-              );
-            })}
+                );
+              })}
+            </div>
 
             {/* Quick Navigation */}
             <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md border border-white/30">
@@ -283,13 +208,11 @@ const AnimatedStepFlow = () => {
               transition={{ duration: 0.3 }}
               className="bg-white rounded-lg shadow-sm border border-gray-200 p-8"
             >
-              {/* Header with 3D Icon */}
+              {/* Header with Emoji Icon */}
               <div className="mb-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className={`w-16 h-16 rounded-lg flex items-center justify-center ${get3DIconClasses(activeStep, true)}`}>
-                    {React.createElement(steps[activeStep].icon, {
-                      className: "w-8 h-8 text-white drop-shadow-sm"
-                    })}
+                  <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-gradient-to-br from-purple-400 to-purple-600 text-white shadow-lg text-2xl">
+                    {steps[activeStep].emoji}
                   </div>
                   <div>
                     <div className="text-sm font-medium text-purple-600 mb-1">
