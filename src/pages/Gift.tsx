@@ -10,52 +10,57 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "react-router-dom";
-
 const Gift = () => {
-  const { t } = useLanguage();
-  const { user } = useAuth();
-  const { toast } = useToast();
+  const {
+    t
+  } = useLanguage();
+  const {
+    user
+  } = useAuth();
+  const {
+    toast
+  } = useToast();
   const [searchParams] = useSearchParams();
 
   // Check if returning from payment
   const paymentStatus = searchParams.get('payment');
-
   const handleGiftPurchaseComplete = (data: any) => {
     console.log("Gift purchase completed:", data);
     toast({
       title: "Gift Card Created!",
-      description: `Gift card ${data.code} has been created and will be delivered to ${data.recipient_email}`,
+      description: `Gift card ${data.code} has been created and will be delivered to ${data.recipient_email}`
     });
   };
-
   const handleGiftRedemption = (giftCard: any, selectedPackage: string, upgradeAmount?: number) => {
-    console.log("Gift redemption:", { giftCard, selectedPackage, upgradeAmount });
-    
+    console.log("Gift redemption:", {
+      giftCard,
+      selectedPackage,
+      upgradeAmount
+    });
+
     // Here we would redirect to the order flow with the gift card applied
     // For now, we'll show a success message
     toast({
       title: "Gift Card Applied!",
-      description: `Proceeding to complete your ${selectedPackage} package order.`,
+      description: `Proceeding to complete your ${selectedPackage} package order.`
     });
-    
+
     // TODO: Redirect to order flow with gift card data
     // window.location.href = `/order?gift=${giftCard.code}&package=${selectedPackage}`;
   };
-
-  return (
-    <div className="min-h-screen relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/65cd14fb-1e9c-4df4-a6e6-9e84a68b90f8.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+  return <div className="min-h-screen relative overflow-hidden" style={{
+    backgroundImage: 'url(/lovable-uploads/65cd14fb-1e9c-4df4-a6e6-9e84a68b90f8.png)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
+  }}>
       {/* White glass overlay for glassmorphism effect */}
       <div className="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
 
       {/* Subtle grid pattern overlay */}
       <div className="absolute inset-0 opacity-[0.02]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-      }}></div>
+      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+    }}></div>
 
       <div className="relative z-10">
         <Navigation />
@@ -79,56 +84,11 @@ const Gift = () => {
             </div>
 
             {/* Features Cards */}
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
-              <Card className="text-center bg-white/80 backdrop-blur-sm">
-                <CardHeader>
-                  <div className="mx-auto w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-4">
-                    <Heart className="w-6 h-6 text-purple-600" />
-                  </div>
-                  <CardTitle>Personalized Experience</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Each gift card creates a unique musical journey tailored to the recipient's story and preferences.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center bg-white/80 backdrop-blur-sm">
-                <CardHeader>
-                  <div className="mx-auto w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mb-4">
-                    <GiftIcon className="w-6 h-6 text-pink-600" />
-                  </div>
-                  <CardTitle>Flexible Delivery</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Send immediately or schedule for special occasions like birthdays, anniversaries, or holidays.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center bg-white/80 backdrop-blur-sm">
-                <CardHeader>
-                  <div className="mx-auto w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-                    <Users className="w-6 h-6 text-orange-600" />
-                  </div>
-                  <CardTitle>Easy Redemption</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Recipients can easily redeem their gift and customize their song with our simple step-by-step process.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
+            
 
             {/* Main Content */}
             <div className="max-w-4xl mx-auto">
-              {paymentStatus === 'success' ? (
-                <GiftPaymentSuccess />
-              ) : (
-                <Tabs defaultValue="purchase" className="w-full">
+              {paymentStatus === 'success' ? <GiftPaymentSuccess /> : <Tabs defaultValue="purchase" className="w-full">
                   <TabsList className="grid w-full grid-cols-2 mb-8">
                     <TabsTrigger value="purchase" className="text-lg py-3">
                       <GiftIcon className="w-5 h-5 mr-2" />
@@ -142,21 +102,14 @@ const Gift = () => {
 
                   <TabsContent value="purchase">
                     <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6">
-                      {user ? (
-                        <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
-                      ) : (
-                        <div className="text-center py-12">
+                      {user ? <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} /> : <div className="text-center py-12">
                           <p className="text-lg text-gray-600 mb-6">
                             Please sign in to purchase a gift card
                           </p>
-                          <a
-                            href="/auth"
-                            className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                          >
+                          <a href="/auth" className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                             Sign In
                           </a>
-                        </div>
-                      )}
+                        </div>}
                     </div>
                   </TabsContent>
 
@@ -165,16 +118,13 @@ const Gift = () => {
                       <GiftRedemption onRedemption={handleGiftRedemption} />
                     </div>
                   </TabsContent>
-                </Tabs>
-              )}
+                </Tabs>}
             </div>
           </div>
         </section>
 
         <Footer />
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Gift;
