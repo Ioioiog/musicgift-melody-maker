@@ -1,4 +1,3 @@
-
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -241,9 +240,13 @@ serve(async (req) => {
       throw new Error('Invalid total price for SmartBill document creation')
     }
 
-    console.log('💰 Price validation:', {
+    // Format price with two decimal places for SmartBill/Netopia compatibility
+    const formattedPrice = totalPrice.toFixed(2)
+
+    console.log('💰 Price validation and formatting:', {
       originalPrice: orderData.total_price,
       convertedPrice: totalPrice,
+      formattedPrice: formattedPrice,
       currency: orderData.currency
     })
     
@@ -270,7 +273,7 @@ serve(async (req) => {
     <measuringUnitName>buc</measuringUnitName>
     <currency>${orderData.currency === 'EUR' ? 'EUR' : 'RON'}</currency>
     <quantity>1</quantity>
-    <price>${totalPrice}</price>
+    <price>${formattedPrice}</price>
     <isTaxIncluded>true</isTaxIncluded>
     <taxName>Normala</taxName>
     <taxPercentage>19</taxPercentage>
@@ -283,7 +286,7 @@ serve(async (req) => {
 </estimate>`
 
     console.log('📄 Creating SmartBill proforma with STRP series')
-    console.log('🔗 XML payload prepared for SmartBill API')
+    console.log('🔗 XML payload prepared for SmartBill API with formatted price:', formattedPrice)
 
     // Create proforma via SmartBill API using XML format
     let proformaResponse: Response
