@@ -1,4 +1,3 @@
-
 export const commonTranslations = {
   // User authentication
   signIn: "Conectare",
@@ -83,4 +82,8 @@ export const commonTranslations = {
   createPersonalizedExperiences: "Creați experiențe muzicale personalizate",
   shareGiftOfMusic: "Împărtășiți darul muzicii cu cei dragi",
   professionalQualityCompositions: "Compoziții de calitate profesională",
+  
+  // Testimonials page
+  testimonialsTitle: "Mărturii ale Clienților",
+  testimonialsSubtitle: "Descoperă poveștile frumoase ale celor care au ales să își transforme amintirile în muzică personalizată",
 };

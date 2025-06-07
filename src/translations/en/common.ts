@@ -82,4 +82,8 @@ export const commonTranslations = {
   createPersonalizedExperiences: "Create personalized musical experiences",
   shareGiftOfMusic: "Share the gift of music with loved ones",
   professionalQualityCompositions: "Professional quality compositions",
+  
+  // Testimonials page
+  testimonialsTitle: "Customer Testimonials",
+  testimonialsSubtitle: "Discover the beautiful stories of those who chose to transform their memories into personalized music",
 };
