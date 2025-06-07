@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, MessageSquare, Music, Gift } from 'lucide-react';
@@ -161,7 +160,7 @@ const AnimatedStepFlow = () => {
                    padding: "2px"
                  }} />
             
-            <div className="relative z-10 p-10 lg:p-14">
+            <div className="relative z-10 p-6 lg:p-8 xl:p-12">
               <div className="flex items-center gap-6 mb-8">
                 {/* Large Icon with enhanced styling */}
                 <motion.div
