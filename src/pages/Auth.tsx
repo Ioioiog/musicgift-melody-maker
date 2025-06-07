@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -140,9 +141,9 @@ const Auth = () => {
             <div className="flex justify-center lg:justify-start mb-8">
               <div className="relative">
                 <img 
-                  src="/lovable-uploads/ece23865-4313-41a7-8269-464d4a50cec6.png" 
+                  src="/lovable-uploads/cb090c51-8b0c-4906-8ec4-8f0ca3583f84.png" 
                   alt="MusicGift Logo" 
-                  className="w-32 h-auto"
+                  className="w-48 h-auto"
                 />
               </div>
             </div>
