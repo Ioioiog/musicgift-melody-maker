@@ -182,7 +182,7 @@ const AnimatedStepFlow = () => {
               className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 relative overflow-hidden"
             >
               {/* Large background icon */}
-              <div className="absolute bottom-4 left-4 opacity-5 pointer-events-none">
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-5 pointer-events-none">
                 {React.createElement(stepIcons[activeStep], { 
                   className: "w-48 h-48", 
                   strokeWidth: 1 
