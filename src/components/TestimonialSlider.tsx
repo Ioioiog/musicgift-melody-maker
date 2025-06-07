@@ -1,4 +1,3 @@
-
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
@@ -77,15 +76,14 @@ export default function TestimonialSlider() {
           <div className="relative group overflow-hidden rounded-xl bg-gray-50">
             <div className="w-full h-full bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center">
               <div className="text-center">
-                <div className="bg-white rounded-full p-4 mb-4 mx-auto w-fit shadow-lg">
-                  <Play className="w-8 h-8 text-red-600 ml-1" />
+                <div className="bg-red-600 hover:bg-red-700 rounded-full p-6 mx-auto w-fit shadow-xl transition-all duration-200 group-hover:scale-110">
+                  <Play className="w-12 h-12 text-white ml-1" fill="white" />
                 </div>
-                <p className="text-sm text-gray-600 px-4">Click to watch on YouTube</p>
               </div>
             </div>
             <button
               onClick={() => setShowYouTubeVideo(true)}
-              className="absolute inset-0 w-full h-full bg-black/0 hover:bg-black/10 transition-all duration-200"
+              className="absolute inset-0 w-full h-full bg-black/0 hover:bg-black/5 transition-all duration-200"
               aria-label="Play YouTube video"
             />
             <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
