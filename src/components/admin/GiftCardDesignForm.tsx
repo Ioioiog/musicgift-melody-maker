@@ -27,6 +27,8 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
     }
   });
 
+  const [selectedElementIndex, setSelectedElementIndex] = useState<number | null>(null);
+
   const { toast } = useToast();
   const createDesignMutation = useCreateGiftCardDesign();
   const updateDesignMutation = useUpdateGiftCardDesign();
@@ -76,12 +78,33 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
     }));
   };
 
+  const updateElementProperty = (elementIndex: number, property: string, value: any) => {
+    const updatedElements = [...formData.template_data.elements];
+    updatedElements[elementIndex] = {
+      ...updatedElements[elementIndex],
+      [property]: value
+    };
+    
+    handleCanvasDataChange({
+      ...formData.template_data,
+      elements: updatedElements
+    });
+  };
+
+  const updateSelectedElementProperty = (property: string, value: any) => {
+    if (selectedElementIndex !== null) {
+      updateElementProperty(selectedElementIndex, property, value);
+    }
+  };
+
+  const selectedElement = selectedElementIndex !== null ? formData.template_data.elements[selectedElementIndex] : null;
+
   const isSubmitting = createDesignMutation.isPending || updateDesignMutation.isPending;
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
       {/* Header with title and action buttons */}
-      <div className="bg-white border-b px-6 py-4 flex justify-between items-center">
+      <div className="bg-white border-b px-6 py-4 flex justify-between items-center flex-shrink-0">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">
             {design ? 'Edit Design' : 'Create New Design'}
@@ -104,55 +127,43 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
         </div>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar - Design Controls */}
-        <div className="w-80 bg-white border-r overflow-y-auto">
-          <div className="p-6 space-y-6">
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900">Design Settings</h3>
-              
-              <div>
-                <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-                  Design Name
-                </Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Enter design name"
-                  className="mt-1"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="theme" className="text-sm font-medium text-gray-700">
-                  Theme
-                </Label>
-                <Input
-                  id="theme"
-                  value={formData.theme}
-                  onChange={(e) => handleInputChange('theme', e.target.value)}
-                  placeholder="e.g., Birthday, Christmas, Valentine"
-                  className="mt-1"
-                  required
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Label htmlFor="is_active" className="text-sm font-medium text-gray-700">
-                  Active Design
-                </Label>
-                <Switch
-                  id="is_active"
-                  checked={formData.is_active}
-                  onCheckedChange={(checked) => handleInputChange('is_active', checked)}
-                />
-              </div>
+      {/* Main Content - Single Column */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Design Settings Section */}
+        <div className="bg-white border-b px-6 py-4 flex-shrink-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+            <div>
+              <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                Design Name
+              </Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                placeholder="Enter design name"
+                className="mt-1"
+                required
+              />
             </div>
 
-            <div className="border-t pt-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Background Image</h3>
+            <div>
+              <Label htmlFor="theme" className="text-sm font-medium text-gray-700">
+                Theme
+              </Label>
+              <Input
+                id="theme"
+                value={formData.theme}
+                onChange={(e) => handleInputChange('theme', e.target.value)}
+                placeholder="e.g., Birthday, Christmas"
+                className="mt-1"
+                required
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-gray-700">
+                Background Image
+              </Label>
               <ImageUpload
                 label=""
                 value={formData.preview_image_url}
@@ -163,40 +174,154 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
               />
             </div>
 
-            {/* Canvas dimensions info */}
-            <div className="border-t pt-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Canvas Info</h3>
-              <div className="text-sm text-gray-600 space-y-1">
-                <p>Width: {formData.template_data.canvasWidth}px</p>
-                <p>Height: {formData.template_data.canvasHeight}px</p>
-                <p>Elements: {formData.template_data.elements?.length || 0}</p>
-              </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                id="is_active"
+                checked={formData.is_active}
+                onCheckedChange={(checked) => handleInputChange('is_active', checked)}
+              />
+              <Label htmlFor="is_active" className="text-sm font-medium text-gray-700">
+                Active
+              </Label>
+            </div>
+
+            <div className="text-sm text-gray-600">
+              <div>Size: {formData.template_data.canvasWidth} × {formData.template_data.canvasHeight}px</div>
+              <div>Elements: {formData.template_data.elements?.length || 0}</div>
             </div>
           </div>
         </div>
 
-        {/* Main Canvas Area */}
-        <div className="flex-1 flex flex-col">
-          {/* Canvas Header */}
-          <div className="bg-white border-b px-6 py-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-medium text-gray-900">Canvas Editor</h2>
-              <div className="text-sm text-gray-500">
-                Design your gift card layout
-              </div>
+        {/* Element Properties Section */}
+        {selectedElement && (
+          <div className="bg-white border-b px-6 py-4 flex-shrink-0">
+            <div className="flex items-center gap-6">
+              <h3 className="text-lg font-medium text-gray-900">
+                Editing: {selectedElement.type || 'Element'} {(selectedElementIndex || 0) + 1}
+              </h3>
+              
+              {selectedElement.type === 'shape' && (
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm">Fill:</Label>
+                    <input
+                      type="color"
+                      value={selectedElement.fill || '#000000'}
+                      onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
+                      className="w-8 h-8 rounded border cursor-pointer"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm">Border:</Label>
+                    <input
+                      type="color"
+                      value={selectedElement.stroke || '#000000'}
+                      onChange={(e) => updateSelectedElementProperty('stroke', e.target.value)}
+                      className="w-8 h-8 rounded border cursor-pointer"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm">Width:</Label>
+                    <Input
+                      type="number"
+                      value={selectedElement.strokeWidth || 1}
+                      onChange={(e) => updateSelectedElementProperty('strokeWidth', parseInt(e.target.value))}
+                      className="w-16 h-8"
+                      min="0"
+                      max="20"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm">Opacity:</Label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={selectedElement.opacity || 1}
+                      onChange={(e) => updateSelectedElementProperty('opacity', parseFloat(e.target.value))}
+                      className="w-20"
+                    />
+                    <span className="text-xs text-gray-500 w-8">
+                      {Math.round((selectedElement.opacity || 1) * 100)}%
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {selectedElement.type === 'text' && (
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm">Text:</Label>
+                    <Input
+                      value={selectedElement.text || ''}
+                      onChange={(e) => updateSelectedElementProperty('text', e.target.value)}
+                      className="w-40 h-8"
+                      placeholder="Enter text"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm">Color:</Label>
+                    <input
+                      type="color"
+                      value={selectedElement.fill || '#000000'}
+                      onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
+                      className="w-8 h-8 rounded border cursor-pointer"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm">Size:</Label>
+                    <Input
+                      type="number"
+                      value={selectedElement.fontSize || 16}
+                      onChange={(e) => updateSelectedElementProperty('fontSize', parseInt(e.target.value))}
+                      className="w-16 h-8"
+                      min="8"
+                      max="72"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm">Weight:</Label>
+                    <select
+                      value={selectedElement.fontWeight || 'normal'}
+                      onChange={(e) => updateSelectedElementProperty('fontWeight', e.target.value)}
+                      className="h-8 px-2 border rounded"
+                    >
+                      <option value="normal">Normal</option>
+                      <option value="bold">Bold</option>
+                      <option value="lighter">Light</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={() => setSelectedElementIndex(null)}
+                className="ml-auto text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
             </div>
           </div>
+        )}
 
-          {/* Canvas Container */}
-          <div className="flex-1 p-6 overflow-auto">
-            <div className="flex justify-center items-start min-h-full">
-              <div className="bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full">
-                <GiftCardCanvasEditor
-                  value={formData.template_data}
-                  onChange={handleCanvasDataChange}
-                  backgroundImage={formData.preview_image_url}
-                />
-              </div>
+        {/* Canvas Area */}
+        <div className="flex-1 overflow-auto p-6">
+          <div className="h-full flex items-center justify-center">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <GiftCardCanvasEditor
+                value={formData.template_data}
+                onChange={handleCanvasDataChange}
+                backgroundImage={formData.preview_image_url}
+                selectedElementIndex={selectedElementIndex}
+                onElementSelect={setSelectedElementIndex}
+              />
             </div>
           </div>
         </div>
