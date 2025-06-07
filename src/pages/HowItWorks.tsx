@@ -45,13 +45,22 @@ const HowItWorks = () => {
         </div>
       </section>
 
-      {/* Main Content - Flexible to fill remaining space */}
-      <section className="flex-1 flex items-center py-4">
+      {/* Main Content - Flexible to fill remaining space with background */}
+      <section 
+        className="flex-1 flex items-center py-4 relative"
+        style={{
+          backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/30"></div>
         <motion.div 
           initial={{ opacity: 0, y: 30 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.8, delay: 0.6 }} 
-          className="w-full"
+          className="w-full relative z-10"
         >
           <AnimatedStepFlow />
         </motion.div>
