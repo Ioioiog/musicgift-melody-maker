@@ -1,3 +1,4 @@
+
 export const commonTranslations = {
   // CTA Section
   readyToCreateSpecial: "Prêt à créer quelque chose de spécial ?",
@@ -14,14 +15,14 @@ export const commonTranslations = {
   
   // Steps
   step: "Étape",
-  step1Title: "Choisir le forfait",
-  step1Description: "Sélectionnez le forfait qui correspond à votre occasion et votre budget",
+  step1Title: "Choisir le forfait parfait",
+  step1Description: "Chaque grande chanson commence par la bonne ambiance. Parcourez nos forfaits soigneusement sélectionnés et choisissez celui qui convient le mieux à votre occasion, votre vision et votre budget — qu'il s'agisse d'une surprise d'anniversaire, d'un geste romantique, d'un hymne d'entreprise, ou simplement d'un musical \"je pense à vous.\"",
   step2Title: "Racontez votre histoire",
-  step2Description: "Remplissez le formulaire avec vos détails et votre histoire unique",
-  step3Title: "Nous créons la musique",
-  step3Description: "Notre équipe professionnelle crée votre chanson personnalisée",
-  step4Title: "Recevez votre cadeau",
-  step4Description: "Nous livrons votre chanson terminée en 3-7 jours ouvrables",
+  step2Description: "C'est là que la magie commence. Nos chansons sont construites autour de votre histoire, alors plus vous nous donnez de détails sincères, plus votre chanson sera émotionnelle et unique.",
+  step3Title: "Détendez-vous pendant que nous composons la magie",
+  step3Description: "Maintenant c'est notre tour de briller ! Pendant que vous vous détendez, notre équipe d'auteurs-compositeurs professionnels, de vocalistes, de musiciens et d'ingénieurs du son se met au travail — transformant votre histoire en un cadeau musical inoubliable.",
+  step4Title: "Recevez votre cadeau musical unique",
+  step4Description: "Dans les 3 à 7 jours ouvrables, votre chef-d'œuvre personnalisé arrive dans votre boîte de réception. Prêt à être offert, partagé, joué en boucle, ou même utilisé pour faire pleurer quelqu'un (seulement des larmes de joie, nous le promettons !).",
   
   // Testimonials
   testimonialsTitle: "Ce que disent nos clients",

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, MessageSquare, Music, Gift } from 'lucide-react';
@@ -204,12 +205,12 @@ const AnimatedStepFlow = () => {
                 {/* Additional detailed information for each step */}
                 {activeStep === 0 && (
                   <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-400">
-                    <p className="text-blue-800 font-medium mb-3">🎁 All our packages include:</p>
+                    <p className="text-blue-800 font-medium mb-3">All our packages include:</p>
                     <ul className="text-blue-700 text-base space-y-2">
-                      <li>• 🎼 Professional music production with real instruments (no boring loops!)</li>
-                      <li>• ✍️ Custom-written lyrics, inspired by your story and emotions</li>
-                      <li>• 🔁 Multiple revision rounds — we won't stop until you're in love with it</li>
-                      <li>• 📂 Final files delivered in high-quality MP3 and WAV formats, ready to share or frame forever</li>
+                      <li>• Professional music production with real instruments (no boring loops!)</li>
+                      <li>• Custom-written lyrics, inspired by your story and emotions</li>
+                      <li>• Multiple revision rounds — we won't stop until you're in love with it</li>
+                      <li>• Final files delivered in high-quality MP3 and WAV formats, ready to share or frame forever</li>
                     </ul>
                     <p className="text-blue-800 text-sm mt-3 italic">Not sure which package is right for you? Don't worry — we'll help you choose like a personal gift concierge.</p>
                   </div>
@@ -217,12 +218,12 @@ const AnimatedStepFlow = () => {
                 
                 {activeStep === 1 && (
                   <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-400">
-                    <p className="text-green-800 font-medium mb-3">📝 In your story, you can include:</p>
+                    <p className="text-green-800 font-medium mb-3">In your story, you can include:</p>
                     <ul className="text-green-700 text-base space-y-2">
-                      <li>• 💖 Special moments, funny memories, important milestones</li>
-                      <li>• 📅 Names, dates, quotes, inside jokes — we love the juicy stuff!</li>
-                      <li>• 🎶 Your favorite musical genres or emotional tone (romantic, nostalgic, uplifting, epic, etc.)</li>
-                      <li>• 🎤 Even audio messages or photos that help us feel the emotion you want to share</li>
+                      <li>• Special moments, funny memories, important milestones</li>
+                      <li>• Names, dates, quotes, inside jokes — we love the juicy stuff!</li>
+                      <li>• Your favorite musical genres or emotional tone (romantic, nostalgic, uplifting, epic, etc.)</li>
+                      <li>• Even audio messages or photos that help us feel the emotion you want to share</li>
                     </ul>
                     <p className="text-green-800 text-sm mt-3 italic">Think of it as writing a love letter, but we'll turn it into a hit song.</p>
                   </div>
@@ -230,12 +231,12 @@ const AnimatedStepFlow = () => {
                 
                 {activeStep === 2 && (
                   <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-400">
-                    <p className="text-purple-800 font-medium mb-3">🎙️ Here's what happens behind the scenes:</p>
+                    <p className="text-purple-800 font-medium mb-3">Here's what happens behind the scenes:</p>
                     <ul className="text-purple-700 text-base space-y-2">
-                      <li>• ✒️ Our lyricists turn your memories into meaningful verses and a catchy chorus</li>
-                      <li>• 🎸 Real musicians record instruments in studio — no AI-only shortcuts here!</li>
-                      <li>• 🎤 Professional vocalists (with real soul) sing your lyrics with passion</li>
-                      <li>• 🎧 Sound engineers mix, master, polish, and sparkle every note</li>
+                      <li>• Our lyricists turn your memories into meaningful verses and a catchy chorus</li>
+                      <li>• Real musicians record instruments in studio — no AI-only shortcuts here!</li>
+                      <li>• Professional vocalists (with real soul) sing your lyrics with passion</li>
+                      <li>• Sound engineers mix, master, polish, and sparkle every note</li>
                     </ul>
                     <p className="text-purple-800 text-sm mt-3 italic">We pour our heart into every second of the song — because it's not just music, it's your message in melody.</p>
                   </div>
@@ -243,12 +244,12 @@ const AnimatedStepFlow = () => {
                 
                 {activeStep === 3 && (
                   <div className="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-400">
-                    <p className="text-orange-800 font-medium mb-3">📦 You'll receive:</p>
+                    <p className="text-orange-800 font-medium mb-3">You'll receive:</p>
                     <ul className="text-orange-700 text-base space-y-2">
-                      <li>• 🎵 Your original song in both MP3 and WAV formats</li>
-                      <li>• 🎨 A custom-designed cover image that matches your song's mood</li>
-                      <li>• 📹 Optional video add-ons or social media-friendly formats</li>
-                      <li>• 🌍 Lifetime access — download it, share it, relive it forever</li>
+                      <li>• Your original song in both MP3 and WAV formats</li>
+                      <li>• A custom-designed cover image that matches your song's mood</li>
+                      <li>• Optional video add-ons or social media-friendly formats</li>
+                      <li>• Lifetime access — download it, share it, relive it forever</li>
                     </ul>
                     <p className="text-orange-800 text-sm mt-3 italic">It's more than a gift. It's a memory you can listen to.</p>
                   </div>
