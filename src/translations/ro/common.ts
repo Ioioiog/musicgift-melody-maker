@@ -1,3 +1,4 @@
+
 export const commonTranslations = {
   readyToCreateSpecial: "Gata să creezi ceva special?",
   helpCreatePersonalized: "Să te ajutăm să creezi un cadou muzical personalizat care va fi prețuit pentru totdeauna",
@@ -37,7 +38,7 @@ export const commonTranslations = {
   // Step 3 Details
   step3DetailsTitle: "Iată ce se întâmplă în culise:",
   step3Detail1: "Versificatorii noștri transformă amintirile tale în versuri semnificative și un refren care se prinde",
-  step3Detail2: "Muzicienii reali înregistrează instrumentele în studio — fără scurtături doar cu AI aici!",
+  step3Detail2: "Muzicienii reali înregistrează instrumentele în studio!",
   step3Detail3: "Vocaliștii profesioniști (cu suflet adevărat) cântă versurile tale cu pasiune",
   step3Detail4: "Inginerii de sunet mixează, masterizează, finisează și fac să strălucească fiecare notă",
   step3DetailsFooter: "Ne punem inima în fiecare secundă a melodiei — pentru că nu este doar muzică, este mesajul tău în melodie.",

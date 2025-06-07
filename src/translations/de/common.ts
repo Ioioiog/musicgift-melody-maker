@@ -38,7 +38,7 @@ export const commonTranslations = {
   // Step 3 Details
   step3DetailsTitle: "Hier passiert hinter den Kulissen:",
   step3Detail1: "Unsere Textdichter verwandeln Ihre Erinnerungen in bedeutungsvolle Strophen und einen eingängigen Refrain",
-  step3Detail2: "Echte Musiker nehmen Instrumente im Studio auf — keine reinen KI-Abkürzungen hier!",
+  step3Detail2: "Echte Musiker nehmen Instrumente im Studio auf!",
   step3Detail3: "Professionelle Vokalisten (mit echter Seele) singen Ihre Texte mit Leidenschaft",
   step3Detail4: "Toningenieure mischen, mastern, polieren und lassen jede Note glänzen",
   step3DetailsFooter: "Wir stecken unser Herz in jede Sekunde des Songs — denn es ist nicht nur Musik, es ist Ihre Botschaft in Melodie.",

@@ -43,7 +43,7 @@ export const commonTranslations = {
   // Step 3 Details
   step3DetailsTitle: "Here's what happens behind the scenes:",
   step3Detail1: "Our lyricists turn your memories into meaningful verses and a catchy chorus",
-  step3Detail2: "Real musicians record instruments in studio — no AI-only shortcuts here!",
+  step3Detail2: "Real musicians record instruments in studio!",
   step3Detail3: "Professional vocalists (with real soul) sing your lyrics with passion",
   step3Detail4: "Sound engineers mix, master, polish, and sparkle every note",
   step3DetailsFooter: "We pour our heart into every second of the song — because it's not just music, it's your message in melody.",

@@ -1,3 +1,4 @@
+
 export const commonTranslations = {
   readyToCreateSpecial: "Gotowy stworzyć coś wyjątkowego?",
   helpCreatePersonalized: "Pozwól nam pomóc ci stworzyć spersonalizowany prezent muzyczny, który będzie ceniony na zawsze",
@@ -37,7 +38,7 @@ export const commonTranslations = {
   // Step 3 Details
   step3DetailsTitle: "Oto co dzieje się za kulisami:",
   step3Detail1: "Nasi tekściarze przekształcają twoje wspomnienia w znaczące zwrotki i chwytliwy refren",
-  step3Detail2: "Prawdziwi muzycy nagrywają instrumenty w studio — żadnych skrótów tylko z AI!",
+  step3Detail2: "Prawdziwi muzycy nagrywają instrumenty w studio!",
   step3Detail3: "Profesjonalni wokaliści (z prawdziwą duszą) śpiewają twoje teksty z pasją",
   step3Detail4: "Inżynierowie dźwięku miksują, masterują, polerują i sprawiają, że każda nuta błyszczy",
   step3DetailsFooter: "Wkładamy nasze serce w każdą sekundę piosenki — ponieważ to nie jest tylko muzyka, to twoja wiadomość w melodii.",

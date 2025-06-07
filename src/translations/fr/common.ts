@@ -43,7 +43,7 @@ export const commonTranslations = {
   // Step 3 Details
   step3DetailsTitle: "Voici ce qui se passe dans les coulisses :",
   step3Detail1: "Nos paroliers transforment vos souvenirs en couplets significatifs et un refrain accrocheur",
-  step3Detail2: "De vrais musiciens enregistrent les instruments en studio — pas de raccourcis uniquement IA ici !",
+  step3Detail2: "De vrais musiciens enregistrent les instruments en studio !",
   step3Detail3: "Des vocalistes professionnels (avec une vraie âme) chantent vos paroles avec passion",
   step3Detail4: "Les ingénieurs du son mixent, masterisent, peaufinent et font briller chaque note",
   step3DetailsFooter: "Nous mettons notre cœur dans chaque seconde de la chanson — parce que ce n'est pas juste de la musique, c'est votre message en mélodie.",
