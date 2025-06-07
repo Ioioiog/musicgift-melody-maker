@@ -5,9 +5,23 @@ import TestimonialSlider from "@/components/TestimonialSlider";
 import TestimonialSubmissionForm from "@/components/TestimonialSubmissionForm";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 const Testimonials = () => {
   const { t } = useLanguage();
+  
+  useEffect(() => {
+    // Load Trustpilot widget script
+    const script = document.createElement('script');
+    script.src = '//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js';
+    script.async = true;
+    document.head.appendChild(script);
+
+    return () => {
+      // Cleanup script on unmount
+      document.head.removeChild(script);
+    };
+  }, []);
   
   return (
     <div className="min-h-screen">
@@ -43,6 +57,27 @@ const Testimonials = () => {
           >
             {t('testimonialsSubtitle')}
           </motion.p>
+          
+          {/* TrustBox widget */}
+          <motion.div
+            className="mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <div 
+              className="trustpilot-widget" 
+              data-locale="en-US" 
+              data-template-id="56278e9abfbbba0bdcd568bc" 
+              data-businessunit-id="684414032f7e44f180176d5b" 
+              data-style-height="52px" 
+              data-style-width="100%"
+            >
+              <a href="https://www.trustpilot.com/review/musicgift.ro" target="_blank" rel="noopener">
+                Trustpilot
+              </a>
+            </div>
+          </motion.div>
           
           {/* Add testimonial submission form */}
           <motion.div
