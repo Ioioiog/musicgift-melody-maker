@@ -56,17 +56,15 @@ const validateSmartBillConfig = () => {
   const token = Deno.env.get('SMARTBILL_TOKEN')
   const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
   const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
-  const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'Prof' // Changed to Prof for payment links
   
   console.log('SmartBill Config Check:', {
     username: username ? `${username.substring(0, 3)}***` : 'MISSING',
     token: token ? `***${token.length} chars***` : 'MISSING',
     baseUrl,
-    companyVat: companyVat ? `${companyVat.substring(0, 4)}***` : 'MISSING',
-    seriesName
+    companyVat: companyVat ? `${companyVat.substring(0, 4)}***` : 'MISSING'
   })
   
-  return { username, token, baseUrl, companyVat, seriesName }
+  return { username, token, baseUrl, companyVat }
 }
 
 serve(async (req) => {
@@ -82,9 +80,9 @@ serve(async (req) => {
     )
 
     const { orderData }: { orderData: OrderData } = await req.json()
-    console.log('Processing order with SmartBill Netopia:', orderData)
+    console.log('Processing order with SmartBill:', orderData)
 
-    // First, save the order to database - ensure payment_provider is set to 'smartbill'
+    // First, save the order to database
     const { data: savedOrder, error: orderError } = await supabaseClient
       .from('orders')
       .insert({
@@ -144,7 +142,7 @@ serve(async (req) => {
     }
 
     // Validate SmartBill configuration
-    const { username, token, baseUrl, companyVat, seriesName } = validateSmartBillConfig()
+    const { username, token, baseUrl, companyVat } = validateSmartBillConfig()
 
     if (!username || !token) {
       console.warn('SmartBill credentials not configured')
@@ -205,10 +203,10 @@ serve(async (req) => {
       isTaxPayer: isCompanyInvoice && !!clientVatCode
     })
 
-    // Create XML payload for estimate/proforma with payment URL generation
+    // Step 1: Create proforma with payment link using STRP series
     const totalPrice = parseFloat(orderData.total_price.toString()) || 0
     
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+    const proformaXml = `<?xml version="1.0" encoding="UTF-8"?>
 <estimate>
   <companyVatCode>${companyVat}</companyVatCode>
   <client>
@@ -221,7 +219,7 @@ serve(async (req) => {
     <email>${escapeXml(clientEmail)}</email>
   </client>
   <issueDate>${issueDate}</issueDate>
-  <seriesName>${seriesName}</seriesName>
+  <seriesName>STRP</seriesName>
   <dueDate>${dueDate}</dueDate>
   <paymentUrl>Generate URL</paymentUrl>
   <product>
@@ -242,30 +240,30 @@ serve(async (req) => {
     `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}. ID comandă: ${savedOrder.id}`)}</observations>
 </estimate>`
 
-    console.log('Generated XML for SmartBill:', xml)
+    console.log('Creating proforma with payment link using STRP series')
 
-    // Create estimate/proforma via SmartBill API using XML format
-    let estimateResponse: Response
+    // Create proforma via SmartBill API using XML format
+    let proformaResponse: Response
     let responseText: string
     
     try {
-      console.log('Sending request to SmartBill API:', `${baseUrl}/SBORO/api/estimate`)
+      console.log('Sending proforma request to SmartBill API:', `${baseUrl}/SBORO/api/estimate`)
       
-      estimateResponse = await rateLimitedFetch(`${baseUrl}/SBORO/api/estimate`, {
+      proformaResponse = await rateLimitedFetch(`${baseUrl}/SBORO/api/estimate`, {
         method: 'POST',
         headers: {
           'Authorization': `Basic ${btoa(`${username}:${token}`)}`,
           'Content-Type': 'application/xml',
           'Accept': 'application/xml'
         },
-        body: xml
+        body: proformaXml
       })
       
-      responseText = await estimateResponse.text()
-      console.log('SmartBill API Response:', responseText)
+      responseText = await proformaResponse.text()
+      console.log('SmartBill Proforma API Response:', responseText)
       
     } catch (smartBillError) {
-      console.error('SmartBill API Error:', smartBillError)
+      console.error('SmartBill Proforma API Error:', smartBillError)
       
       const { error: updateError } = await supabaseClient
         .from('orders')
@@ -293,10 +291,10 @@ serve(async (req) => {
     }
 
     // Check if SmartBill returned an error
-    if (!estimateResponse.ok) {
-      console.error('SmartBill API Error:', {
-        status: estimateResponse.status,
-        statusText: estimateResponse.statusText,
+    if (!proformaResponse.ok) {
+      console.error('SmartBill Proforma API Error:', {
+        status: proformaResponse.status,
+        statusText: proformaResponse.statusText,
         response: responseText
       })
       
@@ -316,7 +314,7 @@ serve(async (req) => {
           success: false,
           orderId: savedOrder.id,
           errorCode: 'paymentFailed',
-          message: `Payment system error: ${estimateResponse.status} ${estimateResponse.statusText}`
+          message: `Payment system error: ${proformaResponse.status} ${proformaResponse.statusText}`
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -332,13 +330,12 @@ serve(async (req) => {
     
     const smartBillPaymentUrl = urlMatch?.[1] || null
     const documentNumber = numberMatch?.[1] || null
-    const documentSeries = seriesMatch?.[1] || seriesName
+    const documentSeries = seriesMatch?.[1] || 'STRP'
     
     console.log('Extracted proforma details:', {
       number: documentNumber,
       series: documentSeries,
-      paymentUrl: smartBillPaymentUrl,
-      fullResponse: responseText
+      paymentUrl: smartBillPaymentUrl
     })
     
     // Check if we got a valid payment URL
