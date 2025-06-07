@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock, ShoppingCart, FileText, Mic, Gift } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { stepContentData } from '@/data/stepContent';
 import { Button } from '@/components/ui/button';
@@ -23,10 +23,11 @@ const AnimatedStepFlow = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  const stepEmojis = ['🛒', '📝', '🎙️', '🎁'];
+  // Modern lucide icons for each step
+  const stepIcons = [ShoppingCart, FileText, Mic, Gift];
   
   const steps: Step[] = stepContentData.map((stepContent, index) => ({
-    emoji: stepEmojis[index],
+    emoji: '', // We'll use lucide icons instead
     title: stepContent.getTitle(t),
     description: stepContent.getDescription(t),
     details: stepContent.getDetails(t)
@@ -72,20 +73,101 @@ const AnimatedStepFlow = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 h-full">
-      <div className="flex flex-col lg:flex-row items-start gap-8 p-8">
+      <div className="flex flex-col lg:flex-row items-start gap-8 p-8 max-w-6xl mx-auto">
         
-        {/* Step Circles */}
+        {/* Modern Step Circles with Lucide Icons */}
         <div className="flex lg:flex-col gap-6">
-          {steps.map((step, idx) => (
-            <div
-              key={idx}
-              onClick={() => handleStepClick(idx)}
-              className={`cursor-pointer w-24 h-24 rounded-full flex items-center justify-center text-xl font-bold shadow-lg transition-all duration-300 
-                ${activeStep === idx ? 'bg-purple-600 text-white scale-105' : 'bg-white text-gray-700'}`}
-            >
-              <span>{step.emoji}</span>
+          {steps.map((step, idx) => {
+            const IconComponent = stepIcons[idx];
+            const isActive = activeStep === idx;
+            const isPrevious = idx < activeStep;
+            
+            return (
+              <motion.div
+                key={idx}
+                onClick={() => handleStepClick(idx)}
+                className={`cursor-pointer w-28 h-28 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 relative overflow-hidden group
+                  ${isActive 
+                    ? 'bg-gradient-to-br from-purple-500 to-purple-700 text-white scale-110 shadow-purple-300/50' 
+                    : isPrevious
+                    ? 'bg-gradient-to-br from-green-400 to-green-600 text-white scale-105 shadow-green-300/30'
+                    : 'bg-white text-gray-600 hover:bg-gray-50 hover:scale-105 shadow-gray-200/50'
+                  }`}
+                whileHover={{ scale: isActive ? 1.15 : 1.1 }}
+                whileTap={{ scale: isActive ? 1.05 : 1.0 }}
+              >
+                {/* Background gradient overlay */}
+                <div className={`absolute inset-0 rounded-full transition-opacity duration-300 ${
+                  isActive ? 'bg-gradient-to-tr from-white/20 to-transparent opacity-100' : 'opacity-0'
+                }`} />
+                
+                {/* Progress ring for active step */}
+                {isActive && (
+                  <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="47"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.3)"
+                      strokeWidth="2"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="47"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.8)"
+                      strokeWidth="2"
+                      strokeDasharray={`${2 * Math.PI * 47}`}
+                      strokeDashoffset={`${2 * Math.PI * 47 * (1 - progress / 100)}`}
+                      className="transition-all duration-100 ease-out"
+                    />
+                  </svg>
+                )}
+                
+                {/* Check mark for completed steps */}
+                {isPrevious && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute top-1 right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center"
+                  >
+                    <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </motion.div>
+                )}
+                
+                {/* Icon */}
+                <IconComponent 
+                  className={`relative z-10 transition-all duration-300 ${
+                    isActive ? 'w-10 h-10' : 'w-8 h-8'
+                  }`}
+                  strokeWidth={isActive ? 2.5 : 2}
+                />
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Progress Header */}
+        <div className="lg:hidden w-full mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-purple-600">
+              {t('step')} {activeStep + 1} of {steps.length}
+            </span>
+            <div className="flex items-center gap-1 text-gray-500">
+              <Clock className="w-4 h-4" />
+              <span className="text-xs">30s auto</span>
             </div>
-          ))}
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              className="bg-purple-600 h-2 rounded-full transition-all duration-100 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
 
         {/* Right Column - Step Content */}
@@ -99,11 +181,11 @@ const AnimatedStepFlow = () => {
               transition={{ duration: 0.3 }}
               className="bg-white rounded-lg shadow-sm border border-gray-200 p-8"
             >
-              {/* Header with Emoji Icon */}
+              {/* Header with Modern Icon */}
               <div className="mb-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-gradient-to-br from-purple-400 to-purple-600 text-white shadow-lg text-2xl">
-                    {steps[activeStep].emoji}
+                  <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-gradient-to-br from-purple-400 to-purple-600 text-white shadow-lg">
+                    {React.createElement(stepIcons[activeStep], { className: "w-8 h-8", strokeWidth: 2 })}
                   </div>
                   <div>
                     <div className="text-sm font-medium text-purple-600 mb-1">
