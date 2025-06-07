@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import TestimonialSlider from "@/components/TestimonialSlider";
@@ -97,7 +96,7 @@ const Testimonials = () => {
             >
               <div className="bg-white border-2 border-green-500 rounded-lg px-8 py-4 hover:bg-green-50 transition-colors duration-200 shadow-sm">
                 <span className="text-gray-800 font-medium text-lg">
-                  Review us on ⭐ Trustpilot
+                  Review us on <span className="text-green-500">⭐</span> Trustpilot
                 </span>
               </div>
             </a>
