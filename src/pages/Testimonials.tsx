@@ -2,6 +2,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import TestimonialSlider from "@/components/TestimonialSlider";
+import TestimonialSubmissionForm from "@/components/TestimonialSubmissionForm";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 
@@ -25,7 +26,7 @@ const Testimonials = () => {
         <div className="absolute inset-0 bg-black/20"></div>
         
         {/* Hero Title Section */}
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10 mb-12">
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10 mb-8">
           <motion.h1 
             className="text-3xl md:text-5xl font-bold mb-4" 
             initial={{ opacity: 0, y: 20 }} 
@@ -35,13 +36,22 @@ const Testimonials = () => {
             {t('testimonialsTitle')}
           </motion.h1>
           <motion.p 
-            className="text-lg md:text-xl opacity-90" 
+            className="text-lg md:text-xl opacity-90 mb-8" 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             {t('testimonialsSubtitle')}
           </motion.p>
+          
+          {/* Add testimonial submission form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <TestimonialSubmissionForm />
+          </motion.div>
         </div>
 
         {/* TestimonialSlider inside hero */}

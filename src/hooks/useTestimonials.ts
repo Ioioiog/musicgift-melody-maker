@@ -54,3 +54,27 @@ export const useTestimonialsAdmin = () => {
     },
   });
 };
+
+// Hook for user's own testimonials
+export const useUserTestimonials = () => {
+  return useQuery({
+    queryKey: ['user-testimonials'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) return [];
+
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching user testimonials:', error);
+        throw error;
+      }
+
+      return data as Testimonial[];
+    },
+  });
+};
