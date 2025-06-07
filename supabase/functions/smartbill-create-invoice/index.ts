@@ -1,3 +1,4 @@
+
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -48,6 +49,7 @@ interface SmartBillInvoiceData {
   sendEmail: boolean;
   precision: number;
   currency: string;
+  paymentUrl?: string;
   products: Array<{
     name: string;
     quantity: number;
@@ -64,6 +66,22 @@ interface SmartBillInvoiceData {
   observations?: string;
 }
 
+// Rate limiting for SmartBill API (max 3 calls per second)
+let lastApiCall = 0
+const API_RATE_LIMIT = 334 // ms between calls
+
+async function rateLimitedFetch(url: string, options: RequestInit) {
+  const now = Date.now()
+  const timeSinceLastCall = now - lastApiCall
+  
+  if (timeSinceLastCall < API_RATE_LIMIT) {
+    await new Promise(resolve => setTimeout(resolve, API_RATE_LIMIT - timeSinceLastCall))
+  }
+  
+  lastApiCall = Date.now()
+  return fetch(url, options)
+}
+
 const validateSmartBillConfig = () => {
   const username = Deno.env.get('SMARTBILL_USERNAME')
   const token = Deno.env.get('SMARTBILL_TOKEN')
@@ -72,10 +90,10 @@ const validateSmartBillConfig = () => {
   const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'mng'
   
   console.log('SmartBill Config Check:', {
-    username: username ? '***configured***' : 'MISSING',
-    token: token ? '***configured***' : 'MISSING',
+    username: username ? `${username.substring(0, 3)}***` : 'MISSING',
+    token: token ? `***${token.length} chars***` : 'MISSING',
     baseUrl,
-    companyVat: companyVat ? '***configured***' : 'MISSING',
+    companyVat: companyVat ? `${companyVat.substring(0, 4)}***` : 'MISSING',
     seriesName
   })
   
@@ -229,16 +247,16 @@ serve(async (req) => {
       name: isCompanyInvoice ? 
         (orderData.form_data.companyName || 'Company Name') : 
         (orderData.form_data.fullName || 'Customer'),
-      vatCode: isCompanyInvoice ? (orderData.form_data.vatCode || '-') : '-',
+      vatCode: isCompanyInvoice ? (orderData.form_data.vatCode || '') : '',
       regCom: isCompanyInvoice ? (orderData.form_data.registrationNumber || '') : '',
       address: isCompanyInvoice ? 
-        (orderData.form_data.companyAddress || orderData.form_data.address || '-') : 
-        (orderData.form_data.address || '-'),
-      city: orderData.form_data.city || 'Bucuresti - Sector 3',
+        (orderData.form_data.companyAddress || orderData.form_data.address || '') : 
+        (orderData.form_data.address || ''),
+      city: orderData.form_data.city || 'Bucuresti',
       county: orderData.form_data.county || 'Bucuresti',
       country: 'Romania',
       email: orderData.form_data.email || '',
-      isTaxPayer: true,
+      isTaxPayer: isCompanyInvoice && !!(orderData.form_data.vatCode),
       saveToDb: false
     }
 
@@ -257,6 +275,7 @@ serve(async (req) => {
       sendEmail: true,
       precision: 2,
       currency: orderData.currency || 'RON',
+      paymentUrl: "Generate URL", // This should trigger Netopia payment link generation
       products: [
         {
           name: `${orderData.package_name} - Cadou Musical Personalizat`,
@@ -288,7 +307,7 @@ serve(async (req) => {
     try {
       console.log('Sending request to SmartBill API:', `${baseUrl}/SBORO/api/invoice`)
       
-      invoiceResponse = await fetch(`${baseUrl}/SBORO/api/invoice`, {
+      invoiceResponse = await rateLimitedFetch(`${baseUrl}/SBORO/api/invoice`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -331,7 +350,7 @@ serve(async (req) => {
     }
 
     // Check if SmartBill returned an error
-    if (!invoiceResponse.ok || invoiceResult?.errorText || invoiceResult?.error) {
+    if (!invoiceResponse.ok || invoiceResult?.errorText) {
       const errorMessage = invoiceResult?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
       console.error('SmartBill API returned error:', errorMessage)
       
