@@ -20,79 +20,67 @@ export const StepDetailsBox: React.FC<StepDetailsBoxProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-      className={`${styling.bgColor} p-8 md:p-10 rounded-2xl border-l-6 ${styling.borderColor} shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden group`}
+      transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+      className={`${styling.bgColor} p-4 md:p-6 rounded-xl border-l-4 ${styling.borderColor} shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group`}
     >
-      {/* Enhanced decorative background elements */}
-      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-white/15 to-transparent rounded-full -translate-y-20 translate-x-20 group-hover:scale-110 transition-transform duration-700" />
-      <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-white/8 to-transparent rounded-full translate-y-12 -translate-x-12 group-hover:scale-105 transition-transform duration-700" />
-      <div className="absolute top-1/2 right-8 w-16 h-16 bg-gradient-to-br from-white/5 to-transparent rounded-full animate-pulse" />
+      {/* Compact decorative elements */}
+      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-white/10 to-transparent rounded-full -translate-y-10 translate-x-10" />
       
       <div className={`${styling.textColor} relative z-10`}>
-        {/* Enhanced title with icon and better styling */}
+        {/* Compact title */}
         <motion.div 
-          className="flex items-center gap-4 mb-6"
+          className="flex items-center gap-3 mb-4"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
         >
-          <div className={`flex items-center justify-center w-10 h-10 rounded-full ${styling.borderColor.replace('border-', 'bg-')} shadow-lg group-hover:rotate-12 transition-transform duration-300`}>
-            <Sparkles className="w-5 h-5 text-white" strokeWidth={2} />
+          <div className={`flex items-center justify-center w-8 h-8 rounded-full ${styling.borderColor.replace('border-', 'bg-')} shadow-md`}>
+            <Sparkles className="w-4 h-4 text-white" strokeWidth={2} />
           </div>
-          <h4 className="text-2xl font-bold tracking-tight">
+          <h4 className="text-lg font-bold">
             {details.listTitle}
           </h4>
         </motion.div>
         
-        {/* Enhanced list with improved icons and animations */}
-        <div className="space-y-5 mb-8">
+        {/* Compact list */}
+        <div className="space-y-3 mb-4">
           {details.listItems.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ 
-                duration: 0.4, 
-                delay: 0.5 + index * 0.1,
+                duration: 0.3, 
+                delay: 0.4 + index * 0.1,
                 ease: "easeOut"
               }}
-              className="flex items-start gap-4 group/item hover:translate-x-2 transition-transform duration-300"
+              className="flex items-start gap-3 group/item hover:translate-x-1 transition-transform duration-200"
             >
-              <div className={`flex-shrink-0 w-7 h-7 rounded-full ${styling.borderColor.replace('border-', 'bg-')} flex items-center justify-center mt-1 shadow-md group-hover/item:scale-110 group-hover/item:shadow-lg transition-all duration-300`}>
-                <Check className="w-4 h-4 text-white" strokeWidth={3} />
+              <div className={`flex-shrink-0 w-5 h-5 rounded-full ${styling.borderColor.replace('border-', 'bg-')} flex items-center justify-center mt-0.5 shadow-sm`}>
+                <Check className="w-3 h-3 text-white" strokeWidth={3} />
               </div>
-              <p className={`${styling.textColor.replace('800', '700')} text-lg leading-relaxed flex-1 font-medium`}>
+              <p className={`${styling.textColor.replace('800', '700')} text-sm leading-relaxed flex-1`}>
                 {item}
               </p>
             </motion.div>
           ))}
         </div>
         
-        {/* Enhanced footer with gradient border and better styling */}
+        {/* Compact footer */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.9 }}
-          className="relative mt-8"
+          transition={{ duration: 0.3, delay: 0.8 }}
+          className="relative"
         >
-          {/* Gradient separator */}
-          <div className={`w-full h-px bg-gradient-to-r from-transparent via-current to-transparent opacity-20 mb-6`} />
+          <div className={`w-full h-px bg-gradient-to-r from-transparent via-current to-transparent opacity-15 mb-3`} />
           
-          {/* Enhanced footer content */}
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 rounded-xl blur-sm" />
-            <div className="relative bg-white/40 backdrop-blur-md rounded-xl px-6 py-4 border border-white/20 shadow-inner">
-              <p className={`${styling.textColor} text-base italic font-semibold text-center leading-relaxed`}>
-                {details.footer}
-              </p>
-            </div>
+          <div className="bg-white/30 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/15">
+            <p className={`${styling.textColor} text-xs italic font-medium text-center`}>
+              {details.footer}
+            </p>
           </div>
         </motion.div>
-
-        {/* Subtle floating particles effect */}
-        <div className="absolute top-4 left-4 w-1 h-1 bg-current opacity-30 rounded-full animate-pulse" />
-        <div className="absolute top-8 right-12 w-1 h-1 bg-current opacity-20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-6 left-8 w-1 h-1 bg-current opacity-25 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
     </motion.div>
   );
