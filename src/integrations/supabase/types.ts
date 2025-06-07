@@ -919,6 +919,48 @@ export type Database = {
         }
         Relationships: []
       }
+      testimonials: {
+        Row: {
+          approved: boolean | null
+          context: string | null
+          created_at: string | null
+          display_order: number | null
+          id: string
+          location: string | null
+          name: string
+          stars: number | null
+          text: string | null
+          updated_at: string | null
+          youtube_link: string | null
+        }
+        Insert: {
+          approved?: boolean | null
+          context?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          location?: string | null
+          name: string
+          stars?: number | null
+          text?: string | null
+          updated_at?: string | null
+          youtube_link?: string | null
+        }
+        Update: {
+          approved?: boolean | null
+          context?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          location?: string | null
+          name?: string
+          stars?: number | null
+          text?: string | null
+          updated_at?: string | null
+          youtube_link?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           assigned_at: string | null

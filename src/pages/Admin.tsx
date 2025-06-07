@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -10,6 +11,7 @@ import CampaignsManagement from "@/components/admin/CampaignsManagement";
 import GiftCardsManagement from "@/components/admin/GiftCardsManagement";
 import PaymentProvidersManagement from "@/components/admin/PaymentProvidersManagement";
 import EmailManagement from "@/components/admin/EmailManagement";
+import TestimonialsManagement from "@/components/admin/TestimonialsManagement";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 
@@ -29,9 +31,8 @@ const Admin = () => {
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-              {/* Enhanced responsive tab layout with better styling */}
               <div className="w-full overflow-x-auto bg-white rounded-lg border shadow-sm">
-                <TabsList className="flex w-full min-w-[900px] sm:min-w-full h-auto p-2 justify-start gap-1 bg-gray-50/50">
+                <TabsList className="flex w-full min-w-[1000px] sm:min-w-full h-auto p-2 justify-start gap-1 bg-gray-50/50">
                   <TabsTrigger 
                     value="packages" 
                     className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
@@ -43,6 +44,12 @@ const Admin = () => {
                     className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
                   >
                     📋 Orders
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="testimonials" 
+                    className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50"
+                  >
+                    💬 Testimonials
                   </TabsTrigger>
                   <TabsTrigger 
                     value="gift-cards" 
@@ -89,6 +96,10 @@ const Admin = () => {
 
               <TabsContent value="orders" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <OrdersManagement />
+              </TabsContent>
+
+              <TabsContent value="testimonials" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
+                <TestimonialsManagement />
               </TabsContent>
 
               <TabsContent value="gift-cards" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
