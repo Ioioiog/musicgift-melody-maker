@@ -8,6 +8,7 @@ import { aboutTranslations } from './about';
 import { commonTranslations } from './common';
 import { giftTranslations } from './gift';
 import { howItWorksTranslations } from './howItWorks';
+import { contactTranslations } from './contact';
 
 export const frTranslations = {
   ...navigationTranslations,
@@ -19,4 +20,5 @@ export const frTranslations = {
   ...commonTranslations,
   ...giftTranslations,
   ...howItWorksTranslations,
+  ...contactTranslations,
 };
