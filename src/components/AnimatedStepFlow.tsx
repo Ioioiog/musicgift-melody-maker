@@ -190,7 +190,7 @@ const AnimatedStepFlow = () => {
               </div>
 
               {/* Description */}
-              <motion.p className="text-lg lg:text-xl text-gray-600 leading-relaxed" initial={{
+              <motion.div className="text-lg lg:text-xl text-gray-600 leading-relaxed space-y-4" initial={{
               opacity: 0,
               y: 20
             }} animate={{
@@ -199,8 +199,57 @@ const AnimatedStepFlow = () => {
             }} transition={{
               delay: 0.4
             }}>
-                {steps[activeStep].description}
-              </motion.p>
+                <p className="mb-4">{steps[activeStep].description}</p>
+                
+                {/* Additional detailed information for each step */}
+                {activeStep === 0 && (
+                  <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                    <p className="text-blue-800 font-medium mb-2">What's included in our packages:</p>
+                    <ul className="text-blue-700 text-base space-y-1">
+                      <li>• Professional music production with live instruments</li>
+                      <li>• Custom lyrics written specifically for your story</li>
+                      <li>• Multiple revision rounds to ensure perfection</li>
+                      <li>• High-quality audio files in multiple formats</li>
+                    </ul>
+                  </div>
+                )}
+                
+                {activeStep === 1 && (
+                  <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                    <p className="text-green-800 font-medium mb-2">Share your unique story:</p>
+                    <ul className="text-green-700 text-base space-y-1">
+                      <li>• Tell us about your special moments and memories</li>
+                      <li>• Include names, dates, and personal details</li>
+                      <li>• Choose your preferred music style and mood</li>
+                      <li>• Upload voice messages or photos for inspiration</li>
+                    </ul>
+                  </div>
+                )}
+                
+                {activeStep === 2 && (
+                  <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                    <p className="text-purple-800 font-medium mb-2">Our creative process:</p>
+                    <ul className="text-purple-700 text-base space-y-1">
+                      <li>• Professional songwriters craft your personalized lyrics</li>
+                      <li>• Experienced musicians record live instruments</li>
+                      <li>• Professional vocalists bring your song to life</li>
+                      <li>• Sound engineers perfect every detail</li>
+                    </ul>
+                  </div>
+                )}
+                
+                {activeStep === 3 && (
+                  <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-400">
+                    <p className="text-orange-800 font-medium mb-2">Your finished masterpiece:</p>
+                    <ul className="text-orange-700 text-base space-y-1">
+                      <li>• Receive your song in high-quality MP3 and WAV formats</li>
+                      <li>• Get beautiful cover artwork designed for your song</li>
+                      <li>• Optional video creation and distribution services</li>
+                      <li>• Lifetime access to download and share your music</li>
+                    </ul>
+                  </div>
+                )}
+              </motion.div>
 
               {/* Progress indicator */}
               <motion.div className="mt-8 flex items-center gap-2" initial={{
