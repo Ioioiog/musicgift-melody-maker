@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, MessageSquare, Music, Gift, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ShoppingCart, MessageSquare, Music, Gift, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { stepContentData } from '@/data/stepContent';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ interface Step {
 const AnimatedStepFlow = () => {
   const { t } = useLanguage();
   const [activeStep, setActiveStep] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   const stepIcons = [ShoppingCart, MessageSquare, Music, Gift];
   
@@ -30,24 +32,42 @@ const AnimatedStepFlow = () => {
     details: stepContent.getDetails(t)
   }));
 
-  // Auto-progression effect - 30 seconds per step
+  // Auto-progression effect - 30 seconds per step with progress tracking
   useEffect(() => {
-    const interval = setInterval(() => {
+    const progressInterval = setInterval(() => {
+      setProgress(prev => {
+        const newProgress = prev + (100 / 300); // 30 seconds = 300 intervals of 100ms
+        if (newProgress >= 100) {
+          return 0;
+        }
+        return newProgress;
+      });
+    }, 100);
+
+    const stepInterval = setInterval(() => {
       setActiveStep(prev => (prev + 1) % steps.length);
+      setProgress(0);
     }, 30000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearInterval(progressInterval);
+      clearInterval(stepInterval);
+    };
   }, [steps.length]);
 
   const handleStepClick = (index: number) => {
     setActiveStep(index);
+    setProgress(0);
   };
 
   const handlePrevious = () => {
     setActiveStep(prev => prev === 0 ? steps.length - 1 : prev - 1);
+    setProgress(0);
   };
 
   const handleNext = () => {
     setActiveStep(prev => (prev + 1) % steps.length);
+    setProgress(0);
   };
 
   // Get 3D style classes for each step
@@ -82,43 +102,173 @@ const AnimatedStepFlow = () => {
     <div className="max-w-6xl mx-auto px-4 h-full">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full items-start">
         
-        {/* Left Column - Simple Step Indicators */}
+        {/* Enhanced Left Column - Step Indicators */}
         <div className="lg:col-span-3">
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Progress Header */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/30">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center">
+                  <Clock className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-800">Process Flow</h3>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                <motion.div 
+                  className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"
+                  style={{ width: `${progress}%` }}
+                  transition={{ duration: 0.1 }}
+                />
+              </div>
+              <p className="text-xs text-gray-600 mt-2">
+                Step {activeStep + 1} of {steps.length} • Auto-advancing in {Math.ceil((100 - progress) * 0.3)}s
+              </p>
+            </div>
+
+            {/* Enhanced Step Indicators */}
             {steps.map((step, index) => {
               const isActive = index === activeStep;
+              const isPrevious = index < activeStep;
+              const isNext = index > activeStep;
               
               return (
                 <motion.div 
                   key={index}
                   onClick={() => handleStepClick(index)}
-                  className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-300 ${
+                  className={`relative group cursor-pointer transition-all duration-300 ${
                     isActive 
-                      ? 'bg-white shadow-md border-l-4 border-purple-600' 
-                      : 'bg-white/50 hover:bg-white/70'
+                      ? 'transform scale-[1.02]' 
+                      : 'hover:transform hover:scale-[1.01]'
                   }`}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  {/* Step Number Circle */}
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm ${
-                    isActive 
-                      ? 'bg-purple-600 text-white' 
-                      : 'bg-gray-100 text-gray-600'
-                  }`}>
-                    {index + 1}
-                  </div>
+                  {/* Connection Line */}
+                  {index < steps.length - 1 && (
+                    <div className="absolute left-5 top-16 w-0.5 h-8 bg-gradient-to-b from-gray-300 to-transparent z-0" />
+                  )}
                   
-                  {/* Step Title */}
-                  <div className="flex-1 min-w-0">
-                    <div className={`text-sm font-medium ${
-                      isActive ? 'text-purple-700' : 'text-gray-700'
-                    }`}>
-                      {step.title}
+                  {/* Step Card */}
+                  <div className={`relative z-10 p-4 rounded-xl transition-all duration-300 ${
+                    isActive 
+                      ? 'bg-gradient-to-r from-purple-50 to-indigo-50 shadow-lg border-2 border-purple-200/50 backdrop-blur-sm' 
+                      : isPrevious
+                      ? 'bg-white/70 shadow-md border border-green-200/50 backdrop-blur-sm'
+                      : 'bg-white/50 shadow-sm border border-gray-200/50 backdrop-blur-sm hover:bg-white/70 hover:shadow-md'
+                  }`}>
+                    
+                    {/* Step Number and Icon */}
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className={`relative w-12 h-12 rounded-xl flex items-center justify-center font-bold transition-all duration-300 ${
+                        isActive 
+                          ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg' 
+                          : isPrevious
+                          ? 'bg-gradient-to-r from-green-400 to-emerald-400 text-white shadow-md'
+                          : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'
+                      }`}>
+                        {isPrevious ? (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="w-5 h-5 bg-white rounded-full flex items-center justify-center"
+                          >
+                            <div className="w-2 h-2 bg-green-500 rounded-full" />
+                          </motion.div>
+                        ) : (
+                          <span className="text-sm">{index + 1}</span>
+                        )}
+                        
+                        {/* Active Step Pulse Effect */}
+                        {isActive && (
+                          <motion.div
+                            className="absolute inset-0 rounded-xl bg-purple-400/30"
+                            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          />
+                        )}
+                      </div>
+                      
+                      {/* Step Icon */}
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                        isActive ? 'bg-white shadow-md' : 'bg-gray-50 group-hover:bg-white'
+                      }`}>
+                        {React.createElement(step.icon, {
+                          className: `w-5 h-5 ${isActive ? 'text-purple-600' : 'text-gray-500'}`
+                        })}
+                      </div>
                     </div>
+                    
+                    {/* Step Content */}
+                    <div className="space-y-2">
+                      <h4 className={`font-semibold transition-colors duration-300 ${
+                        isActive ? 'text-purple-700' : isPrevious ? 'text-green-700' : 'text-gray-700'
+                      }`}>
+                        {step.title}
+                      </h4>
+                      
+                      <p className={`text-sm leading-relaxed transition-colors duration-300 ${
+                        isActive ? 'text-purple-600' : isPrevious ? 'text-green-600' : 'text-gray-600'
+                      }`}>
+                        {step.description.length > 80 ? 
+                          `${step.description.substring(0, 80)}...` : 
+                          step.description
+                        }
+                      </p>
+                    </div>
+
+                    {/* Active Step Indicator */}
+                    {isActive && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                      >
+                        <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full shadow-lg" />
+                      </motion.div>
+                    )}
                   </div>
                 </motion.div>
               );
             })}
+
+            {/* Quick Navigation */}
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-md border border-white/30">
+              <div className="flex items-center justify-between">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handlePrevious}
+                  className="h-8 px-3 bg-white/50 hover:bg-white/80 border-purple-200"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                
+                <div className="flex items-center gap-1">
+                  {steps.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleStepClick(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        index === activeStep 
+                          ? 'bg-purple-600 w-6' 
+                          : index < activeStep
+                          ? 'bg-green-400'
+                          : 'bg-gray-300 hover:bg-gray-400'
+                      }`}
+                    />
+                  ))}
+                </div>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleNext}
+                  className="h-8 px-3 bg-white/50 hover:bg-white/80 border-purple-200"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
 
