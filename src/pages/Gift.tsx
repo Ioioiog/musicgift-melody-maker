@@ -11,6 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Gift = () => {
   const { t } = useLanguage();
@@ -43,61 +44,88 @@ const Gift = () => {
     // window.location.href = `/order?gift=${giftCard.code}&package=${selectedPackage}`;
   };
 
-  const backgroundStyle = {
-    backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
-  };
-
   return (
-    <div className="min-h-screen relative overflow-hidden" style={backgroundStyle}>
-      {/* Dark overlay for better contrast */}
-      <div className="absolute inset-0 bg-black/20"></div>
-
-      <div className="relative z-10">
-        <Navigation />
-        
-        <section className="pt-16 sm:pt-20 md:pt-24 py-8 sm:py-12">
-          <div className="container mx-auto px-4">
-            {/* Hero Section */}
-            <div className="text-center mb-12">
-              <div className="flex justify-center mb-6">
-                <div className="p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
-                  <GiftIcon className="w-12 h-12 text-white" />
-                </div>
-              </div>
-              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                Share the Gift of Music
-              </h1>
-              <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                Give someone special a personalized song they'll treasure forever. 
-                Create a digital gift card and let them choose their perfect musical experience.
-              </p>
+    <div className="min-h-screen flex flex-col">
+      <Navigation />
+      
+      {/* Compact Hero Section */}
+      <section className="py-6 text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/20 py-0"></div>
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+          <motion.div 
+            className="flex justify-center mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className="p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
+              <GiftIcon className="w-12 h-12 text-white" />
             </div>
+          </motion.div>
+          <motion.h2 
+            className="text-2xl md:text-3xl font-bold mb-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            Share the Gift of Music
+          </motion.h2>
+          <motion.p 
+            className="text-base md:text-lg opacity-90 mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            Give someone special a personalized song they'll treasure forever. 
+            Create a digital gift card and let them choose their perfect musical experience.
+          </motion.p>
+        </div>
+      </section>
 
-            {/* Features Cards */}
-            
-
-            {/* Main Content */}
-            <div className="max-w-4xl mx-auto">
-              {paymentStatus === 'success' ? (
+      {/* Main Content - Flexible to fill remaining space with background */}
+      <section className="flex-1 flex items-center py-4 relative" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/30"></div>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="w-full relative z-10 px-4 py-8"
+        >
+          <div className="max-w-4xl mx-auto">
+            {paymentStatus === 'success' ? (
+              <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-purple-200/30 backdrop-blur-sm p-6">
                 <GiftPaymentSuccess />
-              ) : (
-                <Tabs defaultValue="purchase" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 mb-8">
-                    <TabsTrigger value="purchase" className="text-lg py-3">
-                      <GiftIcon className="w-5 h-5 mr-2" />
-                      Buy Gift Card
-                    </TabsTrigger>
-                    <TabsTrigger value="redeem" className="text-lg py-3">
-                      <Heart className="w-5 h-5 mr-2" />
-                      Redeem Gift Card
-                    </TabsTrigger>
-                  </TabsList>
+              </div>
+            ) : (
+              <Tabs defaultValue="purchase" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/10 backdrop-blur-sm border border-white/20">
+                  <TabsTrigger value="purchase" className="text-lg py-3 data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80">
+                    <GiftIcon className="w-5 h-5 mr-2" />
+                    Buy Gift Card
+                  </TabsTrigger>
+                  <TabsTrigger value="redeem" className="text-lg py-3 data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80">
+                    <Heart className="w-5 h-5 mr-2" />
+                    Redeem Gift Card
+                  </TabsTrigger>
+                </TabsList>
 
-                  <TabsContent value="purchase">
-                    <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6">
+                <TabsContent value="purchase">
+                  <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-purple-200/30 backdrop-blur-sm overflow-hidden">
+                    {/* Decorative elements */}
+                    <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-purple-400/15 to-transparent rounded-full blur-lg" />
+                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-indigo-400/10 to-transparent rounded-full blur-md" />
+                    
+                    <div className="relative z-10 p-6">
                       {user ? (
                         <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
                       ) : (
@@ -111,21 +139,28 @@ const Gift = () => {
                         </div>
                       )}
                     </div>
-                  </TabsContent>
+                  </div>
+                </TabsContent>
 
-                  <TabsContent value="redeem">
-                    <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6">
+                <TabsContent value="redeem">
+                  <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-purple-200/30 backdrop-blur-sm overflow-hidden">
+                    {/* Decorative elements */}
+                    <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-purple-400/15 to-transparent rounded-full blur-lg" />
+                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-indigo-400/10 to-transparent rounded-full blur-md" />
+                    
+                    <div className="relative z-10 p-6">
                       <GiftRedemption onRedemption={handleGiftRedemption} />
                     </div>
-                  </TabsContent>
-                </Tabs>
-              )}
-            </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            )}
           </div>
-        </section>
+        </motion.div>
+      </section>
 
-        <Footer />
-      </div>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
