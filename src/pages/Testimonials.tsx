@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import TestimonialSlider from "@/components/TestimonialSlider";
@@ -81,13 +82,14 @@ const Testimonials = () => {
             {t('testimonialsSubtitle')}
           </motion.p>
           
-          {/* Trustpilot Button */}
+          {/* Buttons Section */}
           <motion.div 
-            className="max-w-2xl mx-auto mb-8" 
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8" 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.4 }}
           >
+            {/* Trustpilot Button */}
             <a 
               href="https://www.trustpilot.com/review/musicgift.ro" 
               target="_blank" 
@@ -100,6 +102,9 @@ const Testimonials = () => {
                 </span>
               </div>
             </a>
+
+            {/* Testimonial Submission Button */}
+            <TestimonialSubmissionForm />
           </motion.div>
         </div>
       </section>
