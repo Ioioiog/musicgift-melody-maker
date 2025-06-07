@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import TestimonialSlider from "@/components/TestimonialSlider";
@@ -33,7 +34,7 @@ const Testimonials = () => {
       <Navigation />
       
       {/* Enhanced Hero Section with Purple Musical Background - No top padding for seamless connection to navbar */}
-      <section className="pt-16 md:pt-20 lg:pt-24 pb-8 text-white relative overflow-hidden" style={backgroundStyle}>
+      <section className="pt-16 md:pt-20 lg:pt-24 pb-6 text-white relative overflow-hidden" style={backgroundStyle}>
         <div className="absolute inset-0 bg-black/20"></div>
         
         {/* Floating Musical Notes */}
@@ -50,8 +51,8 @@ const Testimonials = () => {
           </div>
         </div>
         
-        <div className="max-w-4xl mx-auto text-center px-4 relative z-10">
-          <motion.h1 className="text-4xl md:text-6xl font-bold text-white mb-6" initial={{
+        <div className="max-w-4xl mx-auto text-center px-[14px] py-0 my-[24px] relative z-10">
+          <motion.h1 className="text-2xl md:text-3xl font-bold text-white mb-2" initial={{
           opacity: 0,
           y: 20
         }} animate={{
@@ -62,7 +63,7 @@ const Testimonials = () => {
         }}>
             {t('testimonialsTitle')}
           </motion.h1>
-          <motion.p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto" initial={{
+          <motion.p className="text-base md:text-lg text-white/90 mb-4 max-w-2xl mx-auto" initial={{
           opacity: 0,
           y: 20
         }} animate={{
@@ -76,7 +77,7 @@ const Testimonials = () => {
           </motion.p>
           
           {/* Buttons Section */}
-          <motion.div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8" initial={{
+          <motion.div className="flex flex-col sm:flex-row gap-2 justify-center items-center mb-4" initial={{
           opacity: 0,
           y: 20
         }} animate={{
@@ -88,9 +89,9 @@ const Testimonials = () => {
         }}>
             {/* Trustpilot Button */}
             <a href="https://www.trustpilot.com/review/musicgift.ro" target="_blank" rel="noopener noreferrer" className="inline-block">
-              <div className="bg-white border-2 border-green-500 rounded-lg hover:bg-green-50 transition-colors duration-200 shadow-sm py-[4px] px-[15px]">
-                <span className="text-gray-800 font-medium text-lg">
-                  Review us on <span className="text-green-500">⭐</span> Trustpilot
+              <div className="bg-white border-2 border-green-500 rounded-lg hover:bg-green-50 transition-colors duration-200 shadow-sm py-[2px] px-[10px]">
+                <span className="text-gray-800 font-medium text-sm">
+                  Review us on <span style={{ color: '#00B67A' }}>⭐</span> Trustpilot
                 </span>
               </div>
             </a>
