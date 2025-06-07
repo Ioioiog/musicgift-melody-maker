@@ -107,7 +107,7 @@ const Testimonials = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Trusted by Thousands</h2>
             <p className="text-gray-600 mb-8">See what our customers say about their experience</p>
             
-            {/* Enhanced Trustpilot Widget */}
+            {/* Trustpilot Widget */}
             <div className="max-w-2xl mx-auto mb-8">
               <div 
                 className="trustpilot-widget shadow-lg rounded-lg overflow-hidden bg-gradient-to-r from-green-50 to-blue-50 p-4" 
