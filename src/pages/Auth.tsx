@@ -110,47 +110,68 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-10 left-10 w-32 h-32 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/3 right-16 w-48 h-48 bg-pink-400/10 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-20 left-1/4 w-24 h-24 bg-indigo-400/15 rounded-full blur-2xl animate-pulse delay-300"></div>
+        <div className="absolute bottom-1/3 right-1/3 w-16 h-16 bg-purple-300/20 rounded-full blur-xl animate-float delay-700"></div>
+      </div>
+      
+      <div className="w-full max-w-md relative z-10">
         <div className="mb-8">
           <Link 
             to="/" 
-            className="inline-flex items-center text-purple-600 hover:text-purple-700 transition-colors mb-6"
+            className="inline-flex items-center text-white/80 hover:text-white transition-colors mb-8 group"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
             {t('backHome')}
           </Link>
           
           <div className="text-center">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                <Music className="w-8 h-8 text-white" />
+            {/* Music Gift Logo */}
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gradient-to-r from-white to-purple-100 rounded-2xl flex items-center justify-center shadow-2xl border border-white/20 backdrop-blur-sm">
+                  <Music className="w-10 h-10 text-purple-600" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                </div>
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('musicGift')}</h1>
-            <p className="text-gray-600">
+            
+            <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">{t('musicGift')}</h1>
+            <p className="text-purple-100 text-lg leading-relaxed">
               {isLogin ? t('signInSubtitle') : t('signUpSubtitle')}
             </p>
           </div>
         </div>
 
-        <Card className="shadow-xl border-0">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">
+        <Card className="shadow-2xl border-0 backdrop-blur-sm bg-white/95 overflow-hidden">
+          {/* Card Decorative Elements */}
+          <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-purple-400/20 to-transparent rounded-full blur-lg"></div>
+          <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-indigo-400/15 to-transparent rounded-full blur-md"></div>
+          
+          <CardHeader className="space-y-1 relative z-10 pb-8">
+            <CardTitle className="text-3xl text-center font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
               {isLogin ? t('signInBtn') : t('signUpBtn')}
             </CardTitle>
-            <CardDescription className="text-center">
+            <CardDescription className="text-center text-gray-600 text-lg">
               {isLogin 
                 ? t('connectToContinue')
                 : t('createAccount')
               }
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleAuth} className="space-y-4">
+          
+          <CardContent className="relative z-10">
+            <form onSubmit={handleAuth} className="space-y-6">
               {!isLogin && (
                 <div className="space-y-2">
-                  <label htmlFor="fullName" className="text-sm font-medium text-gray-700">
+                  <label htmlFor="fullName" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                     {t('fullName')}
                   </label>
                   <Input
@@ -160,13 +181,14 @@ const Auth = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required={!isLogin}
-                    className="h-12"
+                    className="h-12 border-2 border-gray-200 focus:border-purple-500 transition-colors duration-200"
                   />
                 </div>
               )}
               
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                   {t('email')}
                 </label>
                 <Input
@@ -176,12 +198,13 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="h-12"
+                  className="h-12 border-2 border-gray-200 focus:border-purple-500 transition-colors duration-200"
                 />
               </div>
               
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <label htmlFor="password" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                   {t('password')}
                 </label>
                 <div className="relative">
@@ -192,19 +215,19 @@ const Auth = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="h-12 pr-10"
+                    className="h-12 pr-12 border-2 border-gray-200 focus:border-purple-500 transition-colors duration-200"
                     minLength={6}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-600 transition-colors p-1"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
                 {!isLogin && (
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 mt-1">
                     {t('passwordMinLength')}
                   </p>
                 )}
@@ -212,12 +235,12 @@ const Auth = () => {
               
               <Button
                 type="submit"
-                className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold"
+                className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <div className="flex items-center">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3" />
                     {isLogin ? t('signingIn') : t('signingUp')}
                   </div>
                 ) : (
@@ -226,7 +249,16 @@ const Auth = () => {
               </Button>
             </form>
             
-            <div className="mt-6 text-center">
+            <div className="mt-8 text-center">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white text-gray-500">sau</span>
+                </div>
+              </div>
+              
               <button
                 type="button"
                 onClick={() => {
@@ -235,7 +267,7 @@ const Auth = () => {
                   setEmail('');
                   setPassword('');
                 }}
-                className="text-purple-600 hover:text-purple-700 font-medium"
+                className="mt-6 text-purple-600 hover:text-purple-700 font-semibold text-lg transition-colors duration-200 hover:underline"
               >
                 {isLogin 
                   ? t('noAccount')
