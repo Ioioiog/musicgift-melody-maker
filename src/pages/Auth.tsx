@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -110,7 +111,7 @@ const Auth = () => {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden"
       style={{
         backgroundImage: 'url(/lovable-uploads/59966179-f008-4ec2-b3e6-5b45f100d21f.png)',
         backgroundSize: 'cover',
@@ -118,167 +119,188 @@ const Auth = () => {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      {/* Subtle overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/20"></div>
+      {/* Enhanced overlay for better contrast */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
       
-      <div className="w-full max-w-md relative z-10">
-        <div className="mb-8">
-          <Link 
-            to="/" 
-            className="inline-flex items-center text-white/80 hover:text-white transition-colors mb-8 group"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-            {t('backHome')}
-          </Link>
+      {/* Back to home link */}
+      <Link 
+        to="/" 
+        className="absolute top-6 left-6 inline-flex items-center text-white/90 hover:text-white transition-colors group z-20"
+      >
+        <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
+        {t('backHome')}
+      </Link>
+
+      {/* Main content container */}
+      <div className="w-full max-w-6xl mx-auto px-4 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
           
-          <div className="text-center">
+          {/* Left side - Brand and description */}
+          <div className="text-center lg:text-left">
             {/* Music Gift Logo */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center lg:justify-start mb-8">
               <div className="relative">
-                <div className="w-20 h-20 bg-gradient-to-r from-white to-purple-100 rounded-2xl flex items-center justify-center shadow-2xl border border-white/20 backdrop-blur-sm">
-                  <Music className="w-10 h-10 text-purple-600" />
+                <div className="w-24 h-24 bg-gradient-to-br from-white/20 to-purple-200/30 rounded-3xl flex items-center justify-center shadow-2xl border border-white/30 backdrop-blur-lg">
+                  <Music className="w-12 h-12 text-white" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                  <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
                 </div>
               </div>
             </div>
             
-            <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">{t('musicGift')}</h1>
-            <p className="text-purple-100 text-lg leading-relaxed">
+            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
+              {t('musicGift')}
+            </h1>
+            <p className="text-xl lg:text-2xl text-white/90 mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0">
               {isLogin ? t('signInSubtitle') : t('signUpSubtitle')}
             </p>
-          </div>
-        </div>
-
-        <Card className="shadow-2xl border-0 backdrop-blur-sm bg-white/95 overflow-hidden">
-          {/* Card Decorative Elements */}
-          <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-purple-400/20 to-transparent rounded-full blur-lg"></div>
-          <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-indigo-400/15 to-transparent rounded-full blur-md"></div>
-          
-          <CardHeader className="space-y-1 relative z-10 pb-8">
-            <CardTitle className="text-3xl text-center font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              {isLogin ? t('signInBtn') : t('signUpBtn')}
-            </CardTitle>
-            <CardDescription className="text-center text-gray-600 text-lg">
-              {isLogin 
-                ? t('connectToContinue')
-                : t('createAccount')
-              }
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent className="relative z-10">
-            <form onSubmit={handleAuth} className="space-y-6">
-              {!isLogin && (
-                <div className="space-y-2">
-                  <label htmlFor="fullName" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    {t('fullName')}
-                  </label>
-                  <Input
-                    id="fullName"
-                    type="text"
-                    placeholder={t('fullName')}
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required={!isLogin}
-                    className="h-12 border-2 border-gray-200 focus:border-purple-500 transition-colors duration-200"
-                  />
-                </div>
-              )}
-              
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  {t('email')}
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="email@exemplu.ro"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="h-12 border-2 border-gray-200 focus:border-purple-500 transition-colors duration-200"
-                />
+            
+            {/* Feature highlights */}
+            <div className="hidden lg:block space-y-4">
+              <div className="flex items-center text-white/80">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mr-3"></div>
+                <span>Create personalized musical experiences</span>
               </div>
+              <div className="flex items-center text-white/80">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mr-3"></div>
+                <span>Share the gift of music with loved ones</span>
+              </div>
+              <div className="flex items-center text-white/80">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mr-3"></div>
+                <span>Professional quality compositions</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right side - Auth form */}
+          <div className="w-full max-w-md mx-auto lg:mx-0">
+            <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-lg overflow-hidden">
+              {/* Decorative gradient bar */}
+              <div className="h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500"></div>
               
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  {t('password')}
-                </label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder={t('password')}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="h-12 pr-12 border-2 border-gray-200 focus:border-purple-500 transition-colors duration-200"
-                    minLength={6}
-                  />
+              <CardHeader className="space-y-4 pb-8 pt-8">
+                <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                  {isLogin ? t('signInBtn') : t('signUpBtn')}
+                </CardTitle>
+                <CardDescription className="text-center text-gray-600 text-lg">
+                  {isLogin 
+                    ? t('connectToContinue')
+                    : t('createAccount')
+                  }
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="px-8 pb-8">
+                <form onSubmit={handleAuth} className="space-y-6">
+                  {!isLogin && (
+                    <div className="space-y-2">
+                      <label htmlFor="fullName" className="text-sm font-semibold text-gray-700">
+                        {t('fullName')}
+                      </label>
+                      <Input
+                        id="fullName"
+                        type="text"
+                        placeholder={t('fullName')}
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required={!isLogin}
+                        className="h-12 border-2 border-gray-200 focus:border-purple-500 transition-colors duration-200 rounded-lg"
+                      />
+                    </div>
+                  )}
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-semibold text-gray-700">
+                      {t('email')}
+                    </label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="email@exemplu.ro"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="h-12 border-2 border-gray-200 focus:border-purple-500 transition-colors duration-200 rounded-lg"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="password" className="text-sm font-semibold text-gray-700">
+                      {t('password')}
+                    </label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder={t('password')}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        className="h-12 pr-12 border-2 border-gray-200 focus:border-purple-500 transition-colors duration-200 rounded-lg"
+                        minLength={6}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-600 transition-colors p-1"
+                      >
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                    {!isLogin && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        {t('passwordMinLength')}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <Button
+                    type="submit"
+                    className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 rounded-lg"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center">
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3" />
+                        {isLogin ? t('signingIn') : t('signingUp')}
+                      </div>
+                    ) : (
+                      isLogin ? t('signInBtn') : t('signUpBtn')
+                    )}
+                  </Button>
+                </form>
+                
+                <div className="mt-8 text-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-4 bg-white text-gray-500">sau</span>
+                    </div>
+                  </div>
+                  
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-600 transition-colors p-1"
+                    onClick={() => {
+                      setIsLogin(!isLogin);
+                      setFullName('');
+                      setEmail('');
+                      setPassword('');
+                    }}
+                    className="mt-6 text-purple-600 hover:text-purple-700 font-semibold text-lg transition-colors duration-200 hover:underline"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {isLogin 
+                      ? t('noAccount')
+                      : t('haveAccount')
+                    }
                   </button>
                 </div>
-                {!isLogin && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    {t('passwordMinLength')}
-                  </p>
-                )}
-              </div>
-              
-              <Button
-                type="submit"
-                className="w-full h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <div className="flex items-center">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3" />
-                    {isLogin ? t('signingIn') : t('signingUp')}
-                  </div>
-                ) : (
-                  isLogin ? t('signInBtn') : t('signUpBtn')
-                )}
-              </Button>
-            </form>
-            
-            <div className="mt-8 text-center">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500">sau</span>
-                </div>
-              </div>
-              
-              <button
-                type="button"
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setFullName('');
-                  setEmail('');
-                  setPassword('');
-                }}
-                className="mt-6 text-purple-600 hover:text-purple-700 font-semibold text-lg transition-colors duration-200 hover:underline"
-              >
-                {isLogin 
-                  ? t('noAccount')
-                  : t('haveAccount')
-                }
-              </button>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
