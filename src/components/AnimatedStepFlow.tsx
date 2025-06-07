@@ -248,7 +248,7 @@ const AnimatedStepFlow = () => {
                 })}
               </div>
 
-              {/* Header with smaller icon */}
+              {/* Header with step info - FIXED: Removed duplicate description */}
               <div className="mb-6 relative z-10">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-purple-400 to-purple-600 text-white shadow-lg">
