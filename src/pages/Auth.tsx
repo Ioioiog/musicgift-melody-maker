@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Music, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+
 const Auth = () => {
   const {
     t
@@ -113,12 +114,13 @@ const Auth = () => {
       setIsLoading(false);
     }
   };
-  return <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{
-    backgroundImage: 'url(/lovable-uploads/59966179-f008-4ec2-b3e6-5b45f100d21f.png)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
-  }}>
+  return (
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{
+      backgroundImage: 'url(/lovable-uploads/59966179-f008-4ec2-b3e6-5b45f100d21f.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
       {/* Enhanced overlay with gradient for better depth */}
       <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-purple-900/30 to-black/60 backdrop-blur-sm"></div>
       
@@ -196,42 +198,42 @@ const Auth = () => {
               
               <CardHeader className="space-y-6 pb-8 pt-12">
                 <CardTitle className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center">
-                  <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-slate-50">
+                  <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-white">
                     {isLogin ? t('signInBtn') : t('signUpBtn')}
                   </span>
                 </CardTitle>
-                <CardDescription className="text-center text-lg lg:text-xl leading-relaxed px-2 text-zinc-50">
+                <CardDescription className="text-center text-lg lg:text-xl leading-relaxed px-2 text-white">
                   {isLogin ? t('connectToContinue') : t('createAccount')}
                 </CardDescription>
               </CardHeader>
               
               <CardContent className="px-8 lg:px-10 pb-12">
-                <form onSubmit={handleAuth} className="space-y-8">
+                <form onSubmit={handleAuth} className="space-y-8 text-white">
                   {!isLogin && <div className="space-y-3">
-                      <label htmlFor="fullName" className="text-sm font-semibold text-gray-700 block">
+                      <label htmlFor="fullName" className="text-sm font-semibold text-white block">
                         {t('fullName')}
                       </label>
-                      <Input id="fullName" type="text" placeholder={t('fullName')} value={fullName} onChange={e => setFullName(e.target.value)} required={!isLogin} className="h-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm" />
+                      <Input id="fullName" type="text" placeholder={t('fullName')} value={fullName} onChange={e => setFullName(e.target.value)} required={!isLogin} className="h-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm text-black" />
                     </div>}
                   
                   <div className="space-y-3">
-                    <label htmlFor="email" className="text-sm font-semibold text-gray-700 block bg-transparent">
+                    <label htmlFor="email" className="text-sm font-semibold text-white block bg-transparent">
                       {t('email')}
                     </label>
-                    <Input id="email" type="email" placeholder="email@exemplu.ro" value={email} onChange={e => setEmail(e.target.value)} required className="h-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm" />
+                    <Input id="email" type="email" placeholder="email@exemplu.ro" value={email} onChange={e => setEmail(e.target.value)} required className="h-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm text-black" />
                   </div>
                   
                   <div className="space-y-3">
-                    <label htmlFor="password" className="text-sm font-semibold text-gray-700 block">
+                    <label htmlFor="password" className="text-sm font-semibold text-white block">
                       {t('password')}
                     </label>
                     <div className="relative">
-                      <Input id="password" type={showPassword ? "text" : "password"} placeholder={t('password')} value={password} onChange={e => setPassword(e.target.value)} required className="h-16 pr-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm" minLength={6} />
+                      <Input id="password" type={showPassword ? "text" : "password"} placeholder={t('password')} value={password} onChange={e => setPassword(e.target.value)} required className="h-16 pr-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm text-black" minLength={6} />
                       <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-600 transition-colors p-3 rounded-lg hover:bg-gray-100">
                         {showPassword ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
                       </button>
                     </div>
-                    {!isLogin && <p className="text-xs text-gray-500 mt-2 ml-1">
+                    {!isLogin && <p className="text-xs text-white mt-2 ml-1">
                         {t('passwordMinLength')}
                       </p>}
                   </div>
@@ -262,8 +264,8 @@ const Auth = () => {
                   setFullName('');
                   setEmail('');
                   setPassword('');
-                }} className="mt-10 bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 font-semibold text-xl transition-all duration-300 hover:scale-105 relative group bg-zinc-500 hover:bg-zinc-400 text-zinc-50">
-                    <span className="relative z-10 text-slate-50">
+                }} className="mt-10 bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 font-semibold text-xl transition-all duration-300 hover:scale-105 relative group bg-zinc-500 hover:bg-zinc-400 text-white">
+                    <span className="relative z-10 text-white">
                       {isLogin ? t('noAccount') : t('haveAccount')}
                     </span>
                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-600 to-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
@@ -274,6 +276,8 @@ const Auth = () => {
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Auth;
