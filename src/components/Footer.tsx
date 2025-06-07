@@ -25,7 +25,7 @@ const Footer = () => {
       {/* Subtle grid pattern overlay */}
       <div style={{
       backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-    }} className="absolute inset-0 absolute bg-purple-400 "></div>
+    }} className="inset-0.5 inset-0 -bottom-0.5 bg-violet-500 bg-gradient-purple"></div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 py-6 sm:py-8">
         {/* Main 4-column layout */}
