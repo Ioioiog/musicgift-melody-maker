@@ -40,6 +40,8 @@ interface GiftCardCanvasEditorProps {
   value: CanvasData;
   onChange: (data: CanvasData) => void;
   backgroundImage?: string;
+  selectedElementIndex?: number | null;
+  onElementSelect?: (index: number | null) => void;
 }
 
 const PLACEHOLDERS = [
@@ -56,7 +58,9 @@ const FONTS = ['Arial', 'Georgia', 'Times New Roman', 'Courier New', 'Verdana', 
 const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   value,
   onChange,
-  backgroundImage
+  backgroundImage,
+  selectedElementIndex,
+  onElementSelect
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [fabricCanvas, setFabricCanvas] = useState<FabricCanvas | null>(null);
@@ -67,6 +71,25 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   const [selectedSize, setSelectedSize] = useState([24]);
   const [selectedStrokeWidth, setSelectedStrokeWidth] = useState([2]);
   const [selectedOpacity, setSelectedOpacity] = useState([100]);
+
+  // Sync selection from parent component
+  useEffect(() => {
+    if (!fabricCanvas) return;
+
+    if (selectedElementIndex !== null && selectedElementIndex !== undefined) {
+      const objects = fabricCanvas.getObjects();
+      const targetObject = objects[selectedElementIndex];
+      if (targetObject) {
+        fabricCanvas.setActiveObject(targetObject);
+        setSelectedObject(targetObject);
+        fabricCanvas.renderAll();
+      }
+    } else {
+      fabricCanvas.discardActiveObject();
+      setSelectedObject(null);
+      fabricCanvas.renderAll();
+    }
+  }, [selectedElementIndex, fabricCanvas]);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -110,7 +133,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     }
 
     // Load existing elements
-    value.elements.forEach(element => {
+    value.elements.forEach((element, index) => {
       if (element.type === 'text' || element.type === 'placeholder') {
         const text = new IText(element.text || '', {
           left: element.x,
@@ -124,6 +147,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         text.set('elementId', element.id);
         text.set('elementType', element.type);
         text.set('placeholderType', element.placeholder);
+        text.set('elementIndex', index);
         canvas.add(text);
       } else if (element.type === 'rectangle' || element.type === 'rounded-rectangle') {
         const rect = new Rect({
@@ -140,6 +164,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         });
         rect.set('elementId', element.id);
         rect.set('elementType', element.type);
+        rect.set('elementIndex', index);
         canvas.add(rect);
       } else if (element.type === 'circle') {
         const circle = new Circle({
@@ -153,6 +178,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         });
         circle.set('elementId', element.id);
         circle.set('elementType', element.type);
+        circle.set('elementIndex', index);
         canvas.add(circle);
       } else if (element.type === 'line') {
         const line = new Line([element.x, element.y, element.x + (element.width || 100), element.y], {
@@ -162,21 +188,39 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         });
         line.set('elementId', element.id);
         line.set('elementType', element.type);
+        line.set('elementIndex', index);
         canvas.add(line);
       }
     });
 
     // Handle object selection
     canvas.on('selection:created', (e) => {
-      setSelectedObject(e.selected?.[0]);
+      const selectedObj = e.selected?.[0];
+      setSelectedObject(selectedObj);
+      if (selectedObj && onElementSelect) {
+        const elementIndex = selectedObj.get('elementIndex');
+        if (elementIndex !== undefined) {
+          onElementSelect(elementIndex);
+        }
+      }
     });
 
     canvas.on('selection:updated', (e) => {
-      setSelectedObject(e.selected?.[0]);
+      const selectedObj = e.selected?.[0];
+      setSelectedObject(selectedObj);
+      if (selectedObj && onElementSelect) {
+        const elementIndex = selectedObj.get('elementIndex');
+        if (elementIndex !== undefined) {
+          onElementSelect(elementIndex);
+        }
+      }
     });
 
     canvas.on('selection:cleared', () => {
       setSelectedObject(null);
+      if (onElementSelect) {
+        onElementSelect(null);
+      }
     });
 
     // Handle object modifications
@@ -274,9 +318,11 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       fill: selectedColor
     });
     
+    const elementIndex = value.elements.length;
     text.set('elementId', `element-${Date.now()}`);
     text.set('elementType', 'placeholder');
     text.set('placeholderType', placeholder.id);
+    text.set('elementIndex', elementIndex);
     
     fabricCanvas.add(text);
     fabricCanvas.setActiveObject(text);
@@ -294,8 +340,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       fill: selectedColor
     });
     
+    const elementIndex = value.elements.length;
     text.set('elementId', `element-${Date.now()}`);
     text.set('elementType', 'text');
+    text.set('elementIndex', elementIndex);
     
     fabricCanvas.add(text);
     fabricCanvas.setActiveObject(text);
@@ -316,8 +364,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       opacity: selectedOpacity[0] / 100
     });
     
+    const elementIndex = value.elements.length;
     rect.set('elementId', `element-${Date.now()}`);
     rect.set('elementType', 'rectangle');
+    rect.set('elementIndex', elementIndex);
     
     fabricCanvas.add(rect);
     fabricCanvas.setActiveObject(rect);
@@ -340,8 +390,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       ry: 10
     });
     
+    const elementIndex = value.elements.length;
     rect.set('elementId', `element-${Date.now()}`);
     rect.set('elementType', 'rounded-rectangle');
+    rect.set('elementIndex', elementIndex);
     
     fabricCanvas.add(rect);
     fabricCanvas.setActiveObject(rect);
@@ -361,8 +413,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       opacity: selectedOpacity[0] / 100
     });
     
+    const elementIndex = value.elements.length;
     circle.set('elementId', `element-${Date.now()}`);
     circle.set('elementType', 'circle');
+    circle.set('elementIndex', elementIndex);
     
     fabricCanvas.add(circle);
     fabricCanvas.setActiveObject(circle);
@@ -378,8 +432,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       opacity: selectedOpacity[0] / 100
     });
     
+    const elementIndex = value.elements.length;
     line.set('elementId', `element-${Date.now()}`);
     line.set('elementType', 'line');
+    line.set('elementIndex', elementIndex);
     
     fabricCanvas.add(line);
     fabricCanvas.setActiveObject(line);
