@@ -68,32 +68,8 @@ export default function TestimonialSlider() {
   // Modern video component with enhanced play overlay and autoplay for uploads only
   const VideoWithOverlay = ({ src, type, title }: { src: string; type: 'upload' | 'youtube'; title: string }) => {
     const [isMuted, setIsMuted] = useState(true);
-    const [showYouTubeVideo, setShowYouTubeVideo] = useState(false);
 
     if (type === 'youtube') {
-      if (!showYouTubeVideo) {
-        // Show thumbnail with RED play button for YouTube videos
-        return (
-          <div className="relative group overflow-hidden rounded-xl bg-gradient-to-br from-red-100 to-red-200">
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="bg-red-600 hover:bg-red-700 rounded-full p-6 mx-auto w-fit shadow-xl transition-all duration-200 group-hover:scale-110">
-                  <Play className="w-12 h-12 text-white ml-1" fill="white" />
-                </div>
-              </div>
-            </div>
-            <button 
-              onClick={() => setShowYouTubeVideo(true)} 
-              className="absolute inset-0 w-full h-full bg-transparent hover:bg-black/5 transition-all duration-200" 
-              aria-label="Play YouTube video" 
-            />
-            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
-              <ExternalLink className="w-4 h-4 text-red-600" />
-            </div>
-          </div>
-        );
-      }
-
       return (
         <div className="relative group overflow-hidden rounded-xl bg-gray-50">
           <iframe 
