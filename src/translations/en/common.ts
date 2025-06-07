@@ -24,6 +24,38 @@ export const commonTranslations = {
   step4Title: "Receive Your One-of-a-Kind Musical Gift",
   step4Description: "Within 3–7 working days, your personalized masterpiece arrives in your inbox. Ready to be gifted, shared, played on repeat, or even used to make someone cry (happy tears only, we promise!).",
   
+  // Step 1 Details
+  step1DetailsTitle: "All our packages include:",
+  step1Detail1: "Professional music production with real instruments (no boring loops!)",
+  step1Detail2: "Custom-written lyrics, inspired by your story and emotions",
+  step1Detail3: "Multiple revision rounds — we won't stop until you're in love with it",
+  step1Detail4: "Final files delivered in high-quality MP3 and WAV formats, ready to share or frame forever",
+  step1DetailsFooter: "Not sure which package is right for you? Don't worry — we'll help you choose like a personal gift concierge.",
+  
+  // Step 2 Details
+  step2DetailsTitle: "In your story, you can include:",
+  step2Detail1: "Special moments, funny memories, important milestones",
+  step2Detail2: "Names, dates, quotes, inside jokes — we love the juicy stuff!",
+  step2Detail3: "Your favorite musical genres or emotional tone (romantic, nostalgic, uplifting, epic, etc.)",
+  step2Detail4: "Even audio messages or photos that help us feel the emotion you want to share",
+  step2DetailsFooter: "Think of it as writing a love letter, but we'll turn it into a hit song.",
+  
+  // Step 3 Details
+  step3DetailsTitle: "Here's what happens behind the scenes:",
+  step3Detail1: "Our lyricists turn your memories into meaningful verses and a catchy chorus",
+  step3Detail2: "Real musicians record instruments in studio — no AI-only shortcuts here!",
+  step3Detail3: "Professional vocalists (with real soul) sing your lyrics with passion",
+  step3Detail4: "Sound engineers mix, master, polish, and sparkle every note",
+  step3DetailsFooter: "We pour our heart into every second of the song — because it's not just music, it's your message in melody.",
+  
+  // Step 4 Details
+  step4DetailsTitle: "You'll receive:",
+  step4Detail1: "Your original song in both MP3 and WAV formats",
+  step4Detail2: "A custom-designed cover image that matches your song's mood",
+  step4Detail3: "Optional video add-ons or social media-friendly formats",
+  step4Detail4: "Lifetime access — download it, share it, relive it forever",
+  step4DetailsFooter: "It's more than a gift. It's a memory you can listen to.",
+  
   // Testimonials
   testimonialsTitle: "What Our Clients Say",
   testimonialsSubtitle: "Discover the success stories of those who chose MusicGift",

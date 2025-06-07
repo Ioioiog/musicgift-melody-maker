@@ -24,6 +24,38 @@ export const commonTranslations = {
   step4Title: "Recevez votre cadeau musical unique",
   step4Description: "Dans les 3 à 7 jours ouvrables, votre chef-d'œuvre personnalisé arrive dans votre boîte de réception. Prêt à être offert, partagé, joué en boucle, ou même utilisé pour faire pleurer quelqu'un (seulement des larmes de joie, nous le promettons !).",
   
+  // Step 1 Details
+  step1DetailsTitle: "Tous nos forfaits incluent :",
+  step1Detail1: "Production musicale professionnelle avec de vrais instruments (pas de boucles ennuyeuses !)",
+  step1Detail2: "Paroles écrites sur mesure, inspirées par votre histoire et vos émotions",
+  step1Detail3: "Plusieurs rondes de révision — nous ne nous arrêterons pas tant que vous n'en serez pas amoureux",
+  step1Detail4: "Fichiers finaux livrés en formats MP3 et WAV haute qualité, prêts à partager ou à encadrer pour toujours",
+  step1DetailsFooter: "Vous ne savez pas quel forfait vous convient ? Ne vous inquiétez pas — nous vous aiderons à choisir comme un concierge personnel de cadeaux.",
+  
+  // Step 2 Details
+  step2DetailsTitle: "Dans votre histoire, vous pouvez inclure :",
+  step2Detail1: "Moments spéciaux, souvenirs amusants, étapes importantes",
+  step2Detail2: "Noms, dates, citations, blagues privées — nous adorons les détails croustillants !",
+  step2Detail3: "Vos genres musicaux préférés ou ton émotionnel (romantique, nostalgique, uplifting, épique, etc.)",
+  step2Detail4: "Même des messages audio ou des photos qui nous aident à ressentir l'émotion que vous voulez partager",
+  step2DetailsFooter: "Pensez-y comme écrire une lettre d'amour, mais nous la transformerons en tube.",
+  
+  // Step 3 Details
+  step3DetailsTitle: "Voici ce qui se passe dans les coulisses :",
+  step3Detail1: "Nos paroliers transforment vos souvenirs en couplets significatifs et un refrain accrocheur",
+  step3Detail2: "De vrais musiciens enregistrent les instruments en studio — pas de raccourcis uniquement IA ici !",
+  step3Detail3: "Des vocalistes professionnels (avec une vraie âme) chantent vos paroles avec passion",
+  step3Detail4: "Les ingénieurs du son mixent, masterisent, peaufinent et font briller chaque note",
+  step3DetailsFooter: "Nous mettons notre cœur dans chaque seconde de la chanson — parce que ce n'est pas juste de la musique, c'est votre message en mélodie.",
+  
+  // Step 4 Details
+  step4DetailsTitle: "Vous recevrez :",
+  step4Detail1: "Votre chanson originale aux formats MP3 et WAV",
+  step4Detail2: "Une image de couverture personnalisée qui correspond à l'ambiance de votre chanson",
+  step4Detail3: "Add-ons vidéo optionnels ou formats adaptés aux réseaux sociaux",
+  step4Detail4: "Accès à vie — téléchargez-la, partagez-la, revivez-la pour toujours",
+  step4DetailsFooter: "C'est plus qu'un cadeau. C'est un souvenir que vous pouvez écouter.",
+  
   // Testimonials
   testimonialsTitle: "Ce que disent nos clients",
   testimonialsSubtitle: "Découvrez les histoires de succès de ceux qui ont choisi MusicGift",

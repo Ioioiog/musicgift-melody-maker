@@ -18,6 +18,39 @@ export const commonTranslations = {
   step3Description: "Jetzt sind wir an der Reihe zu glänzen! Während Sie sich entspannen, macht sich unser Team aus professionellen Songwritern, Vokalisten, Musikern und Toningenieuren an die Arbeit — verwandelt Ihre Geschichte in ein unvergessliches Musikgeschenk.",
   step4Title: "Erhalten Sie Ihr einzigartiges Musikgeschenk",
   step4Description: "Innerhalb von 3-7 Werktagen erreicht Ihr personalisiertes Meisterwerk Ihren Posteingang. Bereit zum Verschenken, Teilen, endlosen Wiederholen oder sogar dazu verwendet zu werden, jemanden zum Weinen zu bringen (nur Freudentränen, das versprechen wir!).",
+  
+  // Step 1 Details
+  step1DetailsTitle: "Alle unsere Pakete beinhalten:",
+  step1Detail1: "Professionelle Musikproduktion mit echten Instrumenten (keine langweiligen Loops!)",
+  step1Detail2: "Maßgeschneiderte Texte, inspiriert von Ihrer Geschichte und Ihren Emotionen",
+  step1Detail3: "Mehrere Überarbeitungsrunden — wir hören nicht auf, bis Sie sich darin verlieben",
+  step1Detail4: "Finale Dateien in hochwertigen MP3- und WAV-Formaten geliefert, bereit zum Teilen oder für immer einrahmen",
+  step1DetailsFooter: "Nicht sicher, welches Paket das richtige für Sie ist? Keine Sorge — wir helfen Ihnen bei der Auswahl wie ein persönlicher Geschenke-Concierge.",
+  
+  // Step 2 Details
+  step2DetailsTitle: "In Ihrer Geschichte können Sie einschließen:",
+  step2Detail1: "Besondere Momente, lustige Erinnerungen, wichtige Meilensteine",
+  step2Detail2: "Namen, Daten, Zitate, Insider-Witze — wir lieben die saftigen Details!",
+  step2Detail3: "Ihre bevorzugten Musikgenres oder emotionalen Ton (romantisch, nostalgisch, erhebend, episch, etc.)",
+  step2Detail4: "Sogar Audio-Nachrichten oder Fotos, die uns helfen, die Emotion zu spüren, die Sie teilen möchten",
+  step2DetailsFooter: "Denken Sie daran wie einen Liebesbrief zu schreiben, aber wir machen daraus einen Hit.",
+  
+  // Step 3 Details
+  step3DetailsTitle: "Hier passiert hinter den Kulissen:",
+  step3Detail1: "Unsere Textdichter verwandeln Ihre Erinnerungen in bedeutungsvolle Strophen und einen eingängigen Refrain",
+  step3Detail2: "Echte Musiker nehmen Instrumente im Studio auf — keine reinen KI-Abkürzungen hier!",
+  step3Detail3: "Professionelle Vokalisten (mit echter Seele) singen Ihre Texte mit Leidenschaft",
+  step3Detail4: "Toningenieure mischen, mastern, polieren und lassen jede Note glänzen",
+  step3DetailsFooter: "Wir stecken unser Herz in jede Sekunde des Songs — denn es ist nicht nur Musik, es ist Ihre Botschaft in Melodie.",
+  
+  // Step 4 Details
+  step4DetailsTitle: "Sie erhalten:",
+  step4Detail1: "Ihren Originalsong in MP3- und WAV-Formaten",
+  step4Detail2: "Ein maßgeschneidertes Cover-Bild, das zur Stimmung Ihres Songs passt",
+  step4Detail3: "Optionale Video-Add-ons oder social-media-freundliche Formate",
+  step4Detail4: "Lebenslanger Zugang — laden Sie es herunter, teilen Sie es, erleben Sie es für immer wieder",
+  step4DetailsFooter: "Es ist mehr als ein Geschenk. Es ist eine Erinnerung, die Sie anhören können.",
+  
   testimonialsTitle: "Was unsere Kunden sagen",
   testimonialsSubtitle: "Entdecken Sie die Erfolgsgeschichten derjenigen, die MusicGift gewählt haben",
   testimonialQuote: "MusicGift hat das perfekte Lied für unsere Hochzeit geschaffen. Es war alles, wovon wir geträumt haben und mehr!",

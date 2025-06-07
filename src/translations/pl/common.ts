@@ -1,4 +1,3 @@
-
 export const commonTranslations = {
   readyToCreateSpecial: "Gotowy stworzyć coś wyjątkowego?",
   helpCreatePersonalized: "Pozwól nam pomóc ci stworzyć spersonalizowany prezent muzyczny, który będzie ceniony na zawsze",
@@ -18,6 +17,39 @@ export const commonTranslations = {
   step3Description: "Teraz nasza kolej na zabłyśnięcie! Podczas gdy się relaksujesz, nasz zespół profesjonalnych autorów tekstów, wokalistów, muzyków i inżynierów dźwięku zabiera się do pracy — przekształcając twoją historię w niezapomniany prezent muzyczny.",
   step4Title: "Otrzymaj swój jedyny w swoim rodzaju prezent muzyczny",
   step4Description: "W ciągu 3-7 dni roboczych, twoje spersonalizowane arcydzieło dociera do twojej skrzynki. Gotowe do podarowania, udostępnienia, odtwarzania w kółko, lub nawet użycia, aby sprawić, że ktoś zapłacze (tylko szczęśliwe łzy, obiecujemy!).",
+  
+  // Step 1 Details
+  step1DetailsTitle: "Wszystkie nasze pakiety obejmują:",
+  step1Detail1: "Profesjonalną produkcję muzyczną z prawdziwymi instrumentami (żadnych nudnych pętli!)",
+  step1Detail2: "Niestandardowo napisane teksty, inspirowane twoją historią i emocjami",
+  step1Detail3: "Wiele rund poprawek — nie przestaniemy, dopóki się w nią nie zakochasz",
+  step1Detail4: "Finalne pliki dostarczone w wysokiej jakości formatach MP3 i WAV, gotowe do udostępnienia lub oprawienia na zawsze",
+  step1DetailsFooter: "Nie jesteś pewien, który pakiet jest dla ciebie odpowiedni? Nie martw się — pomożemy ci wybrać jak osobisty konsjerż prezentów.",
+  
+  // Step 2 Details
+  step2DetailsTitle: "W swojej historii możesz uwzględnić:",
+  step2Detail1: "Specjalne momenty, zabawne wspomnienia, ważne kamienie milowe",
+  step2Detail2: "Imiona, daty, cytaty, wewnętrzne żarty — uwielbiamy soczysty materiał!",
+  step2Detail3: "Twoje ulubione gatunki muzyczne lub ton emocjonalny (romantyczny, nostalgiczny, podnoszący na duchu, epicki, itp.)",
+  step2Detail4: "Nawet wiadomości audio lub zdjęcia, które pomagają nam poczuć emocje, które chcesz przekazać",
+  step2DetailsFooter: "Pomyśl o tym jak o pisaniu listu miłosnego, ale my przekształcimy to w przebój.",
+  
+  // Step 3 Details
+  step3DetailsTitle: "Oto co dzieje się za kulisami:",
+  step3Detail1: "Nasi tekściarze przekształcają twoje wspomnienia w znaczące zwrotki i chwytliwy refren",
+  step3Detail2: "Prawdziwi muzycy nagrywają instrumenty w studio — żadnych skrótów tylko z AI!",
+  step3Detail3: "Profesjonalni wokaliści (z prawdziwą duszą) śpiewają twoje teksty z pasją",
+  step3Detail4: "Inżynierowie dźwięku miksują, masterują, polerują i sprawiają, że każda nuta błyszczy",
+  step3DetailsFooter: "Wkładamy nasze serce w każdą sekundę piosenki — ponieważ to nie jest tylko muzyka, to twoja wiadomość w melodii.",
+  
+  // Step 4 Details
+  step4DetailsTitle: "Otrzymasz:",
+  step4Detail1: "Twoją oryginalną piosenkę w formatach MP3 i WAV",
+  step4Detail2: "Niestandardowo zaprojektowany obraz okładki, który pasuje do nastroju twojej piosenki",
+  step4Detail3: "Opcjonalne dodatki wideo lub formaty przyjazne mediom społecznościowym",
+  step4Detail4: "Dożywotni dostęp — pobierz, udostępnij, przeżywaj to na nowo na zawsze",
+  step4DetailsFooter: "To więcej niż prezent. To wspomnienie, którego możesz słuchać.",
+  
   testimonialsTitle: "Co mówią nasi klienci",
   testimonialsSubtitle: "Odkryj historie sukcesu tych, którzy wybrali MusicGift",
   testimonialQuote: "MusicGift stworzył idealną piosenkę na nasze wesele. To było wszystko, o czym marzyliśmy i więcej!",

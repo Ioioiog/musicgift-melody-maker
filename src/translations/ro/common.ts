@@ -1,4 +1,3 @@
-
 export const commonTranslations = {
   readyToCreateSpecial: "Gata să creezi ceva special?",
   helpCreatePersonalized: "Să te ajutăm să creezi un cadou muzical personalizat care va fi prețuit pentru totdeauna",
@@ -18,6 +17,39 @@ export const commonTranslations = {
   step3Description: "Acum e rândul nostru să strălucim! În timp ce te relaxezi, echipa noastră de compozitori profesioniști, vocaliști, muzicieni și ingineri de sunet se pune la treabă — transformând povestea ta într-un cadou muzical de neuitat.",
   step4Title: "Primește cadoul tău muzical unic",
   step4Description: "În 3-7 zile lucrătoare, capodopera ta personalizată ajunge în inbox-ul tău. Gata să fie oferită cadou, împărțită, redată la nesfârșit, sau chiar folosită pentru a face pe cineva să plângă (doar lacrimi de fericire, promitem!).",
+  
+  // Step 1 Details
+  step1DetailsTitle: "Toate pachetele noastre includ:",
+  step1Detail1: "Producție muzicală profesională cu instrumente reale (fără bucle plictisitoare!)",
+  step1Detail2: "Versuri scrise special, inspirate de povestea și emoțiile tale",
+  step1Detail3: "Multiple runde de revizuire — nu ne oprim până nu te îndrăgostești de ea",
+  step1Detail4: "Fișiere finale livrate în formate MP3 și WAV de înaltă calitate, gata să fie împărtășite sau încadrate pentru totdeauna",
+  step1DetailsFooter: "Nu ești sigur care pachet este potrivit pentru tine? Nu-ți face griji — te vom ajuta să alegi ca un consilier personal pentru cadouri.",
+  
+  // Step 2 Details
+  step2DetailsTitle: "În povestea ta, poți include:",
+  step2Detail1: "Momente speciale, amintiri amuzante, repere importante",
+  step2Detail2: "Nume, date, citate, glume de familie — ne plac detaliile suculente!",
+  step2Detail3: "Genurile muzicale preferate sau tonul emoțional (romantic, nostalgic, înălțător, epic, etc.)",
+  step2Detail4: "Chiar și mesaje audio sau fotografii care ne ajută să simțim emoția pe care vrei să o împărtășești",
+  step2DetailsFooter: "Gândește-te ca și cum ai scrie o scrisoare de dragoste, dar noi o vom transforma într-un hit.",
+  
+  // Step 3 Details
+  step3DetailsTitle: "Iată ce se întâmplă în culise:",
+  step3Detail1: "Versificatorii noștri transformă amintirile tale în versuri semnificative și un refren care se prinde",
+  step3Detail2: "Muzicienii reali înregistrează instrumentele în studio — fără scurtături doar cu AI aici!",
+  step3Detail3: "Vocaliștii profesioniști (cu suflet adevărat) cântă versurile tale cu pasiune",
+  step3Detail4: "Inginerii de sunet mixează, masterizează, finisează și fac să strălucească fiecare notă",
+  step3DetailsFooter: "Ne punem inima în fiecare secundă a melodiei — pentru că nu este doar muzică, este mesajul tău în melodie.",
+  
+  // Step 4 Details
+  step4DetailsTitle: "Vei primi:",
+  step4Detail1: "Melodia ta originală în formatele MP3 și WAV",
+  step4Detail2: "O imagine de copertă personalizată care se potrivește cu starea de spirit a melodiei tale",
+  step4Detail3: "Add-on-uri video opționale sau formate prietenoase pentru rețelele sociale",
+  step4Detail4: "Acces pe viață — descarcă-o, împărtășește-o, retrăiește-o pentru totdeauna",
+  step4DetailsFooter: "Este mai mult decât un cadou. Este o amintire pe care o poți asculta.",
+  
   testimonialsTitle: "Ce spun clienții noștri",
   testimonialsSubtitle: "Descoperă poveștile de succes ale celor care au ales MusicGift",
   testimonialQuote: "MusicGift a creat melodia perfectă pentru nunta noastră. A fost tot ce ne-am visat și mai mult!",
