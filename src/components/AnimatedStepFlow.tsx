@@ -241,45 +241,60 @@ const AnimatedStepFlow = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.6 }}
                   >
-                    {/* Navigation Buttons */}
-                    <div className="flex items-center gap-2">
+                    {/* Enhanced Navigation Buttons */}
+                    <div className="flex items-center gap-3">
                       <Button
                         variant="outline"
-                        size="sm"
+                        size="default"
                         onClick={handlePrevious}
-                        className="flex items-center gap-2 hover:bg-purple-50 hover:border-purple-300"
+                        className="flex items-center gap-2 px-6 py-2.5 bg-white/80 backdrop-blur-sm border-2 border-purple-200 hover:bg-purple-50 hover:border-purple-400 hover:shadow-lg transition-all duration-300 group/btn"
                       >
-                        <ChevronLeft className="w-4 h-4" />
-                        Previous
+                        <motion.div
+                          className="group-hover/btn:-translate-x-0.5 transition-transform duration-200"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </motion.div>
+                        <span className="font-medium text-gray-700 group-hover/btn:text-purple-700">
+                          Previous
+                        </span>
                       </Button>
+                      
                       <Button
-                        variant="outline"
-                        size="sm"
+                        variant="default"
+                        size="default"
                         onClick={handleNext}
-                        className="flex items-center gap-2 hover:bg-purple-50 hover:border-purple-300"
+                        className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 border-0 hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 group/btn"
                       >
-                        Next
-                        <ChevronRight className="w-4 h-4" />
+                        <span className="font-medium text-white">
+                          Next
+                        </span>
+                        <motion.div
+                          className="group-hover/btn:translate-x-0.5 transition-transform duration-200"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </motion.div>
                       </Button>
                     </div>
 
                     {/* Progress Indicator */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-medium text-gray-500">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-medium text-gray-600 bg-white/60 backdrop-blur-sm px-3 py-1.5 rounded-full border border-gray-200">
                         {activeStep + 1} of {steps.length}
                       </span>
-                      <div className="flex gap-1">
+                      <div className="flex gap-1.5">
                         {steps.map((_, index) => (
-                          <motion.div
+                          <motion.button
                             key={index}
-                            className={`h-1.5 rounded-full transition-all duration-500 ${
+                            onClick={() => handleStepClick(index)}
+                            className={`h-2.5 rounded-full transition-all duration-500 cursor-pointer hover:scale-110 ${
                               index === activeStep 
-                                ? 'bg-gradient-to-r from-purple-500 to-purple-600 w-6' 
+                                ? 'bg-gradient-to-r from-purple-500 to-purple-600 w-8 shadow-md' 
                                 : index < activeStep 
-                                  ? 'bg-green-400 w-2' 
-                                  : 'bg-gray-200 w-2'
+                                  ? 'bg-green-400 w-2.5 hover:bg-green-500' 
+                                  : 'bg-gray-300 w-2.5 hover:bg-gray-400'
                             }`}
                             whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.95 }}
                           />
                         ))}
                       </div>
