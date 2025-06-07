@@ -184,7 +184,7 @@ const TestimonialSubmissionForm = () => {
           </div>
 
           <div>
-            <Label htmlFor="youtube_link">YouTube Video Link (Optional)</Label>
+            <Label htmlFor="youtube_link">Your MusicGift song link (Optional)</Label>
             <Input
               id="youtube_link"
               value={formData.youtube_link}
