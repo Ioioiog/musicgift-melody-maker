@@ -75,14 +75,12 @@ const AnimatedStepFlow = () => {
     const isActive = stepIndex === activeStep;
     const isPrevious = stepIndex < activeStep;
     
-    const baseClasses = "w-20 h-20 flex items-center justify-center rounded-full text-xl font-semibold transition-all duration-300 cursor-pointer";
-    
     if (isActive) {
-      return `${baseClasses} bg-purple-600 text-white shadow-xl scale-105`;
+      return "w-20 h-20 flex items-center justify-center rounded-full bg-purple-600 text-white shadow-xl text-xl font-semibold scale-105 transition-all duration-300 cursor-pointer";
     } else if (isPrevious) {
-      return `${baseClasses} bg-green-500 text-white shadow-lg hover:scale-105`;
+      return "w-20 h-20 flex items-center justify-center rounded-full bg-green-500 text-white shadow-lg text-xl font-semibold transition-all duration-300 cursor-pointer hover:scale-105";
     } else {
-      return `${baseClasses} bg-white shadow-md text-gray-700 hover:scale-105`;
+      return "w-20 h-20 flex items-center justify-center rounded-full bg-white shadow-md text-gray-700 text-xl font-semibold transition-all duration-300 cursor-pointer hover:scale-105";
     }
   };
 
@@ -93,31 +91,10 @@ const AnimatedStepFlow = () => {
         {/* Enhanced Left Column - Step Indicators */}
         <div className="lg:col-span-3">
           <div className="space-y-6">
-            {/* Progress Header */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/30">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center">
-                  <Clock className="w-4 h-4 text-white" />
-                </div>
-                <h3 className="font-semibold text-gray-800">Process Flow</h3>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                <motion.div 
-                  className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"
-                  style={{ width: `${progress}%` }}
-                  transition={{ duration: 0.1 }}
-                />
-              </div>
-              <p className="text-xs text-gray-600 mt-2">
-                Step {activeStep + 1} of {steps.length} • Auto-advancing in {Math.ceil((100 - progress) * 0.3)}s
-              </p>
-            </div>
-
             {/* Circular Step Indicators */}
             <div className="flex flex-col items-center space-y-8">
               {steps.map((step, index) => {
                 const isActive = index === activeStep;
-                const isPrevious = index < activeStep;
                 
                 return (
                   <div key={index} className="relative flex flex-col items-center">
@@ -146,14 +123,32 @@ const AnimatedStepFlow = () => {
                     </motion.div>
                     
                     {/* Step Number */}
-                    <div className={`mt-2 text-sm font-medium transition-colors duration-300 ${
-                      isActive ? 'text-purple-600' : isPrevious ? 'text-green-600' : 'text-gray-500'
-                    }`}>
+                    <div className="mt-2 text-sm font-medium text-gray-500">
                       Step {index + 1}
                     </div>
                   </div>
                 );
               })}
+            </div>
+
+            {/* Progress Header - moved after steps */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/30">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center">
+                  <Clock className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-800">Process Flow</h3>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                <motion.div 
+                  className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"
+                  style={{ width: `${progress}%` }}
+                  transition={{ duration: 0.1 }}
+                />
+              </div>
+              <p className="text-xs text-gray-600 mt-2">
+                Step {activeStep + 1} of {steps.length} • Auto-advancing in {Math.ceil((100 - progress) * 0.3)}s
+              </p>
             </div>
 
             {/* Quick Navigation */}
