@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Canvas as FabricCanvas, IText, FabricImage, Rect, Circle, Line } from 'fabric';
 import { Button } from '@/components/ui/button';
@@ -620,16 +619,11 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="border border-gray-200 rounded-lg overflow-hidden bg-white p-4">
-                <div className="flex justify-center">
-                  <div className="overflow-auto max-w-full">
-                    <canvas 
-                      ref={canvasRef} 
-                      className="border border-gray-300 rounded shadow-sm" 
-                      style={{ maxWidth: '100%', height: 'auto' }}
-                    />
-                  </div>
-                </div>
+              <div className="border border-gray-200 rounded-lg bg-white p-4 flex justify-center items-center">
+                <canvas 
+                  ref={canvasRef} 
+                  className="border border-gray-300 rounded shadow-sm" 
+                />
               </div>
             </CardContent>
           </Card>
