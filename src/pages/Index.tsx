@@ -7,6 +7,7 @@ import ScenarioHero from "@/components/ScenarioHero";
 import AnimatedStepFlow from "@/components/AnimatedStepFlow";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import ImpactCards from "@/components/ImpactCards";
+import CollaborationSection from "@/components/CollaborationSection";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
@@ -63,6 +64,9 @@ const Index = () => {
           <TestimonialSlider />
         </div>
       </div>
+
+      {/* Collaboration Section */}
+      <CollaborationSection />
 
       {/* CTA Section */}
       <section className="py-20 px-4 text-white text-center relative overflow-hidden" style={backgroundStyle}>

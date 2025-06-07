@@ -3,7 +3,6 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import TestimonialSubmissionForm from "@/components/TestimonialSubmissionForm";
-import CollaborationSection from "@/components/CollaborationSection";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
@@ -119,9 +118,6 @@ const Testimonials = () => {
           </div>
         </div>
       </section>
-
-      {/* Collaboration Section */}
-      <CollaborationSection />
 
       <Footer />
     </div>
