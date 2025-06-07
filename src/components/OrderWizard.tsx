@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,6 +29,8 @@ interface OrderFormData {
   registrationNumber?: string;
   companyAddress?: string;
   representativeName?: string;
+  address?: string;
+  city?: string;
   [key: string]: any;
 }
 
@@ -44,7 +45,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const [formData, setFormData] = useState<OrderFormData>({});
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [addonFieldValues, setAddonFieldValues] = useState<Record<string, any>>({});
-  const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('stripe');
+  const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('smartbill');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
   const { currency } = useCurrency();
@@ -128,7 +129,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const totalPrice = calculateTotalPrice();
 
   const validateFormData = () => {
-    console.log('🔍 Enhanced Form Data Validation Starting...');
+    console.log('🔍 Form Data Validation Starting...');
     
     if (!formData || typeof formData !== 'object') {
       console.error('❌ Form data is not a valid object:', formData);
@@ -165,31 +166,48 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       throw new Error('Please enter a valid full name (at least 2 characters)');
     }
 
+    // Validate invoice type specific fields
+    if (formData.invoiceType === 'company') {
+      if (!formData.companyName || formData.companyName.trim().length < 2) {
+        throw new Error('Company name is required for company invoices');
+      }
+    }
+
     if (totalPrice === null || totalPrice === undefined || totalPrice < 0) {
       console.error('❌ Invalid total price:', totalPrice);
       throw new Error('Invalid total price calculated');
     }
 
-    console.log('✅ Enhanced form data validation passed');
+    console.log('✅ Form data validation passed');
     return true;
   };
 
   const prepareOrderData = () => {
-    console.log('🏗️ Preparing enhanced order data...');
+    console.log('🏗️ Preparing order data...');
     
-    const structuredFormData = {
+    // Clean and structure form data properly
+    const cleanFormData = {
       email: (formData.email || '').trim(),
       fullName: (formData.fullName || '').trim(),
       phone: (formData.phone || '').trim(),
       recipientName: (formData.recipientName || '').trim(),
       occasion: (formData.occasion || '').trim(),
-      invoiceType: formData.invoiceType || '',
+      address: (formData.address || '').trim(),
+      city: (formData.city || 'Bucuresti').trim(),
+      invoiceType: formData.invoiceType || 'individual',
+      // Company-specific fields
       companyName: (formData.companyName || '').trim(),
       vatCode: (formData.vatCode || '').trim(),
       registrationNumber: (formData.registrationNumber || '').trim(),
       companyAddress: (formData.companyAddress || '').trim(),
       representativeName: (formData.representativeName || '').trim(),
-      ...formData
+      // Copy any additional form fields
+      ...Object.keys(formData).reduce((acc, key) => {
+        if (!['email', 'fullName', 'phone', 'recipientName', 'occasion', 'address', 'city', 'invoiceType', 'companyName', 'vatCode', 'registrationNumber', 'companyAddress', 'representativeName'].includes(key)) {
+          acc[key] = formData[key];
+        }
+        return acc;
+      }, {} as Record<string, any>)
     };
 
     const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
@@ -204,18 +222,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     const package_delivery_time = selectedPackageData?.delivery_time_key;
     const package_includes = selectedPackageData?.includes;
 
+    // Don't multiply by 100 - keep price as-is for SmartBill
     const orderData = {
-      form_data: structuredFormData,
+      form_data: cleanFormData,
       selected_addons: selectedAddons,
       addon_field_values: addonFieldValues,
-      total_price: totalPrice * 100,
+      total_price: totalPrice, // Keep as decimal for SmartBill
       package_value: selectedPackage,
       package_name: package_name,
       package_price: package_price,
       package_delivery_time: package_delivery_time,
       package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
       status: 'pending',
-      payment_status: 'pending',
+      payment_status: totalPrice > 0 ? 'pending' : 'completed',
       currency: currency,
       payment_provider: selectedPaymentProvider,
       order_created_at: new Date().toISOString(),
@@ -223,7 +242,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       referrer: document.referrer || 'direct'
     };
 
-    console.log('📦 Enhanced order data prepared:', JSON.stringify(orderData, null, 2));
+    console.log('📦 Order data prepared:', {
+      ...orderData,
+      form_data: { ...orderData.form_data, email: orderData.form_data.email?.substring(0, 5) + '***' }
+    });
     return orderData;
   };
 
@@ -255,76 +277,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
       const orderData = prepareOrderData();
 
-      // Handle payment based on selected provider - NO FALLBACKS
-      if (selectedPaymentProvider === 'stripe') {
-        console.log('🟣 Processing payment with Stripe in redirect mode');
-        
-        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('stripe-create-payment', {
-          body: {
-            orderData,
-            returnUrl: `${window.location.origin}/payment/success`
-          }
-        });
-
-        console.log('🟣 Stripe response:', paymentResponse);
-        console.log('🟣 Stripe error:', paymentError);
-
-        if (paymentError) {
-          console.error('❌ Stripe Edge Function Error:', paymentError);
-          throw new Error(`Stripe payment failed: ${paymentError.message}`);
-        }
-
-        if (!paymentResponse?.success) {
-          console.error('❌ Stripe Payment Response Error:', paymentResponse);
-          throw new Error(paymentResponse?.error || 'Stripe payment initialization failed');
-        }
-
-        // Redirect to Stripe Checkout
-        if (paymentResponse.paymentUrl) {
-          console.log('✅ Redirecting to Stripe Checkout:', paymentResponse.paymentUrl);
-          window.location.href = paymentResponse.paymentUrl;
-        } else {
-          throw new Error('No payment URL received from Stripe');
-        }
-
-      } else if (selectedPaymentProvider === 'revolut') {
-        console.log('🟠 Processing payment with Revolut');
-        
-        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('revolut-create-payment', {
-          body: {
-            orderData,
-            returnUrl: `${window.location.origin}/payment/success`
-          }
-        });
-
-        console.log('🟠 Revolut response:', paymentResponse);
-        console.log('🟠 Revolut error:', paymentError);
-
-        if (paymentError) {
-          console.error('❌ Revolut Edge Function Error:', paymentError);
-          throw new Error(`Revolut payment failed: ${paymentError.message}`);
-        }
-
-        if (!paymentResponse?.success) {
-          console.error('❌ Revolut Payment Response Error:', paymentResponse);
-          throw new Error(paymentResponse?.error || 'Revolut payment initialization failed');
-        }
-
-        if (paymentResponse.paymentUrl) {
-          console.log('✅ Redirecting to Revolut payment:', paymentResponse.paymentUrl);
-          window.location.href = paymentResponse.paymentUrl;
-        } else {
-          navigate('/payment/success?orderId=' + paymentResponse.orderId);
-        }
-
-      } else if (selectedPaymentProvider === 'smartbill') {
+      // Handle SmartBill payment with improved error handling
+      if (selectedPaymentProvider === 'smartbill') {
         console.log('🔵 Processing payment with SmartBill');
+        console.log('🔵 SmartBill order data:', orderData);
         
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('smartbill-create-invoice', {
-          body: {
-            orderData,
-            returnUrl: `${window.location.origin}/payment/success`
-          }
+          body: { orderData }
         });
 
         console.log('🔵 SmartBill response:', paymentResponse);
@@ -337,11 +296,69 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
         if (!paymentResponse?.success) {
           console.error('❌ SmartBill Payment Response Error:', paymentResponse);
-          throw new Error(paymentResponse?.error || 'SmartBill payment initialization failed');
+          const errorCode = paymentResponse?.errorCode || 'unknown';
+          const errorMessage = paymentResponse?.message || paymentResponse?.error || 'SmartBill payment initialization failed';
+          
+          // Navigate to error page with specific error details
+          navigate(`/payment/error?orderId=${paymentResponse?.orderId || 'unknown'}&errorCode=${errorCode}&errorMessage=${encodeURIComponent(errorMessage)}`);
+          return;
         }
 
         if (paymentResponse.paymentUrl) {
           console.log('✅ Redirecting to SmartBill payment:', paymentResponse.paymentUrl);
+          window.location.href = paymentResponse.paymentUrl;
+        } else {
+          console.log('✅ Order completed - no payment required');
+          navigate('/payment/success?orderId=' + paymentResponse.orderId);
+        }
+
+      } else if (selectedPaymentProvider === 'stripe') {
+        console.log('🟣 Processing payment with Stripe');
+        
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('stripe-create-payment', {
+          body: {
+            orderData: {
+              ...orderData,
+              total_price: orderData.total_price * 100 // Convert to cents for Stripe
+            },
+            returnUrl: `${window.location.origin}/payment/success`
+          }
+        });
+
+        console.log('🟣 Stripe response:', paymentResponse);
+
+        if (paymentError || !paymentResponse?.success) {
+          const errorMessage = paymentError?.message || paymentResponse?.error || 'Stripe payment failed';
+          throw new Error(errorMessage);
+        }
+
+        if (paymentResponse.paymentUrl) {
+          window.location.href = paymentResponse.paymentUrl;
+        } else {
+          throw new Error('No payment URL received from Stripe');
+        }
+
+      } else if (selectedPaymentProvider === 'revolut') {
+        console.log('🟠 Processing payment with Revolut');
+        
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('revolut-create-payment', {
+          body: {
+            orderData: {
+              ...orderData,
+              total_price: orderData.total_price * 100 // Convert to cents for Revolut
+            },
+            returnUrl: `${window.location.origin}/payment/success`
+          }
+        });
+
+        console.log('🟠 Revolut response:', paymentResponse);
+
+        if (paymentError || !paymentResponse?.success) {
+          const errorMessage = paymentError?.message || paymentResponse?.error || 'Revolut payment failed';
+          throw new Error(errorMessage);
+        }
+
+        if (paymentResponse.paymentUrl) {
           window.location.href = paymentResponse.paymentUrl;
         } else {
           navigate('/payment/success?orderId=' + paymentResponse.orderId);
@@ -357,7 +374,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       toast({
         title: t('orderError', 'Payment Error'),
-        description: `${selectedPaymentProvider.toUpperCase()} payment failed: ${errorMessage}`,
+        description: `Payment failed: ${errorMessage}`,
         variant: "destructive"
       });
     } finally {

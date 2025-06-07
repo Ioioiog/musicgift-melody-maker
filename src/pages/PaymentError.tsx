@@ -11,6 +11,45 @@ const PaymentError = () => {
   const [searchParams] = useSearchParams();
   const errorCode = searchParams.get('errorCode');
   const errorMessage = searchParams.get('errorMessage');
+  const orderId = searchParams.get('orderId');
+
+  const getErrorDetails = () => {
+    switch (errorCode) {
+      case 'paymentConfigError':
+        return {
+          title: 'Configurare sistem de plată',
+          description: 'Sistemul de plată nu este configurat corect. Vă rugăm să încercați din nou mai târziu.',
+          suggestions: [
+            'Contactați echipa de suport pentru asistență',
+            'Încercați să folosiți o altă metodă de plată'
+          ]
+        };
+      case 'paymentUrlFailed':
+        return {
+          title: 'Link de plată indisponibil',
+          description: 'Nu s-a putut genera linkul de plată. Integrarea Netopia nu este configurată.',
+          suggestions: [
+            'Contactați administratorul sistemului',
+            'Încercați din nou mai târziu',
+            'Folosiți o altă metodă de plată'
+          ]
+        };
+      case 'paymentFailed':
+      default:
+        return {
+          title: 'Eroare de procesare',
+          description: 'Plata nu a putut fi procesată din cauza unei erori tehnice.',
+          suggestions: [
+            'Verificați datele cardului și încercați din nou',
+            'Asigurați-vă că aveți fonduri suficiente în cont',
+            'Încercați să folosiți o altă metodă de plată',
+            'Contactați banca dumneavoastră dacă problema persistă'
+          ]
+        };
+    }
+  };
+
+  const errorDetails = getErrorDetails();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50">
@@ -24,16 +63,21 @@ const PaymentError = () => {
                 <div className="mb-6">
                   <AlertCircle className="w-20 h-20 text-red-500 mx-auto mb-4" />
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Plata nu a putut fi procesată
+                    {errorDetails.title}
                   </h1>
                   <p className="text-gray-600 text-lg">
-                    Din păcate, a apărut o problemă la procesarea plății dumneavoastră.
+                    {errorDetails.description}
                   </p>
                 </div>
 
-                {(errorCode || errorMessage) && (
+                {(errorCode || errorMessage || orderId) && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6 text-left">
-                    <h3 className="font-semibold text-red-800 mb-2">Detalii eroare</h3>
+                    <h3 className="font-semibold text-red-800 mb-2">Detalii tehnice</h3>
+                    {orderId && (
+                      <p className="text-sm text-red-700 mb-1">
+                        <strong>ID comandă:</strong> {orderId}
+                      </p>
+                    )}
                     {errorCode && (
                       <p className="text-sm text-red-700 mb-1">
                         <strong>Cod eroare:</strong> {errorCode}
@@ -41,7 +85,7 @@ const PaymentError = () => {
                     )}
                     {errorMessage && (
                       <p className="text-sm text-red-700">
-                        <strong>Mesaj:</strong> {errorMessage}
+                        <strong>Mesaj:</strong> {decodeURIComponent(errorMessage)}
                       </p>
                     )}
                   </div>
@@ -50,11 +94,9 @@ const PaymentError = () => {
                 <div className="bg-gray-50 rounded-lg p-6 mb-6">
                   <h3 className="font-semibold text-gray-900 mb-3">Ce puteți face?</h3>
                   <ul className="text-left text-gray-700 space-y-2 text-sm">
-                    <li>• Verificați datele cardului și încercați din nou</li>
-                    <li>• Asigurați-vă că aveți fonduri suficiente în cont</li>
-                    <li>• Încercați să folosiți o altă metodă de plată</li>
-                    <li>• Contactați banca dumneavoastră dacă problema persistă</li>
-                    <li>• Contactați echipa noastră de suport pentru asistență</li>
+                    {errorDetails.suggestions.map((suggestion, index) => (
+                      <li key={index}>• {suggestion}</li>
+                    ))}
                   </ul>
                 </div>
 
@@ -86,6 +128,11 @@ const PaymentError = () => {
                     <p className="text-sm text-gray-500">
                       Nu au fost efectuate debităti din contul dumneavoastră din cauza acestei erori.
                     </p>
+                    {orderId && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        Comanda cu ID-ul {orderId.slice(0, 8)}... a fost salvată și poate fi finalizată mai târziu.
+                      </p>
+                    )}
                   </div>
                 </div>
               </CardContent>
