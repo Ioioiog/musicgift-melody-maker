@@ -39,7 +39,7 @@ const Testimonials = () => {
       
       {/* Enhanced Hero Section with Purple Musical Background */}
       <section 
-        className="py-20 text-white relative overflow-hidden"
+        className="pt-20 pb-8 text-white relative overflow-hidden"
         style={backgroundStyle}
       >
         <div className="absolute inset-0 bg-black/20"></div>
