@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Canvas as FabricCanvas, IText, FabricImage, Rect, Circle, Line } from 'fabric';
 import { Button } from '@/components/ui/button';
@@ -605,174 +604,170 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         </Card>
       </div>
 
-      {/* Canvas and Properties Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Canvas Area - Takes 4/5 of the width */}
-        <div className="lg:col-span-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm flex items-center justify-between">
-                Design Canvas (1050 × 600px - Web/Digital 7:4)
-                <Button onClick={clearCanvas} variant="outline" size="sm">
-                  <RotateCcw className="w-4 h-4 mr-1" />
-                  Clear
-                </Button>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="border border-gray-200 rounded-lg overflow-hidden bg-white p-4">
-                <div className="flex justify-center">
-                  <div className="overflow-auto max-w-full">
-                    <canvas 
-                      ref={canvasRef} 
-                      className="border border-gray-300 rounded shadow-sm" 
-                      style={{ maxWidth: '100%', height: 'auto' }}
-                    />
-                  </div>
+      {/* Canvas Row - Full width */}
+      <div className="space-y-6">
+        {/* Canvas Area - Full width */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center justify-between">
+              Design Canvas (1050 × 600px - Web/Digital 7:4)
+              <Button onClick={clearCanvas} variant="outline" size="sm">
+                <RotateCcw className="w-4 h-4 mr-1" />
+                Clear
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white p-4">
+              <div className="flex justify-center">
+                <div className="overflow-auto max-w-full">
+                  <canvas 
+                    ref={canvasRef} 
+                    className="border border-gray-300 rounded shadow-sm" 
+                    style={{ maxWidth: '100%', height: 'auto' }}
+                  />
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Properties Panel - Takes 1/5 of the width */}
-        <div>
+        {/* Properties Panel - Full width when element is selected */}
+        {selectedObject && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm">
-                {selectedObject ? 'Element Properties' : 'Select an element'}
-              </CardTitle>
+              <CardTitle className="text-sm">Element Properties</CardTitle>
             </CardHeader>
             <CardContent>
-              {selectedObject ? (
-                <div className="space-y-3">
-                  {/* Text-specific properties */}
-                  {isTextElement && (
-                    <>
-                      <div>
-                        <Label className="text-xs">Font Family</Label>
-                        <Select
-                          value={selectedObject.fontFamily}
-                          onValueChange={(value) => updateSelectedObject('fontFamily', value)}
-                        >
-                          <SelectTrigger className="h-8">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {FONTS.map(font => (
-                              <SelectItem key={font} value={font}>{font}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <Label className="text-xs">Font Size</Label>
-                        <Input
-                          type="number"
-                          value={selectedObject.fontSize}
-                          onChange={(e) => updateSelectedObject('fontSize', parseInt(e.target.value))}
-                          className="h-8"
-                          min="8"
-                          max="100"
-                        />
-                      </div>
-                      
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={() => updateSelectedObject('fontWeight', 
-                            selectedObject.fontWeight === 'bold' ? 'normal' : 'bold'
-                          )}
-                          variant={selectedObject.fontWeight === 'bold' ? 'default' : 'outline'}
-                          size="sm"
-                          className="flex-1"
-                        >
-                          B
-                        </Button>
-                        <Button
-                          onClick={() => updateSelectedObject('fontStyle', 
-                            selectedObject.fontStyle === 'italic' ? 'normal' : 'italic'
-                          )}
-                          variant={selectedObject.fontStyle === 'italic' ? 'default' : 'outline'}
-                          size="sm"
-                          className="flex-1"
-                        >
-                          I
-                        </Button>
-                      </div>
-                    </>
-                  )}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {/* Text-specific properties */}
+                {isTextElement && (
+                  <>
+                    <div>
+                      <Label className="text-xs">Font Family</Label>
+                      <Select
+                        value={selectedObject.fontFamily}
+                        onValueChange={(value) => updateSelectedObject('fontFamily', value)}
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {FONTS.map(font => (
+                            <SelectItem key={font} value={font}>{font}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-xs">Font Size</Label>
+                      <Input
+                        type="number"
+                        value={selectedObject.fontSize}
+                        onChange={(e) => updateSelectedObject('fontSize', parseInt(e.target.value))}
+                        className="h-8"
+                        min="8"
+                        max="100"
+                      />
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => updateSelectedObject('fontWeight', 
+                          selectedObject.fontWeight === 'bold' ? 'normal' : 'bold'
+                        )}
+                        variant={selectedObject.fontWeight === 'bold' ? 'default' : 'outline'}
+                        size="sm"
+                        className="flex-1"
+                      >
+                        B
+                      </Button>
+                      <Button
+                        onClick={() => updateSelectedObject('fontStyle', 
+                          selectedObject.fontStyle === 'italic' ? 'normal' : 'italic'
+                        )}
+                        variant={selectedObject.fontStyle === 'italic' ? 'default' : 'outline'}
+                        size="sm"
+                        className="flex-1"
+                      >
+                        I
+                      </Button>
+                    </div>
+                  </>
+                )}
 
-                  {/* Shape-specific properties */}
-                  {isShapeElement && (
-                    <>
-                      {selectedObject.type === 'rect' && selectedObject.get('elementType') === 'rounded-rectangle' && (
-                        <div>
-                          <Label className="text-xs">Corner Radius</Label>
-                          <Input
-                            type="number"
-                            value={selectedObject.rx || 0}
-                            onChange={(e) => {
-                              const radius = parseInt(e.target.value);
-                              updateSelectedObject('rx', radius);
-                              updateSelectedObject('ry', radius);
-                            }}
-                            className="h-8"
-                            min="0"
-                            max="50"
-                          />
-                        </div>
-                      )}
-                      
+                {/* Shape-specific properties */}
+                {isShapeElement && (
+                  <>
+                    {selectedObject.type === 'rect' && selectedObject.get('elementType') === 'rounded-rectangle' && (
                       <div>
-                        <Label className="text-xs">Stroke Width</Label>
+                        <Label className="text-xs">Corner Radius</Label>
                         <Input
                           type="number"
-                          value={selectedObject.strokeWidth || 0}
-                          onChange={(e) => updateSelectedObject('strokeWidth', parseInt(e.target.value))}
+                          value={selectedObject.rx || 0}
+                          onChange={(e) => {
+                            const radius = parseInt(e.target.value);
+                            updateSelectedObject('rx', radius);
+                            updateSelectedObject('ry', radius);
+                          }}
                           className="h-8"
                           min="0"
-                          max="20"
+                          max="50"
                         />
                       </div>
+                    )}
+                    
+                    <div>
+                      <Label className="text-xs">Stroke Width</Label>
+                      <Input
+                        type="number"
+                        value={selectedObject.strokeWidth || 0}
+                        onChange={(e) => updateSelectedObject('strokeWidth', parseInt(e.target.value))}
+                        className="h-8"
+                        min="0"
+                        max="20"
+                      />
+                    </div>
 
-                      {selectedObject.stroke && (
-                        <div>
-                          <Label className="text-xs">Stroke Color</Label>
-                          <Input
-                            type="color"
-                            value={selectedObject.stroke}
-                            onChange={(e) => updateSelectedObject('stroke', e.target.value)}
-                            className="h-8"
-                          />
-                        </div>
-                      )}
-
+                    {selectedObject.stroke && (
                       <div>
-                        <Label className="text-xs">Opacity</Label>
+                        <Label className="text-xs">Stroke Color</Label>
                         <Input
-                          type="number"
-                          value={Math.round((selectedObject.opacity || 1) * 100)}
-                          onChange={(e) => updateSelectedObject('opacity', parseInt(e.target.value) / 100)}
+                          type="color"
+                          value={selectedObject.stroke}
+                          onChange={(e) => updateSelectedObject('stroke', e.target.value)}
                           className="h-8"
-                          min="0"
-                          max="100"
                         />
                       </div>
-                    </>
-                  )}
+                    )}
 
-                  {/* Common properties for all elements */}
-                  <div>
-                    <Label className="text-xs">Fill Color</Label>
-                    <Input
-                      type="color"
-                      value={isTextElement ? selectedObject.fill : selectedObject.fill}
-                      onChange={(e) => updateSelectedObject('fill', e.target.value)}
-                      className="h-8"
-                    />
-                  </div>
-                  
+                    <div>
+                      <Label className="text-xs">Opacity</Label>
+                      <Input
+                        type="number"
+                        value={Math.round((selectedObject.opacity || 1) * 100)}
+                        onChange={(e) => updateSelectedObject('opacity', parseInt(e.target.value) / 100)}
+                        className="h-8"
+                        min="0"
+                        max="100"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {/* Common properties for all elements */}
+                <div>
+                  <Label className="text-xs">Fill Color</Label>
+                  <Input
+                    type="color"
+                    value={isTextElement ? selectedObject.fill : selectedObject.fill}
+                    onChange={(e) => updateSelectedObject('fill', e.target.value)}
+                    className="h-8"
+                  />
+                </div>
+                
+                <div className="flex items-end">
                   <Button
                     onClick={deleteSelectedObject}
                     variant="destructive"
@@ -783,12 +778,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
                     Delete
                   </Button>
                 </div>
-              ) : (
-                <p className="text-sm text-gray-500">Click on an element to edit its properties</p>
-              )}
+              </div>
             </CardContent>
           </Card>
-        </div>
+        )}
       </div>
     </div>
   );
