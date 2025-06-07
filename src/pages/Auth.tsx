@@ -193,7 +193,7 @@ const Auth = () => {
           <div className="w-full max-w-md sm:max-w-lg mx-auto xl:mx-0 order-1 xl:order-2 xl:justify-self-center 2xl:justify-self-start">
             <Card className="shadow-2xl border-0 bg-white/96 backdrop-blur-xl overflow-hidden relative transform hover:scale-[1.02] transition-all duration-300">
               {/* Enhanced decorative elements */}
-              <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 bg-slate-50"></div>
+              <div className="absolute top-0 left-0 w-full h-3 bg-white"></div>
               <div className="absolute top-3 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
               
               <CardHeader className="space-y-6 pb-8 pt-12">
