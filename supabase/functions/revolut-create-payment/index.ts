@@ -23,7 +23,10 @@ serve(async (req) => {
 
     const { orderData, returnUrl } = await req.json();
     
-    console.log('🟠 Revolut: Received order data:', JSON.stringify(orderData, null, 2));
+    console.log('🟠 Revolut: Received order data (converting price to cents):', {
+      originalPrice: orderData.total_price,
+      convertedPrice: orderData.total_price * 100
+    });
     console.log('🟠 Revolut: Return URL:', returnUrl);
 
     const revolutApiKey = Deno.env.get('REVOLUT_API_KEY');
@@ -34,12 +37,13 @@ serve(async (req) => {
 
     console.log('✅ Revolut: API key found, proceeding...');
 
-    // Create order in database first - ensure payment_provider is set to 'revolut'
+    // Create order in database first - convert price to cents for Revolut
     const { data: order, error: orderError } = await supabaseClient
       .from('orders')
       .insert([{
         ...orderData,
-        payment_provider: 'revolut', // Explicitly set to revolut
+        total_price: orderData.total_price * 100, // Convert to cents for Revolut
+        payment_provider: 'revolut',
         status: 'pending',
         payment_status: 'pending'
       }])
@@ -53,11 +57,11 @@ serve(async (req) => {
 
     console.log('✅ Revolut: Order created in database:', order.id);
 
-    // Create Revolut Business order
+    // Create Revolut Business order (use the cents value from database)
     const revolutUrl = 'https://b2b.revolut.com/api/1.0/orders';
     
     const revolutOrderData = {
-      amount: orderData.total_price, // Amount in minor units (cents)
+      amount: order.total_price, // Amount in minor units (cents) from database
       currency: orderData.currency,
       merchant_order_ext_ref: order.id,
       description: `${orderData.package_name || 'Custom Song Package'} - ${orderData.package_value}`,

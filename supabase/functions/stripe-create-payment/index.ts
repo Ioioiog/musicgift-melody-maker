@@ -211,16 +211,20 @@ serve(async (req) => {
       // Continue without customer ID - not critical for payment
     }
 
-    // Create order in database first
+    // Create order in database first (convert to cents for Stripe)
     const orderInsertData = {
       ...orderData,
+      total_price: orderData.total_price * 100, // Convert to cents for Stripe
       payment_provider: 'stripe',
       status: 'pending',
       payment_status: 'pending',
       stripe_customer_id: stripeCustomerId
     };
 
-    console.log('🟣 Stripe: Creating order with data:', JSON.stringify(orderInsertData, null, 2));
+    console.log('🟣 Stripe: Creating order with data (price converted to cents):', {
+      ...orderInsertData,
+      form_data: { email: orderInsertData.form_data.email?.substring(0, 5) + '***' }
+    });
 
     const { data: order, error: orderError } = await supabaseClient
       .from('orders')
@@ -266,7 +270,7 @@ serve(async (req) => {
       created_via: 'order_wizard'
     };
 
-    // Line item for the order
+    // Line item for the order (price already in cents from database insert)
     const lineItem = {
       price_data: {
         currency: orderData.currency.toLowerCase(),
@@ -274,7 +278,7 @@ serve(async (req) => {
           name: orderData.package_name || 'Custom Song Package',
           description: `${orderData.package_value} - Delivery: ${orderData.package_delivery_time || 'Standard'}`,
         },
-        unit_amount: orderData.total_price
+        unit_amount: order.total_price // Use the cents value from database
       },
       quantity: 1
     };

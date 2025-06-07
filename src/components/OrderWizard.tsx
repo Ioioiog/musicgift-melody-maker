@@ -222,12 +222,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     const package_delivery_time = selectedPackageData?.delivery_time_key;
     const package_includes = selectedPackageData?.includes;
 
-    // Don't multiply by 100 - keep price as-is for SmartBill
+    // Keep all prices in base monetary units (no multiplication)
     const orderData = {
       form_data: cleanFormData,
       selected_addons: selectedAddons,
       addon_field_values: addonFieldValues,
-      total_price: totalPrice, // Keep as decimal for SmartBill
+      total_price: totalPrice, // Keep in base monetary units
       package_value: selectedPackage,
       package_name: package_name,
       package_price: package_price,
@@ -345,10 +345,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('stripe-create-payment', {
           body: {
-            orderData: {
-              ...orderData,
-              total_price: orderData.total_price * 100 // Convert to cents for Stripe
-            },
+            orderData: orderData, // No price conversion - handled in edge function
             returnUrl: `${window.location.origin}/payment/success`
           }
         });
@@ -371,10 +368,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('revolut-create-payment', {
           body: {
-            orderData: {
-              ...orderData,
-              total_price: orderData.total_price * 100 // Convert to cents for Revolut
-            },
+            orderData: orderData, // No price conversion - handled in edge function
             returnUrl: `${window.location.origin}/payment/success`
           }
         });

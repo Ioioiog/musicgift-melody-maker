@@ -66,21 +66,21 @@ const Order = () => {
       // Calculate total price
       const totalPrice = calculateTotalPrice(orderData.package, orderData.addons || []);
       
-      // Calculate gift card application
+      // Calculate gift card application (keep in base monetary units)
       let giftCreditApplied = 0;
       let finalPrice = totalPrice;
       
       if (giftCard) {
-        const giftBalance = giftCard.gift_amount || 0;
-        giftCreditApplied = Math.min(giftBalance, totalPrice * 100); // Convert to cents
-        finalPrice = Math.max(0, (totalPrice * 100 - giftCreditApplied) / 100); // Convert back to currency units
+        const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents to base units
+        giftCreditApplied = Math.min(giftBalance, totalPrice);
+        finalPrice = Math.max(0, totalPrice - giftCreditApplied);
       }
 
       // Get the selected payment provider
       const paymentProvider = orderData.paymentProvider || 'smartbill';
       console.log(`💳 Selected payment provider: ${paymentProvider}`);
 
-      // Prepare base order payload
+      // Prepare base order payload (all prices in base monetary units)
       const baseOrderPayload = {
         form_data: {
           ...orderData,
@@ -88,13 +88,13 @@ const Order = () => {
           addonFieldValues: orderData.addonFieldValues || {},
         },
         selected_addons: orderData.addons || [],
-        total_price: finalPrice * 100, // Convert to cents for consistency
+        total_price: finalPrice, // Keep in base monetary units
         status: 'pending',
         payment_status: finalPrice > 0 ? 'pending' : 'completed',
-        // Gift card fields
+        // Gift card fields (keep gift_credit_applied in cents for database consistency)
         gift_card_id: giftCard?.id || null,
         is_gift_redemption: !!giftCard,
-        gift_credit_applied: giftCreditApplied,
+        gift_credit_applied: giftCreditApplied * 100, // Convert to cents for database
         // Package detail columns
         package_value: selectedPackage.value,
         package_name: selectedPackage.label_key,
@@ -109,12 +109,12 @@ const Order = () => {
       let paymentResponse;
       let paymentError;
 
-      // Route to the correct payment provider
+      // Route to the correct payment provider (no price conversion in frontend)
       if (paymentProvider === 'stripe') {
         console.log('🟣 Processing with Stripe');
         const { data, error } = await supabase.functions.invoke('stripe-create-payment', {
           body: {
-            orderData: baseOrderPayload,
+            orderData: baseOrderPayload, // Stripe edge function will handle cents conversion
             returnUrl: `${window.location.origin}/payment/success`
           }
         });
@@ -125,7 +125,7 @@ const Order = () => {
         console.log('🟠 Processing with Revolut');
         const { data, error } = await supabase.functions.invoke('revolut-create-payment', {
           body: {
-            orderData: baseOrderPayload,
+            orderData: baseOrderPayload, // Revolut edge function will handle cents conversion
             returnUrl: `${window.location.origin}/payment/success`
           }
         });
@@ -135,7 +135,7 @@ const Order = () => {
       } else if (paymentProvider === 'smartbill') {
         console.log('🔵 Processing with SmartBill');
         const { data, error } = await supabase.functions.invoke('smartbill-create-invoice', {
-          body: { orderData: baseOrderPayload }
+          body: { orderData: baseOrderPayload } // SmartBill uses base monetary units
         });
         paymentResponse = data;
         paymentError = error;
@@ -177,8 +177,8 @@ const Order = () => {
           .insert({
             gift_card_id: giftCard.id,
             order_id: paymentResponse.orderId,
-            redeemed_amount: giftCreditApplied,
-            remaining_balance: Math.max(0, (giftCard.gift_amount || 0) - giftCreditApplied)
+            redeemed_amount: giftCreditApplied * 100, // Convert to cents for database
+            remaining_balance: Math.max(0, (giftCard.gift_amount || 0) - (giftCreditApplied * 100))
           });
 
         if (redemptionError) {
