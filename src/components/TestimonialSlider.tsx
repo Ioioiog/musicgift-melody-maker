@@ -1,3 +1,4 @@
+
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
@@ -64,23 +65,47 @@ export default function TestimonialSlider() {
     return 'text-only';
   };
 
-  // Modern video component with enhanced play overlay and autoplay
+  // Modern video component with enhanced play overlay and autoplay for uploads only
   const VideoWithOverlay = ({ src, type, title }: { src: string; type: 'upload' | 'youtube'; title: string }) => {
     const [isMuted, setIsMuted] = useState(true);
+    const [showYouTubeVideo, setShowYouTubeVideo] = useState(false);
     
     if (type === 'youtube') {
+      if (!showYouTubeVideo) {
+        // Show thumbnail with play button for YouTube videos
+        return (
+          <div className="relative group overflow-hidden rounded-xl bg-gray-50">
+            <div className="w-full h-full bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center">
+              <div className="text-center">
+                <div className="bg-white rounded-full p-4 mb-4 mx-auto w-fit shadow-lg">
+                  <Play className="w-8 h-8 text-red-600 ml-1" />
+                </div>
+                <p className="text-sm text-gray-600 px-4">Click to watch on YouTube</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowYouTubeVideo(true)}
+              className="absolute inset-0 w-full h-full bg-black/0 hover:bg-black/10 transition-all duration-200"
+              aria-label="Play YouTube video"
+            />
+            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
+              <ExternalLink className="w-4 h-4 text-red-600" />
+            </div>
+          </div>
+        );
+      }
+      
       return (
         <div className="relative group overflow-hidden rounded-xl bg-gray-50">
           <iframe
             className="w-full h-full"
-            src={`${src}?autoplay=1&mute=1`}
+            src={src}
             allowFullScreen
             loading="lazy"
             title={title}
-            allow="autoplay"
           />
           <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
-            <ExternalLink className="w-4 h-4 text-gray-600" />
+            <ExternalLink className="w-4 h-4 text-red-600" />
           </div>
         </div>
       );
