@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import NewsletterForm from "@/components/NewsletterForm";
@@ -9,35 +10,35 @@ import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin } from "lucide-react";
+
 const Contact = () => {
-  const {
-    t
-  } = useLanguage();
-  return <div className="min-h-screen">
+  const { t } = useLanguage();
+  
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Contact Form and Info Section */}
-      <section className="py-20 text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
-        <div className="absolute inset-0 bg-black/20 my-0 py-[49px]"></div>
+      <section 
+        className="py-20 text-white relative overflow-hidden"
+        style={{
+          backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/20"></div>
 
         {/* Contact Form and Info */}
         <div className="max-w-6xl mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 py-[71px]">
+          <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <motion.div initial={{
-            opacity: 0,
-            x: -20
-          }} animate={{
-            opacity: 1,
-            x: 0
-          }} transition={{
-            duration: 0.6
-          }}>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ duration: 0.6 }}
+            >
               <Card className="bg-white/95 backdrop-blur-md border border-white/20 shadow-xl">
                 <CardContent className="p-8">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('sendMessage')}</h2>
@@ -71,16 +72,11 @@ const Contact = () => {
             </motion.div>
 
             {/* Contact Info */}
-            <motion.div initial={{
-            opacity: 0,
-            x: 20
-          }} animate={{
-            opacity: 1,
-            x: 0
-          }} transition={{
-            duration: 0.6,
-            delay: 0.2
-          }}>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
               <div className="space-y-8">
                 <div>
                   <h2 className="text-2xl font-bold mb-6">{t('getInTouch')}</h2>
@@ -145,9 +141,46 @@ const Contact = () => {
       </section>
 
       {/* Newsletter Section */}
-      
+      <section 
+        className="py-12 sm:py-16 md:py-20 text-white relative overflow-hidden"
+        style={{
+          backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/50"></div>
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-8 sm:mb-10"
+          >
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
+              {t('stayUpdated') || 'Stay Updated'}
+            </h2>
+            <p className="text-lg sm:text-xl text-white/90 leading-relaxed">
+              {t('subscribeNewsletter') || 'Subscribe to our newsletter for the latest updates and exclusive offers'}
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-md mx-auto"
+          >
+            <NewsletterForm />
+          </motion.div>
+        </div>
+      </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Contact;
