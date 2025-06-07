@@ -71,7 +71,7 @@ export default function TestimonialSlider() {
     // Prioritize uploaded video over YouTube link
     if (testimonial.video_url) {
       return (
-        <div className="relative pb-[56.25%] group flex-shrink-0">
+        <div className="relative h-2/3 group flex-shrink-0">
           <video
             className="absolute top-0 left-0 w-full h-full object-cover"
             controls
@@ -86,7 +86,7 @@ export default function TestimonialSlider() {
       );
     } else if (testimonial.youtube_link) {
       return (
-        <div className="relative pb-[56.25%] group flex-shrink-0">
+        <div className="relative h-2/3 group flex-shrink-0">
           <iframe
             className="absolute top-0 left-0 w-full h-full"
             src={testimonial.youtube_link}
