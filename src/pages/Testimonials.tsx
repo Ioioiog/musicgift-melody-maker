@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import TestimonialSlider from "@/components/TestimonialSlider";
@@ -7,6 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { Star, Users, Award, Shield } from "lucide-react";
+
 const Testimonials = () => {
   const {
     t
@@ -89,10 +89,15 @@ const Testimonials = () => {
         }}>
             {/* Trustpilot Button */}
             <a href="https://www.trustpilot.com/review/musicgift.ro" target="_blank" rel="noopener noreferrer" className="inline-block">
-              <div className="bg-white border-2 border-green-500 rounded-lg hover:bg-green-50 transition-colors duration-200 shadow-sm py-[2px] px-[10px]">
+              <div className="bg-white border-2 border-green-500 rounded-lg hover:bg-green-50 transition-colors duration-200 shadow-sm py-[2px] px-[10px] flex items-center">
                 <span className="text-gray-800 font-medium text-sm">
-                  Review us on <span style={{ color: '#00B67A' }}>⭐</span> Trustpilot
+                  Review us on 
                 </span>
+                <img 
+                  src="/lovable-uploads/47cbf05f-3839-40b6-abc6-584208546eb2.png" 
+                  alt="Trustpilot" 
+                  className="ml-1 h-4 w-auto"
+                />
               </div>
             </a>
 
