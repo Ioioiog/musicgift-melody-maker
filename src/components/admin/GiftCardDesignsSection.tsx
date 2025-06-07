@@ -207,56 +207,77 @@ const GiftCardDesignsSection = () => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Gift Card Designs</CardTitle>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
+    <div className="space-y-6">
+      {/* Header Section */}
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <CardTitle className="text-xl">Gift Card Designs</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                Create and manage custom gift card designs
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowInactive(!showInactive)}
+                className="whitespace-nowrap"
               >
                 {showInactive ? "Hide Inactive" : "Show All"}
               </Button>
+              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                <DialogTrigger asChild>
+                  <Button onClick={handleAdd} className="whitespace-nowrap">
+                    <Plus className="w-4 h-4 mr-2" />
+                    New Design
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
+                  <DialogHeader className="pb-4 border-b">
+                    <DialogTitle className="text-lg">
+                      {editingDesign ? 'Edit Gift Card Design' : 'Create New Gift Card Design'}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="py-4">
+                    <GiftCardDesignForm 
+                      design={editingDesign}
+                      onSuccess={handleFormSuccess}
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
-            <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={handleAdd}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Design
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>
-                    {editingDesign ? 'Edit Design' : 'Add New Design'}
-                  </DialogTitle>
-                </DialogHeader>
-                <GiftCardDesignForm 
-                  design={editingDesign}
-                  onSuccess={handleFormSuccess}
-                />
-              </DialogContent>
-            </Dialog>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <ResponsiveTable
-          headers={["Design", "Status", "Created", "Actions"]}
-          data={designs}
-          renderRow={renderDesktopRow}
-          renderMobileCard={renderMobileCard}
-        />
-        {designs.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            {showInactive ? "No gift card designs found." : "No active gift card designs found."}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        </CardHeader>
+      </Card>
+
+      {/* Designs Table */}
+      <Card>
+        <CardContent className="p-0">
+          <ResponsiveTable
+            headers={["Design", "Status", "Created", "Actions"]}
+            data={designs}
+            renderRow={renderDesktopRow}
+            renderMobileCard={renderMobileCard}
+          />
+          {designs.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">
+              <div className="mb-2">
+                {showInactive ? "No gift card designs found." : "No active gift card designs found."}
+              </div>
+              <p className="text-sm">
+                {designs.length === 0 && allDesigns.length === 0 
+                  ? "Get started by creating your first design."
+                  : "Try adjusting your filters or create a new design."
+                }
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
