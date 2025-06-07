@@ -1,3 +1,4 @@
+
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -88,6 +89,48 @@ function validateOrderData(orderData: OrderData) {
   return true
 }
 
+function convertPriceBasedOnProvider(totalPrice: number, packagePrice: number, paymentProvider: string): number {
+  console.log('💰 Converting price based on payment provider:', {
+    originalTotalPrice: totalPrice,
+    packagePrice: packagePrice,
+    paymentProvider: paymentProvider
+  })
+
+  let convertedPrice = totalPrice;
+
+  // Handle Stripe and Revolut which store prices in cents
+  if (paymentProvider === 'stripe' || paymentProvider === 'revolut') {
+    convertedPrice = totalPrice / 100; // Convert from cents to base units
+    console.log('🔄 Converted from cents to base units:', {
+      originalCents: totalPrice,
+      convertedToBase: convertedPrice
+    })
+  }
+
+  // Sanity check: if converted price seems unreasonable, use package_price as fallback
+  if (convertedPrice > packagePrice * 10) {
+    console.warn('⚠️ Converted price seems too high, using package_price as fallback:', {
+      convertedPrice,
+      packagePrice,
+      usingFallback: true
+    })
+    convertedPrice = packagePrice;
+  }
+
+  // Additional sanity check: ensure price is positive and reasonable
+  if (convertedPrice <= 0 || convertedPrice > 10000) {
+    console.warn('⚠️ Price outside reasonable range, using package_price:', {
+      convertedPrice,
+      packagePrice,
+      usingPackagePrice: true
+    })
+    convertedPrice = packagePrice;
+  }
+
+  console.log('✅ Final converted price:', convertedPrice)
+  return convertedPrice;
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -103,8 +146,10 @@ serve(async (req) => {
     const { orderData }: { orderData: OrderData } = await req.json()
     console.log('🔄 Processing SmartBill order:', {
       totalPrice: orderData.total_price,
+      packagePrice: orderData.package_price,
       currency: orderData.currency,
       packageName: orderData.package_name,
+      paymentProvider: orderData.payment_provider,
       customerEmail: orderData.form_data?.email?.substring(0, 5) + '***'
     })
 
@@ -143,8 +188,15 @@ serve(async (req) => {
 
     console.log('✅ Order saved to database with ID:', savedOrder.id)
 
+    // Convert price based on payment provider
+    const convertedPrice = convertPriceBasedOnProvider(
+      orderData.total_price, 
+      orderData.package_price, 
+      orderData.payment_provider || 'smartbill'
+    );
+
     // Check if payment is needed
-    if (orderData.total_price <= 0) {
+    if (convertedPrice <= 0) {
       console.log('💰 No payment required - completing order')
       
       const { error: updateError } = await supabaseClient
@@ -234,20 +286,15 @@ serve(async (req) => {
       isTaxPayer: isCompanyInvoice && !!clientVatCode
     })
 
-    // Convert price to ensure it's a valid number
-    const totalPrice = Number(orderData.total_price) || 0
-    if (totalPrice <= 0) {
-      throw new Error('Invalid total price for SmartBill document creation')
-    }
-
     // Format price with two decimal places for SmartBill/Netopia compatibility
-    const formattedPrice = totalPrice.toFixed(2)
+    const formattedPrice = convertedPrice.toFixed(2)
 
-    console.log('💰 Price validation and formatting:', {
-      originalPrice: orderData.total_price,
-      convertedPrice: totalPrice,
+    console.log('💰 Final price formatting for SmartBill XML:', {
+      originalTotalPrice: orderData.total_price,
+      convertedPrice: convertedPrice,
       formattedPrice: formattedPrice,
-      currency: orderData.currency
+      currency: orderData.currency,
+      paymentProvider: orderData.payment_provider
     })
     
     // Create proforma with payment link using STRP series
@@ -286,7 +333,7 @@ serve(async (req) => {
 </estimate>`
 
     console.log('📄 Creating SmartBill proforma with STRP series')
-    console.log('🔗 XML payload prepared for SmartBill API with formatted price:', formattedPrice)
+    console.log('🔗 XML payload prepared for SmartBill API with corrected price:', formattedPrice)
 
     // Create proforma via SmartBill API using XML format
     let proformaResponse: Response
