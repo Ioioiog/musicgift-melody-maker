@@ -70,53 +70,69 @@ const AnimatedStepFlow = () => {
       case 0:
         return (
           <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-400">
-            <p className="text-blue-800 font-medium mb-3">{t('step1DetailsTitle')}</p>
-            <ul className="text-blue-700 text-base space-y-2">
-              <li>• {t('step1Detail1')}</li>
-              <li>• {t('step1Detail2')}</li>
-              <li>• {t('step1Detail3')}</li>
-              <li>• {t('step1Detail4')}</li>
+            <p className="text-blue-800 font-medium mb-3">Step 1 — Choose Your Package</p>
+            <p className="text-blue-700 text-base mb-4">
+              Every special song begins with the right foundation. Explore our selection of carefully designed packages and choose the one that best matches your occasion, sentiment, and budget — whether it's a heartfelt birthday tribute, a romantic surprise, a wedding anthem, or a unique gift just because.
+            </p>
+            <p className="text-blue-800 font-medium mb-3">Every package includes:</p>
+            <ul className="text-blue-700 text-base space-y-2 mb-4">
+              <li>• Professionally produced music with rich instrumentation</li>
+              <li>• Custom lyrics inspired by your story</li>
+              <li>• High-quality audio files delivered in MP3 and WAV formats</li>
+              <li>• A beautifully designed visual cover to accompany your song</li>
             </ul>
-            <p className="text-blue-800 text-sm mt-3 italic">{t('step1DetailsFooter')}</p>
+            <p className="text-blue-800 text-sm italic">Not sure which one to pick? We'll guide you.</p>
           </div>
         );
       case 1:
         return (
           <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-400">
-            <p className="text-green-800 font-medium mb-3">{t('step2DetailsTitle')}</p>
-            <ul className="text-green-700 text-base space-y-2">
-              <li>• {t('step2Detail1')}</li>
-              <li>• {t('step2Detail2')}</li>
-              <li>• {t('step2Detail3')}</li>
-              <li>• {t('step2Detail4')}</li>
+            <p className="text-green-800 font-medium mb-3">Step 2 — Share Your Story</p>
+            <p className="text-green-700 text-base mb-4">
+              This is your moment to open up. Your song will be shaped by the story you tell us — the moments that moved you, the people who matter, and the memories you want to preserve through music.
+            </p>
+            <p className="text-green-800 font-medium mb-3">You can include:</p>
+            <ul className="text-green-700 text-base space-y-2 mb-4">
+              <li>• Memorable events, personal milestones, and heartfelt memories</li>
+              <li>• Names, dates, and personal details that bring your story to life</li>
+              <li>• The mood and musical style you prefer (calm, joyful, dramatic, etc.)</li>
+              <li>• Optional voice recordings or photos to spark creative inspiration</li>
             </ul>
-            <p className="text-green-800 text-sm mt-3 italic">{t('step2DetailsFooter')}</p>
+            <p className="text-green-800 text-sm italic">The more you share, the more meaningful the final song will be.</p>
           </div>
         );
       case 2:
         return (
           <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-400">
-            <p className="text-purple-800 font-medium mb-3">{t('step3DetailsTitle')}</p>
-            <ul className="text-purple-700 text-base space-y-2">
-              <li>• {t('step3Detail1')}</li>
-              <li>• {t('step3Detail2')}</li>
-              <li>• {t('step3Detail3')}</li>
-              <li>• {t('step3Detail4')}</li>
+            <p className="text-purple-800 font-medium mb-3">Step 3 — We Create the Music</p>
+            <p className="text-purple-700 text-base mb-4">
+              Once we receive your story, our team gets to work crafting a song that captures its essence. From songwriting to arrangement to performance, we handle every step with care and creativity.
+            </p>
+            <p className="text-purple-800 font-medium mb-3">Here's how it comes together:</p>
+            <ul className="text-purple-700 text-base space-y-2 mb-4">
+              <li>• Your story is transformed into original lyrics</li>
+              <li>• The melody is composed and arranged to match the mood</li>
+              <li>• Talented vocalists record the performance</li>
+              <li>• Audio is professionally mixed and mastered for a polished result</li>
             </ul>
-            <p className="text-purple-800 text-sm mt-3 italic">{t('step3DetailsFooter')}</p>
+            <p className="text-purple-800 text-sm italic">The result is a one-of-a-kind song made just for you.</p>
           </div>
         );
       case 3:
         return (
           <div className="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-400">
-            <p className="text-orange-800 font-medium mb-3">{t('step4DetailsTitle')}</p>
-            <ul className="text-orange-700 text-base space-y-2">
-              <li>• {t('step4Detail1')}</li>
-              <li>• {t('step4Detail2')}</li>
-              <li>• {t('step4Detail3')}</li>
-              <li>• {t('step4Detail4')}</li>
+            <p className="text-orange-800 font-medium mb-3">Step 4 — Receive Your Musical Gift</p>
+            <p className="text-orange-700 text-base mb-4">
+              In 3 to 7 business days, your personalized song will be delivered directly to your inbox. You'll receive everything you need to enjoy it, share it, or gift it to someone special.
+            </p>
+            <p className="text-orange-800 font-medium mb-3">You'll receive:</p>
+            <ul className="text-orange-700 text-base space-y-2 mb-4">
+              <li>• Your custom song in MP3 and WAV formats</li>
+              <li>• A visual cover designed to match the theme of your track</li>
+              <li>• Optionally, a video version or social-media-ready formats</li>
+              <li>• A secure link to download your files, available for 6 months</li>
             </ul>
-            <p className="text-orange-800 text-sm mt-3 italic">{t('step4DetailsFooter')}</p>
+            <p className="text-orange-800 text-sm italic">Your music is ready to be enjoyed — again and again.</p>
           </div>
         );
       default:
@@ -262,7 +278,7 @@ const AnimatedStepFlow = () => {
               >
                 <p className="mb-4">{steps[activeStep].description}</p>
                 
-                {/* Step-specific details using translations */}
+                {/* Step-specific details using new content */}
                 {renderStepDetails()}
               </motion.div>
 
