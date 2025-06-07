@@ -1,15 +1,15 @@
-
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Play, ExternalLink, Quote, Star, Volume2, VolumeX } from "lucide-react";
+import { Play, ExternalLink, Quote, Star, Volume2, VolumeX, X } from "lucide-react";
 
 export default function TestimonialSlider() {
   const { t } = useLanguage();
   const { data: testimonials, isLoading, error } = useTestimonials();
+  const [maximizedVideo, setMaximizedVideo] = useState<{ src: string; type: 'upload' | 'youtube'; title: string } | null>(null);
 
   if (isLoading) {
     return (
@@ -69,11 +69,15 @@ export default function TestimonialSlider() {
   const VideoWithOverlay = ({ src, type, title }: { src: string; type: 'upload' | 'youtube'; title: string }) => {
     const [isMuted, setIsMuted] = useState(true);
 
+    const handleVideoClick = () => {
+      setMaximizedVideo({ src, type, title });
+    };
+
     if (type === 'youtube') {
       return (
-        <div className="relative group overflow-hidden rounded-xl bg-gray-50">
+        <div className="relative group overflow-hidden rounded-xl bg-gray-50 cursor-pointer" onClick={handleVideoClick}>
           <iframe 
-            className="w-full h-full" 
+            className="w-full h-full pointer-events-none" 
             src={src} 
             allowFullScreen 
             loading="lazy" 
@@ -82,14 +86,19 @@ export default function TestimonialSlider() {
           <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
             <ExternalLink className="w-4 h-4 text-red-600" />
           </div>
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+            <div className="bg-white/90 backdrop-blur-sm rounded-full p-3">
+              <Play className="w-6 h-6 text-gray-800" />
+            </div>
+          </div>
         </div>
       );
     }
 
     return (
-      <div className="relative group overflow-hidden rounded-xl bg-gray-50">
+      <div className="relative group overflow-hidden rounded-xl bg-gray-50 cursor-pointer" onClick={handleVideoClick}>
         <video 
-          className="w-full h-full object-cover" 
+          className="w-full h-full object-cover pointer-events-none" 
           autoPlay 
           muted={isMuted} 
           loop 
@@ -100,11 +109,57 @@ export default function TestimonialSlider() {
         </video>
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button 
-            onClick={() => setIsMuted(!isMuted)} 
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsMuted(!isMuted);
+            }} 
             className="text-gray-600 hover:text-gray-800 transition-colors"
           >
             {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
           </button>
+        </div>
+        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+          <div className="bg-white/90 backdrop-blur-sm rounded-full p-3">
+            <Play className="w-6 h-6 text-gray-800" />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Maximized video modal
+  const MaximizedVideoModal = () => {
+    if (!maximizedVideo) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="relative w-full max-w-4xl bg-white rounded-2xl overflow-hidden">
+          <button
+            onClick={() => setMaximizedVideo(null)}
+            className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm rounded-full p-2 hover:bg-white transition-colors"
+          >
+            <X className="w-6 h-6 text-gray-800" />
+          </button>
+          
+          <div className="aspect-video">
+            {maximizedVideo.type === 'youtube' ? (
+              <iframe 
+                className="w-full h-full" 
+                src={maximizedVideo.src} 
+                allowFullScreen 
+                title={maximizedVideo.title}
+              />
+            ) : (
+              <video 
+                className="w-full h-full object-cover" 
+                controls
+                autoPlay
+                preload="metadata"
+              >
+                <source src={maximizedVideo.src} type="video/mp4" />
+              </video>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -263,6 +318,9 @@ export default function TestimonialSlider() {
           
         </motion.div>
       </div>
+
+      {/* Maximized Video Modal */}
+      <MaximizedVideoModal />
     </div>
   );
 }
