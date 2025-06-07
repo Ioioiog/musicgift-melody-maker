@@ -166,7 +166,7 @@ export default function TestimonialSlider() {
                   </div>
                 )}
 
-                {/* Video testimonials - matching the text-only layout style */}
+                {/* Video testimonials - text first, then video */}
                 {type !== 'text-only' && (
                   <div className="bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300 p-8 h-full flex flex-col group hover:shadow-lg">
                     {/* Quote icon for consistency */}
@@ -174,7 +174,14 @@ export default function TestimonialSlider() {
                       <Quote className="w-8 h-8 text-purple-500 opacity-60" />
                     </div>
 
-                    {/* Video section */}
+                    {/* Testimonial text FIRST */}
+                    {testimonial.text && (
+                      <blockquote className="text-gray-700 text-lg leading-relaxed mb-8 flex-grow">
+                        "{testimonial.text}"
+                      </blockquote>
+                    )}
+
+                    {/* Video section AFTER text */}
                     <div className="mb-6 rounded-xl overflow-hidden">
                       {type === 'uploaded-video' && (
                         <div className="h-48">
@@ -215,13 +222,6 @@ export default function TestimonialSlider() {
                         </div>
                       )}
                     </div>
-                    
-                    {/* Testimonial text if available */}
-                    {testimonial.text && (
-                      <blockquote className="text-gray-700 text-lg leading-relaxed mb-8 flex-grow">
-                        "{testimonial.text}"
-                      </blockquote>
-                    )}
                     
                     {/* Star rating */}
                     <div className="flex items-center justify-center mb-6">
