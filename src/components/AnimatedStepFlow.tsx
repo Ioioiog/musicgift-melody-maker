@@ -1,8 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, MessageSquare, Music, Gift } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { stepContentData } from '@/data/stepContent';
+import { StepDetailsBox } from '@/components/StepDetailsBox';
 
 interface Step {
   icon: React.ComponentType<any>;
@@ -17,36 +18,15 @@ const AnimatedStepFlow = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const steps: Step[] = [
-    {
-      icon: ShoppingCart,
-      title: t('step1Title'),
-      description: t('step1Description'),
-      color: "text-blue-600",
-      bgColor: "bg-blue-100"
-    },
-    {
-      icon: MessageSquare,
-      title: t('step2Title'),
-      description: t('step2Description'),
-      color: "text-green-600",
-      bgColor: "bg-green-100"
-    },
-    {
-      icon: Music,
-      title: t('step3Title'),
-      description: t('step3Description'),
-      color: "text-purple-600",
-      bgColor: "bg-purple-100"
-    },
-    {
-      icon: Gift,
-      title: t('step4Title'),
-      description: t('step4Description'),
-      color: "text-orange-600",
-      bgColor: "bg-orange-100"
-    }
-  ];
+  const stepIcons = [ShoppingCart, MessageSquare, Music, Gift];
+
+  const steps: Step[] = stepContentData.map((stepContent, index) => ({
+    icon: stepIcons[index],
+    title: stepContent.title,
+    description: stepContent.description,
+    color: stepContent.styling.color,
+    bgColor: stepContent.styling.bgColor
+  }));
 
   // Auto-progression effect
   useEffect(() => {
@@ -62,86 +42,6 @@ const AnimatedStepFlow = () => {
     setIsPaused(true);
     // Resume auto-progression after 8 seconds
     setTimeout(() => setIsPaused(false), 8000);
-  };
-
-  // Function to render step details based on active step
-  const renderStepDetails = () => {
-    switch (activeStep) {
-      case 0:
-        return (
-          <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-400">
-            <div className="text-blue-800">
-              <p className="mb-4">Every special song begins with the right foundation. Explore our selection of carefully designed packages and choose the one that best matches your occasion, sentiment, and budget — whether it's a heartfelt birthday tribute, a romantic surprise, a wedding anthem, or a unique gift just because.</p>
-              
-              <p className="font-medium mb-3">Every package includes:</p>
-              <ul className="text-blue-700 text-base space-y-2 mb-4">
-                <li>• Professionally produced music with rich instrumentation</li>
-                <li>• Custom lyrics inspired by your story</li>
-                <li>• High-quality audio files delivered in MP3 and WAV formats</li>
-                <li>• A beautifully designed visual cover to accompany your song</li>
-              </ul>
-              
-              <p className="text-blue-800 text-sm italic">Not sure which one to pick? We'll guide you.</p>
-            </div>
-          </div>
-        );
-      case 1:
-        return (
-          <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-400">
-            <div className="text-green-800">
-              <p className="mb-4">This is your moment to open up. Your song will be shaped by the story you tell us — the moments that moved you, the people who matter, and the memories you want to preserve through music.</p>
-              
-              <p className="font-medium mb-3">You can include:</p>
-              <ul className="text-green-700 text-base space-y-2 mb-4">
-                <li>• Memorable events, personal milestones, and heartfelt memories</li>
-                <li>• Names, dates, and personal details that bring your story to life</li>
-                <li>• The mood and musical style you prefer (calm, joyful, dramatic, etc.)</li>
-                <li>• Optional voice recordings or photos to spark creative inspiration</li>
-              </ul>
-              
-              <p className="text-green-800 text-sm italic">The more you share, the more meaningful the final song will be.</p>
-            </div>
-          </div>
-        );
-      case 2:
-        return (
-          <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-400">
-            <div className="text-purple-800">
-              <p className="mb-4">Once we receive your story, our team gets to work crafting a song that captures its essence. From songwriting to arrangement to performance, we handle every step with care and creativity.</p>
-              
-              <p className="font-medium mb-3">Here's how it comes together:</p>
-              <ul className="text-purple-700 text-base space-y-2 mb-4">
-                <li>• Your story is transformed into original lyrics</li>
-                <li>• The melody is composed and arranged to match the mood</li>
-                <li>• Talented vocalists record the performance</li>
-                <li>• Audio is professionally mixed and mastered for a polished result</li>
-              </ul>
-              
-              <p className="text-purple-800 text-sm italic">The result is a one-of-a-kind song made just for you.</p>
-            </div>
-          </div>
-        );
-      case 3:
-        return (
-          <div className="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-400">
-            <div className="text-orange-800">
-              <p className="mb-4">In 3 to 7 business days, your personalized song will be delivered directly to your inbox. You'll receive everything you need to enjoy it, share it, or gift it to someone special.</p>
-              
-              <p className="font-medium mb-3">You'll receive:</p>
-              <ul className="text-orange-700 text-base space-y-2 mb-4">
-                <li>• Your custom song in MP3 and WAV formats</li>
-                <li>• A visual cover designed to match the theme of your track</li>
-                <li>• Optionally, a video version or social-media-ready formats</li>
-                <li>• A secure link to download your files, available for 6 months</li>
-              </ul>
-              
-              <p className="text-orange-800 text-sm italic">Your music is ready to be enjoyed — again and again.</p>
-            </div>
-          </div>
-        );
-      default:
-        return null;
-    }
   };
 
   return (
@@ -282,8 +182,8 @@ const AnimatedStepFlow = () => {
               >
                 <p className="mb-4">{steps[activeStep].description}</p>
                 
-                {/* Step-specific details using the new static content */}
-                {renderStepDetails()}
+                {/* Step-specific details using the centralized content */}
+                <StepDetailsBox stepContent={stepContentData[activeStep]} />
               </motion.div>
 
               {/* Progress indicator */}
