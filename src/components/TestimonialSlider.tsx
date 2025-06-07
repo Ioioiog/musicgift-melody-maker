@@ -1,4 +1,3 @@
-
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -94,13 +93,13 @@ export default function TestimonialSlider() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={testimonial.id} className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
                   <motion.div 
-                    className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 h-[500px] flex flex-col"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
                     {testimonial.youtube_link && (
-                      <div className="relative pb-[56.25%] group">
+                      <div className="relative pb-[56.25%] group flex-shrink-0">
                         <iframe
                           className="absolute top-0 left-0 w-full h-full"
                           src={testimonial.youtube_link}
@@ -111,23 +110,25 @@ export default function TestimonialSlider() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                       </div>
                     )}
-                    <div className="p-4 md:p-6 text-center bg-gradient-to-br from-purple-50 to-pink-50">
-                      <div className="flex items-center justify-center gap-2 mb-3 text-purple-600 font-semibold">
-                        <h4 className="text-lg">{testimonial.name}</h4>
-                        <FaCheckCircle className="text-purple-500 text-sm" />
+                    <div className="p-4 md:p-6 text-center bg-gradient-to-br from-purple-50 to-pink-50 flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-center gap-2 mb-3 text-purple-600 font-semibold">
+                          <h4 className="text-lg">{testimonial.name}</h4>
+                          <FaCheckCircle className="text-purple-500 text-sm" />
+                        </div>
+                        <div className="flex justify-center text-yellow-400 mb-3">
+                          {[...Array(testimonial.stars)].map((_, i) => (
+                            <FaStar key={i} className="text-sm" />
+                          ))}
+                        </div>
+                        {testimonial.text && (
+                          <p className="text-sm italic text-gray-700 mb-2 leading-relaxed border-l-4 border-purple-300 pl-4">
+                            "{testimonial.text}"
+                          </p>
+                        )}
                       </div>
-                      <div className="flex justify-center text-yellow-400 mb-3">
-                        {[...Array(testimonial.stars)].map((_, i) => (
-                          <FaStar key={i} className="text-sm" />
-                        ))}
-                      </div>
-                      {testimonial.text && (
-                        <p className="text-sm italic text-gray-700 mb-2 leading-relaxed border-l-4 border-purple-300 pl-4">
-                          "{testimonial.text}"
-                        </p>
-                      )}
                       {testimonial.location && (
-                        <span className="block text-xs text-gray-500 font-medium bg-white rounded-full px-3 py-1 inline-block">
+                        <span className="block text-xs text-gray-500 font-medium bg-white rounded-full px-3 py-1 inline-block mt-auto">
                           {testimonial.location}
                         </span>
                       )}
