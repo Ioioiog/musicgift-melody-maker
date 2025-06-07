@@ -127,201 +127,232 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
         </div>
       </div>
 
-      {/* Main Content - Single Column */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Design Settings Section */}
-        <div className="bg-white border-b px-6 py-4 flex-shrink-0">
-          <div className="space-y-4 max-w-md">
-            <div>
-              <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-                Design Name
-              </Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                placeholder="Enter design name"
-                className="mt-1"
-                required
-              />
-            </div>
+      {/* Main Content - Two Column Layout */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Column - Settings Panel */}
+        <div className="w-80 bg-white border-r flex flex-col overflow-hidden">
+          {/* Design Settings */}
+          <div className="p-6 border-b">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Design Settings</h3>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                  Design Name
+                </Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  placeholder="Enter design name"
+                  className="mt-1"
+                  required
+                />
+              </div>
 
-            <div>
-              <Label htmlFor="theme" className="text-sm font-medium text-gray-700">
-                Theme
-              </Label>
-              <Input
-                id="theme"
-                value={formData.theme}
-                onChange={(e) => handleInputChange('theme', e.target.value)}
-                placeholder="e.g., Birthday, Christmas"
-                className="mt-1"
-                required
-              />
-            </div>
+              <div>
+                <Label htmlFor="theme" className="text-sm font-medium text-gray-700">
+                  Theme
+                </Label>
+                <Input
+                  id="theme"
+                  value={formData.theme}
+                  onChange={(e) => handleInputChange('theme', e.target.value)}
+                  placeholder="e.g., Birthday, Christmas"
+                  className="mt-1"
+                  required
+                />
+              </div>
 
-            <div>
-              <Label className="text-sm font-medium text-gray-700">
-                Background Image
-              </Label>
-              <ImageUpload
-                label=""
-                value={formData.preview_image_url}
-                onChange={(url) => handleInputChange('preview_image_url', url)}
-                bucketName="gift-card-designs"
-                maxSizeBytes={5 * 1024 * 1024}
-                acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
-              />
-            </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-700">
+                  Background Image
+                </Label>
+                <ImageUpload
+                  label=""
+                  value={formData.preview_image_url}
+                  onChange={(url) => handleInputChange('preview_image_url', url)}
+                  bucketName="gift-card-designs"
+                  maxSizeBytes={5 * 1024 * 1024}
+                  acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+                />
+              </div>
 
-            <div className="flex items-center gap-2">
-              <Switch
-                id="is_active"
-                checked={formData.is_active}
-                onCheckedChange={(checked) => handleInputChange('is_active', checked)}
-              />
-              <Label htmlFor="is_active" className="text-sm font-medium text-gray-700">
-                Active
-              </Label>
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="is_active"
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => handleInputChange('is_active', checked)}
+                />
+                <Label htmlFor="is_active" className="text-sm font-medium text-gray-700">
+                  Active
+                </Label>
+              </div>
             </div>
+          </div>
 
-            <div className="text-sm text-gray-600 p-3 bg-gray-50 rounded">
-              <div>Canvas Size: {formData.template_data.canvasWidth} × {formData.template_data.canvasHeight}px</div>
-              <div>Elements: {formData.template_data.elements?.length || 0}</div>
+          {/* Canvas Info */}
+          <div className="p-6 border-b">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Canvas Info</h3>
+            <div className="space-y-2 text-sm text-gray-600">
+              <div className="flex justify-between">
+                <span>Size:</span>
+                <span>{formData.template_data.canvasWidth} × {formData.template_data.canvasHeight}px</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Elements:</span>
+                <span>{formData.template_data.elements?.length || 0}</span>
+              </div>
             </div>
+          </div>
+
+          {/* Element Properties */}
+          <div className="flex-1 overflow-auto">
+            {selectedElement ? (
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Element Properties
+                  </h3>
+                  <button
+                    onClick={() => setSelectedElementIndex(null)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="text-sm font-medium text-gray-700 mb-3">
+                    {selectedElement.type || 'Element'} {(selectedElementIndex || 0) + 1}
+                  </div>
+
+                  {selectedElement.type === 'shape' && (
+                    <div className="space-y-4">
+                      <div>
+                        <Label className="text-sm">Fill Color</Label>
+                        <input
+                          type="color"
+                          value={selectedElement.fill || '#000000'}
+                          onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
+                          className="w-full h-10 rounded border cursor-pointer mt-1"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm">Border Color</Label>
+                        <input
+                          type="color"
+                          value={selectedElement.stroke || '#000000'}
+                          onChange={(e) => updateSelectedElementProperty('stroke', e.target.value)}
+                          className="w-full h-10 rounded border cursor-pointer mt-1"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm">Border Width</Label>
+                        <Input
+                          type="number"
+                          value={selectedElement.strokeWidth || 1}
+                          onChange={(e) => updateSelectedElementProperty('strokeWidth', parseInt(e.target.value))}
+                          className="mt-1"
+                          min="0"
+                          max="20"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm">Opacity</Label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.1"
+                          value={selectedElement.opacity || 1}
+                          onChange={(e) => updateSelectedElementProperty('opacity', parseFloat(e.target.value))}
+                          className="w-full mt-1"
+                        />
+                        <div className="text-xs text-gray-500 text-center mt-1">
+                          {Math.round((selectedElement.opacity || 1) * 100)}%
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedElement.type === 'text' && (
+                    <div className="space-y-4">
+                      <div>
+                        <Label className="text-sm">Text</Label>
+                        <Input
+                          value={selectedElement.text || ''}
+                          onChange={(e) => updateSelectedElementProperty('text', e.target.value)}
+                          className="mt-1"
+                          placeholder="Enter text"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm">Text Color</Label>
+                        <input
+                          type="color"
+                          value={selectedElement.fill || '#000000'}
+                          onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
+                          className="w-full h-10 rounded border cursor-pointer mt-1"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm">Font Size</Label>
+                        <Input
+                          type="number"
+                          value={selectedElement.fontSize || 16}
+                          onChange={(e) => updateSelectedElementProperty('fontSize', parseInt(e.target.value))}
+                          className="mt-1"
+                          min="8"
+                          max="72"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-sm">Font Weight</Label>
+                        <select
+                          value={selectedElement.fontWeight || 'normal'}
+                          onChange={(e) => updateSelectedElementProperty('fontWeight', e.target.value)}
+                          className="w-full h-10 px-3 border rounded mt-1"
+                        >
+                          <option value="normal">Normal</option>
+                          <option value="bold">Bold</option>
+                          <option value="lighter">Light</option>
+                        </select>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="p-6 text-center text-gray-500">
+                <p className="text-sm">Select an element on the canvas to edit its properties</p>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Element Properties Section */}
-        {selectedElement && (
-          <div className="bg-white border-b px-6 py-4 flex-shrink-0">
-            <div className="flex items-center gap-6">
-              <h3 className="text-lg font-medium text-gray-900">
-                Editing: {selectedElement.type || 'Element'} {(selectedElementIndex || 0) + 1}
-              </h3>
-              
-              {selectedElement.type === 'shape' && (
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm">Fill:</Label>
-                    <input
-                      type="color"
-                      value={selectedElement.fill || '#000000'}
-                      onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
-                      className="w-8 h-8 rounded border cursor-pointer"
-                    />
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm">Border:</Label>
-                    <input
-                      type="color"
-                      value={selectedElement.stroke || '#000000'}
-                      onChange={(e) => updateSelectedElementProperty('stroke', e.target.value)}
-                      className="w-8 h-8 rounded border cursor-pointer"
-                    />
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm">Width:</Label>
-                    <Input
-                      type="number"
-                      value={selectedElement.strokeWidth || 1}
-                      onChange={(e) => updateSelectedElementProperty('strokeWidth', parseInt(e.target.value))}
-                      className="w-16 h-8"
-                      min="0"
-                      max="20"
-                    />
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm">Opacity:</Label>
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.1"
-                      value={selectedElement.opacity || 1}
-                      onChange={(e) => updateSelectedElementProperty('opacity', parseFloat(e.target.value))}
-                      className="w-20"
-                    />
-                    <span className="text-xs text-gray-500 w-8">
-                      {Math.round((selectedElement.opacity || 1) * 100)}%
-                    </span>
-                  </div>
+        {/* Right Column - Canvas Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 overflow-auto p-6">
+            <div className="h-full flex items-center justify-center">
+              <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-purple-200/30 backdrop-blur-sm overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-purple-400/15 to-transparent rounded-full blur-lg"></div>
+                <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-indigo-400/10 to-transparent rounded-full blur-md"></div>
+                <div className="relative z-10 p-8">
+                  <GiftCardCanvasEditor
+                    value={formData.template_data}
+                    onChange={handleCanvasDataChange}
+                    backgroundImage={formData.preview_image_url}
+                    selectedElementIndex={selectedElementIndex}
+                    onElementSelect={setSelectedElementIndex}
+                  />
                 </div>
-              )}
-
-              {selectedElement.type === 'text' && (
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm">Text:</Label>
-                    <Input
-                      value={selectedElement.text || ''}
-                      onChange={(e) => updateSelectedElementProperty('text', e.target.value)}
-                      className="w-40 h-8"
-                      placeholder="Enter text"
-                    />
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm">Color:</Label>
-                    <input
-                      type="color"
-                      value={selectedElement.fill || '#000000'}
-                      onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
-                      className="w-8 h-8 rounded border cursor-pointer"
-                    />
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm">Size:</Label>
-                    <Input
-                      type="number"
-                      value={selectedElement.fontSize || 16}
-                      onChange={(e) => updateSelectedElementProperty('fontSize', parseInt(e.target.value))}
-                      className="w-16 h-8"
-                      min="8"
-                      max="72"
-                    />
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Label className="text-sm">Weight:</Label>
-                    <select
-                      value={selectedElement.fontWeight || 'normal'}
-                      onChange={(e) => updateSelectedElementProperty('fontWeight', e.target.value)}
-                      className="h-8 px-2 border rounded"
-                    >
-                      <option value="normal">Normal</option>
-                      <option value="bold">Bold</option>
-                      <option value="lighter">Light</option>
-                    </select>
-                  </div>
-                </div>
-              )}
-
-              <button
-                onClick={() => setSelectedElementIndex(null)}
-                className="ml-auto text-gray-400 hover:text-gray-600"
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Canvas Area */}
-        <div className="flex-1 overflow-auto p-6">
-          <div className="h-full flex items-center justify-center">
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <GiftCardCanvasEditor
-                value={formData.template_data}
-                onChange={handleCanvasDataChange}
-                backgroundImage={formData.preview_image_url}
-                selectedElementIndex={selectedElementIndex}
-                onElementSelect={setSelectedElementIndex}
-              />
+              </div>
             </div>
           </div>
         </div>
