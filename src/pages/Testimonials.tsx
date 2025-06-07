@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import TestimonialSlider from "@/components/TestimonialSlider";
@@ -49,6 +48,25 @@ const Testimonials = () => {
           >
             {t('testimonialsSubtitle')}
           </motion.p>
+          
+          {/* Trustpilot Widget */}
+          <motion.div
+            className="max-w-md mx-auto mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <div 
+              className="trustpilot-widget" 
+              data-locale="en-US" 
+              data-template-id="56278e9abfbbba0bdcd568bc" 
+              data-businessunit-id="684414032f7e44f180176d5b" 
+              data-style-height="80px" 
+              data-style-width="100%"
+            >
+              <a href="https://www.trustpilot.com/review/musicgift.ro" target="_blank" rel="noopener">Trustpilot</a>
+            </div>
+          </motion.div>
           
           {/* Impact Stats */}
           <motion.div
