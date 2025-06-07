@@ -166,13 +166,18 @@ export default function TestimonialSlider() {
                   </div>
                 )}
 
-                {/* Video testimonials - modern professional layout */}
+                {/* Video testimonials - matching the text-only layout style */}
                 {type !== 'text-only' && (
-                  <div className="bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300 overflow-hidden group hover:shadow-lg">
+                  <div className="bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300 p-8 h-full flex flex-col group hover:shadow-lg">
+                    {/* Quote icon for consistency */}
+                    <div className="mb-6">
+                      <Quote className="w-8 h-8 text-purple-500 opacity-60" />
+                    </div>
+
                     {/* Video section */}
-                    <div className={`${type === 'both-videos' ? 'h-48' : 'h-56'} p-4`}>
-                      {type === 'both-videos' && (
-                        <div className="h-full">
+                    <div className="mb-6 rounded-xl overflow-hidden">
+                      {type === 'uploaded-video' && (
+                        <div className="h-48">
                           <VideoWithOverlay
                             src={testimonial.video_url}
                             type="upload"
@@ -181,68 +186,67 @@ export default function TestimonialSlider() {
                         </div>
                       )}
                       
-                      {type === 'uploaded-video' && (
-                        <VideoWithOverlay
-                          src={testimonial.video_url}
-                          type="upload"
-                          title={`Video testimonial from ${testimonial.name}`}
-                        />
-                      )}
-                      
                       {type === 'youtube' && (
-                        <VideoWithOverlay
-                          src={testimonial.youtube_link}
-                          type="youtube"
-                          title={`Video testimonial from ${testimonial.name}`}
-                        />
-                      )}
-                    </div>
-
-                    {/* Content section */}
-                    <div className="p-6 border-t border-gray-50">
-                      {/* Author info */}
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                          {testimonial.name.charAt(0)}
+                        <div className="h-48">
+                          <VideoWithOverlay
+                            src={testimonial.youtube_link}
+                            type="youtube"
+                            title={`Video testimonial from ${testimonial.name}`}
+                          />
                         </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-semibold text-gray-900 text-sm">{testimonial.name}</h4>
-                            <FaCheckCircle className="text-green-500 text-xs" />
+                      )}
+
+                      {type === 'both-videos' && (
+                        <div className="space-y-4">
+                          <div className="h-40">
+                            <VideoWithOverlay
+                              src={testimonial.video_url}
+                              type="upload"
+                              title={`Video testimonial from ${testimonial.name}`}
+                            />
                           </div>
-                          {testimonial.location && (
-                            <p className="text-xs text-gray-500">{testimonial.location}</p>
-                          )}
+                          <div className="h-40">
+                            <VideoWithOverlay
+                              src={testimonial.youtube_link}
+                              type="youtube"
+                              title={`YouTube testimonial from ${testimonial.name}`}
+                            />
+                          </div>
                         </div>
-                      </div>
-                      
-                      {/* Star rating */}
-                      <div className="flex items-center justify-center mb-4">
-                        <div className="flex gap-1">
-                          {[...Array(testimonial.stars)].map((_, i) => (
-                            <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {/* Testimonial text */}
-                      {testimonial.text && (
-                        <p className="text-sm text-gray-600 text-center leading-relaxed">
-                          "{testimonial.text}"
-                        </p>
                       )}
                     </div>
-
-                    {/* Second video for both-videos type */}
-                    {type === 'both-videos' && (
-                      <div className="h-48 p-4 pt-0">
-                        <VideoWithOverlay
-                          src={testimonial.youtube_link}
-                          type="youtube"
-                          title={`YouTube testimonial from ${testimonial.name}`}
-                        />
-                      </div>
+                    
+                    {/* Testimonial text if available */}
+                    {testimonial.text && (
+                      <blockquote className="text-gray-700 text-lg leading-relaxed mb-8 flex-grow">
+                        "{testimonial.text}"
+                      </blockquote>
                     )}
+                    
+                    {/* Star rating */}
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="flex gap-1">
+                        {[...Array(testimonial.stars)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Author info */}
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                        {testimonial.name.charAt(0)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                          <FaCheckCircle className="text-green-500 text-sm" />
+                        </div>
+                        {testimonial.location && (
+                          <p className="text-sm text-gray-500">{testimonial.location}</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
               </motion.div>
