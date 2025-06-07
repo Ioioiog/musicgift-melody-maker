@@ -131,7 +131,7 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Design Settings Section */}
         <div className="bg-white border-b px-6 py-4 flex-shrink-0">
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+          <div className="space-y-4 max-w-md">
             <div>
               <Label htmlFor="name" className="text-sm font-medium text-gray-700">
                 Design Name
@@ -185,8 +185,8 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
               </Label>
             </div>
 
-            <div className="text-sm text-gray-600">
-              <div>Size: {formData.template_data.canvasWidth} × {formData.template_data.canvasHeight}px</div>
+            <div className="text-sm text-gray-600 p-3 bg-gray-50 rounded">
+              <div>Canvas Size: {formData.template_data.canvasWidth} × {formData.template_data.canvasHeight}px</div>
               <div>Elements: {formData.template_data.elements?.length || 0}</div>
             </div>
           </div>
