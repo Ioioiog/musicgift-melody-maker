@@ -1,7 +1,5 @@
 
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -10,9 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Play, ExternalLink, Quote } from "lucide-react";
 
 export default function TestimonialSlider() {
-  const isMobile = useIsMobile();
   const { t } = useLanguage();
-  const [currentSlide, setCurrentSlide] = useState(0);
   const { data: testimonials, isLoading, error } = useTestimonials();
 
   if (isLoading) {
@@ -20,7 +16,7 @@ export default function TestimonialSlider() {
       <div className="py-16">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="bg-white rounded-3xl shadow-xl overflow-hidden">
                 <Skeleton className="w-full h-64" />
                 <div className="p-8">
@@ -121,49 +117,104 @@ export default function TestimonialSlider() {
       <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 via-transparent to-pink-50/30 pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-4 relative">
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-            skipSnaps: false
-          }}
-          className="w-full"
-          setApi={(api) => {
-            if (api) {
-              api.on('select', () => {
-                setCurrentSlide(api.selectedScrollSnap());
-              });
-            }
-          }}
-        >
-          <CarouselContent className="-ml-8">
-            {testimonials.map((testimonial, index) => {
-              const type = getTestimonialType(testimonial);
-              
-              return (
-                <CarouselItem key={testimonial.id} className="pl-8 basis-full md:basis-1/2 lg:basis-1/3">
-                  <motion.div 
-                    className="h-full"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: index * 0.15 }}
-                  >
-                    {/* Text-only testimonial - enhanced card design */}
-                    {type === 'text-only' && (
-                      <div className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-8 h-full flex flex-col relative overflow-hidden group">
-                        {/* Quote decoration */}
-                        <div className="absolute top-6 right-6 text-purple-100 group-hover:text-purple-200 transition-colors">
-                          <Quote className="w-12 h-12" />
+        {/* Masonry-style grid layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {testimonials.map((testimonial, index) => {
+            const type = getTestimonialType(testimonial);
+            
+            return (
+              <motion.div 
+                key={testimonial.id}
+                className="break-inside-avoid"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: index * 0.1 }}
+              >
+                {/* Text-only testimonial - enhanced card design */}
+                {type === 'text-only' && (
+                  <div className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-8 h-full flex flex-col relative overflow-hidden group">
+                    {/* Quote decoration */}
+                    <div className="absolute top-6 right-6 text-purple-100 group-hover:text-purple-200 transition-colors">
+                      <Quote className="w-12 h-12" />
+                    </div>
+                    
+                    {/* Header */}
+                    <div className="flex items-center gap-4 mb-6 relative z-10">
+                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        {testimonial.name.charAt(0)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-bold text-gray-900 text-lg">{testimonial.name}</h4>
+                          <FaCheckCircle className="text-green-500 text-sm" />
                         </div>
-                        
-                        {/* Header */}
-                        <div className="flex items-center gap-4 mb-6 relative z-10">
-                          <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        {testimonial.location && (
+                          <p className="text-sm text-gray-500">{testimonial.location}</p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Star rating */}
+                    <div className="flex justify-center mb-6">
+                      <div className="flex gap-1 bg-yellow-50 rounded-full px-4 py-2">
+                        {[...Array(testimonial.stars)].map((_, i) => (
+                          <FaStar key={i} className="text-yellow-400 text-lg" />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Testimonial text */}
+                    <blockquote className="text-gray-700 text-center flex-grow text-lg leading-relaxed italic">
+                      "{testimonial.text}"
+                    </blockquote>
+                    
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-50/20 via-transparent to-pink-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  </div>
+                )}
+
+                {/* Video testimonials - modern layout */}
+                {type !== 'text-only' && (
+                  <div className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden group">
+                    {/* Video section */}
+                    <div className={`${type === 'both-videos' ? 'h-64' : 'h-80'} p-4`}>
+                      {type === 'both-videos' && (
+                        <div className="h-full">
+                          <VideoWithOverlay
+                            src={testimonial.video_url}
+                            type="upload"
+                            title={`Video testimonial from ${testimonial.name}`}
+                          />
+                        </div>
+                      )}
+                      
+                      {type === 'uploaded-video' && (
+                        <VideoWithOverlay
+                          src={testimonial.video_url}
+                          type="upload"
+                          title={`Video testimonial from ${testimonial.name}`}
+                        />
+                      )}
+                      
+                      {type === 'youtube' && (
+                        <VideoWithOverlay
+                          src={testimonial.youtube_link}
+                          type="youtube"
+                          title={`Video testimonial from ${testimonial.name}`}
+                        />
+                      )}
+                    </div>
+
+                    {/* Content section */}
+                    <div className="p-6 bg-gradient-to-br from-purple-50/50 to-pink-50/50 relative">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white font-bold">
                             {testimonial.name.charAt(0)}
                           </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-bold text-gray-900 text-lg">{testimonial.name}</h4>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
                               <FaCheckCircle className="text-green-500 text-sm" />
                             </div>
                             {testimonial.location && (
@@ -171,135 +222,73 @@ export default function TestimonialSlider() {
                             )}
                           </div>
                         </div>
-                        
-                        {/* Star rating */}
-                        <div className="flex justify-center mb-6">
-                          <div className="flex gap-1 bg-yellow-50 rounded-full px-4 py-2">
-                            {[...Array(testimonial.stars)].map((_, i) => (
-                              <FaStar key={i} className="text-yellow-400 text-lg" />
-                            ))}
-                          </div>
+                      </div>
+                      
+                      <div className="flex justify-center mb-4">
+                        <div className="flex gap-1 bg-white rounded-full px-3 py-1 shadow-sm">
+                          {[...Array(testimonial.stars)].map((_, i) => (
+                            <FaStar key={i} className="text-yellow-400 text-sm" />
+                          ))}
                         </div>
-                        
-                        {/* Testimonial text */}
-                        <blockquote className="text-gray-700 text-center flex-grow text-lg leading-relaxed italic">
+                      </div>
+                      
+                      {testimonial.text && (
+                        <p className="text-sm text-gray-700 text-center italic">
                           "{testimonial.text}"
-                        </blockquote>
-                        
-                        {/* Gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/20 via-transparent to-pink-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Second video for both-videos type */}
+                    {type === 'both-videos' && (
+                      <div className="h-64 p-4 pt-0">
+                        <VideoWithOverlay
+                          src={testimonial.youtube_link}
+                          type="youtube"
+                          title={`YouTube testimonial from ${testimonial.name}`}
+                        />
                       </div>
                     )}
-
-                    {/* Video testimonials - modern layout */}
-                    {type !== 'text-only' && (
-                      <div className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden h-[600px] flex flex-col group">
-                        {/* Video section */}
-                        <div className={`${type === 'both-videos' ? 'h-1/2' : 'h-2/3'} p-4`}>
-                          {type === 'both-videos' && (
-                            <div className="h-full">
-                              <VideoWithOverlay
-                                src={testimonial.video_url}
-                                type="upload"
-                                title={`Video testimonial from ${testimonial.name}`}
-                              />
-                            </div>
-                          )}
-                          
-                          {type === 'uploaded-video' && (
-                            <VideoWithOverlay
-                              src={testimonial.video_url}
-                              type="upload"
-                              title={`Video testimonial from ${testimonial.name}`}
-                            />
-                          )}
-                          
-                          {type === 'youtube' && (
-                            <VideoWithOverlay
-                              src={testimonial.youtube_link}
-                              type="youtube"
-                              title={`Video testimonial from ${testimonial.name}`}
-                            />
-                          )}
-                        </div>
-
-                        {/* Content section */}
-                        <div className={`p-6 ${type === 'both-videos' ? 'h-1/2' : 'h-1/3'} flex flex-col justify-between bg-gradient-to-br from-purple-50/50 to-pink-50/50 relative`}>
-                          <div>
-                            <div className="flex items-center justify-between mb-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white font-bold">
-                                  {testimonial.name.charAt(0)}
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-2">
-                                    <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
-                                    <FaCheckCircle className="text-green-500 text-sm" />
-                                  </div>
-                                  {testimonial.location && (
-                                    <p className="text-sm text-gray-500">{testimonial.location}</p>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <div className="flex justify-center mb-4">
-                              <div className="flex gap-1 bg-white rounded-full px-3 py-1 shadow-sm">
-                                {[...Array(testimonial.stars)].map((_, i) => (
-                                  <FaStar key={i} className="text-yellow-400 text-sm" />
-                                ))}
-                              </div>
-                            </div>
-                            
-                            {testimonial.text && (
-                              <p className="text-sm text-gray-700 text-center italic">
-                                "{testimonial.text}"
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Second video for both-videos type */}
-                        {type === 'both-videos' && (
-                          <div className="h-1/2 p-4 pt-0">
-                            <VideoWithOverlay
-                              src={testimonial.youtube_link}
-                              type="youtube"
-                              title={`YouTube testimonial from ${testimonial.name}`}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </motion.div>
-                </CarouselItem>
-              );
-            })}
-          </CarouselContent>
-          
-          {!isMobile && (
-            <>
-              <CarouselPrevious className="hidden md:flex -left-16 bg-white/90 backdrop-blur-sm hover:bg-white border-purple-200 text-purple-600 hover:text-purple-700 shadow-xl h-12 w-12" />
-              <CarouselNext className="hidden md:flex -right-16 bg-white/90 backdrop-blur-sm hover:bg-white border-purple-200 text-purple-600 hover:text-purple-700 shadow-xl h-12 w-12" />
-            </>
-          )}
-        </Carousel>
-
-        {/* Enhanced progress indicator */}
-        <div className="flex justify-center mt-12">
-          <div className="flex space-x-3 bg-white/70 backdrop-blur-sm rounded-full px-6 py-3 shadow-lg">
-            {testimonials.map((_, index) => (
-              <div
-                key={index}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentSlide 
-                    ? 'bg-purple-600 scale-125' 
-                    : 'bg-gray-300 hover:bg-gray-400'
-                }`}
-              />
-            ))}
-          </div>
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
+
+        {/* Statistics section at the bottom */}
+        <motion.div
+          className="mt-16 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl p-8 max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">Join Our Growing Community</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-600">{testimonials.length}+</div>
+                <div className="text-sm text-gray-600">Happy Customers</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-600">
+                  {(testimonials.reduce((acc, t) => acc + t.stars, 0) / testimonials.length).toFixed(1)}
+                </div>
+                <div className="text-sm text-gray-600">Average Rating</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-600">
+                  {testimonials.filter(t => t.video_url || t.youtube_link).length}
+                </div>
+                <div className="text-sm text-gray-600">Video Reviews</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-600">99%</div>
+                <div className="text-sm text-gray-600">Satisfaction Rate</div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
