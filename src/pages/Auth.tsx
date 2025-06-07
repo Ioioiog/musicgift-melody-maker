@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,9 +8,10 @@ import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Music, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
-
 const Auth = () => {
-  const { t } = useLanguage();
+  const {
+    t
+  } = useLanguage();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,80 +19,85 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   useEffect(() => {
     // Check if user is already logged in
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
       if (user) {
         navigate('/');
       }
     };
     checkUser();
   }, [navigate]);
-
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
+        const {
+          error
+        } = await supabase.auth.signInWithPassword({
           email,
-          password,
+          password
         });
-
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
             toast({
               title: t('authError'),
               description: t('invalidCredentials'),
-              variant: "destructive",
+              variant: "destructive"
             });
           } else {
             toast({
               title: t('orderError'),
               description: error.message,
-              variant: "destructive",
+              variant: "destructive"
             });
           }
         } else {
           toast({
             title: t('signInSuccess'),
-            description: t('welcomeBack'),
+            description: t('welcomeBack')
           });
           navigate('/');
         }
       } else {
-        const { error } = await supabase.auth.signUp({
+        const {
+          error
+        } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: {
-              full_name: fullName,
-            },
-          },
+              full_name: fullName
+            }
+          }
         });
-
         if (error) {
           if (error.message.includes('User already registered')) {
             toast({
               title: t('accountExists'),
               description: t('accountExistsMessage'),
-              variant: "destructive",
+              variant: "destructive"
             });
           } else {
             toast({
               title: t('orderError'),
               description: error.message,
-              variant: "destructive",
+              variant: "destructive"
             });
           }
         } else {
           toast({
             title: t('accountCreated'),
-            description: t('canSignIn'),
+            description: t('canSignIn')
           });
           setIsLogin(true);
           setFullName('');
@@ -102,39 +107,39 @@ const Auth = () => {
       toast({
         title: t('unexpectedError'),
         description: t('tryAgain'),
-        variant: "destructive",
+        variant: "destructive"
       });
     } finally {
       setIsLoading(false);
     }
   };
-
-  return (
-    <div 
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
-      style={{
-        backgroundImage: 'url(/lovable-uploads/59966179-f008-4ec2-b3e6-5b45f100d21f.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}
-    >
+  return <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{
+    backgroundImage: 'url(/lovable-uploads/59966179-f008-4ec2-b3e6-5b45f100d21f.png)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
+  }}>
       {/* Enhanced overlay with gradient for better depth */}
       <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-purple-900/30 to-black/60 backdrop-blur-sm"></div>
       
       {/* Floating particles animation */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-purple-400/60 rounded-full animate-float" style={{ animationDelay: '0s' }}></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-pink-400/60 rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute bottom-32 left-32 w-3 h-3 bg-indigo-400/40 rounded-full animate-float" style={{ animationDelay: '4s' }}></div>
-        <div className="absolute bottom-20 right-10 w-2 h-2 bg-purple-300/50 rounded-full animate-float" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-20 left-10 w-2 h-2 bg-purple-400/60 rounded-full animate-float" style={{
+        animationDelay: '0s'
+      }}></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-pink-400/60 rounded-full animate-float" style={{
+        animationDelay: '2s'
+      }}></div>
+        <div className="absolute bottom-32 left-32 w-3 h-3 bg-indigo-400/40 rounded-full animate-float" style={{
+        animationDelay: '4s'
+      }}></div>
+        <div className="absolute bottom-20 right-10 w-2 h-2 bg-purple-300/50 rounded-full animate-float" style={{
+        animationDelay: '1s'
+      }}></div>
       </div>
       
       {/* Back to home link with enhanced styling */}
-      <Link 
-        to="/" 
-        className="absolute top-6 left-6 inline-flex items-center text-white/90 hover:text-white transition-all duration-300 group z-20 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 hover:bg-white/20"
-      >
+      <Link to="/" className="absolute top-6 left-6 inline-flex items-center text-white/90 hover:text-white transition-all duration-300 group z-20 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 hover:bg-white/20">
         <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
         {t('backHome')}
       </Link>
@@ -150,11 +155,7 @@ const Auth = () => {
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full blur-2xl opacity-40 group-hover:opacity-60 transition-all duration-500 scale-110"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-300 scale-125 animate-pulse"></div>
-                <img 
-                  src="/lovable-uploads/cb090c51-8b0c-4906-8ec4-8f0ca3583f84.png" 
-                  alt="MusicGift Logo" 
-                  className="relative w-64 h-auto lg:w-72 xl:w-80 2xl:w-96 drop-shadow-2xl group-hover:scale-105 transition-all duration-500"
-                />
+                <img src="/lovable-uploads/cb090c51-8b0c-4906-8ec4-8f0ca3583f84.png" alt="MusicGift Logo" className="relative w-64 h-auto lg:w-72 xl:w-80 2xl:w-96 drop-shadow-2xl group-hover:scale-105 transition-all duration-500" />
               </div>
             </div>
             
@@ -190,55 +191,34 @@ const Auth = () => {
           <div className="w-full max-w-md sm:max-w-lg mx-auto xl:mx-0 order-1 xl:order-2 xl:justify-self-center 2xl:justify-self-start">
             <Card className="shadow-2xl border-0 bg-white/96 backdrop-blur-xl overflow-hidden relative transform hover:scale-[1.02] transition-all duration-300">
               {/* Enhanced decorative elements */}
-              <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500"></div>
+              <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 bg-slate-50"></div>
               <div className="absolute top-3 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
               
               <CardHeader className="space-y-6 pb-8 pt-12">
                 <CardTitle className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center">
-                  <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-slate-50">
                     {isLogin ? t('signInBtn') : t('signUpBtn')}
                   </span>
                 </CardTitle>
-                <CardDescription className="text-center text-gray-600 text-lg lg:text-xl leading-relaxed px-2">
-                  {isLogin 
-                    ? t('connectToContinue')
-                    : t('createAccount')
-                  }
+                <CardDescription className="text-center text-lg lg:text-xl leading-relaxed px-2 text-slate-50">
+                  {isLogin ? t('connectToContinue') : t('createAccount')}
                 </CardDescription>
               </CardHeader>
               
               <CardContent className="px-8 lg:px-10 pb-12">
                 <form onSubmit={handleAuth} className="space-y-8">
-                  {!isLogin && (
-                    <div className="space-y-3">
+                  {!isLogin && <div className="space-y-3">
                       <label htmlFor="fullName" className="text-sm font-semibold text-gray-700 block">
                         {t('fullName')}
                       </label>
-                      <Input
-                        id="fullName"
-                        type="text"
-                        placeholder={t('fullName')}
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        required={!isLogin}
-                        className="h-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm"
-                      />
-                    </div>
-                  )}
+                      <Input id="fullName" type="text" placeholder={t('fullName')} value={fullName} onChange={e => setFullName(e.target.value)} required={!isLogin} className="h-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm" />
+                    </div>}
                   
                   <div className="space-y-3">
                     <label htmlFor="email" className="text-sm font-semibold text-gray-700 block">
                       {t('email')}
                     </label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="email@exemplu.ro"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="h-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm"
-                    />
+                    <Input id="email" type="email" placeholder="email@exemplu.ro" value={email} onChange={e => setEmail(e.target.value)} required className="h-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm" />
                   </div>
                   
                   <div className="space-y-3">
@@ -246,47 +226,24 @@ const Auth = () => {
                       {t('password')}
                     </label>
                     <div className="relative">
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder={t('password')}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className="h-16 pr-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm"
-                        minLength={6}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-600 transition-colors p-3 rounded-lg hover:bg-gray-100"
-                      >
+                      <Input id="password" type={showPassword ? "text" : "password"} placeholder={t('password')} value={password} onChange={e => setPassword(e.target.value)} required className="h-16 pr-16 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-xl text-lg bg-gray-50/50 focus:bg-white shadow-sm" minLength={6} />
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-600 transition-colors p-3 rounded-lg hover:bg-gray-100">
                         {showPassword ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
                       </button>
                     </div>
-                    {!isLogin && (
-                      <p className="text-xs text-gray-500 mt-2 ml-1">
+                    {!isLogin && <p className="text-xs text-gray-500 mt-2 ml-1">
                         {t('passwordMinLength')}
-                      </p>
-                    )}
+                      </p>}
                   </div>
                   
-                  <Button
-                    type="submit"
-                    className="w-full h-16 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-700 hover:via-pink-700 hover:to-indigo-700 text-white font-semibold text-lg lg:text-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-xl relative overflow-hidden group"
-                    disabled={isLoading}
-                  >
+                  <Button type="submit" className="w-full h-16 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-700 hover:via-pink-700 hover:to-indigo-700 text-white font-semibold text-lg lg:text-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-xl relative overflow-hidden group" disabled={isLoading}>
                     <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    {isLoading ? (
-                      <div className="flex items-center relative z-10">
+                    {isLoading ? <div className="flex items-center relative z-10">
                         <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-3" />
                         {isLogin ? t('signingIn') : t('signingUp')}
-                      </div>
-                    ) : (
-                      <span className="relative z-10">
+                      </div> : <span className="relative z-10">
                         {isLogin ? t('signInBtn') : t('signUpBtn')}
-                      </span>
-                    )}
+                      </span>}
                   </Button>
                 </form>
                 
@@ -300,21 +257,14 @@ const Auth = () => {
                     </div>
                   </div>
                   
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsLogin(!isLogin);
-                      setFullName('');
-                      setEmail('');
-                      setPassword('');
-                    }}
-                    className="mt-10 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 font-semibold text-xl transition-all duration-300 hover:scale-105 relative group"
-                  >
-                    <span className="relative z-10">
-                      {isLogin 
-                        ? t('noAccount')
-                        : t('haveAccount')
-                      }
+                  <button type="button" onClick={() => {
+                  setIsLogin(!isLogin);
+                  setFullName('');
+                  setEmail('');
+                  setPassword('');
+                }} className="mt-10 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 font-semibold text-xl transition-all duration-300 hover:scale-105 relative group bg-zinc-500 hover:bg-zinc-400">
+                    <span className="relative z-10 text-slate-50">
+                      {isLogin ? t('noAccount') : t('haveAccount')}
                     </span>
                     <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-600 to-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                   </button>
@@ -324,8 +274,6 @@ const Auth = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Auth;
