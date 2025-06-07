@@ -28,66 +28,66 @@ const AnimatedStepFlow = () => {
   const steps: Step[] = [
     {
       emoji: '',
-      title: 'Pasul 1',
-      description: 'Alege pachetul tău',
+      title: t('step1Title'),
+      description: t('step1Description'),
       details: {
-        intro: 'Fiecare melodie specială începe cu o alegere cat mai potrivită. Explorează selecția noastră de pachete atent concepute și alege pe cel care se potrivește cel mai bine ocaziei, sentimentului și bugetului tău — fie că este un cadou pentru ziua de naștere, o surpriză romantică, un dar de nuntă sau melodia pe care sa dansați sau poate un cadou unic doar așa, pentru ca te-ai saturat sa duci un alt parfum la ziua cuiva!',
-        listTitle: 'Fiecare pachet include:',
+        intro: t('step1DetailsIntro'),
+        listTitle: t('step1DetailsTitle'),
         listItems: [
-          'Muzică produsă profesional, cu atentie, de o echipǎ cu experiențǎ in muzica',
-          'Versuri personalizate inspirate din povestea ta',
-          'Fișiere audio de înaltă calitate livrate în formatele MP3 și WAV sau Midi (Logic Pro)',
-          'O copertă vizuală frumos concepută care să însoțească melodia ta'
+          t('step1Detail1'),
+          t('step1Detail2'),
+          t('step1Detail3'),
+          t('step1Detail4')
         ],
-        footer: 'Nu ești sigur pe care să îl alegi? Te vom ghida.'
+        footer: t('step1DetailsFooter')
       }
     },
     {
       emoji: '',
-      title: 'Pasul 2',
-      description: 'Împărtășește-ți povestea',
+      title: t('step2Title'),
+      description: t('step2Description'),
       details: {
-        intro: 'Acesta este momentul tău să te deschizi. Melodia ta va fi modelată de povestea pe care ne-o spui — momentele care te-au mișcat, oamenii care contează și amintirile pe care vrei să le păstrezi prin muzică.',
-        listTitle: 'Poți include:',
+        intro: t('step2DetailsIntro'),
+        listTitle: t('step2DetailsTitle'),
         listItems: [
-          'Evenimente memorabile, repere personale și amintiri pline de suflet',
-          'Nume, date și detalii personale care dau viață poveștii tale',
-          'Starea de spirit și stilul muzical pe care îl preferi (calm, vesel, dramatic, etc.)',
-          'Înregistrări vocale sau fotografii opționale pentru a aprinde inspirația creativă'
+          t('step2Detail1'),
+          t('step2Detail2'),
+          t('step2Detail3'),
+          t('step2Detail4')
         ],
-        footer: 'Cu cât împărtășești mai mult, cu atât melodia va fi mai personalǎ si mai de efect.'
+        footer: t('step2DetailsFooter')
       }
     },
     {
       emoji: '',
-      title: 'Pasul 3',
-      description: 'Noi creăm muzica',
+      title: t('step3Title'),
+      description: t('step3Description'),
       details: {
-        intro: 'Odată ce primim povestea ta, echipa noastră se pune pe treabă să creeze o melodie care să îi surprindă esența. Nu-ti face griji, eşti pe mâna unor profesionişti, gestionăm fiecare pas cu grijă și creativitate.',
-        listTitle: 'Iată cum se îmbină totul:',
+        intro: t('step3DetailsIntro'),
+        listTitle: t('step3DetailsTitle'),
         listItems: [
-          'Povestea ta este transformată în versuri originale',
-          'Melodia este compusă și aranjată pentru a se potrivi cu starea de spirit',
-          'Adǎugǎm vocea si avem grijǎ ca interpretarea sa fie in armonie perfectǎ cu cerințele tale',
-          'Sunetul este mixat și masterizat profesional pentru un rezultat lustruit'
+          t('step3Detail1'),
+          t('step3Detail2'),
+          t('step3Detail3'),
+          t('step3Detail4')
         ],
-        footer: 'Rezultatul este o melodie unică în felul ei, făcută special pentru tine.'
+        footer: t('step3DetailsFooter')
       }
     },
     {
       emoji: '',
-      title: 'Pasul 4',
-      description: 'Primește cadoul tău muzical',
+      title: t('step4Title'),
+      description: t('step4Description'),
       details: {
-        intro: 'În 3 până la 7 zile lucrătoare, melodia ta personalizată va fi livrată direct în căsuța ta poștală. Vei primi tot ce ai nevoie pentru a te bucura de ea, să o împărtășești sau să o oferi cadou unei persoane speciale.',
-        listTitle: 'Vei primi:',
+        intro: t('step4DetailsIntro'),
+        listTitle: t('step4DetailsTitle'),
         listItems: [
-          'Melodia ta personalizată în formatul MP3 și WAV la cerere',
-          'O copertă vizuală concepută să se potrivească cu tema piesei tale, dacǎ nu ne dai tu o pozǎ potrivitǎ sau preferatǎ',
-          'Opțional, o versiune video sau formate pregătite pentru rețelele sociale',
-          'Un link securizat pentru a descărca fișierele tale, disponibil timp de 6 luni'
+          t('step4Detail1'),
+          t('step4Detail2'),
+          t('step4Detail3'),
+          t('step4Detail4')
         ],
-        footer: 'Muzica ta este gata să fie savurată — din nou și din nou.'
+        footer: t('step4DetailsFooter')
       }
     }
   ];
