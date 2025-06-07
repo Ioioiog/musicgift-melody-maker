@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import TestimonialSlider from "@/components/TestimonialSlider";
@@ -119,16 +118,8 @@ const Testimonials = () => {
         </div>
       </section>
 
-      {/* Testimonial Submission Section */}
-      <section className="py-16 relative overflow-hidden" style={backgroundStyle}>
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative z-10">
-          
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      
+      {/* Collaboration Section */}
+      <CollaborationSection />
 
       <Footer />
     </div>
