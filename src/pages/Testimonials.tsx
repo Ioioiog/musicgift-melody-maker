@@ -26,6 +26,13 @@ const Testimonials = () => {
     };
   }, []);
 
+  const backgroundStyle = {
+    backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
+  };
+
   return (
     <div className="min-h-screen">
       <Navigation />
@@ -33,14 +40,9 @@ const Testimonials = () => {
       {/* Enhanced Hero Section with Purple Musical Background */}
       <section 
         className="py-20 text-white relative overflow-hidden"
-        style={{
-          backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
+        style={backgroundStyle}
       >
-        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
         
         {/* Floating Musical Notes */}
         <div className="absolute inset-0 pointer-events-none">
@@ -109,15 +111,21 @@ const Testimonials = () => {
       </section>
 
       {/* Testimonials Showcase */}
-      <section className="bg-gradient-to-br from-purple-50 via-white to-pink-50 py-0">
-        <div className="max-w-7xl mx-auto px-4">
-          <TestimonialSlider />
+      <section className="relative overflow-hidden" style={backgroundStyle}>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative z-10">
+          <div className="max-w-7xl mx-auto px-4">
+            <TestimonialSlider />
+          </div>
         </div>
       </section>
 
       {/* Testimonial Submission Section */}
-      <section className="py-16 bg-white">
-        
+      <section className="py-16 relative overflow-hidden" style={backgroundStyle}>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative z-10">
+          
+        </div>
       </section>
 
       {/* CTA Section */}
