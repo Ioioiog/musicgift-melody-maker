@@ -1,4 +1,3 @@
-
 export const commonTranslations = {
   // User authentication
   signIn: "Sign In",
@@ -76,4 +75,11 @@ export const commonTranslations = {
   musicGift: "Music Gift",
   signInSubtitle: "Sign in to your account",
   signUpSubtitle: "Create your account",
+  
+  // Additional auth page translations
+  emailPlaceholder: "email@example.com",
+  or: "or",
+  createPersonalizedExperiences: "Create personalized musical experiences",
+  shareGiftOfMusic: "Share the gift of music with loved ones",
+  professionalQualityCompositions: "Professional quality compositions",
 };

@@ -14,52 +14,52 @@ export const commonTranslations = {
   // Account management
   accountSettings: "Setări Cont",
   accountSettingsTitle: "Setări Cont",
-  manageAccount: "Gestionează setările și preferințele contului tău",
+  manageAccount: "Gestionați setările și preferințele contului dumneavoastră",
   profile: "Profil",
   account: "Cont",
   profileInfo: "Informații Profil",
-  updateProfile: "Actualizează informațiile profilului tău",
+  updateProfile: "Actualizați informațiile profilului",
   profileUpdated: "Profil actualizat cu succes",
   profileError: "Actualizarea profilului a eșuat",
   accountInfo: "Informații Cont",
-  accountDetails: "Vezi detaliile și informațiile contului tău",
+  accountDetails: "Vizualizați detaliile și informațiile contului",
   
   // User profile fields
   fullName: "Nume Complet",
   email: "Adresa de Email",
-  emailCannotChange: "Adresa de email nu poate fi schimbată",
+  emailCannotChange: "Adresa de email nu poate fi modificată",
   password: "Parolă",
   passwordMinLength: "Parola trebuie să aibă cel puțin 6 caractere",
   
   // Authentication states
   user: "Utilizator",
   welcomeBack: "Bun venit înapoi!",
-  connectToContinue: "Conectează-te la contul tău pentru a continua",
-  createAccount: "Creează un cont nou pentru a începe",
-  noAccount: "Nu ai cont? Înregistrează-te",
-  haveAccount: "Ai deja cont? Conectează-te",
+  connectToContinue: "Conectați-vă la contul dumneavoastră pentru a continua",
+  createAccount: "Creați un cont nou pentru a începe",
+  noAccount: "Nu aveți cont? Înregistrați-vă",
+  haveAccount: "Aveți deja cont? Conectați-vă",
   accountExists: "Contul există deja",
-  accountExistsMessage: "Un cont cu această adresă de email există deja. Te rugăm să te conectezi.",
+  accountExistsMessage: "Un cont cu această adresă de email există deja. Vă rugăm să vă conectați.",
   accountCreated: "Cont creat cu succes",
-  canSignIn: "Acum te poți conecta la contul tău",
+  canSignIn: "Acum vă puteți conecta la contul dumneavoastră",
   
   // Error messages
   authError: "Eroare de Autentificare",
-  invalidCredentials: "Email sau parolă invalidă. Te rugăm să încerci din nou.",
+  invalidCredentials: "Email sau parolă invalidă. Vă rugăm să încercați din nou.",
   unexpectedError: "A apărut o eroare neașteptată",
-  tryAgain: "Te rugăm să încerci din nou mai târziu",
+  tryAgain: "Vă rugăm să încercați din nou mai târziu",
   orderError: "Eroare",
   loadError: "Încărcarea datelor a eșuat",
   
   // Form actions
-  save: "Salvează",
+  save: "Salvare",
   saving: "Se salvează...",
   saveChanges: "Salvează Modificările",
-  cancel: "Anulează",
-  delete: "Șterge",
-  edit: "Editează",
-  update: "Actualizează",
-  create: "Creează",
+  cancel: "Anulare",
+  delete: "Ștergere",
+  edit: "Editare",
+  update: "Actualizare",
+  create: "Creare",
   
   // Account info fields
   userId: "ID Utilizator",
@@ -67,13 +67,20 @@ export const commonTranslations = {
   lastUpdate: "Ultima Actualizare",
   
   // Navigation
-  backHome: "Înapoi Acasă",
+  backHome: "Înapoi la Pagina Principală",
   home: "Acasă",
   history: "Istoric",
   settings: "Setări",
   
   // Music Gift specific
   musicGift: "Music Gift",
-  signInSubtitle: "Conectează-te la contul tău",
-  signUpSubtitle: "Creează-ți contul",
+  signInSubtitle: "Conectați-vă la contul dumneavoastră",
+  signUpSubtitle: "Creați-vă contul",
+  
+  // Additional auth page translations
+  emailPlaceholder: "email@exemplu.ro",
+  or: "sau",
+  createPersonalizedExperiences: "Creați experiențe muzicale personalizate",
+  shareGiftOfMusic: "Împărtășiți darul muzicii cu cei dragi",
+  professionalQualityCompositions: "Compoziții de calitate profesională",
 };
