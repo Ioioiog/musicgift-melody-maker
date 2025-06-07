@@ -1,3 +1,4 @@
+
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
@@ -238,12 +239,14 @@ export default function TestimonialSlider() {
                     {/* Video section AFTER text */}
                     <div className="mb-6 rounded-xl overflow-hidden">
                       {type === 'uploaded-video' && (
-                        <div className="h-48">
-                          <VideoWithOverlay 
-                            src={testimonial.video_url} 
-                            type="upload" 
-                            title={`Video testimonial from ${testimonial.name}`} 
-                          />
+                        <div className="h-56 flex items-center justify-center">
+                          <div className="w-full max-w-sm">
+                            <VideoWithOverlay 
+                              src={testimonial.video_url} 
+                              type="upload" 
+                              title={`Video testimonial from ${testimonial.name}`} 
+                            />
+                          </div>
                         </div>
                       )}
                       
