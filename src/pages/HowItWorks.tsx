@@ -9,8 +9,7 @@ const HowItWorks = () => {
   const {
     t
   } = useLanguage();
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Navigation />
       
       {/* Compact Hero Section - Adjusted padding for seamless connection to navbar */}
@@ -21,7 +20,7 @@ const HowItWorks = () => {
       backgroundRepeat: 'no-repeat'
     }}>
         <div className="absolute inset-0 bg-black/20 py-0"></div>
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+        <div className="max-w-4xl mx-auto text-center relative z-10 px-[14px] py-0 my-[24px]">
           <motion.h2 className="text-2xl md:text-3xl font-bold mb-2" initial={{
           opacity: 0,
           y: 20
@@ -66,14 +65,13 @@ const HowItWorks = () => {
       }} transition={{
         duration: 0.8,
         delay: 0.6
-      }} className="w-full relative z-10 px-0 py-[131px] my-0">
+      }} className="w-full relative z-10 px-0 my-0 py-0">
           <AnimatedStepFlow />
         </motion.div>
       </section>
 
       {/* Footer */}
       <Footer />
-    </div>
-  );
+    </div>;
 };
 export default HowItWorks;
