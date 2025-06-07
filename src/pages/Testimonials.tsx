@@ -82,30 +82,25 @@ const Testimonials = () => {
             {t('testimonialsSubtitle')}
           </motion.p>
           
-          {/* Trustpilot Widget in Hero */}
+          {/* Trustpilot Button */}
           <motion.div 
             className="max-w-2xl mx-auto mb-8" 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div 
-              className="trustpilot-widget shadow-lg rounded-lg overflow-hidden bg-gradient-to-r from-green-50 to-blue-50 p-4" 
-              data-locale="en-US" 
-              data-template-id="56278e9abfbbba0bdcd568bc" 
-              data-businessunit-id="684414032f7e44f180176d5b" 
-              data-style-height="80px" 
-              data-style-width="100%"
+            <a 
+              href="https://www.trustpilot.com/review/musicgift.ro" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block"
             >
-              <a 
-                href="https://www.trustpilot.com/review/musicgift.ro" 
-                target="_blank" 
-                rel="noopener" 
-                className="text-green-600 font-semibold"
-              >
-                View our Trustpilot reviews →
-              </a>
-            </div>
+              <div className="bg-white border-2 border-green-500 rounded-lg px-8 py-4 hover:bg-green-50 transition-colors duration-200 shadow-sm">
+                <span className="text-gray-800 font-medium text-lg">
+                  Review us on ⭐ Trustpilot
+                </span>
+              </div>
+            </a>
           </motion.div>
         </div>
       </section>
