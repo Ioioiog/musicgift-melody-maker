@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -137,15 +136,14 @@ const Auth = () => {
           
           {/* Left side - Brand and description */}
           <div className="text-center lg:text-left">
-            {/* Music Gift Logo */}
+            {/* MusicGift Logo */}
             <div className="flex justify-center lg:justify-start mb-8">
               <div className="relative">
-                <div className="w-24 h-24 bg-gradient-to-br from-white/20 to-purple-200/30 rounded-3xl flex items-center justify-center shadow-2xl border border-white/30 backdrop-blur-lg">
-                  <Music className="w-12 h-12 text-white" />
-                </div>
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
-                  <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                </div>
+                <img 
+                  src="/lovable-uploads/ece23865-4313-41a7-8269-464d4a50cec6.png" 
+                  alt="MusicGift Logo" 
+                  className="w-32 h-auto"
+                />
               </div>
             </div>
             
