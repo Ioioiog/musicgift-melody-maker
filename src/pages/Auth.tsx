@@ -238,8 +238,11 @@ const Auth = () => {
                       </p>}
                   </div>
                   
-                  <Button type="submit" className="w-full h-16 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-700 hover:via-pink-700 hover:to-indigo-700 text-white font-semibold text-lg lg:text-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-xl relative overflow-hidden group" disabled={isLoading}>
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <Button type="submit" className="w-full h-16 relative overflow-hidden rounded-xl font-semibold text-lg lg:text-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group
+                    bg-white/10 backdrop-blur-md border border-white/20 text-white
+                    hover:bg-white/20 hover:border-white/30
+                    before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-600/30 before:via-pink-600/30 before:to-indigo-600/30 before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-100" disabled={isLoading}>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:animate-pulse"></div>
                     {isLoading ? <div className="flex items-center relative z-10">
                         <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-3" />
                         {isLogin ? t('signingIn') : t('signingUp')}
