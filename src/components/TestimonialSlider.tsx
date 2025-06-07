@@ -84,7 +84,7 @@ export default function TestimonialSlider() {
             </div>
             <button 
               onClick={() => setShowYouTubeVideo(true)} 
-              className="absolute inset-0 w-full h-full bg-black/0 hover:bg-black/5 transition-all duration-200" 
+              className="absolute inset-0 w-full h-full bg-transparent hover:bg-black/5 transition-all duration-200" 
               aria-label="Play YouTube video" 
             />
             <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
