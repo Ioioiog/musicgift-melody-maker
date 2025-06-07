@@ -54,30 +54,7 @@ const Testimonials = () => {
           </motion.p>
           
           {/* Impact Stats */}
-          <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.4
-        }}>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">10,000+</div>
-              <div className="text-sm text-gray-600">Happy Customers</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">4.8</div>
-              <div className="text-sm text-gray-600">Average Rating</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">500+</div>
-              <div className="text-sm text-gray-600">Video Reviews</div>
-            </div>
-            
-          </motion.div>
+          
         </div>
       </section>
 
@@ -93,8 +70,8 @@ const Testimonials = () => {
         }} transition={{
           duration: 0.6
         }}>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Trusted by Thousands</h2>
-            <p className="text-gray-600 mb-8">See what our customers say about their experience</p>
+            
+            
             
             {/* Enhanced Trustpilot Widget */}
             <div className="max-w-2xl mx-auto mb-8">
@@ -147,20 +124,7 @@ const Testimonials = () => {
       {/* Testimonials Showcase */}
       <section className="py-16 bg-gradient-to-br from-purple-50 via-white to-pink-50">
         <div className="max-w-7xl mx-auto px-4">
-          <motion.div className="text-center mb-12" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6
-        }}>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Real Stories, Real Joy</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Discover how MusicGift has helped create unforgettable moments for couples, families, and loved ones around the world
-            </p>
-          </motion.div>
+          
           
           <TestimonialSlider />
         </div>
@@ -172,31 +136,7 @@ const Testimonials = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <motion.div initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6
-        }}>
-            
-            <p className="text-xl opacity-90 mb-8">
-              Join thousands of satisfied customers and create a personalized musical gift that will be treasured forever.
-            </p>
-            <motion.button className="bg-white text-purple-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg" whileHover={{
-            scale: 1.05
-          }} whileTap={{
-            scale: 0.95
-          }} onClick={() => window.location.href = '/order'}>
-              Start Your Order
-            </motion.button>
-          </motion.div>
-        </div>
-      </section>
+      
 
       <Footer />
     </div>;
