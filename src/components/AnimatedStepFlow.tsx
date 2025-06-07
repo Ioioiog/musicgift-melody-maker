@@ -179,13 +179,21 @@ const AnimatedStepFlow = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 p-8"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 relative overflow-hidden"
             >
-              {/* Header with Modern Icon */}
-              <div className="mb-6">
+              {/* Large background icon */}
+              <div className="absolute bottom-4 left-4 opacity-5 pointer-events-none">
+                {React.createElement(stepIcons[activeStep], { 
+                  className: "w-48 h-48", 
+                  strokeWidth: 1 
+                })}
+              </div>
+
+              {/* Header with smaller icon */}
+              <div className="mb-6 relative z-10">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-gradient-to-br from-purple-400 to-purple-600 text-white shadow-lg">
-                    {React.createElement(stepIcons[activeStep], { className: "w-8 h-8", strokeWidth: 2 })}
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-purple-400 to-purple-600 text-white shadow-lg">
+                    {React.createElement(stepIcons[activeStep], { className: "w-6 h-6", strokeWidth: 2 })}
                   </div>
                   <div>
                     <div className="text-sm font-medium text-purple-600 mb-1">
@@ -203,7 +211,7 @@ const AnimatedStepFlow = () => {
               </div>
 
               {/* Details List */}
-              <div className="mb-6">
+              <div className="mb-6 relative z-10">
                 <h4 className="text-lg font-semibold text-gray-900 mb-4">
                   {steps[activeStep].details.listTitle}
                 </h4>
@@ -218,14 +226,14 @@ const AnimatedStepFlow = () => {
               </div>
 
               {/* Footer Note */}
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gray-50 rounded-lg p-4 relative z-10">
                 <p className="text-sm text-gray-600 italic">
                   {steps[activeStep].details.footer}
                 </p>
               </div>
 
               {/* Navigation */}
-              <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
+              <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200 relative z-10">
                 <Button 
                   variant="outline" 
                   onClick={handlePrevious}
