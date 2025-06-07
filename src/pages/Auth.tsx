@@ -139,12 +139,12 @@ const Auth = () => {
         {t('backHome')}
       </Link>
 
-      {/* Main content container with enhanced spacing */}
+      {/* Main content container with enhanced responsive design */}
       <div className="w-full max-w-7xl mx-auto px-4 relative z-10">
-        <div className="grid xl:grid-cols-2 gap-20 items-center min-h-[80vh] lg:gap-24">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 md:gap-16 lg:gap-20 xl:gap-24 2xl:gap-32 items-center justify-items-center min-h-[75vh] md:min-h-[80vh] lg:min-h-[85vh] xl:min-h-[90vh] py-8 md:py-12 lg:py-16">
           
           {/* Left side - Enhanced brand presentation */}
-          <div className="text-center xl:text-left space-y-8 lg:space-y-10 xl:space-y-12 order-2 xl:order-1">
+          <div className="text-center xl:text-left space-y-8 lg:space-y-10 xl:space-y-12 order-2 xl:order-1 w-full max-w-2xl xl:max-w-none">
             {/* MusicGift Logo with enhanced glow effect */}
             <div className="flex justify-center xl:justify-start mb-12 lg:mb-16">
               <div className="relative group">
@@ -153,18 +153,18 @@ const Auth = () => {
                 <img 
                   src="/lovable-uploads/cb090c51-8b0c-4906-8ec4-8f0ca3583f84.png" 
                   alt="MusicGift Logo" 
-                  className="relative w-64 h-auto lg:w-72 xl:w-80 drop-shadow-2xl group-hover:scale-105 transition-all duration-500"
+                  className="relative w-64 h-auto lg:w-72 xl:w-80 2xl:w-96 drop-shadow-2xl group-hover:scale-105 transition-all duration-500"
                 />
               </div>
             </div>
             
             <div className="space-y-6 lg:space-y-8">
-              <h1 className="text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold text-white mb-6 tracking-tight leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold text-white mb-6 tracking-tight leading-tight">
                 <span className="bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent drop-shadow-lg">
                   {t('musicGift')}
                 </span>
               </h1>
-              <p className="text-xl lg:text-2xl xl:text-3xl text-white/95 leading-relaxed max-w-2xl mx-auto xl:mx-0 font-light drop-shadow-md">
+              <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-white/95 leading-relaxed max-w-2xl mx-auto xl:mx-0 font-light drop-shadow-md">
                 {isLogin ? t('signInSubtitle') : t('signUpSubtitle')}
               </p>
             </div>
@@ -187,14 +187,14 @@ const Auth = () => {
           </div>
 
           {/* Right side - Enhanced auth form with better positioning */}
-          <div className="w-full max-w-lg mx-auto xl:mx-0 order-1 xl:order-2 xl:justify-self-end">
+          <div className="w-full max-w-md sm:max-w-lg mx-auto xl:mx-0 order-1 xl:order-2 xl:justify-self-center 2xl:justify-self-start">
             <Card className="shadow-2xl border-0 bg-white/96 backdrop-blur-xl overflow-hidden relative transform hover:scale-[1.02] transition-all duration-300">
               {/* Enhanced decorative elements */}
               <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500"></div>
               <div className="absolute top-3 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
               
               <CardHeader className="space-y-6 pb-8 pt-12">
-                <CardTitle className="text-4xl lg:text-5xl font-bold text-center">
+                <CardTitle className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center">
                   <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent">
                     {isLogin ? t('signInBtn') : t('signUpBtn')}
                   </span>
