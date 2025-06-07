@@ -79,72 +79,136 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
   const isSubmitting = createDesignMutation.isPending || updateDesignMutation.isPending;
 
   return (
-    <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Canvas editor section - Full width */}
+    <div className="h-screen flex flex-col bg-gray-50">
+      {/* Header with title and action buttons */}
+      <div className="bg-white border-b px-6 py-4 flex justify-between items-center">
         <div>
-          <Label>Canvas Design</Label>
-          <div className="mt-2 border rounded-lg p-4 bg-gray-50">
-            <GiftCardCanvasEditor
-              value={formData.template_data}
-              onChange={handleCanvasDataChange}
-              backgroundImage={formData.preview_image_url}
-            />
-          </div>
+          <h1 className="text-2xl font-semibold text-gray-900">
+            {design ? 'Edit Design' : 'Create New Design'}
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Design your gift card template with the canvas editor
+          </p>
         </div>
-
-        {/* Form fields section - Two columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">Design Name</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="theme">Theme</Label>
-              <Input
-                id="theme"
-                value={formData.theme}
-                onChange={(e) => handleInputChange('theme', e.target.value)}
-                required
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="is_active"
-                checked={formData.is_active}
-                onCheckedChange={(checked) => handleInputChange('is_active', checked)}
-              />
-              <Label htmlFor="is_active">Active</Label>
-            </div>
-          </div>
-
-          <div>
-            <ImageUpload
-              label="Background Image"
-              value={formData.preview_image_url}
-              onChange={(url) => handleInputChange('preview_image_url', url)}
-              bucketName="gift-card-designs"
-              maxSizeBytes={5 * 1024 * 1024}
-              acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
-            />
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-2 pt-4 border-t">
+        <div className="flex gap-2">
           <Button type="button" variant="outline" onClick={onSuccess}>
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button 
+            onClick={handleSubmit} 
+            disabled={isSubmitting}
+            className="min-w-[100px]"
+          >
             {isSubmitting ? 'Saving...' : design ? 'Update' : 'Create'}
           </Button>
         </div>
-      </form>
+      </div>
+
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Sidebar - Design Controls */}
+        <div className="w-80 bg-white border-r overflow-y-auto">
+          <div className="p-6 space-y-6">
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Design Settings</h3>
+              
+              <div>
+                <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                  Design Name
+                </Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  placeholder="Enter design name"
+                  className="mt-1"
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="theme" className="text-sm font-medium text-gray-700">
+                  Theme
+                </Label>
+                <Input
+                  id="theme"
+                  value={formData.theme}
+                  onChange={(e) => handleInputChange('theme', e.target.value)}
+                  placeholder="e.g., Birthday, Christmas, Valentine"
+                  className="mt-1"
+                  required
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Label htmlFor="is_active" className="text-sm font-medium text-gray-700">
+                  Active Design
+                </Label>
+                <Switch
+                  id="is_active"
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => handleInputChange('is_active', checked)}
+                />
+              </div>
+            </div>
+
+            <div className="border-t pt-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Background Image</h3>
+              <ImageUpload
+                label=""
+                value={formData.preview_image_url}
+                onChange={(url) => handleInputChange('preview_image_url', url)}
+                bucketName="gift-card-designs"
+                maxSizeBytes={5 * 1024 * 1024}
+                acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+              />
+            </div>
+
+            {/* Canvas dimensions info */}
+            <div className="border-t pt-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Canvas Info</h3>
+              <div className="text-sm text-gray-600 space-y-1">
+                <p>Width: {formData.template_data.canvasWidth}px</p>
+                <p>Height: {formData.template_data.canvasHeight}px</p>
+                <p>Elements: {formData.template_data.elements?.length || 0}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Canvas Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Canvas Header */}
+          <div className="bg-white border-b px-6 py-3">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-medium text-gray-900">Canvas Editor</h2>
+              <div className="text-sm text-gray-500">
+                Design your gift card layout
+              </div>
+            </div>
+          </div>
+
+          {/* Canvas Container */}
+          <div className="flex-1 p-6 overflow-auto">
+            <div className="flex justify-center items-start min-h-full">
+              <div className="bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full">
+                <GiftCardCanvasEditor
+                  value={formData.template_data}
+                  onChange={handleCanvasDataChange}
+                  backgroundImage={formData.preview_image_url}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick save indicator */}
+      {(createDesignMutation.isPending || updateDesignMutation.isPending) && (
+        <div className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
+          <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+          Saving design...
+        </div>
+      )}
     </div>
   );
 };
