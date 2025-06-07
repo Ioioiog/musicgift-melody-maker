@@ -26,46 +26,6 @@ interface OrderData {
   user_id?: string;
 }
 
-interface SmartBillInvoiceData {
-  companyVatCode: string;
-  seriesName: string;
-  client: {
-    name: string;
-    vatCode?: string;
-    regCom?: string;
-    address?: string;
-    isTaxPayer: boolean;
-    city?: string;
-    county?: string;
-    country: string;
-    email?: string;
-    saveToDb?: boolean;
-  };
-  issueDate: string;
-  dueDate: string;
-  deliveryDate: string;
-  isDraft: boolean;
-  language: string;
-  sendEmail: boolean;
-  precision: number;
-  currency: string;
-  paymentUrl?: string;
-  products: Array<{
-    name: string;
-    quantity: number;
-    price: number;
-    measuringUnitName: string;
-    currency: string;
-    isTaxIncluded: boolean;
-    taxName: string;
-    taxPercentage: number;
-    isDiscount: boolean;
-    saveToDb: boolean;
-    isService: boolean;
-  }>;
-  observations?: string;
-}
-
 // Rate limiting for SmartBill API (max 3 calls per second)
 let lastApiCall = 0
 const API_RATE_LIMIT = 334 // ms between calls
@@ -82,12 +42,21 @@ async function rateLimitedFetch(url: string, options: RequestInit) {
   return fetch(url, options)
 }
 
+function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 const validateSmartBillConfig = () => {
   const username = Deno.env.get('SMARTBILL_USERNAME')
   const token = Deno.env.get('SMARTBILL_TOKEN')
   const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
   const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
-  const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'mng'
+  const seriesName = Deno.env.get('SMARTBILL_SERIES') || 'Prof' // Changed to Prof for payment links
   
   console.log('SmartBill Config Check:', {
     username: username ? `${username.substring(0, 3)}***` : 'MISSING',
@@ -98,33 +67,6 @@ const validateSmartBillConfig = () => {
   })
   
   return { username, token, baseUrl, companyVat, seriesName }
-}
-
-const handleSmartBillResponse = async (response: Response) => {
-  const contentType = response.headers.get('content-type') || ''
-  console.log('SmartBill Response Status:', response.status)
-  console.log('SmartBill Response Content-Type:', contentType)
-  
-  // Get response as text first to inspect it
-  const responseText = await response.text()
-  console.log('SmartBill Raw Response (first 500 chars):', responseText.substring(0, 500))
-  
-  // Check if response is HTML (error page)
-  if (responseText.trim().startsWith('<!DOCTYPE') || responseText.trim().startsWith('<html')) {
-    console.error('SmartBill returned HTML error page instead of JSON')
-    throw new Error(`SmartBill API returned HTML error page. Status: ${response.status}`)
-  }
-  
-  // Try to parse as JSON
-  try {
-    const jsonResult = JSON.parse(responseText)
-    console.log('SmartBill JSON Response:', jsonResult)
-    return jsonResult
-  } catch (parseError) {
-    console.error('Failed to parse SmartBill response as JSON:', parseError)
-    console.error('Response text:', responseText)
-    throw new Error(`SmartBill API returned invalid JSON. Response: ${responseText.substring(0, 200)}...`)
-  }
 }
 
 serve(async (req) => {
@@ -140,7 +82,7 @@ serve(async (req) => {
     )
 
     const { orderData }: { orderData: OrderData } = await req.json()
-    console.log('Processing order with SmartBill:', orderData)
+    console.log('Processing order with SmartBill Netopia:', orderData)
 
     // First, save the order to database - ensure payment_provider is set to 'smartbill'
     const { data: savedOrder, error: orderError } = await supabaseClient
@@ -161,7 +103,7 @@ serve(async (req) => {
         gift_card_id: orderData.gift_card_id,
         is_gift_redemption: orderData.is_gift_redemption,
         gift_credit_applied: orderData.gift_credit_applied,
-        payment_provider: 'smartbill', // Explicitly set to smartbill
+        payment_provider: 'smartbill',
         smartbill_payment_status: 'pending'
       })
       .select()
@@ -175,7 +117,6 @@ serve(async (req) => {
 
     // Check if payment is needed
     if (orderData.total_price <= 0) {
-      // No payment needed, mark as completed
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -208,7 +149,6 @@ serve(async (req) => {
     if (!username || !token) {
       console.warn('SmartBill credentials not configured')
       
-      // Update order with config error
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -242,87 +182,91 @@ serve(async (req) => {
     const isCompanyInvoice = orderData.form_data.invoiceType === 'company'
     console.log('Invoice type:', orderData.form_data.invoiceType, 'Is company invoice:', isCompanyInvoice)
 
-    // Prepare client data based on invoice type
-    const clientData = {
-      name: isCompanyInvoice ? 
-        (orderData.form_data.companyName || 'Company Name') : 
-        (orderData.form_data.fullName || 'Customer'),
-      vatCode: isCompanyInvoice ? (orderData.form_data.vatCode || '') : '',
-      regCom: isCompanyInvoice ? (orderData.form_data.registrationNumber || '') : '',
-      address: isCompanyInvoice ? 
-        (orderData.form_data.companyAddress || orderData.form_data.address || '') : 
-        (orderData.form_data.address || ''),
-      city: orderData.form_data.city || 'Bucuresti',
-      county: orderData.form_data.county || 'Bucuresti',
-      country: 'Romania',
-      email: orderData.form_data.email || '',
-      isTaxPayer: isCompanyInvoice && !!(orderData.form_data.vatCode),
-      saveToDb: false
-    }
-
-    console.log('Client data for SmartBill:', clientData)
-
-    // Create SmartBill invoice data
-    const invoiceData: SmartBillInvoiceData = {
-      companyVatCode: companyVat || '',
-      seriesName: seriesName,
-      client: clientData,
-      issueDate: issueDate,
-      dueDate: dueDate,
-      deliveryDate: dueDate,
-      isDraft: false,
-      language: 'RO',
-      sendEmail: true,
-      precision: 2,
-      currency: orderData.currency || 'RON',
-      paymentUrl: "Generate URL", // This should trigger Netopia payment link generation
-      products: [
-        {
-          name: `${orderData.package_name} - Cadou Musical Personalizat`,
-          quantity: 1,
-          price: orderData.total_price,
-          measuringUnitName: 'buc',
-          currency: orderData.currency || 'RON',
-          isTaxIncluded: true,
-          taxName: 'Normala',
-          taxPercentage: 19,
-          isDiscount: false,
-          saveToDb: false,
-          isService: true
-        }
-      ],
-      observations: isCompanyInvoice && orderData.form_data.representativeName ?
-        `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}. Reprezentant companie: ${orderData.form_data.representativeName}` :
-        `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}`
-    }
-
-    console.log('Creating SmartBill invoice with data:', invoiceData)
-
-    // Create invoice via SmartBill API
-    const smartBillAuth = btoa(`${username}:${token}`)
+    // Prepare client data
+    const clientName = isCompanyInvoice ? 
+      (orderData.form_data.companyName || 'Company Name') : 
+      (orderData.form_data.fullName || 'Customer')
     
-    let invoiceResponse: Response
-    let invoiceResult: any
+    const clientVatCode = isCompanyInvoice ? (orderData.form_data.vatCode || '') : ''
+    
+    const clientAddress = isCompanyInvoice ? 
+      (orderData.form_data.companyAddress || orderData.form_data.address || '') : 
+      (orderData.form_data.address || '')
+    
+    const clientCity = orderData.form_data.city || 'Bucuresti'
+    const clientEmail = orderData.form_data.email || ''
+
+    console.log('Client data for SmartBill:', {
+      name: clientName,
+      vatCode: clientVatCode,
+      address: clientAddress,
+      city: clientCity,
+      email: clientEmail,
+      isTaxPayer: isCompanyInvoice && !!clientVatCode
+    })
+
+    // Create XML payload for estimate/proforma with payment URL generation
+    const totalPrice = parseFloat(orderData.total_price.toString()) || 0
+    
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<estimate>
+  <companyVatCode>${companyVat}</companyVatCode>
+  <client>
+    <name>${escapeXml(clientName)}</name>
+    <vatCode>${escapeXml(clientVatCode)}</vatCode>
+    <isTaxPayer>${isCompanyInvoice && !!clientVatCode ? 'true' : 'false'}</isTaxPayer>
+    <address>${escapeXml(clientAddress)}</address>
+    <city>${escapeXml(clientCity)}</city>
+    <country>Romania</country>
+    <email>${escapeXml(clientEmail)}</email>
+  </client>
+  <issueDate>${issueDate}</issueDate>
+  <seriesName>${seriesName}</seriesName>
+  <dueDate>${dueDate}</dueDate>
+  <paymentUrl>Generate URL</paymentUrl>
+  <product>
+    <name>${escapeXml(`${orderData.package_name} - Cadou Musical Personalizat`)}</name>
+    <isDiscount>false</isDiscount>
+    <measuringUnitName>buc</measuringUnitName>
+    <currency>${orderData.currency || 'RON'}</currency>
+    <quantity>1</quantity>
+    <price>${totalPrice}</price>
+    <isTaxIncluded>true</isTaxIncluded>
+    <taxName>Normala</taxName>
+    <taxPercentage>19</taxPercentage>
+    <saveToDb>false</saveToDb>
+    <isService>true</isService>
+  </product>
+  <observations>${escapeXml(isCompanyInvoice && orderData.form_data.representativeName ?
+    `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}. Reprezentant companie: ${orderData.form_data.representativeName}. ID comandă: ${savedOrder.id}` :
+    `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}. ID comandă: ${savedOrder.id}`)}</observations>
+</estimate>`
+
+    console.log('Generated XML for SmartBill:', xml)
+
+    // Create estimate/proforma via SmartBill API using XML format
+    let estimateResponse: Response
+    let responseText: string
     
     try {
-      console.log('Sending request to SmartBill API:', `${baseUrl}/SBORO/api/invoice`)
+      console.log('Sending request to SmartBill API:', `${baseUrl}/SBORO/api/estimate`)
       
-      invoiceResponse = await rateLimitedFetch(`${baseUrl}/SBORO/api/invoice`, {
+      estimateResponse = await rateLimitedFetch(`${baseUrl}/SBORO/api/estimate`, {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${smartBillAuth}`
+          'Authorization': `Basic ${btoa(`${username}:${token}`)}`,
+          'Content-Type': 'application/xml',
+          'Accept': 'application/xml'
         },
-        body: JSON.stringify(invoiceData)
+        body: xml
       })
       
-      invoiceResult = await handleSmartBillResponse(invoiceResponse)
+      responseText = await estimateResponse.text()
+      console.log('SmartBill API Response:', responseText)
       
     } catch (smartBillError) {
       console.error('SmartBill API Error:', smartBillError)
       
-      // Update order with error status
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -334,7 +278,6 @@ serve(async (req) => {
         console.error('Error updating order with SmartBill error:', updateError)
       }
 
-      // Return failure response
       return new Response(
         JSON.stringify({
           success: false,
@@ -350,11 +293,13 @@ serve(async (req) => {
     }
 
     // Check if SmartBill returned an error
-    if (!invoiceResponse.ok || invoiceResult?.errorText) {
-      const errorMessage = invoiceResult?.errorText || invoiceResult?.error || `HTTP ${invoiceResponse.status}`
-      console.error('SmartBill API returned error:', errorMessage)
+    if (!estimateResponse.ok) {
+      console.error('SmartBill API Error:', {
+        status: estimateResponse.status,
+        statusText: estimateResponse.statusText,
+        response: responseText
+      })
       
-      // Update order with error status
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -371,7 +316,7 @@ serve(async (req) => {
           success: false,
           orderId: savedOrder.id,
           errorCode: 'paymentFailed',
-          message: `Payment system error: ${errorMessage}`
+          message: `Payment system error: ${estimateResponse.status} ${estimateResponse.statusText}`
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -380,26 +325,32 @@ serve(async (req) => {
       )
     }
 
-    // Extract invoice details
-    const smartBillInvoiceId = invoiceResult?.number || `INV-${Date.now()}`
-    const smartBillPaymentUrl = invoiceResult?.url
+    // Parse XML response to extract payment URL and document number
+    const urlMatch = responseText.match(/<url>(.*?)<\/url>/)
+    const numberMatch = responseText.match(/<number>(.*?)<\/number>/)
+    const seriesMatch = responseText.match(/<series>(.*?)<\/series>/)
     
-    console.log('Extracted invoice details:', {
-      invoiceId: smartBillInvoiceId,
+    const smartBillPaymentUrl = urlMatch?.[1] || null
+    const documentNumber = numberMatch?.[1] || null
+    const documentSeries = seriesMatch?.[1] || seriesName
+    
+    console.log('Extracted proforma details:', {
+      number: documentNumber,
+      series: documentSeries,
       paymentUrl: smartBillPaymentUrl,
-      fullResponse: invoiceResult
+      fullResponse: responseText
     })
     
     // Check if we got a valid payment URL
-    if (!smartBillPaymentUrl || smartBillPaymentUrl === 'Generate URL') {
-      console.error('SmartBill did not return a valid payment URL')
-      console.error('Response structure:', JSON.stringify(invoiceResult, null, 2))
+    if (!smartBillPaymentUrl) {
+      console.error('SmartBill did not return a payment URL')
+      console.error('Response:', responseText)
       
-      // Update order with payment URL generation failure
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
-          smartbill_invoice_id: smartBillInvoiceId,
+          smartbill_proforma_id: documentNumber ? `${documentSeries}${documentNumber}` : null,
+          smartbill_proforma_data: responseText,
           smartbill_payment_status: 'failed'
         })
         .eq('id', savedOrder.id)
@@ -413,7 +364,7 @@ serve(async (req) => {
           success: false,
           orderId: savedOrder.id,
           errorCode: 'paymentUrlFailed',
-          message: 'Failed to generate payment link'
+          message: 'Failed to generate payment link - Netopia integration not configured'
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -422,8 +373,8 @@ serve(async (req) => {
       )
     }
 
-    console.log('SmartBill invoice created successfully:', {
-      invoiceId: smartBillInvoiceId,
+    console.log('SmartBill proforma created successfully:', {
+      proformaId: `${documentSeries}${documentNumber}`,
       paymentUrl: smartBillPaymentUrl
     })
 
@@ -431,10 +382,11 @@ serve(async (req) => {
     const { error: updateError } = await supabaseClient
       .from('orders')
       .update({ 
-        smartbill_invoice_id: smartBillInvoiceId,
+        smartbill_proforma_id: documentNumber ? `${documentSeries}${documentNumber}` : null,
         smartbill_payment_url: smartBillPaymentUrl,
-        smartbill_invoice_data: invoiceResult,
-        smartbill_payment_status: 'pending'
+        smartbill_proforma_data: responseText,
+        smartbill_payment_status: 'pending',
+        smartbill_proforma_status: 'created'
       })
       .eq('id', savedOrder.id)
 
@@ -448,9 +400,9 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         orderId: savedOrder.id,
-        smartBillInvoiceId: smartBillInvoiceId,
+        smartBillProformaId: documentNumber ? `${documentSeries}${documentNumber}` : null,
         paymentUrl: smartBillPaymentUrl,
-        message: 'Invoice created successfully with SmartBill'
+        message: 'Proforma created successfully with payment link'
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
