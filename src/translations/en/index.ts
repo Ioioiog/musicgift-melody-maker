@@ -6,6 +6,7 @@ import { footerTranslations } from './footer';
 import { orderTranslations } from './order';
 import { aboutTranslations } from './about';
 import { commonTranslations } from './common';
+import { giftTranslations } from './gift';
 
 export const enTranslations = {
   ...navigationTranslations,
@@ -15,4 +16,5 @@ export const enTranslations = {
   ...orderTranslations,
   ...aboutTranslations,
   ...commonTranslations,
+  ...giftTranslations,
 };
