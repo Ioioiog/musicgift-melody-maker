@@ -116,6 +116,181 @@ const OrdersManagement = () => {
     }
   };
 
+  const refreshPaymentStatus = async (orderId: string) => {
+    if (refreshingOrders.has(orderId)) return;
+    
+    setRefreshingOrders(prev => new Set(prev).add(orderId));
+    
+    try {
+      console.log(`Refreshing payment status for order: ${orderId}`);
+      
+      const { data, error } = await supabase.functions.invoke('refresh-payment-status', {
+        body: { orderId }
+      });
+
+      if (error) {
+        console.error('Payment status refresh error:', error);
+        toast({ 
+          title: 'Error refreshing payment status', 
+          description: error.message || 'Failed to refresh payment status',
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      if (data?.error) {
+        console.error('Payment status refresh error:', data.error);
+        toast({ 
+          title: 'Payment status refresh error', 
+          description: data.error,
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      console.log('Payment status refresh result:', data);
+      
+      await refetch();
+      
+      toast({ 
+        title: data?.statusChanged ? 'Payment status updated' : 'Payment status checked',
+        description: data?.message || 'Payment status refreshed successfully'
+      });
+      
+    } catch (error) {
+      console.error('Error refreshing payment status:', error);
+      toast({ 
+        title: 'Error refreshing payment status', 
+        description: 'Failed to refresh payment status',
+        variant: 'destructive' 
+      });
+    } finally {
+      setRefreshingOrders(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(orderId);
+        return newSet;
+      });
+    }
+  };
+
+  const bulkRefreshPaymentStatus = async () => {
+    if (bulkRefreshing) return;
+    
+    setBulkRefreshing(true);
+    
+    try {
+      console.log('Starting bulk payment status refresh');
+      
+      const { data, error } = await supabase.functions.invoke('bulk-refresh-payment-status');
+
+      if (error) {
+        console.error('Bulk payment status refresh error:', error);
+        toast({ 
+          title: 'Bulk refresh failed', 
+          description: error.message || 'Failed to refresh payment statuses',
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      if (data?.error) {
+        console.error('Bulk payment status refresh error:', data.error);
+        toast({ 
+          title: 'Bulk refresh error', 
+          description: data.error,
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      console.log('Bulk payment status refresh result:', data);
+      
+      await refetch();
+      
+      const { totalOrders, successCount, changedCount, errorCount } = data;
+      
+      if (errorCount > 0) {
+        toast({ 
+          title: `Bulk refresh completed with errors`,
+          description: `${successCount}/${totalOrders} orders processed. ${changedCount} status changes. ${errorCount} errors.`,
+          variant: 'destructive'
+        });
+      } else {
+        toast({ 
+          title: 'Bulk refresh completed',
+          description: `${successCount} orders processed successfully. ${changedCount} status changes.`
+        });
+      }
+      
+    } catch (error) {
+      console.error('Error during bulk payment status refresh:', error);
+      toast({ 
+        title: 'Bulk refresh failed', 
+        description: 'Failed to refresh payment statuses',
+        variant: 'destructive' 
+      });
+    } finally {
+      setBulkRefreshing(false);
+    }
+  };
+
+  const convertToInvoice = async (orderId: string) => {
+    if (convertingToInvoice.has(orderId)) return;
+    
+    setConvertingToInvoice(prev => new Set(prev).add(orderId));
+    
+    try {
+      console.log(`Converting order to invoice: ${orderId}`);
+      
+      const { data, error } = await supabase.functions.invoke('convert-to-invoice', {
+        body: { orderId, conversionSource: 'manual' }
+      });
+
+      if (error) {
+        console.error('Invoice conversion error:', error);
+        toast({ 
+          title: 'Error converting to invoice', 
+          description: error.message || 'Failed to convert to invoice',
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      if (data?.error) {
+        console.error('Invoice conversion error:', data.error);
+        toast({ 
+          title: 'Invoice conversion error', 
+          description: data.error,
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      console.log('Invoice conversion result:', data);
+      
+      await refetch();
+      
+      toast({ 
+        title: 'Invoice created successfully',
+        description: `Invoice ${data.invoiceId} has been created`
+      });
+      
+    } catch (error) {
+      console.error('Error converting to invoice:', error);
+      toast({ 
+        title: 'Error converting to invoice', 
+        description: 'Failed to convert to invoice',
+        variant: 'destructive' 
+      });
+    } finally {
+      setConvertingToInvoice(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(orderId);
+        return newSet;
+      });
+    }
+  };
+
   const createProforma = async (orderId: string) => {
     if (creatingProforma.has(orderId)) return;
     
