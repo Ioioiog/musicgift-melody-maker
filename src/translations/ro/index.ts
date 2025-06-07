@@ -7,6 +7,7 @@ import { orderTranslations } from './order';
 import { aboutTranslations } from './about';
 import { commonTranslations } from './common';
 import { giftTranslations } from './gift';
+import { howItWorksTranslations } from './howItWorks';
 
 export const roTranslations = {
   ...navigationTranslations,
@@ -17,4 +18,5 @@ export const roTranslations = {
   ...aboutTranslations,
   ...commonTranslations,
   ...giftTranslations,
+  ...howItWorksTranslations,
 };
