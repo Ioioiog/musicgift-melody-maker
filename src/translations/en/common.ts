@@ -1,3 +1,4 @@
+
 export const commonTranslations = {
   // CTA Section
   readyToCreateSpecial: "Ready to Create Something Special?",
@@ -14,14 +15,14 @@ export const commonTranslations = {
   
   // Steps
   step: "Step",
-  step1Title: "Choose Package",
-  step1Description: "Select the package that fits your occasion and budget",
-  step2Title: "Tell Your Story",
-  step2Description: "Fill out the form with your details and unique story",
-  step3Title: "We Create Music",
-  step3Description: "Our professional team creates your personalized song",
-  step4Title: "Receive Your Gift",
-  step4Description: "We deliver your finished song within 3-7 working days",
+  step1Title: "🌟 Pick the Perfect Package",
+  step1Description: "Every great song starts with the right vibe. Browse through our curated packages and choose the one that best suits your occasion, vision, and budget — whether it's a birthday surprise, a romantic gesture, a company anthem, or just a musical \"I'm thinking of you.\"",
+  step2Title: "✨ Tell Us Your Story",
+  step2Description: "This is where the magic begins. Our songs are built around your story, so the more heartfelt details you give us, the more emotional and unique your song becomes.",
+  step3Title: "🎵 Sit Back While We Compose the Magic",
+  step3Description: "Now it's our turn to shine! While you relax, our team of professional songwriters, vocalists, musicians, and sound engineers goes to work — transforming your story into an unforgettable musical gift.",
+  step4Title: "🎉 Receive Your One-of-a-Kind Musical Gift",
+  step4Description: "Within 3–7 working days, your personalized masterpiece arrives in your inbox. Ready to be gifted, shared, played on repeat, or even used to make someone cry (happy tears only, we promise!).",
   
   // Testimonials
   testimonialsTitle: "What Our Clients Say",
