@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy, RefreshCw, FileText } from 'lucide-react';
+import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy, RefreshCw, FileText, Receipt, CreditCard } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -33,6 +33,7 @@ const OrdersManagement = () => {
   const [refreshingOrders, setRefreshingOrders] = useState<Set<string>>(new Set());
   const [bulkRefreshing, setBulkRefreshing] = useState(false);
   const [creatingProforma, setCreatingProforma] = useState<Set<string>>(new Set());
+  const [convertingToInvoice, setConvertingToInvoice] = useState<Set<string>>(new Set());
   const { toast } = useToast();
   const { t } = useLanguage();
   const isMobile = useIsMobile();
@@ -448,7 +449,10 @@ const OrdersManagement = () => {
     const overallPaymentStatus = getOverallPaymentStatus(order);
     const isRefreshing = refreshingOrders.has(order.id);
     const isCreatingProforma = creatingProforma.has(order.id);
+    const isConvertingToInvoice = convertingToInvoice.has(order.id);
     const hasProforma = order.smartbill_proforma_id || order.smartbill_invoice_id;
+    const isPaid = order.payment_status === 'completed' || order.smartbill_payment_status === 'paid';
+    const canConvertToInvoice = isPaid && !order.smartbill_invoice_id;
 
     return (
       <div className="space-y-4">
@@ -468,14 +472,9 @@ const OrdersManagement = () => {
             <Badge className={getPaymentStatusColor(overallPaymentStatus.status)}>
               {overallPaymentStatus.label}
             </Badge>
-            {order.payment_status && order.payment_status !== overallPaymentStatus.status && (
-              <Badge className={getPaymentStatusColor(order.payment_status)} variant="outline">
-                {t(order.payment_status, order.payment_status)}
-              </Badge>
-            )}
-            {order.smartbill_payment_status && (
-              <Badge className={getPaymentStatusColor(order.smartbill_payment_status)} variant="outline">
-                SmartBill: {order.smartbill_payment_status}
+            {order.payment_provider && (
+              <Badge variant="outline" className="capitalize">
+                {order.payment_provider}
               </Badge>
             )}
             <DeliveryCountdownBadge 
@@ -505,26 +504,7 @@ const OrdersManagement = () => {
               <p><strong>SmartBill Proforma:</strong> {order.smartbill_proforma_id}</p>
             )}
           </div>
-          <div className="space-y-1">
-            <p><strong>{t('created', 'Created')}:</strong> {new Date(order.created_at).toLocaleDateString()}</p>
-            <p><strong>{t('recipient', 'Recipient')}:</strong> {formData?.recipientName || 'N/A'}</p>
-            <p><strong>{t('occasion', 'Occasion')}:</strong> {formData?.occasion || 'N/A'}</p>
-          </div>
         </div>
-
-        {/* SmartBill Payment URL */}
-        {order.smartbill_payment_url && order.smartbill_payment_status === 'pending' && (
-          <div className="mt-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open(order.smartbill_payment_url, '_blank')}
-              className="w-full"
-            >
-              View SmartBill Payment
-            </Button>
-          </div>
-        )}
 
         {/* Action Buttons */}
         <div className="flex flex-col space-y-2">
@@ -547,9 +527,10 @@ const OrdersManagement = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => refreshOrderStatus(order.id)}
+              onClick={() => refreshPaymentStatus(order.id)}
               disabled={isRefreshing}
               className="h-11 px-3"
+              title="Refresh payment status"
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
@@ -564,6 +545,19 @@ const OrdersManagement = () => {
                 title="Create SmartBill Proforma"
               >
                 <FileText className={`w-4 h-4 ${isCreatingProforma ? 'animate-spin' : ''}`} />
+              </Button>
+            )}
+
+            {canConvertToInvoice && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => convertToInvoice(order.id)}
+                disabled={isConvertingToInvoice}
+                className="h-11 px-3"
+                title="Convert to Invoice"
+              >
+                <Receipt className={`w-4 h-4 ${isConvertingToInvoice ? 'animate-spin' : ''}`} />
               </Button>
             )}
           </div>
@@ -641,7 +635,10 @@ const OrdersManagement = () => {
     const overallPaymentStatus = getOverallPaymentStatus(order);
     const isRefreshing = refreshingOrders.has(order.id);
     const isCreatingProforma = creatingProforma.has(order.id);
+    const isConvertingToInvoice = convertingToInvoice.has(order.id);
     const hasProforma = order.smartbill_proforma_id || order.smartbill_invoice_id;
+    const isPaid = order.payment_status === 'completed' || order.smartbill_payment_status === 'paid';
+    const canConvertToInvoice = isPaid && !order.smartbill_invoice_id;
 
     return (
       <>
@@ -649,10 +646,13 @@ const OrdersManagement = () => {
           <div className="text-sm font-medium text-gray-900">#{order.id.slice(0, 8)}</div>
           <div className="text-sm text-gray-500">{formData?.email || 'N/A'}</div>
           {order.smartbill_invoice_id && (
-            <div className="text-xs text-blue-600">SB: {order.smartbill_invoice_id}</div>
+            <div className="text-xs text-blue-600">Invoice: {order.smartbill_invoice_id}</div>
           )}
-          {order.smartbill_proforma_id && (
+          {order.smartbill_proforma_id && !order.smartbill_invoice_id && (
             <div className="text-xs text-green-600">Proforma: {order.smartbill_proforma_id}</div>
+          )}
+          {order.payment_provider && (
+            <div className="text-xs text-purple-600 capitalize">{order.payment_provider}</div>
           )}
         </td>
         <td className="px-6 py-4">
@@ -673,16 +673,6 @@ const OrdersManagement = () => {
             <Badge className={getPaymentStatusColor(overallPaymentStatus.status)}>
               {overallPaymentStatus.label}
             </Badge>
-            {order.payment_status && order.payment_status !== overallPaymentStatus.status && (
-              <Badge className={getPaymentStatusColor(order.payment_status)} variant="outline">
-                {t(order.payment_status, order.payment_status)}
-              </Badge>
-            )}
-            {order.smartbill_payment_status && (
-              <Badge className={getPaymentStatusColor(order.smartbill_payment_status)} variant="outline">
-                SB: {order.smartbill_payment_status}
-              </Badge>
-            )}
             <DeliveryCountdownBadge 
               orderCreatedAt={order.created_at}
               packageValue={packageValue}
@@ -716,11 +706,11 @@ const OrdersManagement = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => refreshOrderStatus(order.id)}
+              onClick={() => refreshPaymentStatus(order.id)}
               disabled={isRefreshing}
-              title="Sync payment status with SmartBill"
+              title="Refresh payment status across all providers"
             >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <CreditCard className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
             
             {!hasProforma && (
@@ -732,6 +722,19 @@ const OrdersManagement = () => {
                 title="Create SmartBill Proforma"
               >
                 <FileText className={`w-4 h-4 ${isCreatingProforma ? 'animate-spin' : ''}`} />
+              </Button>
+            )}
+
+            {canConvertToInvoice && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => convertToInvoice(order.id)}
+                disabled={isConvertingToInvoice}
+                title="Convert to Invoice"
+                className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+              >
+                <Receipt className={`w-4 h-4 ${isConvertingToInvoice ? 'animate-spin' : ''}`} />
               </Button>
             )}
             
@@ -876,14 +879,14 @@ const OrdersManagement = () => {
             <CardTitle className="text-xl sm:text-2xl">{t('ordersManagement', 'Orders Management')}</CardTitle>
             <div className="flex gap-2">
               <Button 
-                onClick={bulkRefreshOrderStatus} 
+                onClick={bulkRefreshPaymentStatus} 
                 variant="outline" 
                 size="sm" 
                 disabled={bulkRefreshing}
                 className="relative"
               >
-                <RefreshCw className={`w-4 h-4 mr-2 ${bulkRefreshing ? 'animate-spin' : ''}`} />
-                {bulkRefreshing ? 'Bulk Syncing...' : 'Bulk Refresh'}
+                <CreditCard className={`w-4 h-4 mr-2 ${bulkRefreshing ? 'animate-spin' : ''}`} />
+                {bulkRefreshing ? 'Bulk Refreshing...' : 'Bulk Refresh Payments'}
               </Button>
               <Button onClick={() => refetch()} variant="outline" size="sm" disabled={isLoading}>
                 <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />

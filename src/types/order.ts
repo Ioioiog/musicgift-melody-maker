@@ -32,6 +32,8 @@ export interface OrderData {
   smartbill_proforma_id?: string;
   smartbill_proforma_status?: string;
   smartbill_proforma_data?: any;
+  smartbill_proforma_error?: string;
+  smartbill_invoice_error?: string;
   gift_credit_applied?: number;
   is_gift_redemption?: boolean;
   gift_card_id?: string;
@@ -40,6 +42,13 @@ export interface OrderData {
   updated_at?: string;
   user_id?: string;
   package_id?: string;
+  payment_provider?: string;
+  revolut_order_id?: string;
+  revolut_payment_id?: string;
+  session_expires_at?: string;
+  invoice_conversion_requested_at?: string;
+  last_status_check_at?: string;
+  invoice_conversion_source?: string;
 }
 
 // Type guard to safely check if form_data has the expected structure

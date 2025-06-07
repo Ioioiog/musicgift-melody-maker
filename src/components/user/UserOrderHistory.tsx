@@ -1,24 +1,29 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Search, Filter, Package, RotateCcw } from 'lucide-react';
+import { Search, Filter, Package, RotateCcw, CreditCard } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useUserOrders } from '@/hooks/useUserOrders';
 import { getOrderFormData, getCustomerName, getCustomerEmail } from '@/types/order';
 import EnhancedOrderTable from './EnhancedOrderTable';
 import OrderDetailsModal from './OrderDetailsModal';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const UserOrderHistory = () => {
   const { t } = useLanguage();
   const { data: orders = [], isLoading, error, refetch } = useUserOrders();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [paymentFilter, setPaymentFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refreshingPayments, setRefreshingPayments] = useState(false);
 
   const handleViewDetails = (order: any) => {
     setSelectedOrder(order);
@@ -27,6 +32,78 @@ const UserOrderHistory = () => {
 
   const handleRefresh = () => {
     refetch();
+  };
+
+  const refreshPaymentStatuses = async () => {
+    if (refreshingPayments) return;
+    
+    setRefreshingPayments(true);
+    
+    try {
+      console.log('Refreshing payment statuses for user orders');
+      
+      // Get user's order IDs
+      const userOrderIds = orders.map(order => order.id);
+      
+      const { data, error } = await supabase.functions.invoke('bulk-refresh-payment-status', {
+        body: { orderIds: userOrderIds }
+      });
+
+      if (error) {
+        console.error('Payment status refresh error:', error);
+        toast({ 
+          title: 'Error refreshing payment status', 
+          description: error.message || 'Failed to refresh payment statuses',
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      if (data?.error) {
+        console.error('Payment status refresh error:', data.error);
+        toast({ 
+          title: 'Payment status refresh error', 
+          description: data.error,
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      console.log('Payment status refresh result:', data);
+      
+      // Refetch orders to get updated data
+      await refetch();
+      
+      const { changedCount, errorCount } = data;
+      
+      if (errorCount > 0) {
+        toast({ 
+          title: 'Payment status refresh completed with some errors',
+          description: `${changedCount} orders updated. ${errorCount} errors occurred.`,
+          variant: 'destructive'
+        });
+      } else if (changedCount > 0) {
+        toast({ 
+          title: 'Payment status updated',
+          description: `${changedCount} order${changedCount > 1 ? 's' : ''} had payment status changes`
+        });
+      } else {
+        toast({ 
+          title: 'Payment status checked',
+          description: 'All payment statuses are up to date'
+        });
+      }
+      
+    } catch (error) {
+      console.error('Error refreshing payment statuses:', error);
+      toast({ 
+        title: 'Error refreshing payment status', 
+        description: 'Failed to refresh payment statuses',
+        variant: 'destructive' 
+      });
+    } finally {
+      setRefreshingPayments(false);
+    }
   };
 
   const clearFilters = () => {
@@ -106,6 +183,16 @@ const UserOrderHistory = () => {
               {t('orderHistory')}
             </CardTitle>
             <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={refreshPaymentStatuses}
+                disabled={refreshingPayments}
+                title="Refresh payment status for all your orders"
+              >
+                <CreditCard className={`w-4 h-4 mr-1 ${refreshingPayments ? 'animate-spin' : ''}`} />
+                {refreshingPayments ? 'Refreshing...' : 'Refresh Payments'}
+              </Button>
               <Button variant="outline" size="sm" onClick={handleRefresh}>
                 <RotateCcw className="w-4 h-4 mr-1" />
                 Refresh

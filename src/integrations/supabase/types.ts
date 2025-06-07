@@ -572,7 +572,10 @@ export type Database = {
           gift_card_id: string | null
           gift_credit_applied: number | null
           id: string
+          invoice_conversion_requested_at: string | null
+          invoice_conversion_source: string | null
           is_gift_redemption: boolean | null
+          last_status_check_at: string | null
           package_delivery_time: string | null
           package_id: string | null
           package_includes: Json | null
@@ -588,10 +591,12 @@ export type Database = {
           selected_addons: Json | null
           session_expires_at: string | null
           smartbill_invoice_data: Json | null
+          smartbill_invoice_error: string | null
           smartbill_invoice_id: string | null
           smartbill_payment_status: string | null
           smartbill_payment_url: string | null
           smartbill_proforma_data: Json | null
+          smartbill_proforma_error: string | null
           smartbill_proforma_id: string | null
           smartbill_proforma_status: string | null
           status: string | null
@@ -610,7 +615,10 @@ export type Database = {
           gift_card_id?: string | null
           gift_credit_applied?: number | null
           id?: string
+          invoice_conversion_requested_at?: string | null
+          invoice_conversion_source?: string | null
           is_gift_redemption?: boolean | null
+          last_status_check_at?: string | null
           package_delivery_time?: string | null
           package_id?: string | null
           package_includes?: Json | null
@@ -626,10 +634,12 @@ export type Database = {
           selected_addons?: Json | null
           session_expires_at?: string | null
           smartbill_invoice_data?: Json | null
+          smartbill_invoice_error?: string | null
           smartbill_invoice_id?: string | null
           smartbill_payment_status?: string | null
           smartbill_payment_url?: string | null
           smartbill_proforma_data?: Json | null
+          smartbill_proforma_error?: string | null
           smartbill_proforma_id?: string | null
           smartbill_proforma_status?: string | null
           status?: string | null
@@ -648,7 +658,10 @@ export type Database = {
           gift_card_id?: string | null
           gift_credit_applied?: number | null
           id?: string
+          invoice_conversion_requested_at?: string | null
+          invoice_conversion_source?: string | null
           is_gift_redemption?: boolean | null
+          last_status_check_at?: string | null
           package_delivery_time?: string | null
           package_id?: string | null
           package_includes?: Json | null
@@ -664,10 +677,12 @@ export type Database = {
           selected_addons?: Json | null
           session_expires_at?: string | null
           smartbill_invoice_data?: Json | null
+          smartbill_invoice_error?: string | null
           smartbill_invoice_id?: string | null
           smartbill_payment_status?: string | null
           smartbill_payment_url?: string | null
           smartbill_proforma_data?: Json | null
+          smartbill_proforma_error?: string | null
           smartbill_proforma_id?: string | null
           smartbill_proforma_status?: string | null
           status?: string | null
