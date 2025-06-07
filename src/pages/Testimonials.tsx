@@ -84,7 +84,7 @@ const Testimonials = () => {
           
           {/* Buttons Section */}
           <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6" 
+            className="flex flex-col sm:flex-row gap-2 justify-center items-center mb-4" 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -96,8 +96,8 @@ const Testimonials = () => {
               rel="noopener noreferrer"
               className="inline-block"
             >
-              <div className="bg-white border-2 border-green-500 rounded-lg px-8 py-4 hover:bg-green-50 transition-colors duration-200 shadow-sm">
-                <span className="text-gray-800 font-medium text-lg">
+              <div className="bg-white border-2 border-green-500 rounded-lg px-6 py-3 hover:bg-green-50 transition-colors duration-200 shadow-sm">
+                <span className="text-gray-800 font-medium text-base">
                   Review us on <span className="text-green-500">⭐</span> Trustpilot
                 </span>
               </div>
