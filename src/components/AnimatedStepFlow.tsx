@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, MessageSquare, Music, Gift, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -241,38 +240,24 @@ const AnimatedStepFlow = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.6 }}
                   >
-                    {/* Enhanced Navigation Buttons */}
-                    <div className="flex items-center gap-3">
+                    {/* Modern Simple Navigation Buttons */}
+                    <div className="flex items-center gap-2">
                       <Button
                         variant="outline"
-                        size="default"
+                        size="icon"
                         onClick={handlePrevious}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-white/80 backdrop-blur-sm border-2 border-purple-200 hover:bg-purple-50 hover:border-purple-400 hover:shadow-lg transition-all duration-300 group/btn"
+                        className="h-10 w-10 rounded-full border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
                       >
-                        <motion.div
-                          className="group-hover/btn:-translate-x-0.5 transition-transform duration-200"
-                        >
-                          <ChevronLeft className="w-4 h-4" />
-                        </motion.div>
-                        <span className="font-medium text-gray-700 group-hover/btn:text-purple-700">
-                          Previous
-                        </span>
+                        <ChevronLeft className="w-4 h-4 text-gray-600" />
                       </Button>
                       
                       <Button
-                        variant="default"
-                        size="default"
+                        variant="outline"
+                        size="icon"
                         onClick={handleNext}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 border-0 hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 group/btn"
+                        className="h-10 w-10 rounded-full border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
                       >
-                        <span className="font-medium text-white">
-                          Next
-                        </span>
-                        <motion.div
-                          className="group-hover/btn:translate-x-0.5 transition-transform duration-200"
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </motion.div>
+                        <ChevronRight className="w-4 h-4 text-gray-600" />
                       </Button>
                     </div>
 
