@@ -1,11 +1,10 @@
-
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Play, ExternalLink, Quote, Star } from "lucide-react";
+import { Play, ExternalLink, Quote, Star, Volume2, VolumeX } from "lucide-react";
 
 export default function TestimonialSlider() {
   const { t } = useLanguage();
@@ -65,19 +64,20 @@ export default function TestimonialSlider() {
     return 'text-only';
   };
 
-  // Modern video component with enhanced play overlay
+  // Modern video component with enhanced play overlay and autoplay
   const VideoWithOverlay = ({ src, type, title }: { src: string; type: 'upload' | 'youtube'; title: string }) => {
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
     
     if (type === 'youtube') {
       return (
         <div className="relative group overflow-hidden rounded-xl bg-gray-50">
           <iframe
             className="w-full h-full"
-            src={src}
+            src={`${src}?autoplay=1&mute=1`}
             allowFullScreen
             loading="lazy"
             title={title}
+            allow="autoplay"
           />
           <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
             <ExternalLink className="w-4 h-4 text-gray-600" />
@@ -90,23 +90,22 @@ export default function TestimonialSlider() {
       <div className="relative group overflow-hidden rounded-xl bg-gray-50">
         <video
           className="w-full h-full object-cover"
-          controls={isPlaying}
+          autoPlay
+          muted={isMuted}
+          loop
+          playsInline
           preload="metadata"
-          poster={src + '#t=0.5'}
-          onPlay={() => setIsPlaying(true)}
         >
           <source src={src} type="video/mp4" />
         </video>
-        {!isPlaying && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-200">
-            <button
-              onClick={() => setIsPlaying(true)}
-              className="bg-white rounded-full p-4 hover:scale-105 transition-transform duration-200 shadow-lg"
-            >
-              <Play className="w-6 h-6 text-gray-800 ml-0.5" />
-            </button>
-          </div>
-        )}
+        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <button
+            onClick={() => setIsMuted(!isMuted)}
+            className="text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
+        </div>
       </div>
     );
   };
