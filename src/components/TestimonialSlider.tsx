@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Play, ExternalLink, Quote } from "lucide-react";
+import { Play, ExternalLink, Quote, Star } from "lucide-react";
 
 export default function TestimonialSlider() {
   const { t } = useLanguage();
@@ -13,15 +13,15 @@ export default function TestimonialSlider() {
 
   if (isLoading) {
     return (
-      <div className="py-16">
+      <div className="py-12">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white rounded-3xl shadow-xl overflow-hidden">
-                <Skeleton className="w-full h-64" />
-                <div className="p-8">
-                  <Skeleton className="h-6 w-3/4 mb-4" />
-                  <Skeleton className="h-4 w-full mb-3" />
+              <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <Skeleton className="w-full h-48" />
+                <div className="p-6">
+                  <Skeleton className="h-5 w-3/4 mb-3" />
+                  <Skeleton className="h-4 w-full mb-2" />
                   <Skeleton className="h-4 w-2/3" />
                 </div>
               </div>
@@ -35,10 +35,10 @@ export default function TestimonialSlider() {
   if (error) {
     console.error('Error loading testimonials:', error);
     return (
-      <div className="py-16">
+      <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="bg-white rounded-3xl shadow-xl p-12">
-            <p className="text-gray-600 text-lg">{t('error') || 'Error loading testimonials'}</p>
+          <div className="bg-white rounded-2xl border border-gray-100 p-12">
+            <p className="text-gray-500">{t('error') || 'Error loading testimonials'}</p>
           </div>
         </div>
       </div>
@@ -47,10 +47,10 @@ export default function TestimonialSlider() {
 
   if (!testimonials || testimonials.length === 0) {
     return (
-      <div className="py-16">
+      <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="bg-white rounded-3xl shadow-xl p-12">
-            <p className="text-gray-600 text-lg">{t('noTestimonialsYet') || 'No testimonials available yet'}</p>
+          <div className="bg-white rounded-2xl border border-gray-100 p-12">
+            <p className="text-gray-500">{t('noTestimonialsYet') || 'No testimonials available yet'}</p>
           </div>
         </div>
       </div>
@@ -71,7 +71,7 @@ export default function TestimonialSlider() {
     
     if (type === 'youtube') {
       return (
-        <div className="relative group overflow-hidden rounded-2xl">
+        <div className="relative group overflow-hidden rounded-xl bg-gray-50">
           <iframe
             className="w-full h-full"
             src={src}
@@ -79,15 +79,15 @@ export default function TestimonialSlider() {
             loading="lazy"
             title={title}
           />
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
-            <ExternalLink className="w-4 h-4 text-gray-700" />
+          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
+            <ExternalLink className="w-4 h-4 text-gray-600" />
           </div>
         </div>
       );
     }
 
     return (
-      <div className="relative group overflow-hidden rounded-2xl">
+      <div className="relative group overflow-hidden rounded-xl bg-gray-50">
         <video
           className="w-full h-full object-cover"
           controls={isPlaying}
@@ -98,12 +98,12 @@ export default function TestimonialSlider() {
           <source src={src} type="video/mp4" />
         </video>
         {!isPlaying && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-black/50 to-transparent group-hover:from-black/60 transition-all duration-300">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-200">
             <button
               onClick={() => setIsPlaying(true)}
-              className="bg-white/95 backdrop-blur-sm rounded-full p-6 hover:bg-white hover:scale-110 transition-all duration-300 shadow-xl"
+              className="bg-white rounded-full p-4 hover:scale-105 transition-transform duration-200 shadow-lg"
             >
-              <Play className="w-8 h-8 text-purple-600 ml-1" />
+              <Play className="w-6 h-6 text-gray-800 ml-0.5" />
             </button>
           </div>
         )}
@@ -112,40 +112,50 @@ export default function TestimonialSlider() {
   };
 
   return (
-    <div className="py-16 relative">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 via-transparent to-pink-50/30 pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto px-4 relative">
-        {/* Masonry-style grid layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    <div className="py-12">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Modern grid layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => {
             const type = getTestimonialType(testimonial);
             
             return (
               <motion.div 
                 key={testimonial.id}
-                className="break-inside-avoid"
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: index * 0.1 }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
               >
-                {/* Text-only testimonial - enhanced card design */}
+                {/* Text-only testimonial - clean professional design */}
                 {type === 'text-only' && (
-                  <div className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-8 h-full flex flex-col relative overflow-hidden group">
-                    {/* Quote decoration */}
-                    <div className="absolute top-6 right-6 text-purple-100 group-hover:text-purple-200 transition-colors">
-                      <Quote className="w-12 h-12" />
+                  <div className="bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300 p-8 h-full flex flex-col group hover:shadow-lg">
+                    {/* Quote icon */}
+                    <div className="mb-6">
+                      <Quote className="w-8 h-8 text-purple-500 opacity-60" />
                     </div>
                     
-                    {/* Header */}
-                    <div className="flex items-center gap-4 mb-6 relative z-10">
-                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                    {/* Testimonial text */}
+                    <blockquote className="text-gray-700 text-lg leading-relaxed mb-8 flex-grow">
+                      "{testimonial.text}"
+                    </blockquote>
+                    
+                    {/* Star rating */}
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="flex gap-1">
+                        {[...Array(testimonial.stars)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Author info */}
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
                         {testimonial.name.charAt(0)}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-bold text-gray-900 text-lg">{testimonial.name}</h4>
+                          <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
                           <FaCheckCircle className="text-green-500 text-sm" />
                         </div>
                         {testimonial.location && (
@@ -153,31 +163,14 @@ export default function TestimonialSlider() {
                         )}
                       </div>
                     </div>
-                    
-                    {/* Star rating */}
-                    <div className="flex justify-center mb-6">
-                      <div className="flex gap-1 bg-yellow-50 rounded-full px-4 py-2">
-                        {[...Array(testimonial.stars)].map((_, i) => (
-                          <FaStar key={i} className="text-yellow-400 text-lg" />
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {/* Testimonial text */}
-                    <blockquote className="text-gray-700 text-center flex-grow text-lg leading-relaxed italic">
-                      "{testimonial.text}"
-                    </blockquote>
-                    
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-50/20 via-transparent to-pink-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   </div>
                 )}
 
-                {/* Video testimonials - modern layout */}
+                {/* Video testimonials - modern professional layout */}
                 {type !== 'text-only' && (
-                  <div className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden group">
+                  <div className="bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300 overflow-hidden group hover:shadow-lg">
                     {/* Video section */}
-                    <div className={`${type === 'both-videos' ? 'h-64' : 'h-80'} p-4`}>
+                    <div className={`${type === 'both-videos' ? 'h-48' : 'h-56'} p-4`}>
                       {type === 'both-videos' && (
                         <div className="h-full">
                           <VideoWithOverlay
@@ -206,34 +199,35 @@ export default function TestimonialSlider() {
                     </div>
 
                     {/* Content section */}
-                    <div className="p-6 bg-gradient-to-br from-purple-50/50 to-pink-50/50 relative">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white font-bold">
-                            {testimonial.name.charAt(0)}
+                    <div className="p-6 border-t border-gray-50">
+                      {/* Author info */}
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                          {testimonial.name.charAt(0)}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-semibold text-gray-900 text-sm">{testimonial.name}</h4>
+                            <FaCheckCircle className="text-green-500 text-xs" />
                           </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
-                              <FaCheckCircle className="text-green-500 text-sm" />
-                            </div>
-                            {testimonial.location && (
-                              <p className="text-sm text-gray-500">{testimonial.location}</p>
-                            )}
-                          </div>
+                          {testimonial.location && (
+                            <p className="text-xs text-gray-500">{testimonial.location}</p>
+                          )}
                         </div>
                       </div>
                       
-                      <div className="flex justify-center mb-4">
-                        <div className="flex gap-1 bg-white rounded-full px-3 py-1 shadow-sm">
+                      {/* Star rating */}
+                      <div className="flex items-center justify-center mb-4">
+                        <div className="flex gap-1">
                           {[...Array(testimonial.stars)].map((_, i) => (
-                            <FaStar key={i} className="text-yellow-400 text-sm" />
+                            <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                           ))}
                         </div>
                       </div>
                       
+                      {/* Testimonial text */}
                       {testimonial.text && (
-                        <p className="text-sm text-gray-700 text-center italic">
+                        <p className="text-sm text-gray-600 text-center leading-relaxed">
                           "{testimonial.text}"
                         </p>
                       )}
@@ -241,7 +235,7 @@ export default function TestimonialSlider() {
 
                     {/* Second video for both-videos type */}
                     {type === 'both-videos' && (
-                      <div className="h-64 p-4 pt-0">
+                      <div className="h-48 p-4 pt-0">
                         <VideoWithOverlay
                           src={testimonial.youtube_link}
                           type="youtube"
@@ -256,35 +250,48 @@ export default function TestimonialSlider() {
           })}
         </div>
 
-        {/* Statistics section at the bottom */}
+        {/* Professional statistics section */}
         <motion.div
-          className="mt-16 text-center"
+          className="mt-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Join Our Growing Community</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-3xl p-8 md:p-12">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+                Trusted by Thousands Worldwide
+              </h3>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Join our growing community of satisfied customers who have created unforgettable musical memories
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600">{testimonials.length}+</div>
-                <div className="text-sm text-gray-600">Happy Customers</div>
+                <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">
+                  {testimonials.length}+
+                </div>
+                <div className="text-sm text-gray-600 font-medium">Happy Customers</div>
               </div>
+              
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600">
+                <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">
                   {(testimonials.reduce((acc, t) => acc + t.stars, 0) / testimonials.length).toFixed(1)}
                 </div>
-                <div className="text-sm text-gray-600">Average Rating</div>
+                <div className="text-sm text-gray-600 font-medium">Average Rating</div>
               </div>
+              
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600">
+                <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">
                   {testimonials.filter(t => t.video_url || t.youtube_link).length}
                 </div>
-                <div className="text-sm text-gray-600">Video Reviews</div>
+                <div className="text-sm text-gray-600 font-medium">Video Reviews</div>
               </div>
+              
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600">99%</div>
-                <div className="text-sm text-gray-600">Satisfaction Rate</div>
+                <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">99%</div>
+                <div className="text-sm text-gray-600 font-medium">Satisfaction Rate</div>
               </div>
             </div>
           </div>
