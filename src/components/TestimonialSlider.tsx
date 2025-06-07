@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Play, ExternalLink } from "lucide-react";
 
 export default function TestimonialSlider() {
   const isMobile = useIsMobile();
@@ -71,7 +72,7 @@ export default function TestimonialSlider() {
   const getTestimonialType = (testimonial: any) => {
     if (testimonial.video_url && testimonial.youtube_link) return 'both-videos'; // Type 4: Both videos
     if (testimonial.video_url) return 'uploaded-video'; // Type 3: Uploaded video
-    if (testimonial.youtube_link) return 'youtube'; // Type 1: YouTube video
+    if (testimonial.youtube_link) return 'youtube'; // Type 1: YouTube audio
     return 'text-only'; // Type 2: Text only
   };
 
@@ -93,18 +94,34 @@ export default function TestimonialSlider() {
     );
   };
 
-  // Render YouTube video
-  const renderYouTubeVideo = (testimonial: any, heightClass = 'h-1/3') => {
+  // Render YouTube audio player
+  const renderYouTubeAudio = (testimonial: any) => {
+    const handlePlayClick = () => {
+      window.open(testimonial.youtube_link, '_blank');
+    };
+
     return (
-      <div className={`relative ${heightClass} group flex-shrink-0`}>
-        <iframe
-          className="absolute top-0 left-0 w-full h-full"
-          src={testimonial.youtube_link}
-          allowFullScreen
-          loading="lazy"
-          title={`Video testimonial from ${testimonial.name}`}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-3 rounded-lg border border-purple-200">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handlePlayClick}
+              className="bg-purple-600 hover:bg-purple-700 text-white rounded-full p-2 transition-colors"
+            >
+              <Play className="w-4 h-4 fill-current" />
+            </button>
+            <div>
+              <p className="text-sm font-medium text-purple-800">Audio Testimonial</p>
+              <p className="text-xs text-purple-600">Click to listen</p>
+            </div>
+          </div>
+          <button
+            onClick={handlePlayClick}
+            className="text-purple-600 hover:text-purple-800 transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     );
   };
@@ -113,18 +130,25 @@ export default function TestimonialSlider() {
   const renderTextContent = (testimonial: any) => {
     const type = getTestimonialType(testimonial);
     let heightClass = 'h-full';
+    let paddingClass = 'p-4 md:p-6';
     
-    if (type === 'both-videos') heightClass = 'h-1/3';
-    else if (type === 'youtube') heightClass = 'h-2/3';
-    else if (type === 'uploaded-video') heightClass = 'h-1/3';
+    if (type === 'both-videos') {
+      heightClass = 'h-1/3';
+      paddingClass = 'p-3 md:p-4';
+    } else if (type === 'youtube') {
+      heightClass = 'h-4/5';
+    } else if (type === 'uploaded-video') {
+      heightClass = 'h-1/3';
+      paddingClass = 'p-3 md:p-4';
+    }
     
     const isFullHeight = type === 'text-only';
     
     return (
-      <div className={`p-4 md:p-6 text-center bg-gradient-to-br from-purple-50 to-pink-50 ${heightClass} flex flex-col justify-between`}>
+      <div className={`${paddingClass} text-center bg-gradient-to-br from-purple-50 to-pink-50 ${heightClass} flex flex-col justify-between`}>
         <div>
           <div className="flex items-center justify-center gap-2 mb-3 text-purple-600 font-semibold">
-            <h4 className="text-lg">{testimonial.name}</h4>
+            <h4 className={`${isFullHeight ? 'text-lg' : 'text-base'}`}>{testimonial.name}</h4>
             <FaCheckCircle className="text-purple-500 text-sm" />
           </div>
           <div className="flex justify-center text-yellow-400 mb-3">
@@ -190,11 +214,12 @@ export default function TestimonialSlider() {
                       {/* Text content - positioned based on type */}
                       {renderTextContent(testimonial)}
                       
-                      {/* Type 1: YouTube only - video at bottom */}
-                      {type === 'youtube' && renderYouTubeVideo(testimonial, 'h-1/3')}
-                      
-                      {/* Type 4: Both videos - YouTube video at bottom */}
-                      {type === 'both-videos' && renderYouTubeVideo(testimonial, 'h-1/3')}
+                      {/* YouTube audio player - positioned at bottom for both types that include YouTube */}
+                      {(type === 'youtube' || type === 'both-videos') && (
+                        <div className="p-3">
+                          {renderYouTubeAudio(testimonial)}
+                        </div>
+                      )}
                     </motion.div>
                   </CarouselItem>
                 );
