@@ -1,3 +1,4 @@
+
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -6,6 +7,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Play, ExternalLink } from "lucide-react";
 
 export default function TestimonialSlider() {
   const isMobile = useIsMobile();
@@ -15,22 +17,18 @@ export default function TestimonialSlider() {
 
   if (isLoading) {
     return (
-      <div className="py-0">
-        <div className="container px-[17px] mx-0 py-0 my-0">
-          <div className="max-w-5xl mx-auto relative z-10 px-[66px] py-[27px] my-[26px]">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white shadow-lg rounded-2xl overflow-hidden">
-                  <Skeleton className="w-full h-48" />
-                  <div className="p-4 md:p-6">
-                    <Skeleton className="h-6 w-3/4 mb-3" />
-                    <Skeleton className="h-4 w-full mb-2" />
-                    <Skeleton className="h-4 w-2/3" />
-                  </div>
-                </div>
-              ))}
+      <div className="w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <Skeleton className="w-full h-48" />
+              <div className="p-4 md:p-6 space-y-3">
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     );
@@ -39,13 +37,9 @@ export default function TestimonialSlider() {
   if (error) {
     console.error('Error loading testimonials:', error);
     return (
-      <div className="py-0">
-        <div className="container px-[17px] mx-0 py-0 my-0">
-          <div className="max-w-5xl mx-auto relative z-10 px-[66px] py-[27px] my-[26px]">
-            <div className="text-center text-white">
-              <p>{t('error') || 'Error loading testimonials'}</p>
-            </div>
-          </div>
+      <div className="w-full text-center py-12">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+          <p className="text-red-600">{t('error') || 'Error loading testimonials'}</p>
         </div>
       </div>
     );
@@ -53,162 +47,173 @@ export default function TestimonialSlider() {
 
   if (!testimonials || testimonials.length === 0) {
     return (
-      <div className="py-0">
-        <div className="container px-[17px] mx-0 py-0 my-0">
-          <div className="max-w-5xl mx-auto relative z-10 px-[66px] py-[27px] my-[26px]">
-            <div className="text-center text-white">
-              <p>{t('noTestimonialsYet') || 'No testimonials available yet'}</p>
-            </div>
-          </div>
+      <div className="w-full text-center py-12">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
+          <p className="text-gray-600">{t('noTestimonialsYet') || 'No testimonials available yet'}</p>
         </div>
       </div>
     );
   }
 
-  const progress = (currentSlide + 1) / testimonials.length * 100;
-
   // Determine testimonial type
   const getTestimonialType = (testimonial: any) => {
-    if (testimonial.video_url && testimonial.youtube_link) return 'both-videos'; // Type 4: Both videos
-    if (testimonial.video_url) return 'uploaded-video'; // Type 3: Uploaded video
-    if (testimonial.youtube_link) return 'youtube'; // Type 1: YouTube video
-    return 'text-only'; // Type 2: Text only
+    if (testimonial.video_url && testimonial.youtube_link) return 'both-videos';
+    if (testimonial.video_url) return 'uploaded-video';
+    if (testimonial.youtube_link) return 'youtube';
+    return 'text-only';
   };
 
-  // Render uploaded video
-  const renderUploadedVideo = (testimonial: any, heightClass = 'h-1/3') => {
-    return (
-      <div className={`relative ${heightClass} group flex-shrink-0`}>
-        <video
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          controls
-          preload="metadata"
-          poster={testimonial.video_url + '#t=0.5'}
-        >
-          <source src={testimonial.video_url} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-      </div>
-    );
-  };
-
-  // Render YouTube video
-  const renderYouTubeVideo = (testimonial: any, heightClass = 'h-1/3') => {
-    return (
-      <div className={`relative ${heightClass} group flex-shrink-0`}>
-        <iframe
-          className="absolute top-0 left-0 w-full h-full"
-          src={testimonial.youtube_link}
-          allowFullScreen
-          loading="lazy"
-          title={`Video testimonial from ${testimonial.name}`}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-      </div>
-    );
-  };
-
-  // Render text content with appropriate sizing
-  const renderTextContent = (testimonial: any) => {
+  // Render video section with modern styling
+  const renderVideoSection = (testimonial: any) => {
     const type = getTestimonialType(testimonial);
-    let heightClass = 'h-full';
     
-    if (type === 'both-videos') heightClass = 'h-1/3';
-    else if (type === 'youtube') heightClass = 'h-2/3';
-    else if (type === 'uploaded-video') heightClass = 'h-1/3';
-    
-    const isFullHeight = type === 'text-only';
-    
+    if (type === 'text-only') return null;
+
     return (
-      <div className={`p-4 md:p-6 text-center bg-gradient-to-br from-purple-50 to-pink-50 ${heightClass} flex flex-col justify-between`}>
-        <div>
-          <div className="flex items-center justify-center gap-2 mb-3 text-purple-600 font-semibold">
-            <h4 className="text-lg">{testimonial.name}</h4>
-            <FaCheckCircle className="text-purple-500 text-sm" />
+      <div className="relative">
+        {/* Uploaded Video */}
+        {(type === 'uploaded-video' || type === 'both-videos') && (
+          <div className="relative group">
+            <video
+              className="w-full h-48 object-cover rounded-t-xl"
+              controls
+              preload="metadata"
+              poster={testimonial.video_url + '#t=0.5'}
+            >
+              <source src={testimonial.video_url} type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-t-xl flex items-center justify-center">
+              <Play className="w-12 h-12 text-white" />
+            </div>
           </div>
-          <div className="flex justify-center text-yellow-400 mb-3">
-            {[...Array(testimonial.stars)].map((_, i) => (
-              <FaStar key={i} className="text-sm" />
-            ))}
+        )}
+
+        {/* YouTube Video */}
+        {(type === 'youtube' || type === 'both-videos') && (
+          <div className="relative group">
+            <iframe
+              className="w-full h-48 rounded-t-xl"
+              src={testimonial.youtube_link}
+              allowFullScreen
+              loading="lazy"
+              title={`Video testimonial from ${testimonial.name}`}
+            />
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <ExternalLink className="w-4 h-4 text-white" />
+            </div>
           </div>
-          {testimonial.text && (
-            <p className={`text-sm italic text-gray-700 mb-2 leading-relaxed border-l-4 border-purple-300 pl-4 ${isFullHeight ? 'text-base' : ''}`}>
-              "{testimonial.text}"
-            </p>
+        )}
+
+        {/* Both videos indicator */}
+        {type === 'both-videos' && (
+          <div className="absolute top-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+            Multiple videos
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Render testimonial content
+  const renderContent = (testimonial: any) => {
+    const type = getTestimonialType(testimonial);
+    const hasVideo = type !== 'text-only';
+
+    return (
+      <div className={`p-4 md:p-6 ${hasVideo ? '' : 'rounded-t-xl'} bg-white flex flex-col justify-between h-full`}>
+        {/* Header with name and rating */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <h4 className="font-semibold text-gray-900 text-sm md:text-base">{testimonial.name}</h4>
+              <FaCheckCircle className="text-green-500 text-xs flex-shrink-0" />
+            </div>
+            <div className="flex items-center gap-1">
+              {[...Array(testimonial.stars)].map((_, i) => (
+                <FaStar key={i} className="text-yellow-400 text-xs" />
+              ))}
+            </div>
+          </div>
+          
+          {testimonial.location && (
+            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full inline-block">
+              {testimonial.location}
+            </span>
           )}
         </div>
-        {testimonial.location && (
-          <span className="block text-xs text-gray-500 font-medium bg-white rounded-full px-3 py-1 inline-block mt-auto">
-            {testimonial.location}
-          </span>
+
+        {/* Testimonial text */}
+        {testimonial.text && (
+          <div className="flex-1">
+            <p className="text-gray-700 text-sm md:text-base leading-relaxed italic">
+              "{testimonial.text}"
+            </p>
+          </div>
         )}
       </div>
     );
   };
 
   return (
-    <div className="py-0">
-      <div className="container px-[17px] mx-0 py-0 my-0">
-        <div className="mb-8 max-w-5xl mx-auto">
-          
-        </div>
+    <div className="w-full">
+      <Carousel
+        opts={{
+          align: "start",
+          loop: true,
+          slidesToScroll: isMobile ? 1 : 2
+        }}
+        className="w-full"
+        setApi={(api) => {
+          if (api) {
+            api.on('select', () => {
+              setCurrentSlide(api.selectedScrollSnap());
+            });
+          }
+        }}
+      >
+        <CarouselContent className="-ml-2 md:-ml-4">
+          {testimonials.map((testimonial, index) => (
+            <CarouselItem 
+              key={testimonial.id} 
+              className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+            >
+              <motion.div 
+                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] overflow-hidden h-full flex flex-col"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -5 }}
+              >
+                {renderVideoSection(testimonial)}
+                {renderContent(testimonial)}
+              </motion.div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        
+        {!isMobile && testimonials.length > 3 && (
+          <>
+            <CarouselPrevious className="hidden md:flex -left-4 lg:-left-6 bg-white shadow-lg border-gray-200 hover:bg-gray-50 text-gray-600 hover:text-gray-800" />
+            <CarouselNext className="hidden md:flex -right-4 lg:-right-6 bg-white shadow-lg border-gray-200 hover:bg-gray-50 text-gray-600 hover:text-gray-800" />
+          </>
+        )}
+      </Carousel>
 
-        <div className="max-w-5xl mx-auto relative z-10 px-[66px] py-[27px] my-[26px]">
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true
-            }}
-            className="w-full"
-            setApi={(api) => {
-              if (api) {
-                api.on('select', () => {
-                  setCurrentSlide(api.selectedScrollSnap());
-                });
-              }
-            }}
-          >
-            <CarouselContent className="-ml-2 md:-ml-4">
-              {testimonials.map((testimonial, index) => {
-                const type = getTestimonialType(testimonial);
-                
-                return (
-                  <CarouselItem key={testimonial.id} className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
-                    <motion.div 
-                      className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 h-[500px] flex flex-col"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: index * 0.1 }}
-                    >
-                      {/* Type 4: Both videos - uploaded video at top */}
-                      {type === 'both-videos' && renderUploadedVideo(testimonial, 'h-1/3')}
-                      
-                      {/* Type 3: Uploaded video only - video at top */}
-                      {type === 'uploaded-video' && renderUploadedVideo(testimonial, 'h-2/3')}
-                      
-                      {/* Text content - positioned based on type */}
-                      {renderTextContent(testimonial)}
-                      
-                      {/* Type 1: YouTube only - video at bottom */}
-                      {type === 'youtube' && renderYouTubeVideo(testimonial, 'h-1/3')}
-                      
-                      {/* Type 4: Both videos - YouTube video at bottom */}
-                      {type === 'both-videos' && renderYouTubeVideo(testimonial, 'h-1/3')}
-                    </motion.div>
-                  </CarouselItem>
-                );
-              })}
-            </CarouselContent>
-            {!isMobile && (
-              <>
-                <CarouselPrevious className="hidden md:flex -left-12 bg-white/80 backdrop-blur-sm hover:bg-white border-purple-200 text-purple-600 hover:text-purple-700" />
-                <CarouselNext className="hidden md:flex -right-12 bg-white/80 backdrop-blur-sm hover:bg-white border-purple-200 text-purple-600 hover:text-purple-700" />
-              </>
-            )}
-          </Carousel>
+      {/* Progress indicators for mobile */}
+      {isMobile && testimonials.length > 1 && (
+        <div className="flex justify-center mt-6 gap-2">
+          {testimonials.map((_, index) => (
+            <div
+              key={index}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                Math.floor(currentSlide) === index
+                  ? 'bg-purple-600 w-6'
+                  : 'bg-gray-300'
+              }`}
+            />
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }
