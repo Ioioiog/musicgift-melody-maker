@@ -29,12 +29,12 @@ const AnimatedStepFlow = () => {
     bgColor: stepContent.styling.bgColor
   }));
 
-  // Auto-progression effect
+  // Auto-progression effect - changed from 4000ms to 5000ms (5 seconds)
   useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
       setActiveStep(prev => (prev + 1) % steps.length);
-    }, 4000);
+    }, 5000);
     return () => clearInterval(interval);
   }, [isPaused, steps.length]);
 
