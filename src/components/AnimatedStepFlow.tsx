@@ -51,15 +51,74 @@ const AnimatedStepFlow = () => {
     setActiveStep(prev => (prev + 1) % steps.length);
   };
 
+  // Get 3D style classes for each step
+  const get3DIconClasses = (stepIndex: number, isActive: boolean) => {
+    const baseClasses = "transition-all duration-300 transform";
+    const activeClasses = isActive ? "scale-110" : "hover:scale-105";
+    
+    switch (stepIndex) {
+      case 0: // Order button
+        return `${baseClasses} ${activeClasses} shadow-lg hover:shadow-xl bg-gradient-to-br from-blue-400 to-blue-600 
+                border-2 border-blue-300 hover:from-blue-500 hover:to-blue-700 active:scale-95 
+                hover:translate-y-[-2px] active:translate-y-[1px] hover:shadow-blue-500/25`;
+      case 1: // Message/Form
+        return `${baseClasses} ${activeClasses} shadow-lg hover:shadow-xl bg-gradient-to-br from-green-400 to-green-600 
+                border-2 border-green-300 hover:from-green-500 hover:to-green-700 
+                hover:translate-y-[-3px] hover:rotate-[-2deg] hover:shadow-green-500/25 
+                relative before:content-[''] before:absolute before:inset-0 before:bg-white/10 before:rounded-lg`;
+      case 2: // Recording/Microphone
+        return `${baseClasses} ${activeClasses} shadow-lg hover:shadow-xl bg-gradient-to-br from-purple-400 to-purple-600 
+                border-2 border-purple-300 hover:from-purple-500 hover:to-purple-700 
+                hover:translate-y-[-2px] hover:shadow-purple-500/25 
+                relative after:content-[''] after:absolute after:inset-[-2px] after:rounded-lg 
+                after:bg-gradient-to-r after:from-purple-600/20 after:to-transparent after:z-[-1]`;
+      case 3: // Gift
+        return `${baseClasses} ${activeClasses} shadow-lg hover:shadow-xl bg-gradient-to-br from-orange-400 to-orange-600 
+                border-2 border-orange-300 hover:from-orange-500 hover:to-orange-700 
+                hover:translate-y-[-3px] hover:rotate-[3deg] hover:shadow-orange-500/25 
+                relative before:content-[''] before:absolute before:top-[-2px] before:left-1/2 
+                before:transform before:translate-x-[-50%] before:w-8 before:h-1 before:bg-orange-200 
+                before:rounded-full before:shadow-sm`;
+      default:
+        return baseClasses;
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 h-full">
+      <style jsx>{`
+        .icon-3d-step-0 {
+          box-shadow: 
+            0 4px 8px rgba(59, 130, 246, 0.15),
+            0 2px 4px rgba(59, 130, 246, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .icon-3d-step-1 {
+          box-shadow: 
+            0 4px 8px rgba(34, 197, 94, 0.15),
+            0 2px 4px rgba(34, 197, 94, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .icon-3d-step-2 {
+          box-shadow: 
+            0 4px 8px rgba(147, 51, 234, 0.15),
+            0 2px 4px rgba(147, 51, 234, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .icon-3d-step-3 {
+          box-shadow: 
+            0 4px 8px rgba(249, 115, 22, 0.15),
+            0 2px 4px rgba(249, 115, 22, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+      `}</style>
+      
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full items-start">
         
         {/* Left Column - Simple Step Indicators */}
         <div className="lg:col-span-3">
           <div className="space-y-4">
             {steps.map((step, index) => {
-              const StepIcon = step.icon;
               const isActive = index === activeStep;
               
               return (
@@ -107,12 +166,12 @@ const AnimatedStepFlow = () => {
               transition={{ duration: 0.3 }}
               className="bg-white rounded-lg shadow-sm border border-gray-200 p-8"
             >
-              {/* Header */}
+              {/* Header with 3D Icon */}
               <div className="mb-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <div className={`w-16 h-16 rounded-lg flex items-center justify-center ${get3DIconClasses(activeStep, true)}`}>
                     {React.createElement(steps[activeStep].icon, {
-                      className: "w-6 h-6 text-purple-600"
+                      className: "w-8 h-8 text-white drop-shadow-sm"
                     })}
                   </div>
                   <div>
