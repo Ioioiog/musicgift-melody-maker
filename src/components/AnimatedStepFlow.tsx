@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, MessageSquare, Music, Gift, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -31,11 +30,11 @@ const AnimatedStepFlow = () => {
     details: stepContent.getDetails(t)
   }));
 
-  // Auto-progression effect - 8 seconds per step
+  // Auto-progression effect - 30 seconds per step
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveStep(prev => (prev + 1) % steps.length);
-    }, 8000);
+    }, 30000);
     return () => clearInterval(interval);
   }, [steps.length]);
 
