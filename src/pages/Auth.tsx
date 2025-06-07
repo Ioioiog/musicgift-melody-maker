@@ -139,67 +139,76 @@ const Auth = () => {
         {t('backHome')}
       </Link>
 
-      {/* Main content container with enhanced responsive design */}
-      <div className="w-full max-w-7xl mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 md:gap-16 lg:gap-20 xl:gap-24 2xl:gap-32 items-center justify-items-center min-h-[75vh] md:min-h-[80vh] lg:min-h-[85vh] xl:min-h-[90vh] py-8 md:py-12 lg:py-16">
+      {/* Main content container with enhanced responsive design and animations */}
+      <div className="w-full max-w-8xl mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 md:gap-12 lg:gap-16 xl:gap-20 2xl:gap-24 items-center justify-items-center min-h-[80vh] md:min-h-[85vh] lg:min-h-[90vh] xl:min-h-[95vh] py-6 md:py-8 lg:py-12 xl:py-16 2xl:py-20 relative">
           
-          {/* Left side - Enhanced brand presentation */}
-          <div className="text-center xl:text-left space-y-8 lg:space-y-10 xl:space-y-12 order-2 xl:order-1 w-full max-w-2xl xl:max-w-none">
+          {/* Enhanced geometric background elements */}
+          <div className="absolute inset-0 pointer-events-none opacity-20">
+            <div className="absolute top-1/4 left-1/4 w-32 h-32 border border-white/20 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
+            <div className="absolute bottom-1/3 right-1/3 w-24 h-24 border border-purple-300/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute top-1/2 right-1/4 w-16 h-16 border border-pink-300/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+          </div>
+          
+          {/* Left side - Enhanced brand presentation with improved grid positioning */}
+          <div className="xl:col-span-7 2xl:col-span-8 text-center xl:text-left space-y-8 lg:space-y-10 xl:space-y-12 2xl:space-y-16 order-2 xl:order-1 w-full max-w-3xl xl:max-w-none animate-fade-in">
             {/* MusicGift Logo with enhanced glow effect */}
-            <div className="flex justify-center xl:justify-start mb-12 lg:mb-16">
+            <div className="flex justify-center xl:justify-start mb-8 lg:mb-12 xl:mb-16">
               <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full blur-2xl opacity-40 group-hover:opacity-60 transition-all duration-500 scale-110"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-300 scale-125 animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full blur-3xl opacity-40 group-hover:opacity-70 transition-all duration-700 scale-110 animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 rounded-full blur-2xl opacity-30 group-hover:opacity-60 transition-all duration-500 scale-125"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-purple-300/10 rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-all duration-300 scale-150"></div>
                 <img 
                   src="/lovable-uploads/cb090c51-8b0c-4906-8ec4-8f0ca3583f84.png" 
                   alt="MusicGift Logo" 
-                  className="relative w-64 h-auto lg:w-72 xl:w-80 2xl:w-96 drop-shadow-2xl group-hover:scale-105 transition-all duration-500"
+                  className="relative w-56 h-auto sm:w-64 lg:w-72 xl:w-80 2xl:w-96 3xl:w-[28rem] drop-shadow-2xl group-hover:scale-105 transition-all duration-700 filter brightness-110"
                 />
               </div>
             </div>
             
-            <div className="space-y-6 lg:space-y-8">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold text-white mb-6 tracking-tight leading-tight">
-                <span className="bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent drop-shadow-lg">
+            <div className="space-y-6 lg:space-y-8 xl:space-y-10">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl 3xl:text-9xl font-bold text-white mb-4 lg:mb-6 tracking-tight leading-[0.9] transform transition-all duration-1000">
+                <span className="bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent drop-shadow-2xl inline-block animate-fade-in" style={{ animationDelay: '0.2s' }}>
                   {t('musicGift')}
                 </span>
               </h1>
-              <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-white/95 leading-relaxed max-w-2xl mx-auto xl:mx-0 font-light drop-shadow-md">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl text-white/95 leading-relaxed max-w-4xl mx-auto xl:mx-0 font-light drop-shadow-lg animate-fade-in" style={{ animationDelay: '0.4s' }}>
                 {isLogin ? t('signInSubtitle') : t('signUpSubtitle')}
               </p>
             </div>
             
-            {/* Enhanced feature highlights with better spacing */}
-            <div className="hidden lg:block space-y-8 mt-16 xl:mt-20">
-              <div className="flex items-center text-white/85 group hover:text-white transition-all duration-300 cursor-default">
-                <div className="w-4 h-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mr-6 group-hover:scale-125 transition-all duration-300 shadow-lg"></div>
-                <span className="text-xl font-medium">Create personalized musical experiences</span>
+            {/* Enhanced feature highlights with staggered animations */}
+            <div className="hidden lg:block space-y-6 xl:space-y-8 mt-12 xl:mt-16 2xl:mt-20">
+              <div className="flex items-center text-white/85 group hover:text-white transition-all duration-500 cursor-default transform hover:translate-x-2 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+                <div className="w-3 h-3 lg:w-4 lg:h-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mr-4 lg:mr-6 group-hover:scale-150 transition-all duration-500 shadow-lg group-hover:shadow-purple-400/50"></div>
+                <span className="text-lg xl:text-xl 2xl:text-2xl font-medium">Create personalized musical experiences</span>
               </div>
-              <div className="flex items-center text-white/85 group hover:text-white transition-all duration-300 cursor-default">
-                <div className="w-4 h-4 bg-gradient-to-r from-pink-400 to-indigo-400 rounded-full mr-6 group-hover:scale-125 transition-all duration-300 shadow-lg"></div>
-                <span className="text-xl font-medium">Share the gift of music with loved ones</span>
+              <div className="flex items-center text-white/85 group hover:text-white transition-all duration-500 cursor-default transform hover:translate-x-2 animate-fade-in" style={{ animationDelay: '0.8s' }}>
+                <div className="w-3 h-3 lg:w-4 lg:h-4 bg-gradient-to-r from-pink-400 to-indigo-400 rounded-full mr-4 lg:mr-6 group-hover:scale-150 transition-all duration-500 shadow-lg group-hover:shadow-pink-400/50"></div>
+                <span className="text-lg xl:text-xl 2xl:text-2xl font-medium">Share the gift of music with loved ones</span>
               </div>
-              <div className="flex items-center text-white/85 group hover:text-white transition-all duration-300 cursor-default">
-                <div className="w-4 h-4 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full mr-6 group-hover:scale-125 transition-all duration-300 shadow-lg"></div>
-                <span className="text-xl font-medium">Professional quality compositions</span>
+              <div className="flex items-center text-white/85 group hover:text-white transition-all duration-500 cursor-default transform hover:translate-x-2 animate-fade-in" style={{ animationDelay: '1s' }}>
+                <div className="w-3 h-3 lg:w-4 lg:h-4 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full mr-4 lg:mr-6 group-hover:scale-150 transition-all duration-500 shadow-lg group-hover:shadow-indigo-400/50"></div>
+                <span className="text-lg xl:text-xl 2xl:text-2xl font-medium">Professional quality compositions</span>
               </div>
             </div>
           </div>
 
-          {/* Right side - Enhanced auth form with better positioning */}
-          <div className="w-full max-w-md sm:max-w-lg mx-auto xl:mx-0 order-1 xl:order-2 xl:justify-self-center 2xl:justify-self-start">
-            <Card className="shadow-2xl border-0 bg-white/96 backdrop-blur-xl overflow-hidden relative transform hover:scale-[1.02] transition-all duration-300">
+          {/* Right side - Enhanced auth form with improved grid positioning */}
+          <div className="xl:col-span-5 2xl:col-span-4 w-full max-w-md sm:max-w-lg lg:max-w-xl xl:max-w-none mx-auto xl:mx-0 order-1 xl:order-2 xl:justify-self-center 2xl:justify-self-end animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <Card className="shadow-2xl border-0 bg-white/97 backdrop-blur-2xl overflow-hidden relative transform hover:scale-[1.01] transition-all duration-500 hover:shadow-purple-500/20">
               {/* Enhanced decorative elements */}
-              <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500"></div>
-              <div className="absolute top-3 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+              <div className="absolute top-0 left-0 w-full h-4 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 shadow-lg"></div>
+              <div className="absolute top-4 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/80 to-transparent"></div>
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-white/60 via-transparent to-white/60"></div>
               
-              <CardHeader className="space-y-6 pb-8 pt-12">
-                <CardTitle className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center">
-                  <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent">
+              <CardHeader className="space-y-6 pb-8 pt-16 px-8 lg:px-12">
+                <CardTitle className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-4xl 2xl:text-5xl font-bold text-center">
+                  <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent drop-shadow-sm">
                     {isLogin ? t('signInBtn') : t('signUpBtn')}
                   </span>
                 </CardTitle>
-                <CardDescription className="text-center text-gray-600 text-lg lg:text-xl leading-relaxed px-2">
+                <CardDescription className="text-center text-gray-600 text-base lg:text-lg xl:text-xl leading-relaxed px-2 font-medium">
                   {isLogin 
                     ? t('connectToContinue')
                     : t('createAccount')
