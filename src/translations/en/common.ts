@@ -15,46 +15,50 @@ export const commonTranslations = {
   
   // Steps
   step: "Step",
-  step1Title: "Pick the Perfect Package",
-  step1Description: "Every great song starts with the right vibe. Browse through our curated packages and choose the one that best suits your occasion, vision, and budget — whether it's a birthday surprise, a romantic gesture, a company anthem, or just a musical \"I'm thinking of you.\"",
-  step2Title: "Tell Us Your Story",
-  step2Description: "This is where the magic begins. Our songs are built around your story, so the more heartfelt details you give us, the more emotional and unique your song becomes.",
-  step3Title: "Sit Back While We Compose the Magic",
-  step3Description: "Now it's our turn to shine! While you relax, our team of professional songwriters, vocalists, musicians, and sound engineers goes to work — transforming your story into an unforgettable musical gift.",
-  step4Title: "Receive Your One-of-a-Kind Musical Gift",
-  step4Description: "Within 3–7 working days, your personalized masterpiece arrives in your inbox. Ready to be gifted, shared, played on repeat, or even used to make someone cry (happy tears only, we promise!).",
   
-  // Step 1 Details
-  step1DetailsTitle: "All our packages include:",
-  step1Detail1: "Professional music production with real instruments (no boring loops!)",
-  step1Detail2: "Custom-written lyrics, inspired by your story and emotions",
-  step1Detail3: "Multiple revision rounds — we won't stop until you're in love with it",
-  step1Detail4: "Final files delivered in high-quality MP3 and WAV formats, ready to share or frame forever",
-  step1DetailsFooter: "Not sure which package is right for you? Don't worry — we'll help you choose like a personal gift concierge.",
+  // Step 1
+  step1Title: "Choose Your Package",
+  step1Description: "Every special song begins with the right foundation. Explore our selection of carefully designed packages and choose the one that best matches your occasion, sentiment, and budget — whether it's a heartfelt birthday tribute, a romantic surprise, a wedding anthem, or a unique gift just because.",
+  step1DetailsIntro: "Every special song begins with the right foundation. Explore our selection of carefully designed packages and choose the one that best matches your occasion, sentiment, and budget — whether it's a heartfelt birthday tribute, a romantic surprise, a wedding anthem, or a unique gift just because.",
+  step1DetailsTitle: "Every package includes:",
+  step1Detail1: "Professionally produced music with rich instrumentation",
+  step1Detail2: "Custom lyrics inspired by your story",
+  step1Detail3: "High-quality audio files delivered in MP3 and WAV formats",
+  step1Detail4: "A beautifully designed visual cover to accompany your song",
+  step1DetailsFooter: "Not sure which one to pick? We'll guide you.",
   
-  // Step 2 Details
-  step2DetailsTitle: "In your story, you can include:",
-  step2Detail1: "Special moments, funny memories, important milestones",
-  step2Detail2: "Names, dates, quotes, inside jokes — we love the juicy stuff!",
-  step2Detail3: "Your favorite musical genres or emotional tone (romantic, nostalgic, uplifting, epic, etc.)",
-  step2Detail4: "Even audio messages or photos that help us feel the emotion you want to share",
-  step2DetailsFooter: "Think of it as writing a love letter, but we'll turn it into a hit song.",
+  // Step 2
+  step2Title: "Share Your Story",
+  step2Description: "This is your moment to open up. Your song will be shaped by the story you tell us — the moments that moved you, the people who matter, and the memories you want to preserve through music.",
+  step2DetailsIntro: "This is your moment to open up. Your song will be shaped by the story you tell us — the moments that moved you, the people who matter, and the memories you want to preserve through music.",
+  step2DetailsTitle: "You can include:",
+  step2Detail1: "Memorable events, personal milestones, and heartfelt memories",
+  step2Detail2: "Names, dates, and personal details that bring your story to life",
+  step2Detail3: "The mood and musical style you prefer (calm, joyful, dramatic, etc.)",
+  step2Detail4: "Optional voice recordings or photos to spark creative inspiration",
+  step2DetailsFooter: "The more you share, the more meaningful the final song will be.",
   
-  // Step 3 Details
-  step3DetailsTitle: "Here's what happens behind the scenes:",
-  step3Detail1: "Our lyricists turn your memories into meaningful verses and a catchy chorus",
-  step3Detail2: "Real musicians record instruments in studio!",
-  step3Detail3: "Professional vocalists (with real soul) sing your lyrics with passion",
-  step3Detail4: "Sound engineers mix, master, polish, and sparkle every note",
-  step3DetailsFooter: "We pour our heart into every second of the song — because it's not just music, it's your message in melody.",
+  // Step 3
+  step3Title: "We Create the Music",
+  step3Description: "Once we receive your story, our team gets to work crafting a song that captures its essence. From songwriting to arrangement to performance, we handle every step with care and creativity.",
+  step3DetailsIntro: "Once we receive your story, our team gets to work crafting a song that captures its essence. From songwriting to arrangement to performance, we handle every step with care and creativity.",
+  step3DetailsTitle: "Here's how it comes together:",
+  step3Detail1: "Your story is transformed into original lyrics",
+  step3Detail2: "The melody is composed and arranged to match the mood",
+  step3Detail3: "Talented vocalists record the performance",
+  step3Detail4: "Audio is professionally mixed and mastered for a polished result",
+  step3DetailsFooter: "The result is a one-of-a-kind song made just for you.",
   
-  // Step 4 Details
+  // Step 4
+  step4Title: "Receive Your Musical Gift",
+  step4Description: "In 3 to 7 business days, your personalized song will be delivered directly to your inbox. You'll receive everything you need to enjoy it, share it, or gift it to someone special.",
+  step4DetailsIntro: "In 3 to 7 business days, your personalized song will be delivered directly to your inbox. You'll receive everything you need to enjoy it, share it, or gift it to someone special.",
   step4DetailsTitle: "You'll receive:",
-  step4Detail1: "Your original song in both MP3 and WAV formats",
-  step4Detail2: "A custom-designed cover image that matches your song's mood",
-  step4Detail3: "Optional video add-ons or social media-friendly formats",
-  step4Detail4: "Lifetime access — download it, share it, relive it forever",
-  step4DetailsFooter: "It's more than a gift. It's a memory you can listen to.",
+  step4Detail1: "Your custom song in MP3 and WAV formats",
+  step4Detail2: "A visual cover designed to match the theme of your track",
+  step4Detail3: "Optionally, a video version or social-media-ready formats",
+  step4Detail4: "A secure link to download your files, available for 6 months",
+  step4DetailsFooter: "Your music is ready to be enjoyed — again and again.",
   
   // Testimonials
   testimonialsTitle: "What Our Clients Say",

@@ -15,46 +15,50 @@ export const commonTranslations = {
   
   // Steps
   step: "Étape",
-  step1Title: "Choisir le forfait parfait",
-  step1Description: "Chaque grande chanson commence par la bonne ambiance. Parcourez nos forfaits soigneusement sélectionnés et choisissez celui qui convient le mieux à votre occasion, votre vision et votre budget — qu'il s'agisse d'une surprise d'anniversaire, d'un geste romantique, d'un hymne d'entreprise, ou simplement d'un musical \"je pense à vous.\"",
-  step2Title: "Racontez votre histoire",
-  step2Description: "C'est là que la magie commence. Nos chansons sont construites autour de votre histoire, alors plus vous nous donnez de détails sincères, plus votre chanson sera émotionnelle et unique.",
-  step3Title: "Détendez-vous pendant que nous composons la magie",
-  step3Description: "Maintenant c'est notre tour de briller ! Pendant que vous vous détendez, notre équipe d'auteurs-compositeurs professionnels, de vocalistes, de musiciens et d'ingénieurs du son se met au travail — transformant votre histoire en un cadeau musical inoubliable.",
-  step4Title: "Recevez votre cadeau musical unique",
-  step4Description: "Dans les 3 à 7 jours ouvrables, votre chef-d'œuvre personnalisé arrive dans votre boîte de réception. Prêt à être offert, partagé, joué en boucle, ou même utilisé pour faire pleurer quelqu'un (seulement des larmes de joie, nous le promettons !).",
   
-  // Step 1 Details
-  step1DetailsTitle: "Tous nos forfaits incluent :",
-  step1Detail1: "Production musicale professionnelle avec de vrais instruments (pas de boucles ennuyeuses !)",
-  step1Detail2: "Paroles écrites sur mesure, inspirées par votre histoire et vos émotions",
-  step1Detail3: "Plusieurs rondes de révision — nous ne nous arrêterons pas tant que vous n'en serez pas amoureux",
-  step1Detail4: "Fichiers finaux livrés en formats MP3 et WAV haute qualité, prêts à partager ou à encadrer pour toujours",
-  step1DetailsFooter: "Vous ne savez pas quel forfait vous convient ? Ne vous inquiétez pas — nous vous aiderons à choisir comme un concierge personnel de cadeaux.",
+  // Step 1
+  step1Title: "Choisissez votre forfait",
+  step1Description: "Chaque chanson spéciale commence par la bonne fondation. Explorez notre sélection de forfaits soigneusement conçus et choisissez celui qui correspond le mieux à votre occasion, sentiment et budget — qu'il s'agisse d'un hommage d'anniversaire sincère, d'une surprise romantique, d'un hymne de mariage ou d'un cadeau unique juste parce que.",
+  step1DetailsIntro: "Chaque chanson spéciale commence par la bonne fondation. Explorez notre sélection de forfaits soigneusement conçus et choisissez celui qui correspond le mieux à votre occasion, sentiment et budget — qu'il s'agisse d'un hommage d'anniversaire sincère, d'une surprise romantique, d'un hymne de mariage ou d'un cadeau unique juste parce que.",
+  step1DetailsTitle: "Chaque forfait comprend :",
+  step1Detail1: "Musique produite professionnellement avec une instrumentation riche",
+  step1Detail2: "Paroles personnalisées inspirées de votre histoire",
+  step1Detail3: "Fichiers audio de haute qualité livrés aux formats MP3 et WAV",
+  step1Detail4: "Une couverture visuelle magnifiquement conçue pour accompagner votre chanson",
+  step1DetailsFooter: "Vous ne savez pas lequel choisir ? Nous vous guiderons.",
   
-  // Step 2 Details
-  step2DetailsTitle: "Dans votre histoire, vous pouvez inclure :",
-  step2Detail1: "Moments spéciaux, souvenirs amusants, étapes importantes",
-  step2Detail2: "Noms, dates, citations, blagues privées — nous adorons les détails croustillants !",
-  step2Detail3: "Vos genres musicaux préférés ou ton émotionnel (romantique, nostalgique, uplifting, épique, etc.)",
-  step2Detail4: "Même des messages audio ou des photos qui nous aident à ressentir l'émotion que vous voulez partager",
-  step2DetailsFooter: "Pensez-y comme écrire une lettre d'amour, mais nous la transformerons en tube.",
+  // Step 2
+  step2Title: "Partagez votre histoire",
+  step2Description: "C'est votre moment de vous ouvrir. Votre chanson sera façonnée par l'histoire que vous nous racontez — les moments qui vous ont touché, les personnes qui comptent et les souvenirs que vous voulez préserver à travers la musique.",
+  step2DetailsIntro: "C'est votre moment de vous ouvrir. Votre chanson sera façonnée par l'histoire que vous nous racontez — les moments qui vous ont touché, les personnes qui comptent et les souvenirs que vous voulez préserver à travers la musique.",
+  step2DetailsTitle: "Vous pouvez inclure :",
+  step2Detail1: "Événements mémorables, jalons personnels et souvenirs sincères",
+  step2Detail2: "Noms, dates et détails personnels qui donnent vie à votre histoire",
+  step2Detail3: "L'ambiance et le style musical que vous préférez (calme, joyeux, dramatique, etc.)",
+  step2Detail4: "Enregistrements vocaux ou photos optionnels pour susciter l'inspiration créative",
+  step2DetailsFooter: "Plus vous partagez, plus la chanson finale sera significative.",
   
-  // Step 3 Details
-  step3DetailsTitle: "Voici ce qui se passe dans les coulisses :",
-  step3Detail1: "Nos paroliers transforment vos souvenirs en couplets significatifs et un refrain accrocheur",
-  step3Detail2: "De vrais musiciens enregistrent les instruments en studio !",
-  step3Detail3: "Des vocalistes professionnels (avec une vraie âme) chantent vos paroles avec passion",
-  step3Detail4: "Les ingénieurs du son mixent, masterisent, peaufinent et font briller chaque note",
-  step3DetailsFooter: "Nous mettons notre cœur dans chaque seconde de la chanson — parce que ce n'est pas juste de la musique, c'est votre message en mélodie.",
+  // Step 3
+  step3Title: "Nous créons la musique",
+  step3Description: "Une fois que nous recevons votre histoire, notre équipe se met au travail pour créer une chanson qui capture son essence. De l'écriture de chansons à l'arrangement en passant par l'interprétation, nous gérons chaque étape avec soin et créativité.",
+  step3DetailsIntro: "Une fois que nous recevons votre histoire, notre équipe se met au travail pour créer une chanson qui capture son essence. De l'écriture de chansons à l'arrangement en passant par l'interprétation, nous gérons chaque étape avec soin et créativité.",
+  step3DetailsTitle: "Voici comment tout s'assemble :",
+  step3Detail1: "Votre histoire est transformée en paroles originales",
+  step3Detail2: "La mélodie est composée et arrangée pour correspondre à l'ambiance",
+  step3Detail3: "Des vocalistes talentueux enregistrent l'interprétation",
+  step3Detail4: "L'audio est mixé et masterisé professionnellement pour un résultat poli",
+  step3DetailsFooter: "Le résultat est une chanson unique en son genre, faite juste pour vous.",
   
-  // Step 4 Details
+  // Step 4
+  step4Title: "Recevez votre cadeau musical",
+  step4Description: "Dans 3 à 7 jours ouvrables, votre chanson personnalisée sera livrée directement dans votre boîte de réception. Vous recevrez tout ce dont vous avez besoin pour en profiter, la partager ou l'offrir à quelqu'un de spécial.",
+  step4DetailsIntro: "Dans 3 à 7 jours ouvrables, votre chanson personnalisée sera livrée directement dans votre boîte de réception. Vous recevrez tout ce dont vous avez besoin pour en profiter, la partager ou l'offrir à quelqu'un de spécial.",
   step4DetailsTitle: "Vous recevrez :",
-  step4Detail1: "Votre chanson originale aux formats MP3 et WAV",
-  step4Detail2: "Une image de couverture personnalisée qui correspond à l'ambiance de votre chanson",
-  step4Detail3: "Add-ons vidéo optionnels ou formats adaptés aux réseaux sociaux",
-  step4Detail4: "Accès à vie — téléchargez-la, partagez-la, revivez-la pour toujours",
-  step4DetailsFooter: "C'est plus qu'un cadeau. C'est un souvenir que vous pouvez écouter.",
+  step4Detail1: "Votre chanson personnalisée aux formats MP3 et WAV",
+  step4Detail2: "Une couverture visuelle conçue pour correspondre au thème de votre morceau",
+  step4Detail3: "En option, une version vidéo ou des formats adaptés aux réseaux sociaux",
+  step4Detail4: "Un lien sécurisé pour télécharger vos fichiers, disponible pendant 6 mois",
+  step4DetailsFooter: "Votre musique est prête à être savourée — encore et encore.",
   
   // Testimonials
   testimonialsTitle: "Ce que disent nos clients",

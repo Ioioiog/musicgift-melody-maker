@@ -1,9 +1,11 @@
 
+import { useLanguage } from '@/contexts/LanguageContext';
+
 export interface StepContent {
   id: number;
-  title: string;
-  description: string;
-  details: {
+  getTitle: (t: (key: string) => string) => string;
+  getDescription: (t: (key: string) => string) => string;
+  getDetails: (t: (key: string) => string) => {
     intro: string;
     listTitle: string;
     listItems: string[];
@@ -20,19 +22,19 @@ export interface StepContent {
 export const stepContentData: StepContent[] = [
   {
     id: 1,
-    title: "Choose Your Package",
-    description: "Every special song begins with the right foundation. Explore our selection of carefully designed packages and choose the one that best matches your occasion, sentiment, and budget — whether it's a heartfelt birthday tribute, a romantic surprise, a wedding anthem, or a unique gift just because.",
-    details: {
-      intro: "Every special song begins with the right foundation. Explore our selection of carefully designed packages and choose the one that best matches your occasion, sentiment, and budget — whether it's a heartfelt birthday tribute, a romantic surprise, a wedding anthem, or a unique gift just because.",
-      listTitle: "Every package includes:",
+    getTitle: (t) => t('step1Title'),
+    getDescription: (t) => t('step1Description'),
+    getDetails: (t) => ({
+      intro: t('step1DetailsIntro'),
+      listTitle: t('step1DetailsTitle'),
       listItems: [
-        "Professionally produced music with rich instrumentation",
-        "Custom lyrics inspired by your story",
-        "High-quality audio files delivered in MP3 and WAV formats",
-        "A beautifully designed visual cover to accompany your song"
+        t('step1Detail1'),
+        t('step1Detail2'),
+        t('step1Detail3'),
+        t('step1Detail4')
       ],
-      footer: "Not sure which one to pick? We'll guide you."
-    },
+      footer: t('step1DetailsFooter')
+    }),
     styling: {
       color: "text-blue-600",
       bgColor: "bg-blue-100",
@@ -42,19 +44,19 @@ export const stepContentData: StepContent[] = [
   },
   {
     id: 2,
-    title: "Share Your Story",
-    description: "This is your moment to open up. Your song will be shaped by the story you tell us — the moments that moved you, the people who matter, and the memories you want to preserve through music.",
-    details: {
-      intro: "This is your moment to open up. Your song will be shaped by the story you tell us — the moments that moved you, the people who matter, and the memories you want to preserve through music.",
-      listTitle: "You can include:",
+    getTitle: (t) => t('step2Title'),
+    getDescription: (t) => t('step2Description'),
+    getDetails: (t) => ({
+      intro: t('step2DetailsIntro'),
+      listTitle: t('step2DetailsTitle'),
       listItems: [
-        "Memorable events, personal milestones, and heartfelt memories",
-        "Names, dates, and personal details that bring your story to life",
-        "The mood and musical style you prefer (calm, joyful, dramatic, etc.)",
-        "Optional voice recordings or photos to spark creative inspiration"
+        t('step2Detail1'),
+        t('step2Detail2'),
+        t('step2Detail3'),
+        t('step2Detail4')
       ],
-      footer: "The more you share, the more meaningful the final song will be."
-    },
+      footer: t('step2DetailsFooter')
+    }),
     styling: {
       color: "text-green-600",
       bgColor: "bg-green-100",
@@ -64,19 +66,19 @@ export const stepContentData: StepContent[] = [
   },
   {
     id: 3,
-    title: "We Create the Music",
-    description: "Once we receive your story, our team gets to work crafting a song that captures its essence. From songwriting to arrangement to performance, we handle every step with care and creativity.",
-    details: {
-      intro: "Once we receive your story, our team gets to work crafting a song that captures its essence. From songwriting to arrangement to performance, we handle every step with care and creativity.",
-      listTitle: "Here's how it comes together:",
+    getTitle: (t) => t('step3Title'),
+    getDescription: (t) => t('step3Description'),
+    getDetails: (t) => ({
+      intro: t('step3DetailsIntro'),
+      listTitle: t('step3DetailsTitle'),
       listItems: [
-        "Your story is transformed into original lyrics",
-        "The melody is composed and arranged to match the mood",
-        "Talented vocalists record the performance",
-        "Audio is professionally mixed and mastered for a polished result"
+        t('step3Detail1'),
+        t('step3Detail2'),
+        t('step3Detail3'),
+        t('step3Detail4')
       ],
-      footer: "The result is a one-of-a-kind song made just for you."
-    },
+      footer: t('step3DetailsFooter')
+    }),
     styling: {
       color: "text-purple-600",
       bgColor: "bg-purple-100",
@@ -86,19 +88,19 @@ export const stepContentData: StepContent[] = [
   },
   {
     id: 4,
-    title: "Receive Your Musical Gift",
-    description: "In 3 to 7 business days, your personalized song will be delivered directly to your inbox. You'll receive everything you need to enjoy it, share it, or gift it to someone special.",
-    details: {
-      intro: "In 3 to 7 business days, your personalized song will be delivered directly to your inbox. You'll receive everything you need to enjoy it, share it, or gift it to someone special.",
-      listTitle: "You'll receive:",
+    getTitle: (t) => t('step4Title'),
+    getDescription: (t) => t('step4Description'),
+    getDetails: (t) => ({
+      intro: t('step4DetailsIntro'),
+      listTitle: t('step4DetailsTitle'),
       listItems: [
-        "Your custom song in MP3 and WAV formats",
-        "A visual cover designed to match the theme of your track",
-        "Optionally, a video version or social-media-ready formats",
-        "A secure link to download your files, available for 6 months"
+        t('step4Detail1'),
+        t('step4Detail2'),
+        t('step4Detail3'),
+        t('step4Detail4')
       ],
-      footer: "Your music is ready to be enjoyed — again and again."
-    },
+      footer: t('step4DetailsFooter')
+    }),
     styling: {
       color: "text-orange-600",
       bgColor: "bg-orange-100",

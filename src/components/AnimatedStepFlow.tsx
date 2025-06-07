@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, MessageSquare, Music, Gift } from 'lucide-react';
@@ -22,8 +23,8 @@ const AnimatedStepFlow = () => {
 
   const steps: Step[] = stepContentData.map((stepContent, index) => ({
     icon: stepIcons[index],
-    title: stepContent.title,
-    description: stepContent.description,
+    title: stepContent.getTitle(t),
+    description: stepContent.getDescription(t),
     color: stepContent.styling.color,
     bgColor: stepContent.styling.bgColor
   }));
