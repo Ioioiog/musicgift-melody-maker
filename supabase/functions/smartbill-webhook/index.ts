@@ -9,12 +9,101 @@ const corsHeaders = {
 
 interface SmartBillWebhookPayload {
   invoiceId?: string;
+  proformaId?: string;
+  documentId?: string;
   paymentStatus?: string;
+  status?: string;
   amount?: number;
   currency?: string;
   transactionId?: string;
   paymentDate?: string;
-  paymentUrl: "Generate URL"
+  paymentMethod?: string;
+  documentType?: string;
+  orderReference?: string;
+}
+
+function normalizePaymentStatus(status: string): { paymentStatus: string; orderStatus: string } {
+  const normalizedStatus = status?.toLowerCase() || 'unknown'
+  
+  console.log('🔄 Normalizing payment status:', status, '->', normalizedStatus)
+  
+  // Map various possible SmartBill statuses to our internal statuses
+  switch (normalizedStatus) {
+    case 'paid':
+    case 'completed':
+    case 'success':
+    case 'successful':
+    case 'confirmed':
+    case 'approved':
+      return { paymentStatus: 'completed', orderStatus: 'confirmed' }
+    
+    case 'failed':
+    case 'error':
+    case 'declined':
+    case 'rejected':
+      return { paymentStatus: 'failed', orderStatus: 'cancelled' }
+    
+    case 'cancelled':
+    case 'canceled':
+    case 'voided':
+      return { paymentStatus: 'cancelled', orderStatus: 'cancelled' }
+    
+    case 'pending':
+    case 'processing':
+    case 'in_progress':
+    case 'awaiting':
+      return { paymentStatus: 'pending', orderStatus: 'pending' }
+    
+    case 'refunded':
+    case 'reversed':
+      return { paymentStatus: 'refunded', orderStatus: 'refunded' }
+    
+    default:
+      console.warn('⚠️ Unknown payment status received:', status)
+      return { paymentStatus: 'pending', orderStatus: 'pending' }
+  }
+}
+
+async function findOrderByDocumentId(supabaseClient: any, documentId: string) {
+  console.log('🔍 Searching for order with document ID:', documentId)
+  
+  // Try to find by SmartBill invoice ID first
+  let { data: order, error } = await supabaseClient
+    .from('orders')
+    .select('*')
+    .eq('smartbill_invoice_id', documentId)
+    .maybeSingle()
+
+  if (!error && order) {
+    console.log('✅ Order found by invoice ID:', order.id)
+    return order
+  }
+
+  // Try to find by SmartBill proforma ID
+  const { data: proformaOrder, error: proformaError } = await supabaseClient
+    .from('orders')
+    .select('*')
+    .eq('smartbill_proforma_id', documentId)
+    .maybeSingle()
+
+  if (!proformaError && proformaOrder) {
+    console.log('✅ Order found by proforma ID:', proformaOrder.id)
+    return proformaOrder
+  }
+
+  // Try partial matches for cases where document ID might be modified
+  const { data: partialMatches, error: partialError } = await supabaseClient
+    .from('orders')
+    .select('*')
+    .or(`smartbill_invoice_id.ilike.%${documentId}%,smartbill_proforma_id.ilike.%${documentId}%`)
+
+  if (!partialError && partialMatches && partialMatches.length > 0) {
+    console.log('✅ Order found by partial match:', partialMatches[0].id)
+    return partialMatches[0]
+  }
+
+  console.error('❌ No order found for document ID:', documentId)
+  throw new Error(`Order not found for document ID: ${documentId}`)
 }
 
 serve(async (req) => {
@@ -30,87 +119,105 @@ serve(async (req) => {
     )
 
     const webhookData: SmartBillWebhookPayload = await req.json()
-    console.log('SmartBill webhook received:', webhookData)
+    console.log('📨 SmartBill webhook received:', {
+      ...webhookData,
+      // Don't log sensitive payment data in full
+      amount: webhookData.amount ? `${webhookData.amount} ${webhookData.currency}` : 'N/A'
+    })
 
-    const { invoiceId, paymentStatus, amount, currency, transactionId, paymentDate } = webhookData
+    // Extract document ID from multiple possible fields
+    const documentId = webhookData.invoiceId || 
+                      webhookData.proformaId || 
+                      webhookData.documentId ||
+                      webhookData.orderReference
 
-    if (!invoiceId) {
-      throw new Error('Invoice ID is required')
+    if (!documentId) {
+      console.error('❌ No document ID found in webhook data')
+      throw new Error('Document ID is required in webhook payload')
     }
 
-    // Find the order by SmartBill invoice ID
-    const { data: order, error: orderError } = await supabaseClient
-      .from('orders')
-      .select('*')
-      .eq('smartbill_invoice_id', invoiceId)
-      .single()
+    // Extract payment status from multiple possible fields
+    const paymentStatus = webhookData.paymentStatus || 
+                         webhookData.status || 
+                         'unknown'
 
-    if (orderError) {
-      throw new Error(`Order not found: ${orderError.message}`)
-    }
+    console.log('📋 Processing webhook for document:', documentId, 'with status:', paymentStatus)
 
-    console.log('Found order for webhook:', order.id)
+    // Find the order by document ID
+    const order = await findOrderByDocumentId(supabaseClient, documentId)
 
-    // Map SmartBill payment status to our order status
-    let newPaymentStatus = 'pending'
-    let newOrderStatus = order.status
+    // Normalize the payment status
+    const { paymentStatus: newPaymentStatus, orderStatus: newOrderStatus } = normalizePaymentStatus(paymentStatus)
 
-    switch (paymentStatus?.toLowerCase()) {
-      case 'paid':
-      case 'completed':
-      case 'success':
-        newPaymentStatus = 'completed'
-        newOrderStatus = 'confirmed'
-        break
-      case 'failed':
-      case 'error':
-        newPaymentStatus = 'failed'
-        newOrderStatus = 'cancelled'
-        break
-      case 'cancelled':
-      case 'canceled':
-        newPaymentStatus = 'cancelled'
-        newOrderStatus = 'cancelled'
-        break
-      default:
-        newPaymentStatus = 'pending'
-    }
+    console.log('🔄 Status mapping:', {
+      originalStatus: paymentStatus,
+      newPaymentStatus,
+      newOrderStatus,
+      orderId: order.id
+    })
 
-    // Update order with payment information
+    // Prepare update data
     const updateData: any = {
       payment_status: newPaymentStatus,
       status: newOrderStatus,
       smartbill_payment_status: paymentStatus,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      webhook_processed_at: new Date().toISOString()
     }
 
     // Add transaction details if available
-    if (transactionId) {
-      updateData.payment_id = transactionId
+    if (webhookData.transactionId) {
+      updateData.payment_id = webhookData.transactionId
     }
 
+    // Add payment method if available
+    if (webhookData.paymentMethod) {
+      updateData.payment_method = webhookData.paymentMethod
+    }
+
+    // If this is an invoice confirmation, update the invoice ID
+    if (webhookData.invoiceId && !order.smartbill_invoice_id) {
+      updateData.smartbill_invoice_id = webhookData.invoiceId
+      console.log('📄 Setting invoice ID from webhook:', webhookData.invoiceId)
+    }
+
+    // Update order with payment information
     const { error: updateError } = await supabaseClient
       .from('orders')
       .update(updateData)
       .eq('id', order.id)
 
     if (updateError) {
+      console.error('❌ Failed to update order:', updateError)
       throw new Error(`Failed to update order: ${updateError.message}`)
     }
 
-    console.log(`Order ${order.id} updated successfully. Status: ${newOrderStatus}, Payment: ${newPaymentStatus}`)
+    console.log(`✅ Order ${order.id} updated successfully:`, {
+      status: newOrderStatus,
+      paymentStatus: newPaymentStatus,
+      smartbillStatus: paymentStatus
+    })
 
-    // TODO: Send confirmation email if payment is successful
+    // Handle post-payment actions
     if (newPaymentStatus === 'completed') {
-      console.log('Payment completed - should send confirmation email')
-      // Implement email sending logic here
+      console.log('🎉 Payment completed - order confirmed')
+      
+      // TODO: Add email notification or other post-payment actions here
+      // Example: Send confirmation email, trigger order fulfillment, etc.
+      
+    } else if (newPaymentStatus === 'failed' || newPaymentStatus === 'cancelled') {
+      console.log('❌ Payment failed or cancelled')
+      
+      // TODO: Add failure handling here
+      // Example: Send notification email, release inventory, etc.
     }
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         orderId: order.id,
-        message: 'Webhook processed successfully'
+        message: `Webhook processed successfully - order status updated to ${newOrderStatus}`,
+        paymentStatus: newPaymentStatus
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -119,9 +226,10 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Error processing SmartBill webhook:', error)
+    console.error('💥 Error processing SmartBill webhook:', error)
     return new Response(
       JSON.stringify({ 
+        success: false,
         error: error.message || 'Failed to process webhook'
       }),
       { 

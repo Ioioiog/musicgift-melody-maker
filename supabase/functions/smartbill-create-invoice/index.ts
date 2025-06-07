@@ -43,6 +43,7 @@ async function rateLimitedFetch(url: string, options: RequestInit) {
 }
 
 function escapeXml(value: string): string {
+  if (!value) return '';
   return value
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -67,6 +68,27 @@ const validateSmartBillConfig = () => {
   return { username, token, baseUrl, companyVat }
 }
 
+function validateOrderData(orderData: OrderData) {
+  console.log('📋 Validating order data...')
+  
+  const requiredFields = ['form_data', 'total_price', 'package_name', 'currency']
+  const missingFields = requiredFields.filter(field => {
+    const value = orderData[field]
+    return value === null || value === undefined || (typeof value === 'string' && value.trim() === '')
+  })
+  
+  if (missingFields.length > 0) {
+    throw new Error(`Missing required order fields: ${missingFields.join(', ')}`)
+  }
+  
+  if (!orderData.form_data.email || !orderData.form_data.fullName) {
+    throw new Error('Missing required customer information: email and fullName')
+  }
+  
+  console.log('✅ Order data validation passed')
+  return true
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -80,7 +102,15 @@ serve(async (req) => {
     )
 
     const { orderData }: { orderData: OrderData } = await req.json()
-    console.log('Processing order with SmartBill:', orderData)
+    console.log('🔄 Processing SmartBill order:', {
+      totalPrice: orderData.total_price,
+      currency: orderData.currency,
+      packageName: orderData.package_name,
+      customerEmail: orderData.form_data?.email?.substring(0, 5) + '***'
+    })
+
+    // Validate order data first
+    validateOrderData(orderData)
 
     // First, save the order to database
     const { data: savedOrder, error: orderError } = await supabaseClient
@@ -108,13 +138,16 @@ serve(async (req) => {
       .single()
 
     if (orderError) {
+      console.error('❌ Database Error:', orderError)
       throw new Error(`Failed to save order: ${orderError.message}`)
     }
 
-    console.log('Order saved to database:', savedOrder.id)
+    console.log('✅ Order saved to database with ID:', savedOrder.id)
 
     // Check if payment is needed
     if (orderData.total_price <= 0) {
+      console.log('💰 No payment required - completing order')
+      
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
@@ -144,13 +177,13 @@ serve(async (req) => {
     // Validate SmartBill configuration
     const { username, token, baseUrl, companyVat } = validateSmartBillConfig()
 
-    if (!username || !token) {
-      console.warn('SmartBill credentials not configured')
+    if (!username || !token || !companyVat) {
+      console.error('❌ SmartBill configuration incomplete')
       
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
-          smartbill_payment_status: 'config_missing'
+          smartbill_payment_status: 'config_error'
         })
         .eq('id', savedOrder.id)
 
@@ -163,7 +196,7 @@ serve(async (req) => {
           success: false, 
           orderId: savedOrder.id,
           errorCode: 'paymentConfigError',
-          message: 'Payment system configuration error'
+          message: 'SmartBill payment system not configured properly'
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -178,23 +211,22 @@ serve(async (req) => {
 
     // Determine if this is a company invoice
     const isCompanyInvoice = orderData.form_data.invoiceType === 'company'
-    console.log('Invoice type:', orderData.form_data.invoiceType, 'Is company invoice:', isCompanyInvoice)
+    console.log('📊 Invoice type:', orderData.form_data.invoiceType, 'Is company:', isCompanyInvoice)
 
-    // Prepare client data
+    // Prepare client data with proper validation
     const clientName = isCompanyInvoice ? 
-      (orderData.form_data.companyName || 'Company Name') : 
+      (orderData.form_data.companyName || orderData.form_data.fullName || 'Company Name') : 
       (orderData.form_data.fullName || 'Customer')
     
     const clientVatCode = isCompanyInvoice ? (orderData.form_data.vatCode || '') : ''
-    
     const clientAddress = isCompanyInvoice ? 
-      (orderData.form_data.companyAddress || orderData.form_data.address || '') : 
-      (orderData.form_data.address || '')
+      (orderData.form_data.companyAddress || orderData.form_data.address || 'No address provided') : 
+      (orderData.form_data.address || 'No address provided')
     
     const clientCity = orderData.form_data.city || 'Bucuresti'
     const clientEmail = orderData.form_data.email || ''
 
-    console.log('Client data for SmartBill:', {
+    console.log('👤 Client data prepared:', {
       name: clientName,
       vatCode: clientVatCode,
       address: clientAddress,
@@ -203,12 +235,22 @@ serve(async (req) => {
       isTaxPayer: isCompanyInvoice && !!clientVatCode
     })
 
-    // Step 1: Create proforma with payment link using STRP series
-    const totalPrice = parseFloat(orderData.total_price.toString()) || 0
+    // Convert price to ensure it's a valid number
+    const totalPrice = Number(orderData.total_price) || 0
+    if (totalPrice <= 0) {
+      throw new Error('Invalid total price for SmartBill document creation')
+    }
+
+    console.log('💰 Price validation:', {
+      originalPrice: orderData.total_price,
+      convertedPrice: totalPrice,
+      currency: orderData.currency
+    })
     
+    // Create proforma with payment link using STRP series
     const proformaXml = `<?xml version="1.0" encoding="UTF-8"?>
 <estimate>
-  <companyVatCode>${companyVat}</companyVatCode>
+  <companyVatCode>${escapeXml(companyVat)}</companyVatCode>
   <client>
     <name>${escapeXml(clientName)}</name>
     <vatCode>${escapeXml(clientVatCode)}</vatCode>
@@ -226,7 +268,7 @@ serve(async (req) => {
     <name>${escapeXml(`${orderData.package_name} - Cadou Musical Personalizat`)}</name>
     <isDiscount>false</isDiscount>
     <measuringUnitName>buc</measuringUnitName>
-    <currency>${orderData.currency || 'RON'}</currency>
+    <currency>${orderData.currency === 'EUR' ? 'EUR' : 'RON'}</currency>
     <quantity>1</quantity>
     <price>${totalPrice}</price>
     <isTaxIncluded>true</isTaxIncluded>
@@ -240,16 +282,18 @@ serve(async (req) => {
     `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}. ID comandă: ${savedOrder.id}`)}</observations>
 </estimate>`
 
-    console.log('Creating proforma with payment link using STRP series')
+    console.log('📄 Creating SmartBill proforma with STRP series')
+    console.log('🔗 XML payload prepared for SmartBill API')
 
     // Create proforma via SmartBill API using XML format
     let proformaResponse: Response
     let responseText: string
     
     try {
-      console.log('Sending proforma request to SmartBill API:', `${baseUrl}/SBORO/api/estimate`)
+      const apiUrl = `${baseUrl}/SBORO/api/estimate`
+      console.log('🌐 Sending request to SmartBill API:', apiUrl)
       
-      proformaResponse = await rateLimitedFetch(`${baseUrl}/SBORO/api/estimate`, {
+      proformaResponse = await rateLimitedFetch(apiUrl, {
         method: 'POST',
         headers: {
           'Authorization': `Basic ${btoa(`${username}:${token}`)}`,
@@ -260,20 +304,22 @@ serve(async (req) => {
       })
       
       responseText = await proformaResponse.text()
-      console.log('SmartBill Proforma API Response:', responseText)
+      console.log('📥 SmartBill API Response Status:', proformaResponse.status)
+      console.log('📥 SmartBill API Response:', responseText.substring(0, 500) + '...')
       
-    } catch (smartBillError) {
-      console.error('SmartBill Proforma API Error:', smartBillError)
+    } catch (fetchError) {
+      console.error('🌐 Network Error calling SmartBill API:', fetchError)
       
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
-          smartbill_payment_status: 'failed'
+          smartbill_payment_status: 'api_error',
+          smartbill_proforma_data: `Network error: ${fetchError.message}`
         })
         .eq('id', savedOrder.id)
 
       if (updateError) {
-        console.error('Error updating order with SmartBill error:', updateError)
+        console.error('Error updating order with network error:', updateError)
       }
 
       return new Response(
@@ -281,7 +327,7 @@ serve(async (req) => {
           success: false,
           orderId: savedOrder.id,
           errorCode: 'paymentFailed',
-          message: 'Failed to generate payment link'
+          message: `Network error contacting SmartBill: ${fetchError.message}`
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -292,21 +338,22 @@ serve(async (req) => {
 
     // Check if SmartBill returned an error
     if (!proformaResponse.ok) {
-      console.error('SmartBill Proforma API Error:', {
+      console.error('❌ SmartBill API Error Response:', {
         status: proformaResponse.status,
         statusText: proformaResponse.statusText,
-        response: responseText
+        body: responseText
       })
       
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
-          smartbill_payment_status: 'failed'
+          smartbill_payment_status: 'api_error',
+          smartbill_proforma_data: responseText
         })
         .eq('id', savedOrder.id)
 
       if (updateError) {
-        console.error('Error updating order with SmartBill error:', updateError)
+        console.error('Error updating order with API error:', updateError)
       }
 
       return new Response(
@@ -314,7 +361,7 @@ serve(async (req) => {
           success: false,
           orderId: savedOrder.id,
           errorCode: 'paymentFailed',
-          message: `Payment system error: ${proformaResponse.status} ${proformaResponse.statusText}`
+          message: `SmartBill API error (${proformaResponse.status}): ${responseText}`
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -332,23 +379,23 @@ serve(async (req) => {
     const documentNumber = numberMatch?.[1] || null
     const documentSeries = seriesMatch?.[1] || 'STRP'
     
-    console.log('Extracted proforma details:', {
+    console.log('📄 SmartBill document details extracted:', {
       number: documentNumber,
       series: documentSeries,
-      paymentUrl: smartBillPaymentUrl
+      paymentUrl: smartBillPaymentUrl ? 'URL Generated' : 'NO URL'
     })
     
     // Check if we got a valid payment URL
     if (!smartBillPaymentUrl) {
-      console.error('SmartBill did not return a payment URL')
-      console.error('Response:', responseText)
+      console.error('❌ SmartBill did not return a payment URL')
+      console.error('📄 Full response for debugging:', responseText)
       
       const { error: updateError } = await supabaseClient
         .from('orders')
         .update({ 
           smartbill_proforma_id: documentNumber ? `${documentSeries}${documentNumber}` : null,
           smartbill_proforma_data: responseText,
-          smartbill_payment_status: 'failed'
+          smartbill_payment_status: 'no_payment_url'
         })
         .eq('id', savedOrder.id)
 
@@ -361,7 +408,7 @@ serve(async (req) => {
           success: false,
           orderId: savedOrder.id,
           errorCode: 'paymentUrlFailed',
-          message: 'Failed to generate payment link - Netopia integration not configured'
+          message: 'SmartBill document created but no payment URL generated - Netopia integration may not be configured'
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -370,10 +417,7 @@ serve(async (req) => {
       )
     }
 
-    console.log('SmartBill proforma created successfully:', {
-      proformaId: `${documentSeries}${documentNumber}`,
-      paymentUrl: smartBillPaymentUrl
-    })
+    console.log('✅ SmartBill proforma created successfully')
 
     // Update order with SmartBill details
     const { error: updateError } = await supabaseClient
@@ -382,7 +426,7 @@ serve(async (req) => {
         smartbill_proforma_id: documentNumber ? `${documentSeries}${documentNumber}` : null,
         smartbill_payment_url: smartBillPaymentUrl,
         smartbill_proforma_data: responseText,
-        smartbill_payment_status: 'pending',
+        smartbill_payment_status: 'payment_url_generated',
         smartbill_proforma_status: 'created'
       })
       .eq('id', savedOrder.id)
@@ -391,7 +435,7 @@ serve(async (req) => {
       console.error('Error updating order with SmartBill details:', updateError)
     }
 
-    console.log('Returning successful response with payment URL:', smartBillPaymentUrl)
+    console.log('🎉 SmartBill integration completed successfully')
 
     return new Response(
       JSON.stringify({
@@ -399,7 +443,7 @@ serve(async (req) => {
         orderId: savedOrder.id,
         smartBillProformaId: documentNumber ? `${documentSeries}${documentNumber}` : null,
         paymentUrl: smartBillPaymentUrl,
-        message: 'Proforma created successfully with payment link'
+        message: 'SmartBill proforma created successfully with payment link'
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -408,7 +452,7 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Error in SmartBill integration:', error)
+    console.error('💥 Critical Error in SmartBill integration:', error)
     return new Response(
       JSON.stringify({ 
         success: false,

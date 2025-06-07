@@ -20,30 +20,44 @@ const PaymentError = () => {
           title: 'Configurare sistem de plată',
           description: 'Sistemul de plată nu este configurat corect. Vă rugăm să încercați din nou mai târziu.',
           suggestions: [
-            'Contactați echipa de suport pentru asistență',
-            'Încercați să folosiți o altă metodă de plată'
+            'Contactați echipa de suport pentru asistență tehnică',
+            'Încercați să folosiți o altă metodă de plată dacă este disponibilă',
+            'Verificați din nou peste câteva minute'
           ]
         };
       case 'paymentUrlFailed':
         return {
           title: 'Link de plată indisponibil',
-          description: 'Nu s-a putut genera linkul de plată. Integrarea Netopia nu este configurată.',
+          description: 'Nu s-a putut genera linkul de plată. Documentul a fost creat dar sistemul de plăți nu este disponibil.',
           suggestions: [
-            'Contactați administratorul sistemului',
-            'Încercați din nou mai târziu',
-            'Folosiți o altă metodă de plată'
+            'Contactați administratorul sistemului pentru configurare',
+            'Documentul dumneavoastră a fost salvat și poate fi plătit ulterior',
+            'Încercați din nou mai târziu când sistemul va fi operațional',
+            'Folosiți o altă metodă de plată dacă este disponibilă'
+          ]
+        };
+      case 'orderCreationFailed':
+        return {
+          title: 'Eroare la crearea comenzii',
+          description: 'Comanda nu a putut fi creată din cauza unei erori de sistem.',
+          suggestions: [
+            'Verificați datele introduse și încercați din nou',
+            'Asigurați-vă că aveți o conexiune stabilă la internet',
+            'Contactați echipa de suport dacă problema persistă',
+            'Încercați să plasați comanda din nou'
           ]
         };
       case 'paymentFailed':
       default:
         return {
-          title: 'Eroare de procesare',
-          description: 'Plata nu a putut fi procesată din cauza unei erori tehnice.',
+          title: 'Eroare de procesare plată',
+          description: 'Plata nu a putut fi procesată din cauza unei erori tehnice sau de configurare.',
           suggestions: [
             'Verificați datele cardului și încercați din nou',
             'Asigurați-vă că aveți fonduri suficiente în cont',
             'Încercați să folosiți o altă metodă de plată',
-            'Contactați banca dumneavoastră dacă problema persistă'
+            'Contactați banca dumneavoastră dacă problema persistă',
+            'Contactați echipa noastră de suport pentru asistență'
           ]
         };
     }
@@ -73,7 +87,7 @@ const PaymentError = () => {
                 {(errorCode || errorMessage || orderId) && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6 text-left">
                     <h3 className="font-semibold text-red-800 mb-2">Detalii tehnice</h3>
-                    {orderId && (
+                    {orderId && orderId !== 'unknown' && (
                       <p className="text-sm text-red-700 mb-1">
                         <strong>ID comandă:</strong> {orderId}
                       </p>
@@ -128,7 +142,7 @@ const PaymentError = () => {
                     <p className="text-sm text-gray-500">
                       Nu au fost efectuate debităti din contul dumneavoastră din cauza acestei erori.
                     </p>
-                    {orderId && (
+                    {orderId && orderId !== 'unknown' && (
                       <p className="text-sm text-gray-500 mt-1">
                         Comanda cu ID-ul {orderId.slice(0, 8)}... a fost salvată și poate fi finalizată mai târziu.
                       </p>

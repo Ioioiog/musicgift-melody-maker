@@ -256,6 +256,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     
     try {
       console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
+      console.log('📦 Order data being submitted:', {
+        package: selectedPackage,
+        addons: selectedAddons.length,
+        totalPrice,
+        paymentProvider: selectedPaymentProvider,
+        customerEmail: formData.email?.substring(0, 5) + '***'
+      });
       
       validateFormData();
       
@@ -277,17 +284,31 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
       const orderData = prepareOrderData();
 
-      // Handle SmartBill payment with improved error handling
+      // Handle SmartBill payment with enhanced error handling and logging
       if (selectedPaymentProvider === 'smartbill') {
         console.log('🔵 Processing payment with SmartBill');
-        console.log('🔵 SmartBill order data:', orderData);
+        console.log('🔵 SmartBill order payload:', {
+          totalPrice: orderData.total_price,
+          currency: orderData.currency,
+          packageName: orderData.package_name,
+          customerInfo: {
+            email: orderData.form_data.email?.substring(0, 5) + '***',
+            name: orderData.form_data.fullName?.substring(0, 5) + '***',
+            invoiceType: orderData.form_data.invoiceType
+          }
+        });
         
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('smartbill-create-invoice', {
           body: { orderData }
         });
 
-        console.log('🔵 SmartBill response:', paymentResponse);
-        console.log('🔵 SmartBill error:', paymentError);
+        console.log('🔵 SmartBill Edge Function Response:', {
+          success: paymentResponse?.success,
+          orderId: paymentResponse?.orderId,
+          errorCode: paymentResponse?.errorCode,
+          hasPaymentUrl: !!paymentResponse?.paymentUrl,
+          message: paymentResponse?.message
+        });
 
         if (paymentError) {
           console.error('❌ SmartBill Edge Function Error:', paymentError);
@@ -296,8 +317,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
         if (!paymentResponse?.success) {
           console.error('❌ SmartBill Payment Response Error:', paymentResponse);
-          const errorCode = paymentResponse?.errorCode || 'unknown';
+          const errorCode = paymentResponse?.errorCode || 'paymentFailed';
           const errorMessage = paymentResponse?.message || paymentResponse?.error || 'SmartBill payment initialization failed';
+          
+          console.log('🔗 Redirecting to error page with details:', {
+            orderId: paymentResponse?.orderId,
+            errorCode,
+            errorMessage: errorMessage.substring(0, 100) + '...'
+          });
           
           // Navigate to error page with specific error details
           navigate(`/payment/error?orderId=${paymentResponse?.orderId || 'unknown'}&errorCode=${errorCode}&errorMessage=${encodeURIComponent(errorMessage)}`);
@@ -305,7 +332,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         }
 
         if (paymentResponse.paymentUrl) {
-          console.log('✅ Redirecting to SmartBill payment:', paymentResponse.paymentUrl);
+          console.log('✅ SmartBill payment URL generated successfully');
+          console.log('🔗 Redirecting to SmartBill payment page');
           window.location.href = paymentResponse.paymentUrl;
         } else {
           console.log('✅ Order completed - no payment required');
@@ -369,9 +397,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       }
 
     } catch (error) {
-      console.error(`💥 ${selectedPaymentProvider.toUpperCase()} Payment Error:`, error);
+      console.error(`💥 ${selectedPaymentProvider?.toUpperCase()} Payment Error:`, error);
       
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      console.error('💥 Full error details:', {
+        message: errorMessage,
+        provider: selectedPaymentProvider,
+        package: selectedPackage,
+        totalPrice
+      });
+      
       toast({
         title: t('orderError', 'Payment Error'),
         description: `Payment failed: ${errorMessage}`,
