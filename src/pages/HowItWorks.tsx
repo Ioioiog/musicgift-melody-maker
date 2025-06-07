@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -6,21 +5,20 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import AnimatedStepFlow from "@/components/AnimatedStepFlow";
-
 const HowItWorks = () => {
-  const { t } = useLanguage();
-
-  return (
-    <div className="min-h-screen">
+  const {
+    t
+  } = useLanguage();
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Purple Musical Background and Animated Steps */}
       <section className="py-40 text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/20 py-0"></div>
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           
@@ -51,46 +49,24 @@ const HowItWorks = () => {
 
           {/* Animated Steps inside Hero */}
           <motion.div initial={{
-            opacity: 0,
-            y: 30
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.8,
-            delay: 0.6
-          }} className="relative z-10">
+          opacity: 0,
+          y: 30
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.8,
+          delay: 0.6
+        }} className="relative z-10">
             <AnimatedStepFlow />
           </motion.div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="bg-white py-[6px]">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <motion.div initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6
-        }}>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('readyToStart')}</h2>
-            <p className="text-xl text-gray-600 mb-8">{t('readyToStartContent')}</p>
-            <Link to="/packages">
-              <Button size="lg" className="bg-gradient-purple">
-                {t('startYourOrder')}
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+      
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default HowItWorks;
