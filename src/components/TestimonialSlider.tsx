@@ -67,6 +67,40 @@ export default function TestimonialSlider() {
 
   const progress = (currentSlide + 1) / testimonials.length * 100;
 
+  const renderVideo = (testimonial: any) => {
+    // Prioritize uploaded video over YouTube link
+    if (testimonial.video_url) {
+      return (
+        <div className="relative pb-[56.25%] group flex-shrink-0">
+          <video
+            className="absolute top-0 left-0 w-full h-full object-cover"
+            controls
+            preload="metadata"
+            poster={testimonial.video_url + '#t=0.5'}
+          >
+            <source src={testimonial.video_url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        </div>
+      );
+    } else if (testimonial.youtube_link) {
+      return (
+        <div className="relative pb-[56.25%] group flex-shrink-0">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={testimonial.youtube_link}
+            allowFullScreen
+            loading="lazy"
+            title={`Video testimonial from ${testimonial.name}`}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="py-0">
       <div className="container px-[17px] mx-0 py-0 my-0">
@@ -98,18 +132,7 @@ export default function TestimonialSlider() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
-                    {testimonial.youtube_link && (
-                      <div className="relative pb-[56.25%] group flex-shrink-0">
-                        <iframe
-                          className="absolute top-0 left-0 w-full h-full"
-                          src={testimonial.youtube_link}
-                          allowFullScreen
-                          loading="lazy"
-                          title={`Video testimonial from ${testimonial.name}`}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                      </div>
-                    )}
+                    {renderVideo(testimonial)}
                     <div className="p-4 md:p-6 text-center bg-gradient-to-br from-purple-50 to-pink-50 flex-1 flex flex-col justify-between">
                       <div>
                         <div className="flex items-center justify-center gap-2 mb-3 text-purple-600 font-semibold">

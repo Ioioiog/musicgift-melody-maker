@@ -931,6 +931,7 @@ export type Database = {
           stars: number | null
           text: string | null
           updated_at: string | null
+          video_url: string | null
           youtube_link: string | null
         }
         Insert: {
@@ -944,6 +945,7 @@ export type Database = {
           stars?: number | null
           text?: string | null
           updated_at?: string | null
+          video_url?: string | null
           youtube_link?: string | null
         }
         Update: {
@@ -957,6 +959,7 @@ export type Database = {
           stars?: number | null
           text?: string | null
           updated_at?: string | null
+          video_url?: string | null
           youtube_link?: string | null
         }
         Relationships: []

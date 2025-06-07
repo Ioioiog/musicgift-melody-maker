@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { VideoUpload } from "@/components/ui/video-upload";
 
 const TestimonialSubmissionForm = () => {
   const { user } = useAuth();
@@ -23,7 +24,8 @@ const TestimonialSubmissionForm = () => {
     location: "",
     stars: 5,
     text: "",
-    youtube_link: ""
+    youtube_link: "",
+    video_url: ""
   });
 
   const resetForm = () => {
@@ -32,8 +34,17 @@ const TestimonialSubmissionForm = () => {
       location: "",
       stars: 5,
       text: "",
-      youtube_link: ""
+      youtube_link: "",
+      video_url: ""
     });
+  };
+
+  const handleVideoUploaded = (url: string) => {
+    setFormData({ ...formData, video_url: url });
+  };
+
+  const handleRemoveVideo = () => {
+    setFormData({ ...formData, video_url: "" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -126,7 +137,7 @@ const TestimonialSubmissionForm = () => {
           Share Your Experience
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Share Your Testimonial</DialogTitle>
         </DialogHeader>
@@ -181,8 +192,16 @@ const TestimonialSubmissionForm = () => {
               placeholder="https://www.youtube.com/embed/VIDEO_ID"
             />
             <p className="text-sm text-gray-500 mt-1">
-              If you have a video testimonial, paste the YouTube embed link here
+              If you have a video testimonial on YouTube, paste the embed link here
             </p>
+          </div>
+
+          <div className="border-t pt-4">
+            <VideoUpload
+              onVideoUploaded={handleVideoUploaded}
+              currentVideoUrl={formData.video_url}
+              onRemoveVideo={handleRemoveVideo}
+            />
           </div>
 
           <div className="flex justify-end space-x-2 pt-4">

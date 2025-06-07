@@ -13,6 +13,7 @@ import { Trash2, Edit, Plus, Check, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQueryClient } from "@tanstack/react-query";
+import { VideoUpload } from "@/components/ui/video-upload";
 import type { Testimonial } from "@/hooks/useTestimonials";
 
 const TestimonialsManagement = () => {
@@ -28,6 +29,7 @@ const TestimonialsManagement = () => {
     text: "",
     context: "",
     youtube_link: "",
+    video_url: "",
     display_order: 0,
     approved: false
   });
@@ -40,10 +42,19 @@ const TestimonialsManagement = () => {
       text: "",
       context: "",
       youtube_link: "",
+      video_url: "",
       display_order: 0,
       approved: false
     });
     setEditingTestimonial(null);
+  };
+
+  const handleVideoUploaded = (url: string) => {
+    setFormData({ ...formData, video_url: url });
+  };
+
+  const handleRemoveVideo = () => {
+    setFormData({ ...formData, video_url: "" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,6 +101,7 @@ const TestimonialsManagement = () => {
       text: testimonial.text || "",
       context: testimonial.context || "",
       youtube_link: testimonial.youtube_link || "",
+      video_url: testimonial.video_url || "",
       display_order: testimonial.display_order,
       approved: testimonial.approved
     });
@@ -158,7 +170,7 @@ const TestimonialsManagement = () => {
               Add Testimonial
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingTestimonial ? 'Edit Testimonial' : 'Add New Testimonial'}
@@ -215,6 +227,14 @@ const TestimonialsManagement = () => {
                   value={formData.youtube_link}
                   onChange={(e) => setFormData({ ...formData, youtube_link: e.target.value })}
                   placeholder="https://www.youtube.com/embed/VIDEO_ID"
+                />
+              </div>
+
+              <div className="border-t pt-4">
+                <VideoUpload
+                  onVideoUploaded={handleVideoUploaded}
+                  currentVideoUrl={formData.video_url}
+                  onRemoveVideo={handleRemoveVideo}
                 />
               </div>
 
@@ -304,7 +324,10 @@ const TestimonialsManagement = () => {
                   <p className="text-sm italic">"{testimonial.text}"</p>
                 )}
                 {testimonial.youtube_link && (
-                  <p className="text-xs text-blue-600">Video: {testimonial.youtube_link}</p>
+                  <p className="text-xs text-blue-600">YouTube: {testimonial.youtube_link}</p>
+                )}
+                {testimonial.video_url && (
+                  <p className="text-xs text-green-600">Uploaded Video: {testimonial.video_url}</p>
                 )}
                 <p className="text-xs text-gray-500">
                   Order: {testimonial.display_order} | Created: {new Date(testimonial.created_at).toLocaleDateString()}

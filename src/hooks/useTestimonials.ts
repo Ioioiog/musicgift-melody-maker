@@ -10,6 +10,7 @@ export interface Testimonial {
   text: string;
   context: string;
   youtube_link: string;
+  video_url: string;
   display_order: number;
   created_at: string;
   updated_at: string;
