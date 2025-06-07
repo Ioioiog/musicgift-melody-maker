@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,26 +33,7 @@ body {
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--light-color);
-  padding-top: 70px; /* Reduced for mobile */
-}
-
-/* Mobile-first responsive padding */
-@media (min-width: 640px) {
-  body {
-    padding-top: 80px;
-  }
-}
-
-@media (min-width: 768px) {
-  body {
-    padding-top: 90px;
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    padding-top: 100px;
-  }
+  /* Removed padding-top since we're handling navbar spacing in individual components */
 }
 
 a {

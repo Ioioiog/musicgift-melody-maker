@@ -37,9 +37,9 @@ const Testimonials = () => {
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Enhanced Hero Section with Purple Musical Background */}
+      {/* Enhanced Hero Section with Purple Musical Background - No top padding for seamless connection to navbar */}
       <section 
-        className="pt-20 pb-8 text-white relative overflow-hidden"
+        className="pt-16 md:pt-20 lg:pt-24 pb-8 text-white relative overflow-hidden"
         style={backgroundStyle}
       >
         <div className="absolute inset-0 bg-black/20"></div>

@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -48,8 +47,8 @@ const Gift = () => {
     <div className="min-h-screen flex flex-col">
       <Navigation />
       
-      {/* Compact Hero Section */}
-      <section className="py-6 text-white relative overflow-hidden" style={{
+      {/* Compact Hero Section - Adjusted padding for seamless connection to navbar */}
+      <section className="pt-16 md:pt-20 lg:pt-24 pb-6 text-white relative overflow-hidden" style={{
         backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
