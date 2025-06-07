@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, Music, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Music, ArrowLeft, Music2, Music3, Music4 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -110,13 +110,42 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Decorative Background Elements */}
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Enhanced Musical Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/3 right-16 w-48 h-48 bg-pink-400/10 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-20 left-1/4 w-24 h-24 bg-indigo-400/15 rounded-full blur-2xl animate-pulse delay-300"></div>
-        <div className="absolute bottom-1/3 right-1/3 w-16 h-16 bg-purple-300/20 rounded-full blur-xl animate-float delay-700"></div>
+        {/* Floating Musical Notes */}
+        <div className="absolute top-20 left-16 w-8 h-8 text-white/20 animate-float">
+          <Music className="w-full h-full" />
+        </div>
+        <div className="absolute top-1/4 right-20 w-6 h-6 text-purple-200/30 animate-float" style={{ animationDelay: '1s' }}>
+          <Music2 className="w-full h-full" />
+        </div>
+        <div className="absolute bottom-1/3 left-1/4 w-10 h-10 text-indigo-200/25 animate-float" style={{ animationDelay: '2s' }}>
+          <Music3 className="w-full h-full" />
+        </div>
+        <div className="absolute top-1/2 right-1/3 w-7 h-7 text-purple-300/20 animate-float" style={{ animationDelay: '3s' }}>
+          <Music4 className="w-full h-full" />
+        </div>
+        <div className="absolute bottom-20 right-16 w-9 h-9 text-white/15 animate-float" style={{ animationDelay: '4s' }}>
+          <Music className="w-full h-full" />
+        </div>
+        <div className="absolute top-32 left-1/3 w-5 h-5 text-indigo-300/30 animate-float" style={{ animationDelay: '0.5s' }}>
+          <Music2 className="w-full h-full" />
+        </div>
+        
+        {/* Enhanced Gradient Orbs */}
+        <div className="absolute top-10 left-10 w-40 h-40 bg-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/3 right-16 w-56 h-56 bg-indigo-400/15 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-20 left-1/4 w-32 h-32 bg-purple-300/25 rounded-full blur-2xl animate-pulse delay-300"></div>
+        <div className="absolute bottom-1/3 right-1/3 w-24 h-24 bg-pink-400/20 rounded-full blur-xl animate-float delay-700"></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        
+        {/* Musical Staff Lines */}
+        <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-300/20 to-transparent"></div>
+        <div className="absolute top-1/4 mt-4 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-300/15 to-transparent"></div>
+        <div className="absolute top-1/4 mt-8 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-300/20 to-transparent"></div>
+        <div className="absolute top-1/4 mt-12 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-300/15 to-transparent"></div>
+        <div className="absolute top-1/4 mt-16 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-300/20 to-transparent"></div>
       </div>
       
       <div className="w-full max-w-md relative z-10">
