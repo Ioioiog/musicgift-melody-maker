@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -234,13 +233,13 @@ const GiftCardDesignsSection = () => {
                     New Design
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
-                  <DialogHeader className="pb-4 border-b">
+                <DialogContent className="max-w-[95vw] max-h-[95vh] w-full overflow-hidden">
+                  <DialogHeader className="pb-4 border-b flex-shrink-0">
                     <DialogTitle className="text-lg">
                       {editingDesign ? 'Edit Gift Card Design' : 'Create New Gift Card Design'}
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="py-4">
+                  <div className="flex-1 overflow-auto">
                     <GiftCardDesignForm 
                       design={editingDesign}
                       onSuccess={handleFormSuccess}
