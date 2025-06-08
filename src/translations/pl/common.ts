@@ -1,3 +1,4 @@
+
 export const commonTranslations = {
   // User authentication
   signIn: "Zaloguj się",
@@ -79,24 +80,4 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Opinie Klientów",
   testimonialsSubtitle: "Odkryj piękne historie tych, którzy zdecydowali się przekształcić swoje wspomnienia w spersonalizowaną muzykę",
-  
-  // Add-on labels
-  rushDelivery: "Ekspresowa Dostawa",
-  commercialRights: "Prawa Komercyjne",
-  distributieMangoRecords: "Ekskluzywna Dystrybucja Mango Records",
-  customVideo: "Spersonalizowane Wideo",
-  audioMessageFromSender: "Wiadomość Audio od Nadawcy",
-  commercialRightsUpgrade: "Upgrade Praw Komercyjnych",
-  extendedSong: "Rozszerzona Piosenka",
-  godparentsmelody: "Melodia Rodziców Chrzestnych",
-  
-  // Add-on descriptions
-  rushDeliveryDesc: "Otrzymaj swoją piosenkę w ciągu 24-48 godzin zamiast standardowego czasu dostawy",
-  commercialRightsDesc: "Uzyskaj pełne prawa komercyjne do używania piosenki w celach komercyjnych. Wymaga akceptacji oznaczenia piosenki jako 'Music Gift by Mango Records'.",
-  distributieMangoRecordsDesc: "Ekskluzywna dystrybucja na platformie Mango Records dla maksymalnej widoczności",
-  customVideoDesc: "Spersonalizowane wideo utworzone z Twoimi zdjęciami dla kompletnego doświadczenia",
-  audioMessageFromSenderDesc: "Dodaj osobistą wiadomość audio od nadawcy dla dodatkowej niespodzianki",
-  commercialRightsUpgradeDesc: "Upgrade do pełnych praw komercyjnych do użytku profesjonalnego",
-  extendedSongDesc: "Rozszerzona piosenka z 3 zwrotkami dla bogatszego doświadczenia muzycznego",
-  godparentsmelodyDesc: "Specjalna melodia dedykowana rodzicom chrzestnym na wesela i wydarzenia religijne",
 };

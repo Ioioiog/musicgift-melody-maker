@@ -1,3 +1,4 @@
+
 export const commonTranslations = {
   // User authentication
   signIn: "Sign In",
@@ -86,24 +87,4 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Customer Testimonials",
   testimonialsSubtitle: "Discover the beautiful stories of those who chose to transform their memories into personalized music",
-  
-  // Add-on labels (fixed keys)
-  rushDelivery: "Rush Delivery",
-  commercialRights: "Commercial Rights",
-  distributieMangoRecords: "Exclusive Mango Records Distribution",
-  customVideo: "Custom Video",
-  audioMessageFromSender: "Audio Message from Sender",
-  commercialRightsUpgrade: "Commercial Rights Upgrade",
-  extendedSong: "Extended Song",
-  godparentsmelody: "Godparents Melody",
-  
-  // Add-on descriptions
-  rushDeliveryDesc: "Receive your song in 24-48 hours instead of the standard delivery time",
-  commercialRightsDesc: "Get full commercial rights to use the song for commercial purposes. Requires acceptance of tagging the song with 'Music Gift by Mango Records'.",
-  distributieMangoRecordsDesc: "Exclusive distribution on Mango Records platform for maximum visibility",
-  customVideoDesc: "A personalized video created with your photos for a complete experience",
-  audioMessageFromSenderDesc: "Add a personal audio message from the sender for an extra surprise",
-  commercialRightsUpgradeDesc: "Upgrade to full commercial rights for professional use",
-  extendedSongDesc: "Extended song with 3 verses for a richer musical experience",
-  godparentsmelodyDesc: "Special melody dedicated to godparents for weddings and religious events",
 };

@@ -1,3 +1,4 @@
+
 export const commonTranslations = {
   // User authentication
   signIn: "Conectare",
@@ -86,24 +87,4 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Mărturii ale Clienților",
   testimonialsSubtitle: "Descoperă poveștile frumoase ale celor care au ales să își transforme amintirile în muzică personalizată",
-  
-  // Add-on labels
-  rushDelivery: "Livrare rapidă",
-  commercialRights: "Drepturi comerciale",
-  distributieMangoRecords: "Distribuție exclusivă Mango Records",
-  customVideo: "Video personalizat",
-  audioMessageFromSender: "Mesaj audio de la expeditor",
-  commercialRightsUpgrade: "Upgrade drepturi comerciale",
-  extendedSong: "Melodie extinsă",
-  godparentsmelody: "Melodia nașilor",
-  
-  // Add-on descriptions
-  rushDeliveryDesc: "Primește melodia ta în 24-48 de ore în loc de timpul standard de livrare",
-  commercialRightsDesc: "Obține drepturi comerciale complete pentru folosirea melodiei în scopuri comerciale. Necesită acceptarea etichetării melodiei cu 'Music Gift by Mango Records'.",
-  distributieMangoRecordsDesc: "Distribuție exclusivă pe platforma Mango Records pentru vizibilitate maximă",
-  customVideoDesc: "Un video personalizat creat cu fotografiile tale pentru o experiență completă",
-  audioMessageFromSenderDesc: "Adaugă un mesaj audio personal de la expeditor pentru o surpriză în plus",
-  commercialRightsUpgradeDesc: "Upgrade la drepturi comerciale complete pentru utilizare profesională",
-  extendedSongDesc: "Melodie extinsă cu 3 versuri pentru o experiență muzicală mai bogată",
-  godparentsmelodyDesc: "Melodie specială dedicată nașilor pentru nunți și evenimente religioase",
 };

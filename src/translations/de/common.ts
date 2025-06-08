@@ -1,3 +1,4 @@
+
 export const commonTranslations = {
   // User authentication
   signIn: "Anmelden",
@@ -86,24 +87,4 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Kundenbewertungen",
   testimonialsSubtitle: "Entdecken Sie die schönen Geschichten derer, die sich entschieden haben, ihre Erinnerungen in personalisierte Musik zu verwandeln",
-  
-  // Add-on labels
-  rushDelivery: "Express-Lieferung",
-  commercialRights: "Kommerzielle Rechte",
-  distributieMangoRecords: "Exklusive Mango Records Verteilung",
-  customVideo: "Personalisiertes Video",
-  audioMessageFromSender: "Audio-Nachricht vom Absender",
-  commercialRightsUpgrade: "Kommerzielle Rechte Upgrade",
-  extendedSong: "Erweitertes Lied",
-  godparentsmelody: "Pateneltern-Melodie",
-  
-  // Add-on descriptions
-  rushDeliveryDesc: "Erhalten Sie Ihr Lied in 24-48 Stunden anstatt der Standard-Lieferzeit",
-  commercialRightsDesc: "Erhalten Sie vollständige kommerzielle Rechte zur Nutzung des Liedes für kommerzielle Zwecke. Erfordert die Akzeptanz der Kennzeichnung des Liedes mit 'Music Gift by Mango Records'.",
-  distributieMangoRecordsDesc: "Exklusive Verteilung auf der Mango Records Plattform für maximale Sichtbarkeit",
-  customVideoDesc: "Ein personalisiertes Video erstellt mit Ihren Fotos für ein vollständiges Erlebnis",
-  audioMessageFromSenderDesc: "Fügen Sie eine persönliche Audio-Nachricht vom Absender für eine zusätzliche Überraschung hinzu",
-  commercialRightsUpgradeDesc: "Upgrade auf vollständige kommerzielle Rechte für professionelle Nutzung",
-  extendedSongDesc: "Erweitertes Lied mit 3 Strophen für ein reicheres musikalisches Erlebnis",
-  godparentsmelodyDesc: "Spezielle Melodie gewidmet den Pateneltern für Hochzeiten und religiöse Veranstaltungen",
 };
