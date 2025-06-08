@@ -458,7 +458,7 @@ const PackageDetails = () => {
                     <h4 className="font-semibold text-white mb-2">{t('guarantees', 'Our Guarantees')}</h4>
                     <ul className="space-y-1 text-sm text-white/70">
                       <li>✓ {t('onTime', 'On-time delivery')}</li>
-                      <li>✓ {t('support', '24/7 customer support')}</li>
+                      <li>✓ {t('securePayments', 'Secure payments')}</li>
                     </ul>
                   </div>
                 </CardContent>
