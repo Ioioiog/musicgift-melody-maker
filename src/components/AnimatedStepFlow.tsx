@@ -214,58 +214,58 @@ const AnimatedStepFlow = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.6, delay: activeStep * 0.1 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/30 hover:shadow-xl transition-all duration-300 rounded-xl p-8 relative overflow-hidden shadow-lg h-full"
+              className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/30 hover:shadow-xl transition-all duration-300 rounded-xl p-4 relative overflow-hidden shadow-lg h-full"
             >
               {/* Large background icon */}
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-5 pointer-events-none">
+              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-5 pointer-events-none">
                 {React.createElement(stepIcons[activeStep], { 
-                  className: "w-48 h-48", 
+                  className: "w-32 h-32", 
                   strokeWidth: 1 
                 })}
               </div>
 
               {/* Header with step info */}
-              <div className="mb-6 relative z-10">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-white/20 backdrop-blur-sm text-white shadow-lg border border-white/30">
+              <div className="mb-4 relative z-10">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-white/20 backdrop-blur-sm text-white shadow-lg border border-white/30">
                     {React.createElement(stepIcons[activeStep], { 
-                      className: "w-6 h-6", 
+                      className: "w-5 h-5", 
                       strokeWidth: 2 
                     })}
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-white/90 mb-1">
+                    <div className="text-xs font-medium text-white/90 mb-1">
                       {steps[activeStep].title}
                     </div>
-                    <h3 className="text-2xl font-bold text-white">
+                    <h3 className="text-xl font-bold text-white">
                       {steps[activeStep].description}
                     </h3>
                   </div>
                 </div>
                 
-                <p className="text-white/90 text-lg leading-relaxed">
+                <p className="text-white/90 text-base leading-relaxed">
                   {steps[activeStep].details.intro}
                 </p>
               </div>
 
               {/* Details List */}
-              <div className="mb-6 relative z-10">
-                <h4 className="text-lg font-semibold text-white mb-4">
+              <div className="mb-4 relative z-10">
+                <h4 className="text-base font-semibold text-white mb-3">
                   {steps[activeStep].details.listTitle}
                 </h4>
-                <ul className="space-y-3">
+                <ul className="space-y-2">
                   {steps[activeStep].details.listItems.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-white/80 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-white/90">{item}</span>
+                    <li key={index} className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-white/80 rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-white/90 text-sm">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               {/* Footer Note */}
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 relative z-10 border border-white/30">
-                <p className="text-sm text-white italic">
+              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 relative z-10 border border-white/30">
+                <p className="text-xs text-white italic">
                   {steps[activeStep].details.footer}
                 </p>
               </div>
