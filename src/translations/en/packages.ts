@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -316,5 +317,9 @@ export const packagesTranslations = {
   didYouKnowComingOfAge1Title: "Music and 18th birthday celebrations",
   didYouKnowComingOfAge1Desc: "Teenagers who receive personalized songs for their 18th birthday report higher self-esteem and stronger sense of identity during their transition to adulthood.",
   didYouKnowComingOfAge2Title: "18th birthday milestone celebrations",
-  didYouKnowComingOfAge2Desc: "18th birthday celebrations with personalized elements are remembered more vividly and positively impact future life decisions."
+  didYouKnowComingOfAge2Desc: "18th birthday celebrations with personalized elements are remembered more vividly and positively impact future life decisions.",
+
+  // FAQ Revision answers
+  faqRevisionsAnswerWedding: "Yes, the wedding package includes one free revision to ensure your complete satisfaction with the final product.",
+  faqRevisionsAnswerOther: "Revisions are only available for the Wedding package. Other packages do not include revision options to maintain our streamlined production process and competitive pricing."
 };

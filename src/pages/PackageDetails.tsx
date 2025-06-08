@@ -1,4 +1,3 @@
-
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Check, Clock, Star, Users, Mic, Music, FileText, HelpCircle, ChevronDown, ChevronUp, Lightbulb, Plus, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -238,7 +237,7 @@ const PackageDetails = () => {
     if (packageValue === 'wedding') {
       return t('faqRevisionsAnswerWedding', 'Yes, the wedding package includes one free revision to ensure your complete satisfaction with the final product.');
     }
-    return t('faqRevisionsAnswerStandard', 'Revisions are available as an add-on service. Please check our available add-ons for revision options.');
+    return t('faqRevisionsAnswerOther', 'Revisions are only available for the Wedding package. Other packages do not include revision options to maintain our streamlined production process and competitive pricing.');
   };
 
   const packageFeatures = getPackageFeatures(packageData.value);
