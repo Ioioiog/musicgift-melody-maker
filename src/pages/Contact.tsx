@@ -38,33 +38,33 @@ const Contact = () => {
           }} transition={{
             duration: 0.6
           }}>
-              <Card className="bg-white/95 backdrop-blur-md border border-white/20 shadow-xl">
+              <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl h-full">
                 <CardContent className="p-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('sendMessage')}</h2>
+                  <h2 className="text-2xl font-bold text-white mb-6">{t('sendMessage')}</h2>
                   <form className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="firstName">{t('firstName')}</Label>
-                        <Input id="firstName" />
+                        <Label htmlFor="firstName" className="text-white/90">{t('firstName')}</Label>
+                        <Input id="firstName" className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40" />
                       </div>
                       <div>
-                        <Label htmlFor="lastName">{t('lastName')}</Label>
-                        <Input id="lastName" />
+                        <Label htmlFor="lastName" className="text-white/90">{t('lastName')}</Label>
+                        <Input id="lastName" className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40" />
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="email">{t('email')}</Label>
-                      <Input id="email" type="email" />
+                      <Label htmlFor="email" className="text-white/90">{t('email')}</Label>
+                      <Input id="email" type="email" className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40" />
                     </div>
                     <div>
-                      <Label htmlFor="subject">{t('subject')}</Label>
-                      <Input id="subject" />
+                      <Label htmlFor="subject" className="text-white/90">{t('subject')}</Label>
+                      <Input id="subject" className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40" />
                     </div>
                     <div>
-                      <Label htmlFor="message">{t('message')}</Label>
-                      <Textarea id="message" rows={6} />
+                      <Label htmlFor="message" className="text-white/90">{t('message')}</Label>
+                      <Textarea id="message" rows={6} className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40" />
                     </div>
-                    <Button className="w-full bg-gradient-purple">{t('sendMessage')}</Button>
+                    <Button className="w-full bg-gradient-purple hover:bg-white/30 transition-all duration-300">{t('sendMessage')}</Button>
                   </form>
                 </CardContent>
               </Card>
@@ -119,10 +119,10 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <Card className="bg-white/95 backdrop-blur-md border border-white/20 shadow-xl">
+                <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
                   <CardContent className="p-6">
-                    <h3 className="font-bold text-gray-900 mb-4">{t('businessHours')}</h3>
-                    <div className="space-y-2 text-sm text-gray-600">
+                    <h3 className="font-bold text-white mb-4">{t('businessHours')}</h3>
+                    <div className="space-y-2 text-sm text-white/80">
                       <div className="flex justify-between">
                         <span>{t('monday')} - {t('friday')}</span>
                         <span>9:00 - 18:00</span>
