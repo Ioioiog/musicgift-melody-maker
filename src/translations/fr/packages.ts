@@ -11,7 +11,7 @@ export const packagesTranslations = {
   artistPackage: "Forfait Artiste",
   remixPackage: "Forfait Remix",
   instrumentalPackage: "Forfait Instrumental",
-  giftPackage: "Forfait Cadeau",
+  giftPackage: "Carte Cadeau",
   
   // Package taglines
   plusTagline: "Surprise musicale rapide – simple et abordable",

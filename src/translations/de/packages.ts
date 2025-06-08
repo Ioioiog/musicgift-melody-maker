@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Wählen Sie Ihr Paket",
   selectPerfectPackage: "Wählen Sie das perfekte Paket, das zu Ihren Bedürfnissen und Ihrem Budget passt",
@@ -12,7 +11,7 @@ export const packagesTranslations = {
   artistPackage: "Künstler Paket",
   remixPackage: "Remix Paket",
   instrumentalPackage: "Instrumental Paket",
-  giftPackage: "Geschenk Paket",
+  giftPackage: "Geschenkkarte",
   
   // Package taglines
   plusTagline: "Schnelle musikalische Überraschung – einfach und erschwinglich",
@@ -237,4 +236,3 @@ export const packagesTranslations = {
   voiceFemale: "Weibliche Stimme",
   voiceMale: "Männliche Stimme"
 };
-

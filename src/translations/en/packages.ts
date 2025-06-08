@@ -1,5 +1,3 @@
-
-
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -13,7 +11,7 @@ export const packagesTranslations = {
   artistPackage: "Artist Package",
   remixPackage: "Remix Package",
   instrumentalPackage: "Instrumental Package",
-  giftPackage: "Gift Package",
+  giftPackage: "Gift Card",
   
   // Package taglines
   plusTagline: "Quick musical surprise – simple and affordable",
@@ -313,4 +311,3 @@ export const packagesTranslations = {
   faqSatisfaction: "What if I'm not satisfied?",
   faqSatisfactionAnswer: "We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost."
 };
-

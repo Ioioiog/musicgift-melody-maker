@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -12,7 +11,7 @@ export const packagesTranslations = {
   artistPackage: "Pachetul Artist",
   remixPackage: "Pachetul Remix",
   instrumentalPackage: "Pachetul Instrumental",
-  giftPackage: "Pachetul Cadou",
+  giftPackage: "Card Cadou",
   
   // Package taglines
   plusTagline: "Surpriză muzicală rapidă – simplă și accesibilă",
@@ -287,4 +286,3 @@ export const packagesTranslations = {
   faqSatisfaction: "What if I'm not satisfied?",
   faqSatisfactionAnswer: "We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost."
 };
-
