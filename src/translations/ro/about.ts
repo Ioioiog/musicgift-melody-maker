@@ -1,4 +1,5 @@
 
+
 export const aboutTranslations = {
   ourStory: "Povestea noastră",
   ourCreativeTeam: "Echipa noastră creativă",
@@ -29,9 +30,9 @@ export const aboutTranslations = {
   // Mission & Values
   missionValues: "Misiunea și Valorile Noastre",
   passion: "Pasiune",
-  passionDesc: "Fiecare melodie pe care o creăm este impregnată cu pasiune genuină și profunzime emoțională, asigurându-ne că povestea ta este spusă cu autenticitate.",
+  passionDesc: "Fiecare melodie pe care o creăm este impregnată cu pasiune și profunzime emoțională, asigurându-ne că povestea ta este spusă cu autenticitate.",
   quality: "Calitate",
-  qualityDesc: "Producție profesională de studio, muzicieni experimentați și atenție meticuloasă la detalii în fiecare proiect.",
+  qualityDesc: "Producție profesională, muzicieni experimentați și atenție meticuloasă la detalii în fiecare proiect.",
   dedication: "Dedicare",
   dedicationDesc: "Investim timp și grijă în înțelegerea poveștii tale pentru a crea muzică care să reprezinte cu adevărat emoțiile tale.",
   
@@ -40,13 +41,14 @@ export const aboutTranslations = {
   uniqueApproach: "Abordare Unică",
   uniqueApproachDesc: "Combinăm povestirea personală cu producția muzicală profesională pentru a crea melodii cu adevărat unice.",
   fastDelivery: "Livrare Rapidă",
-  fastDeliveryDesc: "Muzică de calitate profesională livrată în 7-14 zile, perfectă pentru ocazii speciale și cadouri.",
+  fastDeliveryDesc: "Muzică de calitate profesională livrată în 3-7 zile, perfectă pentru ocazii speciale și cadouri.",
   satisfactionGuarantee: "Garanție de Satisfacție",
   satisfactionGuaranteeDesc: "Garanție de satisfacție 100% cu revizuiri nelimitate până când melodia ta surprinde perfect povestea ta.",
   
   // Call to Action
   readyToStart: "Gata să îți Creezi Melodia?",
-  readyToStartDesc: "Alătură-te miilor de clienți mulțumiți care și-au transformat poveștile în melodii frumoase și personalizate.",
+  readyToStartDesc: "Alătură-te clienților mulțumiți care și-au transformat poveștile în melodii frumoase și personalizate.",
   startYourSong: "Începe Melodia Ta",
   viewPackages: "Vezi Pachetele",
 };
+
