@@ -233,6 +233,14 @@ const PackageDetails = () => {
     }));
   };
 
+  // Get package-specific revision answer
+  const getRevisionAnswer = (packageValue: string) => {
+    if (packageValue === 'wedding') {
+      return t('faqRevisionsAnswerWedding', 'Yes, the wedding package includes one free revision to ensure your complete satisfaction with the final product.');
+    }
+    return t('faqRevisionsAnswerStandard', 'Revisions are available as an add-on service. Please check our available add-ons for revision options.');
+  };
+
   const packageFeatures = getPackageFeatures(packageData.value);
   const didYouKnowFacts = getDidYouKnowFacts(packageData.value);
   const availableAddOns = getAvailableAddOns();
@@ -401,7 +409,7 @@ const PackageDetails = () => {
                         {t('faqRevisions', 'Can I request revisions?')}
                       </AccordionTrigger>
                       <AccordionContent className="text-white/70">
-                        {t('faqRevisionsAnswer', 'Yes, we offer one free revision to ensure your complete satisfaction with the final product.')}
+                        {getRevisionAnswer(packageData.value)}
                       </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-2" className="border-white/20">
@@ -409,7 +417,7 @@ const PackageDetails = () => {
                         {t('faqLanguage', 'What languages are supported?')}
                       </AccordionTrigger>
                       <AccordionContent className="text-white/70">
-                        {t('faqLanguageAnswer', 'We support multiple languages including English, Romanian, French, German, and Polish.')}
+                        {t('faqLanguageAnswer', 'We support multiple languages including English, Romanian, French, German, Polish, and Italian.')}
                       </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-3" className="border-white/20">
