@@ -1,3 +1,4 @@
+
 import type { Field, Step, FieldOption, Addon } from '@/types';
 
 export interface PackageInclude {
@@ -315,8 +316,8 @@ export const packages: Package[] = [
     label_key: "plusPackage",
     description_key: "plusDescription",
     tagline_key: "plusTagline",
-    price_ron: 99,
-    price_eur: 19,
+    price_ron: 1,
+    price_eur: 1,
     delivery_time_key: "plusDelivery",
     includes: [
       { include_key: "plusInclude1" },
@@ -333,8 +334,8 @@ export const packages: Package[] = [
     label_key: "personalPackage",
     description_key: "personalDescription",
     tagline_key: "personalTagline",
-    price_ron: 249,
-    price_eur: 49,
+    price_ron: 299,
+    price_eur: 59,
     delivery_time_key: "personalDelivery",
     includes: [
       { include_key: "personalInclude1" },
@@ -369,8 +370,8 @@ export const packages: Package[] = [
     label_key: "businessPackage",
     description_key: "businessDescription",
     tagline_key: "businessTagline",
-    price_ron: 749,
-    price_eur: 149,
+    price_ron: 499,
+    price_eur: 99,
     delivery_time_key: "businessDelivery",
     includes: [
       { include_key: "businessInclude1" },
@@ -387,8 +388,8 @@ export const packages: Package[] = [
     label_key: "artistPackage",
     description_key: "artistDescription",
     tagline_key: "artistTagline",
-    price_ron: 999,
-    price_eur: 199,
+    price_ron: 7999,
+    price_eur: 1599,
     delivery_time_key: "artistDelivery",
     includes: [
       { include_key: "artistInclude1" },
@@ -405,8 +406,8 @@ export const packages: Package[] = [
     label_key: "remixPackage",
     description_key: "remixDescription",
     tagline_key: "remixTagline",
-    price_ron: 349,
-    price_eur: 69,
+    price_ron: 499,
+    price_eur: 99,
     delivery_time_key: "remixDelivery",
     includes: [
       { include_key: "remixInclude1" },
@@ -425,8 +426,8 @@ export const packages: Package[] = [
     label_key: "instrumentalPackage",
     description_key: "instrumentalDescription",
     tagline_key: "instrumentalTagline",
-    price_ron: 349,
-    price_eur: 69,
+    price_ron: 499,
+    price_eur: 99,
     delivery_time_key: "instrumentalDelivery",
     includes: [
       { include_key: "instrumentalInclude1" },
@@ -444,8 +445,8 @@ export const packages: Package[] = [
     label_key: "giftPackage",
     description_key: "giftDescription",
     tagline_key: "giftTagline",
-    price_ron: 0,
-    price_eur: 0,
+    price_ron: 299,
+    price_eur: 59,
     delivery_time_key: "giftDelivery",
     includes: [
       { include_key: "giftInclude1" },
@@ -462,8 +463,8 @@ export const packages: Package[] = [
     label_key: "weddingPackage",
     description_key: "weddingDescription",
     tagline_key: "weddingTagline",
-    price_ron: 350,
-    price_eur: 69,
+    price_ron: 299,
+    price_eur: 59,
     delivery_time_key: "weddingDelivery",
     includes: [
       { include_key: "weddingInclude1" },
@@ -506,8 +507,8 @@ export const packages: Package[] = [
     label_key: "comingOfAgePackage",
     description_key: "comingOfAgeDescription",
     tagline_key: "comingOfAgeTagline",
-    price_ron: 349,
-    price_eur: 69,
+    price_ron: 299,
+    price_eur: 59,
     delivery_time_key: "comingOfAgeDelivery",
     includes: [
       { include_key: "comingOfAgeInclude1" },
