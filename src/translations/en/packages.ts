@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -206,17 +207,17 @@ export const packagesTranslations = {
   // New Special Event Package names
   weddingPackage: "Wedding Package",
   baptismPackage: "Baptism Package",
-  comingOfAgePackage: "Coming of Age Package",
+  comingOfAgePackage: "18th Birthday Package",
   
   // New Package taglines
   weddingTagline: "Your unique dance song – created from your love story",
   baptismTagline: "An original melody for your little angel's special day",
-  comingOfAgeTagline: "A personalized anthem for the journey to adulthood",
+  comingOfAgeTagline: "A personalized anthem for your 18th birthday celebration",
   
   // New Package descriptions
   weddingDescription: "Have you dreamed of not dancing the most important dance of your life to the same song that others have danced to? Create an original personalized song for the bride and groom's dance or godparents' dance, based on their love story or friendship.",
   baptismDescription: "An original, emotional and personalized melody dedicated to the baptized child – ideal to be sung or played at the event, and to remain a lifelong memory.",
-  comingOfAgeDescription: "A unique and emotional musical gift for a young man or woman turning 18 – created from their story, energy, and aspirations.",
+  comingOfAgeDescription: "A unique and emotional musical gift for your 18th birthday – created from your story, energy, and aspirations as you step into adulthood.",
   
   // New Delivery times
   weddingDelivery: "5–7 working days",
@@ -242,7 +243,7 @@ export const packagesTranslations = {
   baptismInclude6: "Final WAV + MP3 files",
   
   // Coming of Age Package includes
-  comingOfAgeInclude1: "Interview/brief about the celebrant",
+  comingOfAgeInclude1: "Interview/brief about the 18th birthday celebrant",
   comingOfAgeInclude2: "Personalized lyrics about their dreams, passions, and personality",
   comingOfAgeInclude3: "Adapted vibe (hip-hop, pop, trap, lofi, etc.)",
   comingOfAgeInclude4: "Original song composed + professional vocals",
@@ -282,11 +283,11 @@ export const packagesTranslations = {
   baptismStyleAcousticPop: "Acoustic Pop",
   
   // Coming of Age form fields
-  comingOfAgeStep1Title: "Celebrant Information",
+  comingOfAgeStep1Title: "18th Birthday Celebrant Information",
   comingOfAgeStep2Title: "Musical Style & Vibe",
-  comingOfAgeCelebrantNamePlaceholder: "Name of the person turning 18",
+  comingOfAgeCelebrantNamePlaceholder: "Name of the 18th birthday celebrant",
   comingOfAgeHobbiesPlaceholder: "Their hobbies, passions, and personality traits",
-  comingOfAgePersonalMessagePlaceholder: "Personal message from family/friends",
+  comingOfAgePersonalMessagePlaceholder: "Personal message from family/friends for the 18th birthday",
   comingOfAgeStyleHipHop: "Hip-Hop",
   comingOfAgeStylePop: "Pop",
   comingOfAgeStyleTrap: "Trap",
@@ -312,8 +313,8 @@ export const packagesTranslations = {
   didYouKnowBaptism2Title: "Family traditions through music",
   didYouKnowBaptism2Desc: "Children who grow up with personalized songs often develop stronger family bonds and appreciation for their unique story.",
   
-  didYouKnowComingOfAge1Title: "Music and identity formation",
-  didYouKnowComingOfAge1Desc: "Teenagers who receive personalized songs report higher self-esteem and stronger sense of identity during their transition to adulthood.",
-  didYouKnowComingOfAge2Title: "Milestone celebrations",
-  didYouKnowComingOfAge2Desc: "Coming of age celebrations with personalized elements are remembered more vividly and positively impact future life decisions."
+  didYouKnowComingOfAge1Title: "Music and 18th birthday celebrations",
+  didYouKnowComingOfAge1Desc: "Teenagers who receive personalized songs for their 18th birthday report higher self-esteem and stronger sense of identity during their transition to adulthood.",
+  didYouKnowComingOfAge2Title: "18th birthday milestone celebrations",
+  didYouKnowComingOfAge2Desc: "18th birthday celebrations with personalized elements are remembered more vividly and positively impact future life decisions."
 };
