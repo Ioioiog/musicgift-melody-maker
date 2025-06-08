@@ -48,8 +48,8 @@ const Packages = () => {
     );
   };
 
-  // Define the desired order for packages - updated to match user request
-  const packageOrder = ['personal', 'premium', 'business', 'instrumental', 'remix', 'gift', 'plus', 'artist'];
+  // Define the desired order for packages - updated to include new special event packages
+  const packageOrder = ['personal', 'premium', 'business', 'instrumental', 'remix', 'gift', 'wedding', 'baptism', 'coming-of-age', 'plus', 'artist'];
   
   // Sort packages according to the defined order
   const sortedPackages = packages?.sort((a, b) => {
@@ -172,7 +172,6 @@ const Packages = () => {
       </section>
 
       {/* Gift Card CTA */}
-      
 
       <Footer />
     </div>

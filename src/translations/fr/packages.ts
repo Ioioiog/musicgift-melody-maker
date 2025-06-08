@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Choisissez votre forfait",
   selectPerfectPackage: "Sélectionnez le forfait parfait qui correspond à vos besoins et à votre budget",
@@ -203,4 +202,118 @@ export const packagesTranslations = {
   giftPhysicalCard: "Carte physique",
   giftPhysicalCardDesc: "Carte cadeau physique livrée par courrier",
   giftPhysicalCardPrice: "€15 / 75 RON",
+  
+  // New Special Event Package names
+  weddingPackage: "Forfait Mariage",
+  baptismPackage: "Forfait Baptême",
+  comingOfAgePackage: "Forfait Majorité",
+  
+  // New Package taglines
+  weddingTagline: "Votre chanson de danse unique – créée à partir de votre histoire d'amour",
+  baptismTagline: "Une mélodie originale pour le jour spécial de votre petit ange",
+  comingOfAgeTagline: "Un hymne personnalisé pour le voyage vers l'âge adulte",
+  
+  // New Package descriptions
+  weddingDescription: "Avez-vous rêvé de ne pas danser la danse la plus importante de votre vie sur la même chanson que d'autres ont dansée ? Créez une chanson originale personnalisée pour la danse des mariés ou des parrains, basée sur leur histoire d'amour ou d'amitié.",
+  baptismDescription: "Une mélodie originale, émouvante et personnalisée dédiée à l'enfant baptisé – idéale pour être chantée ou jouée lors de l'événement, et pour rester un souvenir à vie.",
+  comingOfAgeDescription: "Un cadeau musical unique et émouvant pour un jeune homme ou une jeune femme qui atteint 18 ans – créé à partir de leur histoire, de leur énergie et de leurs aspirations.",
+  
+  // New Delivery times
+  weddingDelivery: "5–7 jours ouvrables",
+  baptismDelivery: "3–5 jours ouvrables",
+  comingOfAgeDelivery: "5–7 jours ouvrables",
+  
+  // Wedding Package includes
+  weddingInclude1: "Consultation créative (histoire des mariés/parrains)",
+  weddingInclude2: "Composition mélodie personnalisée + paroles",
+  weddingInclude3: "Instrumental original",
+  weddingInclude4: "Voix professionnelle (féminine/masculine)",
+  weddingInclude5: "Mix & master professionnel",
+  weddingInclude6: "Fichiers finaux WAV + MP3",
+  weddingInclude7: "Révision gratuite (1x)",
+  weddingInclude8: "Une demande de modification incluse",
+  
+  // Baptism Package includes
+  baptismInclude1: "Consultation avec les parents (nom de l'enfant, signification)",
+  baptismInclude2: "Paroles personnalisées sur le bébé",
+  baptismInclude3: "Ligne mélodique + instrumental original",
+  baptismInclude4: "Voix professionnelle (au choix : féminine/masculine)",
+  baptismInclude5: "Mix & master professionnel",
+  baptismInclude6: "Fichiers finaux WAV + MP3",
+  
+  // Coming of Age Package includes
+  comingOfAgeInclude1: "Interview/brief sur le célébrant",
+  comingOfAgeInclude2: "Paroles personnalisées sur leurs rêves, passions et personnalité",
+  comingOfAgeInclude3: "Ambiance adaptée (hip-hop, pop, trap, lofi, etc.)",
+  comingOfAgeInclude4: "Chanson originale composée + voix professionnelle",
+  comingOfAgeInclude5: "Mix & master professionnel",
+  comingOfAgeInclude6: "Fichiers finaux WAV + MP3",
+  
+  // New Add-ons
+  personalizedAudioMessage: "Message Audio Personnalisé",
+  personalizedAudioMessageDesc: "Message audio au début de la chanson",
+  godparentsSpecialMelody: "Mélodie Spéciale pour Parrains",
+  godparentsSpecialMelodyDesc: "Une deuxième mélodie comme cadeau surprise pour les parrains",
+  
+  // Wedding form fields
+  weddingStep1Title: "Détails du Couple",
+  weddingStep2Title: "Histoire et Préférences",
+  weddingCoupleNamesPlaceholder: "Entrez les noms des mariés ou des parrains",
+  weddingBrideGroom: "Mariée et Marié",
+  weddingGodparents: "Parrains",
+  weddingHowMetPlaceholder: "Dites-nous comment ils se sont rencontrés...",
+  weddingLoveStoryPlaceholder: "Partagez leur histoire d'amour ou d'amitié détaillée...",
+  weddingAtmosphereRomantic: "Romantique",
+  weddingAtmosphereEmotional: "Émotionnelle",
+  weddingAtmosphereElegant: "Élégante",
+  weddingMusicalStylePlaceholder: "Style musical préféré ou chanson d'inspiration",
+  
+  // Baptism form fields
+  baptismStep1Title: "Informations sur l'Enfant",
+  baptismStep2Title: "Préférences Musicales",
+  baptismChildNamePlaceholder: "Nom de l'enfant",
+  baptismNameMeaningPlaceholder: "Signification du nom (optionnel)",
+  baptismBirthStoryPlaceholder: "Histoire de naissance / souhaits des parents",
+  baptismAtmosphereCalm: "Calme",
+  baptismAtmospherePlayful: "Enjouée",
+  baptismAtmosphereEmotional: "Émotionnelle",
+  baptismStyleBallad: "Ballade",
+  baptismStyleLullaby: "Berceuse",
+  baptismStyleAcousticPop: "Pop Acoustique",
+  
+  // Coming of Age form fields
+  comingOfAgeStep1Title: "Informations sur le Célébrant",
+  comingOfAgeStep2Title: "Style Musical et Ambiance",
+  comingOfAgeCelebrantNamePlaceholder: "Nom de la personne qui atteint 18 ans",
+  comingOfAgeHobbiesPlaceholder: "Leurs loisirs, passions et traits de personnalité",
+  comingOfAgePersonalMessagePlaceholder: "Message personnel de la famille/des amis",
+  comingOfAgeStyleHipHop: "Hip-Hop",
+  comingOfAgeStylePop: "Pop",
+  comingOfAgeStyleTrap: "Trap",
+  comingOfAgeStyleLofi: "Lo-Fi",
+  comingOfAgeVibeEmotional: "Émotionnelle",
+  comingOfAgeVibeFun: "Amusante",
+  comingOfAgeVibeRebellious: "Rebelle",
+  comingOfAgeVibeDreamy: "Rêveuse",
+  comingOfAgeFavoriteArtistsPlaceholder: "Exemples d'artistes ou chansons préférés",
+  
+  // Common voice options
+  voiceFemale: "Voix Féminine",
+  voiceMale: "Voix Masculine",
+  
+  // Did You Know sections for new packages
+  didYouKnowWedding1Title: "Les chansons de mariage créent des souvenirs durables",
+  didYouKnowWedding1Desc: "Les couples qui dansent sur leur propre chanson personnalisée rapportent une connexion émotionnelle plus forte avec leurs souvenirs de mariage et jouent la chanson aux anniversaires.",
+  didYouKnowWedding2Title: "Traditions de mariage uniques",
+  didYouKnowWedding2Desc: "Avoir une chanson de mariage personnalisée devient une nouvelle tradition, avec 67% des couples disant qu'ils auraient souhaité quelque chose de plus personnel que les chansons populaires.",
+  
+  didYouKnowBaptism1Title: "La musique et le développement de l'enfant",
+  didYouKnowBaptism1Desc: "Les chansons personnalisées pour enfants aident au lien émotionnel et peuvent devenir une source de réconfort tout au long des années d'enfance.",
+  didYouKnowBaptism2Title: "Les traditions familiales par la musique",
+  didYouKnowBaptism2Desc: "Les enfants qui grandissent avec des chansons personnalisées développent souvent des liens familiaux plus forts et une appréciation pour leur histoire unique.",
+  
+  didYouKnowComingOfAge1Title: "La musique et la formation de l'identité",
+  didYouKnowComingOfAge1Desc: "Les adolescents qui reçoivent des chansons personnalisées rapportent une estime de soi plus élevée et un sentiment d'identité plus fort pendant leur transition vers l'âge adulte.",
+  didYouKnowComingOfAge2Title: "Célébrations d'étapes importantes",
+  didYouKnowComingOfAge2Desc: "Les célébrations de majorité avec des éléments personnalisés sont rappelées plus vivement et impactent positivement les futures décisions de vie."
 };

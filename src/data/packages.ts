@@ -50,10 +50,24 @@ export const addons = {
     label_key: 'extendedSongLabel',
     description_key: 'extendedSongDescription',
     availableFor: ['personal', 'premium', 'business', 'plus']
+  },
+  personalizedAudioMessage: {
+    label_key: 'personalizedAudioMessage',
+    description_key: 'personalizedAudioMessageDesc',
+    price_ron: 99,
+    price_eur: 19,
+    availableFor: ['wedding', 'baptism', 'coming-of-age']
+  },
+  godparentsSpecialMelody: {
+    label_key: 'godparentsSpecialMelody',
+    description_key: 'godparentsSpecialMelodyDesc',
+    price_ron: 199,
+    price_eur: 39,
+    availableFor: ['wedding']
   }
 };
 
-export const packages: Package[] = [
+export const packages: PackageData[] = [
   {
     id: "plus-package",
     value: "plus",
@@ -1410,6 +1424,284 @@ export const packages: Package[] = [
             placeholder_key: "representativeNamePlaceholder",
             required: true,
             field_order: 7
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'wedding',
+    value: 'wedding',
+    label_key: 'weddingPackage',
+    description_key: 'weddingDescription',
+    tagline_key: 'weddingTagline',
+    price_ron: 350,
+    price_eur: 69,
+    delivery_time_key: 'weddingDelivery',
+    tag: null,
+    is_active: true,
+    includes: [
+      { include_key: 'weddingInclude1', include_order: 1 },
+      { include_key: 'weddingInclude2', include_order: 2 },
+      { include_key: 'weddingInclude3', include_order: 3 },
+      { include_key: 'weddingInclude4', include_order: 4 },
+      { include_key: 'weddingInclude5', include_order: 5 },
+      { include_key: 'weddingInclude6', include_order: 6 },
+      { include_key: 'weddingInclude7', include_order: 7 },
+      { include_key: 'weddingInclude8', include_order: 8 }
+    ],
+    steps: [
+      {
+        step_number: 1,
+        title_key: 'weddingStep1Title',
+        fields: [
+          {
+            field_name: 'couple_names',
+            field_type: 'text',
+            placeholder_key: 'weddingCoupleNamesPlaceholder',
+            required: true,
+            field_order: 1
+          },
+          {
+            field_name: 'relationship_type',
+            field_type: 'select',
+            required: true,
+            field_order: 2,
+            options: [
+              { value: 'bride_groom', label_key: 'weddingBrideGroom' },
+              { value: 'godparents', label_key: 'weddingGodparents' }
+            ]
+          },
+          {
+            field_name: 'how_they_met',
+            field_type: 'textarea',
+            placeholder_key: 'weddingHowMetPlaceholder',
+            required: true,
+            field_order: 3
+          }
+        ]
+      },
+      {
+        step_number: 2,
+        title_key: 'weddingStep2Title',
+        fields: [
+          {
+            field_name: 'love_story',
+            field_type: 'textarea',
+            placeholder_key: 'weddingLoveStoryPlaceholder',
+            required: true,
+            field_order: 1
+          },
+          {
+            field_name: 'atmosphere',
+            field_type: 'select',
+            required: true,
+            field_order: 2,
+            options: [
+              { value: 'romantic', label_key: 'weddingAtmosphereRomantic' },
+              { value: 'emotional', label_key: 'weddingAtmosphereEmotional' },
+              { value: 'elegant', label_key: 'weddingAtmosphereElegant' }
+            ]
+          },
+          {
+            field_name: 'voice_type',
+            field_type: 'select',
+            required: true,
+            field_order: 3,
+            options: [
+              { value: 'female', label_key: 'voiceFemale' },
+              { value: 'male', label_key: 'voiceMale' }
+            ]
+          },
+          {
+            field_name: 'musical_style',
+            field_type: 'text',
+            placeholder_key: 'weddingMusicalStylePlaceholder',
+            required: true,
+            field_order: 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'baptism',
+    value: 'baptism',
+    label_key: 'baptismPackage',
+    description_key: 'baptismDescription',
+    tagline_key: 'baptismTagline',
+    price_ron: 299,
+    price_eur: 59,
+    delivery_time_key: 'baptismDelivery',
+    tag: null,
+    is_active: true,
+    includes: [
+      { include_key: 'baptismInclude1', include_order: 1 },
+      { include_key: 'baptismInclude2', include_order: 2 },
+      { include_key: 'baptismInclude3', include_order: 3 },
+      { include_key: 'baptismInclude4', include_order: 4 },
+      { include_key: 'baptismInclude5', include_order: 5 },
+      { include_key: 'baptismInclude6', include_order: 6 }
+    ],
+    steps: [
+      {
+        step_number: 1,
+        title_key: 'baptismStep1Title',
+        fields: [
+          {
+            field_name: 'child_name',
+            field_type: 'text',
+            placeholder_key: 'baptismChildNamePlaceholder',
+            required: true,
+            field_order: 1
+          },
+          {
+            field_name: 'name_meaning',
+            field_type: 'text',
+            placeholder_key: 'baptismNameMeaningPlaceholder',
+            required: false,
+            field_order: 2
+          },
+          {
+            field_name: 'birth_story',
+            field_type: 'textarea',
+            placeholder_key: 'baptismBirthStoryPlaceholder',
+            required: true,
+            field_order: 3
+          }
+        ]
+      },
+      {
+        step_number: 2,
+        title_key: 'baptismStep2Title',
+        fields: [
+          {
+            field_name: 'atmosphere',
+            field_type: 'select',
+            required: true,
+            field_order: 1,
+            options: [
+              { value: 'calm', label_key: 'baptismAtmosphereCalm' },
+              { value: 'playful', label_key: 'baptismAtmospherePlayful' },
+              { value: 'emotional', label_key: 'baptismAtmosphereEmotional' }
+            ]
+          },
+          {
+            field_name: 'voice_type',
+            field_type: 'select',
+            required: true,
+            field_order: 2,
+            options: [
+              { value: 'female', label_key: 'voiceFemale' },
+              { value: 'male', label_key: 'voiceMale' }
+            ]
+          },
+          {
+            field_name: 'musical_style',
+            field_type: 'select',
+            required: true,
+            field_order: 3,
+            options: [
+              { value: 'ballad', label_key: 'baptismStyleBallad' },
+              { value: 'lullaby', label_key: 'baptismStyleLullaby' },
+              { value: 'acoustic_pop', label_key: 'baptismStyleAcousticPop' }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'coming-of-age',
+    value: 'coming-of-age',
+    label_key: 'comingOfAgePackage',
+    description_key: 'comingOfAgeDescription',
+    tagline_key: 'comingOfAgeTagline',
+    price_ron: 349,
+    price_eur: 69,
+    delivery_time_key: 'comingOfAgeDelivery',
+    tag: null,
+    is_active: true,
+    includes: [
+      { include_key: 'comingOfAgeInclude1', include_order: 1 },
+      { include_key: 'comingOfAgeInclude2', include_order: 2 },
+      { include_key: 'comingOfAgeInclude3', include_order: 3 },
+      { include_key: 'comingOfAgeInclude4', include_order: 4 },
+      { include_key: 'comingOfAgeInclude5', include_order: 5 },
+      { include_key: 'comingOfAgeInclude6', include_order: 6 }
+    ],
+    steps: [
+      {
+        step_number: 1,
+        title_key: 'comingOfAgeStep1Title',
+        fields: [
+          {
+            field_name: 'celebrant_name',
+            field_type: 'text',
+            placeholder_key: 'comingOfAgeCelebrantNamePlaceholder',
+            required: true,
+            field_order: 1
+          },
+          {
+            field_name: 'hobbies_traits',
+            field_type: 'textarea',
+            placeholder_key: 'comingOfAgeHobbiesPlaceholder',
+            required: true,
+            field_order: 2
+          },
+          {
+            field_name: 'personal_message',
+            field_type: 'textarea',
+            placeholder_key: 'comingOfAgePersonalMessagePlaceholder',
+            required: true,
+            field_order: 3
+          }
+        ]
+      },
+      {
+        step_number: 2,
+        title_key: 'comingOfAgeStep2Title',
+        fields: [
+          {
+            field_name: 'musical_style',
+            field_type: 'select',
+            required: true,
+            field_order: 1,
+            options: [
+              { value: 'hip_hop', label_key: 'comingOfAgeStyleHipHop' },
+              { value: 'pop', label_key: 'comingOfAgeStylePop' },
+              { value: 'trap', label_key: 'comingOfAgeStyleTrap' },
+              { value: 'lofi', label_key: 'comingOfAgeStyleLofi' }
+            ]
+          },
+          {
+            field_name: 'vibe',
+            field_type: 'select',
+            required: true,
+            field_order: 2,
+            options: [
+              { value: 'emotional', label_key: 'comingOfAgeVibeEmotional' },
+              { value: 'fun', label_key: 'comingOfAgeVibeFun' },
+              { value: 'rebellious', label_key: 'comingOfAgeVibeRebellious' },
+              { value: 'dreamy', label_key: 'comingOfAgeVibeDreamy' }
+            ]
+          },
+          {
+            field_name: 'favorite_artists',
+            field_type: 'text',
+            placeholder_key: 'comingOfAgeFavoriteArtistsPlaceholder',
+            required: false,
+            field_order: 3
+          },
+          {
+            field_name: 'voice_type',
+            field_type: 'select',
+            required: true,
+            field_order: 4,
+            options: [
+              { value: 'female', label_key: 'voiceFemale' },
+              { value: 'male', label_key: 'voiceMale' }
+            ]
           }
         ]
       }

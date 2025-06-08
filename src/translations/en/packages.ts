@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -203,4 +202,118 @@ export const packagesTranslations = {
   giftPhysicalCard: "Physical Card",
   giftPhysicalCardDesc: "Physical gift card delivered by mail",
   giftPhysicalCardPrice: "€15 / 75 RON",
+  
+  // New Special Event Package names
+  weddingPackage: "Wedding Package",
+  baptismPackage: "Baptism Package",
+  comingOfAgePackage: "Coming of Age Package",
+  
+  // New Package taglines
+  weddingTagline: "Your unique dance song – created from your love story",
+  baptismTagline: "An original melody for your little angel's special day",
+  comingOfAgeTagline: "A personalized anthem for the journey to adulthood",
+  
+  // New Package descriptions
+  weddingDescription: "Have you dreamed of not dancing the most important dance of your life to the same song that others have danced to? Create an original personalized song for the bride and groom's dance or godparents' dance, based on their love story or friendship.",
+  baptismDescription: "An original, emotional and personalized melody dedicated to the baptized child – ideal to be sung or played at the event, and to remain a lifelong memory.",
+  comingOfAgeDescription: "A unique and emotional musical gift for a young man or woman turning 18 – created from their story, energy, and aspirations.",
+  
+  // New Delivery times
+  weddingDelivery: "5–7 working days",
+  baptismDelivery: "3–5 working days",
+  comingOfAgeDelivery: "5–7 working days",
+  
+  // Wedding Package includes
+  weddingInclude1: "Creative consultation (bride & groom/godparents' story)",
+  weddingInclude2: "Personalized melody + lyrics composition",
+  weddingInclude3: "Original instrumental",
+  weddingInclude4: "Professional vocals (female/male)",
+  weddingInclude5: "Professional mix & master",
+  weddingInclude6: "Final WAV + MP3 files",
+  weddingInclude7: "Free revision (1x)",
+  weddingInclude8: "One modification request included",
+  
+  // Baptism Package includes
+  baptismInclude1: "Consultation with parents (child's name, significance)",
+  baptismInclude2: "Personalized lyrics about the baby",
+  baptismInclude3: "Melodic line + original instrumental",
+  baptismInclude4: "Professional vocals (choice: female/male)",
+  baptismInclude5: "Professional mix & master",
+  baptismInclude6: "Final WAV + MP3 files",
+  
+  // Coming of Age Package includes
+  comingOfAgeInclude1: "Interview/brief about the celebrant",
+  comingOfAgeInclude2: "Personalized lyrics about their dreams, passions, and personality",
+  comingOfAgeInclude3: "Adapted vibe (hip-hop, pop, trap, lofi, etc.)",
+  comingOfAgeInclude4: "Original song composed + professional vocals",
+  comingOfAgeInclude5: "Professional mix & master",
+  comingOfAgeInclude6: "Final WAV + MP3 files",
+  
+  // New Add-ons
+  personalizedAudioMessage: "Personalized Audio Message",
+  personalizedAudioMessageDesc: "Audio message at the beginning of the song",
+  godparentsSpecialMelody: "Godparents' Special Melody",
+  godparentsSpecialMelodyDesc: "A second melody as a surprise gift for the godparents",
+  
+  // Wedding form fields
+  weddingStep1Title: "Couple Details",
+  weddingStep2Title: "Story & Preferences",
+  weddingCoupleNamesPlaceholder: "Enter bride & groom or godparents' names",
+  weddingBrideGroom: "Bride & Groom",
+  weddingGodparents: "Godparents",
+  weddingHowMetPlaceholder: "Tell us how they met...",
+  weddingLoveStoryPlaceholder: "Share their detailed love story or friendship story...",
+  weddingAtmosphereRomantic: "Romantic",
+  weddingAtmosphereEmotional: "Emotional",
+  weddingAtmosphereElegant: "Elegant",
+  weddingMusicalStylePlaceholder: "Preferred musical style or inspiration song",
+  
+  // Baptism form fields
+  baptismStep1Title: "Child Information",
+  baptismStep2Title: "Musical Preferences",
+  baptismChildNamePlaceholder: "Child's name",
+  baptismNameMeaningPlaceholder: "Meaning of the name (optional)",
+  baptismBirthStoryPlaceholder: "Birth story / parents' wishes",
+  baptismAtmosphereCalm: "Calm",
+  baptismAtmospherePlayful: "Playful",
+  baptismAtmosphereEmotional: "Emotional",
+  baptismStyleBallad: "Ballad",
+  baptismStyleLullaby: "Lullaby",
+  baptismStyleAcousticPop: "Acoustic Pop",
+  
+  // Coming of Age form fields
+  comingOfAgeStep1Title: "Celebrant Information",
+  comingOfAgeStep2Title: "Musical Style & Vibe",
+  comingOfAgeCelebrantNamePlaceholder: "Name of the person turning 18",
+  comingOfAgeHobbiesPlaceholder: "Their hobbies, passions, and personality traits",
+  comingOfAgePersonalMessagePlaceholder: "Personal message from family/friends",
+  comingOfAgeStyleHipHop: "Hip-Hop",
+  comingOfAgeStylePop: "Pop",
+  comingOfAgeStyleTrap: "Trap",
+  comingOfAgeStyleLofi: "Lo-Fi",
+  comingOfAgeVibeEmotional: "Emotional",
+  comingOfAgeVibeFun: "Fun",
+  comingOfAgeVibeRebellious: "Rebellious",
+  comingOfAgeVibeDreamy: "Dreamy",
+  comingOfAgeFavoriteArtistsPlaceholder: "Examples of favorite artists or songs",
+  
+  // Common voice options
+  voiceFemale: "Female Voice",
+  voiceMale: "Male Voice",
+  
+  // Did You Know sections for new packages
+  didYouKnowWedding1Title: "Wedding songs create lasting memories",
+  didYouKnowWedding1Desc: "Couples who dance to their own personalized song report stronger emotional connection to their wedding memories and play the song on anniversaries.",
+  didYouKnowWedding2Title: "Unique wedding traditions",
+  didYouKnowWedding2Desc: "Having a custom wedding song is becoming a new tradition, with 67% of couples saying they wish they had something more personal than popular songs.",
+  
+  didYouKnowBaptism1Title: "Music and child development",
+  didYouKnowBaptism1Desc: "Personalized songs for children help with emotional bonding and can become a source of comfort throughout their childhood years.",
+  didYouKnowBaptism2Title: "Family traditions through music",
+  didYouKnowBaptism2Desc: "Children who grow up with personalized songs often develop stronger family bonds and appreciation for their unique story.",
+  
+  didYouKnowComingOfAge1Title: "Music and identity formation",
+  didYouKnowComingOfAge1Desc: "Teenagers who receive personalized songs report higher self-esteem and stronger sense of identity during their transition to adulthood.",
+  didYouKnowComingOfAge2Title: "Milestone celebrations",
+  didYouKnowComingOfAge2Desc: "Coming of age celebrations with personalized elements are remembered more vividly and positively impact future life decisions."
 };

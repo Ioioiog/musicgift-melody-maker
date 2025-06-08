@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Wählen Sie Ihr Paket",
   selectPerfectPackage: "Wählen Sie das perfekte Paket, das zu Ihren Bedürfnissen und Ihrem Budget passt",
@@ -203,4 +202,118 @@ export const packagesTranslations = {
   giftPhysicalCard: "Physische Karte",
   giftPhysicalCardDesc: "Physische Geschenkkarte per Post geliefert",
   giftPhysicalCardPrice: "€15 / 75 RON",
+  
+  // New Special Event Package names
+  weddingPackage: "Hochzeitspaket",
+  baptismPackage: "Taufpaket",
+  comingOfAgePackage: "Volljährigkeitspaket",
+  
+  // New Package taglines
+  weddingTagline: "Euer einzigartiger Tanzsong – erstellt aus eurer Liebesgeschichte",
+  baptismTagline: "Eine originale Melodie für den besonderen Tag eures kleinen Engels",
+  comingOfAgeTagline: "Eine personalisierte Hymne für den Weg ins Erwachsenenalter",
+  
+  // New Package descriptions
+  weddingDescription: "Habt ihr davon geträumt, den wichtigsten Tanz eures Lebens nicht zu demselben Lied zu tanzen, zu dem andere getanzt haben? Erstellt einen originalen personalisierten Song für den Brautpaartanz oder Patenelterntanz, basierend auf eurer Liebesgeschichte oder Freundschaft.",
+  baptismDescription: "Eine originale, emotionale und personalisierte Melodie, die dem getauften Kind gewidmet ist – ideal zum Singen oder Abspielen bei der Veranstaltung und um ein lebenslanges Andenken zu bleiben.",
+  comingOfAgeDescription: "Ein einzigartiges und emotionales Musikgeschenk für einen jungen Mann oder eine junge Frau, der/die 18 wird – erstellt aus ihrer Geschichte, Energie und ihren Bestrebungen.",
+  
+  // New Delivery times
+  weddingDelivery: "5–7 Werktage",
+  baptismDelivery: "3–5 Werktage",
+  comingOfAgeDelivery: "5–7 Werktage",
+  
+  // Wedding Package includes
+  weddingInclude1: "Kreative Beratung (Geschichte des Brautpaars/der Pateneltern)",
+  weddingInclude2: "Personalisierte Melodie + Texterstellung",
+  weddingInclude3: "Original Instrumental",
+  weddingInclude4: "Professioneller Gesang (weiblich/männlich)",
+  weddingInclude5: "Professioneller Mix & Master",
+  weddingInclude6: "Finale WAV + MP3 Dateien",
+  weddingInclude7: "Kostenlose Revision (1x)",
+  weddingInclude8: "Eine Änderungsanfrage inklusive",
+  
+  // Baptism Package includes
+  baptismInclude1: "Beratung mit Eltern (Name des Kindes, Bedeutung)",
+  baptismInclude2: "Personalisierter Text über das Baby",
+  baptismInclude3: "Melodielinie + Original Instrumental",
+  baptismInclude4: "Professioneller Gesang (Wahl: weiblich/männlich)",
+  baptismInclude5: "Professioneller Mix & Master",
+  baptismInclude6: "Finale WAV + MP3 Dateien",
+  
+  // Coming of Age Package includes
+  comingOfAgeInclude1: "Interview/Brief über den Jubilar",
+  comingOfAgeInclude2: "Personalisierter Text über ihre Träume, Leidenschaften und Persönlichkeit",
+  comingOfAgeInclude3: "Angepasste Stimmung (Hip-Hop, Pop, Trap, Lofi, etc.)",
+  comingOfAgeInclude4: "Original Song komponiert + professioneller Gesang",
+  comingOfAgeInclude5: "Professioneller Mix & Master",
+  comingOfAgeInclude6: "Finale WAV + MP3 Dateien",
+  
+  // New Add-ons
+  personalizedAudioMessage: "Personalisierte Audio-Nachricht",
+  personalizedAudioMessageDesc: "Audio-Nachricht am Anfang des Songs",
+  godparentsSpecialMelody: "Spezielle Melodie für Pateneltern",
+  godparentsSpecialMelodyDesc: "Eine zweite Melodie als Überraschungsgeschenk für die Pateneltern",
+  
+  // Wedding form fields
+  weddingStep1Title: "Paar-Details",
+  weddingStep2Title: "Geschichte & Präferenzen",
+  weddingCoupleNamesPlaceholder: "Namen des Brautpaars oder der Pateneltern eingeben",
+  weddingBrideGroom: "Braut & Bräutigam",
+  weddingGodparents: "Pateneltern",
+  weddingHowMetPlaceholder: "Erzählt uns, wie sie sich kennengelernt haben...",
+  weddingLoveStoryPlaceholder: "Teilt ihre detaillierte Liebesgeschichte oder Freundschaftsgeschichte...",
+  weddingAtmosphereRomantic: "Romantisch",
+  weddingAtmosphereEmotional: "Emotional",
+  weddingAtmosphereElegant: "Elegant",
+  weddingMusicalStylePlaceholder: "Bevorzugter Musikstil oder Inspirationssong",
+  
+  // Baptism form fields
+  baptismStep1Title: "Kind-Informationen",
+  baptismStep2Title: "Musikalische Präferenzen",
+  baptismChildNamePlaceholder: "Name des Kindes",
+  baptismNameMeaningPlaceholder: "Bedeutung des Namens (optional)",
+  baptismBirthStoryPlaceholder: "Geburtsgeschichte / Wünsche der Eltern",
+  baptismAtmosphereCalm: "Ruhig",
+  baptismAtmospherePlayful: "Spielerisch",
+  baptismAtmosphereEmotional: "Emotional",
+  baptismStyleBallad: "Ballade",
+  baptismStyleLullaby: "Wiegenlied",
+  baptismStyleAcousticPop: "Acoustic Pop",
+  
+  // Coming of Age form fields
+  comingOfAgeStep1Title: "Jubilar-Informationen",
+  comingOfAgeStep2Title: "Musikstil & Stimmung",
+  comingOfAgeCelebrantNamePlaceholder: "Name der Person, die 18 wird",
+  comingOfAgeHobbiesPlaceholder: "Ihre Hobbys, Leidenschaften und Persönlichkeitsmerkmale",
+  comingOfAgePersonalMessagePlaceholder: "Persönliche Nachricht von Familie/Freunden",
+  comingOfAgeStyleHipHop: "Hip-Hop",
+  comingOfAgeStylePop: "Pop",
+  comingOfAgeStyleTrap: "Trap",
+  comingOfAgeStyleLofi: "Lo-Fi",
+  comingOfAgeVibeEmotional: "Emotional",
+  comingOfAgeVibeFun: "Spaßig",
+  comingOfAgeVibeRebellious: "Rebellisch",
+  comingOfAgeVibeDreamy: "Verträumt",
+  comingOfAgeFavoriteArtistsPlaceholder: "Beispiele für Lieblingskünstler oder Songs",
+  
+  // Common voice options
+  voiceFemale: "Weibliche Stimme",
+  voiceMale: "Männliche Stimme",
+  
+  // Did You Know sections for new packages
+  didYouKnowWedding1Title: "Hochzeitslieder schaffen bleibende Erinnerungen",
+  didYouKnowWedding1Desc: "Paare, die zu ihrem eigenen personalisierten Lied tanzen, berichten über eine stärkere emotionale Verbindung zu ihren Hochzeitserinnerungen und spielen das Lied an Jahrestagen.",
+  didYouKnowWedding2Title: "Einzigartige Hochzeitstraditionen",
+  didYouKnowWedding2Desc: "Ein individuelles Hochzeitslied zu haben wird zu einer neuen Tradition, mit 67% der Paare, die sagen, sie hätten sich etwas Persönlicheres als populäre Songs gewünscht.",
+  
+  didYouKnowBaptism1Title: "Musik und Kindesentwicklung",
+  didYouKnowBaptism1Desc: "Personalisierte Lieder für Kinder helfen bei der emotionalen Bindung und können während der Kindheitsjahre eine Quelle des Trostes werden.",
+  didYouKnowBaptism2Title: "Familientraditionen durch Musik",
+  didYouKnowBaptism2Desc: "Kinder, die mit personalisierten Liedern aufwachsen, entwickeln oft stärkere Familienbande und Wertschätzung für ihre einzigartige Geschichte.",
+  
+  didYouKnowComingOfAge1Title: "Musik und Identitätsbildung",
+  didYouKnowComingOfAge1Desc: "Teenager, die personalisierte Lieder erhalten, berichten über höheres Selbstwertgefühl und stärkeres Identitätsgefühl während des Übergangs ins Erwachsenenalter.",
+  didYouKnowComingOfAge2Title: "Meilenstein-Feiern",
+  didYouKnowComingOfAge2Desc: "Volljährigkeitsfeiern mit personalisierten Elementen werden lebhafter erinnert und beeinflussen zukünftige Lebensentscheidungen positiv."
 };

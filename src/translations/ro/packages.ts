@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -203,4 +202,118 @@ export const packagesTranslations = {
   giftPhysicalCard: "Card fizic",
   giftPhysicalCardDesc: "Card cadou fizic livrat prin poștă",
   giftPhysicalCardPrice: "€15 / 75 RON",
+  
+  // New Special Event Package names
+  weddingPackage: "Pachetul Nuntă",
+  baptismPackage: "Pachetul Botez",
+  comingOfAgePackage: "Pachetul Majorat",
+  
+  // New Package taglines
+  weddingTagline: "Melodia voastră unică de dans – creată din povestea voastră de dragoste",
+  baptismTagline: "O melodie originală pentru ziua specială a îngerașului vostru",
+  comingOfAgeTagline: "Un imn personalizat pentru călătoria către maturitate",
+  
+  // New Package descriptions
+  weddingDescription: "Ați visat să nu dansați cel mai important dans al vieții voastre pe aceeași melodie pe care au dansat-o și alții? Creați o melodie originală personalizată pentru dansul mirilor sau al nașilor, bazată pe povestea lor de dragoste sau prietenie.",
+  baptismDescription: "O melodie originală, emoționantă și personalizată dedicată copilului botezat – ideală pentru a fi cântată sau redată la eveniment și pentru a rămâne o amintire pe viață.",
+  comingOfAgeDescription: "Un cadou muzical unic și emoționant pentru un tânăr sau o tânără care împlinește 18 ani – creat din povestea, energia și aspirațiile lor.",
+  
+  // New Delivery times
+  weddingDelivery: "5–7 zile lucrătoare",
+  baptismDelivery: "3–5 zile lucrătoare",
+  comingOfAgeDelivery: "5–7 zile lucrătoare",
+  
+  // Wedding Package includes
+  weddingInclude1: "Consultanță creativă (povestea mirilor/nașilor)",
+  weddingInclude2: "Compoziție melodie personalizată + versuri",
+  weddingInclude3: "Instrumental original",
+  weddingInclude4: "Voce profesională (feminină/masculină)",
+  weddingInclude5: "Mix & master profesional",
+  weddingInclude6: "Fișiere finale WAV + MP3",
+  weddingInclude7: "Revizie gratuită (1x)",
+  weddingInclude8: "O solicitare de modificare inclusă",
+  
+  // Baptism Package includes
+  baptismInclude1: "Consultație cu părinții (numele copilului, semnificația)",
+  baptismInclude2: "Versuri personalizate despre copil",
+  baptismInclude3: "Linie melodică + instrumental original",
+  baptismInclude4: "Voce profesională (la alegere: feminină/masculină)",
+  baptismInclude5: "Mix & master profesional",
+  baptismInclude6: "Fișiere finale WAV + MP3",
+  
+  // Coming of Age Package includes
+  comingOfAgeInclude1: "Interviu/brief despre sărbătorit",
+  comingOfAgeInclude2: "Versuri personalizate despre visurile, pasiunile și personalitatea lor",
+  comingOfAgeInclude3: "Vibe adaptat (hip-hop, pop, trap, lofi, etc.)",
+  comingOfAgeInclude4: "Melodie originală compusă + voce profesională",
+  comingOfAgeInclude5: "Mix & master profesional",
+  comingOfAgeInclude6: "Fișiere finale WAV + MP3",
+  
+  // New Add-ons
+  personalizedAudioMessage: "Mesaj Audio Personalizat",
+  personalizedAudioMessageDesc: "Mesaj audio la începutul melodiei",
+  godparentsSpecialMelody: "Melodia Specială pentru Nași",
+  godparentsSpecialMelodyDesc: "O a doua melodie ca surpriză cadou pentru nași",
+  
+  // Wedding form fields
+  weddingStep1Title: "Detalii Cuplu",
+  weddingStep2Title: "Poveste & Preferințe",
+  weddingCoupleNamesPlaceholder: "Introduceți numele mirilor sau nașilor",
+  weddingBrideGroom: "Mire & Mireasă",
+  weddingGodparents: "Nași",
+  weddingHowMetPlaceholder: "Spuneți-ne cum s-au cunoscut...",
+  weddingLoveStoryPlaceholder: "Împărtășiți povestea lor detaliată de dragoste sau prietenie...",
+  weddingAtmosphereRomantic: "Romantic",
+  weddingAtmosphereEmotional: "Emoționant",
+  weddingAtmosphereElegant: "Elegant",
+  weddingMusicalStylePlaceholder: "Stilul muzical preferat sau melodia de inspirație",
+  
+  // Baptism form fields
+  baptismStep1Title: "Informații Copil",
+  baptismStep2Title: "Preferințe Muzicale",
+  baptismChildNamePlaceholder: "Numele copilului",
+  baptismNameMeaningPlaceholder: "Semnificația numelui (opțional)",
+  baptismBirthStoryPlaceholder: "Povestea nașterii / dorințele părinților",
+  baptismAtmosphereCalm: "Calm",
+  baptismAtmospherePlayful: "Jucăuș",
+  baptismAtmosphereEmotional: "Emoționant",
+  baptismStyleBallad: "Baladă",
+  baptismStyleLullaby: "Cântec de leagăn",
+  baptismStyleAcousticPop: "Pop Acustic",
+  
+  // Coming of Age form fields
+  comingOfAgeStep1Title: "Informații Sărbătorit",
+  comingOfAgeStep2Title: "Stil Muzical & Atmosferă",
+  comingOfAgeCelebrantNamePlaceholder: "Numele persoanei care împlinește 18 ani",
+  comingOfAgeHobbiesPlaceholder: "Hobby-urile, pasiunile și trăsăturile de personalitate",
+  comingOfAgePersonalMessagePlaceholder: "Mesaj personal de la familie/prieteni",
+  comingOfAgeStyleHipHop: "Hip-Hop",
+  comingOfAgeStylePop: "Pop",
+  comingOfAgeStyleTrap: "Trap",
+  comingOfAgeStyleLofi: "Lo-Fi",
+  comingOfAgeVibeEmotional: "Emoționant",
+  comingOfAgeVibeFun: "Distractiv",
+  comingOfAgeVibeRebellious: "Rebel",
+  comingOfAgeVibeDreamy: "Visător",
+  comingOfAgeFavoriteArtistsPlaceholder: "Exemple de artiști sau melodii preferate",
+  
+  // Common voice options
+  voiceFemale: "Voce Feminină",
+  voiceMale: "Voce Masculină",
+  
+  // Did You Know sections for new packages
+  didYouKnowWedding1Title: "Melodiile de nuntă creează amintiri durabile",
+  didYouKnowWedding1Desc: "Cuplurile care dansează pe propria melodie personalizată raportează o conexiune emoțională mai puternică cu amintirile de nuntă și redau melodia la aniversări.",
+  didYouKnowWedding2Title: "Tradiții de nuntă unice",
+  didYouKnowWedding2Desc: "Să ai o melodie de nuntă personalizată devine o nouă tradiție, cu 67% din cupluri spunând că și-ar fi dorit ceva mai personal decât melodiile populare.",
+  
+  didYouKnowBaptism1Title: "Muzica și dezvoltarea copilului",
+  didYouKnowBaptism1Desc: "Melodiile personalizate pentru copii ajută la legătura emoțională și pot deveni o sursă de confort pe parcursul anilor de copilărie.",
+  didYouKnowBaptism2Title: "Tradițiile familiei prin muzică",
+  didYouKnowBaptism2Desc: "Copiii care cresc cu melodii personalizate dezvoltă adesea legături familiale mai puternice și aprecierea pentru povestea lor unică.",
+  
+  didYouKnowComingOfAge1Title: "Muzica și formarea identității",
+  didYouKnowComingOfAge1Desc: "Adolescenții care primesc melodii personalizate raportează o stimă de sine mai mare și un sentiment mai puternic al identității în timpul tranziției la maturitate.",
+  didYouKnowComingOfAge2Title: "Sărbătorirea momentelor importante",
+  didYouKnowComingOfAge2Desc: "Sărbătorile de majorat cu elemente personalizate sunt amintite mai viu și au impact pozitiv asupra deciziilor viitoare de viață."
 };
