@@ -144,19 +144,15 @@ export const packagesTranslations = {
   // Common add-ons
   rushDelivery: "Livrare urgentă",
   rushDeliveryDesc: "Primește melodia cu 50% mai repede",
-  rushDeliveryPrice: "+50% din prețul pachetului",
   
   extraRevision: "Revizie suplimentară",
   extraRevisionDesc: "O revizie suplimentară pentru perfecționare",
-  extraRevisionPrice: "€25 / 125 RON",
   
   extendedLicense: "Licență extinsă",
   extendedLicenseDesc: "Drepturi comerciale complete și nelimitate",
-  extendedLicensePrice: "€99 / 499 RON",
   
   sourceFiles: "Fișiere sursă",
   sourceFilesDesc: "Accesul la toate fișierele de proiect (stems, MIDI)",
-  sourceFilesPrice: "€75 / 375 RON",
   
   // Add-ons
   socialMediaRights: "Drepturi Social Media",

@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -141,6 +142,18 @@ export const packagesTranslations = {
   availableAddOns: "Available Add-ons",
   enhanceYourPackage: "Enhance your package with additional options",
   
+  // Common add-ons
+  rushDelivery: "Rush Delivery",
+  rushDeliveryDesc: "Get your song 50% faster",
+  
+  extraRevision: "Extra Revision",
+  extraRevisionDesc: "One additional revision for perfection",
+  
+  extendedLicense: "Extended License",
+  extendedLicenseDesc: "Full unlimited commercial rights",
+  
+  sourceFiles: "Source Files",
+  sourceFilesDesc: "Access to all project files (stems, MIDI)",
 
   // Add-ons
   socialMediaRights: "Social Media Rights",

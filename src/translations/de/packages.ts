@@ -109,6 +109,16 @@ export const packagesTranslations = {
   rushDelivery: "Express-Lieferung",
   rushDeliveryDesc: "Erhalten Sie Ihr Lied 50% schneller",
   
+  extraRevision: "Zusätzliche Überarbeitung",
+  extraRevisionDesc: "Eine zusätzliche Überarbeitung für Perfektion",
+  
+  extendedLicense: "Erweiterte Lizenz",
+  extendedLicenseDesc: "Vollständige unbegrenzte kommerzielle Rechte",
+  
+  sourceFiles: "Quelldateien",
+  sourceFilesDesc: "Zugang zu allen Projektdateien (Stems, MIDI)",
+  
+  // Add-ons
   socialMediaRights: "Social Media Rechte",
   socialMediaRightsDesc: "Erhalten Sie die Rechte, das Lied auf jeder Social Media Plattform zu posten. Erfordert die Zustimmung zur Kennzeichnung des Liedes mit 'Music Gift by Mango Records'.",
   
