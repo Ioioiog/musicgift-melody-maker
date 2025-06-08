@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Clock, Star, ArrowRight, Gift } from 'lucide-react';
@@ -36,12 +37,23 @@ const Packages = () => {
   };
   const renderPackagePrice = (pkg: any) => {
     if (pkg.value === 'gift') {
-      return <div className="text-2xl font-bold text-white px-[41px] bg-orange-500 py-[4px]">
-          {t('startingFrom', 'Starting from')} {currency === 'EUR' ? '€59' : '299 RON'}
+      return <div className="relative group cursor-pointer">
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl blur-sm group-hover:blur-md transition-all duration-300 opacity-75"></div>
+          <div className="relative bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xl md:text-2xl font-bold px-6 py-4 rounded-xl shadow-lg transform group-hover:scale-105 transition-all duration-300 text-center border border-orange-400/50">
+            <div className="flex items-center justify-center gap-2">
+              <Gift className="w-5 h-5" />
+              {t('startingFrom', 'Starting from')} {currency === 'EUR' ? '€59' : '299 RON'}
+            </div>
+          </div>
         </div>;
     }
-    return <div className="text-3xl font-bold text-white bg-orange-500 py-0 my-0 mx-[79px] px-[18px]">
-        {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}
+    return <div className="relative group cursor-pointer">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl blur-sm group-hover:blur-md transition-all duration-300 opacity-75"></div>
+        <div className="relative bg-gradient-to-r from-orange-500 to-orange-600 text-white text-2xl md:text-3xl font-bold px-8 py-5 rounded-xl shadow-lg transform group-hover:scale-105 transition-all duration-300 text-center border border-orange-400/50">
+          <div className="flex items-center justify-center">
+            {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}
+          </div>
+        </div>
       </div>;
   };
 
@@ -118,11 +130,13 @@ const Packages = () => {
                     <CardTitle className="text-2xl md:text-3xl font-bold mb-3 leading-tight tracking-wide bg-gradient-to-r from-white to-white/90 bg-clip-text drop-shadow-lg text-orange-500 text-center">
                       {t(pkg.label_key)}
                     </CardTitle>
-                    <CardDescription className="text-white/80 text-center">
+                    <CardDescription className="text-white/80 text-center mb-4">
                       {t(pkg.description_key)}
                     </CardDescription>
-                    {renderPackagePrice(pkg)}
-                    <div className="flex items-center text-sm text-white/70">
+                    <div className="mb-4">
+                      {renderPackagePrice(pkg)}
+                    </div>
+                    <div className="flex items-center justify-center text-sm text-white/70">
                       <Clock className="w-4 h-4 mr-1" />
                       {t(pkg.delivery_time_key)}
                     </div>
