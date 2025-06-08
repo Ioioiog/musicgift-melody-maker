@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -176,29 +175,28 @@ const Auth = () => {
             </div>
           </div>
 
-          {/* Right side - Auth form */}
+          {/* Right side - Auth form with Glassmorphism */}
           <div className="w-full max-w-md mx-auto order-1 lg:order-2">
-            <Card className="shadow-2xl border-0 bg-white/96 backdrop-blur-xl overflow-hidden relative transform hover:scale-[1.02] transition-all duration-300">
-              {/* Decorative elements */}
-              <div className="absolute top-0 left-0 w-full h-2 bg-white"></div>
-              <div className="absolute top-2 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+            <Card className="bg-white/20 backdrop-blur-md border border-white/30 hover:border-white/40 shadow-2xl hover:shadow-3xl transition-all duration-300 group hover:bg-white/25 rounded-2xl overflow-hidden relative">
+              {/* Enhanced glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               
-              <CardHeader className="space-y-4 pb-6 pt-8">
+              <CardHeader className="space-y-4 pb-6 pt-8 relative z-10">
                 <CardTitle className="text-2xl lg:text-3xl font-bold text-center">
-                  <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent">
+                  <span className="text-white drop-shadow-lg">
                     {isLogin ? t('signInBtn') : t('signUpBtn')}
                   </span>
                 </CardTitle>
-                <CardDescription className="text-center text-base leading-relaxed px-2 text-gray-600">
+                <CardDescription className="text-center text-base leading-relaxed px-2 text-white/80">
                   {isLogin ? t('connectToContinue') : t('createAccount')}
                 </CardDescription>
               </CardHeader>
               
-              <CardContent className="px-6 pb-8">
+              <CardContent className="px-6 pb-8 relative z-10">
                 <form onSubmit={handleAuth} className="space-y-6">
                   {!isLogin && (
                     <div className="space-y-2">
-                      <label htmlFor="fullName" className="text-sm font-semibold text-gray-700 block">
+                      <label htmlFor="fullName" className="text-sm font-semibold text-white/90 block">
                         {t('fullName')}
                       </label>
                       <Input
@@ -208,13 +206,13 @@ const Auth = () => {
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         required={!isLogin}
-                        className="h-12 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-lg text-base bg-gray-50/50 focus:bg-white shadow-sm"
+                        className="h-12 border-2 border-white/30 bg-white/10 backdrop-blur-sm focus:border-white/50 focus:bg-white/20 transition-all duration-300 rounded-lg text-base text-white placeholder:text-white/60 shadow-inner"
                       />
                     </div>
                   )}
                   
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-semibold text-gray-700 block">
+                    <label htmlFor="email" className="text-sm font-semibold text-white/90 block">
                       {t('email')}
                     </label>
                     <Input
@@ -224,12 +222,12 @@ const Auth = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="h-12 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-lg text-base bg-gray-50/50 focus:bg-white shadow-sm"
+                      className="h-12 border-2 border-white/30 bg-white/10 backdrop-blur-sm focus:border-white/50 focus:bg-white/20 transition-all duration-300 rounded-lg text-base text-white placeholder:text-white/60 shadow-inner"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <label htmlFor="password" className="text-sm font-semibold text-gray-700 block">
+                    <label htmlFor="password" className="text-sm font-semibold text-white/90 block">
                       {t('password')}
                     </label>
                     <div className="relative">
@@ -240,19 +238,19 @@ const Auth = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        className="h-12 pr-12 border-2 border-gray-200 focus:border-purple-500 transition-all duration-300 rounded-lg text-base bg-gray-50/50 focus:bg-white shadow-sm"
+                        className="h-12 pr-12 border-2 border-white/30 bg-white/10 backdrop-blur-sm focus:border-white/50 focus:bg-white/20 transition-all duration-300 rounded-lg text-base text-white placeholder:text-white/60 shadow-inner"
                         minLength={6}
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-100"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
                       >
                         {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
                     </div>
                     {!isLogin && (
-                      <p className="text-xs text-gray-500 mt-1 ml-1">
+                      <p className="text-xs text-white/70 mt-1 ml-1">
                         {t('passwordMinLength')}
                       </p>
                     )}
@@ -260,12 +258,12 @@ const Auth = () => {
                   
                   <Button
                     type="submit"
-                    className="w-full h-12 relative overflow-hidden rounded-lg font-semibold text-base shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group
-                      bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-700 hover:via-pink-700 hover:to-indigo-700
-                      before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/10 before:via-transparent before:to-white/10 before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-100"
+                    className="w-full h-12 relative overflow-hidden rounded-lg font-semibold text-base shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group/btn
+                      bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 hover:border-white/40 text-white
+                      before:absolute before:inset-0 before:bg-gradient-to-r before:from-purple-500/20 before:via-pink-500/20 before:to-indigo-500/20 before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-100"
                     disabled={isLoading}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:animate-pulse"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 group-hover/btn:opacity-100 transition-all duration-500 group-hover/btn:animate-pulse"></div>
                     {isLoading ? (
                       <div className="flex items-center relative z-10">
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
@@ -282,10 +280,10 @@ const Auth = () => {
                 <div className="mt-8 text-center">
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-gray-300"></div>
+                      <div className="w-full border-t border-white/30"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="px-6 bg-white text-gray-500 font-medium">{t('or', 'or')}</span>
+                      <span className="px-6 bg-white/10 backdrop-blur-sm text-white/80 font-medium rounded-full">{t('or', 'or')}</span>
                     </div>
                   </div>
                   
@@ -297,12 +295,12 @@ const Auth = () => {
                       setEmail('');
                       setPassword('');
                     }}
-                    className="mt-6 text-purple-600 hover:text-purple-700 font-semibold text-lg transition-all duration-300 hover:scale-105 relative group"
+                    className="mt-6 text-white/90 hover:text-white font-semibold text-lg transition-all duration-300 hover:scale-105 relative group/switch"
                   >
                     <span className="relative z-10">
                       {isLogin ? t('noAccount') : t('haveAccount')}
                     </span>
-                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-600 to-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-white/60 to-white/80 scale-x-0 group-hover/switch:scale-x-100 transition-transform duration-300 origin-left"></div>
                   </button>
                 </div>
               </CardContent>
