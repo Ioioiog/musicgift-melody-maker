@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Clock, CheckCircle, Gift } from 'lucide-react';
+import { Gift, Package, Plus } from 'lucide-react';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -16,141 +16,109 @@ interface OrderSummaryProps {
 }
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAddons, giftCard }) => {
-  const { t } = useLanguage();
-  const { currency } = useCurrency();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
+  const { t } = useLanguage();
+  const { currency } = useCurrency();
 
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
   const selectedAddonsData = selectedAddons.map(addonKey => 
     addons.find(addon => addon.addon_key === addonKey)
   ).filter(Boolean);
 
-  const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
-  const addonsPrice = selectedAddonsData.reduce((total, addon) => total + (addon ? getAddonPrice(addon, currency) : 0), 0);
-  const subtotal = packagePrice + addonsPrice;
-  
-  // Calculate gift card discount
-  const giftBalance = giftCard ? (giftCard.gift_amount || 0) / 100 : 0; // Convert from cents
-  const giftDiscount = Math.min(giftBalance, subtotal);
-  const finalTotal = Math.max(0, subtotal - giftDiscount);
-
   if (!selectedPackageData) return null;
 
+  const packagePrice = getPackagePrice(selectedPackageData, currency);
+  const addonsPrice = selectedAddonsData.reduce((total, addon) => 
+    total + (addon ? getAddonPrice(addon, currency) : 0), 0);
+  const subtotal = packagePrice + addonsPrice;
+  
+  let giftCreditApplied = 0;
+  if (giftCard) {
+    const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
+    giftCreditApplied = Math.min(giftBalance, subtotal);
+  }
+  
+  const finalTotal = Math.max(0, subtotal - giftCreditApplied);
+
   return (
-    <Card className="bg-white/90 backdrop-blur-sm">
+    <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
       <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">
-          <CheckCircle className="w-5 h-5 text-green-500" />
+        <CardTitle className="flex items-center gap-2 text-white">
+          <Package className="w-5 h-5" />
           {t('orderSummary')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Package Details */}
-        <div className="space-y-2">
+        {/* Package Section */}
+        <div>
           <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <h4 className="font-medium text-gray-900">
-                {t(selectedPackageData.label_key)}
-              </h4>
-              {selectedPackageData.delivery_time_key && (
-                <div className="flex items-center text-sm text-gray-500 mt-1">
-                  <Clock className="w-3 h-3 mr-1" />
-                  {t(selectedPackageData.delivery_time_key)}
-                </div>
-              )}
+            <div>
+              <h3 className="font-medium text-white">{t(selectedPackageData.label_key)}</h3>
+              <p className="text-sm text-white/70">{t(selectedPackageData.description_key)}</p>
             </div>
-            <span className="font-medium text-gray-900">
-              {packagePrice} {currency}
-            </span>
+            <span className="font-medium text-white">{currency} {packagePrice.toFixed(2)}</span>
           </div>
         </div>
 
-        {/* Selected Addons */}
+        {/* Add-ons Section */}
         {selectedAddonsData.length > 0 && (
           <>
-            <Separator />
-            <div className="space-y-2">
-              <h4 className="font-medium text-gray-900">
-                {t('addons')}
+            <Separator className="bg-white/20" />
+            <div>
+              <h4 className="font-medium mb-2 text-white flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                {t('addOns')}
               </h4>
-              {selectedAddonsData.map((addon) => (
-                <div key={addon?.addon_key} className="flex justify-between items-center text-sm">
-                  <span className="text-gray-600">{t(addon?.label_key || '')}</span>
-                  <span className="font-medium">+{addon ? getAddonPrice(addon, currency) : 0} {currency}</span>
-                </div>
-              ))}
+              <div className="space-y-2">
+                {selectedAddonsData.map((addon) => (
+                  addon && (
+                    <div key={addon.addon_key} className="flex justify-between items-center text-sm">
+                      <span className="text-white/80">{t(addon.label_key)}</span>
+                      <span className="text-white">{currency} {getAddonPrice(addon, currency).toFixed(2)}</span>
+                    </div>
+                  )
+                ))}
+              </div>
             </div>
           </>
         )}
 
-        <Separator />
+        <Separator className="bg-white/20" />
 
-        {/* Pricing Summary */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">{t('subtotal')}</span>
-            <span className="font-medium">{subtotal} {currency}</span>
-          </div>
-          
-          {/* Gift Card Discount */}
-          {giftCard && giftDiscount > 0 && (
-            <div className="flex justify-between items-center text-green-600">
-              <div className="flex items-center gap-1">
-                <Gift className="w-4 h-4" />
-                <span>{t('giftCardDiscount')}</span>
-              </div>
-              <span className="font-medium">-{giftDiscount.toFixed(2)} {currency}</span>
-            </div>
-          )}
-          
-          <Separator />
-          
-          <div className="flex justify-between items-center text-lg font-bold">
-            <span className="text-gray-900">{t('total')}</span>
-            <div className="text-right">
-              <span className="text-purple-600">{finalTotal.toFixed(2)} {currency}</span>
-              {finalTotal === 0 && (
-                <div className="text-xs text-green-600 font-normal">
-                  {t('fullyCoveredByGiftCard')}
-                </div>
-              )}
-            </div>
-          </div>
+        {/* Subtotal */}
+        <div className="flex justify-between items-center">
+          <span className="font-medium text-white">{t('subtotal')}</span>
+          <span className="font-medium text-white">{currency} {subtotal.toFixed(2)}</span>
         </div>
 
-        {/* Gift Card Info */}
-        {giftCard && (
-          <>
-            <Separator />
-            <div className="bg-green-50 p-3 rounded-lg border border-green-200">
-              <div className="flex items-center gap-2 mb-2">
-                <Gift className="w-4 h-4 text-green-600" />
-                <span className="font-medium text-green-800">{t('giftCardApplied')}</span>
-              </div>
-              <div className="text-sm text-green-700 space-y-1">
-                <div>{t('giftCardFrom')} {giftCard.sender_name}</div>
-                <div>{t('giftCardBalance')} {giftBalance.toFixed(2)} {currency}</div>
-                {giftBalance > subtotal && (
-                  <div className="text-xs">
-                    {t('giftCardRemaining')} {(giftBalance - subtotal).toFixed(2)} {currency}
-                  </div>
-                )}
-              </div>
-            </div>
-          </>
+        {/* Gift Card Credit */}
+        {giftCard && giftCreditApplied > 0 && (
+          <div className="flex justify-between items-center text-green-400">
+            <span className="flex items-center gap-2">
+              <Gift className="w-4 h-4" />
+              {t('giftCardCredit')}
+            </span>
+            <span>-{currency} {giftCreditApplied.toFixed(2)}</span>
+          </div>
         )}
 
-        {/* Quality Badge */}
-        <div className="pt-2">
-          <Badge variant="secondary" className="w-full justify-center py-2 bg-purple-50 text-purple-700 border-purple-200">
-            {t('professionalQuality')}
+        <Separator className="bg-white/20" />
+
+        {/* Total */}
+        <div className="flex justify-between items-center text-lg font-bold">
+          <span className="text-white">{t('total')}</span>
+          <span className="text-white">{currency} {finalTotal.toFixed(2)}</span>
+        </div>
+
+        {finalTotal === 0 && (
+          <Badge variant="secondary" className="w-full justify-center bg-green-500/20 text-green-300 border-green-400/30">
+            {t('fullyPaidWithGiftCard', 'Fully paid with gift card')}
           </Badge>
-        </div>
+        )}
       </CardContent>
     </Card>
   );
 };
 
 export default OrderSummary;
-

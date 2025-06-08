@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
@@ -223,10 +224,16 @@ const Order = () => {
 
   if (isLoadingGift && giftCardCode) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">{t('loadingGiftCard')}</p>
+      <div className="min-h-screen flex items-center justify-center" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="text-center relative z-10">
+          <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white">{t('loadingGiftCard')}</p>
         </div>
       </div>
     );
@@ -234,18 +241,13 @@ const Order = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/65cd14fb-1e9c-4df4-a6e6-9e84a68b90f8.png)',
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }}>
-      {/* White glass overlay for glassmorphism effect */}
-      <div className="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
-
-      {/* Subtle grid pattern overlay */}
-      <div className="absolute inset-0 opacity-[0.02]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-      }}></div>
+      {/* Dark overlay for better contrast */}
+      <div className="absolute inset-0 bg-black/20"></div>
 
       <div className="relative z-10">
         <Navigation />

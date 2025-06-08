@@ -427,12 +427,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
   return (
     <div className="container mx-auto py-8">
-      <Card className="bg-white/90 backdrop-blur-sm">
+      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
         <CardHeader className="pb-2 pt-6">
-          <CardTitle className="text-2xl font-bold">
+          <CardTitle className="text-2xl font-bold text-white">
             {t('orderDetails')}
           </CardTitle>
-          <p className="text-gray-500">
+          <p className="text-white/80">
             {t('completeAllSteps')}
           </p>
         </CardHeader>
@@ -478,7 +478,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                   ))
                 ) : (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">{t('loadingSteps')}</p>
+                    <p className="text-white/70">{t('loadingSteps')}</p>
                   </div>
                 )}
               </div>
@@ -487,9 +487,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
           <div className="flex justify-between mt-6">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={handlePrev}
               disabled={currentStep === 0 || isSubmitting}
+              className="border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t('previous')}
@@ -497,10 +498,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
             <Button
               onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
               disabled={!canProceed() || (currentStep > 0 && !isPaymentStep && isStepsLoading) || isSubmitting}
+              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
             >
               {isSubmitting ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
                   {t('processing', 'Processing...')}
                 </>
               ) : (
