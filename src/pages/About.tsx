@@ -1,9 +1,10 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy, Heart, Shield, Clock, Award, Users, Globe, Headphones, Zap, CheckCircle } from "lucide-react";
+import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy, Heart, Shield, Clock, Award, Users, Globe, Headphones, Zap, CheckCircle, Target, ThumbsUp } from "lucide-react";
 
 const About = () => {
   const {
@@ -180,30 +181,38 @@ const About = () => {
                 duration: 0.6,
                 delay: 0.7
               }}>
-                  <h3 className="text-xl font-bold text-white mb-4">{t('awardsRecognition') || 'Awards & Recognition'}</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">{t('awardsRecognition')}</h3>
                   
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
                       <Award className="w-6 h-6 text-yellow-400 mt-1 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold text-white text-sm">{t('internationalSuccess') || 'International Success'}</h4>
-                        <p className="text-white/80 text-sm">{t('internationalSuccessDesc') || 'Akcent achieved worldwide recognition with hits reaching top charts in over 20 countries'}</p>
+                        <h4 className="font-semibold text-white text-sm">{t('nationalInternationalSuccess')}</h4>
+                        <p className="text-white/80 text-sm">{t('nationalInternationalSuccessDesc')}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Trophy className="w-6 h-6 text-orange-400 mt-1 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-semibold text-white text-sm">{t('ordaAward')}</h4>
+                        <p className="text-white/80 text-sm">{t('ordaAwardDesc')}</p>
                       </div>
                     </div>
 
                     <div className="flex items-start gap-3">
                       <Users className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold text-white text-sm">{t('industryExperience') || 'Industry Experience'}</h4>
-                        <p className="text-white/80 text-sm">{t('industryExperienceDesc') || 'Over 20 years of professional music production and artist development experience'}</p>
+                        <h4 className="font-semibold text-white text-sm">{t('industryExperience')}</h4>
+                        <p className="text-white/80 text-sm">{t('industryExperienceDesc')}</p>
                       </div>
                     </div>
 
                     <div className="flex items-start gap-3">
                       <Globe className="w-6 h-6 text-green-400 mt-1 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold text-white text-sm">{t('globalReach') || 'Global Reach'}</h4>
-                        <p className="text-white/80 text-sm">{t('globalReachDesc') || 'Music distributed worldwide through major platforms and streaming services'}</p>
+                        <h4 className="font-semibold text-white text-sm">{t('globalReach')}</h4>
+                        <p className="text-white/80 text-sm">{t('globalReachDesc')}</p>
                       </div>
                     </div>
                   </div>
@@ -220,30 +229,30 @@ const About = () => {
                 duration: 0.6,
                 delay: 0.8
               }}>
-                  <h3 className="text-xl font-bold text-white mb-4">{t('missionValues') || 'Our Mission & Values'}</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">{t('missionValues')}</h3>
                   
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
                       <Heart className="w-6 h-6 text-red-400 mt-1 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold text-white text-sm">{t('passion') || 'Passion'}</h4>
-                        <p className="text-white/80 text-sm">{t('passionDesc') || 'Every song we create is infused with genuine passion and emotional depth, ensuring your story is told with authenticity.'}</p>
+                        <h4 className="font-semibold text-white text-sm">{t('passion')}</h4>
+                        <p className="text-white/80 text-sm">{t('passionDesc')}</p>
                       </div>
                     </div>
 
                     <div className="flex items-start gap-3">
                       <Shield className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold text-white text-sm">{t('quality') || 'Quality'}</h4>
-                        <p className="text-white/80 text-sm">{t('qualityDesc') || 'Professional studio production, experienced musicians, and meticulous attention to detail in every project.'}</p>
+                        <h4 className="font-semibold text-white text-sm">{t('quality')}</h4>
+                        <p className="text-white/80 text-sm">{t('qualityDesc')}</p>
                       </div>
                     </div>
 
                     <div className="flex items-start gap-3">
                       <Clock className="w-6 h-6 text-purple-400 mt-1 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold text-white text-sm">{t('dedication') || 'Dedication'}</h4>
-                        <p className="text-white/80 text-sm">{t('dedicationDesc') || 'We invest time and care into understanding your story to create music that truly represents your emotions.'}</p>
+                        <h4 className="font-semibold text-white text-sm">{t('dedication')}</h4>
+                        <p className="text-white/80 text-sm">{t('dedicationDesc')}</p>
                       </div>
                     </div>
                   </div>
@@ -260,30 +269,38 @@ const About = () => {
                 duration: 0.6,
                 delay: 0.9
               }}>
-                  <h3 className="text-xl font-bold text-white mb-4">{t('whyChooseUs') || 'Why Choose Us'}</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">{t('whyChooseUs')}</h3>
                   
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
                       <Headphones className="w-6 h-6 text-cyan-400 mt-1 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold text-white text-sm">{t('uniqueApproach') || 'Unique Approach'}</h4>
-                        <p className="text-white/80 text-sm">{t('uniqueApproachDesc') || 'We combine personal storytelling with professional music production to create truly one-of-a-kind songs.'}</p>
+                        <h4 className="font-semibold text-white text-sm">{t('uniqueApproach')}</h4>
+                        <p className="text-white/80 text-sm">{t('uniqueApproachDesc')}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Target className="w-6 h-6 text-pink-400 mt-1 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-semibold text-white text-sm">{t('qualityOverQuantity')}</h4>
+                        <p className="text-white/80 text-sm">{t('qualityOverQuantityDesc')}</p>
                       </div>
                     </div>
 
                     <div className="flex items-start gap-3">
                       <Zap className="w-6 h-6 text-orange-400 mt-1 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold text-white text-sm">{t('fastDelivery') || 'Fast Delivery'}</h4>
-                        <p className="text-white/80 text-sm">{t('fastDeliveryDesc') || 'Professional quality music delivered within 7-14 days, perfect for special occasions and gift-giving.'}</p>
+                        <h4 className="font-semibold text-white text-sm">{t('fastDelivery')}</h4>
+                        <p className="text-white/80 text-sm">{t('fastDeliveryDesc')}</p>
                       </div>
                     </div>
 
                     <div className="flex items-start gap-3">
                       <CheckCircle className="w-6 h-6 text-green-400 mt-1 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold text-white text-sm">{t('satisfactionGuarantee') || 'Satisfaction Guarantee'}</h4>
-                        <p className="text-white/80 text-sm">{t('satisfactionGuaranteeDesc') || '100% satisfaction guarantee with unlimited revisions until your song perfectly captures your story.'}</p>
+                        <h4 className="font-semibold text-white text-sm">{t('satisfactionGuarantee')}</h4>
+                        <p className="text-white/80 text-sm">{t('satisfactionGuaranteeDesc')}</p>
                       </div>
                     </div>
                   </div>

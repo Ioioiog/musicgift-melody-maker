@@ -19,12 +19,14 @@ export const aboutTranslations = {
   
   // Awards & Recognition
   awardsRecognition: "Nagrody i Uznanie",
-  internationalSuccess: "Sukces Międzynarodowy",
-  internationalSuccessDesc: "Akcent osiągnął światowe uznanie z hitami docierającymi do czołówek list przebojów w ponad 20 krajach",
+  nationalInternationalSuccess: "Sukces Krajowy i Międzynarodowy",
+  nationalInternationalSuccessDesc: "Piosenki skomponowane przez nasz zespół dotarły na listy przebojów zarówno w Rumunii, jak i za granicą (np. No Lies – Pitt Leffer, Red Blonde, Mellina & Vescan – Poză de Album to tylko kilka przykładów).",
+  ordaAward: "Nagroda ORDA 2019",
+  ordaAwardDesc: "W 2019 roku Mango Records wygrało nagrodę za największą liczbę sprzedanych płyt CD w Rumunii, z ponad milionem jednostek zarejestrowanych w ORDA.",
   industryExperience: "Doświadczenie w Branży",
-  industryExperienceDesc: "Ponad 20 lat profesjonalnego doświadczenia w produkcji muzycznej i rozwoju artystów",
+  industryExperienceDesc: "Ponad 20 lat profesjonalnego doświadczenia w produkcji muzycznej i rozwoju artystów.",
   globalReach: "Zasięg Globalny",
-  globalReachDesc: "Muzyka dystrybuowana na całym świecie poprzez główne platformy i usługi streamingowe",
+  globalReachDesc: "Nasza muzyka jest dystrybuowana na całym świecie poprzez główne platformy i usługi streamingowe.",
   
   // Mission & Values
   missionValues: "Nasza Misja i Wartości",
@@ -33,20 +35,22 @@ export const aboutTranslations = {
   quality: "Jakość",
   qualityDesc: "Profesjonalna produkcja, doświadczeni muzycy i skrupulatna dbałość o szczegóły w każdym projekcie.",
   dedication: "Poświęcenie",
-  dedicationDesc: "Inwestujemy czas i troskę w zrozumienie Twojej historii, aby stworzyć muzykę, która naprawdę reprezentuje Twoje emocje.",
+  dedicationDesc: "Inwestujemy czas i troskę w zrozumienie Twojej historii, aby stworzyć muzykę, która naprawdę oddaje Twoje emocje.",
   
   // Why Choose Us
   whyChooseUs: "Dlaczego Nas Wybrać",
   uniqueApproach: "Unikalne Podejście",
-  uniqueApproachDesc: "Łączymy osobiste opowiadanie z profesjonalną produkcją muzyczną, aby tworzyć naprawdę jedyne w swoim rodzaju piosenki.",
+  uniqueApproachDesc: "Łączymy osobiste opowiadanie z profesjonalną produkcją muzyczną, aby tworzyć naprawdę unikalne piosenki. Oferujemy dystrybucję i ekspozycję przez całą sieć Mango Records, która ma prawdziwą publiczność ponad 3 milionów ludzi. Przykłady: YouTube – @MangorecordsChannel, Facebook – @MangoMusicRomania, Instagram – @mangomusicro i wiele grup TikTok oraz społeczności miłośników muzyki.",
+  qualityOverQuantity: "Jakość Ponad Ilość",
+  qualityOverQuantityDesc: "Nie przyjmujemy dużych wolumenów zamówień – skupiamy się na jakości, nie na ilości. Miksujemy i masterujemy końcowy produkt w profesjonalnym studiu używając Logic Pro, Ableton Live, Avid Pro Tools i więcej. Nie używamy szablonów – wszystko jest tworzone od zera, tylko dla Ciebie.",
   fastDelivery: "Szybka Dostawa",
-  fastDeliveryDesc: "Muzyka profesjonalnej jakości dostarczona w ciągu 3-7 dni, idealna na specjalne okazje i jako prezenty.",
+  fastDeliveryDesc: "Muzyka wysokiej jakości dostarczona w 3–7 dni – idealna na specjalne okazje i znaczące prezenty. Może to potrwać... ale nigdy nie poświęcamy jakości.",
   satisfactionGuarantee: "Gwarancja Satysfakcji",
-  satisfactionGuaranteeDesc: "100% gwarancja satysfakcji z nieograniczonymi poprawkami, aż Twoja piosenka idealnie oddaje Twoją historię.",
+  satisfactionGuaranteeDesc: "Nie dostarczamy, dopóki nie czujemy, że piosenka idealnie oddaje emocję Twojej historii. Bez skrótów, bez kompromisów – tylko autentyczna muzyka, godna Twojego wyjątkowego momentu.",
   
   // Call to Action
   readyToStart: "Gotowy Stworzyć Swoją Piosenkę?",
-  readyToStartDesc: "Dołącz do zadowolonych klientów, którzy przekształcili swoje historie w piękne, spersonalizowane piosenki.",
+  readyToStartDesc: "Dołącz do tysięcy zadowolonych klientów, którzy przekształcili swoje historie w piękne, spersonalizowane piosenki.",
   startYourSong: "Zacznij Swoją Piosenkę",
   viewPackages: "Zobacz Pakiety",
 };

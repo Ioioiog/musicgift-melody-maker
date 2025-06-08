@@ -19,12 +19,14 @@ export const aboutTranslations = {
   
   // Awards & Recognition
   awardsRecognition: "Prix et Reconnaissance",
-  internationalSuccess: "Succès International",
-  internationalSuccessDesc: "Akcent a obtenu une reconnaissance mondiale avec des tubes atteignant les classements de plus de 20 pays",
+  nationalInternationalSuccess: "Succès National et International",
+  nationalInternationalSuccessDesc: "Les chansons composées par notre équipe ont atteint les classements en Roumanie et à l'étranger (par exemple, No Lies – Pitt Leffer, Red Blonde, Mellina & Vescan – Poză de Album ne sont que quelques exemples).",
+  ordaAward: "Prix ORDA 2019",
+  ordaAwardDesc: "En 2019, Mango Records a remporté le prix du plus grand nombre de CD vendus en Roumanie, avec plus d'un million d'unités enregistrées auprès d'ORDA.",
   industryExperience: "Expérience de l'Industrie",
-  industryExperienceDesc: "Plus de 20 ans d'expérience professionnelle en production musicale et développement d'artistes",
+  industryExperienceDesc: "Plus de 20 ans d'expérience professionnelle en production musicale et développement d'artistes.",
   globalReach: "Portée Mondiale",
-  globalReachDesc: "Musique distribuée dans le monde entier via les principales plateformes et services de streaming",
+  globalReachDesc: "Notre musique est distribuée dans le monde entier via les principales plateformes et services de streaming.",
   
   // Mission & Values
   missionValues: "Notre Mission et Nos Valeurs",
@@ -38,15 +40,17 @@ export const aboutTranslations = {
   // Why Choose Us
   whyChooseUs: "Pourquoi Nous Choisir",
   uniqueApproach: "Approche Unique",
-  uniqueApproachDesc: "Nous combinons la narration personnelle avec la production musicale professionnelle pour créer des chansons vraiment uniques.",
+  uniqueApproachDesc: "Nous mélangeons la narration personnelle avec la production musicale professionnelle pour créer des chansons vraiment uniques. Nous offrons distribution et exposition à travers tout le réseau Mango Records, qui a un vrai public de plus de 3 millions de personnes. Exemples : YouTube – @MangorecordsChannel, Facebook – @MangoMusicRomania, Instagram – @mangomusicro, et de nombreux groupes TikTok et communautés d'amateurs de musique.",
+  qualityOverQuantity: "Qualité Plutôt que Quantité",
+  qualityOverQuantityDesc: "Nous n'acceptons pas de gros volumes de commandes – notre focus est sur la qualité, pas la quantité. Nous mixons et masterisons le produit final dans un studio professionnel en utilisant Logic Pro, Ableton Live, Avid Pro Tools, et plus encore. Nous n'utilisons pas de modèles – tout est créé à partir de zéro, juste pour vous.",
   fastDelivery: "Livraison Rapide",
-  fastDeliveryDesc: "Musique de qualité professionnelle livrée en 3-7 jours, parfaite pour les occasions spéciales et les cadeaux.",
+  fastDeliveryDesc: "Musique de haute qualité livrée en 3–7 jours – parfaite pour les occasions spéciales et les cadeaux significatifs. Cela peut prendre du temps... mais nous ne sacrifions jamais la qualité.",
   satisfactionGuarantee: "Garantie de Satisfaction",
-  satisfactionGuaranteeDesc: "Garantie de satisfaction à 100% avec révisions illimitées jusqu'à ce que votre chanson capture parfaitement votre histoire.",
+  satisfactionGuaranteeDesc: "Nous ne livrons pas jusqu'à ce que nous sentions que la chanson capture parfaitement l'émotion de votre histoire. Pas de raccourcis, pas de compromis – seulement de la musique authentique, digne de votre moment spécial.",
   
   // Call to Action
   readyToStart: "Prêt à Créer Votre Chanson ?",
-  readyToStartDesc: "Rejoignez les clients satisfaits qui ont transformé leurs histoires en belles chansons personnalisées.",
+  readyToStartDesc: "Rejoignez des milliers de clients satisfaits qui ont transformé leurs histoires en belles chansons personnalisées.",
   startYourSong: "Commencez Votre Chanson",
   viewPackages: "Voir les Forfaits",
 };

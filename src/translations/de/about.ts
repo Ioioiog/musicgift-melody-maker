@@ -19,12 +19,14 @@ export const aboutTranslations = {
   
   // Awards & Recognition
   awardsRecognition: "Auszeichnungen und Anerkennung",
-  internationalSuccess: "Internationaler Erfolg",
-  internationalSuccessDesc: "Akcent erzielte weltweite Anerkennung mit Hits, die die Charts in über 20 Ländern erreichten",
+  nationalInternationalSuccess: "Nationaler und Internationaler Erfolg",
+  nationalInternationalSuccessDesc: "Lieder, die von unserem Team komponiert wurden, haben sowohl in Rumänien als auch im Ausland die Charts erreicht (z.B. No Lies – Pitt Leffer, Red Blonde, Mellina & Vescan – Poză de Album sind nur einige Beispiele).",
+  ordaAward: "ORDA Auszeichnung 2019",
+  ordaAwardDesc: "2019 gewann Mango Records die Auszeichnung für die höchste Anzahl verkaufter CDs in Rumänien, mit über 1 Million bei ORDA registrierten Einheiten.",
   industryExperience: "Branchenerfahrung",
-  industryExperienceDesc: "Über 20 Jahre professionelle Erfahrung in Musikproduktion und Künstlerentwicklung",
+  industryExperienceDesc: "Über 20 Jahre professionelle Erfahrung in Musikproduktion und Künstlerentwicklung.",
   globalReach: "Globale Reichweite",
-  globalReachDesc: "Musik wird weltweit über große Plattformen und Streaming-Dienste vertrieben",
+  globalReachDesc: "Unsere Musik wird weltweit über große Plattformen und Streaming-Dienste vertrieben.",
   
   // Mission & Values
   missionValues: "Unsere Mission und Werte",
@@ -33,20 +35,22 @@ export const aboutTranslations = {
   quality: "Qualität",
   qualityDesc: "Professionelle Produktion, erfahrene Musiker und akribische Aufmerksamkeit für Details in jedem Projekt.",
   dedication: "Hingabe",
-  dedicationDesc: "Wir investieren Zeit und Sorgfalt in das Verständnis Ihrer Geschichte, um Musik zu schaffen, die Ihre Emotionen wirklich repräsentiert.",
+  dedicationDesc: "Wir investieren Zeit und Sorgfalt in das Verständnis Ihrer Geschichte, um Musik zu schaffen, die Ihre Emotionen wirklich widerspiegelt.",
   
   // Why Choose Us
   whyChooseUs: "Warum Uns Wählen",
   uniqueApproach: "Einzigartiger Ansatz",
-  uniqueApproachDesc: "Wir kombinieren persönliches Storytelling mit professioneller Musikproduktion, um wirklich einzigartige Lieder zu schaffen.",
+  uniqueApproachDesc: "Wir verbinden persönliches Storytelling mit professioneller Musikproduktion, um wirklich einzigartige Lieder zu schaffen. Wir bieten Vertrieb und Bekanntheit durch das gesamte Mango Records Netzwerk, das ein echtes Publikum von über 3 Millionen Menschen hat. Beispiele: YouTube – @MangorecordsChannel, Facebook – @MangoMusicRomania, Instagram – @mangomusicro und viele TikTok-Gruppen und musikliebende Gemeinschaften.",
+  qualityOverQuantity: "Qualität vor Quantität",
+  qualityOverQuantityDesc: "Wir nehmen keine großen Auftragsvolumen an – unser Fokus liegt auf Qualität, nicht Quantität. Wir mischen und mastern das Endprodukt in einem professionellen Studio mit Logic Pro, Ableton Live, Avid Pro Tools und mehr. Wir verwenden keine Vorlagen – alles wird von Grund auf neu erstellt, nur für Sie.",
   fastDelivery: "Schnelle Lieferung",
-  fastDeliveryDesc: "Professionelle Musikqualität innerhalb von 3-7 Tagen geliefert, perfekt für besondere Anlässe und Geschenke.",
+  fastDeliveryDesc: "Hochwertige Musik in 3–7 Tagen geliefert – perfekt für besondere Anlässe und bedeutungsvolle Geschenke. Es kann Zeit dauern... aber wir opfern niemals die Qualität.",
   satisfactionGuarantee: "Zufriedenheitsgarantie",
-  satisfactionGuaranteeDesc: "100% Zufriedenheitsgarantie mit unbegrenzten Überarbeitungen, bis Ihr Lied Ihre Geschichte perfekt einfängt.",
+  satisfactionGuaranteeDesc: "Wir liefern nicht, bis wir fühlen, dass das Lied die Emotion Ihrer Geschichte perfekt einfängt. Keine Abkürzungen, keine Kompromisse – nur authentische Musik, würdig Ihres besonderen Moments.",
   
   // Call to Action
   readyToStart: "Bereit, Ihr Lied zu Erstellen?",
-  readyToStartDesc: "Schließen Sie sich zufriedenen Kunden an, die ihre Geschichten in schöne, personalisierte Lieder verwandelt haben.",
+  readyToStartDesc: "Schließen Sie sich Tausenden zufriedener Kunden an, die ihre Geschichten in schöne, personalisierte Lieder verwandelt haben.",
   startYourSong: "Beginnen Sie Ihr Lied",
   viewPackages: "Pakete Ansehen",
 };
