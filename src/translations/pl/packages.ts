@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Wybierz swój pakiet",
   selectPerfectPackage: "Wybierz idealny pakiet, który pasuje do Twoich potrzeb i budżetu",
@@ -187,9 +188,6 @@ export const packagesTranslations = {
   separatedStems: "Oddzielne Stemy",
   separatedStemsDesc: "Oryginalny beat + indywidualne pliki ścieżek. Idealny do miksowania, remiksu i synchronizacji wideo. Zawiera prawa komercyjne.",
   
-  // New Special Event Package names  
-  weddingPackage: "Pakiet Ślubny",
-
   // New Special Event Package names
   weddingPackage: "Pakiet ślubny",
   baptismPackage: "Pakiet chrzcin",
