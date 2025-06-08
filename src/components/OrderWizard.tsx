@@ -15,6 +15,7 @@ import PackageSelectionStep from './order/PackageSelectionStep';
 import PaymentProviderSelection from './order/PaymentProviderSelection';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useToast } from '@/hooks/use-toast';
+
 interface OrderFormData {
   email?: string;
   fullName?: string;
@@ -32,58 +33,45 @@ interface OrderFormData {
   city?: string;
   [key: string]: any;
 }
+
 interface OrderWizardProps {
   giftCard?: any;
   onComplete?: (orderData: any) => Promise<void>;
   preselectedPackage?: string;
 }
-const OrderWizard: React.FC<OrderWizardProps> = ({
-  giftCard,
-  onComplete,
-  preselectedPackage
-}) => {
+
+const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, preselectedPackage }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<OrderFormData>({});
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [addonFieldValues, setAddonFieldValues] = useState<Record<string, any>>({});
   const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('smartbill');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const {
-    t
-  } = useLanguage();
-  const {
-    currency
-  } = useCurrency();
-  const {
-    toast
-  } = useToast();
+  const { t } = useLanguage();
+  const { currency } = useCurrency();
+  const { toast } = useToast();
   const navigate = useNavigate();
-  const {
-    data: packages = []
-  } = usePackages();
-  const {
-    data: addons = []
-  } = useAddons();
+  const { data: packages = [] } = usePackages();
+  const { data: addons = [] } = useAddons();
+  
   const selectedPackage = formData.package as string;
-  const {
-    data: packageSteps = [],
-    isLoading: isStepsLoading
-  } = usePackageSteps(selectedPackage);
+  const { data: packageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
+  
   const totalSteps = 1 + (packageSteps?.length || 0) + 1;
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+
   useEffect(() => {
     if (preselectedPackage && packages.length > 0) {
       if (preselectedPackage === 'gift') {
         navigate('/gift');
         return;
       }
-      setFormData(prev => ({
-        ...prev,
-        package: preselectedPackage
-      }));
+      
+      setFormData(prev => ({ ...prev, package: preselectedPackage }));
       setCurrentStep(1);
     }
   }, [packages, preselectedPackage, navigate]);
+
   const handleNext = () => {
     if (currentStep === 0) {
       if (!formData.package) return;
@@ -92,29 +80,29 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       setCurrentStep(currentStep + 1);
     }
   };
+
   const handlePrev = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
+
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
+
   const handlePackageSelect = (packageValue: string) => {
     if (packageValue === 'gift') {
       navigate('/gift');
       return;
     }
-    const newFormData = {
-      package: packageValue
-    };
+    
+    const newFormData = { package: packageValue };
     setFormData(newFormData);
     setSelectedAddons([]);
     setAddonFieldValues({});
   };
+
   const handleAddonChange = (addonId: string, checked: boolean) => {
     setSelectedAddons(prev => {
       if (checked) {
@@ -124,12 +112,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       }
     });
   };
+
   const handleAddonFieldChange = (addonKey: string, fieldValue: any) => {
-    setAddonFieldValues(prev => ({
-      ...prev,
-      [addonKey]: fieldValue
-    }));
+    setAddonFieldValues(prev => ({ ...prev, [addonKey]: fieldValue }));
   };
+
   const calculateTotalPrice = () => {
     const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
     const addonsPrice = selectedAddons.reduce((total, addonKey) => {
@@ -138,34 +125,42 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     }, 0);
     return packagePrice + addonsPrice;
   };
+
   const totalPrice = calculateTotalPrice();
+
   const validateFormData = () => {
     console.log('🔍 Form Data Validation Starting...');
+    
     if (!formData || typeof formData !== 'object') {
       console.error('❌ Form data is not a valid object:', formData);
       throw new Error('Form data is missing or invalid');
     }
+
     if (!selectedPackage || selectedPackage === '') {
       console.error('❌ No package selected');
       throw new Error('Please select a package before proceeding');
     }
+
     const requiredFields = ['email', 'fullName'];
     const missingFields = requiredFields.filter(field => {
       const value = formData[field];
-      const isEmpty = !value || value === '' || typeof value === 'string' && value.trim() === '';
+      const isEmpty = !value || value === '' || (typeof value === 'string' && value.trim() === '');
       if (isEmpty) {
         console.error(`❌ Missing or empty field: ${field} = "${value}"`);
       }
       return isEmpty;
     });
+    
     if (missingFields.length > 0) {
       console.error('❌ Missing required fields:', missingFields);
       throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
     }
+
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       console.error('❌ Invalid email format:', formData.email);
       throw new Error('Please enter a valid email address');
     }
+
     if (formData.fullName && formData.fullName.trim().length < 2) {
       console.error('❌ Full name too short:', formData.fullName);
       throw new Error('Please enter a valid full name (at least 2 characters)');
@@ -177,16 +172,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         throw new Error('Company name is required for company invoices');
       }
     }
+
     if (totalPrice === null || totalPrice === undefined || totalPrice < 0) {
       console.error('❌ Invalid total price:', totalPrice);
       throw new Error('Invalid total price calculated');
     }
+
     console.log('✅ Form data validation passed');
     return true;
   };
+
   const prepareOrderData = () => {
     console.log('🏗️ Preparing order data...');
-
+    
     // Clean and structure form data properly
     const cleanFormData = {
       email: (formData.email || '').trim(),
@@ -211,11 +209,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         return acc;
       }, {} as Record<string, any>)
     };
+
     const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+    
     if (!selectedPackageData) {
       console.error('❌ Selected package data not found:', selectedPackage);
       throw new Error('Selected package not found');
     }
+
     const package_name = selectedPackageData?.label_key;
     const package_price = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
     const package_delivery_time = selectedPackageData?.delivery_time_key;
@@ -226,8 +227,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       form_data: cleanFormData,
       selected_addons: selectedAddons,
       addon_field_values: addonFieldValues,
-      total_price: totalPrice,
-      // Keep in base monetary units
+      total_price: totalPrice, // Keep in base monetary units
       package_value: selectedPackage,
       package_name: package_name,
       package_price: package_price,
@@ -241,18 +241,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       user_agent: navigator.userAgent,
       referrer: document.referrer || 'direct'
     };
+
     console.log('📦 Order data prepared:', {
       ...orderData,
-      form_data: {
-        ...orderData.form_data,
-        email: orderData.form_data.email?.substring(0, 5) + '***'
-      }
+      form_data: { ...orderData.form_data, email: orderData.form_data.email?.substring(0, 5) + '***' }
     });
     return orderData;
   };
+
   const handleSubmit = async () => {
     if (isSubmitting) return;
+    
     setIsSubmitting(true);
+    
     try {
       console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
       console.log('📦 Order data being submitted:', {
@@ -262,7 +263,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         paymentProvider: selectedPaymentProvider,
         customerEmail: formData.email?.substring(0, 5) + '***'
       });
+      
       validateFormData();
+      
       if (onComplete) {
         await onComplete({
           ...formData,
@@ -274,9 +277,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         });
         return;
       }
+
       if (!selectedPaymentProvider) {
         throw new Error('Please select a payment method before proceeding');
       }
+
       const orderData = prepareOrderData();
 
       // Handle SmartBill payment with enhanced error handling and logging
@@ -292,14 +297,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             invoiceType: orderData.form_data.invoiceType
           }
         });
-        const {
-          data: paymentResponse,
-          error: paymentError
-        } = await supabase.functions.invoke('smartbill-create-invoice', {
-          body: {
-            orderData
-          }
+        
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('smartbill-create-invoice', {
+          body: { orderData }
         });
+
         console.log('🔵 SmartBill Edge Function Response:', {
           success: paymentResponse?.success,
           orderId: paymentResponse?.orderId,
@@ -307,24 +309,28 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
           hasPaymentUrl: !!paymentResponse?.paymentUrl,
           message: paymentResponse?.message
         });
+
         if (paymentError) {
           console.error('❌ SmartBill Edge Function Error:', paymentError);
           throw new Error(`SmartBill payment failed: ${paymentError.message}`);
         }
+
         if (!paymentResponse?.success) {
           console.error('❌ SmartBill Payment Response Error:', paymentResponse);
           const errorCode = paymentResponse?.errorCode || 'paymentFailed';
           const errorMessage = paymentResponse?.message || paymentResponse?.error || 'SmartBill payment initialization failed';
+          
           console.log('🔗 Redirecting to error page with details:', {
             orderId: paymentResponse?.orderId,
             errorCode,
             errorMessage: errorMessage.substring(0, 100) + '...'
           });
-
+          
           // Navigate to error page with specific error details
           navigate(`/payment/error?orderId=${paymentResponse?.orderId || 'unknown'}&errorCode=${errorCode}&errorMessage=${encodeURIComponent(errorMessage)}`);
           return;
         }
+
         if (paymentResponse.paymentUrl) {
           console.log('✅ SmartBill payment URL generated successfully');
           console.log('🔗 Redirecting to SmartBill payment page');
@@ -333,55 +339,60 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
           console.log('✅ Order completed - no payment required');
           navigate('/payment/success?orderId=' + paymentResponse.orderId);
         }
+
       } else if (selectedPaymentProvider === 'stripe') {
         console.log('🟣 Processing payment with Stripe');
-        const {
-          data: paymentResponse,
-          error: paymentError
-        } = await supabase.functions.invoke('stripe-create-payment', {
+        
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('stripe-create-payment', {
           body: {
-            orderData: orderData,
-            // No price conversion - handled in edge function
+            orderData: orderData, // No price conversion - handled in edge function
             returnUrl: `${window.location.origin}/payment/success`
           }
         });
+
         console.log('🟣 Stripe response:', paymentResponse);
+
         if (paymentError || !paymentResponse?.success) {
           const errorMessage = paymentError?.message || paymentResponse?.error || 'Stripe payment failed';
           throw new Error(errorMessage);
         }
+
         if (paymentResponse.paymentUrl) {
           window.location.href = paymentResponse.paymentUrl;
         } else {
           throw new Error('No payment URL received from Stripe');
         }
+
       } else if (selectedPaymentProvider === 'revolut') {
         console.log('🟠 Processing payment with Revolut');
-        const {
-          data: paymentResponse,
-          error: paymentError
-        } = await supabase.functions.invoke('revolut-create-payment', {
+        
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('revolut-create-payment', {
           body: {
-            orderData: orderData,
-            // No price conversion - handled in edge function
+            orderData: orderData, // No price conversion - handled in edge function
             returnUrl: `${window.location.origin}/payment/success`
           }
         });
+
         console.log('🟠 Revolut response:', paymentResponse);
+
         if (paymentError || !paymentResponse?.success) {
           const errorMessage = paymentError?.message || paymentResponse?.error || 'Revolut payment failed';
           throw new Error(errorMessage);
         }
+
         if (paymentResponse.paymentUrl) {
           window.location.href = paymentResponse.paymentUrl;
         } else {
           navigate('/payment/success?orderId=' + paymentResponse.orderId);
         }
+
       } else {
         throw new Error(`Unsupported payment provider: ${selectedPaymentProvider}`);
       }
+
     } catch (error) {
       console.error(`💥 ${selectedPaymentProvider?.toUpperCase()} Payment Error:`, error);
+      
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       console.error('💥 Full error details:', {
         message: errorMessage,
@@ -389,6 +400,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         package: selectedPackage,
         totalPrice
       });
+      
       toast({
         title: t('orderError', 'Payment Error'),
         description: `Payment failed: ${errorMessage}`,
@@ -398,9 +410,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       setIsSubmitting(false);
     }
   };
+
   const isPaymentStep = currentStep === totalSteps - 1;
   const currentPackageStepIndex = currentStep - 1;
   const currentStepData = currentStep > 0 && !isPaymentStep ? packageSteps?.[currentPackageStepIndex] : null;
+
   const canProceed = () => {
     if (currentStep === 0) {
       return !!formData.package;
@@ -410,13 +424,15 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     }
     return true;
   };
-  return <div className="container mx-auto py-[78px]">
-      <Card className="bg-white/90 backdrop-blur-sm">
+
+  return (
+    <div className="container mx-auto py-8">
+      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
         <CardHeader className="pb-2 pt-6">
-          <CardTitle className="text-2xl font-bold">
+          <CardTitle className="text-2xl font-bold text-white">
             {t('orderDetails')}
           </CardTitle>
-          <p className="text-gray-500">
+          <p className="text-white/80">
             {t('completeAllSteps')}
           </p>
         </CardHeader>
@@ -426,47 +442,91 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
           </div>
 
           <AnimatePresence initial={false} mode="wait">
-            <motion.div key={currentStep} initial={{
-            opacity: 0,
-            x: -20
-          }} animate={{
-            opacity: 1,
-            x: 0
-          }} exit={{
-            opacity: 0,
-            x: 20
-          }} transition={{
-            duration: 0.2
-          }}>
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.2 }}
+            >
               <div className="space-y-4">
-                {currentStep === 0 ? <PackageSelectionStep selectedPackage={formData.package} onPackageSelect={handlePackageSelect} /> : isPaymentStep ? <PaymentProviderSelection selectedProvider={selectedPaymentProvider} onProviderSelect={setSelectedPaymentProvider} /> : currentStepData ? currentStepData.fields.map(field => <FormFieldRenderer key={field.id} field={field} value={formData[field.field_name]} onChange={value => handleInputChange(field.field_name, value)} selectedAddons={selectedAddons} onAddonChange={handleAddonChange} availableAddons={addons} addonFieldValues={addonFieldValues} onAddonFieldChange={handleAddonFieldChange} selectedPackage={selectedPackage} formData={formData} />) : <div className="text-center py-8">
-                    <p className="text-gray-500">{t('loadingSteps')}</p>
-                  </div>}
+                {currentStep === 0 ? (
+                  <PackageSelectionStep
+                    selectedPackage={formData.package}
+                    onPackageSelect={handlePackageSelect}
+                  />
+                ) : isPaymentStep ? (
+                  <PaymentProviderSelection
+                    selectedProvider={selectedPaymentProvider}
+                    onProviderSelect={setSelectedPaymentProvider}
+                  />
+                ) : currentStepData ? (
+                  currentStepData.fields.map(field => (
+                    <FormFieldRenderer
+                      key={field.id}
+                      field={field}
+                      value={formData[field.field_name]}
+                      onChange={(value) => handleInputChange(field.field_name, value)}
+                      selectedAddons={selectedAddons}
+                      onAddonChange={handleAddonChange}
+                      availableAddons={addons}
+                      addonFieldValues={addonFieldValues}
+                      onAddonFieldChange={handleAddonFieldChange}
+                      selectedPackage={selectedPackage}
+                      formData={formData}
+                    />
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-white/70">{t('loadingSteps')}</p>
+                  </div>
+                )}
               </div>
             </motion.div>
           </AnimatePresence>
 
           <div className="flex justify-between mt-6">
-            <Button variant="secondary" onClick={handlePrev} disabled={currentStep === 0 || isSubmitting}>
+            <Button
+              variant="outline"
+              onClick={handlePrev}
+              disabled={currentStep === 0 || isSubmitting}
+              className="border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t('previous')}
             </Button>
-            <Button onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext} disabled={!canProceed() || currentStep > 0 && !isPaymentStep && isStepsLoading || isSubmitting}>
-              {isSubmitting ? <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+            <Button
+              onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
+              disabled={!canProceed() || (currentStep > 0 && !isPaymentStep && isStepsLoading) || isSubmitting}
+              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
                   {t('processing', 'Processing...')}
-                </> : <>
+                </>
+              ) : (
+                <>
                   {currentStep === totalSteps - 1 ? t('submitOrder') : t('next')}
                   <ArrowRight className="w-4 h-4 ml-2" />
-                </>}
+                </>
+              )}
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      {selectedPackage && <div className="mt-8">
-          <OrderSummary selectedPackage={selectedPackage} selectedAddons={selectedAddons} giftCard={giftCard} />
-        </div>}
-    </div>;
+      {selectedPackage && (
+        <div className="mt-8">
+          <OrderSummary
+            selectedPackage={selectedPackage}
+            selectedAddons={selectedAddons}
+            giftCard={giftCard}
+          />
+        </div>
+      )}
+    </div>
+  );
 };
+
 export default OrderWizard;
