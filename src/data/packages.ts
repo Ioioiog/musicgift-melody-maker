@@ -359,7 +359,7 @@ export const packages: Package[] = [
       { include_key: "premiumInclude2" },
       { include_key: "premiumInclude3" },
     ],
-    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender", "extendedSong"],
+    available_addons: ["rushDelivery", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: [],
     tag: "popular",
   },
@@ -378,7 +378,7 @@ export const packages: Package[] = [
       { include_key: "businessInclude3" },
       { include_key: "businessInclude4" },
     ],
-    available_addons: ["rushDelivery", "commercialRights", "customVideo", "brandedAudioMessage", "commercialRightsUpgrade", "extendedSong"],
+    available_addons: ["rushDelivery", "customVideo", "brandedAudioMessage", "commercialRightsUpgrade", "extendedSong"],
     steps: [],
   },
   {
