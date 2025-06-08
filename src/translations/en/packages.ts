@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -159,8 +160,8 @@ export const packagesTranslations = {
   sourceFilesPrice: "€75 / 375 RON",
 
   // Add-ons
-  commercialRights: "Commercial Rights",
-  commercialRightsDesc: "Full commercial usage rights included",
+  socialMediaRights: "Social Media Rights",
+  socialMediaRightsDesc: "Get the rights to post the song on any social media platform. Requires acceptance of tagging the song with 'Music Gift by Mango Records'.",
   
   distributieMangoRecords: "Mango Records Distribution",
   distributieMangoRecordsDesc: "Professional distribution through Mango Records",

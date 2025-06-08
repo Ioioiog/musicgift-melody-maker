@@ -1,3 +1,4 @@
+
 import type { Field, Step, FieldOption, Addon } from '@/types';
 
 export interface PackageInclude {
@@ -323,7 +324,7 @@ export const packages: Package[] = [
       { include_key: "plusInclude2" },
       { include_key: "plusInclude3" },
     ],
-    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender", "extendedSong"],
+    available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: [],
     tag: "new",
   },
@@ -342,7 +343,7 @@ export const packages: Package[] = [
       { include_key: "personalInclude3" },
       { include_key: "personalInclude4" },
     ],
-    available_addons: ["rushDelivery", "commercialRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
+    available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: [],
   },
   {
@@ -396,7 +397,7 @@ export const packages: Package[] = [
       { include_key: "artistInclude3" },
       { include_key: "artistInclude4" },
     ],
-    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender"],
+    available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "audioMessageFromSender"],
     steps: [],
   },
   {
@@ -416,7 +417,7 @@ export const packages: Package[] = [
       { include_key: "remixInclude5" },
       { include_key: "remixInclude6" },
     ],
-    available_addons: ["rushDelivery", "commercialRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender"],
+    available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender"],
     steps: [],
   },
   {
@@ -435,7 +436,7 @@ export const packages: Package[] = [
       { include_key: "instrumentalInclude4" },
       { include_key: "instrumentalInclude5" },
     ],
-    available_addons: ["rushDelivery", "commercialRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender"],
+    available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender"],
     steps: [],
   },
   {
@@ -475,7 +476,7 @@ export const packages: Package[] = [
       { include_key: "weddingInclude7" },
       { include_key: "weddingInclude8" }
     ],
-    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender", "extendedSong", "godparentsmelody"],
+    available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "audioMessageFromSender", "extendedSong", "godparentsmelody"],
     steps: weddingOrderFlow.steps,
     tag: "new"
   },
@@ -496,7 +497,7 @@ export const packages: Package[] = [
       { include_key: "baptismInclude5" },
       { include_key: "baptismInclude6" }
     ],
-    available_addons: ["rushDelivery", "commercialRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
+    available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: baptismOrderFlow.steps,
     tag: "new"
   },
@@ -517,7 +518,7 @@ export const packages: Package[] = [
       { include_key: "comingOfAgeInclude5" },
       { include_key: "comingOfAgeInclude6" }
     ],
-    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender", "extendedSong"],
+    available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: comingOfAgeOrderFlow.steps,
     tag: "new"
   }
@@ -534,10 +535,10 @@ export const addOns: AddOn[] = [
     availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix', 'wedding', 'baptism', 'comingOfAge']
   },
   {
-    id: "commercialRights",
-    value: "commercialRights",
-    label_key: "commercialRights",
-    description_key: "commercialRightsDesc",
+    id: "socialMediaRights",
+    value: "socialMediaRights",
+    label_key: "socialMediaRights",
+    description_key: "socialMediaRightsDesc",
     price_ron: 0,
     price_eur: 0,
     availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix', 'wedding', 'baptism', 'comingOfAge']

@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -158,6 +157,10 @@ export const packagesTranslations = {
   sourceFiles: "Fișiere sursă",
   sourceFilesDesc: "Accesul la toate fișierele de proiect (stems, MIDI)",
   sourceFilesPrice: "€75 / 375 RON",
+  
+  // Add-ons
+  socialMediaRights: "Drepturi Social Media",
+  socialMediaRightsDesc: "Obții drepturile de a posta melodia pe orice platformă de social media. Necesită acceptarea etichetării melodiei cu 'Music Gift by Mango Records'.",
   
   // Package-specific add-ons
   // Personal package add-ons

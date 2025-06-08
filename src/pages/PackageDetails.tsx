@@ -1,3 +1,4 @@
+
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Check, Clock, Star, Users, Mic, Music, FileText, HelpCircle, ChevronDown, ChevronUp, Lightbulb, Plus, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -198,7 +199,7 @@ const PackageDetails = () => {
     switch (addonKey) {
       case 'rushDelivery':
         return <Clock className="w-4 h-4" />;
-      case 'commercialRights':
+      case 'socialMediaRights':
       case 'commercialRightsUpgrade':
         return <FileText className="w-4 h-4" />;
       case 'distributieMangoRecords':

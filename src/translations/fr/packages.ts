@@ -158,51 +158,30 @@ export const packagesTranslations = {
   sourceFilesDesc: "Accès à tous les fichiers de projet (stems, MIDI)",
   sourceFilesPrice: "€75 / 375 RON",
   
-  // Package-specific add-ons
-  // Personal package add-ons
-  personalDuet: "Version duo",
-  personalDuetDesc: "Enregistrement avec deux vocalistes pour chansons romantiques",
-  personalDuetPrice: "€35 / 175 RON",
+  // Add-ons
+  socialMediaRights: "Droits Réseaux Sociaux",
+  socialMediaRightsDesc: "Obtenez les droits de publier la chanson sur toute plateforme de réseaux sociaux. Nécessite l'acceptation d'étiqueter la chanson avec 'Music Gift by Mango Records'.",
   
-  personalInstrumental: "Version instrumentale",
-  personalInstrumentalDesc: "Version sans voix de votre chanson",
-  personalInstrumentalPrice: "€20 / 100 RON",
+  distributieMangoRecords: "Distribution Mango Records",
+  distributieMangoRecordsDesc: "Distribution professionnelle via Mango Records",
   
-  // Premium package add-ons
-  premiumExtendedVideo: "Vidéo étendue",
-  premiumExtendedVideoDesc: "Vidéo de 3-5 minutes au lieu de 1-2 minutes",
-  premiumExtendedVideoPrice: "€150 / 750 RON",
+  customVideo: "Vidéo personnalisée",
+  customVideoDesc: "Vidéo animée pour votre chanson",
   
-  premiumSocialKit: "Kit réseaux sociaux",
-  premiumSocialKitDesc: "Clips de 15 secondes pour TikTok, Instagram, YouTube Shorts",
-  premiumSocialKitPrice: "€50 / 250 RON",
+  audioMessageFromSender: "Message audio de l'expéditeur",
+  audioMessageFromSenderDesc: "Ajoutez un message audio personnel de l'expéditeur pour une surprise supplémentaire",
   
-  // Business package add-ons
-  businessMultipleVersions: "Versions multiples",
-  businessMultipleVersionsDesc: "3 versions différentes (30s, 60s, version complète)",
-  businessMultipleVersionsPrice: "€100 / 500 RON",
+  brandedAudioMessage: "Message audio de marque",
+  brandedAudioMessageDesc: "Incluez un court message vocal de marque au début de la chanson – parfait pour les introductions personnalisées, les messages de campagne ou les slogans de marque.",
   
-  businessJingleKit: "Kit jingle complet",
-  businessJingleKitDesc: "5 variations de jingle courts (5-15 secondes)",
-  businessJingleKitPrice: "€150 / 750 RON",
+  commercialRightsUpgrade: "Mise à niveau des droits commerciaux",
+  commercialRightsUpgradeDesc: "Droits commerciaux étendus pour une utilisation professionnelle",
   
-  // Artist package add-ons
-  artistVocalCoaching: "Coaching vocal",
-  artistVocalCoachingDesc: "Séance de coaching vocal en ligne d'1 heure",
-  artistVocalCoachingPrice: "€80 / 400 RON",
+  extendedSong: "Chanson étendue",
+  extendedSongDesc: "Version plus longue de votre chanson",
   
-  artistMusicVideo: "Clip vidéo professionnel",
-  artistMusicVideoDesc: "Clip vidéo professionnel filmé et monté",
-  artistMusicVideoPrice: "€500 / 2500 RON",
-  
-  // Gift package add-ons
-  giftCustomPackaging: "Emballage personnalisé",
-  giftCustomPackagingDesc: "Boîte cadeau personnalisée avec message",
-  giftCustomPackagingPrice: "€25 / 125 RON",
-  
-  giftPhysicalCard: "Carte physique",
-  giftPhysicalCardDesc: "Carte cadeau physique livrée par courrier",
-  giftPhysicalCardPrice: "€15 / 75 RON",
+  godparentsmelody: "Mélodie des parrains",
+  godparentsmelodyDesc: "Mélodie spéciale pour les parrains",
   
   // New Special Event Package names
   weddingPackage: "Forfait Mariage",
