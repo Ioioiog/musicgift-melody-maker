@@ -7,8 +7,10 @@ import { useUnsubscribe } from '@/hooks/useNewsletter';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Unsubscribe = () => {
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'pending'>('pending');
   const unsubscribeMutation = useUnsubscribe();
@@ -40,20 +42,20 @@ const Unsubscribe = () => {
         <div className="max-w-md mx-auto">
           <Card>
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl">Newsletter Unsubscribe</CardTitle>
+              <CardTitle className="text-2xl">{t('newsletterUnsubscribe')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-6">
               {status === 'pending' && id && token && (
                 <>
                   <p className="text-gray-600">
-                    Are you sure you want to unsubscribe from our newsletter?
+                    {t('confirmUnsubscribe')}
                   </p>
                   <Button 
                     onClick={handleUnsubscribe}
                     variant="destructive"
                     className="w-full"
                   >
-                    Yes, Unsubscribe
+                    {t('yesUnsubscribe')}
                   </Button>
                 </>
               )}
@@ -61,7 +63,7 @@ const Unsubscribe = () => {
               {status === 'loading' && (
                 <>
                   <Loader2 className="w-12 h-12 animate-spin mx-auto text-purple-600" />
-                  <p className="text-gray-600">Processing your request...</p>
+                  <p className="text-gray-600">{t('processingRequest')}</p>
                 </>
               )}
 
@@ -69,10 +71,9 @@ const Unsubscribe = () => {
                 <>
                   <CheckCircle className="w-16 h-16 mx-auto text-green-600" />
                   <div>
-                    <h3 className="text-lg font-semibold mb-2">Successfully Unsubscribed</h3>
+                    <h3 className="text-lg font-semibold mb-2">{t('successfullyUnsubscribed')}</h3>
                     <p className="text-gray-600">
-                      You have been successfully removed from our newsletter. 
-                      We're sorry to see you go!
+                      {t('unsubscribeSuccessMessage')}
                     </p>
                   </div>
                 </>
@@ -82,11 +83,11 @@ const Unsubscribe = () => {
                 <>
                   <XCircle className="w-16 h-16 mx-auto text-red-600" />
                   <div>
-                    <h3 className="text-lg font-semibold mb-2">Unsubscribe Failed</h3>
+                    <h3 className="text-lg font-semibold mb-2">{t('unsubscribeFailed')}</h3>
                     <p className="text-gray-600">
                       {!id || !token 
-                        ? 'Invalid unsubscribe link. Please contact support.'
-                        : 'Unable to process your request. Please try again or contact support.'
+                        ? t('invalidUnsubscribeLink')
+                        : t('unsubscribeErrorMessage')
                       }
                     </p>
                   </div>
