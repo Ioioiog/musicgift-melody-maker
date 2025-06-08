@@ -191,10 +191,6 @@ export const packagesTranslations = {
   artistVocalCoachingDesc: "1-stündige Online-Gesangscoaching-Session",
   artistVocalCoachingPrice: "€80 / 400 RON",
   
-  artistMusicVideo: "Professionelles Musikvideo",
-  artistMusicVideoDesc: "Professionell gefilmtes und bearbeitetes Musikvideo",
-  artistMusicVideoPrice: "€500 / 2500 RON",
-  
   // Gift package add-ons
   giftCustomPackaging: "Individuelle Verpackung",
   giftCustomPackagingDesc: "Personalisierte Geschenkbox mit Nachricht",
@@ -316,5 +312,19 @@ export const packagesTranslations = {
   didYouKnowComingOfAge1Title: "Musik und Identitätsbildung",
   didYouKnowComingOfAge1Desc: "Teenager, die personalisierte Lieder erhalten, berichten über höheres Selbstwertgefühl und stärkeres Identitätsgefühl während des Übergangs ins Erwachsenenalter.",
   didYouKnowComingOfAge2Title: "Meilenstein-Feiern",
-  didYouKnowComingOfAge2Desc: "Volljährigkeitsfeiern mit personalisierten Elementen werden lebhafter erinnert und beeinflussen zukünftige Lebensentscheidungen positiv."
+  didYouKnowComingOfAge2Desc: "Volljährigkeitsfeiern mit personalisierten Elementen werden lebhafter erinnert und beeinflussen zukünftige Lebensentscheidungen positiv.",
+
+  // FAQ Revision answers
+  faqRevisionsAnswerWedding: "Ja, das Hochzeitspaket beinhaltet eine kostenlose Überarbeitung, um Ihre vollständige Zufriedenheit mit dem Endprodukt zu gewährleisten.",
+  faqRevisionsAnswerOther: "Überarbeitungen sind nur für das Hochzeitspaket verfügbar. Andere Pakete beinhalten keine Überarbeitungsoptionen, um unseren optimierten Produktionsprozess und wettbewerbsfähige Preise beizubehalten.",
+
+  // New FAQ questions and answers
+  faqDeliveryTime: "Wie lange dauert es, bis ich mein Lied erhalte?",
+  faqDeliveryTimeAnswer: "Ihr Lied wird innerhalb von 3–5 Werktagen nach Bestätigung Ihrer Bestellung und Geschichte fertig sein. Wir möchten, dass jede Kreation mit Sorgfalt und Professionalität gefertigt wird.",
+  
+  faqDeliveryMethod: "Wie erhalte ich mein Lied?",
+  faqDeliveryMethodAnswer: "Sie erhalten Ihr personalisiertes Lied per E-Mail in hoher Qualität (MP3 oder WAV auf Anfrage). Sie können das Lied bis zu 6 Monate lang über den Link herunterladen, den wir senden. Danach läuft der Link ab und MusicGift speichert das Lied nicht mehr auf einem Server, also stellen Sie sicher, dass Sie Ihre Datei in dieser Zeit speichern.",
+  
+  faqSatisfaction: "Was ist, wenn ich nicht zufrieden bin?",
+  faqSatisfactionAnswer: "Wir arbeiten mit größter Sorgfalt daran, die Emotion hinter Ihrer Geschichte einzufangen. Wenn es echte Probleme gibt (z.B. falsche Lieferung, beschädigte Datei usw.), werden wir sie ohne zusätzliche Kosten beheben."
 };

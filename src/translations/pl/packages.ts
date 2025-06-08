@@ -316,5 +316,19 @@ export const packagesTranslations = {
   didYouKnowComingOfAge1Title: "Muzyka i kształtowanie tożsamości",
   didYouKnowComingOfAge1Desc: "Nastolatki, które otrzymują spersonalizowane piosenki, zgłaszają wyższą samoocenę i silniejsze poczucie tożsamości podczas przejścia do dorosłości.",
   didYouKnowComingOfAge2Title: "Świętowanie kamieni milowych",
-  didYouKnowComingOfAge2Desc: "Święta pełnoletności z spersonalizowanymi elementami są pamiętane bardziej żywo i pozytywnie wpływają na przyszłe decyzje życiowe."
+  didYouKnowComingOfAge2Desc: "Święta pełnoletności z spersonalizowanymi elementami są pamiętane bardziej żywo i pozytywnie wpływają na przyszłe decyzje życiowe.",
+  
+  // FAQ Revision answers
+  faqRevisionsAnswerWedding: "Tak, pakiet ślubny zawiera jedną darmową rewizję, aby zapewnić Państwu pełną satysfakcję z końcowego produktu.",
+  faqRevisionsAnswerOther: "Rewizje są dostępne tylko w pakiecie ślubnym. Inne pakiety nie zawierają opcji rewizji, aby utrzymać nasz usprawniony proces produkcji i konkurencyjne ceny.",
+  
+  // New FAQ questions and answers
+  faqDeliveryTime: "Ile czasu zajmuje otrzymanie mojej piosenki?",
+  faqDeliveryTimeAnswer: "Twoja piosenka będzie gotowa w ciągu 3–5 dni roboczych po potwierdzeniu zamówienia i historii. Chcemy, aby każde dzieło było tworzone z troską i profesjonalizmem.",
+  
+  faqDeliveryMethod: "Jak otrzymam moją piosenkę?",
+  faqDeliveryMethodAnswer: "Otrzymasz swoją spersonalizowaną piosenkę pocztą elektroniczną w wysokiej jakości (MP3 lub WAV na żądanie). Możesz pobrać piosenkę przez maksymalnie 6 miesięcy, używając linku, który wyślemy. Po tym czasie link wygaśnie i MusicGift nie będzie już przechowywać piosenki na żadnym serwerze, więc pamiętaj o zapisaniu pliku w tym czasie.",
+  
+  faqSatisfaction: "Co jeśli nie będę zadowolony?",
+  faqSatisfactionAnswer: "Pracujemy z największą starannością, aby uchwycić emocje stojące za Twoją historią. Jeśli wystąpią jakiekolwiek rzeczywiste problemy (np. błędna dostawa, uszkodzony plik itp.), naprawimy je bez dodatkowych kosztów."
 };
