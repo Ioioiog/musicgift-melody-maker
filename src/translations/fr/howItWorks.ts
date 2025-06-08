@@ -12,7 +12,7 @@ export const howItWorksTranslations = {
   step1DetailsTitle: "Chaque forfait comprend :",
   step1Detail1: "Musique produite professionnellement avec soin par une équipe musicale expérimentée",
   step1Detail2: "Paroles personnalisées inspirées de votre histoire",
-  step1Detail3: "Fichiers audio haute qualité livrés aux formats MP3 et WAV ou Midi (Logic Pro)",
+  step1Detail3: "Fichiers audio haute qualité livrés en MP3, en plus sur demande formats WAV HQ",
   step1Detail4: "Une couverture visuelle magnifiquement conçue pour accompagner votre chanson",
   step1DetailsFooter: "Pas sûr lequel choisir ? Nous vous guiderons.",
   
@@ -43,7 +43,7 @@ export const howItWorksTranslations = {
   step4Description: "Votre chanson sera livrée en 3-7 jours ouvrables",
   step4DetailsIntro: "Dans les 3 à 7 jours ouvrables, votre chanson personnalisée sera livrée directement dans votre boîte de réception. Vous recevrez tout ce dont vous avez besoin pour en profiter, la partager ou l'offrir en cadeau à quelqu'un de spécial.",
   step4DetailsTitle: "Vous recevrez :",
-  step4Detail1: "Votre chanson personnalisée aux formats MP3 et WAV sur demande",
+  step4Detail1: "Votre chanson personnalisée en MP3, en plus sur demande format WAV HQ",
   step4Detail2: "Une couverture visuelle conçue pour correspondre au thème de votre chanson, si vous ne fournissez pas de photo appropriée ou préférée",
   step4Detail3: "Optionnellement, une version vidéo ou des formats prêts pour les réseaux sociaux",
   step4Detail4: "Un lien sécurisé pour télécharger vos fichiers, disponible pendant 6 mois",

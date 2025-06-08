@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -72,14 +71,14 @@ export const packagesTranslations = {
   remixInclude1: "Complete remix in chosen style",
   remixInclude2: "Customizable label: \"Remix by Mango Records\"",
   remixInclude3: "Professional Mix & Master",
-  remixInclude4: "Audio export: WAV + MP3",
+  remixInclude4: "Audio export: MP3, additional at request WAV HQ",
   remixInclude5: "Short version for social media (optional)",
   remixInclude6: "Requires sending original song",
   
   instrumentalInclude1: "Original instrumental composed from scratch by the MusicGift team",
   instrumentalInclude2: "Complete arrangement: beat, harmonies, structure",
   instrumentalInclude3: "No voice – space for your interpretation",
-  instrumentalInclude4: "Professional audio file (WAV HQ or MP3 and optionally separate STEMs)",
+  instrumentalInclude4: "Professional audio file (MP3, additional at request WAV HQ and optionally separate STEMs)",
   instrumentalInclude5: "Limited commercial license",
   
   giftInclude1: "Digital gift card valid for any MusicGift package",
@@ -210,7 +209,7 @@ export const packagesTranslations = {
   weddingInclude3: "Original instrumental",
   weddingInclude4: "Expressive vocal interpretation",
   weddingInclude5: "Professional mix & master",
-  weddingInclude6: "Final WAV HQ + MP3 files",
+  weddingInclude6: "Final MP3, additional at request WAV HQ files",
   weddingInclude7: "Free revision (1x)",
   weddingInclude8: "One modification request included",
   
@@ -220,7 +219,7 @@ export const packagesTranslations = {
   baptismInclude3: "Melodic line + original instrumental",
   baptismInclude4: "Professional voice (choice: female/male)",
   baptismInclude5: "Professional mix & master",
-  baptismInclude6: "Final WAV + MP3 files",
+  baptismInclude6: "Final MP3, additional at request WAV HQ files",
   
   // Coming of Age Package includes
   comingOfAgeInclude1: "Interview/brief about the celebrant with the MusicGift team",
@@ -228,7 +227,7 @@ export const packagesTranslations = {
   comingOfAgeInclude3: "Adapted vibe (hip-hop, pop, trap, lofi, etc.)",
   comingOfAgeInclude4: "Original song composed from scratch",
   comingOfAgeInclude5: "Professional mix & master",
-  comingOfAgeInclude6: "Final WAV + MP3 files",
+  comingOfAgeInclude6: "Final MP3, additional at request WAV HQ files",
   
   // New Add-ons
   personalizedAudioMessage: "Personalized Audio Message",
@@ -307,7 +306,7 @@ export const packagesTranslations = {
   faqDeliveryTimeAnswer: "Your song will be ready within 3–5 business days after your order and story are confirmed. We want every creation to be crafted with care and professionalism.",
   
   faqDeliveryMethod: "How will I receive my song?",
-  faqDeliveryMethodAnswer: "You will receive your personalized song via email, in high-quality format (MP3, or WAV upon request). You can download the song for up to 6 months using the link we send. After that, the link will expire and MusicGift will no longer store the song on any server, so make sure to save your file during that time.",
+  faqDeliveryMethodAnswer: "You will receive your personalized song via email, in high-quality format (MP3, additional at request WAV HQ). You can download the song for up to 6 months using the link we send. After that, the link will expire and MusicGift will no longer store the song on any server, so make sure to save your file during that time.",
   
   faqSatisfaction: "What if I'm not satisfied?",
   faqSatisfactionAnswer: "We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost."

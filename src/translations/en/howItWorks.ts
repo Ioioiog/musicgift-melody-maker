@@ -12,7 +12,7 @@ export const howItWorksTranslations = {
   step1DetailsTitle: "Each package includes:",
   step1Detail1: "Professionally produced music with care by an experienced music team",
   step1Detail2: "Personalized lyrics inspired by your story",
-  step1Detail3: "High-quality audio files delivered in MP3 and WAV or Midi (Logic Pro) formats",
+  step1Detail3: "High-quality audio files delivered in MP3, additional at request WAV HQ formats",
   step1Detail4: "A beautifully designed visual cover to accompany your song",
   step1DetailsFooter: "Not sure which one to choose? We'll guide you.",
   
@@ -43,7 +43,7 @@ export const howItWorksTranslations = {
   step4Description: "Your song will be delivered in 3-7 business days",
   step4DetailsIntro: "Within 3 to 7 business days, your personalized song will be delivered directly to your inbox. You'll receive everything you need to enjoy it, share it, or give it as a gift to someone special.",
   step4DetailsTitle: "You will receive:",
-  step4Detail1: "Your personalized song in MP3 and WAV format upon request",
+  step4Detail1: "Your personalized song in MP3, additional at request WAV HQ format",
   step4Detail2: "A visual cover designed to match your song's theme, if you don't provide a suitable or preferred photo",
   step4Detail3: "Optionally, a video version or formats ready for social media",
   step4Detail4: "A secure link to download your files, available for 6 months",

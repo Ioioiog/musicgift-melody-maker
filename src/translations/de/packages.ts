@@ -71,14 +71,14 @@ export const packagesTranslations = {
   remixInclude1: "Kompletter Remix im gewählten Stil",
   remixInclude2: "Anpassbares Label: \"Remix by Mango Records\"",
   remixInclude3: "Professioneller Mix & Master",
-  remixInclude4: "Audio-Export: WAV + MP3",
+  remixInclude4: "Audio-Export: MP3, zusätzlich auf Anfrage WAV HQ",
   remixInclude5: "Kurze Version für soziale Medien (optional)",
   remixInclude6: "Erfordert das Senden des Originalsongs",
   
   instrumentalInclude1: "Original-Instrumental von Grund auf vom MusicGift-Team komponiert",
   instrumentalInclude2: "Vollständiges Arrangement: Beat, Harmonien, Struktur",
   instrumentalInclude3: "Keine Stimme – Raum für Ihre Interpretation",
-  instrumentalInclude4: "Professionelle Audiodatei (WAV HQ oder MP3 und optional separate STEMs)",
+  instrumentalInclude4: "Professionelle Audiodatei (MP3, zusätzlich auf Anfrage WAV HQ und optional separate STEMs)",
   instrumentalInclude5: "Begrenzte kommerzielle Lizenz",
   
   giftInclude1: "Digitale Geschenkkarte gültig für jedes MusicGift-Paket",
@@ -158,47 +158,30 @@ export const packagesTranslations = {
   sourceFilesDesc: "Zugang zu allen Projektdateien (Stems, MIDI)",
   sourceFilesPrice: "€75 / 375 RON",
   
-  // Package-specific add-ons
-  // Personal package add-ons
-  personalDuet: "Duett-Version",
-  personalDuetDesc: "Aufnahme mit zwei Vokalisten für romantische Lieder",
-  personalDuetPrice: "€35 / 175 RON",
+  // Add-ons
+  socialMediaRights: "Social Media Rechte",
+  socialMediaRightsDesc: "Erhalten Sie die Rechte, das Lied auf jeder Social-Media-Plattform zu posten. Erfordert die Zustimmung, das Lied mit 'Music Gift by Mango Records' zu markieren.",
   
-  personalInstrumental: "Instrumentalversion",
-  personalInstrumentalDesc: "Stimmfreie Version Ihres Liedes",
-  personalInstrumentalPrice: "€20 / 100 RON",
+  distributieMangoRecords: "Mango Records Distribution",
+  distributieMangoRecordsDesc: "Professionelle Distribution über Mango Records",
   
-  // Premium package add-ons
-  premiumExtendedVideo: "Erweitertes Video",
-  premiumExtendedVideoDesc: "3-5 Minuten Video statt 1-2 Minuten",
-  premiumExtendedVideoPrice: "€150 / 750 RON",
+  customVideo: "Individuelles Video",
+  customVideoDesc: "Animiertes Video für Ihr Lied",
   
-  premiumSocialKit: "Social Media Kit",
-  premiumSocialKitDesc: "15-Sekunden-Clips für TikTok, Instagram, YouTube Shorts",
-  premiumSocialKitPrice: "€50 / 250 RON",
+  audioMessageFromSender: "Audio-Nachricht vom Absender",
+  audioMessageFromSenderDesc: "Fügen Sie eine persönliche Audio-Nachricht vom Absender für eine zusätzliche Überraschung hinzu",
   
-  // Business package add-ons
-  businessMultipleVersions: "Mehrere Versionen",
-  businessMultipleVersionsDesc: "3 verschiedene Versionen (30s, 60s, Vollversion)",
-  businessMultipleVersionsPrice: "€100 / 500 RON",
+  brandedAudioMessage: "Marken-Audio-Nachricht",
+  brandedAudioMessageDesc: "Fügen Sie eine kurze Marken-Sprachnachricht am Anfang des Liedes hinzu – perfekt für personalisierte Einführungen, Kampagnennachrichten oder Marken-Slogans.",
   
-  businessJingleKit: "Komplettes Jingle-Kit",
-  businessJingleKitDesc: "5 kurze Jingle-Variationen (5-15 Sekunden)",
-  businessJingleKitPrice: "€150 / 750 RON",
+  commercialRightsUpgrade: "Kommerzielle Rechte Upgrade",
+  commercialRightsUpgradeDesc: "Erweiterte kommerzielle Rechte für geschäftliche Nutzung",
   
-  // Artist package add-ons
-  artistVocalCoaching: "Gesangscoaching",
-  artistVocalCoachingDesc: "1-stündige Online-Gesangscoaching-Session",
-  artistVocalCoachingPrice: "€80 / 400 RON",
+  extendedSong: "Verlängertes Lied",
+  extendedSongDesc: "Längere Version Ihres Liedes",
   
-  // Gift package add-ons
-  giftCustomPackaging: "Individuelle Verpackung",
-  giftCustomPackagingDesc: "Personalisierte Geschenkbox mit Nachricht",
-  giftCustomPackagingPrice: "€25 / 125 RON",
-  
-  giftPhysicalCard: "Physische Karte",
-  giftPhysicalCardDesc: "Physische Geschenkkarte per Post geliefert",
-  giftPhysicalCardPrice: "€15 / 75 RON",
+  godparentsmelody: "Pateneltern-Melodie",
+  godparentsmelodyDesc: "Spezielle Melodie für Pateneltern",
   
   // New Special Event Package names
   weddingPackage: "Hochzeitspaket",
@@ -226,7 +209,7 @@ export const packagesTranslations = {
   weddingInclude3: "Original Instrumental",
   weddingInclude4: "Ausdrucksstarke Gesangsinterpretation",
   weddingInclude5: "Professioneller Mix & Master",
-  weddingInclude6: "Finale WAV HQ + MP3 Dateien",
+  weddingInclude6: "Finale MP3, zusätzlich auf Anfrage WAV HQ Dateien",
   weddingInclude7: "Kostenlose Revision (1x)",
   weddingInclude8: "Eine Änderungsanfrage inklusive",
   
@@ -236,7 +219,7 @@ export const packagesTranslations = {
   baptismInclude3: "Melodielinie + Original Instrumental",
   baptismInclude4: "Professionelle Stimme (Wahl: weiblich/männlich)",
   baptismInclude5: "Professioneller Mix & Master",
-  baptismInclude6: "Finale WAV + MP3 Dateien",
+  baptismInclude6: "Finale MP3, zusätzlich auf Anfrage WAV HQ Dateien",
   
   // Coming of Age Package includes
   comingOfAgeInclude1: "Interview/Brief über den Jubilar mit dem MusicGift-Team",
@@ -244,7 +227,7 @@ export const packagesTranslations = {
   comingOfAgeInclude3: "Angepasste Stimmung (Hip-Hop, Pop, Trap, Lofi, etc.)",
   comingOfAgeInclude4: "Original Song von Grund auf komponiert",
   comingOfAgeInclude5: "Professioneller Mix & Master",
-  comingOfAgeInclude6: "Finale WAV + MP3 Dateien",
+  comingOfAgeInclude6: "Finale MP3, zusätzlich auf Anfrage WAV HQ Dateien",
   
   // New Add-ons
   personalizedAudioMessage: "Personalisierte Audio-Nachricht",
@@ -323,7 +306,7 @@ export const packagesTranslations = {
   faqDeliveryTimeAnswer: "Ihr Lied wird innerhalb von 3–5 Werktagen nach Bestätigung Ihrer Bestellung und Geschichte fertig sein. Wir möchten, dass jede Kreation mit Sorgfalt und Professionalität gefertigt wird.",
   
   faqDeliveryMethod: "Wie erhalte ich mein Lied?",
-  faqDeliveryMethodAnswer: "Sie erhalten Ihr personalisiertes Lied per E-Mail in hoher Qualität (MP3 oder WAV auf Anfrage). Sie können das Lied bis zu 6 Monate lang über den Link herunterladen, den wir senden. Danach läuft der Link ab und MusicGift speichert das Lied nicht mehr auf einem Server, also stellen Sie sicher, dass Sie Ihre Datei in dieser Zeit speichern.",
+  faqDeliveryMethodAnswer: "Sie erhalten Ihr personalisiertes Lied per E-Mail in hoher Qualität (MP3, zusätzlich auf Anfrage WAV HQ). Sie können das Lied bis zu 6 Monate lang über den Link herunterladen, den wir senden. Danach läuft der Link ab und MusicGift speichert das Lied nicht mehr auf einem Server, also stellen Sie sicher, dass Sie Ihre Datei in dieser Zeit speichern.",
   
   faqSatisfaction: "Was ist, wenn ich nicht zufrieden bin?",
   faqSatisfactionAnswer: "Wir arbeiten mit größter Sorgfalt daran, die Emotion hinter Ihrer Geschichte einzufangen. Wenn es echte Probleme gibt (z.B. falsche Lieferung, beschädigte Datei usw.), werden wir sie ohne zusätzliche Kosten beheben."

@@ -12,7 +12,7 @@ export const howItWorksTranslations = {
   step1DetailsTitle: "Jedes Paket beinhaltet:",
   step1Detail1: "Professionell produzierte Musik mit Sorgfalt von einem erfahrenen Musikteam",
   step1Detail2: "Personalisierte Texte inspiriert von Ihrer Geschichte",
-  step1Detail3: "Hochwertige Audiodateien geliefert in MP3- und WAV- oder Midi-Formaten (Logic Pro)",
+  step1Detail3: "Hochwertige Audiodateien geliefert in MP3, zusätzlich auf Anfrage WAV HQ Formaten",
   step1Detail4: "Ein wunderschön gestaltetes visuelles Cover, das Ihr Lied begleitet",
   step1DetailsFooter: "Nicht sicher, welches Sie wählen sollen? Wir führen Sie gerne.",
   
@@ -43,7 +43,7 @@ export const howItWorksTranslations = {
   step4Description: "Ihr Lied wird in 3-7 Werktagen geliefert",
   step4DetailsIntro: "Innerhalb von 3 bis 7 Werktagen wird Ihr personalisiertes Lied direkt in Ihren Posteingang geliefert. Sie erhalten alles, was Sie brauchen, um es zu genießen, zu teilen oder als Geschenk an jemand Besonderen zu geben.",
   step4DetailsTitle: "Sie erhalten:",
-  step4Detail1: "Ihr personalisiertes Lied in MP3- und WAV-Format auf Anfrage",
+  step4Detail1: "Ihr personalisiertes Lied in MP3, zusätzlich auf Anfrage WAV HQ Format",
   step4Detail2: "Ein visuelles Cover, das zum Thema Ihres Liedes passt, falls Sie kein geeignetes oder bevorzugtes Foto bereitstellen",
   step4Detail3: "Optional eine Videoversion oder Formate bereit für soziale Medien",
   step4Detail4: "Einen sicheren Link zum Herunterladen Ihrer Dateien, verfügbar für 6 Monate",

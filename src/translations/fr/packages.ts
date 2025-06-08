@@ -71,14 +71,14 @@ export const packagesTranslations = {
   remixInclude1: "Remix complet dans le style choisi",
   remixInclude2: "Label personnalisable: \"Remix by Mango Records\"",
   remixInclude3: "Mix & Master professionnel",
-  remixInclude4: "Export audio: WAV + MP3",
+  remixInclude4: "Export audio: MP3, en plus sur demande WAV HQ",
   remixInclude5: "Version courte pour réseaux sociaux (optionnel)",
   remixInclude6: "Nécessite l'envoi de la chanson originale",
   
   instrumentalInclude1: "Instrumental original composé de zéro par l'équipe MusicGift",
   instrumentalInclude2: "Arrangement complet: beat, harmonies, structure",
   instrumentalInclude3: "Sans voix – espace pour votre interprétation",
-  instrumentalInclude4: "Fichier audio professionnel (WAV HQ ou MP3 et optionnellement STEMs séparés)",
+  instrumentalInclude4: "Fichier audio professionnel (MP3, en plus sur demande WAV HQ et optionnellement STEMs séparés)",
   instrumentalInclude5: "Licence commerciale limitée",
   
   giftInclude1: "Carte cadeau numérique valable pour tout forfait MusicGift",
@@ -209,7 +209,7 @@ export const packagesTranslations = {
   weddingInclude3: "Instrumental original",
   weddingInclude4: "Interprétation vocale expressive",
   weddingInclude5: "Mix & master professionnel",
-  weddingInclude6: "Fichiers finaux WAV HQ + MP3",
+  weddingInclude6: "Fichiers finaux MP3, en plus sur demande WAV HQ",
   weddingInclude7: "Révision gratuite (1x)",
   weddingInclude8: "Une demande de modification incluse",
   
@@ -219,7 +219,7 @@ export const packagesTranslations = {
   baptismInclude3: "Ligne mélodique + instrumental original",
   baptismInclude4: "Voix professionnelle (au choix : féminine/masculine)",
   baptismInclude5: "Mix & master professionnel",
-  baptismInclude6: "Fichiers finaux WAV + MP3",
+  baptismInclude6: "Fichiers finaux MP3, en plus sur demande WAV HQ",
   
   // Coming of Age Package includes
   comingOfAgeInclude1: "Interview/brief sur le célébrant avec l'équipe MusicGift",
@@ -227,7 +227,7 @@ export const packagesTranslations = {
   comingOfAgeInclude3: "Ambiance adaptée (hip-hop, pop, trap, lofi, etc.)",
   comingOfAgeInclude4: "Chanson originale composée de zéro",
   comingOfAgeInclude5: "Mix & master professionnel",
-  comingOfAgeInclude6: "Fichiers finaux WAV + MP3",
+  comingOfAgeInclude6: "Fichiers finaux MP3, en plus sur demande WAV HQ",
   
   // New Add-ons
   personalizedAudioMessage: "Message Audio Personnalisé",
