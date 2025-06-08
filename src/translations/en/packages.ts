@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -26,12 +25,12 @@ export const packagesTranslations = {
   
   // Package descriptions
   plusDescription: "The simplest way to create a personalized musical message. Perfect for quick surprises and testing our service.",
-  personalDescription: "Perfect for birthdays, weddings or special occasions – we transform your story into a unique and emotional musical gift.",
-  premiumDescription: "Complete release. Expose your story to the whole world. Original music, animated DOMG video and global distribution through Mango Records channel (+100k).",
+  personalDescription: "The perfect gift for birthdays, weddings or special occasions – we transform your story or the story of someone you want to gift into a unique and emotional musical gift.",
+  premiumDescription: "Complete release. Your song or the song you gift becomes public. Accompanied by an animated video and distributed globally through the Mango Records network.",
   businessDescription: "Give your brand a memorable voice. Created for companies that want an original song for branding, campaigns or ads with emotional impact.",
   artistDescription: "Launch your musical career with a top song. For dedicated artists who want an original song, complete distribution and co-ownership of rights.",
-  remixDescription: "Bring your song back to life in a completely new style. For artists or creators who own the rights to the original song and want a remixed version in another genre.",
-  instrumentalDescription: "Create based on an instrumental built especially for you. For artists who want to write their own song, but need a personalized and professional instrumental.",
+  remixDescription: "Bring your song back to life in a completely new style. For artists or creators who own the rights to the original song and want a remixed or rearranged version in another genre.",
+  instrumentalDescription: "Created based on an instrumental built especially for you. Ideal for artists who want to write their own song and need a personalized, professional and original instrumental.",
   giftDescription: "A musical story given as a gift. Perfect for surprising someone dear – the recipient chooses the style and atmosphere of the song themselves.",
   
   // Delivery times
@@ -49,19 +48,20 @@ export const packagesTranslations = {
   plusInclude2: "Basic production quality",
   plusInclude3: "Digital delivery in 1–2 days",
   
-  personalInclude1: "Original song created after your story",
-  personalInclude2: "Professional voice from MusicGift team",
+  personalInclude1: "Original and unique song created based on your story",
+  personalInclude2: "Expressive vocal interpretation, carefully performed by the MusicGift & Do Music for Good Band team",
   personalInclude3: "Digital delivery in 3–5 days",
-  personalInclude4: "Personal use rights (non-commercial)",
+  personalInclude4: "Personal use rights",
   
   premiumInclude1: "Original song with complete production",
-  premiumInclude2: "Animated video (\"Do Music for Good\" style)",
-  premiumInclude3: "Official digital distribution through Mango Records (+100k)",
+  premiumInclude2: "Animated video (\"MusicGift\" style)",
+  premiumInclude3: "Publishing through Mango Records channel and official digital distribution through Mango Records",
   
-  businessInclude1: "Personalized song for your business",
-  businessInclude2: "Professional production and studio voice",
-  businessInclude3: "Superior quality Mix & Master",
-  businessInclude4: "Limited commercial license",
+  businessInclude1: "Brainstorming session with the MusicGift team to understand the brand's vision and values",
+  businessInclude2: "Personalized song for your business",
+  businessInclude3: "Complete production, with voice adapted to your brand",
+  businessInclude4: "Superior quality Mix & Master",
+  businessInclude5: "Commercial license (depending on client's direction and preference)",
   
   artistInclude1: "Original song + professional instrumental",
   artistInclude2: "Vocal guide + studio voice recording",
@@ -75,10 +75,10 @@ export const packagesTranslations = {
   remixInclude5: "Short version for social media (optional)",
   remixInclude6: "Requires sending original song",
   
-  instrumentalInclude1: "Original instrumental composed by MusicGift",
+  instrumentalInclude1: "Original instrumental composed from scratch by the MusicGift team",
   instrumentalInclude2: "Complete arrangement: beat, harmonies, structure",
   instrumentalInclude3: "No voice – space for your interpretation",
-  instrumentalInclude4: "Professional audio file (WAV or MP3)",
+  instrumentalInclude4: "Professional audio file (WAV HQ or MP3 and optionally separate STEMs)",
   instrumentalInclude5: "Limited commercial license",
   
   giftInclude1: "Digital gift card valid for any MusicGift package",
@@ -215,9 +215,9 @@ export const packagesTranslations = {
   comingOfAgeTagline: "A personalized anthem for your 18th birthday celebration",
   
   // New Package descriptions
-  weddingDescription: "Have you dreamed of not dancing the most important dance of your life to the same song that others have danced to? Create an original personalized song for the bride and groom's dance or godparents' dance, based on their love story or friendship.",
+  weddingDescription: "Have you dreamed of not dancing the most important dance of your life to the same song that others have danced to? MusicGift creates an original song, personalized for the bride and groom's dance or godparents' dance, based on their love story or friendship.",
   baptismDescription: "An original, emotional and personalized melody dedicated to the baptized child – ideal to be sung or played at the event, and to remain a lifelong memory.",
-  comingOfAgeDescription: "A unique and emotional musical gift for your 18th birthday – created from your story, energy, and aspirations as you step into adulthood.",
+  comingOfAgeDescription: "A unique and emotional musical gift for a young man or woman who turns 18 – created from their story, energy, and aspirations.",
   
   // New Delivery times
   weddingDelivery: "5–7 working days",
@@ -225,28 +225,28 @@ export const packagesTranslations = {
   comingOfAgeDelivery: "5–7 working days",
   
   // Wedding Package includes
-  weddingInclude1: "Creative consultation (bride & groom/godparents' story)",
-  weddingInclude2: "Personalized melody + lyrics composition",
+  weddingInclude1: "Creative consultation session between bride and groom and the MusicGift team (bride and groom/godparents' story)",
+  weddingInclude2: "Personalized melody composition + lyrics written especially for you",
   weddingInclude3: "Original instrumental",
-  weddingInclude4: "Professional vocals (female/male)",
+  weddingInclude4: "Expressive vocal interpretation",
   weddingInclude5: "Professional mix & master",
-  weddingInclude6: "Final WAV + MP3 files",
+  weddingInclude6: "Final WAV HQ + MP3 files",
   weddingInclude7: "Free revision (1x)",
   weddingInclude8: "One modification request included",
   
   // Baptism Package includes
   baptismInclude1: "Consultation with parents (child's name, significance)",
-  baptismInclude2: "Personalized lyrics about the baby",
+  baptismInclude2: "Personalized lyrics about the child",
   baptismInclude3: "Melodic line + original instrumental",
-  baptismInclude4: "Professional vocals (choice: female/male)",
+  baptismInclude4: "Professional voice (choice: female/male)",
   baptismInclude5: "Professional mix & master",
   baptismInclude6: "Final WAV + MP3 files",
   
   // Coming of Age Package includes
-  comingOfAgeInclude1: "Interview/brief about the 18th birthday celebrant",
+  comingOfAgeInclude1: "Interview/brief about the celebrant with the MusicGift team",
   comingOfAgeInclude2: "Personalized lyrics about their dreams, passions, and personality",
   comingOfAgeInclude3: "Adapted vibe (hip-hop, pop, trap, lofi, etc.)",
-  comingOfAgeInclude4: "Original song composed + professional vocals",
+  comingOfAgeInclude4: "Original song composed from scratch",
   comingOfAgeInclude5: "Professional mix & master",
   comingOfAgeInclude6: "Final WAV + MP3 files",
   

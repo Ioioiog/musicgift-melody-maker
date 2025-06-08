@@ -25,12 +25,12 @@ export const packagesTranslations = {
   
   // Package descriptions
   plusDescription: "Le moyen le plus simple de créer un message musical personnalisé. Parfait pour les surprises rapides et tester notre service.",
-  personalDescription: "Parfait pour les anniversaires, mariages ou occasions spéciales – nous transformons votre histoire en un cadeau musical unique et émouvant.",
-  premiumDescription: "Sortie complète. Exposez votre histoire au monde entier. Musique originale, vidéo animée DOMG et distribution mondiale via le canal Mango Records (+100k).",
+  personalDescription: "Le cadeau parfait pour les anniversaires, mariages ou occasions spéciales – nous transformons votre histoire ou l'histoire de la personne que vous souhaitez offrir en un cadeau musical unique et émouvant.",
+  premiumDescription: "Sortie complète. Votre chanson ou la chanson que vous offrez devient publique. Accompagnée d'une vidéo animée et distribuée mondialement à travers le réseau Mango Records.",
   businessDescription: "Donnez à votre marque une voix mémorable. Créé pour les entreprises qui veulent une chanson originale pour le branding, les campagnes ou les publicités avec impact émotionnel.",
   artistDescription: "Lancez votre carrière musicale avec un top titre. Pour les artistes dédiés qui veulent une chanson originale, une distribution complète et une copropriété des droits.",
-  remixDescription: "Redonnez vie à votre chanson dans un style complètement nouveau. Pour les artistes ou créateurs qui possèdent les droits de la chanson originale et veulent une version remix dans un autre genre.",
-  instrumentalDescription: "Créez basé sur un instrumental construit spécialement pour vous. Pour les artistes qui veulent écrire leur propre chanson, mais ont besoin d'un instrumental personnalisé et professionnel.",
+  remixDescription: "Redonnez vie à votre chanson dans un style complètement nouveau. Pour les artistes ou créateurs qui possèdent les droits de la chanson originale et veulent une version remix ou réarrangée dans un autre genre.",
+  instrumentalDescription: "Créé sur la base d'un instrumental construit spécialement pour vous. Idéal pour les artistes qui veulent écrire leur propre chanson et ont besoin d'un instrumental personnalisé, professionnel et original.",
   giftDescription: "Une histoire musicale offerte en cadeau. Parfait pour surprendre quelqu'un de cher – le bénéficiaire choisit lui-même le style et l'atmosphère de la chanson.",
   
   // Delivery times
@@ -48,19 +48,20 @@ export const packagesTranslations = {
   plusInclude2: "Qualité de production de base",
   plusInclude3: "Livraison numérique en 1–2 jours",
   
-  personalInclude1: "Chanson originale créée d'après votre histoire",
-  personalInclude2: "Voix professionnelle de l'équipe MusicGift",
+  personalInclude1: "Chanson originale et unique créée sur la base de votre histoire",
+  personalInclude2: "Interprétation vocale expressive, soigneusement réalisée par l'équipe MusicGift & Do Music for Good Band",
   personalInclude3: "Livraison numérique en 3–5 jours",
-  personalInclude4: "Droits d'usage personnel (non-commercial)",
+  personalInclude4: "Droits d'usage personnel",
   
   premiumInclude1: "Chanson originale avec production complète",
-  premiumInclude2: "Vidéo animée (style \"Do Music for Good\")",
-  premiumInclude3: "Distribution numérique officielle via Mango Records (+100k)",
+  premiumInclude2: "Vidéo animée (style \"MusicGift\")",
+  premiumInclude3: "Publication via le canal Mango Records et distribution numérique officielle via Mango Records",
   
-  businessInclude1: "Chanson personnalisée pour votre entreprise",
-  businessInclude2: "Production professionnelle et voix de studio",
-  businessInclude3: "Mix & Master de qualité supérieure",
-  businessInclude4: "Licence commerciale limitée",
+  businessInclude1: "Session de brainstorming avec l'équipe MusicGift pour comprendre la vision et les valeurs de la marque",
+  businessInclude2: "Chanson personnalisée pour votre entreprise",
+  businessInclude3: "Production complète, avec voix adaptée à votre marque",
+  businessInclude4: "Mix & Master de qualité supérieure",
+  businessInclude5: "Licence commerciale (selon la direction et la préférence du client)",
   
   artistInclude1: "Chanson originale + instrumental professionnel",
   artistInclude2: "Guide vocal + enregistrement voix de studio",
@@ -74,10 +75,10 @@ export const packagesTranslations = {
   remixInclude5: "Version courte pour réseaux sociaux (optionnel)",
   remixInclude6: "Nécessite l'envoi de la chanson originale",
   
-  instrumentalInclude1: "Instrumental original composé par MusicGift",
+  instrumentalInclude1: "Instrumental original composé de zéro par l'équipe MusicGift",
   instrumentalInclude2: "Arrangement complet: beat, harmonies, structure",
   instrumentalInclude3: "Sans voix – espace pour votre interprétation",
-  instrumentalInclude4: "Fichier audio professionnel (WAV ou MP3)",
+  instrumentalInclude4: "Fichier audio professionnel (WAV HQ ou MP3 et optionnellement STEMs séparés)",
   instrumentalInclude5: "Licence commerciale limitée",
   
   giftInclude1: "Carte cadeau numérique valable pour tout forfait MusicGift",
@@ -214,7 +215,7 @@ export const packagesTranslations = {
   comingOfAgeTagline: "Un hymne personnalisé pour le voyage vers l'âge adulte",
   
   // New Package descriptions
-  weddingDescription: "Avez-vous rêvé de ne pas danser la danse la plus importante de votre vie sur la même chanson que d'autres ont dansée ? Créez une chanson originale personnalisée pour la danse des mariés ou des parrains, basée sur leur histoire d'amour ou d'amitié.",
+  weddingDescription: "Avez-vous rêvé de ne pas danser la danse la plus importante de votre vie sur la même chanson que d'autres ont dansée ? MusicGift crée une chanson originale, personnalisée pour la danse des mariés ou des parrains, basée sur leur histoire d'amour ou d'amitié.",
   baptismDescription: "Une mélodie originale, émouvante et personnalisée dédiée à l'enfant baptisé – idéale pour être chantée ou jouée lors de l'événement, et pour rester un souvenir à vie.",
   comingOfAgeDescription: "Un cadeau musical unique et émouvant pour un jeune homme ou une jeune femme qui atteint 18 ans – créé à partir de leur histoire, de leur énergie et de leurs aspirations.",
   
@@ -224,28 +225,28 @@ export const packagesTranslations = {
   comingOfAgeDelivery: "5–7 jours ouvrables",
   
   // Wedding Package includes
-  weddingInclude1: "Consultation créative (histoire des mariés/parrains)",
-  weddingInclude2: "Composition mélodie personnalisée + paroles",
+  weddingInclude1: "Session de consultation créative entre les mariés et l'équipe MusicGift (histoire des mariés/parrains)",
+  weddingInclude2: "Composition mélodie personnalisée + paroles écrites spécialement pour vous",
   weddingInclude3: "Instrumental original",
-  weddingInclude4: "Voix professionnelle (féminine/masculine)",
+  weddingInclude4: "Interprétation vocale expressive",
   weddingInclude5: "Mix & master professionnel",
-  weddingInclude6: "Fichiers finaux WAV + MP3",
+  weddingInclude6: "Fichiers finaux WAV HQ + MP3",
   weddingInclude7: "Révision gratuite (1x)",
   weddingInclude8: "Une demande de modification incluse",
   
   // Baptism Package includes
   baptismInclude1: "Consultation avec les parents (nom de l'enfant, signification)",
-  baptismInclude2: "Paroles personnalisées sur le bébé",
+  baptismInclude2: "Paroles personnalisées sur l'enfant",
   baptismInclude3: "Ligne mélodique + instrumental original",
   baptismInclude4: "Voix professionnelle (au choix : féminine/masculine)",
   baptismInclude5: "Mix & master professionnel",
   baptismInclude6: "Fichiers finaux WAV + MP3",
   
   // Coming of Age Package includes
-  comingOfAgeInclude1: "Interview/brief sur le célébrant",
+  comingOfAgeInclude1: "Interview/brief sur le célébrant avec l'équipe MusicGift",
   comingOfAgeInclude2: "Paroles personnalisées sur leurs rêves, passions et personnalité",
   comingOfAgeInclude3: "Ambiance adaptée (hip-hop, pop, trap, lofi, etc.)",
-  comingOfAgeInclude4: "Chanson originale composée + voix professionnelle",
+  comingOfAgeInclude4: "Chanson originale composée de zéro",
   comingOfAgeInclude5: "Mix & master professionnel",
   comingOfAgeInclude6: "Fichiers finaux WAV + MP3",
   
