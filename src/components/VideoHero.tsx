@@ -182,11 +182,11 @@ const VideoHero = () => {
         </div>
       )}
 
-      {/* Audio Control Button - Enhanced visibility */}
+      {/* Audio Control Button - Positioned below navbar */}
       {!showPlayButton && !isLoading && (
         <button
           onClick={handleToggleAudio}
-          className="absolute top-4 right-4 z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 p-3 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm"
+          className="absolute top-16 sm:top-20 md:top-24 right-4 z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 p-3 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm"
           aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
         >
           <Volume2 className={`w-6 h-6 ${hasAudio ? 'opacity-100' : 'opacity-60'}`} />
