@@ -166,7 +166,7 @@ export const packagesTranslations = {
   distributieMangoRecordsDesc: "Distribuție profesională prin Mango Records",
   
   customVideo: "Video personalizat",
-  customVideoDesc: "Video animat pentru melodia ta",
+  customVideoDesc: "Un videoclip personalizat creat cu fotografiile sau/și videoclipurile tale pentru o experiență completă",
   
   audioMessageFromSender: "Mesaj audio de la expeditor",
   audioMessageFromSenderDesc: "Adaugă un mesaj audio personal de la expeditor pentru o surpriză suplimentară",

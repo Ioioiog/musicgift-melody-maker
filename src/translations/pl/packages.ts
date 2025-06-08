@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Wybierz swój pakiet",
   selectPerfectPackage: "Wybierz idealny pakiet, który pasuje do Twoich potrzeb i budżetu",
@@ -123,27 +122,27 @@ export const packagesTranslations = {
   // Artist package facts
   didYouKnowArtist1Title: "Pierwsze wrażenie ma znaczenie",
   didYouKnowArtist1Desc: "Profesjonaliści z branży muzycznej decydują w ciągu pierwszych 15 sekund, czy piosenka ma potencjał, podkreślając znaczenie profesjonalnej produkcji.",
-  didYouKnowArtist2Title: "Sukces streamingu",
-  didYouKnowArtist2Desc: "Niezależni artyści stanowią 43% globalnego rynku muzycznego, udowadniając, że jakościowa produkcja może konkurować z wielkimi wytwórniami.",
+  didYouKnowArtist2Title: "Sukces w streamingu",
+  didYouKnowArtist2Desc: "Niezależni artyści stanowią 43% globalnego rynku muzycznego, dowodząc, że jakościowa produkcja może konkurować z większymi wytwórniami.",
   
   // Gift package facts
   didYouKnowGift1Title: "Prezenty doświadczeń",
-  didYouKnowGift1Desc: "Prezenty oparte na doświadczeniach, takie jak spersonalizowane piosenki, tworzą dłużej trwające szczęście niż prezenty materialne, zgodnie z badaniami psychologicznymi.",
-  didYouKnowGift2Title: "Muzyczne więzi",
+  didYouKnowGift1Desc: "Prezenty oparte na doświadczeniu, takie jak spersonalizowane piosenki, tworzą dłużej trwające szczęście niż prezenty materialne, zgodnie z badaniami psychologicznymi.",
+  didYouKnowGift2Title: "Więź muzyczna",
   didYouKnowGift2Desc: "Dzielenie się muzyką wzmacnia relacje poprzez uwalnianie oksytocyny, 'hormonu więzi', czyniąc prezenty muzyczne szczególnie znaczącymi.",
   
   // General facts
   didYouKnowGeneral1Title: "Muzyka i emocje",
-  didYouKnowGeneral1Desc: "Muzyka aktywuje te same szlaki neuronowe co jedzenie, seks i narkotyki, wyjaśniając, dlaczego spersonalizowane piosenki są tak satysfakcjonujące.",
+  didYouKnowGeneral1Desc: "Muzyka aktywuje te same ścieżki neuronowe co jedzenie, seks i narkotyki, wyjaśniając, dlaczego spersonalizowane piosenki są tak satysfakcjonujące.",
   didYouKnowGeneral2Title: "Wzmocnienie pamięci",
-  didYouKnowGeneral2Desc: "Ludzki mózg może pamiętać teksty i melodie przez dziesięciolecia, czyniąc piosenki idealnymi kapsułami czasu do przechowywania wspomnień.",
+  didYouKnowGeneral2Desc: "Ludzki mózg może pamiętać teksty i melodie przez dziesięciolecia, czyniąc piosenki idealnymi kapsułami czasu do zachowania wspomnień.",
   
   // Add-ons section
   availableAddOns: "Dostępne dodatki",
   enhanceYourPackage: "Ulepsz swój pakiet dodatkowymi opcjami",
   
   // Common add-ons
-  rushDelivery: "Express dostawa",
+  rushDelivery: "Ekspresowa dostawa",
   rushDeliveryDesc: "Otrzymaj swoją piosenkę 50% szybciej",
   rushDeliveryPrice: "+50% ceny pakietu",
   
@@ -161,19 +160,19 @@ export const packagesTranslations = {
   
   // Add-ons
   socialMediaRights: "Prawa do mediów społecznościowych",
-  socialMediaRightsDesc: "Uzyskaj prawa do publikowania piosenki na każdej platformie mediów społecznościowych. Wymaga akceptacji oznaczenia piosenki jako 'Music Gift by Mango Records'.",
+  socialMediaRightsDesc: "Uzyskaj prawa do publikowania piosenki na dowolnej platformie mediów społecznościowych. Wymaga akceptacji oznaczenia piosenki jako 'Music Gift by Mango Records'.",
   
   distributieMangoRecords: "Dystrybucja Mango Records",
   distributieMangoRecordsDesc: "Profesjonalna dystrybucja przez Mango Records",
   
   customVideo: "Niestandardowe wideo",
-  customVideoDesc: "Animowane wideo do Twojej piosenki",
+  customVideoDesc: "Spersonalizowane wideo stworzone z Twoimi zdjęciami lub/i filmami dla kompletnego doświadczenia",
   
   audioMessageFromSender: "Wiadomość audio od nadawcy",
   audioMessageFromSenderDesc: "Dodaj osobistą wiadomość audio od nadawcy dla dodatkowej niespodzianki",
   
   brandedAudioMessage: "Markowa wiadomość audio",
-  brandedAudioMessageDesc: "Dołącz krótką markową wiadomość głosową na początku piosenki – idealną do spersonalizowanych wprowadzeń, wiadomości kampanijnych lub sloganów marki.",
+  brandedAudioMessageDesc: "Umieść krótką markową wiadomość głosową na początku piosenki – idealna do spersonalizowanych wprowadzeń, wiadomości kampanijnych lub sloganów marki.",
   
   commercialRightsUpgrade: "Upgrade praw komercyjnych",
   commercialRightsUpgradeDesc: "Rozszerzone prawa komercyjne do użytku biznesowego",
@@ -181,9 +180,9 @@ export const packagesTranslations = {
   extendedSong: "Rozszerzona piosenka",
   extendedSongDesc: "Dłuższa wersja Twojej piosenki",
   
-  godparentsmelody: "Melodia rodziców chrzestnych",
+  godparentsmelody: "Melodia dla rodziców chrzestnych",
   godparentsmelodyDesc: "Specjalna melodia dla rodziców chrzestnych",
-
+  
   // New add-on
   separatedStems: "Oddzielne Stemy",
   separatedStemsDesc: "Oryginalny beat + indywidualne pliki ścieżek. Idealny do miksowania, remiksu i synchronizacji wideo. Zawiera prawa komercyjne.",
@@ -191,128 +190,5 @@ export const packagesTranslations = {
   // New Special Event Package names
   weddingPackage: "Pakiet ślubny",
   baptismPackage: "Pakiet chrzcin",
-  comingOfAgePackage: "Pakiet pełnoletności",
-  
-  // New Package taglines
-  weddingTagline: "Wasza wyjątkowa piosenka do tańca – stworzona z Waszej historii miłosnej",
-  baptismTagline: "Oryginalna melodia na wyjątkowy dzień Waszego małego anioła",
-  comingOfAgeTagline: "Spersonalizowany hymn dla podróży w dorosłość",
-  
-  // New Package descriptions
-  weddingDescription: "Czy marzyliście o tym, żeby nie tańczyć najważniejszego tańca waszego życia do tej samej piosenki, do której tańczyli inni? MusicGift tworzy oryginalną piosenkę, spersonalizowaną dla tańca młodej pary lub rodziców chrzestnych, opartą na ich historii miłosnej lub przyjaźni.",
-  baptismDescription: "Oryginalna, emocjonalna i spersonalizowana melodia dedykowana ochrzczonemu dziecku – idealna do śpiewania lub odtwarzania podczas wydarzenia i pozostania wspomnieniem na całe życie.",
-  comingOfAgeDescription: "Wyjątkowy i emocjonalny prezent muzyczny dla młodego mężczyzny lub kobiety, która kończy 18 lat – stworzony z ich historii, energii i aspiracji.",
-  
-  // New Delivery times
-  weddingDelivery: "5–7 dni roboczych",
-  baptismDelivery: "3–5 dni roboczych",
-  comingOfAgeDelivery: "5–7 dni roboczych",
-  
-  // Wedding Package includes
-  weddingInclude1: "Sesja konsultacji kreatywnej między młodą parą a zespołem MusicGift (historia młodej pary/rodziców chrzestnych)",
-  weddingInclude2: "Spersonalizowana kompozycja melodii + teksty napisane specjalnie dla was",
-  weddingInclude3: "Oryginalny instrumental",
-  weddingInclude4: "Ekspresyjna interpretacja wokalna",
-  weddingInclude5: "Profesjonalny mix & master",
-  weddingInclude6: "Finalne pliki MP3, dodatkowo na żądanie WAV HQ",
-  weddingInclude7: "Darmowa rewizja (1x)",
-  weddingInclude8: "Jedna prośba o modyfikację wliczona",
-  
-  // Baptism Package includes
-  baptismInclude1: "Konsultacja z rodzicami (imię dziecka, znaczenie)",
-  baptismInclude2: "Spersonalizowane teksty o dziecku",
-  baptismInclude3: "Linia melodyczna + oryginalny instrumental",
-  baptismInclude4: "Profesjonalny głos (wybór: żeński/męski)",
-  baptismInclude5: "Profesjonalny mix & master",
-  baptismInclude6: "Finalne pliki MP3, dodatkowo na żądanie WAV HQ",
-  
-  // Coming of Age Package includes
-  comingOfAgeInclude1: "Wywiad/brief o świętującym z zespołem MusicGift",
-  comingOfAgeInclude2: "Spersonalizowane teksty o ich marzeniach, pasjach i osobowości",
-  comingOfAgeInclude3: "Dostosowany klimat (hip-hop, pop, trap, lofi, itp.)",
-  comingOfAgeInclude4: "Oryginalna piosenka skomponowana od zera",
-  comingOfAgeInclude5: "Profesjonalny mix & master",
-  comingOfAgeInclude6: "Finalne pliki MP3, dodatkowo na żądanie WAV HQ",
-  
-  // New Add-ons
-  personalizedAudioMessage: "Spersonalizowana wiadomość audio",
-  personalizedAudioMessageDesc: "Wiadomość audio na początku piosenki",
-  godparentsSpecialMelody: "Specjalna melodia dla rodziców chrzestnych",
-  godparentsSpecialMelodyDesc: "Druga melodia jako prezent niespodzianka dla rodziców chrzestnych",
-  
-  // Wedding form fields
-  weddingStep1Title: "Szczegóły pary",
-  weddingStep2Title: "Historia i preferencje",
-  weddingCoupleNamesPlaceholder: "Wprowadź imiona młodej pary lub rodziców chrzestnych",
-  weddingBrideGroom: "Panna młoda i pan młody",
-  weddingGodparents: "Rodzice chrzestni",
-  weddingHowMetPlaceholder: "Opowiedz nam jak się poznali...",
-  weddingLoveStoryPlaceholder: "Podziel się ich szczegółową historią miłosną lub przyjaźni...",
-  weddingAtmosphereRomantic: "Romantyczna",
-  weddingAtmosphereEmotional: "Emocjonalna",
-  weddingAtmosphereElegant: "Elegancka",
-  weddingMusicalStylePlaceholder: "Preferowany styl muzyczny lub piosenka inspirująca",
-  
-  // Baptism form fields
-  baptismStep1Title: "Informacje o dziecku",
-  baptismStep2Title: "Preferencje muzyczne",
-  baptismChildNamePlaceholder: "Imię dziecka",
-  baptismNameMeaningPlaceholder: "Znaczenie imienia (opcjonalnie)",
-  baptismBirthStoryPlaceholder: "Historia narodzin / życzenia rodziców",
-  baptismAtmosphereCalm: "Spokojna",
-  baptismAtmospherePlayful: "Zabawna",
-  baptismAtmosphereEmotional: "Emocjonalna",
-  baptismStyleBallad: "Ballada",
-  baptismStyleLullaby: "Kołysanka",
-  baptismStyleAcousticPop: "Acoustic Pop",
-  
-  // Coming of Age form fields
-  comingOfAgeStep1Title: "Informacje o świętującym pełnoletność",
-  comingOfAgeStep2Title: "Styl muzyczny i klimat",
-  comingOfAgeCelebrantNamePlaceholder: "Imię osoby świętującej pełnoletność",
-  comingOfAgeHobbiesPlaceholder: "Ich hobby, pasje i cechy osobowości",
-  comingOfAgePersonalMessagePlaceholder: "Osobista wiadomość od rodziny/przyjaciół na pełnoletność",
-  comingOfAgeStyleHipHop: "Hip-Hop",
-  comingOfAgeStylePop: "Pop",
-  comingOfAgeStyleTrap: "Trap",
-  comingOfAgeStyleLofi: "Lo-Fi",
-  comingOfAgeVibeEmotional: "Emocjonalny",
-  comingOfAgeVibeFun: "Zabawny",
-  comingOfAgeVibeRebellious: "Buntowniczy",
-  comingOfAgeVibeDreamy: "Marzycielski",
-  comingOfAgeFavoriteArtistsPlaceholder: "Przykłady ulubionych artystów lub piosenek",
-  
-  // Common voice options
-  voiceFemale: "Głos żeński",
-  voiceMale: "Głos męski",
-  
-  // Did You Know sections for new packages
-  didYouKnowWedding1Title: "Piosenki ślubne tworzą trwałe wspomnienia",
-  didYouKnowWedding1Desc: "Pary, które tańczą do swojej własnej spersonalizowanej piosenki, zgłaszają silniejsze emocjonalne połączenie ze swoimi wspomnieniami ślubnymi i odtwarzają piosenkę w rocznice.",
-  didYouKnowWedding2Title: "Unikalne tradycje ślubne",
-  didYouKnowWedding2Desc: "Posiadanie niestandardowej piosenki ślubnej staje się nową tradycją, z 67% par mówiących, że chcieliby mieć coś bardziej osobistego niż popularne piosenki.",
-  
-  didYouKnowBaptism1Title: "Muzyka i rozwój dziecka",
-  didYouKnowBaptism1Desc: "Spersonalizowane piosenki dla dzieci pomagają w więzi emocjonalnej i mogą stać się źródłem komfortu przez całe lata dzieciństwa.",
-  didYouKnowBaptism2Title: "Tradycje rodzinne przez muzykę",
-  didYouKnowBaptism2Desc: "Dzieci, które dorastają ze spersonalizowanymi piosenkami, często rozwijają silniejsze więzi rodzinne i docenienie dla swojej wyjątkowej historii.",
-  
-  didYouKnowComingOfAge1Title: "Muzyka i świętowanie pełnoletności",
-  didYouKnowComingOfAge1Desc: "Nastolatkowie, którzy otrzymują spersonalizowane piosenki na 18. urodziny, zgłaszają wyższą samoocenę i silniejsze poczucie tożsamości podczas przejścia do dorosłości.",
-  didYouKnowComingOfAge2Title: "Świętowanie kamieni milowych",
-  didYouKnowComingOfAge2Desc: "Świętowania pełnoletności ze spersonalizowanymi elementami są bardziej żywo zapamiętywane i pozytywnie wpływają na przyszłe decyzje życiowe.",
-
-  // FAQ Revision answers
-  faqRevisionsAnswerWedding: "Tak, pakiet ślubny zawiera jedną darmową rewizję, aby zapewnić Twoją pełną satysfakcję z finalnego produktu.",
-  faqRevisionsAnswerOther: "Rewizje są dostępne tylko dla pakietu ślubnego. Inne pakiety nie zawierają opcji rewizji, aby utrzymać nasz uproszczony proces produkcji i konkurencyjne ceny.",
-
-  // New FAQ questions and answers
-  faqDeliveryTime: "Jak długo trwa otrzymanie mojej piosenki?",
-  faqDeliveryTimeAnswer: "Twoja piosenka będzie gotowa w ciągu 3–5 dni roboczych po potwierdzeniu Twojego zamówienia i historii. Chcemy, żeby każda kreacja była stworzona z dbałością i profesjonalizmem.",
-  
-  faqDeliveryMethod: "Jak otrzymam swoją piosenkę?",
-  faqDeliveryMethodAnswer: "Otrzymasz swoją spersonalizowaną piosenkę przez email, w wysokiej jakości (MP3, dodatkowo na żądanie WAV HQ). Możesz pobierać piosenkę przez maksymalnie 6 miesięcy używając linku, który wysyłamy. Po tym czasie link wygaśnie i MusicGift nie będzie już przechowywać piosenki na żadnym serwerze, więc upewnij się, że zapiszesz swój plik w tym czasie.",
-  
-  faqSatisfaction: "Co jeśli nie będę zadowolony?",
-  faqSatisfactionAnswer: "Pracujemy z najwyższą starannością, aby uchwycić emocję stojącą za Twoją historią. Jeśli wystąpią jakiekolwiek prawdziwe problemy (np. błędna dostawa, uszkodzony plik itp.), naprawimy je bez dodatkowych kosztów."
+  comingOfAgePackage: "Pakiet pełnoletności"
 };

@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Choisissez votre forfait",
   selectPerfectPackage: "Sélectionnez le forfait parfait qui correspond à vos besoins et à votre budget",
@@ -167,7 +166,7 @@ export const packagesTranslations = {
   distributieMangoRecordsDesc: "Distribution professionnelle via Mango Records",
   
   customVideo: "Vidéo personnalisée",
-  customVideoDesc: "Vidéo animée pour votre chanson",
+  customVideoDesc: "Une vidéo personnalisée créée avec vos photos ou/et vidéos pour une expérience complète",
   
   audioMessageFromSender: "Message audio de l'expéditeur",
   audioMessageFromSenderDesc: "Ajoutez un message audio personnel de l'expéditeur pour une surprise supplémentaire",
