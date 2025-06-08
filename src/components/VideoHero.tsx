@@ -149,13 +149,13 @@ const VideoHero = () => {
   };
 
   return (
-    <section className="video-hero relative overflow-hidden h-screen">
+    <section className="video-hero relative overflow-hidden h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen">
       {/* Video Background */}
       <video
         ref={videoRef}
         loop
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover"
+        className="absolute top-0 left-0 w-full h-full object-cover sm:object-center"
         key={videoSrc}
       >
         <source src={videoSrc} type="video/mp4" />
@@ -198,14 +198,14 @@ const VideoHero = () => {
       <div className="absolute inset-0 bg-black/40"></div>
 
       {/* Title at Bottom */}
-      <div className="absolute bottom-20 left-0 right-0 z-10 text-center text-white px-4">
-        <h1 className="text-4xl md:text-6xl font-bold animate-float bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+      <div className="absolute bottom-12 sm:bottom-16 md:bottom-20 left-0 right-0 z-10 text-center text-white px-4">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold animate-float bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
           {t('heroTitle')}
         </h1>
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 scroll-indicator">
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 scroll-indicator">
         <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
           <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse"></div>
         </div>
