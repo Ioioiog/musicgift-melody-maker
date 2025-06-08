@@ -13,9 +13,9 @@ export default function TestimonialSlider() {
 
   if (isLoading) {
     return (
-      <div className="py-12">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="py-8">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
                 <Skeleton className="w-full h-48" />
@@ -166,10 +166,10 @@ export default function TestimonialSlider() {
   };
 
   return (
-    <div className="py-12">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Modern grid layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="py-8">
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Modern grid layout with smaller gap */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {testimonials.map((testimonial, index) => {
             const type = getTestimonialType(testimonial);
             
@@ -182,38 +182,38 @@ export default function TestimonialSlider() {
               >
                 {/* Text-only testimonial - glassmorphism design */}
                 {type === 'text-only' && (
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 hover:border-white/30 transition-all duration-300 p-8 h-full flex flex-col group hover:shadow-lg">
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 hover:border-white/30 transition-all duration-300 p-6 h-full flex flex-col group hover:shadow-lg">
                     {/* Quote icon */}
-                    <div className="mb-6">
-                      <Quote className="w-8 h-8 text-white opacity-60" />
+                    <div className="mb-4">
+                      <Quote className="w-6 h-6 text-white opacity-60" />
                     </div>
                     
                     {/* Testimonial text */}
-                    <blockquote className="text-white text-lg leading-relaxed mb-8 flex-grow">
+                    <blockquote className="text-white text-base leading-relaxed mb-6 flex-grow">
                       "{testimonial.text}"
                     </blockquote>
                     
                     {/* Star rating */}
-                    <div className="flex items-center justify-center mb-6">
+                    <div className="flex items-center justify-center mb-4">
                       <div className="flex gap-1">
                         {[...Array(testimonial.stars)].map((_, i) => (
-                          <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                          <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                         ))}
                       </div>
                     </div>
                     
                     {/* Author info */}
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-semibold text-lg border border-white/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-semibold text-base border border-white/30">
                         {testimonial.name.charAt(0)}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold text-white">{testimonial.name}</h4>
-                          <FaCheckCircle className="text-green-400 text-sm" />
+                          <h4 className="font-semibold text-white text-sm">{testimonial.name}</h4>
+                          <FaCheckCircle className="text-green-400 text-xs" />
                         </div>
                         {testimonial.location && (
-                          <p className="text-sm text-white/70">{testimonial.location}</p>
+                          <p className="text-xs text-white/70">{testimonial.location}</p>
                         )}
                       </div>
                     </div>
@@ -222,23 +222,23 @@ export default function TestimonialSlider() {
 
                 {/* Video testimonials - glassmorphism design */}
                 {type !== 'text-only' && (
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 hover:border-white/30 transition-all duration-300 p-8 h-full flex flex-col group hover:shadow-lg">
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 hover:border-white/30 transition-all duration-300 p-6 h-full flex flex-col group hover:shadow-lg">
                     {/* Quote icon for consistency */}
-                    <div className="mb-6">
-                      <Quote className="w-8 h-8 text-white opacity-60" />
+                    <div className="mb-4">
+                      <Quote className="w-6 h-6 text-white opacity-60" />
                     </div>
 
                     {/* Testimonial text FIRST */}
                     {testimonial.text && (
-                      <blockquote className="text-white text-lg leading-relaxed mb-8 flex-grow">
+                      <blockquote className="text-white text-base leading-relaxed mb-6 flex-grow">
                         "{testimonial.text}"
                       </blockquote>
                     )}
 
                     {/* Video section AFTER text */}
-                    <div className="mb-6 rounded-xl overflow-hidden">
+                    <div className="mb-4 rounded-xl overflow-hidden">
                       {type === 'uploaded-video' && (
-                        <div className="h-56 flex items-center justify-center">
+                        <div className="h-48 flex items-center justify-center">
                           <div className="w-full max-w-sm">
                             <VideoWithOverlay 
                               src={testimonial.video_url} 
@@ -250,7 +250,7 @@ export default function TestimonialSlider() {
                       )}
                       
                       {type === 'youtube' && (
-                        <div className="h-48">
+                        <div className="h-40">
                           <VideoWithOverlay 
                             src={testimonial.youtube_link} 
                             type="youtube" 
@@ -260,15 +260,15 @@ export default function TestimonialSlider() {
                       )}
 
                       {type === 'both-videos' && (
-                        <div className="space-y-4">
-                          <div className="h-40">
+                        <div className="space-y-3">
+                          <div className="h-32">
                             <VideoWithOverlay 
                               src={testimonial.video_url} 
                               type="upload" 
                               title={`Video testimonial from ${testimonial.name}`} 
                             />
                           </div>
-                          <div className="h-40">
+                          <div className="h-32">
                             <VideoWithOverlay 
                               src={testimonial.youtube_link} 
                               type="youtube" 
@@ -280,26 +280,26 @@ export default function TestimonialSlider() {
                     </div>
                     
                     {/* Star rating */}
-                    <div className="flex items-center justify-center mb-6">
+                    <div className="flex items-center justify-center mb-4">
                       <div className="flex gap-1">
                         {[...Array(testimonial.stars)].map((_, i) => (
-                          <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                          <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                         ))}
                       </div>
                     </div>
                     
                     {/* Author info */}
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-semibold text-lg border border-white/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-semibold text-base border border-white/30">
                         {testimonial.name.charAt(0)}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold text-white">{testimonial.name}</h4>
-                          <FaCheckCircle className="text-green-400 text-sm" />
+                          <h4 className="font-semibold text-white text-sm">{testimonial.name}</h4>
+                          <FaCheckCircle className="text-green-400 text-xs" />
                         </div>
                         {testimonial.location && (
-                          <p className="text-sm text-white/70">{testimonial.location}</p>
+                          <p className="text-xs text-white/70">{testimonial.location}</p>
                         )}
                       </div>
                     </div>
@@ -312,7 +312,7 @@ export default function TestimonialSlider() {
 
         {/* Professional statistics section */}
         <motion.div 
-          className="mt-16"
+          className="mt-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
