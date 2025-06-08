@@ -112,7 +112,7 @@ const AnimatedStepFlow = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 h-full">
-      <div className="flex flex-col lg:flex-row items-start gap-8 p-8 max-w-6xl mx-auto">
+      <div className="flex flex-col lg:flex-row items-start gap-4 p-4 max-w-4xl mx-auto">
         
         {/* Modern Step Circles with Lucide Icons - Made Smaller */}
         <div className="flex lg:flex-col gap-4">
