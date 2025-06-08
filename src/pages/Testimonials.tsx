@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import TestimonialSlider from "@/components/TestimonialSlider";
@@ -75,35 +76,6 @@ const Testimonials = () => {
         }}>
             {t('testimonialsSubtitle')}
           </motion.p>
-          
-          {/* Buttons Section */}
-          <motion.div className="flex flex-col sm:flex-row gap-2 justify-center items-center mb-4" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.4
-        }}>
-            {/* Trustpilot Button */}
-            <a href="https://www.trustpilot.com/review/musicgift.ro" target="_blank" rel="noopener noreferrer" className="inline-block">
-              <div className="bg-white border-2 border-green-500 rounded-lg hover:bg-green-50 transition-colors duration-200 shadow-sm py-[2px] px-[10px] flex items-center">
-                <span className="text-gray-800 font-medium text-sm">
-                  Review us on 
-                </span>
-                <img 
-                  src="/lovable-uploads/47cbf05f-3839-40b6-abc6-584208546eb2.png" 
-                  alt="Trustpilot" 
-                  className="ml-1 h-4 w-auto"
-                />
-              </div>
-            </a>
-
-            {/* Testimonial Submission Button */}
-            <TestimonialSubmissionForm />
-          </motion.div>
         </div>
       </section>
 
@@ -112,6 +84,35 @@ const Testimonials = () => {
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4">
+            {/* Buttons Section - Moved here from hero */}
+            <motion.div className="flex flex-col sm:flex-row gap-2 justify-center items-center mb-8 pt-6" initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.4
+          }}>
+              {/* Trustpilot Button */}
+              <a href="https://www.trustpilot.com/review/musicgift.ro" target="_blank" rel="noopener noreferrer" className="inline-block">
+                <div className="bg-white border-2 border-green-500 rounded-lg hover:bg-green-50 transition-colors duration-200 shadow-sm py-[2px] px-[10px] flex items-center">
+                  <span className="text-gray-800 font-medium text-sm">
+                    Review us on 
+                  </span>
+                  <img 
+                    src="/lovable-uploads/47cbf05f-3839-40b6-abc6-584208546eb2.png" 
+                    alt="Trustpilot" 
+                    className="ml-1 h-4 w-auto"
+                  />
+                </div>
+              </a>
+
+              {/* Testimonial Submission Button */}
+              <TestimonialSubmissionForm />
+            </motion.div>
+
             <TestimonialSlider />
           </div>
         </div>
