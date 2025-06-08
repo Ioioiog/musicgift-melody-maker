@@ -222,15 +222,15 @@ const Footer = () => {
             <div className="absolute bottom-4 right-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
           </div>
           
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 relative z-10">
-            <div className="bg-white/15 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 sm:py-3 sm:px-40 shadow-lg hover:bg-white/20 transition-all duration-300 group">
-              <p className="text-xs text-gray-800 font-semibold text-center group-hover:text-gray-700 transition-colors duration-300">
+          <div className="flex flex-col items-center justify-center space-y-4 relative z-10">
+            <div className="bg-white/15 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 shadow-lg hover:bg-white/20 transition-all duration-300 group">
+              <p className="text-xs text-white font-semibold text-center group-hover:text-white/90 transition-colors duration-300">
                 {t('copyright')}
               </p>
             </div>
             
             {/* Decorative musical elements */}
-            <div className="hidden sm:flex items-center space-x-4 opacity-60">
+            <div className="flex items-center space-x-4 opacity-60">
               <div className="w-8 h-8 bg-gradient-to-br from-purple-400/30 to-pink-400/30 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center">
                 <Music className="w-4 h-4 text-white" />
               </div>
