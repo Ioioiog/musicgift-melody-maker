@@ -162,63 +162,42 @@ export const packagesTranslations = {
   socialMediaRights: "Drepturi Social Media",
   socialMediaRightsDesc: "Obții drepturile de a posta melodia pe orice platformă de social media. Necesită acceptarea etichetării melodiei cu 'Music Gift by Mango Records'.",
   
-  // Package-specific add-ons
-  // Personal package add-ons
-  personalDuet: "Versiune duet",
-  personalDuetDesc: "Înregistrare cu doi vocalisti pentru melodii romantice",
-  personalDuetPrice: "€35 / 175 RON",
+  distributieMangoRecords: "Distribuție Mango Records",
+  distributieMangoRecordsDesc: "Distribuție profesională prin Mango Records",
   
-  personalInstrumental: "Versiune instrumentală",
-  personalInstrumentalDesc: "Versiunea fără voce a melodiei tale",
-  personalInstrumentalPrice: "€20 / 100 RON",
+  customVideo: "Video personalizat",
+  customVideoDesc: "Video animat pentru melodia ta",
   
-  // Premium package add-ons
-  premiumExtendedVideo: "Video extins",
-  premiumExtendedVideoDesc: "Video de 3-5 minute în loc de 1-2 minute",
-  premiumExtendedVideoPrice: "€150 / 750 RON",
+  audioMessageFromSender: "Mesaj audio de la expeditor",
+  audioMessageFromSenderDesc: "Adaugă un mesaj audio personal de la expeditor pentru o surpriză suplimentară",
   
-  premiumSocialKit: "Kit social media",
-  premiumSocialKitDesc: "15 secunde clips pentru TikTok, Instagram, YouTube Shorts",
-  premiumSocialKitPrice: "€50 / 250 RON",
+  brandedAudioMessage: "Mesaj audio de marcă",
+  brandedAudioMessageDesc: "Include un scurt mesaj vocal de marcă la începutul melodiei – perfect pentru introduceri personalizate, mesaje de campanie sau sloganuri de marcă.",
   
-  // Business package add-ons
-  businessMultipleVersions: "Versiuni multiple",
-  businessMultipleVersionsDesc: "3 versiuni diferite (30s, 60s, versiune completă)",
-  businessMultipleVersionsPrice: "€100 / 500 RON",
+  commercialRightsUpgrade: "Upgrade drepturi comerciale",
+  commercialRightsUpgradeDesc: "Drepturi comerciale extinse pentru utilizare comercială",
   
-  businessJingleKit: "Kit jingle complet",
-  businessJingleKitDesc: "5 variante de jingle-uri scurte (5-15 secunde)",
-  businessJingleKitPrice: "€150 / 750 RON",
+  extendedSong: "Melodie extinsă",
+  extendedSongDesc: "Versiune mai lungă a melodiei tale",
   
-  // Artist package add-ons
-  artistVocalCoaching: "Coaching vocal",
-  artistVocalCoachingDesc: "Sesiune de 1 oră de coaching vocal online",
-  artistVocalCoachingPrice: "€80 / 400 RON",
+  godparentsmelody: "Melodia nașilor",
+  godparentsmelodyDesc: "Melodie specială pentru nași",
   
-  artistMusicVideo: "Videoclip profesional",
-  artistMusicVideoDesc: "Videoclip profesional filmat și editat",
-  artistMusicVideoPrice: "€500 / 2500 RON",
-  
-  // Gift package add-ons
-  giftCustomPackaging: "Ambalare personalizată",
-  giftCustomPackagingDesc: "Cutie cadou personalizată cu mesaj",
-  giftCustomPackagingPrice: "€25 / 125 RON",
-  
-  giftPhysicalCard: "Card fizic",
-  giftPhysicalCardDesc: "Card cadou fizic livrat prin poștă",
-  giftPhysicalCardPrice: "€15 / 75 RON",
+  // New add-on
+  separatedStems: "Stem-uri Separate",
+  separatedStemsDesc: "Beat original + fișiere de track individuale. Ideal pentru mixare, remixare și sincronizare video. Include drepturi comerciale.",
   
   // New Special Event Package names
   weddingPackage: "Pachetul Nuntă",
   baptismPackage: "Pachetul Botez",
   comingOfAgePackage: "Pachetul Majorat",
   
-  // New Package taglines
+  // Package taglines
   weddingTagline: "Melodia voastră unică de dans – creată din povestea voastră de dragoste",
   baptismTagline: "O melodie originală pentru ziua specială a îngerașului vostru",
   comingOfAgeTagline: "Un imn personalizat pentru călătoria către maturitate",
   
-  // New Package descriptions
+  // Package descriptions
   weddingDescription: "Ați visat să nu dansați cel mai important dans al vieții voastre pe aceeași melodie pe care au dansat-o și alții? MusicGift creeazǎ o melodie originală, personalizată pentru dansul mirilor sau al nașilor, bazată pe povestea lor de dragoste sau prietenie.",
   baptismDescription: "O melodie originală, emoționantă și personalizată dedicată copilului botezat – ideală pentru a fi cântată sau redată la eveniment și pentru a rămâne o amintire pe viață.",
   comingOfAgeDescription: "Un cadou muzical unic și emoționant pentru un tânăr sau o tânără care împlinește 18 ani – creat din povestea, energia și aspirațiile lor.",
@@ -254,13 +233,7 @@ export const packagesTranslations = {
   comingOfAgeInclude5: "Mix & master profesional",
   comingOfAgeInclude6: "Fișiere finale WAV + MP3",
   
-  // New Add-ons
-  personalizedAudioMessage: "Mesaj Audio Personalizat",
-  personalizedAudioMessageDesc: "Mesaj audio la începutul melodiei",
-  godparentsSpecialMelody: "Melodia Specială pentru Nași",
-  godparentsSpecialMelodyDesc: "O a doua melodie ca surpriză cadou pentru nași",
-  
-  // Wedding form fields
+  // Form fields
   weddingStep1Title: "Detalii Cuplu",
   weddingStep2Title: "Poveste & Preferințe",
   weddingCoupleNamesPlaceholder: "Introduceți numele mirilor sau nașilor",
@@ -273,7 +246,6 @@ export const packagesTranslations = {
   weddingAtmosphereElegant: "Elegant",
   weddingMusicalStylePlaceholder: "Stilul muzical preferat sau melodia de inspirație",
   
-  // Baptism form fields
   baptismStep1Title: "Informații Copil",
   baptismStep2Title: "Preferințe Muzicale",
   baptismChildNamePlaceholder: "Numele copilului",
@@ -286,7 +258,6 @@ export const packagesTranslations = {
   baptismStyleLullaby: "Cântec de leagăn",
   baptismStyleAcousticPop: "Pop Acustic",
   
-  // Coming of Age form fields
   comingOfAgeStep1Title: "Informații Sărbătorit",
   comingOfAgeStep2Title: "Stil Muzical & Atmosferă",
   comingOfAgeCelebrantNamePlaceholder: "Numele persoanei care împlinește 18 ani",
@@ -302,23 +273,20 @@ export const packagesTranslations = {
   comingOfAgeVibeDreamy: "Visător",
   comingOfAgeFavoriteArtistsPlaceholder: "Exemple de artiști sau melodii preferate",
   
-  // Common voice options
   voiceFemale: "Voce Feminină",
   voiceMale: "Voce Masculină",
+
+  // FAQ Revision answers
+  faqRevisionsAnswerWedding: "Yes, the wedding package includes one free revision to ensure your complete satisfaction with the final product.",
+  faqRevisionsAnswerOther: "Revisions are only available for the Wedding package. Other packages do not include revision options to maintain our streamlined production process and competitive pricing.",
+
+  // New FAQ questions and answers
+  faqDeliveryTime: "How long does it take to receive my song?",
+  faqDeliveryTimeAnswer: "Your song will be ready within 3–5 business days after your order and story are confirmed. We want every creation to be crafted with care and professionalism.",
   
-  // Did You Know sections for new packages
-  didYouKnowWedding1Title: "Melodiile de nuntă creează amintiri durabile",
-  didYouKnowWedding1Desc: "Cuplurile care dansează pe propria melodie personalizată raportează o conexiune emoțională mai puternică cu amintirile de nuntă și redau melodia la aniversări.",
-  didYouKnowWedding2Title: "Tradiții de nuntă unice",
-  didYouKnowWedding2Desc: "Să ai o melodie de nuntă personalizată devine o nouă tradiție, cu 67% din cupluri spunând că și-ar fi dorit ceva mai personal decât melodiile populare.",
+  faqDeliveryMethod: "How will I receive my song?",
+  faqDeliveryMethodAnswer: "You will receive your personalized song via email, in high-quality format (MP3, additional at request WAV HQ). You can download the song for up to 6 months using the link we send. After that, the link will expire and MusicGift will no longer store the song on any server, so make sure to save your file during that time.",
   
-  didYouKnowBaptism1Title: "Muzica și dezvoltarea copilului",
-  didYouKnowBaptism1Desc: "Melodiile personalizate pentru copii ajută la legătura emoțională și pot deveni o sursă de confort pe parcursul anilor de copilărie.",
-  didYouKnowBaptism2Title: "Tradițiile familiei prin muzică",
-  didYouKnowBaptism2Desc: "Copiii care cresc cu melodii personalizate dezvoltă adesea legături familiale mai puternice și aprecierea pentru povestea lor unică.",
-  
-  didYouKnowComingOfAge1Title: "Muzica și formarea identității",
-  didYouKnowComingOfAge1Desc: "Adolescenții care primesc melodii personalizate raportează o stimă de sine mai mare și un sentiment mai puternic al identității în timpul tranziției la maturitate.",
-  didYouKnowComingOfAge2Title: "Sărbătorirea momentelor importante",
-  didYouKnowComingOfAge2Desc: "Sărbătorile de majorat cu elemente personalizate sunt amintite mai viu și au impact pozitiv asupra deciziilor viitoare de viață."
+  faqSatisfaction: "What if I'm not satisfied?",
+  faqSatisfactionAnswer: "We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost."
 };

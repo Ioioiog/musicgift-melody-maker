@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choisissez votre forfait",
   selectPerfectPackage: "Sélectionnez le forfait parfait qui correspond à vos besoins et à votre budget",
@@ -182,6 +183,10 @@ export const packagesTranslations = {
   
   godparentsmelody: "Mélodie des parrains",
   godparentsmelodyDesc: "Mélodie spéciale pour les parrains",
+  
+  // New add-on
+  separatedStems: "Stems Séparés",
+  separatedStemsDesc: "Beat original + fichiers de pistes individuelles. Idéal pour le mixage, le remixage et la synchronisation vidéo. Inclut les droits commerciaux.",
   
   // New Special Event Package names
   weddingPackage: "Forfait Mariage",

@@ -1,4 +1,3 @@
-
 import type { Field, Step, FieldOption, Addon } from '@/types';
 
 export interface PackageInclude {
@@ -530,7 +529,7 @@ export const addOns: AddOn[] = [
     value: "rushDelivery",
     label_key: "rushDelivery",
     description_key: "rushDeliveryDesc",
-    price_ron: 100,
+    price_ron: 99,
     price_eur: 20,
     availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix', 'wedding', 'baptism', 'comingOfAge']
   },
@@ -541,16 +540,16 @@ export const addOns: AddOn[] = [
     description_key: "socialMediaRightsDesc",
     price_ron: 0,
     price_eur: 0,
-    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix', 'wedding', 'baptism', 'comingOfAge']
+    availableFor: ['personal', 'wedding', 'baptism', 'comingOfAge']
   },
   {
     id: "distributieMangoRecords",
     value: "distributieMangoRecords",
     label_key: "distributieMangoRecords",
     description_key: "distributieMangoRecordsDesc",
-    price_ron: 200,
+    price_ron: 199,
     price_eur: 40,
-    availableFor: ['personal', 'remix', 'instrumental', 'wedding', 'baptism']
+    availableFor: ['personal', 'remix', 'instrumental', 'wedding', 'baptism', 'comingOfAge', 'business']
   },
   {
     id: "customVideo",
@@ -566,7 +565,7 @@ export const addOns: AddOn[] = [
     value: "audioMessageFromSender",
     label_key: "audioMessageFromSender",
     description_key: "audioMessageFromSenderDesc",
-    price_ron: 100,
+    price_ron: 99,
     price_eur: 20,
     availableFor: ['personal', 'premium', 'wedding', 'baptism', 'comingOfAge']
   },
@@ -584,7 +583,7 @@ export const addOns: AddOn[] = [
     value: "commercialRightsUpgrade",
     label_key: "commercialRightsUpgrade",
     description_key: "commercialRightsUpgradeDesc",
-    price_ron: 400,
+    price_ron: 399,
     price_eur: 80,
     availableFor: ['business']
   },
@@ -605,6 +604,15 @@ export const addOns: AddOn[] = [
     price_ron: 199,
     price_eur: 40,
     availableFor: ['wedding']
+  },
+  {
+    id: "separatedStems",
+    value: "separatedStems",
+    label_key: "separatedStems",
+    description_key: "separatedStemsDesc",
+    price_ron: 149,
+    price_eur: 30,
+    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix', 'artist', 'wedding', 'baptism', 'comingOfAge']
   }
 ];
 

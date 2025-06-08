@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -182,6 +183,10 @@ export const packagesTranslations = {
   
   godparentsmelody: "Godparents Melody",
   godparentsmelodyDesc: "Special melody for godparents",
+  
+  // New add-on
+  separatedStems: "Separated Stems",
+  separatedStemsDesc: "Original beat + individual track files. Ideal for mixing, remixing, and video synchronization. Includes commercial rights.",
   
   // New Special Event Package names
   weddingPackage: "Wedding Package",
