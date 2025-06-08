@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -48,9 +49,6 @@ const StaticPackageManager = () => {
                 <div className="flex gap-2">
                   <Badge variant="outline">{pkg.value}</Badge>
                   {pkg.tag && <Badge variant="secondary">{pkg.tag}</Badge>}
-                  {pkg.tags?.map((tag, index) => (
-                    <Badge key={index} variant="secondary">{tag.tag_type}</Badge>
-                  ))}
                 </div>
               </div>
             </CardHeader>

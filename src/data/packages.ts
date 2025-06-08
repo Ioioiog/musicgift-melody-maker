@@ -1,8 +1,10 @@
+export type { Package, PackageData, Field, Step, FieldOption, Addon } from '@/types';
 
 export interface OrderFlow {
   steps: {
-    step_key: string;
-    step_order: number;
+    id: string;
+    step_number: number;
+    title_key: string;
     fields: {
       id: string;
       field_name: string;
@@ -13,34 +15,6 @@ export interface OrderFlow {
       options?: { value: string; label_key: string }[];
     }[];
   }[];
-}
-
-export interface Package {
-  id: string;
-  value: string;
-  label_key: string;
-  description_key: string;
-  tagline_key: string;
-  price_ron: number;
-  price_eur: number;
-  delivery_time_key: string;
-  includes: { include_key: string }[];
-  available_addons: string[];
-  order_flow: OrderFlow;
-  steps: {
-    step_key: string;
-    step_order: number;
-    fields: {
-      id: string;
-      field_name: string;
-      field_type: string;
-      placeholder_key?: string;
-      required: boolean;
-      field_order: number;
-      options?: { value: string; label_key: string }[];
-    }[];
-  }[];
-  tag?: string;
 }
 
 export interface AddOn {
@@ -53,22 +27,13 @@ export interface AddOn {
   availableFor: string[];
 }
 
-export interface Field {
-  id: string;
-  field_name: string;
-  field_type: string;
-  placeholder_key?: string;
-  required: boolean;
-  field_order: number;
-  options?: { value: string; label_key: string }[];
-}
-
 // Wedding Package Order Flow
 const weddingOrderFlow: OrderFlow = {
   steps: [
     {
-      step_key: "weddingStep1Title",
-      step_order: 1,
+      id: "wedding-step-1",
+      step_number: 1,
+      title_key: "weddingStep1Title",
       fields: [
         {
           id: "wedding_couple_names",
@@ -100,8 +65,9 @@ const weddingOrderFlow: OrderFlow = {
       ]
     },
     {
-      step_key: "weddingStep2Title",
-      step_order: 2,
+      id: "wedding-step-2",
+      step_number: 2,
+      title_key: "weddingStep2Title",
       fields: [
         {
           id: "wedding_love_story",
@@ -151,8 +117,9 @@ const weddingOrderFlow: OrderFlow = {
 const baptismOrderFlow: OrderFlow = {
   steps: [
     {
-      step_key: "baptismStep1Title",
-      step_order: 1,
+      id: "baptism-step-1",
+      step_number: 1,
+      title_key: "baptismStep1Title",
       fields: [
         {
           id: "baptism_child_name",
@@ -181,8 +148,9 @@ const baptismOrderFlow: OrderFlow = {
       ]
     },
     {
-      step_key: "baptismStep2Title",
-      step_order: 2,
+      id: "baptism-step-2",
+      step_number: 2,
+      title_key: "baptismStep2Title",
       fields: [
         {
           id: "baptism_atmosphere",
@@ -228,8 +196,9 @@ const baptismOrderFlow: OrderFlow = {
 const comingOfAgeOrderFlow: OrderFlow = {
   steps: [
     {
-      step_key: "comingOfAgeStep1Title",
-      step_order: 1,
+      id: "coming-of-age-step-1",
+      step_number: 1,
+      title_key: "comingOfAgeStep1Title",
       fields: [
         {
           id: "coming_of_age_celebrant_name",
@@ -258,8 +227,9 @@ const comingOfAgeOrderFlow: OrderFlow = {
       ]
     },
     {
-      step_key: "comingOfAgeStep2Title",
-      step_order: 2,
+      id: "coming-of-age-step-2",
+      step_number: 2,
+      title_key: "comingOfAgeStep2Title",
       fields: [
         {
           id: "coming_of_age_musical_style",
@@ -327,7 +297,6 @@ export const packages: Package[] = [
       { include_key: "plusInclude3" },
     ],
     available_addons: [],
-    order_flow: { steps: [] },
     steps: [],
     tag: "new",
   },
@@ -347,7 +316,6 @@ export const packages: Package[] = [
       { include_key: "personalInclude4" },
     ],
     available_addons: ["personalDuet", "personalInstrumental"],
-    order_flow: { steps: [] },
     steps: [],
   },
   {
@@ -365,7 +333,6 @@ export const packages: Package[] = [
       { include_key: "premiumInclude3" },
     ],
     available_addons: ["premiumExtendedVideo", "premiumSocialKit"],
-    order_flow: { steps: [] },
     steps: [],
     tag: "popular",
   },
@@ -385,7 +352,6 @@ export const packages: Package[] = [
       { include_key: "businessInclude4" },
     ],
     available_addons: ["businessMultipleVersions", "businessJingleKit"],
-    order_flow: { steps: [] },
     steps: [],
   },
   {
@@ -404,7 +370,6 @@ export const packages: Package[] = [
       { include_key: "artistInclude4" },
     ],
     available_addons: ["artistVocalCoaching", "artistMusicVideo"],
-    order_flow: { steps: [] },
     steps: [],
   },
   {
@@ -425,7 +390,6 @@ export const packages: Package[] = [
       { include_key: "remixInclude6" },
     ],
     available_addons: [],
-    order_flow: { steps: [] },
     steps: [],
   },
   {
@@ -445,7 +409,6 @@ export const packages: Package[] = [
       { include_key: "instrumentalInclude5" },
     ],
     available_addons: [],
-    order_flow: { steps: [] },
     steps: [],
   },
   {
@@ -463,7 +426,6 @@ export const packages: Package[] = [
       { include_key: "giftInclude3" },
     ],
     available_addons: ["giftCustomPackaging", "giftPhysicalCard"],
-    order_flow: { steps: [] },
     steps: [],
     tag: "gift",
   },
@@ -487,7 +449,6 @@ export const packages: Package[] = [
       { include_key: "weddingInclude8" }
     ],
     available_addons: ["personalizedAudioMessage", "godparentsSpecialMelody"],
-    order_flow: weddingOrderFlow,
     steps: weddingOrderFlow.steps,
     tag: "new"
   },
@@ -509,7 +470,6 @@ export const packages: Package[] = [
       { include_key: "baptismInclude6" }
     ],
     available_addons: ["personalizedAudioMessage"],
-    order_flow: baptismOrderFlow,
     steps: baptismOrderFlow.steps,
     tag: "new"
   },
@@ -531,7 +491,6 @@ export const packages: Package[] = [
       { include_key: "comingOfAgeInclude6" }
     ],
     available_addons: ["personalizedAudioMessage"],
-    order_flow: comingOfAgeOrderFlow,
     steps: comingOfAgeOrderFlow.steps,
     tag: "new"
   }

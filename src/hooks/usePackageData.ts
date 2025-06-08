@@ -65,39 +65,9 @@ export const usePackageSteps = (packageValue: string) => {
           return [];
         }
 
-        // Transform the data to match the expected interface
-        const transformedSteps = packageData.steps.map(step => {
-          const transformedFields = (step.fields || [])
-            .sort((a: any, b: any) => a.field_order - b.field_order)
-            .map((field: any) => ({
-              ...field,
-              id: `${step.step_order}-${field.field_name}`,
-              // Safe transformation of options - only process if options exists and is an array
-              options: field.options && Array.isArray(field.options) ? field.options.map((option: any) => {
-                // If it's already a FieldOption object, return as is
-                if (typeof option === 'object' && option.value && option.label_key) {
-                  return option;
-                }
-                // If it's a string, transform to FieldOption
-                if (typeof option === 'string') {
-                  return { value: option, label_key: option };
-                }
-                // Fallback for any other format
-                return { value: String(option), label_key: String(option) };
-              }) : undefined
-            }));
-
-          return {
-            ...step,
-            id: `step-${step.step_order}`,
-            step_number: step.step_order,
-            title_key: step.step_key,
-            fields: transformedFields
-          };
-        });
-
-        console.log('Transformed steps ready for component:', transformedSteps);
-        return transformedSteps as StepData[];
+        // The steps are already in the correct format since we updated the data structure
+        console.log('Steps ready for component:', packageData.steps);
+        return packageData.steps as StepData[];
 
       } catch (error) {
         console.error('Error in usePackageSteps:', error);

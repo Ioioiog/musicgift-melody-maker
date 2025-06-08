@@ -35,7 +35,7 @@ export interface PackageTag {
 }
 
 export interface Package {
-  id?: string; // Add id field for database packages
+  id?: string;
   value: string;
   label_key: string;
   tagline_key: string;
@@ -43,9 +43,9 @@ export interface Package {
   price_ron: number;
   price_eur: number;
   delivery_time_key: string;
-  tag?: string; // Keep existing tag field
-  tags?: PackageTag[]; // Add tags array for database packages
+  tag?: string;
   includes?: PackageInclude[];
+  available_addons: string[];
   steps: Step[];
 }
 
