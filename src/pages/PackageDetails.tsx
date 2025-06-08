@@ -321,28 +321,6 @@ const PackageDetails = () => {
                 </CardContent>
               </Card>
 
-              {/* Enhanced Features */}
-              <Card className="bg-white/10 backdrop-blur-md border border-white/20">
-                <CardHeader>
-                  <CardTitle className="text-white">{t('keyFeatures', 'Key Features')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {packageFeatures.map((feature, index) => (
-                      <div key={index} className="flex items-start space-x-3 p-4 rounded-lg bg-white/5">
-                        <div className="text-purple-400 mt-1">
-                          {feature.icon}
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-white mb-1">{feature.title}</h4>
-                          <p className="text-white/70 text-sm">{feature.description}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Available Add-ons Section */}
               {availableAddOns.length > 0 && (
                 <Card className="bg-white/10 backdrop-blur-md border border-white/20">
