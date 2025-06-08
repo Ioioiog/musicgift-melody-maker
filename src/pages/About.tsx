@@ -3,7 +3,8 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
+import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy, Heart, Shield, Clock, Award, Users, Globe } from "lucide-react";
+
 const About = () => {
   const {
     t
@@ -294,6 +295,136 @@ const About = () => {
           </div>
         </div>
       </section>
+
+      {/* Awards & Recognition Section */}
+      <div className="max-w-6xl mx-auto px-4 relative z-10 mt-16">
+        <motion.div 
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
+        >
+          <h2 className="text-3xl font-bold text-white mb-8">{t('awardsRecognition') || 'Awards & Recognition'}</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <motion.div 
+              className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.3 }}
+            >
+              <Award className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-white mb-2">{t('internationalSuccess') || 'International Success'}</h3>
+              <p className="text-white/90 text-sm">{t('internationalSuccessDesc') || 'Akcent achieved worldwide recognition with hits reaching top charts in over 20 countries'}</p>
+            </motion.div>
+
+            <motion.div 
+              className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.4 }}
+            >
+              <Users className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-white mb-2">{t('industryExperience') || 'Industry Experience'}</h3>
+              <p className="text-white/90 text-sm">{t('industryExperienceDesc') || 'Over 20 years of professional music production and artist development experience'}</p>
+            </motion.div>
+
+            <motion.div 
+              className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.5 }}
+            >
+              <Globe className="w-12 h-12 text-green-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-white mb-2">{t('globalReach') || 'Global Reach'}</h3>
+              <p className="text-white/90 text-sm">{t('globalReachDesc') || 'Music distributed worldwide through major platforms and streaming services'}</p>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Mission & Values Section */}
+        <motion.div 
+          className="mt-16 mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.6 }}
+        >
+          <h2 className="text-3xl font-bold text-white text-center mb-12">{t('missionValues') || 'Our Mission & Values'}</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div 
+              className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.7 }}
+            >
+              <Heart className="w-16 h-16 text-red-400 mx-auto mb-6" />
+              <h3 className="text-2xl font-bold text-white mb-4">{t('passion') || 'Passion'}</h3>
+              <p className="text-white/90 leading-relaxed">
+                {t('passionDesc') || 'Every song we create is infused with genuine passion and emotional depth, ensuring your story is told with authenticity.'}
+              </p>
+            </motion.div>
+
+            <motion.div 
+              className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.8 }}
+            >
+              <Shield className="w-16 h-16 text-blue-400 mx-auto mb-6" />
+              <h3 className="text-2xl font-bold text-white mb-4">{t('quality') || 'Quality'}</h3>
+              <p className="text-white/90 leading-relaxed">
+                {t('qualityDesc') || 'Professional studio production, experienced musicians, and meticulous attention to detail in every project.'}
+              </p>
+            </motion.div>
+
+            <motion.div 
+              className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.9 }}
+            >
+              <Clock className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+              <h3 className="text-2xl font-bold text-white mb-4">{t('dedication') || 'Dedication'}</h3>
+              <p className="text-white/90 leading-relaxed">
+                {t('dedicationDesc') || 'We invest time and care into understanding your story to create music that truly represents your emotions.'}
+              </p>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Call to Action Section */}
+        <motion.div 
+          className="text-center bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-3xl border border-white/30 p-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 2.0 }}
+        >
+          <Music className="w-20 h-20 text-white mx-auto mb-6 opacity-80" />
+          <h2 className="text-4xl font-bold text-white mb-6">{t('readyToStart') || 'Ready to Create Your Song?'}</h2>
+          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+            {t('readyToStartDesc') || 'Join thousands of satisfied customers who have turned their stories into beautiful, personalized songs. Let us help you create a musical memory that will last forever.'}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <motion.a
+              href="/order"
+              className="bg-white text-purple-800 font-bold py-4 px-8 rounded-full text-lg hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {t('startYourSong') || 'Start Your Song'}
+            </motion.a>
+            <motion.a
+              href="/packages"
+              className="border-2 border-white text-white font-bold py-4 px-8 rounded-full text-lg hover:bg-white hover:text-purple-800 transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {t('viewPackages') || 'View Packages'}
+            </motion.a>
+          </div>
+        </motion.div>
+      </div>
 
       <Footer />
     </div>;
