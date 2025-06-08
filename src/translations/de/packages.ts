@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Wählen Sie Ihr Paket",
   selectPerfectPackage: "Wählen Sie das perfekte Paket, das zu Ihren Bedürfnissen und Ihrem Budget passt",
@@ -107,7 +108,7 @@ export const packagesTranslations = {
   
   // Common add-ons
   rushDelivery: "Express-Lieferung",
-  rushDeliveryDesc: "Erhalten Sie Ihr Lied 50% schneller",
+  rushDeliveryDesc: "Erhalten Sie Ihr Lied in 24-48 Stunden nach Zahlung",
   
   extraRevision: "Zusätzliche Überarbeitung",
   extraRevisionDesc: "Eine zusätzliche Überarbeitung für Perfektion",
@@ -236,3 +237,4 @@ export const packagesTranslations = {
   voiceFemale: "Weibliche Stimme",
   voiceMale: "Männliche Stimme"
 };
+

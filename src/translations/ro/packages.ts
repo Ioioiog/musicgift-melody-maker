@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -143,7 +144,7 @@ export const packagesTranslations = {
   
   // Common add-ons
   rushDelivery: "Livrare urgentă",
-  rushDeliveryDesc: "Primește melodia cu 50% mai repede",
+  rushDeliveryDesc: "Primește melodia în 24-48 de ore de la plată",
   
   extraRevision: "Revizie suplimentară",
   extraRevisionDesc: "O revizie suplimentară pentru perfecționare",
@@ -286,3 +287,4 @@ export const packagesTranslations = {
   faqSatisfaction: "What if I'm not satisfied?",
   faqSatisfactionAnswer: "We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost."
 };
+

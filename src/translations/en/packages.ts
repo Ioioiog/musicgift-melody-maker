@@ -1,4 +1,5 @@
 
+
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -144,7 +145,7 @@ export const packagesTranslations = {
   
   // Common add-ons
   rushDelivery: "Rush Delivery",
-  rushDeliveryDesc: "Get your song 50% faster",
+  rushDeliveryDesc: "Get your song in 24-48 hours from payment",
   
   extraRevision: "Extra Revision",
   extraRevisionDesc: "One additional revision for perfection",
@@ -312,3 +313,4 @@ export const packagesTranslations = {
   faqSatisfaction: "What if I'm not satisfied?",
   faqSatisfactionAnswer: "We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost."
 };
+
