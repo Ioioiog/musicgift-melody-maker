@@ -16,4 +16,37 @@ export const aboutTranslations = {
   memorableEvents: "Memorable Events",
   releasedAlbums: "Released Albums",
   copiesSold: "Copies Sold",
+  
+  // Awards & Recognition
+  awardsRecognition: "Awards & Recognition",
+  internationalSuccess: "International Success",
+  internationalSuccessDesc: "Akcent achieved worldwide recognition with hits reaching top charts in over 20 countries",
+  industryExperience: "Industry Experience",
+  industryExperienceDesc: "Over 20 years of professional music production and artist development experience",
+  globalReach: "Global Reach",
+  globalReachDesc: "Music distributed worldwide through major platforms and streaming services",
+  
+  // Mission & Values
+  missionValues: "Our Mission & Values",
+  passion: "Passion",
+  passionDesc: "Every song we create is infused with genuine passion and emotional depth, ensuring your story is told with authenticity.",
+  quality: "Quality",
+  qualityDesc: "Professional studio production, experienced musicians, and meticulous attention to detail in every project.",
+  dedication: "Dedication",
+  dedicationDesc: "We invest time and care into understanding your story to create music that truly represents your emotions.",
+  
+  // Why Choose Us
+  whyChooseUs: "Why Choose Us",
+  uniqueApproach: "Unique Approach",
+  uniqueApproachDesc: "We combine personal storytelling with professional music production to create truly one-of-a-kind songs.",
+  fastDelivery: "Fast Delivery",
+  fastDeliveryDesc: "Professional quality music delivered within 7-14 days, perfect for special occasions and gift-giving.",
+  satisfactionGuarantee: "Satisfaction Guarantee",
+  satisfactionGuaranteeDesc: "100% satisfaction guarantee with unlimited revisions until your song perfectly captures your story.",
+  
+  // Call to Action
+  readyToStart: "Ready to Create Your Song?",
+  readyToStartDesc: "Join thousands of satisfied customers who have turned their stories into beautiful, personalized songs.",
+  startYourSong: "Start Your Song",
+  viewPackages: "View Packages",
 };

@@ -16,4 +16,37 @@ export const aboutTranslations = {
   memorableEvents: "Niezapomnianych wydarzeń",
   releasedAlbums: "Wydanych albumów",
   copiesSold: "Sprzedanych kopii",
+  
+  // Awards & Recognition
+  awardsRecognition: "Nagrody i Uznanie",
+  internationalSuccess: "Sukces Międzynarodowy",
+  internationalSuccessDesc: "Akcent osiągnął światowe uznanie z hitami docierającymi do czołówek list przebojów w ponad 20 krajach",
+  industryExperience: "Doświadczenie w Branży",
+  industryExperienceDesc: "Ponad 20 lat profesjonalnego doświadczenia w produkcji muzycznej i rozwoju artystów",
+  globalReach: "Zasięg Globalny",
+  globalReachDesc: "Muzyka dystrybuowana na całym świecie poprzez główne platformy i usługi streamingowe",
+  
+  // Mission & Values
+  missionValues: "Nasza Misja i Wartości",
+  passion: "Pasja",
+  passionDesc: "Każda piosenka, którą tworzymy, jest przepełniona autentyczną pasją i głębokością emocjonalną, zapewniając, że Twoja historia jest opowiedziana z autentycznością.",
+  quality: "Jakość",
+  qualityDesc: "Profesjonalna produkcja studyjna, doświadczeni muzycy i skrupulatna dbałość o szczegóły w każdym projekcie.",
+  dedication: "Poświęcenie",
+  dedicationDesc: "Inwestujemy czas i troskę w zrozumienie Twojej historii, aby stworzyć muzykę, która naprawdę reprezentuje Twoje emocje.",
+  
+  // Why Choose Us
+  whyChooseUs: "Dlaczego Nas Wybrać",
+  uniqueApproach: "Unikalne Podejście",
+  uniqueApproachDesc: "Łączymy osobiste opowiadanie z profesjonalną produkcją muzyczną, aby tworzyć naprawdę jedyne w swoim rodzaju piosenki.",
+  fastDelivery: "Szybka Dostawa",
+  fastDeliveryDesc: "Muzyka profesjonalnej jakości dostarczona w ciągu 7-14 dni, idealna na specjalne okazje i jako prezenty.",
+  satisfactionGuarantee: "Gwarancja Satysfakcji",
+  satisfactionGuaranteeDesc: "100% gwarancja satysfakcji z nieograniczonymi poprawkami, aż Twoja piosenka idealnie oddaje Twoją historię.",
+  
+  // Call to Action
+  readyToStart: "Gotowy Stworzyć Swoją Piosenkę?",
+  readyToStartDesc: "Dołącz do tysięcy zadowolonych klientów, którzy przekształcili swoje historie w piękne, spersonalizowane piosenki.",
+  startYourSong: "Zacznij Swoją Piosenkę",
+  viewPackages: "Zobacz Pakiety",
 };

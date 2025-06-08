@@ -16,4 +16,37 @@ export const aboutTranslations = {
   memorableEvents: "Evenimente memorabile",
   releasedAlbums: "Albume lansate",
   copiesSold: "Exemplare vândute",
+  
+  // Awards & Recognition
+  awardsRecognition: "Premii și Recunoaștere",
+  internationalSuccess: "Succes Internațional",
+  internationalSuccessDesc: "Akcent a obținut recunoaștere mondială cu hituri care au ajuns în topurile din peste 20 de țări",
+  industryExperience: "Experiență în Industrie",
+  industryExperienceDesc: "Peste 20 de ani de experiență profesională în producția muzicală și dezvoltarea artiștilor",
+  globalReach: "Acoperire Globală",
+  globalReachDesc: "Muzica distribuită în întreaga lume prin platforme majore și servicii de streaming",
+  
+  // Mission & Values
+  missionValues: "Misiunea și Valorile Noastre",
+  passion: "Pasiune",
+  passionDesc: "Fiecare melodie pe care o creăm este impregnată cu pasiune genuină și profunzime emoțională, asigurându-ne că povestea ta este spusă cu autenticitate.",
+  quality: "Calitate",
+  qualityDesc: "Producție profesională de studio, muzicieni experimentați și atenție meticuloasă la detalii în fiecare proiect.",
+  dedication: "Dedicare",
+  dedicationDesc: "Investim timp și grijă în înțelegerea poveștii tale pentru a crea muzică care să reprezinte cu adevărat emoțiile tale.",
+  
+  // Why Choose Us
+  whyChooseUs: "De Ce Să Ne Alegi",
+  uniqueApproach: "Abordare Unică",
+  uniqueApproachDesc: "Combinăm povestirea personală cu producția muzicală profesională pentru a crea melodii cu adevărat unice.",
+  fastDelivery: "Livrare Rapidă",
+  fastDeliveryDesc: "Muzică de calitate profesională livrată în 7-14 zile, perfectă pentru ocazii speciale și cadouri.",
+  satisfactionGuarantee: "Garanție de Satisfacție",
+  satisfactionGuaranteeDesc: "Garanție de satisfacție 100% cu revizuiri nelimitate până când melodia ta surprinde perfect povestea ta.",
+  
+  // Call to Action
+  readyToStart: "Gata să îți Creezi Melodia?",
+  readyToStartDesc: "Alătură-te miilor de clienți mulțumiți care și-au transformat poveștile în melodii frumoase și personalizate.",
+  startYourSong: "Începe Melodia Ta",
+  viewPackages: "Vezi Pachetele",
 };

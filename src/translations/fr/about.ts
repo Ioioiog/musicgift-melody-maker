@@ -16,4 +16,37 @@ export const aboutTranslations = {
   memorableEvents: "Événements Mémorables",
   releasedAlbums: "Albums Sortis",
   copiesSold: "Exemplaires Vendus",
+  
+  // Awards & Recognition
+  awardsRecognition: "Prix et Reconnaissance",
+  internationalSuccess: "Succès International",
+  internationalSuccessDesc: "Akcent a obtenu une reconnaissance mondiale avec des tubes atteignant les classements de plus de 20 pays",
+  industryExperience: "Expérience de l'Industrie",
+  industryExperienceDesc: "Plus de 20 ans d'expérience professionnelle en production musicale et développement d'artistes",
+  globalReach: "Portée Mondiale",
+  globalReachDesc: "Musique distribuée dans le monde entier via les principales plateformes et services de streaming",
+  
+  // Mission & Values
+  missionValues: "Notre Mission et Nos Valeurs",
+  passion: "Passion",
+  passionDesc: "Chaque chanson que nous créons est imprégnée de passion authentique et de profondeur émotionnelle, garantissant que votre histoire soit racontée avec authenticité.",
+  quality: "Qualité",
+  qualityDesc: "Production studio professionnelle, musiciens expérimentés et attention méticuleuse aux détails dans chaque projet.",
+  dedication: "Dévouement",
+  dedicationDesc: "Nous investissons du temps et des soins pour comprendre votre histoire afin de créer une musique qui représente vraiment vos émotions.",
+  
+  // Why Choose Us
+  whyChooseUs: "Pourquoi Nous Choisir",
+  uniqueApproach: "Approche Unique",
+  uniqueApproachDesc: "Nous combinons la narration personnelle avec la production musicale professionnelle pour créer des chansons vraiment uniques.",
+  fastDelivery: "Livraison Rapide",
+  fastDeliveryDesc: "Musique de qualité professionnelle livrée en 7-14 jours, parfaite pour les occasions spéciales et les cadeaux.",
+  satisfactionGuarantee: "Garantie de Satisfaction",
+  satisfactionGuaranteeDesc: "Garantie de satisfaction à 100% avec révisions illimitées jusqu'à ce que votre chanson capture parfaitement votre histoire.",
+  
+  // Call to Action
+  readyToStart: "Prêt à Créer Votre Chanson ?",
+  readyToStartDesc: "Rejoignez des milliers de clients satisfaits qui ont transformé leurs histoires en belles chansons personnalisées.",
+  startYourSong: "Commencez Votre Chanson",
+  viewPackages: "Voir les Forfaits",
 };

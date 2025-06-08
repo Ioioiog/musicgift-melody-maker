@@ -16,4 +16,37 @@ export const aboutTranslations = {
   memorableEvents: "Unvergessliche Ereignisse",
   releasedAlbums: "Veröffentlichte Alben",
   copiesSold: "Verkaufte Exemplare",
+  
+  // Awards & Recognition
+  awardsRecognition: "Auszeichnungen und Anerkennung",
+  internationalSuccess: "Internationaler Erfolg",
+  internationalSuccessDesc: "Akcent erzielte weltweite Anerkennung mit Hits, die die Charts in über 20 Ländern erreichten",
+  industryExperience: "Branchenerfahrung",
+  industryExperienceDesc: "Über 20 Jahre professionelle Erfahrung in Musikproduktion und Künstlerentwicklung",
+  globalReach: "Globale Reichweite",
+  globalReachDesc: "Musik wird weltweit über große Plattformen und Streaming-Dienste vertrieben",
+  
+  // Mission & Values
+  missionValues: "Unsere Mission und Werte",
+  passion: "Leidenschaft",
+  passionDesc: "Jedes Lied, das wir schaffen, ist mit echter Leidenschaft und emotionaler Tiefe durchdrungen und stellt sicher, dass Ihre Geschichte authentisch erzählt wird.",
+  quality: "Qualität",
+  qualityDesc: "Professionelle Studioproduktion, erfahrene Musiker und akribische Aufmerksamkeit für Details in jedem Projekt.",
+  dedication: "Hingabe",
+  dedicationDesc: "Wir investieren Zeit und Sorgfalt in das Verständnis Ihrer Geschichte, um Musik zu schaffen, die Ihre Emotionen wirklich repräsentiert.",
+  
+  // Why Choose Us
+  whyChooseUs: "Warum Uns Wählen",
+  uniqueApproach: "Einzigartiger Ansatz",
+  uniqueApproachDesc: "Wir kombinieren persönliches Storytelling mit professioneller Musikproduktion, um wirklich einzigartige Lieder zu schaffen.",
+  fastDelivery: "Schnelle Lieferung",
+  fastDeliveryDesc: "Professionelle Musikqualität innerhalb von 7-14 Tagen geliefert, perfekt für besondere Anlässe und Geschenke.",
+  satisfactionGuarantee: "Zufriedenheitsgarantie",
+  satisfactionGuaranteeDesc: "100% Zufriedenheitsgarantie mit unbegrenzten Überarbeitungen, bis Ihr Lied Ihre Geschichte perfekt einfängt.",
+  
+  // Call to Action
+  readyToStart: "Bereit, Ihr Lied zu Erstellen?",
+  readyToStartDesc: "Schließen Sie sich Tausenden zufriedener Kunden an, die ihre Geschichten in schöne, personalisierte Lieder verwandelt haben.",
+  startYourSong: "Beginnen Sie Ihr Lied",
+  viewPackages: "Pakete Ansehen",
 };
