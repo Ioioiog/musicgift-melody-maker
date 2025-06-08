@@ -21,6 +21,22 @@ const Footer = () => {
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
       }} className="inset-0.5 inset-0 -bottom-0.5 bg-violet-500 bg-gradient-purple"></div>
 
+      {/* Full-screen animated musical notes pattern overlay */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
+        <div className="absolute top-4 left-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
+        <div className="absolute top-8 right-12 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute top-16 left-1/4 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-20 right-1/3 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute top-32 left-1/2 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-1/4 left-16 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{ animationDelay: '2.5s' }}></div>
+        <div className="absolute bottom-1/3 right-1/4 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '3s' }}></div>
+        <div className="absolute bottom-20 left-1/3 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '3.5s' }}></div>
+        <div className="absolute bottom-4 right-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute bottom-8 left-1/5 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{ animationDelay: '4.5s' }}></div>
+        <div className="absolute top-1/2 left-8 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '5s' }}></div>
+        <div className="absolute top-1/3 right-16 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '5.5s' }}></div>
+      </div>
+
       <div className="container mx-auto px-4 sm:px-6 relative z-10 py-6 sm:py-8">
         {/* Main 4-column layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -213,14 +229,6 @@ const Footer = () => {
           {/* Enhanced layered background effects */}
           <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 via-violet-600/25 to-pink-600/30"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/10 to-violet-600/20"></div>
-          
-          {/* Animated musical notes pattern overlay */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-4 left-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
-            <div className="absolute top-8 right-12 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-            <div className="absolute bottom-6 left-16 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute bottom-4 right-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-          </div>
           
           <div className="flex flex-col items-center justify-center space-y-4 relative z-10">
             <div className="bg-white/15 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 shadow-lg hover:bg-white/20 transition-all duration-300 group">
