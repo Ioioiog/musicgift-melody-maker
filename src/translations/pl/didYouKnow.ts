@@ -1,3 +1,4 @@
+
 export const didYouKnowTranslations = {
   // Section title
   didYouKnow: "Czy wiesz?",
@@ -115,10 +116,4 @@ export const didYouKnowTranslations = {
   didYouKnowGift4Desc: "Odbiorcy cenią piosenki bardziej niż przedmioty fizyczne.",
   didYouKnowGift5Title: "Przypomnienie na całe życie",
   didYouKnowGift5Desc: "Spersonalizowana melodia staje się ich wspomnieniem o tobie na całe życie.",
-  
-  // General facts (keeping existing ones as fallback)
-  didYouKnowGeneral1Title: "Muzyka i emocje",
-  didYouKnowGeneral1Desc: "Muzyka aktywuje te same ścieżki neuronowe co jedzenie, seks i narkotyki, wyjaśniając, dlaczego spersonalizowane piosenki są tak satysfakcjonujące.",
-  didYouKnowGeneral2Title: "Wzmocnienie pamięci",
-  didYouKnowGeneral2Desc: "Ludzki mózg może pamiętać teksty i melodie przez dziesięciolecia, czyniąc piosenki idealnymi kapsułami czasu do zachowania wspomnień.",
 };

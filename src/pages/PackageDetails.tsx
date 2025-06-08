@@ -1,4 +1,3 @@
-
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Check, Clock, Star, Users, Mic, Music, FileText, HelpCircle, ChevronDown, ChevronUp, Lightbulb, Plus, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -120,82 +119,251 @@ const PackageDetails = () => {
   // Did you know facts based on package type
   const getDidYouKnowFacts = (packageValue: string) => {
     switch (packageValue) {
+      case 'wedding':
+        return [
+          {
+            title: t('didYouKnowWedding1Title'),
+            description: t('didYouKnowWedding1Desc')
+          },
+          {
+            title: t('didYouKnowWedding2Title'),
+            description: t('didYouKnowWedding2Desc')
+          },
+          {
+            title: t('didYouKnowWedding3Title'),
+            description: t('didYouKnowWedding3Desc')
+          },
+          {
+            title: t('didYouKnowWedding4Title'),
+            description: t('didYouKnowWedding4Desc')
+          },
+          {
+            title: t('didYouKnowWedding5Title'),
+            description: t('didYouKnowWedding5Desc')
+          }
+        ];
+        
+      case 'baptism':
+        return [
+          {
+            title: t('didYouKnowBaptism1Title'),
+            description: t('didYouKnowBaptism1Desc')
+          },
+          {
+            title: t('didYouKnowBaptism2Title'),
+            description: t('didYouKnowBaptism2Desc')
+          },
+          {
+            title: t('didYouKnowBaptism3Title'),
+            description: t('didYouKnowBaptism3Desc')
+          },
+          {
+            title: t('didYouKnowBaptism4Title'),
+            description: t('didYouKnowBaptism4Desc')
+          },
+          {
+            title: t('didYouKnowBaptism5Title'),
+            description: t('didYouKnowBaptism5Desc')
+          }
+        ];
+
+      case 'comingOfAge':
+        return [
+          {
+            title: t('didYouKnowComingOfAge1Title'),
+            description: t('didYouKnowComingOfAge1Desc')
+          },
+          {
+            title: t('didYouKnowComingOfAge2Title'),
+            description: t('didYouKnowComingOfAge2Desc')
+          },
+          {
+            title: t('didYouKnowComingOfAge3Title'),
+            description: t('didYouKnowComingOfAge3Desc')
+          },
+          {
+            title: t('didYouKnowComingOfAge4Title'),
+            description: t('didYouKnowComingOfAge4Desc')
+          },
+          {
+            title: t('didYouKnowComingOfAge5Title'),
+            description: t('didYouKnowComingOfAge5Desc')
+          }
+        ];
+        
       case 'personal':
         return [
           {
-            title: t('didYouKnowPersonal1Title', 'Music triggers memories'),
-            description: t('didYouKnowPersonal1Desc', 'Studies show that personalized songs can trigger stronger emotional memories than generic music, making them perfect for special occasions.')
+            title: t('didYouKnowPersonal1Title'),
+            description: t('didYouKnowPersonal1Desc')
           },
           {
-            title: t('didYouKnowPersonal2Title', 'Unique gift impact'),
-            description: t('didYouKnowPersonal2Desc', 'Personalized gifts are remembered 3x longer than traditional gifts, creating lasting emotional connections.')
+            title: t('didYouKnowPersonal2Title'),
+            description: t('didYouKnowPersonal2Desc')
+          },
+          {
+            title: t('didYouKnowPersonal3Title'),
+            description: t('didYouKnowPersonal3Desc')
+          },
+          {
+            title: t('didYouKnowPersonal4Title'),
+            description: t('didYouKnowPersonal4Desc')
+          },
+          {
+            title: t('didYouKnowPersonal5Title'),
+            description: t('didYouKnowPersonal5Desc')
           }
         ];
       
       case 'premium':
         return [
           {
-            title: t('didYouKnowPremium1Title', 'Global reach potential'),
-            description: t('didYouKnowPremium1Desc', 'Songs distributed globally can reach over 100 million potential listeners across all major streaming platforms.')
+            title: t('didYouKnowPremium1Title'),
+            description: t('didYouKnowPremium1Desc')
           },
           {
-            title: t('didYouKnowPremium2Title', 'Video engagement'),
-            description: t('didYouKnowPremium2Desc', 'Music videos receive 1200% more shares than text and images combined on social media platforms.')
+            title: t('didYouKnowPremium2Title'),
+            description: t('didYouKnowPremium2Desc')
+          },
+          {
+            title: t('didYouKnowPremium3Title'),
+            description: t('didYouKnowPremium3Desc')
+          },
+          {
+            title: t('didYouKnowPremium4Title'),
+            description: t('didYouKnowPremium4Desc')
+          },
+          {
+            title: t('didYouKnowPremium5Title'),
+            description: t('didYouKnowPremium5Desc')
           }
         ];
       
       case 'business':
         return [
           {
-            title: t('didYouKnowBusiness1Title', 'Brand recall boost'),
-            description: t('didYouKnowBusiness1Desc', 'Brands with custom jingles have 96% higher recall rates compared to those using generic background music.')
+            title: t('didYouKnowBusiness1Title'),
+            description: t('didYouKnowBusiness1Desc')
           },
           {
-            title: t('didYouKnowBusiness2Title', 'Emotional marketing'),
-            description: t('didYouKnowBusiness2Desc', 'Emotional content is shared 2x more than rational content, making custom songs powerful marketing tools.')
+            title: t('didYouKnowBusiness2Title'),
+            description: t('didYouKnowBusiness2Desc')
           }
         ];
       
       case 'artist':
         return [
           {
-            title: t('didYouKnowArtist1Title', 'First impression matters'),
-            description: t('didYouKnowArtist1Desc', 'Music industry professionals decide within the first 15 seconds if a song has potential, highlighting the importance of professional production.')
+            title: t('didYouKnowArtist1Title'),
+            description: t('didYouKnowArtist1Desc')
           },
           {
-            title: t('didYouKnowArtist2Title', 'Streaming success'),
-            description: t('didYouKnowArtist2Desc', 'Independent artists account for 43% of the global music market, proving that quality production can compete with major labels.')
+            title: t('didYouKnowArtist2Title'),
+            description: t('didYouKnowArtist2Desc')
+          },
+          {
+            title: t('didYouKnowArtist3Title'),
+            description: t('didYouKnowArtist3Desc')
+          },
+          {
+            title: t('didYouKnowArtist4Title'),
+            description: t('didYouKnowArtist4Desc')
+          },
+          {
+            title: t('didYouKnowArtist5Title'),
+            description: t('didYouKnowArtist5Desc')
+          }
+        ];
+
+      case 'instrumental':
+        return [
+          {
+            title: t('didYouKnowInstrumental1Title'),
+            description: t('didYouKnowInstrumental1Desc')
+          },
+          {
+            title: t('didYouKnowInstrumental2Title'),
+            description: t('didYouKnowInstrumental2Desc')
+          },
+          {
+            title: t('didYouKnowInstrumental3Title'),
+            description: t('didYouKnowInstrumental3Desc')
+          },
+          {
+            title: t('didYouKnowInstrumental4Title'),
+            description: t('didYouKnowInstrumental4Desc')
+          },
+          {
+            title: t('didYouKnowInstrumental5Title'),
+            description: t('didYouKnowInstrumental5Desc')
+          }
+        ];
+
+      case 'remix':
+        return [
+          {
+            title: t('didYouKnowRemix1Title'),
+            description: t('didYouKnowRemix1Desc')
+          },
+          {
+            title: t('didYouKnowRemix2Title'),
+            description: t('didYouKnowRemix2Desc')
+          },
+          {
+            title: t('didYouKnowRemix3Title'),
+            description: t('didYouKnowRemix3Desc')
+          },
+          {
+            title: t('didYouKnowRemix4Title'),
+            description: t('didYouKnowRemix4Desc')
+          },
+          {
+            title: t('didYouKnowRemix5Title'),
+            description: t('didYouKnowRemix5Desc')
           }
         ];
       
       case 'gift':
         return [
           {
-            title: t('didYouKnowGift1Title', 'Experience gifts'),
-            description: t('didYouKnowGift1Desc', 'Experience-based gifts like custom songs create longer-lasting happiness than material gifts, according to psychological studies.')
+            title: t('didYouKnowGift1Title'),
+            description: t('didYouKnowGift1Desc')
           },
           {
-            title: t('didYouKnowGift2Title', 'Musical bonding'),
-            description: t('didYouKnowGift2Desc', 'Sharing music strengthens relationships by releasing oxytocin, the "bonding hormone", making musical gifts especially meaningful.')
+            title: t('didYouKnowGift2Title'),
+            description: t('didYouKnowGift2Desc')
+          },
+          {
+            title: t('didYouKnowGift3Title'),
+            description: t('didYouKnowGift3Desc')
+          },
+          {
+            title: t('didYouKnowGift4Title'),
+            description: t('didYouKnowGift4Desc')
+          },
+          {
+            title: t('didYouKnowGift5Title'),
+            description: t('didYouKnowGift5Desc')
           }
         ];
       
       default:
+        // Fallback to personal package facts if package type is not recognized
         return [
           {
-            title: t('didYouKnowGeneral1Title', 'Music and emotions'),
-            description: t('didYouKnowGeneral1Desc', 'Music activates the same neural pathways as food, sex, and drugs, explaining why personalized songs feel so rewarding.')
+            title: t('didYouKnowPersonal1Title'),
+            description: t('didYouKnowPersonal1Desc')
           },
           {
-            title: t('didYouKnowGeneral2Title', 'Memory enhancement'),
-            description: t('didYouKnowGeneral2Desc', 'The human brain can remember lyrics and melodies for decades, making songs perfect time capsules for preserving memories.')
+            title: t('didYouKnowPersonal2Title'),
+            description: t('didYouKnowPersonal2Desc')
           }
         ];
     }
   };
 
   // Get add-on icon based on add-on type
-  const getAddonIcon = (addonKey: string) => {
+  function getAddonIcon(addonKey: string) {
     switch (addonKey) {
       case 'rushDelivery':
         return <Clock className="w-4 h-4" />;
@@ -216,10 +384,10 @@ const PackageDetails = () => {
       default:
         return <Plus className="w-4 h-4" />;
     }
-  };
+  }
 
   // Filter add-ons available for this package
-  const getAvailableAddOns = () => {
+  function getAvailableAddOns() {
     if (!addons || !packageData.available_addons) return [];
     
     return addons.filter(addon => 
@@ -232,15 +400,15 @@ const PackageDetails = () => {
         : `${currency === 'EUR' ? '€' : 'RON'} ${getAddonPrice(addon, currency)}`,
       icon: getAddonIcon(addon.addon_key)
     }));
-  };
+  }
 
   // Get package-specific revision answer
-  const getRevisionAnswer = (packageValue: string) => {
+  function getRevisionAnswer(packageValue: string) {
     if (packageValue === 'wedding') {
       return t('faqRevisionsAnswerWedding', 'Yes, the wedding package includes one free revision to ensure your complete satisfaction with the final product.');
     }
     return t('faqRevisionsAnswerOther', 'Revisions are only available for the Wedding package. Other packages do not include revision options to maintain our streamlined production process and competitive pricing.');
-  };
+  }
 
   const packageFeatures = getPackageFeatures(packageData.value);
   const didYouKnowFacts = getDidYouKnowFacts(packageData.value);
@@ -361,7 +529,7 @@ const PackageDetails = () => {
                 <CardHeader>
                   <CardTitle className="text-white flex items-center">
                     <Lightbulb className="w-5 h-5 mr-2 text-yellow-400" />
-                    {t('didYouKnow', 'Știai că?')}
+                    {t('didYouKnow', 'Did You Know?')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>

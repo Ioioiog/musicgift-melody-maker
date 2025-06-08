@@ -1,3 +1,4 @@
+
 export const didYouKnowTranslations = {
   // Section title
   didYouKnow: "Wussten Sie?",
@@ -115,10 +116,4 @@ export const didYouKnowTranslations = {
   didYouKnowGift4Desc: "Empfänger schätzen Lieder mehr als physische Gegenstände.",
   didYouKnowGift5Title: "Lebenslange Erinnerung",
   didYouKnowGift5Desc: "Eine personalisierte Melodie wird zu ihrer lebenslangen Erinnerung an Sie.",
-  
-  // General facts (keeping existing ones as fallback)
-  didYouKnowGeneral1Title: "Musik und Emotionen",
-  didYouKnowGeneral1Desc: "Musik aktiviert dieselben neuronalen Pfade wie Essen, Sex und Drogen, was erklärt, warum personalisierte Lieder so belohnend wirken.",
-  didYouKnowGeneral2Title: "Gedächtnisverbesserung",
-  didYouKnowGeneral2Desc: "Das menschliche Gehirn kann sich jahrzehntelang an Texte und Melodien erinnern, was Lieder zu perfekten Zeitkapseln für die Bewahrung von Erinnerungen macht.",
 };

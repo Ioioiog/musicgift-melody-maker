@@ -1,3 +1,4 @@
+
 export const didYouKnowTranslations = {
   // Section title
   didYouKnow: "Știai că?",
@@ -115,10 +116,4 @@ export const didYouKnowTranslations = {
   didYouKnowGift4Desc: "Destinatarii prețuiesc melodiile mai mult decât obiectele fizice.",
   didYouKnowGift5Title: "Amintire pentru toată viața",
   didYouKnowGift5Desc: "O melodie personalizată devine amintirea lor pe viață despre tine.",
-  
-  // General facts (keeping existing ones as fallback)
-  didYouKnowGeneral1Title: "Muzica și emotțiile",
-  didYouKnowGeneral1Desc: "Muzica activează aceleași căi neurale ca mâncarea, sexul și drogurile, explicând de ce melodiile personalizate se simt atât de recompensante.",
-  didYouKnowGeneral2Title: "Îmbunătățirea memoriei",
-  didYouKnowGeneral2Desc: "Creierul uman poate reține versuri și melodii timp de decenii, făcând melodiile capsule temporale perfecte pentru păstrarea amintirilor.",
 };
