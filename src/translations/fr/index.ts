@@ -10,6 +10,7 @@ import { giftTranslations } from './gift';
 import { howItWorksTranslations } from './howItWorks';
 import { contactTranslations } from './contact';
 import { unsubscribeTranslations } from './unsubscribe';
+import { faqTranslations } from './faq';
 
 export const frTranslations = {
   ...navigationTranslations,
@@ -23,4 +24,5 @@ export const frTranslations = {
   ...howItWorksTranslations,
   ...contactTranslations,
   ...unsubscribeTranslations,
+  ...faqTranslations,
 };

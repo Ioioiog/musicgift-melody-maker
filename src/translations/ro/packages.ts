@@ -229,7 +229,13 @@ export const packagesTranslations = {
   comingOfAgeInclude5: "Mix & master profesional",
   comingOfAgeInclude6: "Fișiere finale WAV + MP3",
   
-  // Form fields
+  // New Add-ons
+  personalizedAudioMessage: "Mesaj Audio Personalizat",
+  personalizedAudioMessageDesc: "Mesaj audio la începutul melodiei",
+  godparentsSpecialMelody: "Mélodie Spéciale pour Parrains",
+  godparentsSpecialMelodyDesc: "Une deuxième mélodie comme cadeau surprise pour les parrains",
+  
+  // Wedding form fields
   weddingStep1Title: "Detalii Cuplu",
   weddingStep2Title: "Poveste & Preferințe",
   weddingCoupleNamesPlaceholder: "Introduceți numele mirilor sau nașilor",
@@ -242,6 +248,7 @@ export const packagesTranslations = {
   weddingAtmosphereElegant: "Elegant",
   weddingMusicalStylePlaceholder: "Stilul muzical preferat sau melodia de inspirație",
   
+  // Baptism form fields
   baptismStep1Title: "Informații Copil",
   baptismStep2Title: "Preferințe Muzicale",
   baptismChildNamePlaceholder: "Numele copilului",
@@ -254,6 +261,7 @@ export const packagesTranslations = {
   baptismStyleLullaby: "Cântec de leagăn",
   baptismStyleAcousticPop: "Pop Acustic",
   
+  // Coming of Age form fields
   comingOfAgeStep1Title: "Informații Sărbătorit",
   comingOfAgeStep2Title: "Stil Muzical & Atmosferă",
   comingOfAgeCelebrantNamePlaceholder: "Numele persoanei care împlinește 18 ani",
@@ -269,20 +277,23 @@ export const packagesTranslations = {
   comingOfAgeVibeDreamy: "Visător",
   comingOfAgeFavoriteArtistsPlaceholder: "Exemple de artiști sau melodii preferate",
   
+  // Common voice options
   voiceFemale: "Voce Feminină",
   voiceMale: "Voce Masculină",
-
-  // FAQ Revision answers
-  faqRevisionsAnswerWedding: "Yes, the wedding package includes one free revision to ensure your complete satisfaction with the final product.",
-  faqRevisionsAnswerOther: "Revisions are only available for the Wedding package. Other packages do not include revision options to maintain our streamlined production process and competitive pricing.",
-
-  // New FAQ questions and answers
-  faqDeliveryTime: "How long does it take to receive my song?",
-  faqDeliveryTimeAnswer: "Your song will be ready within 3–5 business days after your order and story are confirmed. We want every creation to be crafted with care and professionalism.",
   
-  faqDeliveryMethod: "How will I receive my song?",
-  faqDeliveryMethodAnswer: "You will receive your personalized song via email, in high-quality format (MP3, additional at request WAV HQ). You can download the song for up to 6 months using the link we send. After that, the link will expire and MusicGift will no longer store the song on any server, so make sure to save your file during that time.",
+  // Did You Know sections for new packages
+  didYouKnowWedding1Title: "Wedding songs create lasting memories",
+  didYouKnowWedding1Desc: "Couples who dance to their own personalized song report stronger emotional connection to their wedding memories and play the song on anniversaries.",
+  didYouKnowWedding2Title: "Unique wedding traditions",
+  didYouKnowWedding2Desc: "Having a custom wedding song is becoming a new tradition, with 67% of couples saying they wish they had something more personal than popular songs.",
   
-  faqSatisfaction: "What if I'm not satisfied?",
-  faqSatisfactionAnswer: "We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost."
+  didYouKnowBaptism1Title: "Music and child development",
+  didYouKnowBaptism1Desc: "Personalized songs for children help with emotional bonding and can become a source of comfort throughout their childhood years.",
+  didYouKnowBaptism2Title: "Family traditions through music",
+  didYouKnowBaptism2Desc: "Children who grow up with personalized songs often develop stronger family bonds and appreciation for their unique story.",
+  
+  didYouKnowComingOfAge1Title: "Music and 18th birthday celebrations",
+  didYouKnowComingOfAge1Desc: "Teenagers who receive personalized songs for their 18th birthday report higher self-esteem and stronger sense of identity during their transition to adulthood.",
+  didYouKnowComingOfAge2Title: "18th birthday milestone celebrations",
+  didYouKnowComingOfAge2Desc: "18th birthday celebrations with personalized elements are remembered more vividly and positively impact future life decisions."
 };
