@@ -21,8 +21,8 @@ const Footer = () => {
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
       }} className="inset-0.5 inset-0 -bottom-0.5 bg-violet-500 bg-gradient-purple"></div>
 
-      {/* Full-screen animated musical notes pattern overlay */}
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
+      {/* Footer-contained animated musical notes pattern overlay */}
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-20">
         <div className="absolute top-4 left-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
         <div className="absolute top-8 right-12 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
         <div className="absolute top-16 left-1/4 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
