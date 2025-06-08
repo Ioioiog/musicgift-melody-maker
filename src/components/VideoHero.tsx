@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
@@ -183,14 +182,14 @@ const VideoHero = () => {
         </div>
       )}
 
-      {/* Audio Control Button */}
+      {/* Audio Control Button - Enhanced visibility for mobile */}
       {!showPlayButton && !isLoading && (
         <button
           onClick={handleToggleAudio}
-          className="absolute top-4 right-4 z-30 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all duration-200"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-200 shadow-lg border border-white/20"
           aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
         >
-          <Volume2 className={`w-5 h-5 ${hasAudio ? 'opacity-100' : 'opacity-50'}`} />
+          <Volume2 className={`w-4 h-4 sm:w-5 sm:h-5 ${hasAudio ? 'opacity-100' : 'opacity-50'}`} />
         </button>
       )}
 
