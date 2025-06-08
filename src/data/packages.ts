@@ -1,4 +1,31 @@
-export type { Package, PackageData, Field, Step, FieldOption, Addon } from '@/types';
+import type { Field, Step, FieldOption, Addon } from '@/types';
+
+export interface PackageInclude {
+  include_key: string;
+  include_order?: number;
+}
+
+export interface PackageTag {
+  id: string;
+  tag_type: string;
+  tag_label_key?: string;
+  styling_class?: string;
+}
+
+export interface Package {
+  id?: string;
+  value: string;
+  label_key: string;
+  tagline_key: string;
+  description_key: string;
+  price_ron: number;
+  price_eur: number;
+  delivery_time_key: string;
+  tag?: string;
+  includes?: PackageInclude[];
+  available_addons: string[];
+  steps: Step[];
+}
 
 export interface OrderFlow {
   steps: {
