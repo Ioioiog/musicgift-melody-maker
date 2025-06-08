@@ -36,7 +36,7 @@ const Packages = () => {
   };
   const renderPackagePrice = (pkg: any) => {
     if (pkg.value === 'gift') {
-      return <div className="text-2xl font-bold text-white">
+      return <div className="text-2xl font-bold text-white px-[41px] bg-orange-500 py-[4px]">
           {t('startingFrom', 'Starting from')} {currency === 'EUR' ? '€59' : '299 RON'}
         </div>;
     }
@@ -118,7 +118,7 @@ const Packages = () => {
                     <CardTitle className="text-2xl md:text-3xl font-bold mb-3 leading-tight tracking-wide bg-gradient-to-r from-white to-white/90 bg-clip-text drop-shadow-lg text-orange-500 text-center">
                       {t(pkg.label_key)}
                     </CardTitle>
-                    <CardDescription className="text-white/80">
+                    <CardDescription className="text-white/80 text-center">
                       {t(pkg.description_key)}
                     </CardDescription>
                     {renderPackagePrice(pkg)}
@@ -129,7 +129,7 @@ const Packages = () => {
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col">
                     <div className="flex-1">
-                      <h4 className="font-semibold mb-3 text-orange-500">{t('whatsIncluded', 'What\'s included:')}</h4>
+                      <h4 className="font-semibold mb-3 text-orange-500 text-center">{t('whatsIncluded', 'What\'s included:')}</h4>
                       <ul className="space-y-2 mb-6">
                         {pkg.includes?.map((item, itemIndex) => <li key={itemIndex} className="flex items-start">
                             <Check className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
