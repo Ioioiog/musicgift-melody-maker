@@ -113,8 +113,8 @@ const AnimatedStepFlow = () => {
     <div className="max-w-6xl mx-auto px-4 h-full">
       <div className="flex flex-col lg:flex-row items-start gap-8 p-8 max-w-6xl mx-auto">
         
-        {/* Modern Step Circles with Lucide Icons */}
-        <div className="flex lg:flex-col gap-6">
+        {/* Modern Step Circles with Lucide Icons - Made Smaller */}
+        <div className="flex lg:flex-col gap-4">
           {steps.map((step, idx) => {
             const IconComponent = stepIcons[idx];
             const isActive = activeStep === idx;
@@ -124,11 +124,11 @@ const AnimatedStepFlow = () => {
               <motion.div
                 key={idx}
                 onClick={() => handleStepClick(idx)}
-                className={`cursor-pointer w-28 h-28 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 relative overflow-hidden group
+                className={`cursor-pointer w-20 h-20 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 relative overflow-hidden group
                   ${isActive 
-                    ? 'bg-gradient-to-br from-purple-500 to-purple-700 text-white scale-110 shadow-purple-300/50' 
+                    ? 'bg-orange-700 text-white scale-110 shadow-orange-300/50' 
                     : isPrevious 
-                    ? 'bg-gradient-to-br from-green-400 to-green-600 text-white scale-105 shadow-green-300/30' 
+                    ? 'bg-green-400 text-white scale-105 shadow-green-300/30' 
                     : 'bg-white text-gray-600 hover:bg-gray-50 hover:scale-105 shadow-gray-200/50'
                   }`}
                 whileHover={{ scale: isActive ? 1.15 : 1.1 }}
@@ -169,9 +169,9 @@ const AnimatedStepFlow = () => {
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute top-1 right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center"
+                    className="absolute top-1 right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center"
                   >
-                    <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-3 h-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
                   </motion.div>
@@ -179,7 +179,7 @@ const AnimatedStepFlow = () => {
                 
                 {/* Icon */}
                 <IconComponent 
-                  className={`relative z-10 transition-all duration-300 ${isActive ? 'w-10 h-10' : 'w-8 h-8'}`} 
+                  className={`relative z-10 transition-all duration-300 ${isActive ? 'w-8 h-8' : 'w-6 h-6'}`} 
                   strokeWidth={isActive ? 2.5 : 2} 
                 />
               </motion.div>
@@ -190,7 +190,7 @@ const AnimatedStepFlow = () => {
         {/* Progress Header */}
         <div className="lg:hidden w-full mb-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-purple-600">
+            <span className="text-sm font-medium text-orange-600">
               {t('step')} {activeStep + 1} of {steps.length}
             </span>
             <div className="flex items-center gap-1 text-gray-500">
@@ -200,7 +200,7 @@ const AnimatedStepFlow = () => {
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
-              className="bg-purple-600 h-2 rounded-full transition-all duration-100 ease-out"
+              className="bg-orange-600 h-2 rounded-full transition-all duration-100 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -215,7 +215,7 @@ const AnimatedStepFlow = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:shadow-xl transition-all duration-300 rounded-lg p-8 relative overflow-hidden"
+              className="bg-white/95 backdrop-blur-md border border-white/30 hover:bg-white/100 hover:shadow-xl transition-all duration-300 rounded-xl p-8 relative overflow-hidden shadow-lg"
             >
               {/* Large background icon */}
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-5 pointer-events-none">
@@ -228,45 +228,45 @@ const AnimatedStepFlow = () => {
               {/* Header with step info */}
               <div className="mb-6 relative z-10">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-purple-400 to-purple-600 text-white shadow-lg">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-orange-700 text-white shadow-lg">
                     {React.createElement(stepIcons[activeStep], { 
                       className: "w-6 h-6", 
                       strokeWidth: 2 
                     })}
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-purple-300 mb-1">
+                    <div className="text-sm font-medium text-orange-600 mb-1">
                       {steps[activeStep].title}
                     </div>
-                    <h3 className="text-2xl font-bold text-white">
+                    <h3 className="text-2xl font-bold text-gray-800">
                       {steps[activeStep].description}
                     </h3>
                   </div>
                 </div>
                 
-                <p className="text-white/80 text-lg leading-relaxed">
+                <p className="text-gray-700 text-lg leading-relaxed">
                   {steps[activeStep].details.intro}
                 </p>
               </div>
 
               {/* Details List */}
               <div className="mb-6 relative z-10">
-                <h4 className="text-lg font-semibold text-white mb-4">
+                <h4 className="text-lg font-semibold text-gray-800 mb-4">
                   {steps[activeStep].details.listTitle}
                 </h4>
                 <ul className="space-y-3">
                   {steps[activeStep].details.listItems.map((item, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-purple-300 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-white/90">{item}</span>
+                      <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-gray-700">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               {/* Footer Note */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 relative z-10 border border-white/10">
-                <p className="text-sm text-white/80 italic">
+              <div className="bg-orange-50 backdrop-blur-sm rounded-lg p-4 relative z-10 border border-orange-100">
+                <p className="text-sm text-orange-800 italic">
                   {steps[activeStep].details.footer}
                 </p>
               </div>
