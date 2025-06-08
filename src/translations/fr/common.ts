@@ -86,4 +86,24 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Témoignages Clients",
   testimonialsSubtitle: "Découvrez les belles histoires de ceux qui ont choisi de transformer leurs souvenirs en musique personnalisée",
+  
+  // Add-on labels
+  rushDeliveryLabel: "Livraison Express",
+  commercialRightsLabel: "Droits Commerciaux",
+  distributieMangoRecordsLabel: "Distribution Exclusive Mango Records",
+  customVideoLabel: "Vidéo Personnalisée",
+  audioMessageFromSenderLabel: "Message Audio de l'Expéditeur",
+  commercialRightsUpgradeLabel: "Mise à Niveau Droits Commerciaux",
+  extendedSongLabel: "Chanson Étendue",
+  godparentsmelodyLabel: "Mélodie des Parrains",
+  
+  // Add-on descriptions
+  rushDeliveryDesc: "Recevez votre chanson en 24-48 heures au lieu du délai de livraison standard",
+  commercialRightsDesc: "Obtenez tous les droits commerciaux pour utiliser la chanson à des fins commerciales. Nécessite l'acceptation d'étiqueter la chanson avec 'Music Gift by Mango Records'.",
+  distributieMangoRecordsDesc: "Distribution exclusive sur la plateforme Mango Records pour une visibilité maximale",
+  customVideoDesc: "Une vidéo personnalisée créée avec vos photos pour une expérience complète",
+  audioMessageFromSenderDesc: "Ajoutez un message audio personnel de l'expéditeur pour une surprise supplémentaire",
+  commercialRightsUpgradeDesc: "Mise à niveau vers tous les droits commerciaux pour un usage professionnel",
+  extendedSongDesc: "Chanson étendue avec 3 couplets pour une expérience musicale plus riche",
+  godparentsmelodyDesc: "Mélodie spéciale dédiée aux parrains pour les mariages et événements religieux",
 };
