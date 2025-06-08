@@ -323,7 +323,7 @@ export const packages: Package[] = [
       { include_key: "plusInclude2" },
       { include_key: "plusInclude3" },
     ],
-    available_addons: [],
+    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: [],
     tag: "new",
   },
@@ -342,7 +342,7 @@ export const packages: Package[] = [
       { include_key: "personalInclude3" },
       { include_key: "personalInclude4" },
     ],
-    available_addons: ["personalDuet", "personalInstrumental"],
+    available_addons: ["rushDelivery", "commercialRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: [],
   },
   {
@@ -359,7 +359,7 @@ export const packages: Package[] = [
       { include_key: "premiumInclude2" },
       { include_key: "premiumInclude3" },
     ],
-    available_addons: ["premiumExtendedVideo", "premiumSocialKit"],
+    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: [],
     tag: "popular",
   },
@@ -378,7 +378,7 @@ export const packages: Package[] = [
       { include_key: "businessInclude3" },
       { include_key: "businessInclude4" },
     ],
-    available_addons: ["businessMultipleVersions", "businessJingleKit"],
+    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender", "commercialRightsUpgrade", "extendedSong"],
     steps: [],
   },
   {
@@ -396,7 +396,7 @@ export const packages: Package[] = [
       { include_key: "artistInclude3" },
       { include_key: "artistInclude4" },
     ],
-    available_addons: ["artistVocalCoaching", "artistMusicVideo"],
+    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender"],
     steps: [],
   },
   {
@@ -416,7 +416,7 @@ export const packages: Package[] = [
       { include_key: "remixInclude5" },
       { include_key: "remixInclude6" },
     ],
-    available_addons: [],
+    available_addons: ["rushDelivery", "commercialRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender"],
     steps: [],
   },
   {
@@ -435,7 +435,7 @@ export const packages: Package[] = [
       { include_key: "instrumentalInclude4" },
       { include_key: "instrumentalInclude5" },
     ],
-    available_addons: [],
+    available_addons: ["rushDelivery", "commercialRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender"],
     steps: [],
   },
   {
@@ -452,7 +452,7 @@ export const packages: Package[] = [
       { include_key: "giftInclude2" },
       { include_key: "giftInclude3" },
     ],
-    available_addons: ["giftCustomPackaging", "giftPhysicalCard"],
+    available_addons: [],
     steps: [],
     tag: "gift",
   },
@@ -475,7 +475,7 @@ export const packages: Package[] = [
       { include_key: "weddingInclude7" },
       { include_key: "weddingInclude8" }
     ],
-    available_addons: ["personalizedAudioMessage", "godparentsSpecialMelody"],
+    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender", "extendedSong", "godparentsmelody"],
     steps: weddingOrderFlow.steps,
     tag: "new"
   },
@@ -496,7 +496,7 @@ export const packages: Package[] = [
       { include_key: "baptismInclude5" },
       { include_key: "baptismInclude6" }
     ],
-    available_addons: ["personalizedAudioMessage"],
+    available_addons: ["rushDelivery", "commercialRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: baptismOrderFlow.steps,
     tag: "new"
   },
@@ -517,7 +517,7 @@ export const packages: Package[] = [
       { include_key: "comingOfAgeInclude5" },
       { include_key: "comingOfAgeInclude6" }
     ],
-    available_addons: ["personalizedAudioMessage"],
+    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: comingOfAgeOrderFlow.steps,
     tag: "new"
   }
@@ -529,145 +529,73 @@ export const addOns: AddOn[] = [
     value: "rushDelivery",
     label_key: "rushDelivery",
     description_key: "rushDeliveryDesc",
-    price_ron: 0,
-    price_eur: 0,
-    availableFor: []
-  },
-  {
-    id: "extraRevision",
-    value: "extraRevision",
-    label_key: "extraRevision",
-    description_key: "extraRevisionDesc",
-    price_ron: 125,
-    price_eur: 25,
-    availableFor: []
-  },
-  {
-    id: "extendedLicense",
-    value: "extendedLicense",
-    label_key: "extendedLicense",
-    description_key: "extendedLicenseDesc",
-    price_ron: 499,
-    price_eur: 99,
-    availableFor: []
-  },
-  {
-    id: "sourceFiles",
-    value: "sourceFiles",
-    label_key: "sourceFiles",
-    description_key: "sourceFilesDesc",
-    price_ron: 375,
-    price_eur: 75,
-    availableFor: []
-  },
-  {
-    id: "personalDuet",
-    value: "personalDuet",
-    label_key: "personalDuet",
-    description_key: "personalDuetDesc",
-    price_ron: 175,
-    price_eur: 35,
-    availableFor: ["personal"]
-  },
-  {
-    id: "personalInstrumental",
-    value: "personalInstrumental",
-    label_key: "personalInstrumental",
-    description_key: "personalInstrumentalDesc",
     price_ron: 100,
     price_eur: 20,
-    availableFor: ["personal"]
+    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix', 'wedding', 'baptism', 'comingOfAge']
   },
   {
-    id: "premiumExtendedVideo",
-    value: "premiumExtendedVideo",
-    label_key: "premiumExtendedVideo",
-    description_key: "premiumExtendedVideoDesc",
-    price_ron: 750,
-    price_eur: 150,
-    availableFor: ["premium"]
+    id: "commercialRights",
+    value: "commercialRights",
+    label_key: "commercialRights",
+    description_key: "commercialRightsDesc",
+    price_ron: 0,
+    price_eur: 0,
+    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix', 'wedding', 'baptism', 'comingOfAge']
   },
   {
-    id: "premiumSocialKit",
-    value: "premiumSocialKit",
-    label_key: "premiumSocialKit",
-    description_key: "premiumSocialKitDesc",
-    price_ron: 250,
-    price_eur: 50,
-    availableFor: ["premium"]
+    id: "distributieMangoRecords",
+    value: "distributieMangoRecords",
+    label_key: "distributieMangoRecords",
+    description_key: "distributieMangoRecordsDesc",
+    price_ron: 200,
+    price_eur: 40,
+    availableFor: ['personal', 'remix', 'instrumental', 'wedding', 'baptism']
   },
   {
-    id: "businessMultipleVersions",
-    value: "businessMultipleVersions",
-    label_key: "businessMultipleVersions",
-    description_key: "businessMultipleVersionsDesc",
-    price_ron: 500,
-    price_eur: 100,
-    availableFor: ["business"]
+    id: "customVideo",
+    value: "customVideo",
+    label_key: "customVideo",
+    description_key: "customVideoDesc",
+    price_ron: 149,
+    price_eur: 30,
+    availableFor: ['personal', 'business', 'premium', 'instrumental', 'remix', 'wedding', 'baptism', 'comingOfAge']
   },
   {
-    id: "businessJingleKit",
-    value: "businessJingleKit",
-    label_key: "businessJingleKit",
-    description_key: "businessJingleKitDesc",
-    price_ron: 750,
-    price_eur: 150,
-    availableFor: ["business"]
+    id: "audioMessageFromSender",
+    value: "audioMessageFromSender",
+    label_key: "audioMessageFromSender",
+    description_key: "audioMessageFromSenderDesc",
+    price_ron: 100,
+    price_eur: 20,
+    availableFor: ['personal', 'business', 'premium', 'wedding', 'baptism', 'comingOfAge']
   },
   {
-    id: "artistVocalCoaching",
-    value: "artistVocalCoaching",
-    label_key: "artistVocalCoaching",
-    description_key: "artistVocalCoachingDesc",
+    id: "commercialRightsUpgrade",
+    value: "commercialRightsUpgrade",
+    label_key: "commercialRightsUpgrade",
+    description_key: "commercialRightsUpgradeDesc",
     price_ron: 400,
     price_eur: 80,
-    availableFor: ["artist"]
+    availableFor: ['business']
   },
   {
-    id: "artistMusicVideo",
-    value: "artistMusicVideo",
-    label_key: "artistMusicVideo",
-    description_key: "artistMusicVideoDesc",
-    price_ron: 2500,
-    price_eur: 500,
-    availableFor: ["artist"]
+    id: "extendedSong",
+    value: "extendedSong",
+    label_key: "extendedSong",
+    description_key: "extendedSongDesc",
+    price_ron: 49,
+    price_eur: 10,
+    availableFor: ['personal', 'premium', 'business', 'wedding', 'baptism', 'comingOfAge']
   },
   {
-    id: "giftCustomPackaging",
-    value: "giftCustomPackaging",
-    label_key: "giftCustomPackaging",
-    description_key: "giftCustomPackagingDesc",
-    price_ron: 125,
-    price_eur: 25,
-    availableFor: ["gift"]
-  },
-  {
-    id: "giftPhysicalCard",
-    value: "giftPhysicalCard",
-    label_key: "giftPhysicalCard",
-    description_key: "giftPhysicalCardDesc",
-    price_ron: 75,
-    price_eur: 15,
-    availableFor: ["gift"]
-  },
-  {
-    id: "personalizedAudioMessage",
-    value: "personalizedAudioMessage",
-    label_key: "personalizedAudioMessage",
-    description_key: "personalizedAudioMessageDesc",
-    price_ron: 149,
-    price_eur: 29,
-    availableFor: ["wedding", "baptism", "coming-of-age"]
-  },
-  {
-    id: "godparentsSpecialMelody",
-    value: "godparentsSpecialMelody",
-    label_key: "godparentsSpecialMelody",
-    description_key: "godparentsSpecialMelodyDesc",
-    price_ron: 249,
-    price_eur: 49,
-    availableFor: ["wedding"]
-  },
+    id: "godparentsmelody",
+    value: "godparentsmelody",
+    label_key: "godparentsmelody",
+    description_key: "godparentsmelodyDesc",
+    price_ron: 199,
+    price_eur: 40,
+    availableFor: ['wedding']
+  }
 ];
 
 // Export PackageData type alias
