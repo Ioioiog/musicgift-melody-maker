@@ -127,7 +127,7 @@ const Packages = () => {
                         {t('popular', 'Popular')}
                       </Badge>
                     )}
-                    <CardTitle className="text-xl mb-2 text-white">
+                    <CardTitle className="text-2xl md:text-3xl font-bold text-white mb-3 leading-tight tracking-wide bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent drop-shadow-lg">
                       {t(pkg.label_key)}
                     </CardTitle>
                     <CardDescription className="text-white/80">
