@@ -40,7 +40,7 @@ const Packages = () => {
           {t('startingFrom', 'Starting from')} {currency === 'EUR' ? '€59' : '299 RON'}
         </div>;
     }
-    return <div className="text-3xl font-bold text-white bg-orange-500 px-[12px] mx-[97px]">
+    return <div className="text-3xl font-bold text-white bg-orange-500 py-0 my-0 mx-[79px] px-[18px]">
         {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}
       </div>;
   };
@@ -127,7 +127,7 @@ const Packages = () => {
                       {t(pkg.delivery_time_key)}
                     </div>
                   </CardHeader>
-                  <CardContent className="flex-1 flex flex-col">
+                  <CardContent className="flex-1 flex flex-col mx-0 py-[4px] my-0">
                     <div className="flex-1">
                       <h4 className="font-semibold mb-3 text-orange-500 text-center">{t('whatsIncluded', 'What\'s included:')}</h4>
                       <ul className="space-y-2 mb-6">
