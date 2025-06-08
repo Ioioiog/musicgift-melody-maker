@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -25,12 +26,12 @@ export const packagesTranslations = {
   
   // Package descriptions
   plusDescription: "Cea mai simplă modalitate de a crea un mesaj muzical personalizat. Perfect pentru surprize rapide și testarea serviciului nostru.",
-  personalDescription: "Perfect pentru zile de naștere, nunți sau ocazii speciale – transformăm povestea ta într-un cadou muzical unic și emoționant.",
-  premiumDescription: "Lansare completă. Expune povestea ta întregii lumi. Muzică originală, video animat DOMG și distribuție globală prin canalul Mango Records (+100k).",
+  personalDescription: "Cadoul perfect pentru zile de naștere, nunți sau ocazii speciale – transformăm povestea ta sau a cui vrei sa-I oferi - într-un cadou muzical unic și emoționant.",
+  premiumDescription: "Lansare completă. Piesa ta sau piesa dăruitǎ de tine cadou devine publicǎ. Însoțitǎ de un videoclip animat si distribuitǎ la nivel global prin rețeaua Mango Records.",
   businessDescription: "Oferă brandului tău o voce memorabilă. Creat pentru companiile care vor o melodie originală pentru branding, campanii sau reclame cu impact emoțional.",
   artistDescription: "Lansează-ți cariera muzicală cu o melodie de top. Pentru artiștii dedicați care vor o melodie originală, distribuție completă și co-proprietate asupra drepturilor.",
-  remixDescription: "Readuci melodia ta la viață într-un stil complet nou. Pentru artiști sau creatori care dețin drepturile asupra melodiei originale și vor o versiune remixată într-un alt gen.",
-  instrumentalDescription: "Creează pe baza unui instrumental construit special pentru tine. Pentru artiștii care vor să-și scrie propria melodie, dar au nevoie de un instrumental personalizat și profesional.",
+  remixDescription: "Readuci melodia ta la viață într-un stil complet nou. Pentru artiști sau creatori care dețin drepturile asupra melodiei originale și vor o versiune remixată sau rearanjatǎ într-un alt gen.",
+  instrumentalDescription: "Creat pe baza unui instrumental construit special pentru tine. Ideal pentru artiști care vor să-și scrie propria cântec si au nevoie de un instrumental personalizat, profesionist si original.",
   giftDescription: "O poveste muzicală dăruită cadou. Perfect pentru a surprinde pe cineva drag – beneficiarul alege singur stilul și atmosfera melodiei.",
   
   // Delivery times
@@ -48,19 +49,20 @@ export const packagesTranslations = {
   plusInclude2: "Calitate de producție de bază",
   plusInclude3: "Livrare digitală în 1–2 zile",
   
-  personalInclude1: "Melodie originală creată după povestea ta",
-  personalInclude2: "Voce profesională din echipa MusicGift",
+  personalInclude1: "Melodie originală si unicǎ creată pe baza poveștii tale",
+  personalInclude2: "Interpretare vocalǎ expresivǎ, realizatǎ cu grijǎ de echipa MusicGift & Do Music for Good Band",
   personalInclude3: "Livrare digitală în 3–5 zile",
-  personalInclude4: "Drepturi de uz personal (necomercial)",
+  personalInclude4: "Drepturi de uz personal",
   
   premiumInclude1: "Melodie originală cu producție completă",
-  premiumInclude2: "Video animat (stil \"Do Music for Good\")",
-  premiumInclude3: "Distribuție digitală oficială prin Mango Records (+100k)",
+  premiumInclude2: "Video animat (stil \"MusicGift\")",
+  premiumInclude3: "Publicare prin canalul Mango Records si distribuție digitală oficială prin Mango Records",
   
-  businessInclude1: "Melodie personalizată pentru business-ul tău",
-  businessInclude2: "Producție profesională și voce de studio",
-  businessInclude3: "Mix & Master de calitate superioară",
-  businessInclude4: "Licență comercială limitată",
+  businessInclude1: "Sesiune de brainstorming cu echipa MusicGift pentru a ințelege viziunea si valorile brandului",
+  businessInclude2: "Melodie personalizată pentru business-ul tău",
+  businessInclude3: "Producție completǎ, cu voce adaptatǎ brandului tǎu",
+  businessInclude4: "Mix & Master de calitate superioară",
+  businessInclude5: "Licență comercială ( În funcție de direcția si dorința clientului )",
   
   artistInclude1: "Melodie originală + instrumental profesional",
   artistInclude2: "Ghid vocal + înregistrare voce de studio",
@@ -74,10 +76,10 @@ export const packagesTranslations = {
   remixInclude5: "Versiune scurtă pentru social media (opțional)",
   remixInclude6: "Necesită trimiterea melodiei originale",
   
-  instrumentalInclude1: "Instrumental original compus de MusicGift",
+  instrumentalInclude1: "Instrumental original compus de la zero de echipa MusicGift",
   instrumentalInclude2: "Aranjament complet: beat, armonii, structură",
   instrumentalInclude3: "Fără voce – spațiu pentru interpretarea ta",
-  instrumentalInclude4: "Fișier audio profesional (WAV sau MP3)",
+  instrumentalInclude4: "Fișier audio profesional (WAV HQ sau MP3 și opțional STEM-uri separate. )",
   instrumentalInclude5: "Licență comercială limitată",
   
   giftInclude1: "Card cadou digital valabil pentru orice pachet MusicGift",
@@ -214,7 +216,7 @@ export const packagesTranslations = {
   comingOfAgeTagline: "Un imn personalizat pentru călătoria către maturitate",
   
   // New Package descriptions
-  weddingDescription: "Ați visat să nu dansați cel mai important dans al vieții voastre pe aceeași melodie pe care au dansat-o și alții? Creați o melodie originală personalizată pentru dansul mirilor sau al nașilor, bazată pe povestea lor de dragoste sau prietenie.",
+  weddingDescription: "Ați visat să nu dansați cel mai important dans al vieții voastre pe aceeași melodie pe care au dansat-o și alții? MusicGift creeazǎ o melodie originală, personalizată pentru dansul mirilor sau al nașilor, bazată pe povestea lor de dragoste sau prietenie.",
   baptismDescription: "O melodie originală, emoționantă și personalizată dedicată copilului botezat – ideală pentru a fi cântată sau redată la eveniment și pentru a rămâne o amintire pe viață.",
   comingOfAgeDescription: "Un cadou muzical unic și emoționant pentru un tânăr sau o tânără care împlinește 18 ani – creat din povestea, energia și aspirațiile lor.",
   
@@ -224,12 +226,12 @@ export const packagesTranslations = {
   comingOfAgeDelivery: "5–7 zile lucrătoare",
   
   // Wedding Package includes
-  weddingInclude1: "Consultanță creativă (povestea mirilor/nașilor)",
-  weddingInclude2: "Compoziție melodie personalizată + versuri",
+  weddingInclude1: "Sesiune de consultanță creativă intre miri si echipa MusicGift (povestea mirilor/nașilor)",
+  weddingInclude2: "Compoziție melodie personalizată + versuri scrise special pentru voi",
   weddingInclude3: "Instrumental original",
-  weddingInclude4: "Voce profesională (feminină/masculină)",
+  weddingInclude4: "Interpretare vocalǎ expresivǎ",
   weddingInclude5: "Mix & master profesional",
-  weddingInclude6: "Fișiere finale WAV + MP3",
+  weddingInclude6: "Fișiere finale WAV HQ + MP3",
   weddingInclude7: "Revizie gratuită (1x)",
   weddingInclude8: "O solicitare de modificare inclusă",
   
@@ -242,10 +244,10 @@ export const packagesTranslations = {
   baptismInclude6: "Fișiere finale WAV + MP3",
   
   // Coming of Age Package includes
-  comingOfAgeInclude1: "Interviu/brief despre sărbătorit",
+  comingOfAgeInclude1: "Interviu/brief despre sărbătorit cu echipa MusicGift",
   comingOfAgeInclude2: "Versuri personalizate despre visurile, pasiunile și personalitatea lor",
   comingOfAgeInclude3: "Vibe adaptat (hip-hop, pop, trap, lofi, etc.)",
-  comingOfAgeInclude4: "Melodie originală compusă + voce profesională",
+  comingOfAgeInclude4: "Melodie originală compusă de la zero",
   comingOfAgeInclude5: "Mix & master profesional",
   comingOfAgeInclude6: "Fișiere finale WAV + MP3",
   
