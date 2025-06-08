@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy, Heart, Shield, Clock, Award, Users, Globe } from "lucide-react";
+import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy, Heart, Shield, Clock, Award, Users, Globe, Headphones, Zap, CheckCircle } from "lucide-react";
 
 const About = () => {
   const {
@@ -245,6 +245,46 @@ const About = () => {
                       <div>
                         <h4 className="font-semibold text-white text-sm">{t('dedication') || 'Dedication'}</h4>
                         <p className="text-white/80 text-sm">{t('dedicationDesc') || 'We invest time and care into understanding your story to create music that truly represents your emotions.'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Why Choose Us Section */}
+                <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 0.9
+              }}>
+                  <h3 className="text-xl font-bold text-white mb-4">{t('whyChooseUs') || 'Why Choose Us'}</h3>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <Headphones className="w-6 h-6 text-cyan-400 mt-1 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-semibold text-white text-sm">{t('uniqueApproach') || 'Unique Approach'}</h4>
+                        <p className="text-white/80 text-sm">{t('uniqueApproachDesc') || 'We combine personal storytelling with professional music production to create truly one-of-a-kind songs.'}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Zap className="w-6 h-6 text-orange-400 mt-1 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-semibold text-white text-sm">{t('fastDelivery') || 'Fast Delivery'}</h4>
+                        <p className="text-white/80 text-sm">{t('fastDeliveryDesc') || 'Professional quality music delivered within 7-14 days, perfect for special occasions and gift-giving.'}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <CheckCircle className="w-6 h-6 text-green-400 mt-1 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-semibold text-white text-sm">{t('satisfactionGuarantee') || 'Satisfaction Guarantee'}</h4>
+                        <p className="text-white/80 text-sm">{t('satisfactionGuaranteeDesc') || '100% satisfaction guarantee with unlimited revisions until your song perfectly captures your story.'}</p>
                       </div>
                     </div>
                   </div>
