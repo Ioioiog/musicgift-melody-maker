@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Wählen Sie Ihr Paket",
   selectPerfectPackage: "Wählen Sie das perfekte Paket, das zu Ihren Bedürfnissen und Ihrem Budget passt",
@@ -97,4 +96,43 @@ export const packagesTranslations = {
   reload: "Neu laden",
   noPackagesAvailable: "Momentan sind keine Pakete verfügbar.",
   checkBackLater: "Bitte schauen Sie später noch einmal vorbei.",
+  
+  // Did You Know section
+  didYouKnow: "Wussten Sie?",
+  
+  // Personal package facts
+  didYouKnowPersonal1Title: "Musik löst Erinnerungen aus",
+  didYouKnowPersonal1Desc: "Studien zeigen, dass personalisierte Lieder stärkere emotionale Erinnerungen auslösen können als generische Musik, was sie perfekt für besondere Anlässe macht.",
+  didYouKnowPersonal2Title: "Einzigartige Geschenkwirkung",
+  didYouKnowPersonal2Desc: "Personalisierte Geschenke werden 3x länger in Erinnerung behalten als traditionelle Geschenke und schaffen dauerhafte emotionale Verbindungen.",
+  
+  // Premium package facts
+  didYouKnowPremium1Title: "Globales Reichweitenpotenzial",
+  didYouKnowPremium1Desc: "Global vertriebene Lieder können über 100 Millionen potenzielle Hörer auf allen großen Streaming-Plattformen erreichen.",
+  didYouKnowPremium2Title: "Video-Engagement",
+  didYouKnowPremium2Desc: "Musikvideos erhalten 1200% mehr Shares als Text und Bilder zusammen auf Social-Media-Plattformen.",
+  
+  // Business package facts
+  didYouKnowBusiness1Title: "Markenwiedererkennungs-Boost",
+  didYouKnowBusiness1Desc: "Marken mit benutzerdefinierten Jingles haben 96% höhere Wiedererinnerungsraten im Vergleich zu denen, die generische Hintergrundmusik verwenden.",
+  didYouKnowBusiness2Title: "Emotionales Marketing",
+  didYouKnowBusiness2Desc: "Emotionaler Inhalt wird 2x mehr geteilt als rationaler Inhalt, was benutzerdefinierte Lieder zu mächtigen Marketing-Tools macht.",
+  
+  // Artist package facts
+  didYouKnowArtist1Title: "Der erste Eindruck zählt",
+  didYouKnowArtist1Desc: "Musikindustrie-Profis entscheiden innerhalb der ersten 15 Sekunden, ob ein Lied Potenzial hat, was die Bedeutung professioneller Produktion unterstreicht.",
+  didYouKnowArtist2Title: "Streaming-Erfolg",
+  didYouKnowArtist2Desc: "Unabhängige Künstler machen 43% des globalen Musikmarktes aus und beweisen, dass Qualitätsproduktion mit Major Labels konkurrieren kann.",
+  
+  // Gift package facts
+  didYouKnowGift1Title: "Erlebnisgeschenke",
+  didYouKnowGift1Desc: "Erlebnisbasierte Geschenke wie benutzerdefinierte Lieder schaffen länger anhaltende Freude als materielle Geschenke, laut psychologischen Studien.",
+  didYouKnowGift2Title: "Musikalische Bindung",
+  didYouKnowGift2Desc: "Das Teilen von Musik stärkt Beziehungen durch die Freisetzung von Oxytocin, dem 'Bindungshormon', was musikalische Geschenke besonders bedeutsam macht.",
+  
+  // General facts
+  didYouKnowGeneral1Title: "Musik und Emotionen",
+  didYouKnowGeneral1Desc: "Musik aktiviert dieselben neuronalen Bahnen wie Essen, Sex und Drogen, was erklärt, warum personalisierte Lieder so belohnend wirken.",
+  didYouKnowGeneral2Title: "Gedächtnisverbesserung",
+  didYouKnowGeneral2Desc: "Das menschliche Gehirn kann sich jahrzehntelang an Texte und Melodien erinnern, was Lieder zu perfekten Zeitkapseln für die Bewahrung von Erinnerungen macht.",
 };

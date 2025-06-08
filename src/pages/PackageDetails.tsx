@@ -1,6 +1,5 @@
-
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Check, Clock, Star, Users, Mic, Music, FileText, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Check, Clock, Star, Users, Mic, Music, FileText, HelpCircle, ChevronDown, ChevronUp, Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -115,6 +114,83 @@ const PackageDetails = () => {
     return baseFeatures;
   };
 
+  // Did you know facts based on package type
+  const getDidYouKnowFacts = (packageValue: string) => {
+    switch (packageValue) {
+      case 'personal':
+        return [
+          {
+            title: t('didYouKnowPersonal1Title', 'Music triggers memories'),
+            description: t('didYouKnowPersonal1Desc', 'Studies show that personalized songs can trigger stronger emotional memories than generic music, making them perfect for special occasions.')
+          },
+          {
+            title: t('didYouKnowPersonal2Title', 'Unique gift impact'),
+            description: t('didYouKnowPersonal2Desc', 'Personalized gifts are remembered 3x longer than traditional gifts, creating lasting emotional connections.')
+          }
+        ];
+      
+      case 'premium':
+        return [
+          {
+            title: t('didYouKnowPremium1Title', 'Global reach potential'),
+            description: t('didYouKnowPremium1Desc', 'Songs distributed globally can reach over 100 million potential listeners across all major streaming platforms.')
+          },
+          {
+            title: t('didYouKnowPremium2Title', 'Video engagement'),
+            description: t('didYouKnowPremium2Desc', 'Music videos receive 1200% more shares than text and images combined on social media platforms.')
+          }
+        ];
+      
+      case 'business':
+        return [
+          {
+            title: t('didYouKnowBusiness1Title', 'Brand recall boost'),
+            description: t('didYouKnowBusiness1Desc', 'Brands with custom jingles have 96% higher recall rates compared to those using generic background music.')
+          },
+          {
+            title: t('didYouKnowBusiness2Title', 'Emotional marketing'),
+            description: t('didYouKnowBusiness2Desc', 'Emotional content is shared 2x more than rational content, making custom songs powerful marketing tools.')
+          }
+        ];
+      
+      case 'artist':
+        return [
+          {
+            title: t('didYouKnowArtist1Title', 'First impression matters'),
+            description: t('didYouKnowArtist1Desc', 'Music industry professionals decide within the first 15 seconds if a song has potential, highlighting the importance of professional production.')
+          },
+          {
+            title: t('didYouKnowArtist2Title', 'Streaming success'),
+            description: t('didYouKnowArtist2Desc', 'Independent artists account for 43% of the global music market, proving that quality production can compete with major labels.')
+          }
+        ];
+      
+      case 'gift':
+        return [
+          {
+            title: t('didYouKnowGift1Title', 'Experience gifts'),
+            description: t('didYouKnowGift1Desc', 'Experience-based gifts like custom songs create longer-lasting happiness than material gifts, according to psychological studies.')
+          },
+          {
+            title: t('didYouKnowGift2Title', 'Musical bonding'),
+            description: t('didYouKnowGift2Desc', 'Sharing music strengthens relationships by releasing oxytocin, the "bonding hormone", making musical gifts especially meaningful.')
+          }
+        ];
+      
+      default:
+        return [
+          {
+            title: t('didYouKnowGeneral1Title', 'Music and emotions'),
+            description: t('didYouKnowGeneral1Desc', 'Music activates the same neural pathways as food, sex, and drugs, explaining why personalized songs feel so rewarding.')
+          },
+          {
+            title: t('didYouKnowGeneral2Title', 'Memory enhancement'),
+            description: t('didYouKnowGeneral2Desc', 'The human brain can remember lyrics and melodies for decades, making songs perfect time capsules for preserving memories.')
+          }
+        ];
+    }
+  };
+
   // Package-specific delivery timeline
   const getDeliverySteps = (packageValue: string) => {
     switch (packageValue) {
@@ -167,6 +243,7 @@ const PackageDetails = () => {
 
   const packageFeatures = getPackageFeatures(packageData.value);
   const deliverySteps = getDeliverySteps(packageData.value);
+  const didYouKnowFacts = getDidYouKnowFacts(packageData.value);
   const relatedPackages = packages?.filter(pkg => pkg.value !== packageData.value).slice(0, 2);
 
   return (
@@ -261,6 +338,26 @@ const PackageDetails = () => {
                           <h4 className="font-semibold text-white mb-1">{feature.title}</h4>
                           <p className="text-white/70 text-sm">{feature.description}</p>
                         </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Did You Know Section */}
+              <Card className="bg-white/10 backdrop-blur-md border border-white/20">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Lightbulb className="w-5 h-5 mr-2 text-yellow-400" />
+                    {t('didYouKnow', 'Știai că?')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {didYouKnowFacts.map((fact, index) => (
+                      <div key={index} className="p-4 rounded-lg bg-white/5 border border-white/10">
+                        <h4 className="font-semibold text-white mb-2">{fact.title}</h4>
+                        <p className="text-white/80 text-sm leading-relaxed">{fact.description}</p>
                       </div>
                     ))}
                   </div>

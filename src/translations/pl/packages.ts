@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Wybierz swój pakiet",
   selectPerfectPackage: "Wybierz idealny pakiet, który pasuje do twoich potrzeb i budżetu",
@@ -97,4 +96,43 @@ export const packagesTranslations = {
   reload: "Przeładuj",
   noPackagesAvailable: "Obecnie brak dostępnych pakietów.",
   checkBackLater: "Sprawdź ponownie później.",
+  
+  // Did You Know section
+  didYouKnow: "Czy Wiesz, że?",
+  
+  // Personal package facts
+  didYouKnowPersonal1Title: "Muzyka wyzwala wspomnienia",
+  didYouKnowPersonal1Desc: "Badania pokazują, że spersonalizowane piosenki mogą wyzwalać silniejsze emocjonalne wspomnienia niż muzyka generyczna, czyniąc je idealnymi na specjalne okazje.",
+  didYouKnowPersonal2Title: "Wpływ wyjątkowych prezentów",
+  didYouKnowPersonal2Desc: "Spersonalizowane prezenty są pamiętane 3 razy dłużej niż tradycyjne prezenty, tworząc trwałe więzi emocjonalne.",
+  
+  // Premium package facts
+  didYouKnowPremium1Title: "Potencjał globalnego zasięgu",
+  didYouKnowPremium1Desc: "Piosenki dystrybuowane globalnie mogą dotrzeć do ponad 100 milionów potencjalnych słuchaczy na wszystkich głównych platformach streamingowych.",
+  didYouKnowPremium2Title: "Zaangażowanie wideo",
+  didYouKnowPremium2Desc: "Teledyski otrzymują 1200% więcej udostępnień niż tekst i obrazy łącznie na platformach mediów społecznościowych.",
+  
+  // Business package facts
+  didYouKnowBusiness1Title: "Zwiększenie rozpoznawalności marki",
+  didYouKnowBusiness1Desc: "Marki z niestandardowymi jingleami mają o 96% wyższe wskaźniki zapamiętywania w porównaniu z tymi używającymi generycznej muzyki tła.",
+  didYouKnowBusiness2Title: "Marketing emocjonalny",
+  didYouKnowBusiness2Desc: "Treści emocjonalne są udostępniane 2 razy częściej niż treści racjonalne, czyniąc niestandardowe piosenki potężnymi narzędziami marketingowymi.",
+  
+  // Artist package facts
+  didYouKnowArtist1Title: "Pierwsze wrażenie się liczy",
+  didYouKnowArtist1Desc: "Profesjonaliści z branży muzycznej decydują w ciągu pierwszych 15 sekund, czy piosenka ma potencjał, podkreślając znaczenie profesjonalnej produkcji.",
+  didYouKnowArtist2Title: "Sukces streamingu",
+  didYouKnowArtist2Desc: "Niezależni artyści stanowią 43% globalnego rynku muzycznego, udowadniając, że jakościowa produkcja może konkurować z wielkimi wytwórniami.",
+  
+  // Gift package facts
+  didYouKnowGift1Title: "Prezenty doświadczeń",
+  didYouKnowGift1Desc: "Prezenty oparte na doświadczeniach, jak niestandardowe piosenki, tworzą długotrwałe szczęście niż prezenty materialne, zgodnie z badaniami psychologicznymi.",
+  didYouKnowGift2Title: "Więź muzyczna",
+  didYouKnowGift2Desc: "Dzielenie się muzyką wzmacnia relacje poprzez uwalnianie oksytocyny, 'hormonu więzi', czyniąc prezenty muzyczne szczególnie znaczącymi.",
+  
+  // General facts
+  didYouKnowGeneral1Title: "Muzyka i emocje",
+  didYouKnowGeneral1Desc: "Muzyka aktywuje te same ścieżki neuronalne co jedzenie, seks i narkotyki, wyjaśniając dlaczego spersonalizowane piosenki są tak satysfakcjonujące.",
+  didYouKnowGeneral2Title: "Wzmocnienie pamięci",
+  didYouKnowGeneral2Desc: "Ludzki mózg może pamiętać teksty i melodie przez dziesięciolecia, czyniąc piosenki idealnymi kapsułami czasu do zachowania wspomnień.",
 };

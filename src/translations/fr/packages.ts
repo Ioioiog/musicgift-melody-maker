@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Choisissez votre forfait",
   selectPerfectPackage: "Sélectionnez le forfait parfait qui correspond à vos besoins et votre budget",
@@ -97,4 +96,43 @@ export const packagesTranslations = {
   reload: "Recharger",
   noPackagesAvailable: "Aucun forfait disponible pour le moment.",
   checkBackLater: "Veuillez revenir plus tard.",
+  
+  // Did You Know section
+  didYouKnow: "Le Saviez-vous ?",
+  
+  // Personal package facts
+  didYouKnowPersonal1Title: "La musique déclenche des souvenirs",
+  didYouKnowPersonal1Desc: "Des études montrent que les chansons personnalisées peuvent déclencher des souvenirs émotionnels plus forts que la musique générique, les rendant parfaites pour les occasions spéciales.",
+  didYouKnowPersonal2Title: "Impact des cadeaux uniques",
+  didYouKnowPersonal2Desc: "Les cadeaux personnalisés sont mémorisés 3 fois plus longtemps que les cadeaux traditionnels, créant des connexions émotionnelles durables.",
+  
+  // Premium package facts
+  didYouKnowPremium1Title: "Potentiel de portée mondiale",
+  didYouKnowPremium1Desc: "Les chansons distribuées mondialement peuvent atteindre plus de 100 millions d'auditeurs potentiels sur toutes les principales plateformes de streaming.",
+  didYouKnowPremium2Title: "Engagement vidéo",
+  didYouKnowPremium2Desc: "Les vidéos musicales reçoivent 1200% de partages en plus que le texte et les images combinés sur les plateformes de médias sociaux.",
+  
+  // Business package facts
+  didYouKnowBusiness1Title: "Amélioration de la mémorisation de marque",
+  didYouKnowBusiness1Desc: "Les marques avec des jingles personnalisés ont des taux de mémorisation 96% plus élevés comparés à celles utilisant de la musique de fond générique.",
+  didYouKnowBusiness2Title: "Marketing émotionnel",
+  didYouKnowBusiness2Desc: "Le contenu émotionnel est partagé 2 fois plus que le contenu rationnel, faisant des chansons personnalisées des outils de marketing puissants.",
+  
+  // Artist package facts
+  didYouKnowArtist1Title: "La première impression compte",
+  didYouKnowArtist1Desc: "Les professionnels de l'industrie musicale décident dans les 15 premières secondes si une chanson a du potentiel, soulignant l'importance de la production professionnelle.",
+  didYouKnowArtist2Title: "Succès du streaming",
+  didYouKnowArtist2Desc: "Les artistes indépendants représentent 43% du marché musical mondial, prouvant qu'une production de qualité peut concurrencer les grandes maisons de disques.",
+  
+  // Gift package facts
+  didYouKnowGift1Title: "Cadeaux d'expérience",
+  didYouKnowGift1Desc: "Les cadeaux basés sur l'expérience comme les chansons personnalisées créent un bonheur plus durable que les cadeaux matériels, selon les études psychologiques.",
+  didYouKnowGift2Title: "Lien musical",
+  didYouKnowGift2Desc: "Partager de la musique renforce les relations en libérant de l'ocytocine, 'l'hormone du lien', rendant les cadeaux musicaux particulièrement significatifs.",
+  
+  // General facts
+  didYouKnowGeneral1Title: "Musique et émotions",
+  didYouKnowGeneral1Desc: "La musique active les mêmes voies neurales que la nourriture, le sexe et les drogues, expliquant pourquoi les chansons personnalisées sont si gratifiantes.",
+  didYouKnowGeneral2Title: "Amélioration de la mémoire",
+  didYouKnowGeneral2Desc: "Le cerveau humain peut se souvenir des paroles et mélodies pendant des décennies, faisant des chansons des capsules temporelles parfaites pour préserver les souvenirs.",
 };

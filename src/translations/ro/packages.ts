@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -97,4 +96,43 @@ export const packagesTranslations = {
   reload: "Reîncarcă",
   noPackagesAvailable: "Nu sunt pachete disponibile momentan.",
   checkBackLater: "Te rugăm să revii mai târziu.",
+  
+  // Did You Know section
+  didYouKnow: "Știai că?",
+  
+  // Personal package facts
+  didYouKnowPersonal1Title: "Muzica declanșează amintiri",
+  didYouKnowPersonal1Desc: "Studiile arată că melodiile personalizate pot declanșa amintiri emoționale mai puternice decât muzica generică, făcându-le perfecte pentru ocazii speciale.",
+  didYouKnowPersonal2Title: "Impactul cadourilor unice",
+  didYouKnowPersonal2Desc: "Cadourile personalizate sunt ținute minte de 3 ori mai mult decât cadourile tradiționale, creând conexiuni emoționale durabile.",
+  
+  // Premium package facts
+  didYouKnowPremium1Title: "Potențialul de reach global",
+  didYouKnowPremium1Desc: "Melodiile distribuite global pot ajunge la peste 100 de milioane de ascultători potențiali pe toate platformele majore de streaming.",
+  didYouKnowPremium2Title: "Engagement-ul video",
+  didYouKnowPremium2Desc: "Videoclipurile muzicale primesc cu 1200% mai multe share-uri decât textul și imaginile combinate pe platformele social media.",
+  
+  // Business package facts
+  didYouKnowBusiness1Title: "Creșterea recunoașterii mărcii",
+  didYouKnowBusiness1Desc: "Mărcile cu jingle-uri personalizate au rate de recunoaștere cu 96% mai mari comparativ cu cele care folosesc muzică de fundal generică.",
+  didYouKnowBusiness2Title: "Marketing emoțional",
+  didYouKnowBusiness2Desc: "Conținutul emoțional este distribuit de 2 ori mai mult decât conținutul rațional, făcând melodiile personalizate instrumente puternice de marketing.",
+  
+  // Artist package facts
+  didYouKnowArtist1Title: "Prima impresie contează",
+  didYouKnowArtist1Desc: "Profesioniștii din industria muzicală decid în primele 15 secunde dacă o melodie are potențial, evidențiind importanța producției profesionale.",
+  didYouKnowArtist2Title: "Succesul în streaming",
+  didYouKnowArtist2Desc: "Artiștii independenți reprezintă 43% din piața globală de muzică, demonstrând că producția de calitate poate concura cu label-urile majore.",
+  
+  // Gift package facts
+  didYouKnowGift1Title: "Cadourile de experiență",
+  didYouKnowGift1Desc: "Cadourile bazate pe experiență, precum melodiile personalizate, creează fericire mai durabilă decât cadourile materiale, conform studiilor psihologice.",
+  didYouKnowGift2Title: "Legătura muzicală",
+  didYouKnowGift2Desc: "Împărțirea muzicii întărește relațiile prin eliberarea de oxitocină, 'hormonul legăturii', făcând cadourile muzicale deosebit de semnificative.",
+  
+  // General facts
+  didYouKnowGeneral1Title: "Muzica și emotțiile",
+  didYouKnowGeneral1Desc: "Muzica activează aceleași căi neurale ca mâncarea, sexul și drogurile, explicând de ce melodiile personalizate se simt atât de recompensante.",
+  didYouKnowGeneral2Title: "Îmbunătățirea memoriei",
+  didYouKnowGeneral2Desc: "Creierul uman poate reține versuri și melodii timp de decenii, făcând melodiile capsule temporale perfecte pentru păstrarea amintirilor.",
 };
