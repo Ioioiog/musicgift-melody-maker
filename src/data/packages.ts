@@ -396,7 +396,7 @@ export const packages: Package[] = [
       { include_key: "artistInclude3" },
       { include_key: "artistInclude4" },
     ],
-    available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "audioMessageFromSender"],
+    available_addons: [],
     steps: [],
   },
   {
