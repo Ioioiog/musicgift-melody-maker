@@ -1,4 +1,3 @@
-
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
@@ -18,7 +17,7 @@ export default function TestimonialSlider() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="bg-white/90 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden">
+              <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
                 <Skeleton className="w-full h-48" />
                 <div className="p-6">
                   <Skeleton className="h-5 w-3/4 mb-3" />
@@ -38,8 +37,8 @@ export default function TestimonialSlider() {
     return (
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-white/20 p-12">
-            <p className="text-gray-700">{t('error') || 'Error loading testimonials'}</p>
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-12">
+            <p className="text-white">{t('error') || 'Error loading testimonials'}</p>
           </div>
         </div>
       </div>
@@ -50,8 +49,8 @@ export default function TestimonialSlider() {
     return (
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-white/20 p-12">
-            <p className="text-gray-700">{t('noTestimonialsYet') || 'No testimonials available yet'}</p>
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-12">
+            <p className="text-white">{t('noTestimonialsYet') || 'No testimonials available yet'}</p>
           </div>
         </div>
       </div>
@@ -181,16 +180,16 @@ export default function TestimonialSlider() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
               >
-                {/* Text-only testimonial - clean professional design with purple background adaptation */}
+                {/* Text-only testimonial - glassmorphism design */}
                 {type === 'text-only' && (
-                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-white/20 hover:border-white/40 transition-all duration-300 p-8 h-full flex flex-col group hover:shadow-lg">
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 hover:border-white/30 transition-all duration-300 p-8 h-full flex flex-col group hover:shadow-lg">
                     {/* Quote icon */}
                     <div className="mb-6">
-                      <Quote className="w-8 h-8 text-purple-600 opacity-60" />
+                      <Quote className="w-8 h-8 text-white opacity-60" />
                     </div>
                     
                     {/* Testimonial text */}
-                    <blockquote className="text-gray-700 text-lg leading-relaxed mb-8 flex-grow">
+                    <blockquote className="text-white text-lg leading-relaxed mb-8 flex-grow">
                       "{testimonial.text}"
                     </blockquote>
                     
@@ -205,33 +204,33 @@ export default function TestimonialSlider() {
                     
                     {/* Author info */}
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                      <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-semibold text-lg border border-white/30">
                         {testimonial.name.charAt(0)}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                          <FaCheckCircle className="text-green-500 text-sm" />
+                          <h4 className="font-semibold text-white">{testimonial.name}</h4>
+                          <FaCheckCircle className="text-green-400 text-sm" />
                         </div>
                         {testimonial.location && (
-                          <p className="text-sm text-gray-500">{testimonial.location}</p>
+                          <p className="text-sm text-white/70">{testimonial.location}</p>
                         )}
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* Video testimonials - text first, then video with purple background adaptation */}
+                {/* Video testimonials - glassmorphism design */}
                 {type !== 'text-only' && (
-                  <div className="bg-white/90 backdrop-blur-sm rounded-2xl border border-white/20 hover:border-white/40 transition-all duration-300 p-8 h-full flex flex-col group hover:shadow-lg">
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 hover:border-white/30 transition-all duration-300 p-8 h-full flex flex-col group hover:shadow-lg">
                     {/* Quote icon for consistency */}
                     <div className="mb-6">
-                      <Quote className="w-8 h-8 text-purple-600 opacity-60" />
+                      <Quote className="w-8 h-8 text-white opacity-60" />
                     </div>
 
                     {/* Testimonial text FIRST */}
                     {testimonial.text && (
-                      <blockquote className="text-gray-700 text-lg leading-relaxed mb-8 flex-grow">
+                      <blockquote className="text-white text-lg leading-relaxed mb-8 flex-grow">
                         "{testimonial.text}"
                       </blockquote>
                     )}
@@ -291,16 +290,16 @@ export default function TestimonialSlider() {
                     
                     {/* Author info */}
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                      <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-semibold text-lg border border-white/30">
                         {testimonial.name.charAt(0)}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                          <FaCheckCircle className="text-green-500 text-sm" />
+                          <h4 className="font-semibold text-white">{testimonial.name}</h4>
+                          <FaCheckCircle className="text-green-400 text-sm" />
                         </div>
                         {testimonial.location && (
-                          <p className="text-sm text-gray-500">{testimonial.location}</p>
+                          <p className="text-sm text-white/70">{testimonial.location}</p>
                         )}
                       </div>
                     </div>
