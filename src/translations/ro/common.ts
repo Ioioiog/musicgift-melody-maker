@@ -87,4 +87,24 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Mărturii ale Clienților",
   testimonialsSubtitle: "Descoperă poveștile frumoase ale celor care au ales să își transforme amintirile în muzică personalizată",
+
+  // Package Details Page - Missing translations
+  backToPackages: "Înapoi la Pachete",
+  whatsIncluded: "Ce este inclus:",
+  availableAddOns: "Opțiuni Suplimentare Disponibile",
+  enhanceYourPackage: "Îmbunătățește-ți pachetul cu opțiuni suplimentare",
+  didYouKnow: "Știai că?",
+  frequentlyAsked: "Întrebări Frecvente",
+  readyToStart: "Gata să Începi?",
+  packageDetailsCta: "Creează-ți cântecul personalizat astăzi",
+  professionalQuality: "Calitate profesională garantată",
+  guarantees: "Garanțiile Noastre",
+  onTime: "Livrare la timp",
+  securePayments: "Plăți securizate",
+  otherPackages: "Alte Pachete",
+  startingFrom: "Începând de la",
+  ourGuarantees: "Garanțiile Noastre",
+  readyToCreate: "Gata să Îți Creezi Cântecul?",
+  createYourPersonalizedSong: "Creează-ți cântecul personalizat astăzi",
+  onTimeDelivery: "Livrare la timp",
 };

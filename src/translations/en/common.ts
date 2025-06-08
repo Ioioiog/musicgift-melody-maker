@@ -87,4 +87,24 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Customer Testimonials",
   testimonialsSubtitle: "Discover the beautiful stories of those who chose to transform their memories into personalized music",
+
+  // Package Details Page - Missing translations
+  backToPackages: "Back to Packages",
+  whatsIncluded: "What's included:",
+  availableAddOns: "Available Add-ons",
+  enhanceYourPackage: "Enhance your package with additional options",
+  didYouKnow: "Did You Know?",
+  frequentlyAsked: "Frequently Asked Questions",
+  readyToStart: "Ready to Start?",
+  packageDetailsCta: "Create your personalized song today",
+  professionalQuality: "Professional quality guaranteed",
+  guarantees: "Our Guarantees",
+  onTime: "On-time delivery",
+  securePayments: "Secure payments",
+  otherPackages: "Other Packages",
+  startingFrom: "Starting from",
+  ourGuarantees: "Our Guarantees",
+  readyToCreate: "Ready to Create Your Song?",
+  createYourPersonalizedSong: "Create your personalized song today",
+  onTimeDelivery: "On-time delivery",
 };

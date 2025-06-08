@@ -80,4 +80,24 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Opinie Klientów",
   testimonialsSubtitle: "Odkryj piękne historie tych, którzy zdecydowali się przekształcić swoje wspomnienia w spersonalizowaną muzykę",
+
+  // Package Details Page - Missing translations
+  backToPackages: "Powrót do Pakietów",
+  whatsIncluded: "Co jest zawarte:",
+  availableAddOns: "Dostępne Dodatki",
+  enhanceYourPackage: "Ulepsz swój pakiet dodatkowymi opcjami",
+  didYouKnow: "Czy wiesz?",
+  frequentlyAsked: "Często Zadawane Pytania",
+  readyToStart: "Gotowy do Rozpoczęcia?",
+  packageDetailsCta: "Stwórz swoją spersonalizowaną piosenkę już dziś",
+  professionalQuality: "Profesjonalna jakość gwarantowana",
+  guarantees: "Nasze Gwarancje",
+  onTime: "Dostawa na czas",
+  securePayments: "Bezpieczne płatności",
+  otherPackages: "Inne Pakiety",
+  startingFrom: "Począwszy od",
+  ourGuarantees: "Nasze Gwarancje",
+  readyToCreate: "Gotowy Stworzyć Swoją Piosenkę?",
+  createYourPersonalizedSong: "Stwórz swoją spersonalizowaną piosenkę już dziś",
+  onTimeDelivery: "Dostawa na czas",
 };

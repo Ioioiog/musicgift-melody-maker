@@ -87,4 +87,24 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Témoignages Clients",
   testimonialsSubtitle: "Découvrez les belles histoires de ceux qui ont choisi de transformer leurs souvenirs en musique personnalisée",
+
+  // Package Details Page - Missing translations
+  backToPackages: "Retour aux Forfaits",
+  whatsIncluded: "Ce qui est inclus :",
+  availableAddOns: "Options Supplémentaires Disponibles",
+  enhanceYourPackage: "Améliorez votre forfait avec des options supplémentaires",
+  didYouKnow: "Le saviez-vous ?",
+  frequentlyAsked: "Questions Fréquemment Posées",
+  readyToStart: "Prêt à Commencer ?",
+  packageDetailsCta: "Créez votre chanson personnalisée aujourd'hui",
+  professionalQuality: "Qualité professionnelle garantie",
+  guarantees: "Nos Garanties",
+  onTime: "Livraison à temps",
+  securePayments: "Paiements sécurisés",
+  otherPackages: "Autres Forfaits",
+  startingFrom: "À partir de",
+  ourGuarantees: "Nos Garanties",
+  readyToCreate: "Prêt à Créer Votre Chanson ?",
+  createYourPersonalizedSong: "Créez votre chanson personnalisée aujourd'hui",
+  onTimeDelivery: "Livraison à temps",
 };
