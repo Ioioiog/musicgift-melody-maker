@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Clock, Star, ArrowRight, Gift } from 'lucide-react';
@@ -37,21 +36,29 @@ const Packages = () => {
   };
   const renderPackagePrice = (pkg: any) => {
     if (pkg.value === 'gift') {
-      return <div className="relative group cursor-pointer">
-          <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl blur-sm group-hover:blur-md transition-all duration-300 opacity-75"></div>
-          <div className="relative bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xl md:text-2xl font-bold px-6 py-4 rounded-xl shadow-lg transform group-hover:scale-105 transition-all duration-300 text-center border border-orange-400/50">
-            <div className="flex items-center justify-center gap-2">
+      return <div className="relative group">
+          <div className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 rounded-2xl p-6 transition-all duration-300 group-hover:shadow-lg group-hover:border-orange-300">
+            <div className="flex items-center justify-center gap-2 text-orange-700">
               <Gift className="w-5 h-5" />
-              {t('startingFrom', 'Starting from')} {currency === 'EUR' ? '€59' : '299 RON'}
+              <div className="text-center">
+                <div className="text-sm font-medium text-orange-600 mb-1">
+                  {t('startingFrom', 'Starting from')}
+                </div>
+                <div className="text-2xl font-bold text-orange-800">
+                  {currency === 'EUR' ? '€59' : '299 RON'}
+                </div>
+              </div>
             </div>
           </div>
         </div>;
     }
-    return <div className="relative group cursor-pointer">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl blur-sm group-hover:blur-md transition-all duration-300 opacity-75"></div>
-        <div className="relative bg-gradient-to-r from-orange-500 to-orange-600 text-white text-2xl md:text-3xl font-bold px-8 py-5 rounded-xl shadow-lg transform group-hover:scale-105 transition-all duration-300 text-center border border-orange-400/50">
-          <div className="flex items-center justify-center">
-            {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}
+    return <div className="relative group">
+        <div className="bg-gradient-to-br from-slate-50 to-slate-100 border-2 border-slate-200 rounded-2xl p-6 transition-all duration-300 group-hover:shadow-lg group-hover:border-slate-300">
+          <div className="text-center">
+            <div className="text-sm font-medium text-slate-600 mb-2">Price</div>
+            <div className="text-3xl font-bold text-slate-800 tracking-tight">
+              {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}
+            </div>
           </div>
         </div>
       </div>;
