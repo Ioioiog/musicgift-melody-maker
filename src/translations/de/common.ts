@@ -88,14 +88,14 @@ export const commonTranslations = {
   testimonialsSubtitle: "Entdecken Sie die schönen Geschichten derer, die sich entschieden haben, ihre Erinnerungen in personalisierte Musik zu verwandeln",
   
   // Add-on labels
-  rushDeliveryLabel: "Express-Lieferung",
-  commercialRightsLabel: "Kommerzielle Rechte",
-  distributieMangoRecordsLabel: "Exklusive Mango Records Verteilung",
-  customVideoLabel: "Personalisiertes Video",
-  audioMessageFromSenderLabel: "Audio-Nachricht vom Absender",
-  commercialRightsUpgradeLabel: "Kommerzielle Rechte Upgrade",
-  extendedSongLabel: "Erweitertes Lied",
-  godparentsmelodyLabel: "Pateneltern-Melodie",
+  rushDelivery: "Express-Lieferung",
+  commercialRights: "Kommerzielle Rechte",
+  distributieMangoRecords: "Exklusive Mango Records Verteilung",
+  customVideo: "Personalisiertes Video",
+  audioMessageFromSender: "Audio-Nachricht vom Absender",
+  commercialRightsUpgrade: "Kommerzielle Rechte Upgrade",
+  extendedSong: "Erweitertes Lied",
+  godparentsmelody: "Pateneltern-Melodie",
   
   // Add-on descriptions
   rushDeliveryDesc: "Erhalten Sie Ihr Lied in 24-48 Stunden anstatt der Standard-Lieferzeit",

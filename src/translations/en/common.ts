@@ -87,15 +87,15 @@ export const commonTranslations = {
   testimonialsTitle: "Customer Testimonials",
   testimonialsSubtitle: "Discover the beautiful stories of those who chose to transform their memories into personalized music",
   
-  // Add-on labels
-  rushDeliveryLabel: "Rush Delivery",
-  commercialRightsLabel: "Commercial Rights",
-  distributieMangoRecordsLabel: "Exclusive Mango Records Distribution",
-  customVideoLabel: "Custom Video",
-  audioMessageFromSenderLabel: "Audio Message from Sender",
-  commercialRightsUpgradeLabel: "Commercial Rights Upgrade",
-  extendedSongLabel: "Extended Song",
-  godparentsmelodyLabel: "Godparents Melody",
+  // Add-on labels (fixed keys)
+  rushDelivery: "Rush Delivery",
+  commercialRights: "Commercial Rights",
+  distributieMangoRecords: "Exclusive Mango Records Distribution",
+  customVideo: "Custom Video",
+  audioMessageFromSender: "Audio Message from Sender",
+  commercialRightsUpgrade: "Commercial Rights Upgrade",
+  extendedSong: "Extended Song",
+  godparentsmelody: "Godparents Melody",
   
   // Add-on descriptions
   rushDeliveryDesc: "Receive your song in 24-48 hours instead of the standard delivery time",

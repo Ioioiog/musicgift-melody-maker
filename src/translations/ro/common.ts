@@ -88,14 +88,14 @@ export const commonTranslations = {
   testimonialsSubtitle: "Descoperă poveștile frumoase ale celor care au ales să își transforme amintirile în muzică personalizată",
   
   // Add-on labels
-  rushDeliveryLabel: "Livrare rapidă",
-  commercialRightsLabel: "Drepturi comerciale",
-  distributieMangoRecordsLabel: "Distribuție exclusivă Mango Records",
-  customVideoLabel: "Video personalizat",
-  audioMessageFromSenderLabel: "Mesaj audio de la expeditor",
-  commercialRightsUpgradeLabel: "Upgrade drepturi comerciale",
-  extendedSongLabel: "Melodie extinsă",
-  godparentsmelodyLabel: "Melodia nașilor",
+  rushDelivery: "Livrare rapidă",
+  commercialRights: "Drepturi comerciale",
+  distributieMangoRecords: "Distribuție exclusivă Mango Records",
+  customVideo: "Video personalizat",
+  audioMessageFromSender: "Mesaj audio de la expeditor",
+  commercialRightsUpgrade: "Upgrade drepturi comerciale",
+  extendedSong: "Melodie extinsă",
+  godparentsmelody: "Melodia nașilor",
   
   // Add-on descriptions
   rushDeliveryDesc: "Primește melodia ta în 24-48 de ore în loc de timpul standard de livrare",
