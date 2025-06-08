@@ -136,4 +136,71 @@ export const packagesTranslations = {
   didYouKnowGeneral1Desc: "Muzica activează aceleași căi neurale ca mâncarea, sexul și drogurile, explicând de ce melodiile personalizate se simt atât de recompensante.",
   didYouKnowGeneral2Title: "Îmbunătățirea memoriei",
   didYouKnowGeneral2Desc: "Creierul uman poate reține versuri și melodii timp de decenii, făcând melodiile capsule temporale perfecte pentru păstrarea amintirilor.",
+  
+  // Add-ons section
+  availableAddOns: "Add-ons disponibile",
+  enhanceYourPackage: "Îmbunătățește-ți pachetul cu opțiuni suplimentare",
+  
+  // Common add-ons
+  rushDelivery: "Livrare urgentă",
+  rushDeliveryDesc: "Primește melodia cu 50% mai repede",
+  rushDeliveryPrice: "+50% din prețul pachetului",
+  
+  extraRevision: "Revizie suplimentară",
+  extraRevisionDesc: "O revizie suplimentară pentru perfecționare",
+  extraRevisionPrice: "€25 / 125 RON",
+  
+  extendedLicense: "Licență extinsă",
+  extendedLicenseDesc: "Drepturi comerciale complete și nelimitate",
+  extendedLicensePrice: "€99 / 499 RON",
+  
+  sourceFiles: "Fișiere sursă",
+  sourceFilesDesc: "Accesul la toate fișierele de proiect (stems, MIDI)",
+  sourceFilesPrice: "€75 / 375 RON",
+  
+  // Package-specific add-ons
+  // Personal package add-ons
+  personalDuet: "Versiune duet",
+  personalDuetDesc: "Înregistrare cu doi vocalisti pentru melodii romantice",
+  personalDuetPrice: "€35 / 175 RON",
+  
+  personalInstrumental: "Versiune instrumentală",
+  personalInstrumentalDesc: "Versiunea fără voce a melodiei tale",
+  personalInstrumentalPrice: "€20 / 100 RON",
+  
+  // Premium package add-ons
+  premiumExtendedVideo: "Video extins",
+  premiumExtendedVideoDesc: "Video de 3-5 minute în loc de 1-2 minute",
+  premiumExtendedVideoPrice: "€150 / 750 RON",
+  
+  premiumSocialKit: "Kit social media",
+  premiumSocialKitDesc: "15 secunde clips pentru TikTok, Instagram, YouTube Shorts",
+  premiumSocialKitPrice: "€50 / 250 RON",
+  
+  // Business package add-ons
+  businessMultipleVersions: "Versiuni multiple",
+  businessMultipleVersionsDesc: "3 versiuni diferite (30s, 60s, versiune completă)",
+  businessMultipleVersionsPrice: "€100 / 500 RON",
+  
+  businessJingleKit: "Kit jingle complet",
+  businessJingleKitDesc: "5 variante de jingle-uri scurte (5-15 secunde)",
+  businessJingleKitPrice: "€150 / 750 RON",
+  
+  // Artist package add-ons
+  artistVocalCoaching: "Coaching vocal",
+  artistVocalCoachingDesc: "Sesiune de 1 oră de coaching vocal online",
+  artistVocalCoachingPrice: "€80 / 400 RON",
+  
+  artistMusicVideo: "Videoclip profesional",
+  artistMusicVideoDesc: "Videoclip profesional filmat și editat",
+  artistMusicVideoPrice: "€500 / 2500 RON",
+  
+  // Gift package add-ons
+  giftCustomPackaging: "Ambalare personalizată",
+  giftCustomPackagingDesc: "Cutie cadou personalizată cu mesaj",
+  giftCustomPackagingPrice: "€25 / 125 RON",
+  
+  giftPhysicalCard: "Card fizic",
+  giftPhysicalCardDesc: "Card cadou fizic livrat prin poștă",
+  giftPhysicalCardPrice: "€15 / 75 RON",
 };

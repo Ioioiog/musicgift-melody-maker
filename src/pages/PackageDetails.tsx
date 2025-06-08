@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Check, Clock, Star, Users, Mic, Music, FileText, HelpCircle, ChevronDown, ChevronUp, Lightbulb } from 'lucide-react';
+import { ArrowLeft, Check, Clock, Star, Users, Mic, Music, FileText, HelpCircle, ChevronDown, ChevronUp, Lightbulb, Plus, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -241,9 +241,126 @@ const PackageDetails = () => {
     }
   };
 
+  // Get available add-ons for package
+  const getAvailableAddOns = (packageValue: string) => {
+    const commonAddOns = [
+      {
+        title: t('rushDelivery'),
+        description: t('rushDeliveryDesc'),
+        price: t('rushDeliveryPrice'),
+        icon: <Clock className="w-4 h-4" />
+      },
+      {
+        title: t('extraRevision'),
+        description: t('extraRevisionDesc'),
+        price: t('extraRevisionPrice'),
+        icon: <Plus className="w-4 h-4" />
+      }
+    ];
+
+    const packageSpecificAddOns = {
+      personal: [
+        {
+          title: t('personalDuet'),
+          description: t('personalDuetDesc'),
+          price: t('personalDuetPrice'),
+          icon: <Users className="w-4 h-4" />
+        },
+        {
+          title: t('personalInstrumental'),
+          description: t('personalInstrumentalDesc'),
+          price: t('personalInstrumentalPrice'),
+          icon: <Music className="w-4 h-4" />
+        }
+      ],
+      premium: [
+        {
+          title: t('premiumExtendedVideo'),
+          description: t('premiumExtendedVideoDesc'),
+          price: t('premiumExtendedVideoPrice'),
+          icon: <FileText className="w-4 h-4" />
+        },
+        {
+          title: t('premiumSocialKit'),
+          description: t('premiumSocialKitDesc'),
+          price: t('premiumSocialKitPrice'),
+          icon: <Users className="w-4 h-4" />
+        }
+      ],
+      business: [
+        {
+          title: t('businessMultipleVersions'),
+          description: t('businessMultipleVersionsDesc'),
+          price: t('businessMultipleVersionsPrice'),
+          icon: <Music className="w-4 h-4" />
+        },
+        {
+          title: t('businessJingleKit'),
+          description: t('businessJingleKitDesc'),
+          price: t('businessJingleKitPrice'),
+          icon: <Star className="w-4 h-4" />
+        }
+      ],
+      artist: [
+        {
+          title: t('artistVocalCoaching'),
+          description: t('artistVocalCoachingDesc'),
+          price: t('artistVocalCoachingPrice'),
+          icon: <Mic className="w-4 h-4" />
+        },
+        {
+          title: t('artistMusicVideo'),
+          description: t('artistMusicVideoDesc'),
+          price: t('artistMusicVideoPrice'),
+          icon: <FileText className="w-4 h-4" />
+        }
+      ],
+      gift: [
+        {
+          title: t('giftCustomPackaging'),
+          description: t('giftCustomPackagingDesc'),
+          price: t('giftCustomPackagingPrice'),
+          icon: <Plus className="w-4 h-4" />
+        },
+        {
+          title: t('giftPhysicalCard'),
+          description: t('giftPhysicalCardDesc'),
+          price: t('giftPhysicalCardPrice'),
+          icon: <FileText className="w-4 h-4" />
+        }
+      ]
+    };
+
+    const allAddOns = [
+      ...commonAddOns,
+      ...(packageSpecificAddOns[packageValue as keyof typeof packageSpecificAddOns] || [])
+    ];
+
+    // Add universal add-ons for packages that support them
+    if (['personal', 'premium', 'business', 'artist'].includes(packageValue)) {
+      allAddOns.push(
+        {
+          title: t('extendedLicense'),
+          description: t('extendedLicenseDesc'),
+          price: t('extendedLicensePrice'),
+          icon: <FileText className="w-4 h-4" />
+        },
+        {
+          title: t('sourceFiles'),
+          description: t('sourceFilesDesc'),
+          price: t('sourceFilesPrice'),
+          icon: <Music className="w-4 h-4" />
+        }
+      );
+    }
+
+    return allAddOns;
+  };
+
   const packageFeatures = getPackageFeatures(packageData.value);
   const deliverySteps = getDeliverySteps(packageData.value);
   const didYouKnowFacts = getDidYouKnowFacts(packageData.value);
+  const availableAddOns = getAvailableAddOns(packageData.value);
   const relatedPackages = packages?.filter(pkg => pkg.value !== packageData.value).slice(0, 2);
 
   return (
@@ -337,6 +454,37 @@ const PackageDetails = () => {
                         <div>
                           <h4 className="font-semibold text-white mb-1">{feature.title}</h4>
                           <p className="text-white/70 text-sm">{feature.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Available Add-ons Section */}
+              <Card className="bg-white/10 backdrop-blur-md border border-white/20">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <ShoppingCart className="w-5 h-5 mr-2 text-blue-400" />
+                    {t('availableAddOns', 'Available Add-ons')}
+                  </CardTitle>
+                  <CardDescription className="text-white/80">
+                    {t('enhanceYourPackage', 'Enhance your package with additional options')}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {availableAddOns.map((addon, index) => (
+                      <div key={index} className="p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                        <div className="flex items-start space-x-3">
+                          <div className="text-blue-400 mt-1">
+                            {addon.icon}
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-white mb-1">{addon.title}</h4>
+                            <p className="text-white/70 text-sm mb-2">{addon.description}</p>
+                            <div className="text-blue-300 font-medium text-sm">{addon.price}</div>
+                          </div>
                         </div>
                       </div>
                     ))}

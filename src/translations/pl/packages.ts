@@ -32,7 +32,7 @@ export const packagesTranslations = {
   artistDescription: "Rozpocznij swoją karierę muzyczną z topową piosenką. Dla oddanych artystów, którzy chcą oryginalną piosenkę, kompletną dystrybucję i współwłasność praw.",
   remixDescription: "Przywróć swoją piosenkę do życia w zupełnie nowym stylu. Dla artystów lub twórców, którzy posiadają prawa do oryginalnej piosenki i chcą wersję remiks w innym gatunku.",
   instrumentalDescription: "Twórz na podstawie instrumentalu zbudowanego specjalnie dla ciebie. Dla artystów, którzy chcą napisać własną piosenkę, ale potrzebują spersonalizowanego i profesjonalnego instrumentalu.",
-  giftDescription: "Muzyczna historia podarowana w prezencie. Idealne do zaskoczenia kogoś drogiego – odbiorca sam wybiera styl i atmosferę piosenki.",
+  giftDescription: "Muzyczna historia podarowana w prezencie. Idealne do zaskoczenia kogoś drogego – odbiorca sam wybiera styl i atmosferę piosenki.",
   
   // Delivery times
   plusDelivery: "1–2 dni robocze",
@@ -136,4 +136,71 @@ export const packagesTranslations = {
   didYouKnowGeneral1Desc: "Muzyka aktywuje te same ścieżki neuronalne co jedzenie, seks i narkotyki, wyjaśniając dlaczego spersonalizowane piosenki są tak satysfakcjonujące.",
   didYouKnowGeneral2Title: "Wzmocnienie pamięci",
   didYouKnowGeneral2Desc: "Ludzki mózg może pamiętać teksty i melodie przez dziesięciolecia, czyniąc piosenki idealnymi kapsułami czasu do zachowania wspomnień.",
+  
+  // Add-ons section
+  availableAddOns: "Dostępne dodatki",
+  enhanceYourPackage: "Wzbogać swój pakiet dodatkowymi opcjami",
+  
+  // Common add-ons
+  rushDelivery: "Express dostawa",
+  rushDeliveryDesc: "Otrzymaj swoją piosenkę 50% szybciej",
+  rushDeliveryPrice: "+50% ceny pakietu",
+  
+  extraRevision: "Dodatkowa rewizja",
+  extraRevisionDesc: "Jedna dodatkowa rewizja dla perfekcji",
+  extraRevisionPrice: "€25 / 125 RON",
+  
+  extendedLicense: "Rozszerzona licencja",
+  extendedLicenseDesc: "Pełne nieograniczone prawa komercyjne",
+  extendedLicensePrice: "€99 / 499 RON",
+  
+  sourceFiles: "Pliki źródłowe",
+  sourceFilesDesc: "Dostęp do wszystkich plików projektu (stems, MIDI)",
+  sourceFilesPrice: "€75 / 375 RON",
+  
+  // Package-specific add-ons
+  // Personal package add-ons
+  personalDuet: "Wersja duet",
+  personalDuetDesc: "Nagranie z dwoma wokalistami dla romantycznych piosenek",
+  personalDuetPrice: "€35 / 175 RON",
+  
+  personalInstrumental: "Wersja instrumentalna",
+  personalInstrumentalDesc: "Wersja bez głosu twojej piosenki",
+  personalInstrumentalPrice: "€20 / 100 RON",
+  
+  // Premium package add-ons
+  premiumExtendedVideo: "Rozszerzone wideo",
+  premiumExtendedVideoDesc: "Wideo 3-5 minut zamiast 1-2 minut",
+  premiumExtendedVideoPrice: "€150 / 750 RON",
+  
+  premiumSocialKit: "Zestaw social media",
+  premiumSocialKitDesc: "15-sekundowe klipy dla TikTok, Instagram, YouTube Shorts",
+  premiumSocialKitPrice: "€50 / 250 RON",
+  
+  // Business package add-ons
+  businessMultipleVersions: "Wiele wersji",
+  businessMultipleVersionsDesc: "3 różne wersje (30s, 60s, pełna wersja)",
+  businessMultipleVersionsPrice: "€100 / 500 RON",
+  
+  businessJingleKit: "Kompletny zestaw jingle",
+  businessJingleKitDesc: "5 krótkich wariantów jingle (5-15 sekund)",
+  businessJingleKitPrice: "€150 / 750 RON",
+  
+  // Artist package add-ons
+  artistVocalCoaching: "Coaching wokalny",
+  artistVocalCoachingDesc: "1-godzinna sesja coachingu wokalnego online",
+  artistVocalCoachingPrice: "€80 / 400 RON",
+  
+  artistMusicVideo: "Profesjonalny teledysk",
+  artistMusicVideoDesc: "Profesjonalnie nakręcony i zmontowany teledysk",
+  artistMusicVideoPrice: "€500 / 2500 RON",
+  
+  // Gift package add-ons
+  giftCustomPackaging: "Spersonalizowane opakowanie",
+  giftCustomPackagingDesc: "Spersonalizowane pudełko prezentowe z wiadomością",
+  giftCustomPackagingPrice: "€25 / 125 RON",
+  
+  giftPhysicalCard: "Karta fizyczna",
+  giftPhysicalCardDesc: "Fizyczna karta podarunkowa dostarczona pocztą",
+  giftPhysicalCardPrice: "€15 / 75 RON",
 };

@@ -136,4 +136,71 @@ export const packagesTranslations = {
   didYouKnowGeneral1Desc: "Musik aktiviert dieselben neuronalen Bahnen wie Essen, Sex und Drogen, was erklärt, warum personalisierte Lieder so belohnend wirken.",
   didYouKnowGeneral2Title: "Gedächtnisverbesserung",
   didYouKnowGeneral2Desc: "Das menschliche Gehirn kann sich jahrzehntelang an Texte und Melodien erinnern, was Lieder zu perfekten Zeitkapseln für die Bewahrung von Erinnerungen macht.",
+  
+  // Add-ons section
+  availableAddOns: "Verfügbare Add-ons",
+  enhanceYourPackage: "Erweitern Sie Ihr Paket mit zusätzlichen Optionen",
+  
+  // Common add-ons
+  rushDelivery: "Express-Lieferung",
+  rushDeliveryDesc: "Erhalten Sie Ihr Lied 50% schneller",
+  rushDeliveryPrice: "+50% des Paketpreises",
+  
+  extraRevision: "Zusätzliche Überarbeitung",
+  extraRevisionDesc: "Eine zusätzliche Überarbeitung für Perfektion",
+  extraRevisionPrice: "€25 / 125 RON",
+  
+  extendedLicense: "Erweiterte Lizenz",
+  extendedLicenseDesc: "Vollständige unbegrenzte kommerzielle Rechte",
+  extendedLicensePrice: "€99 / 499 RON",
+  
+  sourceFiles: "Quelldateien",
+  sourceFilesDesc: "Zugang zu allen Projektdateien (Stems, MIDI)",
+  sourceFilesPrice: "€75 / 375 RON",
+  
+  // Package-specific add-ons
+  // Personal package add-ons
+  personalDuet: "Duett-Version",
+  personalDuetDesc: "Aufnahme mit zwei Vokalisten für romantische Lieder",
+  personalDuetPrice: "€35 / 175 RON",
+  
+  personalInstrumental: "Instrumentalversion",
+  personalInstrumentalDesc: "Stimmfreie Version Ihres Liedes",
+  personalInstrumentalPrice: "€20 / 100 RON",
+  
+  // Premium package add-ons
+  premiumExtendedVideo: "Erweitertes Video",
+  premiumExtendedVideoDesc: "3-5 Minuten Video statt 1-2 Minuten",
+  premiumExtendedVideoPrice: "€150 / 750 RON",
+  
+  premiumSocialKit: "Social Media Kit",
+  premiumSocialKitDesc: "15-Sekunden-Clips für TikTok, Instagram, YouTube Shorts",
+  premiumSocialKitPrice: "€50 / 250 RON",
+  
+  // Business package add-ons
+  businessMultipleVersions: "Mehrere Versionen",
+  businessMultipleVersionsDesc: "3 verschiedene Versionen (30s, 60s, Vollversion)",
+  businessMultipleVersionsPrice: "€100 / 500 RON",
+  
+  businessJingleKit: "Komplettes Jingle-Kit",
+  businessJingleKitDesc: "5 kurze Jingle-Variationen (5-15 Sekunden)",
+  businessJingleKitPrice: "€150 / 750 RON",
+  
+  // Artist package add-ons
+  artistVocalCoaching: "Gesangscoaching",
+  artistVocalCoachingDesc: "1-stündige Online-Gesangscoaching-Session",
+  artistVocalCoachingPrice: "€80 / 400 RON",
+  
+  artistMusicVideo: "Professionelles Musikvideo",
+  artistMusicVideoDesc: "Professionell gefilmtes und bearbeitetes Musikvideo",
+  artistMusicVideoPrice: "€500 / 2500 RON",
+  
+  // Gift package add-ons
+  giftCustomPackaging: "Individuelle Verpackung",
+  giftCustomPackagingDesc: "Personalisierte Geschenkbox mit Nachricht",
+  giftCustomPackagingPrice: "€25 / 125 RON",
+  
+  giftPhysicalCard: "Physische Karte",
+  giftPhysicalCardDesc: "Physische Geschenkkarte per Post geliefert",
+  giftPhysicalCardPrice: "€15 / 75 RON",
 };
