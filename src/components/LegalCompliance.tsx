@@ -8,39 +8,39 @@ const LegalCompliance = () => {
   const { t } = useLanguage();
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 lg:gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 lg:gap-4">
       {/* ANPC Consumer Protection */}
-      <div className="space-y-2">
+      <div className="space-y-1">
         <h4 className="text-gray-900 font-bold text-xs uppercase tracking-wider text-center md:text-left">
           {t('consumerProtection')}
         </h4>
-        <div className="space-y-2">
-          <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity duration-300 hover:scale-105 min-h-[60px] flex items-center justify-center">
-            <img src="/lovable-uploads/1f4ebed9-cee9-49a4-9585-1bbe339732a2.png" alt="Soluționarea alternativă a litigiilor - ANPC" className="max-w-[80px] max-h-[60px] w-auto h-full hover:opacity-90 transition object-fill" />
+        <div className="space-y-1">
+          <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity duration-300 hover:scale-105 min-h-[80px] flex items-center justify-center">
+            <img src="/lovable-uploads/1f4ebed9-cee9-49a4-9585-1bbe339732a2.png" alt="Soluționarea alternativă a litigiilor - ANPC" className="max-w-[120px] max-h-[80px] w-auto h-full hover:opacity-90 transition object-fill" />
           </a>
-          <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity duration-300 hover:scale-105 min-h-[60px] flex items-center justify-center">
-            <img src="/lovable-uploads/e923f28a-a040-43f3-a749-31a8b2e479b3.png" alt={t('onlineDisputeResolution')} className="max-w-[80px] max-h-[40px] w-full h-auto hover:opacity-90 transition object-fill" />
+          <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity duration-300 hover:scale-105 min-h-[80px] flex items-center justify-center">
+            <img src="/lovable-uploads/e923f28a-a040-43f3-a749-31a8b2e479b3.png" alt={t('onlineDisputeResolution')} className="max-w-[120px] max-h-[60px] w-full h-auto hover:opacity-90 transition object-fill" />
           </a>
         </div>
       </div>
 
       {/* Payment Partners - Now includes NTP */}
-      <div className="space-y-2">
+      <div className="space-y-1">
         <h4 className="text-gray-900 font-bold text-xs uppercase tracking-wider text-center md:text-left">
           {t('paymentPartners')}
         </h4>
-        <div className="space-y-2">
-          <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[60px]">
-            <img src="/lovable-uploads/a83ec5e1-01f2-4010-9224-fb7860ad66be.png" alt="Stripe" className="max-w-[80px] max-h-[40px] w-full h-auto hover:opacity-80 transition object-fill" />
+        <div className="space-y-1">
+          <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[40px]">
+            <img src="/lovable-uploads/a83ec5e1-01f2-4010-9224-fb7860ad66be.png" alt="Stripe" className="max-w-[60px] max-h-[30px] w-full h-auto hover:opacity-80 transition object-fill" />
           </a>
-          <div className="relative flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[60px]">
-            <img alt="Revolut Business" src="/lovable-uploads/e0dec0a1-3977-42e6-a9fa-9addebc53ead.png" className="max-w-[80px] max-h-[40px] w-full h-auto hover:opacity-80 transition object-fill" />
+          <div className="relative flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[40px]">
+            <img alt="Revolut Business" src="/lovable-uploads/e0dec0a1-3977-42e6-a9fa-9addebc53ead.png" className="max-w-[60px] max-h-[30px] w-full h-auto hover:opacity-80 transition object-fill" />
             <Badge className="absolute -top-1 -right-1 text-white text-xs px-1 py-0.5 bg-stone-950">
               Coming Soon
             </Badge>
           </div>
-          <div className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[60px]">
-            <div className="max-w-[80px] max-h-[40px] flex items-center justify-center">
+          <div className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[40px]">
+            <div className="max-w-[60px] max-h-[30px] flex items-center justify-center">
               <NTPLogo color="#ffffff" version="orizontal" secret="152227" />
             </div>
           </div>
@@ -48,25 +48,25 @@ const LegalCompliance = () => {
       </div>
 
       {/* Business Partners Section - Moved after Payment Partners */}
-      <div className="space-y-2">
+      <div className="space-y-1">
         <h4 className="text-gray-900 font-bold text-xs uppercase tracking-wider text-center md:text-left">
           {t('businessPartners')}
         </h4>
-        <div className="space-y-2">
-          <a href="https://www.billionareboysclub.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[60px]">
-            <img src="/lovable-uploads/318e18fe-b529-4525-8ddf-74bb1d3a3962.png" alt="Billionaire Boys Club" className="max-w-[80px] max-h-[40px] w-full h-auto hover:opacity-80 transition object-fill" />
+        <div className="space-y-1">
+          <a href="https://www.billionareboysclub.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[40px]">
+            <img src="/lovable-uploads/318e18fe-b529-4525-8ddf-74bb1d3a3962.png" alt="Billionaire Boys Club" className="max-w-[60px] max-h-[30px] w-full h-auto hover:opacity-80 transition object-fill" />
           </a>
-          <a href="https://www.mgnews.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[60px]">
-            <img src="/lovable-uploads/2db89d5c-d0a3-4a0e-b17a-4969d3f1164f.png" alt="MG News" className="max-w-[80px] max-h-[40px] w-full h-auto hover:opacity-80 transition object-fill" />
+          <a href="https://www.mgnews.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[40px]">
+            <img src="/lovable-uploads/2db89d5c-d0a3-4a0e-b17a-4969d3f1164f.png" alt="MG News" className="max-w-[60px] max-h-[30px] w-full h-auto hover:opacity-80 transition object-fill" />
           </a>
-          <a href="https://www.evonews.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[60px]">
-            <img src="/lovable-uploads/e48515de-2c58-4a30-819d-fa1862f6373f.png" alt="Evo News" className="max-w-[80px] max-h-[40px] w-full h-auto hover:opacity-80 transition object-fill" />
+          <a href="https://www.evonews.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[40px]">
+            <img src="/lovable-uploads/e48515de-2c58-4a30-819d-fa1862f6373f.png" alt="Evo News" className="max-w-[60px] max-h-[30px] w-full h-auto hover:opacity-80 transition object-fill" />
           </a>
         </div>
       </div>
 
       {/* Empty fourth column for future use */}
-      <div className="space-y-2">
+      <div className="space-y-1">
         {/* This column can be used for additional partners or content in the future */}
       </div>
     </div>
