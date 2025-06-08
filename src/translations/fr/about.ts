@@ -29,9 +29,9 @@ export const aboutTranslations = {
   // Mission & Values
   missionValues: "Notre Mission et Nos Valeurs",
   passion: "Passion",
-  passionDesc: "Chaque chanson que nous créons est imprégnée de passion authentique et de profondeur émotionnelle, garantissant que votre histoire soit racontée avec authenticité.",
+  passionDesc: "Chaque chanson que nous créons est imprégnée de passion et de profondeur émotionnelle, garantissant que votre histoire soit racontée avec authenticité.",
   quality: "Qualité",
-  qualityDesc: "Production studio professionnelle, musiciens expérimentés et attention méticuleuse aux détails dans chaque projet.",
+  qualityDesc: "Production professionnelle, musiciens expérimentés et attention méticuleuse aux détails dans chaque projet.",
   dedication: "Dévouement",
   dedicationDesc: "Nous investissons du temps et des soins pour comprendre votre histoire afin de créer une musique qui représente vraiment vos émotions.",
   
@@ -40,13 +40,13 @@ export const aboutTranslations = {
   uniqueApproach: "Approche Unique",
   uniqueApproachDesc: "Nous combinons la narration personnelle avec la production musicale professionnelle pour créer des chansons vraiment uniques.",
   fastDelivery: "Livraison Rapide",
-  fastDeliveryDesc: "Musique de qualité professionnelle livrée en 7-14 jours, parfaite pour les occasions spéciales et les cadeaux.",
+  fastDeliveryDesc: "Musique de qualité professionnelle livrée en 3-7 jours, parfaite pour les occasions spéciales et les cadeaux.",
   satisfactionGuarantee: "Garantie de Satisfaction",
   satisfactionGuaranteeDesc: "Garantie de satisfaction à 100% avec révisions illimitées jusqu'à ce que votre chanson capture parfaitement votre histoire.",
   
   // Call to Action
   readyToStart: "Prêt à Créer Votre Chanson ?",
-  readyToStartDesc: "Rejoignez des milliers de clients satisfaits qui ont transformé leurs histoires en belles chansons personnalisées.",
+  readyToStartDesc: "Rejoignez les clients satisfaits qui ont transformé leurs histoires en belles chansons personnalisées.",
   startYourSong: "Commencez Votre Chanson",
   viewPackages: "Voir les Forfaits",
 };

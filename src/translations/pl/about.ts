@@ -29,9 +29,9 @@ export const aboutTranslations = {
   // Mission & Values
   missionValues: "Nasza Misja i Wartości",
   passion: "Pasja",
-  passionDesc: "Każda piosenka, którą tworzymy, jest przepełniona autentyczną pasją i głębokością emocjonalną, zapewniając, że Twoja historia jest opowiedziana z autentycznością.",
+  passionDesc: "Każda piosenka, którą tworzymy, jest przepełniona pasją i głębokością emocjonalną, zapewniając, że Twoja historia jest opowiedziana z autentycznością.",
   quality: "Jakość",
-  qualityDesc: "Profesjonalna produkcja studyjna, doświadczeni muzycy i skrupulatna dbałość o szczegóły w każdym projekcie.",
+  qualityDesc: "Profesjonalna produkcja, doświadczeni muzycy i skrupulatna dbałość o szczegóły w każdym projekcie.",
   dedication: "Poświęcenie",
   dedicationDesc: "Inwestujemy czas i troskę w zrozumienie Twojej historii, aby stworzyć muzykę, która naprawdę reprezentuje Twoje emocje.",
   
@@ -40,13 +40,13 @@ export const aboutTranslations = {
   uniqueApproach: "Unikalne Podejście",
   uniqueApproachDesc: "Łączymy osobiste opowiadanie z profesjonalną produkcją muzyczną, aby tworzyć naprawdę jedyne w swoim rodzaju piosenki.",
   fastDelivery: "Szybka Dostawa",
-  fastDeliveryDesc: "Muzyka profesjonalnej jakości dostarczona w ciągu 7-14 dni, idealna na specjalne okazje i jako prezenty.",
+  fastDeliveryDesc: "Muzyka profesjonalnej jakości dostarczona w ciągu 3-7 dni, idealna na specjalne okazje i jako prezenty.",
   satisfactionGuarantee: "Gwarancja Satysfakcji",
   satisfactionGuaranteeDesc: "100% gwarancja satysfakcji z nieograniczonymi poprawkami, aż Twoja piosenka idealnie oddaje Twoją historię.",
   
   // Call to Action
   readyToStart: "Gotowy Stworzyć Swoją Piosenkę?",
-  readyToStartDesc: "Dołącz do tysięcy zadowolonych klientów, którzy przekształcili swoje historie w piękne, spersonalizowane piosenki.",
+  readyToStartDesc: "Dołącz do zadowolonych klientów, którzy przekształcili swoje historie w piękne, spersonalizowane piosenki.",
   startYourSong: "Zacznij Swoją Piosenkę",
   viewPackages: "Zobacz Pakiety",
 };

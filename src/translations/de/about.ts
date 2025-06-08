@@ -29,9 +29,9 @@ export const aboutTranslations = {
   // Mission & Values
   missionValues: "Unsere Mission und Werte",
   passion: "Leidenschaft",
-  passionDesc: "Jedes Lied, das wir schaffen, ist mit echter Leidenschaft und emotionaler Tiefe durchdrungen und stellt sicher, dass Ihre Geschichte authentisch erzählt wird.",
+  passionDesc: "Jedes Lied, das wir schaffen, ist mit Leidenschaft und emotionaler Tiefe durchdrungen und stellt sicher, dass Ihre Geschichte authentisch erzählt wird.",
   quality: "Qualität",
-  qualityDesc: "Professionelle Studioproduktion, erfahrene Musiker und akribische Aufmerksamkeit für Details in jedem Projekt.",
+  qualityDesc: "Professionelle Produktion, erfahrene Musiker und akribische Aufmerksamkeit für Details in jedem Projekt.",
   dedication: "Hingabe",
   dedicationDesc: "Wir investieren Zeit und Sorgfalt in das Verständnis Ihrer Geschichte, um Musik zu schaffen, die Ihre Emotionen wirklich repräsentiert.",
   
@@ -40,13 +40,13 @@ export const aboutTranslations = {
   uniqueApproach: "Einzigartiger Ansatz",
   uniqueApproachDesc: "Wir kombinieren persönliches Storytelling mit professioneller Musikproduktion, um wirklich einzigartige Lieder zu schaffen.",
   fastDelivery: "Schnelle Lieferung",
-  fastDeliveryDesc: "Professionelle Musikqualität innerhalb von 7-14 Tagen geliefert, perfekt für besondere Anlässe und Geschenke.",
+  fastDeliveryDesc: "Professionelle Musikqualität innerhalb von 3-7 Tagen geliefert, perfekt für besondere Anlässe und Geschenke.",
   satisfactionGuarantee: "Zufriedenheitsgarantie",
   satisfactionGuaranteeDesc: "100% Zufriedenheitsgarantie mit unbegrenzten Überarbeitungen, bis Ihr Lied Ihre Geschichte perfekt einfängt.",
   
   // Call to Action
   readyToStart: "Bereit, Ihr Lied zu Erstellen?",
-  readyToStartDesc: "Schließen Sie sich Tausenden zufriedener Kunden an, die ihre Geschichten in schöne, personalisierte Lieder verwandelt haben.",
+  readyToStartDesc: "Schließen Sie sich zufriedenen Kunden an, die ihre Geschichten in schöne, personalisierte Lieder verwandelt haben.",
   startYourSong: "Beginnen Sie Ihr Lied",
   viewPackages: "Pakete Ansehen",
 };
