@@ -4,7 +4,13 @@ export const faqTranslations = {
   faqRevisionsAnswerWedding: "Tak, pakiet ślubny zawiera jedną bezpłatną rewizję, aby zapewnić Państwa pełną satysfakcję z produktu końcowego.",
   faqRevisionsAnswerOther: "Rewizje są dostępne tylko dla pakietu ślubnego. Inne pakiety nie zawierają opcji rewizji, aby utrzymać nasz usprawniony proces produkcji i konkurencyjne ceny.",
 
-  // New FAQ questions and answers
+  // FAQ questions and answers
+  faqRevisions: "Czy mogę poprosić o rewizje?",
+  faqLanguage: "Jakie języki są obsługiwane?",
+  faqLanguageAnswer: "Obsługujemy wiele języków, w tym polski, angielski, rumuński, francuski, niemiecki i włoski.",
+  faqRights: "Kto posiada prawa do piosenki?",
+  faqRightsAnswer: "Prawa różnią się w zależności od pakietu. Pakiety osobiste obejmują prawa do użytku osobistego, podczas gdy pakiety biznesowe i artystyczne obejmują prawa komercyjne.",
+  
   faqDeliveryTime: "Ile czasu zajmuje otrzymanie mojej piosenki?",
   faqDeliveryTimeAnswer: "Twoja piosenka będzie gotowa w ciągu 3–5 dni roboczych po potwierdzeniu zamówienia i historii. Chcemy, aby każda kreacja była wykonana z troską i profesjonalizmem.",
   

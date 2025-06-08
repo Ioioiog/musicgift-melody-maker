@@ -4,7 +4,13 @@ export const faqTranslations = {
   faqRevisionsAnswerWedding: "Ja, das Hochzeits-Paket beinhaltet eine kostenlose Überarbeitung, um Ihre vollständige Zufriedenheit mit dem Endprodukt zu gewährleisten.",
   faqRevisionsAnswerOther: "Überarbeitungen sind nur für das Hochzeits-Paket verfügbar. Andere Pakete beinhalten keine Überarbeitungsoptionen, um unseren effizienten Produktionsprozess und wettbewerbsfähige Preise aufrechtzuerhalten.",
 
-  // New FAQ questions and answers
+  // FAQ questions and answers
+  faqRevisions: "Kann ich Überarbeitungen anfordern?",
+  faqLanguage: "Welche Sprachen werden unterstützt?",
+  faqLanguageAnswer: "Wir unterstützen mehrere Sprachen, darunter Deutsch, Englisch, Rumänisch, Französisch, Polnisch und Italienisch.",
+  faqRights: "Wer besitzt die Rechte an dem Lied?",
+  faqRightsAnswer: "Die Rechte variieren je nach Paket. Persönliche Pakete beinhalten Rechte für den persönlichen Gebrauch, während Business- und Künstlerpakete kommerzielle Rechte beinhalten.",
+  
   faqDeliveryTime: "Wie lange dauert es, bis ich mein Lied erhalte?",
   faqDeliveryTimeAnswer: "Ihr Lied wird innerhalb von 3–5 Werktagen nach Bestätigung Ihrer Bestellung und Geschichte fertig sein. Wir möchten, dass jede Kreation mit Sorgfalt und Professionalität erstellt wird.",
   

@@ -1,16 +1,22 @@
 
 export const faqTranslations = {
   // FAQ Revision answers
-  faqRevisionsAnswerWedding: "Yes, the wedding package includes one free revision to ensure your complete satisfaction with the final product.",
-  faqRevisionsAnswerOther: "Revisions are only available for the Wedding package. Other packages do not include revision options to maintain our streamlined production process and competitive pricing.",
+  faqRevisionsAnswerWedding: "Da, pachetul de nuntă include o revizuire gratuită pentru a vă asigura satisfacția completă cu produsul final.",
+  faqRevisionsAnswerOther: "Revizuirile sunt disponibile doar pentru pachetul de Nuntă. Alte pachete nu includ opțiuni de revizuire pentru a menține procesul nostru de producție simplificat și prețurile competitive.",
 
-  // New FAQ questions and answers
-  faqDeliveryTime: "How long does it take to receive my song?",
-  faqDeliveryTimeAnswer: "Your song will be ready within 3–5 business days after your order and story are confirmed. We want every creation to be crafted with care and professionalism.",
+  // FAQ questions and answers
+  faqRevisions: "Pot solicita revizuiri?",
+  faqLanguage: "Ce limbi sunt suportate?",
+  faqLanguageAnswer: "Suportăm mai multe limbi, inclusiv româna, engleza, franceza, germana, poloneza și italiana.",
+  faqRights: "Cine deține drepturile asupra cântecului?",
+  faqRightsAnswer: "Drepturile variază în funcție de pachet. Pachetele personale includ drepturi de uz personal, în timp ce pachetele de business și artist includ drepturi comerciale.",
   
-  faqDeliveryMethod: "How will I receive my song?",
-  faqDeliveryMethodAnswer: "You will receive your personalized song via email, in high-quality format (MP3, additional at request WAV HQ). You can download the song for up to 6 months using the link we send. After that, the link will expire and MusicGift will no longer store the song on any server, so make sure to save your file during that time.",
+  faqDeliveryTime: "Cât timp durează să primesc cântecul meu?",
+  faqDeliveryTimeAnswer: "Cântecul tău va fi gata în termen de 3–5 zile lucrătoare după confirmarea comenzii și a poveștii tale. Vrem ca fiecare creație să fie realizată cu grijă și profesionalism.",
   
-  faqSatisfaction: "What if I'm not satisfied?",
-  faqSatisfactionAnswer: "We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost."
+  faqDeliveryMethod: "Cum voi primi cântecul meu?",
+  faqDeliveryMethodAnswer: "Vei primi cântecul tău personalizat prin email, în format de înaltă calitate (MP3, suplimentar la cerere WAV HQ). Poți descărca cântecul timp de maximum 6 luni folosind linkul pe care îl trimitem. După aceea, linkul va expira și MusicGift nu va mai stoca cântecul pe niciun server, așa că asigură-te că îți salvezi fișierul în această perioadă.",
+  
+  faqSatisfaction: "Ce se întâmplă dacă nu sunt mulțumit?",
+  faqSatisfactionAnswer: "Lucrăm cu cea mai mare grijă pentru a surprinde emoția din spatele poveștii tale. Dacă există probleme reale (de ex. livrare greșită, fișier corupt, etc.), le vom rezolva fără costuri suplimentare."
 };

@@ -4,7 +4,13 @@ export const faqTranslations = {
   faqRevisionsAnswerWedding: "Yes, the wedding package includes one free revision to ensure your complete satisfaction with the final product.",
   faqRevisionsAnswerOther: "Revisions are only available for the Wedding package. Other packages do not include revision options to maintain our streamlined production process and competitive pricing.",
 
-  // New FAQ questions and answers
+  // FAQ questions and answers
+  faqRevisions: "Can I request revisions?",
+  faqLanguage: "What languages are supported?",
+  faqLanguageAnswer: "We support multiple languages including English, Romanian, French, German, Polish, and Italian.",
+  faqRights: "Who owns the rights to the song?",
+  faqRightsAnswer: "Rights vary by package. Personal packages include personal use rights, while business and artist packages include commercial rights.",
+  
   faqDeliveryTime: "How long does it take to receive my song?",
   faqDeliveryTimeAnswer: "Your song will be ready within 3–5 business days after your order and story are confirmed. We want every creation to be crafted with care and professionalism.",
   
