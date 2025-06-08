@@ -78,13 +78,13 @@ const CollaborationSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <Card className="bg-white/95 backdrop-blur-sm border border-white/20 shadow-xl">
+          <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold text-gray-900 flex items-center justify-center gap-2">
-                <MessageSquare className="w-6 h-6 text-purple-600" />
+              <CardTitle className="text-2xl font-bold text-white flex items-center justify-center gap-2">
+                <MessageSquare className="w-6 h-6 text-purple-400" />
                 Apply to Collaborate
               </CardTitle>
-              <p className="text-gray-600">
+              <p className="text-white/80">
                 Share your talent with us and become part of our musical family
               </p>
             </CardHeader>
@@ -93,7 +93,7 @@ const CollaborationSection = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="name" className="flex items-center gap-2 text-gray-700 font-medium">
+                    <Label htmlFor="name" className="flex items-center gap-2 text-white/90 font-medium">
                       <User className="w-4 h-4" />
                       Full Name
                     </Label>
@@ -105,12 +105,12 @@ const CollaborationSection = () => {
                       onChange={handleInputChange}
                       placeholder="Enter your full name"
                       required
-                      className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="flex items-center gap-2 text-gray-700 font-medium">
+                    <Label htmlFor="email" className="flex items-center gap-2 text-white/90 font-medium">
                       <Mail className="w-4 h-4" />
                       Email Address
                     </Label>
@@ -122,13 +122,13 @@ const CollaborationSection = () => {
                       onChange={handleInputChange}
                       placeholder="your.email@example.com"
                       required
-                      className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
                     />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="portfolioLink" className="flex items-center gap-2 text-gray-700 font-medium">
+                  <Label htmlFor="portfolioLink" className="flex items-center gap-2 text-white/90 font-medium">
                     <Link className="w-4 h-4" />
                     Portfolio Link
                   </Label>
@@ -139,15 +139,15 @@ const CollaborationSection = () => {
                     value={formData.portfolioLink}
                     onChange={handleInputChange}
                     placeholder="Link to your vocal samples or portfolio (YouTube, SoundCloud, etc.)"
-                    className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
                   />
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-white/70">
                     Share a link to your best vocal work or musical portfolio
                   </p>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="message" className="flex items-center gap-2 text-gray-700 font-medium">
+                  <Label htmlFor="message" className="flex items-center gap-2 text-white/90 font-medium">
                     <MessageSquare className="w-4 h-4" />
                     Short Bio or Message
                   </Label>
@@ -159,9 +159,9 @@ const CollaborationSection = () => {
                     placeholder="Tell us about yourself, your musical background, and why you'd like to collaborate with MusicGift..."
                     rows={4}
                     required
-                    className="border-gray-300 focus:border-purple-500 focus:ring-purple-500 resize-none"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 resize-none"
                   />
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-white/70">
                     Share your musical journey and what makes your voice unique
                   </p>
                 </div>
