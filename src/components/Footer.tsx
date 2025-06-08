@@ -200,9 +200,20 @@ const Footer = () => {
           <LegalCompliance />
         </div>
 
-        {/* Bottom Section - Copyright */}
-        <div className="border-t border-black/10 mt-6 sm:mt-12 pt-4 sm:pt-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+        {/* Bottom Section - Copyright with Purple Musical Background */}
+        <div 
+          className="border-t border-black/10 mt-6 sm:mt-12 pt-4 sm:pt-6 relative overflow-hidden"
+          style={{
+            backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
+          {/* Purple overlay for the bottom section */}
+          <div className="absolute inset-0 bg-purple-600/20"></div>
+          
+          <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0 relative z-10">
             <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-full px-3 py-1.5 sm:py-2 sm:px-[180px]">
               <p className="text-xs text-gray-700 font-medium text-center">
                 {t('copyright')}
