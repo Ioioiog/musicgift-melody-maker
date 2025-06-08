@@ -1,3 +1,4 @@
+
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Check, Clock, Star, Users, Mic, Music, FileText, HelpCircle, ChevronDown, ChevronUp, Lightbulb, Plus, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -193,56 +194,6 @@ const PackageDetails = () => {
     }
   };
 
-  // Package-specific delivery timeline
-  const getDeliverySteps = (packageValue: string) => {
-    switch (packageValue) {
-      case 'personal':
-        return [
-          { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
-          { step: 2, title: t('storyReview', 'Story Review'), time: t('24hours', '24 hours') },
-          { step: 3, title: t('songCreation', 'Song Creation'), time: t('3-4days', '3-4 days') },
-          { step: 4, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') }
-        ];
-      
-      case 'premium':
-        return [
-          { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
-          { step: 2, title: t('storyReview', 'Story Review'), time: t('24hours', '24 hours') },
-          { step: 3, title: t('songCreation', 'Song Creation'), time: t('3-4days', '3-4 days') },
-          { step: 4, title: t('videoProduction', 'Video Production'), time: t('5-7days', '5-7 days') },
-          { step: 5, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') },
-          { step: 6, title: t('distribution', 'Distribution'), time: t('2-3days', '2-3 days') }
-        ];
-      
-      case 'business':
-        return [
-          { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
-          { step: 2, title: t('briefingCall', 'Briefing Call'), time: t('48hours', '48 hours') },
-          { step: 3, title: t('conceptDevelopment', 'Concept Development'), time: t('2-3days', '2-3 days') },
-          { step: 4, title: t('songCreation', 'Song Creation'), time: t('4-5days', '4-5 days') },
-          { step: 5, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') }
-        ];
-      
-      case 'artist':
-        return [
-          { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
-          { step: 2, title: t('artistConsultation', 'Artist Consultation'), time: t('24hours', '24 hours') },
-          { step: 3, title: t('songwritingSession', 'Songwriting Session'), time: t('3-4days', '3-4 days') },
-          { step: 4, title: t('recording', 'Recording & Production'), time: t('5-6days', '5-6 days') },
-          { step: 5, title: t('mastering', 'Mastering'), time: t('2days', '2 days') },
-          { step: 6, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') }
-        ];
-      
-      default:
-        return [
-          { step: 1, title: t('orderPlacement', 'Order Placement'), time: t('immediate', 'Immediate') },
-          { step: 2, title: t('storyReview', 'Story Review'), time: t('24hours', '24 hours') },
-          { step: 3, title: t('songCreation', 'Song Creation'), time: t('2-3days', '2-3 days') },
-          { step: 4, title: t('finalDelivery', 'Final Delivery'), time: t('1day', '1 day') }
-        ];
-    }
-  };
-
   // Get add-on icon based on add-on type
   const getAddonIcon = (addonKey: string) => {
     switch (addonKey) {
@@ -283,7 +234,6 @@ const PackageDetails = () => {
   };
 
   const packageFeatures = getPackageFeatures(packageData.value);
-  const deliverySteps = getDeliverySteps(packageData.value);
   const didYouKnowFacts = getDidYouKnowFacts(packageData.value);
   const availableAddOns = getAvailableAddOns();
   const relatedPackages = packages?.filter(pkg => pkg.value !== packageData.value).slice(0, 2);
@@ -433,28 +383,6 @@ const PackageDetails = () => {
                       <div key={index} className="p-4 rounded-lg bg-white/5 border border-white/10">
                         <h4 className="font-semibold text-white mb-2">{fact.title}</h4>
                         <p className="text-white/80 text-sm leading-relaxed">{fact.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Delivery Timeline */}
-              <Card className="bg-white/10 backdrop-blur-md border border-white/20">
-                <CardHeader>
-                  <CardTitle className="text-white">{t('deliveryTimeline', 'Delivery Timeline')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {deliverySteps.map((step, index) => (
-                      <div key={index} className="flex items-center space-x-4">
-                        <div className="flex-shrink-0 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                          {step.step}
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-white">{step.title}</h4>
-                          <p className="text-white/70 text-sm">{step.time}</p>
-                        </div>
                       </div>
                     ))}
                   </div>
