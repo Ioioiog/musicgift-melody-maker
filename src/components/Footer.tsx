@@ -200,9 +200,9 @@ const Footer = () => {
           <LegalCompliance />
         </div>
 
-        {/* Bottom Section - Copyright with Purple Musical Background */}
+        {/* Enhanced Bottom Section - Copyright with Purple Musical Background */}
         <div 
-          className="border-t border-black/10 mt-6 sm:mt-12 pt-4 sm:pt-6 relative overflow-hidden"
+          className="border-t border-black/10 mt-6 sm:mt-12 pt-6 sm:pt-8 relative overflow-hidden"
           style={{
             backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
             backgroundSize: 'cover',
@@ -210,14 +210,36 @@ const Footer = () => {
             backgroundRepeat: 'no-repeat'
           }}
         >
-          {/* Purple overlay for the bottom section */}
-          <div className="absolute inset-0 bg-purple-600/20"></div>
+          {/* Enhanced layered background effects */}
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 via-violet-600/25 to-pink-600/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/10 to-violet-600/20"></div>
           
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0 relative z-10">
-            <div className="bg-white/10 backdrop-blur-sm border border-black/10 rounded-full px-3 py-1.5 sm:py-2 sm:px-[180px]">
-              <p className="text-xs text-gray-700 font-medium text-center">
+          {/* Animated musical notes pattern overlay */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-4 left-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
+            <div className="absolute top-8 right-12 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+            <div className="absolute bottom-6 left-16 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute bottom-4 right-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 relative z-10">
+            <div className="bg-white/15 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 sm:py-3 sm:px-40 shadow-lg hover:bg-white/20 transition-all duration-300 group">
+              <p className="text-xs text-gray-800 font-semibold text-center group-hover:text-gray-700 transition-colors duration-300">
                 {t('copyright')}
               </p>
+            </div>
+            
+            {/* Decorative musical elements */}
+            <div className="hidden sm:flex items-center space-x-4 opacity-60">
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-400/30 to-pink-400/30 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center">
+                <Music className="w-4 h-4 text-white" />
+              </div>
+              <div className="flex space-x-1">
+                <div className="w-1 h-4 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
+                <div className="w-1 h-6 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
+                <div className="w-1 h-3 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
+                <div className="w-1 h-5 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
+              </div>
             </div>
           </div>
         </div>
