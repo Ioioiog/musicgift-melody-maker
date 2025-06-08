@@ -141,22 +141,6 @@ export const packagesTranslations = {
   availableAddOns: "Available Add-ons",
   enhanceYourPackage: "Enhance your package with additional options",
   
-  // Common add-ons
-  rushDelivery: "Rush Delivery",
-  rushDeliveryDesc: "Get your song 50% faster",
-  rushDeliveryPrice: "+50% of package price",
-  
-  extraRevision: "Extra Revision",
-  extraRevisionDesc: "One additional revision for perfection",
-  extraRevisionPrice: "€25 / 125 RON",
-  
-  extendedLicense: "Extended License",
-  extendedLicenseDesc: "Full unlimited commercial rights",
-  extendedLicensePrice: "€99 / 499 RON",
-  
-  sourceFiles: "Source Files",
-  sourceFilesDesc: "Access to all project files (stems, MIDI)",
-  sourceFilesPrice: "€75 / 375 RON",
 
   // Add-ons
   socialMediaRights: "Social Media Rights",
