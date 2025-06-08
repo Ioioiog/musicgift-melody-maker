@@ -1,5 +1,3 @@
-
-
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -159,52 +157,31 @@ export const packagesTranslations = {
   sourceFiles: "Source Files",
   sourceFilesDesc: "Access to all project files (stems, MIDI)",
   sourceFilesPrice: "€75 / 375 RON",
+
+  // Add-ons
+  commercialRights: "Commercial Rights",
+  commercialRightsDesc: "Full commercial usage rights included",
   
-  // Package-specific add-ons
-  // Personal package add-ons
-  personalDuet: "Duet Version",
-  personalDuetDesc: "Recording with two vocalists for romantic songs",
-  personalDuetPrice: "€35 / 175 RON",
+  distributieMangoRecords: "Mango Records Distribution",
+  distributieMangoRecordsDesc: "Professional distribution through Mango Records",
   
-  personalInstrumental: "Instrumental Version",
-  personalInstrumentalDesc: "Voice-free version of your song",
-  personalInstrumentalPrice: "€20 / 100 RON",
+  customVideo: "Custom Video",
+  customVideoDesc: "Animated video for your song",
   
-  // Premium package add-ons
-  premiumExtendedVideo: "Extended Video",
-  premiumExtendedVideoDesc: "3-5 minute video instead of 1-2 minutes",
-  premiumExtendedVideoPrice: "€150 / 750 RON",
+  audioMessageFromSender: "Audio Message from Sender",
+  audioMessageFromSenderDesc: "Add a personal audio message from the sender for an extra surprise",
   
-  premiumSocialKit: "Social Media Kit",
-  premiumSocialKitDesc: "15-second clips for TikTok, Instagram, YouTube Shorts",
-  premiumSocialKitPrice: "€50 / 250 RON",
+  brandedAudioMessage: "Branded Audio Message",
+  brandedAudioMessageDesc: "Include a short branded voice message at the beginning of the song – perfect for personalized introductions, campaign messages, or brand slogans.",
   
-  // Business package add-ons
-  businessMultipleVersions: "Multiple Versions",
-  businessMultipleVersionsDesc: "3 different versions (30s, 60s, full version)",
-  businessMultipleVersionsPrice: "€100 / 500 RON",
+  commercialRightsUpgrade: "Commercial Rights Upgrade",
+  commercialRightsUpgradeDesc: "Extended commercial rights for business use",
   
-  businessJingleKit: "Complete Jingle Kit",
-  businessJingleKitDesc: "5 short jingle variations (5-15 seconds)",
-  businessJingleKitPrice: "€150 / 750 RON",
+  extendedSong: "Extended Song",
+  extendedSongDesc: "Longer version of your song",
   
-  // Artist package add-ons
-  artistVocalCoaching: "Vocal Coaching",
-  artistVocalCoachingDesc: "1-hour online vocal coaching session",
-  artistVocalCoachingPrice: "€80 / 400 RON",
-  
-  artistMusicVideo: "Professional Music Video",
-  artistMusicVideoDesc: "Professional filmed and edited music video",
-  artistMusicVideoPrice: "€500 / 2500 RON",
-  
-  // Gift package add-ons
-  giftCustomPackaging: "Custom Packaging",
-  giftCustomPackagingDesc: "Personalized gift box with message",
-  giftCustomPackagingPrice: "€25 / 125 RON",
-  
-  giftPhysicalCard: "Physical Card",
-  giftPhysicalCardDesc: "Physical gift card delivered by mail",
-  giftPhysicalCardPrice: "€15 / 75 RON",
+  godparentsmelody: "Godparents Melody",
+  godparentsmelodyDesc: "Special melody for godparents",
   
   // New Special Event Package names
   weddingPackage: "Wedding Package",
@@ -334,4 +311,3 @@ export const packagesTranslations = {
   faqSatisfaction: "What if I'm not satisfied?",
   faqSatisfactionAnswer: "We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost."
 };
-

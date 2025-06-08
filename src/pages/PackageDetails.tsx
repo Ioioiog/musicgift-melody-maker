@@ -206,6 +206,7 @@ const PackageDetails = () => {
       case 'customVideo':
         return <FileText className="w-4 h-4" />;
       case 'audioMessageFromSender':
+      case 'brandedAudioMessage':
         return <Mic className="w-4 h-4" />;
       case 'extendedSong':
         return <Music className="w-4 h-4" />;

@@ -1,4 +1,3 @@
-
 import type { Field, Step, FieldOption, Addon } from '@/types';
 
 export interface PackageInclude {
@@ -379,7 +378,7 @@ export const packages: Package[] = [
       { include_key: "businessInclude3" },
       { include_key: "businessInclude4" },
     ],
-    available_addons: ["rushDelivery", "commercialRights", "customVideo", "audioMessageFromSender", "commercialRightsUpgrade", "extendedSong"],
+    available_addons: ["rushDelivery", "commercialRights", "customVideo", "brandedAudioMessage", "commercialRightsUpgrade", "extendedSong"],
     steps: [],
   },
   {
@@ -568,7 +567,16 @@ export const addOns: AddOn[] = [
     description_key: "audioMessageFromSenderDesc",
     price_ron: 100,
     price_eur: 20,
-    availableFor: ['personal', 'business', 'premium', 'wedding', 'baptism', 'comingOfAge']
+    availableFor: ['personal', 'premium', 'wedding', 'baptism', 'comingOfAge']
+  },
+  {
+    id: "brandedAudioMessage",
+    value: "brandedAudioMessage",
+    label_key: "brandedAudioMessage",
+    description_key: "brandedAudioMessageDesc",
+    price_ron: 0,
+    price_eur: 0,
+    availableFor: ['business']
   },
   {
     id: "commercialRightsUpgrade",
