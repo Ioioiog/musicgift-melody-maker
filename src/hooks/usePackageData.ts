@@ -1,7 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { packages, addons, type PackageData } from '@/data/packages';
+import { packages, addOns, type PackageData } from '@/data/packages';
 
 export interface StepData {
   id: string;
@@ -71,7 +71,7 @@ export const usePackageSteps = (packageValue: string) => {
             .sort((a: any, b: any) => a.field_order - b.field_order)
             .map((field: any) => ({
               ...field,
-              id: `${step.step_number}-${field.field_name}`,
+              id: `${step.step_order}-${field.field_name}`,
               // Safe transformation of options - only process if options exists and is an array
               options: field.options && Array.isArray(field.options) ? field.options.map((option: any) => {
                 // If it's already a FieldOption object, return as is
@@ -89,7 +89,9 @@ export const usePackageSteps = (packageValue: string) => {
 
           return {
             ...step,
-            id: `step-${step.step_number}`,
+            id: `step-${step.step_order}`,
+            step_number: step.step_order,
+            title_key: step.step_key,
             fields: transformedFields
           };
         });
@@ -116,10 +118,10 @@ export const useAddons = () => {
     queryFn: async () => {
       console.log('Using consolidated addons data...');
       
-      // Transform addons object to array format expected by components
-      const addonsArray = Object.entries(addons).map(([key, addon]) => ({
-        id: key,
-        addon_key: key,
+      // Transform addons array to format expected by components
+      const addonsArray = addOns.map(addon => ({
+        id: addon.id,
+        addon_key: addon.value,
         label_key: addon.label_key,
         description_key: addon.description_key,
         price_ron: addon.price_ron,

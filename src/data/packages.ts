@@ -1,4 +1,19 @@
-import { OrderFlow } from "@/components/OrderForm";
+
+export interface OrderFlow {
+  steps: {
+    step_key: string;
+    step_order: number;
+    fields: {
+      id: string;
+      field_name: string;
+      field_type: string;
+      placeholder_key?: string;
+      required: boolean;
+      field_order: number;
+      options?: { value: string; label_key: string }[];
+    }[];
+  }[];
+}
 
 export interface Package {
   id: string;
@@ -12,6 +27,19 @@ export interface Package {
   includes: { include_key: string }[];
   available_addons: string[];
   order_flow: OrderFlow;
+  steps: {
+    step_key: string;
+    step_order: number;
+    fields: {
+      id: string;
+      field_name: string;
+      field_type: string;
+      placeholder_key?: string;
+      required: boolean;
+      field_order: number;
+      options?: { value: string; label_key: string }[];
+    }[];
+  }[];
   tag?: string;
 }
 
@@ -22,6 +50,7 @@ export interface AddOn {
   description_key: string;
   price_ron: number;
   price_eur: number;
+  availableFor: string[];
 }
 
 export interface Field {
@@ -299,6 +328,7 @@ export const packages: Package[] = [
     ],
     available_addons: [],
     order_flow: { steps: [] },
+    steps: [],
     tag: "new",
   },
   {
@@ -318,6 +348,7 @@ export const packages: Package[] = [
     ],
     available_addons: ["personalDuet", "personalInstrumental"],
     order_flow: { steps: [] },
+    steps: [],
   },
   {
     id: "premium",
@@ -335,6 +366,7 @@ export const packages: Package[] = [
     ],
     available_addons: ["premiumExtendedVideo", "premiumSocialKit"],
     order_flow: { steps: [] },
+    steps: [],
     tag: "popular",
   },
   {
@@ -354,6 +386,7 @@ export const packages: Package[] = [
     ],
     available_addons: ["businessMultipleVersions", "businessJingleKit"],
     order_flow: { steps: [] },
+    steps: [],
   },
   {
     id: "artist",
@@ -372,6 +405,7 @@ export const packages: Package[] = [
     ],
     available_addons: ["artistVocalCoaching", "artistMusicVideo"],
     order_flow: { steps: [] },
+    steps: [],
   },
   {
     id: "remix",
@@ -392,6 +426,7 @@ export const packages: Package[] = [
     ],
     available_addons: [],
     order_flow: { steps: [] },
+    steps: [],
   },
   {
     id: "instrumental",
@@ -411,6 +446,7 @@ export const packages: Package[] = [
     ],
     available_addons: [],
     order_flow: { steps: [] },
+    steps: [],
   },
   {
     id: "gift",
@@ -428,6 +464,7 @@ export const packages: Package[] = [
     ],
     available_addons: ["giftCustomPackaging", "giftPhysicalCard"],
     order_flow: { steps: [] },
+    steps: [],
     tag: "gift",
   },
   {
@@ -451,6 +488,7 @@ export const packages: Package[] = [
     ],
     available_addons: ["personalizedAudioMessage", "godparentsSpecialMelody"],
     order_flow: weddingOrderFlow,
+    steps: weddingOrderFlow.steps,
     tag: "new"
   },
   {
@@ -472,6 +510,7 @@ export const packages: Package[] = [
     ],
     available_addons: ["personalizedAudioMessage"],
     order_flow: baptismOrderFlow,
+    steps: baptismOrderFlow.steps,
     tag: "new"
   },
   {
@@ -493,6 +532,7 @@ export const packages: Package[] = [
     ],
     available_addons: ["personalizedAudioMessage"],
     order_flow: comingOfAgeOrderFlow,
+    steps: comingOfAgeOrderFlow.steps,
     tag: "new"
   }
 ];
@@ -505,6 +545,7 @@ export const addOns: AddOn[] = [
     description_key: "rushDeliveryDesc",
     price_ron: 0,
     price_eur: 0,
+    availableFor: []
   },
   {
     id: "extraRevision",
@@ -513,6 +554,7 @@ export const addOns: AddOn[] = [
     description_key: "extraRevisionDesc",
     price_ron: 125,
     price_eur: 25,
+    availableFor: []
   },
   {
     id: "extendedLicense",
@@ -521,6 +563,7 @@ export const addOns: AddOn[] = [
     description_key: "extendedLicenseDesc",
     price_ron: 499,
     price_eur: 99,
+    availableFor: []
   },
   {
     id: "sourceFiles",
@@ -529,6 +572,7 @@ export const addOns: AddOn[] = [
     description_key: "sourceFilesDesc",
     price_ron: 375,
     price_eur: 75,
+    availableFor: []
   },
   {
     id: "personalDuet",
@@ -537,6 +581,7 @@ export const addOns: AddOn[] = [
     description_key: "personalDuetDesc",
     price_ron: 175,
     price_eur: 35,
+    availableFor: ["personal"]
   },
   {
     id: "personalInstrumental",
@@ -545,6 +590,7 @@ export const addOns: AddOn[] = [
     description_key: "personalInstrumentalDesc",
     price_ron: 100,
     price_eur: 20,
+    availableFor: ["personal"]
   },
   {
     id: "premiumExtendedVideo",
@@ -553,6 +599,7 @@ export const addOns: AddOn[] = [
     description_key: "premiumExtendedVideoDesc",
     price_ron: 750,
     price_eur: 150,
+    availableFor: ["premium"]
   },
   {
     id: "premiumSocialKit",
@@ -561,6 +608,7 @@ export const addOns: AddOn[] = [
     description_key: "premiumSocialKitDesc",
     price_ron: 250,
     price_eur: 50,
+    availableFor: ["premium"]
   },
   {
     id: "businessMultipleVersions",
@@ -569,6 +617,7 @@ export const addOns: AddOn[] = [
     description_key: "businessMultipleVersionsDesc",
     price_ron: 500,
     price_eur: 100,
+    availableFor: ["business"]
   },
   {
     id: "businessJingleKit",
@@ -577,6 +626,7 @@ export const addOns: AddOn[] = [
     description_key: "businessJingleKitDesc",
     price_ron: 750,
     price_eur: 150,
+    availableFor: ["business"]
   },
   {
     id: "artistVocalCoaching",
@@ -585,6 +635,7 @@ export const addOns: AddOn[] = [
     description_key: "artistVocalCoachingDesc",
     price_ron: 400,
     price_eur: 80,
+    availableFor: ["artist"]
   },
   {
     id: "artistMusicVideo",
@@ -593,6 +644,7 @@ export const addOns: AddOn[] = [
     description_key: "artistMusicVideoDesc",
     price_ron: 2500,
     price_eur: 500,
+    availableFor: ["artist"]
   },
   {
     id: "giftCustomPackaging",
@@ -601,6 +653,7 @@ export const addOns: AddOn[] = [
     description_key: "giftCustomPackagingDesc",
     price_ron: 125,
     price_eur: 25,
+    availableFor: ["gift"]
   },
   {
     id: "giftPhysicalCard",
@@ -609,6 +662,7 @@ export const addOns: AddOn[] = [
     description_key: "giftPhysicalCardDesc",
     price_ron: 75,
     price_eur: 15,
+    availableFor: ["gift"]
   },
   {
     id: "personalizedAudioMessage",
@@ -617,6 +671,7 @@ export const addOns: AddOn[] = [
     description_key: "personalizedAudioMessageDesc",
     price_ron: 149,
     price_eur: 29,
+    availableFor: ["wedding", "baptism", "coming-of-age"]
   },
   {
     id: "godparentsSpecialMelody",
@@ -625,5 +680,9 @@ export const addOns: AddOn[] = [
     description_key: "godparentsSpecialMelodyDesc",
     price_ron: 249,
     price_eur: 49,
+    availableFor: ["wedding"]
   },
 ];
+
+// Export PackageData type alias
+export type PackageData = Package;
