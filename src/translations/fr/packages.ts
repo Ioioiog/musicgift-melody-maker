@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choisissez votre forfait",
   selectPerfectPackage: "Sélectionnez le forfait parfait qui correspond à vos besoins et votre budget",
@@ -113,10 +114,10 @@ export const packagesTranslations = {
   didYouKnowPremium2Desc: "Les vidéos musicales reçoivent 1200% de partages en plus que le texte et les images combinés sur les plateformes de médias sociaux.",
   
   // Business package facts
-  didYouKnowBusiness1Title: "Amélioration de la mémorisation de marque",
-  didYouKnowBusiness1Desc: "Les marques avec des jingles personnalisés ont des taux de mémorisation 96% plus élevés comparés à celles utilisant de la musique de fond générique.",
-  didYouKnowBusiness2Title: "Marketing émotionnel",
-  didYouKnowBusiness2Desc: "Le contenu émotionnel est partagé 2 fois plus que le contenu rationnel, faisant des chansons personnalisées des outils de marketing puissants.",
+  didYouKnowBusiness1Title: "Une marque avec identité audio est retenue 5 fois plus facilement",
+  didYouKnowBusiness1Desc: "Une identité audio professionnelle n'est pas qu'un luxe – c'est une signature unique et reconnaissable qui vous différencie sur un marché encombré, crée une connexion émotionnelle forte avec votre public, augmente l'impact des publicités et du contenu numérique, et améliore la confiance et le professionnalisme perçus.",
+  didYouKnowBusiness2Title: "Votre marque mérite d'avoir un son unique",
+  didYouKnowBusiness2Desc: "Grâce au forfait Business MusicGift, nous composons pour vous une pièce originale, parfaitement adaptée à votre marque, public et valeurs. Elle peut être utilisée dans les publicités, clips réseaux sociaux, podcasts, spots radio ou sur votre site web – partout où vous voulez être entendu.",
   
   // Artist package facts
   didYouKnowArtist1Title: "La première impression compte",

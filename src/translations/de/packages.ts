@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Wählen Sie Ihr Paket",
   selectPerfectPackage: "Wählen Sie das perfekte Paket, das zu Ihren Bedürfnissen und Ihrem Budget passt",
@@ -113,10 +114,10 @@ export const packagesTranslations = {
   didYouKnowPremium2Desc: "Musikvideos erhalten 1200% mehr Shares als Text und Bilder zusammen auf Social-Media-Plattformen.",
   
   // Business package facts
-  didYouKnowBusiness1Title: "Markenwiedererkennungs-Boost",
-  didYouKnowBusiness1Desc: "Marken mit benutzerdefinierten Jingles haben 96% höhere Wiedererinnerungsraten im Vergleich zu denen, die generische Hintergrundmusik verwenden.",
-  didYouKnowBusiness2Title: "Emotionales Marketing",
-  didYouKnowBusiness2Desc: "Emotionaler Inhalt wird 2x mehr geteilt als rationaler Inhalt, was benutzerdefinierte Lieder zu mächtigen Marketing-Tools macht.",
+  didYouKnowBusiness1Title: "Eine Marke mit Audio-Identität wird 5-mal leichter erinnert",
+  didYouKnowBusiness1Desc: "Eine professionelle Audio-Identität ist nicht nur ein Luxus – sie ist eine einzigartige, erkennbare Signatur, die Sie in einem überfüllten Markt differenziert, eine starke emotionale Verbindung zu Ihrem Publikum schafft, die Wirkung von Anzeigen und digitalem Content steigert und Vertrauen sowie wahrgenommenen Professionalismus erhöht.",
+  didYouKnowBusiness2Title: "Ihre Marke verdient einen einzigartigen Klang",
+  didYouKnowBusiness2Desc: "Mit dem Business MusicGift-Paket komponieren wir für Sie ein originelles Stück, perfekt angepasst an Ihre Marke, Ihr Publikum und Ihre Werte. Es kann in Anzeigen, Social-Media-Clips, Podcasts, Radiospots oder auf Ihrer Website verwendet werden – überall wo Sie gehört werden möchten.",
   
   // Artist package facts
   didYouKnowArtist1Title: "Der erste Eindruck zählt",

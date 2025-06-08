@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -113,10 +114,10 @@ export const packagesTranslations = {
   didYouKnowPremium2Desc: "Music videos receive 1200% more shares than text and images combined on social media platforms.",
   
   // Business package facts
-  didYouKnowBusiness1Title: "Brand recall boost",
-  didYouKnowBusiness1Desc: "Brands with custom jingles have 96% higher recall rates compared to those using generic background music.",
-  didYouKnowBusiness2Title: "Emotional marketing",
-  didYouKnowBusiness2Desc: "Emotional content is shared 2x more than rational content, making custom songs powerful marketing tools.",
+  didYouKnowBusiness1Title: "A brand with audio identity is remembered 5 times easier",
+  didYouKnowBusiness1Desc: "A professional audio identity is not just a luxury – it's a unique, recognizable signature that differentiates you in a crowded market, creates a strong emotional connection with your audience, increases the impact of ads and digital content, and enhances perceived trust and professionalism.",
+  didYouKnowBusiness2Title: "Your brand deserves to have a unique sound",
+  didYouKnowBusiness2Desc: "Through the Business MusicGift package, we compose an original piece for you, perfectly adapted to your brand, audience and values. It can be used in ads, social media clips, podcasts, radio spots or on your website – wherever you want to be heard.",
   
   // Artist package facts
   didYouKnowArtist1Title: "First impression matters",

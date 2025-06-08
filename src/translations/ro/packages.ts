@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -113,10 +114,10 @@ export const packagesTranslations = {
   didYouKnowPremium2Desc: "Videoclipurile muzicale primesc cu 1200% mai multe share-uri decât textul și imaginile combinate pe platformele social media.",
   
   // Business package facts
-  didYouKnowBusiness1Title: "Creșterea recunoașterii mărcii",
-  didYouKnowBusiness1Desc: "Mărcile cu jingle-uri personalizate au rate de recunoaștere cu 96% mai mari comparativ cu cele care folosesc muzică de fundal generică.",
-  didYouKnowBusiness2Title: "Marketing emoțional",
-  didYouKnowBusiness2Desc: "Conținutul emoțional este distribuit de 2 ori mai mult decât conținutul rațional, făcând melodiile personalizate instrumente puternice de marketing.",
+  didYouKnowBusiness1Title: "Un brand cu identitate sonoră este reținut de 5 ori mai ușor",
+  didYouKnowBusiness1Desc: "O identitate audio profesională nu este doar un moft – este o semnătură unică, recognoscibilă, care te diferențiază pe o piață aglomerată, creează o legătură emoțională puternică cu publicul, crește impactul reclamelor și sporește încrederea și profesionalismul perceput.",
+  didYouKnowBusiness2Title: "Brandul tău merită să aibă un sunet unic",
+  didYouKnowBusiness2Desc: "Prin pachetul Business MusicGift, compunem pentru tine o piesă originală, perfect adaptată brandului, publicului și valorilor tale. Poate fi folosită în reclame, clipuri social media, podcasturi, spoturi radio sau pe site-ul tău – oriunde vrei să fii auzit.",
   
   // Artist package facts
   didYouKnowArtist1Title: "Prima impresie contează",

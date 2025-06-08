@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Wybierz swój pakiet",
   selectPerfectPackage: "Wybierz idealny pakiet, który pasuje do twoich potrzeb i budżetu",
@@ -113,10 +114,10 @@ export const packagesTranslations = {
   didYouKnowPremium2Desc: "Teledyski otrzymują 1200% więcej udostępnień niż tekst i obrazy łącznie na platformach mediów społecznościowych.",
   
   // Business package facts
-  didYouKnowBusiness1Title: "Zwiększenie rozpoznawalności marki",
-  didYouKnowBusiness1Desc: "Marki z niestandardowymi jingleami mają o 96% wyższe wskaźniki zapamiętywania w porównaniu z tymi używającymi generycznej muzyki tła.",
-  didYouKnowBusiness2Title: "Marketing emocjonalny",
-  didYouKnowBusiness2Desc: "Treści emocjonalne są udostępniane 2 razy częściej niż treści racjonalne, czyniąc niestandardowe piosenki potężnymi narzędziami marketingowymi.",
+  didYouKnowBusiness1Title: "Marka z tożsamością audio jest zapamiętywana 5 razy łatwiej",
+  didYouKnowBusiness1Desc: "Profesjonalna tożsamość audio to nie tylko luksus – to unikalna, rozpoznawalna sygnatura, która wyróżnia Cię na zatłoczonym rynku, tworzy silną emocjonalną więź z publicznością, zwiększa wpływ reklam i treści cyfrowych oraz podnosi zaufanie i postrzegany profesjonalizm.",
+  didYouKnowBusiness2Title: "Twoja marka zasługuje na unikalny dźwięk",
+  didYouKnowBusiness2Desc: "Poprzez pakiet Business MusicGift komponujemy dla Ciebie oryginalny utwór, idealnie dopasowany do Twojej marki, publiczności i wartości. Może być używany w reklamach, klipach social media, podcastach, spotach radiowych lub na Twojej stronie internetowej – wszędzie tam, gdzie chcesz być słyszalny.",
   
   // Artist package facts
   didYouKnowArtist1Title: "Pierwsze wrażenie się liczy",
