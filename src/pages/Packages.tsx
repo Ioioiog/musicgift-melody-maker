@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Clock, Star, ArrowRight, Gift } from 'lucide-react';
@@ -67,9 +68,9 @@ const Packages = () => {
     <div className="min-h-screen">
       <Navigation />
       
-      {/* Hero Section with Music Background */}
+      {/* Compact Hero Section with Music Background - Matching Gift Cards Style */}
       <section 
-        className="py-20 px-4 text-center text-white relative overflow-hidden" 
+        className="pt-16 md:pt-20 lg:pt-24 pb-6 px-4 text-center text-white relative overflow-hidden" 
         style={{
           backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
           backgroundSize: 'cover',
@@ -77,17 +78,17 @@ const Packages = () => {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-0 bg-black/20"></div>
         <div className="max-w-4xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="text-2xl md:text-3xl font-bold mb-2">
               {t('chooseYourPackage', 'Choose Your Package')}
             </h1>
-            <p className="text-xl md:text-2xl mb-8 opacity-90">
+            <p className="text-base md:text-lg mb-4 opacity-90">
               {t('packagesSubtitle', 'Professional music creation tailored to your needs')}
             </p>
           </motion.div>
