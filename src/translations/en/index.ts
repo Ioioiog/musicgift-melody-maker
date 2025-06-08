@@ -11,6 +11,7 @@ import { howItWorksTranslations } from './howItWorks';
 import { contactTranslations } from './contact';
 import { unsubscribeTranslations } from './unsubscribe';
 import { faqTranslations } from './faq';
+import { didYouKnowTranslations } from './didYouKnow';
 
 export const enTranslations = {
   ...navigationTranslations,
@@ -25,4 +26,5 @@ export const enTranslations = {
   ...contactTranslations,
   ...unsubscribeTranslations,
   ...faqTranslations,
+  ...didYouKnowTranslations,
 };

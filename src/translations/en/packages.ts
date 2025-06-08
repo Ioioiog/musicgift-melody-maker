@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -97,45 +98,6 @@ export const packagesTranslations = {
   reload: "Reload",
   noPackagesAvailable: "No packages available at the moment.",
   checkBackLater: "Please check back later.",
-  
-  // Did You Know section
-  didYouKnow: "Did You Know?",
-  
-  // Personal package facts
-  didYouKnowPersonal1Title: "Music triggers memories",
-  didYouKnowPersonal1Desc: "Studies show that personalized songs can trigger stronger emotional memories than generic music, making them perfect for special occasions.",
-  didYouKnowPersonal2Title: "Unique gift impact",
-  didYouKnowPersonal2Desc: "Personalized gifts are remembered 3x longer than traditional gifts, creating lasting emotional connections.",
-  
-  // Premium package facts
-  didYouKnowPremium1Title: "Global reach potential",
-  didYouKnowPremium1Desc: "Songs distributed globally can reach over 100 million potential listeners across all major streaming platforms.",
-  didYouKnowPremium2Title: "Video engagement",
-  didYouKnowPremium2Desc: "Music videos receive 1200% more shares than text and images combined on social media platforms.",
-  
-  // Business package facts
-  didYouKnowBusiness1Title: "A brand with audio identity is remembered 5 times easier",
-  didYouKnowBusiness1Desc: "A professional audio identity is not just a luxury – it's a unique, recognizable signature that differentiates you in a crowded market, creates a strong emotional connection with your audience, increases the impact of ads and digital content, and enhances perceived trust and professionalism.",
-  didYouKnowBusiness2Title: "Your brand deserves to have a unique sound",
-  didYouKnowBusiness2Desc: "Through the Business MusicGift package, we compose an original piece for you, perfectly adapted to your brand, audience and values. It can be used in ads, social media clips, podcasts, radio spots or on your website – wherever you want to be heard.",
-  
-  // Artist package facts
-  didYouKnowArtist1Title: "First impression matters",
-  didYouKnowArtist1Desc: "Music industry professionals decide within the first 15 seconds if a song has potential, highlighting the importance of professional production.",
-  didYouKnowArtist2Title: "Streaming success",
-  didYouKnowArtist2Desc: "Independent artists account for 43% of the global music market, proving that quality production can compete with major labels.",
-  
-  // Gift package facts
-  didYouKnowGift1Title: "Experience gifts",
-  didYouKnowGift1Desc: "Experience-based gifts like custom songs create longer-lasting happiness than material gifts, according to psychological studies.",
-  didYouKnowGift2Title: "Musical bonding",
-  didYouKnowGift2Desc: "Sharing music strengthens relationships by releasing oxytocin, the 'bonding hormone', making musical gifts especially meaningful.",
-  
-  // General facts
-  didYouKnowGeneral1Title: "Music and emotions",
-  didYouKnowGeneral1Desc: "Music activates the same neural pathways as food, sex, and drugs, explaining why personalized songs feel so rewarding.",
-  didYouKnowGeneral2Title: "Memory enhancement",
-  didYouKnowGeneral2Desc: "The human brain can remember lyrics and melodies for decades, making songs perfect time capsules for preserving memories.",
   
   // Add-ons section
   availableAddOns: "Available Add-ons",
