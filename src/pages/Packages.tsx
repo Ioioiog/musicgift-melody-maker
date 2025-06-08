@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Clock, Star, ArrowRight, Gift } from 'lucide-react';
@@ -49,8 +48,8 @@ const Packages = () => {
     );
   };
 
-  // Define the desired order for packages
-  const packageOrder = ['personal', 'premium', 'business', 'plus', 'artist', 'remix', 'instrumental', 'gift'];
+  // Define the desired order for packages - updated to match user request
+  const packageOrder = ['personal', 'premium', 'business', 'instrumental', 'remix', 'gift', 'plus', 'artist'];
   
   // Sort packages according to the defined order
   const sortedPackages = packages?.sort((a, b) => {
