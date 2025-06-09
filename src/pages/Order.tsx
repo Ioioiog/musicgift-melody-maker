@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useGiftCardByCode } from "@/hooks/useGiftCards";
 import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Order = () => {
   const { toast } = useToast();
@@ -25,6 +26,7 @@ const Order = () => {
   const { data: addons = [] } = useAddons();
   const [searchParams] = useSearchParams();
   const [orderData, setOrderData] = useState<any>(null);
+  const isMobile = useIsMobile();
 
   // Extract gift card parameters from URL
   const giftCardCode = searchParams.get('gift');
@@ -262,14 +264,16 @@ const Order = () => {
         
         <OrderHeroSection />
         
-        <section className="py-4 sm:py-6 md:py-8">
-          <div className="container mx-auto px-2 sm:px-4">
+        <section className="py-2 sm:py-4 md:py-6 lg:py-8">
+          <div className="container mx-auto px-2 sm:px-4 lg:px-6">
             {isGiftPackage ? (
-              <GiftPurchaseWizard onComplete={handleGiftCardComplete} />
+              <div className="max-w-4xl mx-auto">
+                <GiftPurchaseWizard onComplete={handleGiftCardComplete} />
+              </div>
             ) : (
-              <div className="flex flex-col lg:flex-row gap-6">
+              <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6">
                 {/* Main content - Order Wizard */}
-                <div className="flex-1 lg:max-w-4xl">
+                <div className="flex-1 order-2 lg:order-1">
                   <OrderWizard 
                     onComplete={handleOrderComplete} 
                     giftCard={giftCard} 
@@ -278,8 +282,18 @@ const Order = () => {
                   />
                 </div>
                 
-                {/* Sidebar - Order Summary */}
-                <div className="lg:w-80 xl:w-96">
+                {/* Mobile Order Summary - Above wizard on mobile */}
+                {isMobile && orderData?.selectedPackage && (
+                  <div className="order-1 lg:hidden">
+                    <OrderSidebarSummary 
+                      orderData={orderData}
+                      giftCard={giftCard}
+                    />
+                  </div>
+                )}
+                
+                {/* Desktop Sidebar - Order Summary */}
+                <div className="hidden lg:block lg:w-80 xl:w-96 order-3 lg:order-2">
                   <OrderSidebarSummary 
                     orderData={orderData}
                     giftCard={giftCard}
