@@ -18,12 +18,10 @@ import { getAddonPrice } from '@/utils/pricing';
 import { Addon, Package } from '@/types';
 import AudioRecorder from './AudioRecorder';
 import { getVatValidationError } from '@/utils/vatValidation';
-
 interface FieldOption {
   value: string;
   label_key: string;
 }
-
 interface Field {
   id: string;
   field_name: string;
@@ -34,7 +32,6 @@ interface Field {
   field_order: number;
   options?: FieldOption[];
 }
-
 interface FormFieldRendererProps {
   field: Field;
   value: any;
@@ -48,7 +45,6 @@ interface FormFieldRendererProps {
   selectedPackageData?: Package;
   formData?: any;
 }
-
 const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   field,
   value,
@@ -62,48 +58,47 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   selectedPackageData,
   formData = {}
 }) => {
-  const { t } = useLanguage();
-  const { currency } = useCurrency();
+  const {
+    t
+  } = useLanguage();
+  const {
+    currency
+  } = useCurrency();
   const [date, setDate] = useState<Date>();
   const [vatError, setVatError] = useState<string | null>(null);
 
   // Helper function to check if addon should be shown based on package's available_addons
   const shouldShowAddon = (addon: Addon) => {
     if (!addon.is_active) return false;
-    
+
     // Use the passed package data if available
     if (selectedPackageData) {
       const isAvailable = selectedPackageData.available_addons.includes(addon.addon_key);
-      
       console.log('Addon availability check:', {
         addonKey: addon.addon_key,
         selectedPackage: selectedPackageData.value,
         packageAvailableAddons: selectedPackageData.available_addons,
         isAvailable
       });
-      
       return isAvailable;
     }
-    
+
     // Fallback: if no package data is provided, don't show any addons
     console.warn('No package data provided for addon filtering');
     return false;
   };
-
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>, addonKey: string) => {
     const files = event.target.files;
     if (files) {
       onAddonFieldChange(addonKey, Array.from(files));
     }
   };
-
   const handleAudioRecording = (audioBlob: Blob, addonKey: string) => {
     onAddonFieldChange(addonKey, audioBlob);
   };
-
   const handleVatCodeChange = (vatCode: string) => {
     onChange(vatCode);
-    
+
     // Only validate if the field is VAT code and there's a value
     if (field.field_name === 'vatCode' && vatCode) {
       const error = getVatValidationError(vatCode);
@@ -121,7 +116,6 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   if (isCompanyField && !isCompanyInvoice) {
     return null;
   }
-
   const renderField = () => {
     switch (field.field_type) {
       case 'text':
@@ -129,132 +123,72 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       case 'tel':
       case 'url':
         const isVatField = field.field_name === 'vatCode';
-        return (
-          <div className="space-y-2">
-            <Input
-              type={field.field_type}
-              value={value || ''}
-              onChange={(e) => isVatField ? handleVatCodeChange(e.target.value) : onChange(e.target.value)}
-              placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
-              required={field.required}
-              className={cn(
-                "w-full",
-                isVatField && vatError && "border-red-500 focus:border-red-500"
-              )}
-            />
-            {isVatField && vatError && (
-              <div className="flex items-center space-x-2 text-red-600 text-sm">
+        return <div className="space-y-2">
+            <Input type={field.field_type} value={value || ''} onChange={e => isVatField ? handleVatCodeChange(e.target.value) : onChange(e.target.value)} placeholder={field.placeholder_key ? t(field.placeholder_key) : ''} required={field.required} className={cn("w-full", isVatField && vatError && "border-red-500 focus:border-red-500")} />
+            {isVatField && vatError && <div className="flex items-center space-x-2 text-red-600 text-sm">
                 <AlertCircle className="w-4 h-4" />
                 <span>{t(vatError === 'Cod TVA prea scurt' ? 'vatCodeTooShort' : 'vatCodeInvalidFormat')}</span>
-              </div>
-            )}
-          </div>
-        );
-
+              </div>}
+          </div>;
       case 'textarea':
-        return (
-          <Textarea
-            value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
-            required={field.required}
-            className="min-h-[100px] w-full"
-          />
-        );
-
+        return <Textarea value={value || ''} onChange={e => onChange(e.target.value)} placeholder={field.placeholder_key ? t(field.placeholder_key) : ''} required={field.required} className="min-h-[100px] w-full" />;
       case 'audio':
-        return (
-          <div className="space-y-2">
-            <AudioRecorder
-              value={value || null}
-              onChange={(audioFile) => onChange(audioFile)}
-              maxDuration={45}
-            />
-            {field.placeholder_key && (
-              <p className="text-sm text-gray-600">
+        return <div className="space-y-2">
+            <AudioRecorder value={value || null} onChange={audioFile => onChange(audioFile)} maxDuration={45} />
+            {field.placeholder_key && <p className="text-sm text-gray-600">
                 {t(field.placeholder_key)}
-              </p>
-            )}
-          </div>
-        );
-
+              </p>}
+          </div>;
       case 'select':
         // Validate that options exist and are properly formatted
         if (!field.options || !Array.isArray(field.options)) {
           console.warn('Select field missing valid options:', field);
-          return (
-            <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md">
+          return <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md">
               <AlertCircle className="w-4 h-4" />
               <span className="text-sm">{t('fieldConfigurationError')}</span>
-            </div>
-          );
+            </div>;
         }
-
-        return (
-          <Select value={value || ''} onValueChange={onChange}>
+        return <Select value={value || ''} onValueChange={onChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder={field.placeholder_key ? t(field.placeholder_key) : t('selectOption')} />
             </SelectTrigger>
             <SelectContent>
               {field.options.map((option, index) => {
-                // Ensure option has proper structure
-                const optionValue = typeof option === 'string' ? option : option.value;
-                const optionLabel = typeof option === 'string' ? option : option.label_key;
-                
-                return (
-                  <SelectItem key={`${optionValue}-${index}`} value={optionValue}>
+              // Ensure option has proper structure
+              const optionValue = typeof option === 'string' ? option : option.value;
+              const optionLabel = typeof option === 'string' ? option : option.label_key;
+              return <SelectItem key={`${optionValue}-${index}`} value={optionValue}>
                     {t(optionLabel) || optionLabel}
-                  </SelectItem>
-                );
-              })}
+                  </SelectItem>;
+            })}
             </SelectContent>
-          </Select>
-        );
-
+          </Select>;
       case 'checkbox':
-        return (
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              checked={value || false}
-              onCheckedChange={onChange}
-              required={field.required}
-            />
+        return <div className="flex items-center space-x-2">
+            <Checkbox checked={value || false} onCheckedChange={onChange} required={field.required} />
             <Label className="text-sm">
               {field.placeholder_key ? t(field.placeholder_key) : ''}
             </Label>
-          </div>
-        );
-
+          </div>;
       case 'checkbox-group':
         const filteredAddons = availableAddons.filter(addon => shouldShowAddon(addon));
-        
         console.log('Rendering addon checkbox group:', {
           selectedPackage: selectedPackageData?.value || 'none',
           availableAddons: availableAddons.length,
           filteredAddons: filteredAddons.length,
           addonKeys: filteredAddons.map(a => a.addon_key)
         });
-        
         if (filteredAddons.length === 0) {
-          return (
-            <div className="text-sm text-gray-500 italic">
+          return <div className="text-sm text-gray-500 italic">
               {t('noAddonsAvailable')}
-            </div>
-          );
+            </div>;
         }
-        
-        return (
-          <div className="space-y-4">
-            {filteredAddons.map((addon) => (
-              <Card key={addon.id} className="border-2 hover:border-purple-200 transition-colors">
+        return <div className="space-y-4">
+            {filteredAddons.map(addon => <Card key={addon.id} className="border-2 hover:border-purple-200 transition-colors">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-3 flex-1">
-                      <Checkbox
-                        checked={selectedAddons.includes(addon.addon_key)}
-                        onCheckedChange={(checked) => onAddonChange(addon.addon_key, checked as boolean)}
-                        className="mt-1"
-                      />
+                      <Checkbox checked={selectedAddons.includes(addon.addon_key)} onCheckedChange={checked => onAddonChange(addon.addon_key, checked as boolean)} className="mt-1" />
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
                           <Label className="font-semibold text-base cursor-pointer">
@@ -264,34 +198,20 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                             +{getAddonPrice(addon, currency)} {currency}
                           </Badge>
                         </div>
-                        {addon.description_key && (
-                          <p className="text-sm text-gray-600 mb-3">
+                        {addon.description_key && <p className="text-sm text-gray-600 mb-3">
                             {t(addon.description_key)}
-                          </p>
-                        )}
+                          </p>}
                         
                         {/* Render addon-specific fields when selected */}
-                        {selectedAddons.includes(addon.addon_key) && addon.trigger_field_type && (
-                          <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                            {addon.trigger_field_type === 'file' && (
-                              <div>
+                        {selectedAddons.includes(addon.addon_key) && addon.trigger_field_type && <div className="mt-3 p-3 bg-gray-50 rounded-md">
+                            {addon.trigger_field_type === 'file' && <div>
                                 <Label className="text-sm font-medium mb-2 block">
                                   {t('uploadFiles')}
                                 </Label>
                                 <div className="border-2 border-dashed border-gray-300 rounded-md p-4 text-center">
                                   <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                                  <Input
-                                    type="file"
-                                    multiple
-                                    accept={addon.trigger_field_config?.allowedTypes?.join(',')}
-                                    onChange={(e) => handleFileUpload(e, addon.addon_key)}
-                                    className="hidden"
-                                    id={`file-${addon.addon_key}`}
-                                  />
-                                  <label
-                                    htmlFor={`file-${addon.addon_key}`}
-                                    className="cursor-pointer text-sm text-purple-600 hover:text-purple-700"
-                                  >
+                                  <Input type="file" multiple accept={addon.trigger_field_config?.allowedTypes?.join(',')} onChange={e => handleFileUpload(e, addon.addon_key)} className="hidden" id={`file-${addon.addon_key}`} />
+                                  <label htmlFor={`file-${addon.addon_key}`} className="cursor-pointer text-sm text-purple-600 hover:text-purple-700">
                                     {t('clickToUploadFiles')}
                                   </label>
                                   <p className="text-xs text-gray-500 mt-1">
@@ -299,81 +219,50 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                                     {addon.trigger_field_config?.maxTotalSizeMb || 150}MB {t('totalSize')}
                                   </p>
                                 </div>
-                              </div>
-                            )}
+                              </div>}
                             
-                            {addon.trigger_field_type === 'audio-recorder' && (
-                              <div>
+                            {addon.trigger_field_type === 'audio-recorder' && <div>
                                 <Label className="text-sm font-medium mb-2 block">
                                   {t('recordAudioMessage')}
                                 </Label>
-                                <AudioRecorder
-                                  value={addonFieldValues[addon.addon_key] || null}
-                                  onChange={(audioFile) => onAddonFieldChange(addon.addon_key, audioFile)}
-                                  maxDuration={addon.trigger_field_config?.maxDuration || 30}
-                                />
-                              </div>
-                            )}
-                          </div>
-                        )}
+                                <AudioRecorder value={addonFieldValues[addon.addon_key] || null} onChange={audioFile => onAddonFieldChange(addon.addon_key, audioFile)} maxDuration={addon.trigger_field_config?.maxDuration || 30} />
+                              </div>}
+                          </div>}
                       </div>
                     </div>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
-          </div>
-        );
-
+              </Card>)}
+          </div>;
       case 'date':
-        return (
-          <Popover>
+        return <Popover>
             <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !date && "text-muted-foreground"
-                )}
-              >
+              <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}>
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {date ? format(date, "PPP") : <span>{field.placeholder_key ? t(field.placeholder_key) : t('pickDate')}</span>}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={(selectedDate) => {
-                  setDate(selectedDate);
-                  onChange(selectedDate);
-                }}
-                initialFocus
-              />
+              <Calendar mode="single" selected={date} onSelect={selectedDate => {
+              setDate(selectedDate);
+              onChange(selectedDate);
+            }} initialFocus />
             </PopoverContent>
-          </Popover>
-        );
-
+          </Popover>;
       default:
         console.warn('Unknown field type:', field.field_type);
-        return (
-          <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md">
+        return <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md">
             <AlertCircle className="w-4 h-4" />
             <span className="text-sm">{t('unknownFieldType').replace('{fieldType}', field.field_type)}</span>
-          </div>
-        );
+          </div>;
     }
   };
-
-  return (
-    <div className="space-y-3">
-      <Label className="text-sm font-medium text-gray-700">
+  return <div className="space-y-3">
+      <Label className="text-sm font-medium text-gray-700 bg-transparent">
         {field.label_key ? t(field.label_key) : field.field_name === 'package' ? t('selectYourPackage') : field.field_name}
         {field.required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       {renderField()}
-    </div>
-  );
+    </div>;
 };
-
 export default FormFieldRenderer;
