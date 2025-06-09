@@ -1,17 +1,17 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export interface PackageData {
-  id: number;
+  id: string;
   value: string;
   label_key: string;
   tagline_key: string;
   description_key: string;
+  delivery_time_key: string;
   price_ron: number;
   price_eur: number;
-  delivery_time_key: string;
-  is_active: boolean;
-  is_popular: boolean;
-  tag?: string;
   available_addons: string[];
   includes: Array<{
+    id: string;
     include_key: string;
     include_order: number;
   }>;
@@ -23,774 +23,578 @@ export interface PackageData {
       id: string;
       field_name: string;
       field_type: string;
-      label_key?: string;
       placeholder_key?: string;
       required: boolean;
       field_order: number;
-      options?: Array<{ value: string; label_key: string }>;
+      options?: Array<{ value: string; label_key: string; }>;
     }>;
   }>;
 }
 
+export interface Addon {
+  id: string;
+  addon_key: string;
+  label_key: string;
+  description_key: string;
+  price_ron: number;
+  price_eur: number;
+  is_active: boolean;
+  trigger_field_type?: string;
+  trigger_field_config?: {
+    maxFiles?: number;
+    maxTotalSizeMb?: number;
+    allowedTypes?: string[];
+    maxDuration?: number;
+  };
+}
+
 export const packages: PackageData[] = [
   {
-    id: 1,
+    id: "1",
     value: "personal",
     label_key: "personalPackage",
     tagline_key: "personalTagline", 
     description_key: "personalDescription",
-    price_ron: 299,
-    price_eur: 59,
     delivery_time_key: "personalDelivery",
-    is_active: true,
-    is_popular: true,
-    tag: "popular",
-    available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
+    price_ron: 29900,
+    price_eur: 5999,
+    available_addons: ["rushDelivery", "extraRevision", "sourceFiles", "customVideo", "audioMessageFromSender"],
     includes: [
-      { include_key: "personalInclude1", include_order: 1 },
-      { include_key: "personalInclude2", include_order: 2 },
-      { include_key: "personalInclude3", include_order: 3 },
-      { include_key: "personalInclude4", include_order: 4 }
+      { id: "p1", include_key: "personalInclude1", include_order: 1 },
+      { id: "p2", include_key: "personalInclude2", include_order: 2 },
+      { id: "p3", include_key: "personalInclude3", include_order: 3 },
+      { id: "p4", include_key: "personalInclude4", include_order: 4 }
     ],
     steps: [
       {
-        id: "step1",
+        id: "personal_step1",
         step_number: 1,
         title_key: "generalDetails",
         fields: [
           {
-            id: "field1",
-            field_name: "recipientName",
-            field_type: "text",
-            label_key: "recipientName",
-            placeholder_key: "recipientName",
+            id: "songTheme",
+            field_name: "songTheme",
+            field_type: "textarea",
+            placeholder_key: "songThemePlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field2",
-            field_name: "relationship",
+            id: "songLanguage",
+            field_name: "songLanguage",
             field_type: "select",
-            label_key: "relationship",
-            placeholder_key: "relationship",
+            placeholder_key: "selectSongLanguage",
             required: true,
             field_order: 2,
             options: [
-              { value: "partner", label_key: "relationshipPartner" },
-              { value: "spouse", label_key: "relationshipSpouse" },
-              { value: "friend", label_key: "relationshipFriend" },
-              { value: "family", label_key: "relationshipFamily" },
-              { value: "child", label_key: "relationshipChild" },
-              { value: "parent", label_key: "relationshipParent" },
-              { value: "sibling", label_key: "relationshipSibling" },
-              { value: "colleague", label_key: "relationshipColleague" },
-              { value: "other", label_key: "relationshipOther" }
+              { value: "romanian", label_key: "romanianLanguage" },
+              { value: "english", label_key: "englishLanguage" },
+              { value: "french", label_key: "frenchLanguage" },
+              { value: "italian", label_key: "italianLanguage" }
             ]
           },
           {
-            id: "field3",
-            field_name: "occasion",
+            id: "songStyle",
+            field_name: "songStyle",
             field_type: "select",
-            label_key: "occasion",
-            placeholder_key: "occasion",
+            placeholder_key: "selectSongStyle",
             required: true,
             field_order: 3,
             options: [
-              { value: "birthday", label_key: "occasionBirthday" },
-              { value: "anniversary", label_key: "occasionAnniversary" },
-              { value: "wedding", label_key: "occasionWedding" },
-              { value: "valentines", label_key: "occasionValentines" },
-              { value: "christmas", label_key: "occasionChristmas" },
-              { value: "graduation", label_key: "occasionGraduation" },
-              { value: "mothers_day", label_key: "occasionMothersDay" },
-              { value: "fathers_day", label_key: "occasionFathersDay" },
-              { value: "just_because", label_key: "occasionJustBecause" },
-              { value: "other", label_key: "occasionOther" }
+              { value: "pop", label_key: "popStyle" },
+              { value: "rock", label_key: "rockStyle" },
+              { value: "ballad", label_key: "balladStyle" },
+              { value: "folk", label_key: "folkStyle" },
+              { value: "jazz", label_key: "jazzStyle" }
             ]
-          },
-          {
-            id: "field4",
-            field_name: "eventDate",
-            field_type: "date",
-            label_key: "eventDate",
-            placeholder_key: "eventDate",
-            required: false,
-            field_order: 4
-          },
-          {
-            id: "field5",
-            field_name: "songLanguage",
-            field_type: "select",
-            label_key: "songLanguage",
-            placeholder_key: "songLanguage",
-            required: true,
-            field_order: 5,
-            options: [
-              { value: "romanian", label_key: "romanianLanguage" },
-              { value: "english", label_key: "englishLanguage" },
-              { value: "french", label_key: "frenchLanguage" }
-            ]
-          },
-          {
-            id: "field6",
-            field_name: "pronunciationAudio_recipient",
-            field_type: "audio",
-            label_key: "pronunciationAudioRecipient",
-            placeholder_key: "pronunciationAudioRecipient",
-            required: false,
-            field_order: 6
           }
         ]
       },
       {
-        id: "step2",
+        id: "personal_step2",
         step_number: 2,
-        title_key: "storyAndEmotionalDetails",
+        title_key: "recipientDetails",
         fields: [
           {
-            id: "field7",
-            field_name: "story",
-            field_type: "textarea",
-            label_key: "story",
-            placeholder_key: "story",
+            id: "recipientName",
+            field_name: "recipientName",
+            field_type: "text",
+            placeholder_key: "recipientNamePlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field8",
-            field_name: "emotionalTone",
-            field_type: "select",
-            label_key: "emotionalTone",
-            placeholder_key: "emotionalTone",
-            required: true,
-            field_order: 2,
-            options: [
-              { value: "romantic", label_key: "moodRomantic" },
-              { value: "cheerful", label_key: "moodCheerful" },
-              { value: "nostalgic", label_key: "moodNostalgic" },
-              { value: "energetic", label_key: "moodEnergetic" },
-              { value: "melancholic", label_key: "moodMelancholic" },
-              { value: "inspirational", label_key: "moodInspirational" },
-              { value: "emotional", label_key: "moodEmotional" },
-              { value: "uplifting", label_key: "moodUplifting" }
-            ]
+            id: "recipientAge",
+            field_name: "recipientAge",
+            field_type: "text",
+            placeholder_key: "recipientAgePlaceholder",
+            required: false,
+            field_order: 2
           },
           {
-            id: "field9",
-            field_name: "keyMoments",
-            field_type: "textarea",
-            label_key: "keyMoments",
-            placeholder_key: "keyMoments",
+            id: "recipientRelation",
+            field_name: "recipientRelation",
+            field_type: "text",
+            placeholder_key: "recipientRelationPlaceholder",
             required: true,
             field_order: 3
           },
           {
-            id: "field10",
-            field_name: "specialWords",
+            id: "recipientPersonality",
+            field_name: "recipientPersonality",
             field_type: "textarea",
-            label_key: "specialWords",
-            placeholder_key: "specialWords",
-            required: false,
+            placeholder_key: "recipientPersonalityPlaceholder",
+            required: true,
             field_order: 4
-          },
-          {
-            id: "field11",
-            field_name: "pronunciationAudio_keywords",
-            field_type: "audio",
-            label_key: "pronunciationAudioKeywords",
-            placeholder_key: "pronunciationAudioKeywords",
-            required: false,
-            field_order: 5
           }
         ]
       },
       {
-        id: "step3",
+        id: "personal_step3",
         step_number: 3,
-        title_key: "musicalPreferences",
+        title_key: "messageDetails",
         fields: [
           {
-            id: "field12",
-            field_name: "musicStyle",
-            field_type: "select",
-            label_key: "musicStyle",
-            placeholder_key: "musicStyle",
+            id: "specialMessage",
+            field_name: "specialMessage",
+            field_type: "textarea",
+            placeholder_key: "specialMessagePlaceholder",
             required: true,
-            field_order: 1,
-            options: [
-              { value: "pop_contemporary", label_key: "stylePopContemporary" },
-              { value: "rock_ballad", label_key: "styleRockBallad" },
-              { value: "folk_acoustic", label_key: "styleFolkAcoustic" },
-              { value: "country", label_key: "styleCountry" },
-              { value: "jazz_blues", label_key: "styleJazzBlues" },
-              { value: "classical", label_key: "styleClassical" },
-              { value: "electronic", label_key: "styleElectronic" },
-              { value: "hip_hop", label_key: "styleHipHop" },
-              { value: "rnb", label_key: "styleRnB" },
-              { value: "reggae", label_key: "styleReggae" }
-            ]
+            field_order: 1
           },
           {
-            id: "field13",
-            field_name: "referenceSong",
-            field_type: "text",
-            label_key: "referenceSong",
-            placeholder_key: "referenceSong",
+            id: "specialMemories",
+            field_name: "specialMemories",
+            field_type: "textarea",
+            placeholder_key: "specialMemoriesPlaceholder",
             required: false,
             field_order: 2
+          },
+          {
+            id: "additionalInfo",
+            field_name: "additionalInfo",
+            field_type: "textarea",
+            placeholder_key: "additionalInfoPlaceholder",
+            required: false,
+            field_order: 3
           }
         ]
       }
     ]
   },
   {
-    id: 2,
+    id: "2",
     value: "premium",
     label_key: "premiumPackage",
     tagline_key: "premiumTagline",
     description_key: "premiumDescription",
-    price_ron: 499,
-    price_eur: 99,
     delivery_time_key: "premiumDelivery",
-    is_active: true,
-    is_popular: false,
-    tag: "premium",
-    available_addons: ["rushDelivery", "customVideo", "audioMessageFromSender", "extendedSong"],
+    price_ron: 59900,
+    price_eur: 11999,
+    available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles", "customVideo", "audioMessageFromSender"],
     includes: [
-      { include_key: "premiumInclude1", include_order: 1 },
-      { include_key: "premiumInclude2", include_order: 2 },
-      { include_key: "premiumInclude3", include_order: 3 }
+      { id: "pr1", include_key: "premiumInclude1", include_order: 1 },
+      { id: "pr2", include_key: "premiumInclude2", include_order: 2 },
+      { id: "pr3", include_key: "premiumInclude3", include_order: 3 }
     ],
     steps: [
       {
-        id: "step1",
+        id: "premium_step1",
         step_number: 1,
         title_key: "generalDetails",
         fields: [
           {
-            id: "field1",
-            field_name: "recipientName",
-            field_type: "text",
-            label_key: "recipientName",
-            placeholder_key: "recipientName",
+            id: "songTheme",
+            field_name: "songTheme",
+            field_type: "textarea",
+            placeholder_key: "songThemePlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field2",
-            field_name: "relationship",
+            id: "songLanguage",
+            field_name: "songLanguage",
             field_type: "select",
-            label_key: "relationship",
-            placeholder_key: "relationship",
+            placeholder_key: "selectSongLanguage",
             required: true,
             field_order: 2,
             options: [
-              { value: "partner", label_key: "relationshipPartner" },
-              { value: "spouse", label_key: "relationshipSpouse" },
-              { value: "friend", label_key: "relationshipFriend" },
-              { value: "family", label_key: "relationshipFamily" },
-              { value: "child", label_key: "relationshipChild" },
-              { value: "parent", label_key: "relationshipParent" },
-              { value: "sibling", label_key: "relationshipSibling" },
-              { value: "colleague", label_key: "relationshipColleague" },
-              { value: "other", label_key: "relationshipOther" }
+              { value: "romanian", label_key: "romanianLanguage" },
+              { value: "english", label_key: "englishLanguage" },
+              { value: "french", label_key: "frenchLanguage" },
+              { value: "italian", label_key: "italianLanguage" }
             ]
           },
           {
-            id: "field3",
-            field_name: "occasion",
+            id: "songStyle",
+            field_name: "songStyle",
             field_type: "select",
-            label_key: "occasion",
-            placeholder_key: "occasion",
+            placeholder_key: "selectSongStyle",
             required: true,
             field_order: 3,
             options: [
-              { value: "birthday", label_key: "occasionBirthday" },
-              { value: "anniversary", label_key: "occasionAnniversary" },
-              { value: "wedding", label_key: "occasionWedding" },
-              { value: "valentines", label_key: "occasionValentines" },
-              { value: "christmas", label_key: "occasionChristmas" },
-              { value: "graduation", label_key: "occasionGraduation" },
-              { value: "mothers_day", label_key: "occasionMothersDay" },
-              { value: "fathers_day", label_key: "occasionFathersDay" },
-              { value: "just_because", label_key: "occasionJustBecause" },
-              { value: "other", label_key: "occasionOther" }
-            ]
-          },
-          {
-            id: "field4",
-            field_name: "eventDate",
-            field_type: "date",
-            label_key: "eventDate",
-            placeholder_key: "eventDate",
-            required: false,
-            field_order: 4
-          },
-          {
-            id: "field5",
-            field_name: "songLanguage",
-            field_type: "select",
-            label_key: "songLanguage",
-            placeholder_key: "songLanguage",
-            required: true,
-            field_order: 5,
-            options: [
-              { value: "romanian", label_key: "romanianLanguage" },
-              { value: "english", label_key: "englishLanguage" },
-              { value: "french", label_key: "frenchLanguage" }
+              { value: "pop", label_key: "popStyle" },
+              { value: "rock", label_key: "rockStyle" },
+              { value: "ballad", label_key: "balladStyle" },
+              { value: "electronic", label_key: "electronicStyle" },
+              { value: "hiphop", label_key: "hiphopStyle" }
             ]
           }
         ]
       },
       {
-        id: "step2",
+        id: "premium_step2",
         step_number: 2,
-        title_key: "storyAndEmotionalDetails",
+        title_key: "recipientDetails",
         fields: [
           {
-            id: "field6",
-            field_name: "story",
-            field_type: "textarea",
-            label_key: "story",
-            placeholder_key: "story",
+            id: "recipientName",
+            field_name: "recipientName",
+            field_type: "text",
+            placeholder_key: "recipientNamePlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field7",
-            field_name: "emotionalTone",
-            field_type: "select",
-            label_key: "emotionalTone",
-            placeholder_key: "emotionalTone",
-            required: true,
-            field_order: 2,
-            options: [
-              { value: "romantic", label_key: "moodRomantic" },
-              { value: "cheerful", label_key: "moodCheerful" },
-              { value: "nostalgic", label_key: "moodNostalgic" },
-              { value: "energetic", label_key: "moodEnergetic" },
-              { value: "melancholic", label_key: "moodMelancholic" },
-              { value: "inspirational", label_key: "moodInspirational" },
-              { value: "emotional", label_key: "moodEmotional" },
-              { value: "uplifting", label_key: "moodUplifting" }
-            ]
+            id: "recipientAge",
+            field_name: "recipientAge",
+            field_type: "text",
+            placeholder_key: "recipientAgePlaceholder",
+            required: false,
+            field_order: 2
           },
           {
-            id: "field8",
-            field_name: "keyMoments",
-            field_type: "textarea",
-            label_key: "keyMoments",
-            placeholder_key: "keyMoments",
+            id: "recipientRelation",
+            field_name: "recipientRelation",
+            field_type: "text",
+            placeholder_key: "recipientRelationPlaceholder",
             required: true,
             field_order: 3
           },
           {
-            id: "field9",
-            field_name: "specialWords",
+            id: "recipientPersonality",
+            field_name: "recipientPersonality",
             field_type: "textarea",
-            label_key: "specialWords",
-            placeholder_key: "specialWords",
-            required: false,
+            placeholder_key: "recipientPersonalityPlaceholder",
+            required: true,
             field_order: 4
           }
         ]
       },
       {
-        id: "step3",
+        id: "premium_step3",
         step_number: 3,
-        title_key: "musicalPreferences",
+        title_key: "messageDetails",
         fields: [
           {
-            id: "field10",
-            field_name: "musicStyle",
-            field_type: "select",
-            label_key: "musicStyle",
-            placeholder_key: "musicStyle",
+            id: "specialMessage",
+            field_name: "specialMessage",
+            field_type: "textarea",
+            placeholder_key: "specialMessagePlaceholder",
             required: true,
-            field_order: 1,
-            options: [
-              { value: "pop_contemporary", label_key: "stylePopContemporary" },
-              { value: "rock_ballad", label_key: "styleRockBallad" },
-              { value: "folk_acoustic", label_key: "styleFolkAcoustic" },
-              { value: "country", label_key: "styleCountry" },
-              { value: "jazz_blues", label_key: "styleJazzBlues" },
-              { value: "classical", label_key: "styleClassical" },
-              { value: "electronic", label_key: "styleElectronic" },
-              { value: "hip_hop", label_key: "styleHipHop" },
-              { value: "rnb", label_key: "styleRnB" },
-              { value: "reggae", label_key: "styleReggae" }
-            ]
+            field_order: 1
           },
           {
-            id: "field11",
-            field_name: "referenceSong",
-            field_type: "text",
-            label_key: "referenceSong",
-            placeholder_key: "referenceSong",
+            id: "specialMemories",
+            field_name: "specialMemories",
+            field_type: "textarea",
+            placeholder_key: "specialMemoriesPlaceholder",
             required: false,
             field_order: 2
+          },
+          {
+            id: "additionalInfo",
+            field_name: "additionalInfo",
+            field_type: "textarea",
+            placeholder_key: "additionalInfoPlaceholder",
+            required: false,
+            field_order: 3
           }
         ]
       },
       {
-        id: "step4",
+        id: "premium_step4",
         step_number: 4,
-        title_key: "premiumExtras",
+        title_key: "distributionDetails",
         fields: [
           {
-            id: "field12",
-            field_name: "artistPreference",
-            field_type: "select",
-            label_key: "artistPreference",
-            placeholder_key: "artistPreference",
-            required: false,
-            field_order: 1,
-            options: [
-              { value: "male", label_key: "maleVoice" },
-              { value: "female", label_key: "femaleVoice" },
-              { value: "no_preference", label_key: "noPreference" }
-            ]
+            id: "artistName",
+            field_name: "artistName",
+            field_type: "text",
+            placeholder_key: "artistNamePlaceholder",
+            required: true,
+            field_order: 1
           },
           {
-            id: "field13",
-            field_name: "instrumentPreference",
-            field_type: "select",
-            label_key: "instrumentPreference",
-            placeholder_key: "instrumentPreference",
-            required: false,
-            field_order: 2,
-            options: [
-              { value: "acoustic_guitar", label_key: "acousticGuitar" },
-              { value: "piano", label_key: "piano" },
-              { value: "electric_guitar", label_key: "electricGuitar" },
-              { value: "violin", label_key: "violin" },
-              { value: "full_band", label_key: "fullBand" },
-              { value: "no_preference", label_key: "noPreference" }
-            ]
+            id: "songTitle",
+            field_name: "songTitle",
+            field_type: "text",
+            placeholder_key: "songTitlePlaceholder",
+            required: true,
+            field_order: 2
+          },
+          {
+            id: "releaseDate",
+            field_name: "releaseDate",
+            field_type: "date",
+            placeholder_key: "releaseDatePlaceholder",
+            required: true,
+            field_order: 3
           }
         ]
       }
     ]
   },
   {
-    id: 3,
+    id: "3",
     value: "business",
     label_key: "businessPackage",
     tagline_key: "businessTagline",
     description_key: "businessDescription",
-    price_ron: 499,
-    price_eur: 99,
     delivery_time_key: "businessDelivery",
-    is_active: true,
-    is_popular: false,
-    available_addons: ["rushDelivery", "customVideo", "brandedAudioMessage", "commercialRightsUpgrade", "distributieMangoRecords"],
+    price_ron: 149900,
+    price_eur: 29999,
+    available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles", "brandedAudioMessage", "commercialRightsUpgrade"],
     includes: [
-      { include_key: "businessInclude1", include_order: 1 },
-      { include_key: "businessInclude2", include_order: 2 },
-      { include_key: "businessInclude3", include_order: 3 },
-      { include_key: "businessInclude4", include_order: 4 },
-      { include_key: "businessInclude5", include_order: 5 }
+      { id: "b1", include_key: "businessInclude1", include_order: 1 },
+      { id: "b2", include_key: "businessInclude2", include_order: 2 },
+      { id: "b3", include_key: "businessInclude3", include_order: 3 },
+      { id: "b4", include_key: "businessInclude4", include_order: 4 },
+      { id: "b5", include_key: "businessInclude5", include_order: 5 }
     ],
     steps: [
       {
-        id: "step1",
+        id: "business_step1",
         step_number: 1,
         title_key: "businessDetails",
         fields: [
           {
-            id: "field1",
-            field_name: "companyName",
+            id: "businessName",
+            field_name: "businessName",
             field_type: "text",
-            label_key: "companyName",
-            placeholder_key: "companyName",
+            placeholder_key: "businessNamePlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field2",
-            field_name: "targetAudience",
+            id: "businessIndustry",
+            field_name: "businessIndustry",
             field_type: "text",
-            label_key: "targetAudience",
-            placeholder_key: "targetAudience",
+            placeholder_key: "businessIndustryPlaceholder",
             required: true,
             field_order: 2
           },
           {
-            id: "field3",
-            field_name: "campaignPurpose",
-            field_type: "select",
-            label_key: "campaignPurpose",
-            placeholder_key: "campaignPurpose",
+            id: "businessValues",
+            field_name: "businessValues",
+            field_type: "textarea",
+            placeholder_key: "businessValuesPlaceholder",
             required: true,
-            field_order: 3,
-            options: [
-              { value: "brand_awareness", label_key: "brandAwareness" },
-              { value: "product_launch", label_key: "productLaunch" },
-              { value: "employee_appreciation", label_key: "employeeAppreciation" },
-              { value: "customer_loyalty", label_key: "customerLoyalty" },
-              { value: "event_promotion", label_key: "eventPromotion" },
-              { value: "other", label_key: "other" }
-            ]
+            field_order: 3
+          }
+        ]
+      },
+      {
+        id: "business_step2",
+        step_number: 2,
+        title_key: "songRequirements",
+        fields: [
+          {
+            id: "songPurpose",
+            field_name: "songPurpose",
+            field_type: "textarea",
+            placeholder_key: "songPurposePlaceholder",
+            required: true,
+            field_order: 1
           },
           {
-            id: "field4",
+            id: "songLanguage",
             field_name: "songLanguage",
             field_type: "select",
-            label_key: "songLanguage",
-            placeholder_key: "songLanguage",
+            placeholder_key: "selectSongLanguage",
             required: true,
-            field_order: 4,
+            field_order: 2,
             options: [
               { value: "romanian", label_key: "romanianLanguage" },
               { value: "english", label_key: "englishLanguage" },
               { value: "french", label_key: "frenchLanguage" }
             ]
+          },
+          {
+            id: "songStyle",
+            field_name: "songStyle",
+            field_type: "select",
+            placeholder_key: "selectSongStyle",
+            required: true,
+            field_order: 3,
+            options: [
+              { value: "pop", label_key: "popStyle" },
+              { value: "rock", label_key: "rockStyle" },
+              { value: "electronic", label_key: "electronicStyle" },
+              { value: "corporate", label_key: "corporateStyle" },
+              { value: "acoustic", label_key: "acousticStyle" }
+            ]
+          },
+          {
+            id: "targetAudience",
+            field_name: "targetAudience",
+            field_type: "textarea",
+            placeholder_key: "targetAudiencePlaceholder",
+            required: true,
+            field_order: 4
           }
         ]
       },
       {
-        id: "step2",
-        step_number: 2,
-        title_key: "brandMessage",
+        id: "business_step3",
+        step_number: 3,
+        title_key: "additionalRequirements",
         fields: [
           {
-            id: "field5",
-            field_name: "brandValues",
+            id: "keyMessages",
+            field_name: "keyMessages",
             field_type: "textarea",
-            label_key: "brandValues",
-            placeholder_key: "brandValues",
+            placeholder_key: "keyMessagesPlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field6",
-            field_name: "keyMessage",
+            id: "brandGuidelines",
+            field_name: "brandGuidelines",
             field_type: "textarea",
-            label_key: "keyMessage",
-            placeholder_key: "keyMessage",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "field7",
-            field_name: "emotionalTone",
-            field_type: "select",
-            label_key: "emotionalTone",
-            placeholder_key: "emotionalTone",
-            required: true,
-            field_order: 3,
-            options: [
-              { value: "professional", label_key: "moodProfessional" },
-              { value: "inspirational", label_key: "moodInspirational" },
-              { value: "energetic", label_key: "moodEnergetic" },
-              { value: "trustworthy", label_key: "moodTrustworthy" },
-              { value: "innovative", label_key: "moodInnovative" },
-              { value: "warm", label_key: "moodWarm" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "step3",
-        step_number: 3,
-        title_key: "musicalPreferences",
-        fields: [
-          {
-            id: "field8",
-            field_name: "musicStyle",
-            field_type: "select",
-            label_key: "musicStyle",
-            placeholder_key: "musicStyle",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "corporate", label_key: "styleCorporate" },
-              { value: "pop_contemporary", label_key: "stylePopContemporary" },
-              { value: "jazz_blues", label_key: "styleJazzBlues" },
-              { value: "classical", label_key: "styleClassical" },
-              { value: "electronic", label_key: "styleElectronic" },
-              { value: "folk_acoustic", label_key: "styleFolkAcoustic" }
-            ]
-          },
-          {
-            id: "field9",
-            field_name: "referenceSong",
-            field_type: "text",
-            label_key: "referenceSong",
-            placeholder_key: "referenceSong",
+            placeholder_key: "brandGuidelinesPlaceholder",
             required: false,
             field_order: 2
+          },
+          {
+            id: "additionalInfo",
+            field_name: "additionalInfo",
+            field_type: "textarea",
+            placeholder_key: "additionalInfoPlaceholder",
+            required: false,
+            field_order: 3
           }
         ]
       }
     ]
   },
   {
-    id: 4,
+    id: "4",
     value: "artist",
     label_key: "artistPackage",
     tagline_key: "artistTagline",
     description_key: "artistDescription",
-    price_ron: 7999,
-    price_eur: 1499,
     delivery_time_key: "artistDelivery",
-    is_active: true,
-    is_popular: false,
-    available_addons: ["rushDelivery"],
+    price_ron: 199900,
+    price_eur: 39999,
+    available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles", "customVideo"],
     includes: [
-      { include_key: "artistInclude1", include_order: 1 },
-      { include_key: "artistInclude2", include_order: 2 },
-      { include_key: "artistInclude3", include_order: 3 },
-      { include_key: "artistInclude4", include_order: 4 }
+      { id: "a1", include_key: "artistInclude1", include_order: 1 },
+      { id: "a2", include_key: "artistInclude2", include_order: 2 },
+      { id: "a3", include_key: "artistInclude3", include_order: 3 },
+      { id: "a4", include_key: "artistInclude4", include_order: 4 }
     ],
     steps: [
       {
-        id: "step1",
+        id: "artist_step1",
         step_number: 1,
-        title_key: "artistProfile",
+        title_key: "artistDetails",
         fields: [
           {
-            id: "field1",
+            id: "artistName",
             field_name: "artistName",
             field_type: "text",
-            label_key: "artistName",
-            placeholder_key: "artistName",
+            placeholder_key: "artistNamePlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field2",
+            id: "artistGenre",
             field_name: "artistGenre",
-            field_type: "select",
-            label_key: "artistGenre",
-            placeholder_key: "artistGenre",
+            field_type: "text",
+            placeholder_key: "artistGenrePlaceholder",
             required: true,
-            field_order: 2,
-            options: [
-              { value: "pop", label_key: "genrePop" },
-              { value: "rock", label_key: "genreRock" },
-              { value: "folk", label_key: "genreFolk" },
-              { value: "jazz", label_key: "genreJazz" },
-              { value: "classical", label_key: "genreClassical" },
-              { value: "electronic", label_key: "genreElectronic" },
-              { value: "hip_hop", label_key: "genreHipHop" },
-              { value: "rnb", label_key: "genreRnB" }
-            ]
+            field_order: 2
           },
           {
-            id: "field3",
-            field_name: "careerStage",
-            field_type: "select",
-            label_key: "careerStage",
-            placeholder_key: "careerStage",
+            id: "artistInfluences",
+            field_name: "artistInfluences",
+            field_type: "textarea",
+            placeholder_key: "artistInfluencesPlaceholder",
             required: true,
-            field_order: 3,
-            options: [
-              { value: "emerging", label_key: "stageEmerging" },
-              { value: "developing", label_key: "stageDeveloping" },
-              { value: "established", label_key: "stageEstablished" },
-              { value: "veteran", label_key: "stageVeteran" }
-            ]
+            field_order: 3
+          }
+        ]
+      },
+      {
+        id: "artist_step2",
+        step_number: 2,
+        title_key: "songRequirements",
+        fields: [
+          {
+            id: "songTheme",
+            field_name: "songTheme",
+            field_type: "textarea",
+            placeholder_key: "songThemePlaceholder",
+            required: true,
+            field_order: 1
           },
           {
-            id: "field4",
+            id: "songLanguage",
             field_name: "songLanguage",
             field_type: "select",
-            label_key: "songLanguage",
-            placeholder_key: "songLanguage",
+            placeholder_key: "selectSongLanguage",
             required: true,
-            field_order: 4,
+            field_order: 2,
             options: [
               { value: "romanian", label_key: "romanianLanguage" },
               { value: "english", label_key: "englishLanguage" },
               { value: "french", label_key: "frenchLanguage" }
             ]
+          },
+          {
+            id: "songStyle",
+            field_name: "songStyle",
+            field_type: "select",
+            placeholder_key: "selectSongStyle",
+            required: true,
+            field_order: 3,
+            options: [
+              { value: "pop", label_key: "popStyle" },
+              { value: "rock", label_key: "rockStyle" },
+              { value: "electronic", label_key: "electronicStyle" },
+              { value: "hiphop", label_key: "hiphopStyle" },
+              { value: "rnb", label_key: "rnbStyle" }
+            ]
           }
         ]
       },
       {
-        id: "step2",
-        step_number: 2,
-        title_key: "songConcept",
+        id: "artist_step3",
+        step_number: 3,
+        title_key: "distributionDetails",
         fields: [
           {
-            id: "field5",
-            field_name: "songTheme",
-            field_type: "textarea",
-            label_key: "songTheme",
-            placeholder_key: "songTheme",
+            id: "songTitle",
+            field_name: "songTitle",
+            field_type: "text",
+            placeholder_key: "songTitlePlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field6",
-            field_name: "targetAudience",
-            field_type: "text",
-            label_key: "targetAudience",
-            placeholder_key: "targetAudience",
+            id: "releaseDate",
+            field_name: "releaseDate",
+            field_type: "date",
+            placeholder_key: "releaseDatePlaceholder",
             required: true,
             field_order: 2
           },
           {
-            id: "field7",
-            field_name: "emotionalTone",
-            field_type: "select",
-            label_key: "emotionalTone",
-            placeholder_key: "emotionalTone",
-            required: true,
-            field_order: 3,
-            options: [
-              { value: "romantic", label_key: "moodRomantic" },
-              { value: "energetic", label_key: "moodEnergetic" },
-              { value: "melancholic", label_key: "moodMelancholic" },
-              { value: "inspirational", label_key: "moodInspirational" },
-              { value: "rebellious", label_key: "moodRebellious" },
-              { value: "nostalgic", label_key: "moodNostalgic" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "step3",
-        step_number: 3,
-        title_key: "technicalRequirements",
-        fields: [
-          {
-            id: "field8",
-            field_name: "songStructure",
-            field_type: "select",
-            label_key: "songStructure",
-            placeholder_key: "songStructure",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "verse_chorus", label_key: "structureVerseChorus" },
-              { value: "verse_chorus_bridge", label_key: "structureVerseChorusBridge" },
-              { value: "intro_verse_chorus_outro", label_key: "structureIntroVerseChorusOutro" },
-              { value: "custom", label_key: "structureCustom" }
-            ]
-          },
-          {
-            id: "field9",
-            field_name: "songDuration",
-            field_type: "select",
-            label_key: "songDuration",
-            placeholder_key: "songDuration",
-            required: true,
-            field_order: 2,
-            options: [
-              { value: "2_3_minutes", label_key: "duration2to3" },
-              { value: "3_4_minutes", label_key: "duration3to4" },
-              { value: "4_5_minutes", label_key: "duration4to5" },
-              { value: "custom", label_key: "durationCustom" }
-            ]
-          },
-          {
-            id: "field10",
-            field_name: "instrumentalRequirements",
+            id: "additionalInfo",
+            field_name: "additionalInfo",
             field_type: "textarea",
-            label_key: "instrumentalRequirements",
-            placeholder_key: "instrumentalRequirements",
+            placeholder_key: "additionalInfoPlaceholder",
             required: false,
             field_order: 3
           }
@@ -799,111 +603,94 @@ export const packages: PackageData[] = [
     ]
   },
   {
-    id: 5,
+    id: "5",
     value: "remix",
     label_key: "remixPackage",
     tagline_key: "remixTagline",
     description_key: "remixDescription",
-    price_ron: 499,
-    price_eur: 99,
     delivery_time_key: "remixDelivery",
-    is_active: true,
-    is_popular: false,
-    available_addons: ["rushDelivery", "distributieMangoRecords"],
+    price_ron: 19900,
+    price_eur: 3999,
+    available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles"],
     includes: [
-      { include_key: "remixInclude1", include_order: 1 },
-      { include_key: "remixInclude2", include_order: 2 },
-      { include_key: "remixInclude3", include_order: 3 },
-      { include_key: "remixInclude4", include_order: 4 },
-      { include_key: "remixInclude5", include_order: 5 },
-      { include_key: "remixInclude6", include_order: 6 }
+      { id: "r1", include_key: "remixInclude1", include_order: 1 },
+      { id: "r2", include_key: "remixInclude2", include_order: 2 },
+      { id: "r3", include_key: "remixInclude3", include_order: 3 },
+      { id: "r4", include_key: "remixInclude4", include_order: 4 },
+      { id: "r5", include_key: "remixInclude5", include_order: 5 },
+      { id: "r6", include_key: "remixInclude6", include_order: 6 }
     ],
     steps: [
       {
-        id: "step1",
+        id: "remix_step1",
         step_number: 1,
         title_key: "originalSongDetails",
         fields: [
           {
-            id: "field1",
+            id: "originalSongTitle",
             field_name: "originalSongTitle",
             field_type: "text",
-            label_key: "originalSongTitle",
-            placeholder_key: "originalSongTitle",
+            placeholder_key: "originalSongTitlePlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field2",
+            id: "originalArtist",
             field_name: "originalArtist",
             field_type: "text",
-            label_key: "originalArtist",
-            placeholder_key: "originalArtist",
+            placeholder_key: "originalArtistPlaceholder",
             required: true,
             field_order: 2
           },
           {
-            id: "field3",
-            field_name: "songReference",
-            field_type: "text",
-            label_key: "songReference",
-            placeholder_key: "songReference",
+            id: "originalSongLink",
+            field_name: "originalSongLink",
+            field_type: "url",
+            placeholder_key: "originalSongLinkPlaceholder",
             required: true,
             field_order: 3
-          },
-          {
-            id: "field4",
-            field_name: "songLanguage",
-            field_type: "select",
-            label_key: "songLanguage",
-            placeholder_key: "songLanguage",
-            required: true,
-            field_order: 4,
-            options: [
-              { value: "romanian", label_key: "romanianLanguage" },
-              { value: "english", label_key: "englishLanguage" },
-              { value: "french", label_key: "frenchLanguage" }
-            ]
           }
         ]
       },
       {
-        id: "step2",
+        id: "remix_step2",
         step_number: 2,
         title_key: "remixRequirements",
         fields: [
           {
-            id: "field5",
+            id: "remixStyle",
             field_name: "remixStyle",
             field_type: "select",
-            label_key: "remixStyle",
-            placeholder_key: "remixStyle",
+            placeholder_key: "selectRemixStyle",
             required: true,
             field_order: 1,
             options: [
-              { value: "acoustic", label_key: "styleAcoustic" },
-              { value: "electronic", label_key: "styleElectronic" },
-              { value: "rock", label_key: "styleRock" },
-              { value: "jazz", label_key: "styleJazz" },
-              { value: "orchestral", label_key: "styleOrchestral" },
-              { value: "lo_fi", label_key: "styleLoFi" }
+              { value: "edm", label_key: "edmStyle" },
+              { value: "house", label_key: "houseStyle" },
+              { value: "techno", label_key: "technoStyle" },
+              { value: "trap", label_key: "trapStyle" },
+              { value: "lofi", label_key: "lofiStyle" }
             ]
           },
           {
-            id: "field6",
-            field_name: "personalizations",
-            field_type: "textarea",
-            label_key: "personalizations",
-            placeholder_key: "personalizations",
+            id: "remixMood",
+            field_name: "remixMood",
+            field_type: "select",
+            placeholder_key: "selectRemixMood",
             required: true,
-            field_order: 2
+            field_order: 2,
+            options: [
+              { value: "energetic", label_key: "energeticMood" },
+              { value: "chill", label_key: "chillMood" },
+              { value: "dark", label_key: "darkMood" },
+              { value: "uplifting", label_key: "upliftingMood" }
+            ]
           },
           {
-            id: "field7",
-            field_name: "specialInstructions",
+            id: "remixInstructions",
+            field_name: "remixInstructions",
             field_type: "textarea",
-            label_key: "specialInstructions",
-            placeholder_key: "specialInstructions",
+            placeholder_key: "remixInstructionsPlaceholder",
             required: false,
             field_order: 3
           }
@@ -912,129 +699,99 @@ export const packages: PackageData[] = [
     ]
   },
   {
-    id: 6,
+    id: "6",
     value: "instrumental",
     label_key: "instrumentalPackage",
     tagline_key: "instrumentalTagline",
     description_key: "instrumentalDescription",
-    price_ron: 499,
-    price_eur: 99,
     delivery_time_key: "instrumentalDelivery",
-    is_active: true,
-    is_popular: false,
-    available_addons: ["rushDelivery", "customVideo", "distributieMangoRecords", "separatedStems"],
+    price_ron: 14900,
+    price_eur: 2999,
+    available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles", "separatedStems"],
     includes: [
-      { include_key: "instrumentalInclude1", include_order: 1 },
-      { include_key: "instrumentalInclude2", include_order: 2 },
-      { include_key: "instrumentalInclude3", include_order: 3 },
-      { include_key: "instrumentalInclude4", include_order: 4 },
-      { include_key: "instrumentalInclude5", include_order: 5 }
+      { id: "i1", include_key: "instrumentalInclude1", include_order: 1 },
+      { id: "i2", include_key: "instrumentalInclude2", include_order: 2 },
+      { id: "i3", include_key: "instrumentalInclude3", include_order: 3 },
+      { id: "i4", include_key: "instrumentalInclude4", include_order: 4 },
+      { id: "i5", include_key: "instrumentalInclude5", include_order: 5 }
     ],
     steps: [
       {
-        id: "step1",
+        id: "instrumental_step1",
         step_number: 1,
-        title_key: "instrumentalConcept",
+        title_key: "instrumentalDetails",
         fields: [
           {
-            id: "field1",
-            field_name: "instrumentalPurpose",
+            id: "instrumentalStyle",
+            field_name: "instrumentalStyle",
             field_type: "select",
-            label_key: "instrumentalPurpose",
-            placeholder_key: "instrumentalPurpose",
+            placeholder_key: "selectInstrumentalStyle",
             required: true,
             field_order: 1,
             options: [
-              { value: "background_music", label_key: "purposeBackgroundMusic" },
-              { value: "meditation", label_key: "purposeMeditation" },
-              { value: "workout", label_key: "purposeWorkout" },
-              { value: "study", label_key: "purposeStudy" },
-              { value: "relaxation", label_key: "purposeRelaxation" },
-              { value: "commercial", label_key: "purposeCommercial" },
-              { value: "performance", label_key: "purposePerformance" }
+              { value: "pop", label_key: "popStyle" },
+              { value: "hiphop", label_key: "hiphopStyle" },
+              { value: "rnb", label_key: "rnbStyle" },
+              { value: "electronic", label_key: "electronicStyle" },
+              { value: "acoustic", label_key: "acousticStyle" }
             ]
           },
           {
-            id: "field2",
-            field_name: "mood",
+            id: "instrumentalMood",
+            field_name: "instrumentalMood",
             field_type: "select",
-            label_key: "mood",
-            placeholder_key: "mood",
+            placeholder_key: "selectInstrumentalMood",
             required: true,
             field_order: 2,
             options: [
-              { value: "calm", label_key: "moodCalm" },
-              { value: "energetic", label_key: "moodEnergetic" },
-              { value: "mysterious", label_key: "moodMysterious" },
-              { value: "uplifting", label_key: "moodUplifting" },
-              { value: "dramatic", label_key: "moodDramatic" },
-              { value: "peaceful", label_key: "moodPeaceful" }
+              { value: "energetic", label_key: "energeticMood" },
+              { value: "chill", label_key: "chillMood" },
+              { value: "dark", label_key: "darkMood" },
+              { value: "uplifting", label_key: "upliftingMood" },
+              { value: "melancholic", label_key: "melancholicMood" }
             ]
           },
           {
-            id: "field3",
-            field_name: "duration",
+            id: "instrumentalTempo",
+            field_name: "instrumentalTempo",
             field_type: "select",
-            label_key: "duration",
-            placeholder_key: "duration",
+            placeholder_key: "selectInstrumentalTempo",
             required: true,
             field_order: 3,
             options: [
-              { value: "1_2_minutes", label_key: "duration1to2" },
-              { value: "2_3_minutes", label_key: "duration2to3" },
-              { value: "3_4_minutes", label_key: "duration3to4" },
-              { value: "4_5_minutes", label_key: "duration4to5" },
-              { value: "custom", label_key: "durationCustom" }
+              { value: "slow", label_key: "slowTempo" },
+              { value: "medium", label_key: "mediumTempo" },
+              { value: "fast", label_key: "fastTempo" }
             ]
           }
         ]
       },
       {
-        id: "step2",
+        id: "instrumental_step2",
         step_number: 2,
-        title_key: "instrumentalArrangement",
+        title_key: "instrumentalRequirements",
         fields: [
           {
-            id: "field4",
-            field_name: "primaryInstruments",
-            field_type: "select",
-            label_key: "primaryInstruments",
-            placeholder_key: "primaryInstruments",
+            id: "instrumentalDescription",
+            field_name: "instrumentalDescription",
+            field_type: "textarea",
+            placeholder_key: "instrumentalDescriptionPlaceholder",
             required: true,
-            field_order: 1,
-            options: [
-              { value: "piano", label_key: "instrumentPiano" },
-              { value: "guitar", label_key: "instrumentGuitar" },
-              { value: "violin", label_key: "instrumentViolin" },
-              { value: "flute", label_key: "instrumentFlute" },
-              { value: "saxophone", label_key: "instrumentSaxophone" },
-              { value: "electronic", label_key: "instrumentElectronic" },
-              { value: "full_orchestra", label_key: "instrumentFullOrchestra" }
-            ]
+            field_order: 1
           },
           {
-            id: "field5",
-            field_name: "musicStyle",
-            field_type: "select",
-            label_key: "musicStyle",
-            placeholder_key: "musicStyle",
-            required: true,
-            field_order: 2,
-            options: [
-              { value: "classical", label_key: "styleClassical" },
-              { value: "jazz", label_key: "styleJazz" },
-              { value: "ambient", label_key: "styleAmbient" },
-              { value: "cinematic", label_key: "styleCinematic" },
-              { value: "minimalist", label_key: "styleMinimalist" },
-              { value: "world", label_key: "styleWorld" }
-            ]
+            id: "instrumentalReferences",
+            field_name: "instrumentalReferences",
+            field_type: "textarea",
+            placeholder_key: "instrumentalReferencesPlaceholder",
+            required: false,
+            field_order: 2
           },
           {
-            id: "field6",
-            field_name: "referenceSong",
-            field_type: "text",
-            label_key: "referenceSong",
-            placeholder_key: "referenceSong",
+            id: "additionalInfo",
+            field_name: "additionalInfo",
+            field_type: "textarea",
+            placeholder_key: "additionalInfoPlaceholder",
             required: false,
             field_order: 3
           }
@@ -1043,699 +800,298 @@ export const packages: PackageData[] = [
     ]
   },
   {
-    id: 7,
-    value: "plus",
-    label_key: "plusPackage",
-    tagline_key: "plusTagline",
-    description_key: "plusDescription",
-    price_ron: 1,
-    price_eur: 1,
-    delivery_time_key: "plusDelivery",
-    is_active: true,
-    is_popular: false,
-    tag: "new",
-    available_addons: [],
-    includes: [
-      { include_key: "plusInclude1", include_order: 1 },
-      { include_key: "plusInclude2", include_order: 2 },
-      { include_key: "plusInclude3", include_order: 3 }
-    ],
-    steps: [
-      {
-        id: "step1",
-        step_number: 1,
-        title_key: "basicDetails",
-        fields: [
-          {
-            id: "field1",
-            field_name: "songType",
-            field_type: "select",
-            label_key: "songType",
-            placeholder_key: "songType",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "personal", label_key: "typePersonal" },
-              { value: "promotional", label_key: "typePromotional" },
-              { value: "educational", label_key: "typeEducational" }
-            ]
-          },
-          {
-            id: "field2",
-            field_name: "songLanguage",
-            field_type: "select",
-            label_key: "songLanguage",
-            placeholder_key: "songLanguage",
-            required: true,
-            field_order: 2,
-            options: [
-              { value: "romanian", label_key: "romanianLanguage" },
-              { value: "english", label_key: "englishLanguage" },
-              { value: "french", label_key: "frenchLanguage" }
-            ]
-          },
-          {
-            id: "field3",
-            field_name: "basicTheme",
-            field_type: "textarea",
-            label_key: "basicTheme",
-            placeholder_key: "basicTheme",
-            required: true,
-            field_order: 3
-          }
-        ]
-      },
-      {
-        id: "step2",
-        step_number: 2,
-        title_key: "simplePreferences",
-        fields: [
-          {
-            id: "field4",
-            field_name: "musicStyle",
-            field_type: "select",
-            label_key: "musicStyle",
-            placeholder_key: "musicStyle",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "pop", label_key: "stylePop" },
-              { value: "acoustic", label_key: "styleAcoustic" },
-              { value: "electronic", label_key: "styleElectronic" },
-              { value: "simple", label_key: "styleSimple" }
-            ]
-          },
-          {
-            id: "field5",
-            field_name: "mood",
-            field_type: "select",
-            label_key: "mood",
-            placeholder_key: "mood",
-            required: true,
-            field_order: 2,
-            options: [
-              { value: "happy", label_key: "moodHappy" },
-              { value: "calm", label_key: "moodCalm" },
-              { value: "energetic", label_key: "moodEnergetic" },
-              { value: "uplifting", label_key: "moodUplifting" }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 8,
-    value: "gift",
-    label_key: "giftPackage",
-    tagline_key: "giftTagline",
-    description_key: "giftDescription",
-    price_ron: 299,
-    price_eur: 59,
-    delivery_time_key: "giftDelivery",
-    is_active: true,
-    is_popular: false,
-    tag: "gift",
-    available_addons: ["rushDelivery", "customVideo", "audioMessageFromSender", "extendedSong"],
-    includes: [
-      { include_key: "giftInclude1", include_order: 1 },
-      { include_key: "giftInclude2", include_order: 2 },
-      { include_key: "giftInclude3", include_order: 3 }
-    ],
-    steps: [
-      {
-        id: "step1",
-        step_number: 1,
-        title_key: "giftDetails",
-        fields: [
-          {
-            id: "field1",
-            field_name: "recipientName",
-            field_type: "text",
-            label_key: "recipientName",
-            placeholder_key: "recipientName",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "field2",
-            field_name: "relationship",
-            field_type: "select",
-            label_key: "relationship",
-            placeholder_key: "relationship",
-            required: true,
-            field_order: 2,
-            options: [
-              { value: "partner", label_key: "relationshipPartner" },
-              { value: "spouse", label_key: "relationshipSpouse" },
-              { value: "friend", label_key: "relationshipFriend" },
-              { value: "family", label_key: "relationshipFamily" },
-              { value: "child", label_key: "relationshipChild" },
-              { value: "parent", label_key: "relationshipParent" },
-              { value: "colleague", label_key: "relationshipColleague" }
-            ]
-          },
-          {
-            id: "field3",
-            field_name: "giftOccasion",
-            field_type: "select",
-            label_key: "giftOccasion",
-            placeholder_key: "giftOccasion",
-            required: true,
-            field_order: 3,
-            options: [
-              { value: "birthday", label_key: "occasionBirthday" },
-              { value: "anniversary", label_key: "occasionAnniversary" },
-              { value: "valentine", label_key: "occasionValentines" },
-              { value: "christmas", label_key: "occasionChristmas" },
-              { value: "surprise", label_key: "occasionSurprise" },
-              { value: "thank_you", label_key: "occasionThankYou" }
-            ]
-          },
-          {
-            id: "field4",
-            field_name: "songLanguage",
-            field_type: "select",
-            label_key: "songLanguage",
-            placeholder_key: "songLanguage",
-            required: true,
-            field_order: 4,
-            options: [
-              { value: "romanian", label_key: "romanianLanguage" },
-              { value: "english", label_key: "englishLanguage" },
-              { value: "french", label_key: "frenchLanguage" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "step2",
-        step_number: 2,
-        title_key: "giftMessage",
-        fields: [
-          {
-            id: "field5",
-            field_name: "personalMessage",
-            field_type: "textarea",
-            label_key: "personalMessage",
-            placeholder_key: "personalMessage",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "field6",
-            field_name: "specialMoments",
-            field_type: "textarea",
-            label_key: "specialMoments",
-            placeholder_key: "specialMoments",
-            required: false,
-            field_order: 2
-          },
-          {
-            id: "field7",
-            field_name: "emotionalTone",
-            field_type: "select",
-            label_key: "emotionalTone",
-            placeholder_key: "emotionalTone",
-            required: true,
-            field_order: 3,
-            options: [
-              { value: "warm", label_key: "moodWarm" },
-              { value: "cheerful", label_key: "moodCheerful" },
-              { value: "grateful", label_key: "moodGrateful" },
-              { value: "loving", label_key: "moodLoving" },
-              { value: "playful", label_key: "moodPlayful" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "step3",
-        step_number: 3,
-        title_key: "musicalPreferences",
-        fields: [
-          {
-            id: "field8",
-            field_name: "musicStyle",
-            field_type: "select",
-            label_key: "musicStyle",
-            placeholder_key: "musicStyle",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "pop_contemporary", label_key: "stylePopContemporary" },
-              { value: "acoustic", label_key: "styleAcoustic" },
-              { value: "jazz", label_key: "styleJazz" },
-              { value: "classical", label_key: "styleClassical" },
-              { value: "upbeat", label_key: "styleUpbeat" }
-            ]
-          },
-          {
-            id: "field9",
-            field_name: "referenceSong",
-            field_type: "text",
-            label_key: "referenceSong",
-            placeholder_key: "referenceSong",
-            required: false,
-            field_order: 2
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 9,
+    id: "7",
     value: "wedding",
     label_key: "weddingPackage",
     tagline_key: "weddingTagline",
     description_key: "weddingDescription",
-    price_ron: 299,
-    price_eur: 59,
     delivery_time_key: "weddingDelivery",
-    is_active: true,
-    is_popular: false,
-    available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong", "godparentsmelody"],
+    price_ron: 39900,
+    price_eur: 7999,
+    available_addons: ["rushDelivery", "extraRevision", "sourceFiles", "customVideo", "personalizedAudioMessage", "godparentsSpecialMelody"],
     includes: [
-      { include_key: "weddingInclude1", include_order: 1 },
-      { include_key: "weddingInclude2", include_order: 2 },
-      { include_key: "weddingInclude3", include_order: 3 },
-      { include_key: "weddingInclude4", include_order: 4 },
-      { include_key: "weddingInclude5", include_order: 5 },
-      { include_key: "weddingInclude6", include_order: 6 },
-      { include_key: "weddingInclude7", include_order: 7 },
-      { include_key: "weddingInclude8", include_order: 8 }
+      { id: "w1", include_key: "weddingInclude1", include_order: 1 },
+      { id: "w2", include_key: "weddingInclude2", include_order: 2 },
+      { id: "w3", include_key: "weddingInclude3", include_order: 3 },
+      { id: "w4", include_key: "weddingInclude4", include_order: 4 },
+      { id: "w5", include_key: "weddingInclude5", include_order: 5 },
+      { id: "w6", include_key: "weddingInclude6", include_order: 6 },
+      { id: "w7", include_key: "weddingInclude7", include_order: 7 },
+      { id: "w8", include_key: "weddingInclude8", include_order: 8 }
     ],
     steps: [
       {
-        id: "step1",
+        id: "wedding_step1",
         step_number: 1,
-        title_key: "coupleDetails",
+        title_key: "weddingStep1Title",
         fields: [
           {
-            id: "field1",
-            field_name: "brideName",
+            id: "coupleNames",
+            field_name: "coupleNames",
             field_type: "text",
-            label_key: "brideName",
-            placeholder_key: "brideName",
+            placeholder_key: "weddingCoupleNamesPlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field2",
-            field_name: "groomName",
-            field_type: "text",
-            label_key: "groomName",
-            placeholder_key: "groomName",
+            id: "coupleType",
+            field_name: "coupleType",
+            field_type: "select",
+            placeholder_key: "selectCoupleType",
             required: true,
-            field_order: 2
+            field_order: 2,
+            options: [
+              { value: "brideGroom", label_key: "weddingBrideGroom" },
+              { value: "godparents", label_key: "weddingGodparents" }
+            ]
           },
           {
-            id: "field3",
-            field_name: "weddingDate",
-            field_type: "date",
-            label_key: "weddingDate",
-            placeholder_key: "weddingDate",
+            id: "howMet",
+            field_name: "howMet",
+            field_type: "textarea",
+            placeholder_key: "weddingHowMetPlaceholder",
             required: true,
+            field_order: 3
+          }
+        ]
+      },
+      {
+        id: "wedding_step2",
+        step_number: 2,
+        title_key: "weddingStep2Title",
+        fields: [
+          {
+            id: "loveStory",
+            field_name: "loveStory",
+            field_type: "textarea",
+            placeholder_key: "weddingLoveStoryPlaceholder",
+            required: true,
+            field_order: 1
+          },
+          {
+            id: "songAtmosphere",
+            field_name: "songAtmosphere",
+            field_type: "select",
+            placeholder_key: "selectSongAtmosphere",
+            required: true,
+            field_order: 2,
+            options: [
+              { value: "romantic", label_key: "weddingAtmosphereRomantic" },
+              { value: "emotional", label_key: "weddingAtmosphereEmotional" },
+              { value: "elegant", label_key: "weddingAtmosphereElegant" }
+            ]
+          },
+          {
+            id: "musicalStyle",
+            field_name: "musicalStyle",
+            field_type: "text",
+            placeholder_key: "weddingMusicalStylePlaceholder",
+            required: false,
             field_order: 3
           },
           {
-            id: "field4",
-            field_name: "songLanguage",
+            id: "voicePreference",
+            field_name: "voicePreference",
             field_type: "select",
-            label_key: "songLanguage",
-            placeholder_key: "songLanguage",
+            placeholder_key: "selectVoicePreference",
             required: true,
             field_order: 4,
             options: [
-              { value: "romanian", label_key: "romanianLanguage" },
-              { value: "english", label_key: "englishLanguage" },
-              { value: "french", label_key: "frenchLanguage" }
+              { value: "female", label_key: "voiceFemale" },
+              { value: "male", label_key: "voiceMale" }
             ]
-          }
-        ]
-      },
-      {
-        id: "step2",
-        step_number: 2,
-        title_key: "loveStory",
-        fields: [
-          {
-            id: "field5",
-            field_name: "howYouMet",
-            field_type: "textarea",
-            label_key: "howYouMet",
-            placeholder_key: "howYouMet",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "field6",
-            field_name: "specialMoments",
-            field_type: "textarea",
-            label_key: "specialMoments",
-            placeholder_key: "specialMoments",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "field7",
-            field_name: "futureWishes",
-            field_type: "textarea",
-            label_key: "futureWishes",
-            placeholder_key: "futureWishes",
-            required: false,
-            field_order: 3
-          }
-        ]
-      },
-      {
-        id: "step3",
-        step_number: 3,
-        title_key: "musicalPreferences",
-        fields: [
-          {
-            id: "field8",
-            field_name: "musicStyle",
-            field_type: "select",
-            label_key: "musicStyle",
-            placeholder_key: "musicStyle",
-            required: true,
-            field_order: 1,
-            options: [
-              { value: "romantic_ballad", label_key: "styleRomanticBallad" },
-              { value: "acoustic_folk", label_key: "styleAcousticFolk" },
-              { value: "classical", label_key: "styleClassical" },
-              { value: "contemporary", label_key: "styleContemporary" },
-              { value: "traditional", label_key: "styleTraditional" }
-            ]
-          },
-          {
-            id: "field9",
-            field_name: "referenceSong",
-            field_type: "text",
-            label_key: "referenceSong",
-            placeholder_key: "referenceSong",
-            required: false,
-            field_order: 2
           }
         ]
       }
     ]
   },
   {
-    id: 10,
+    id: "8",
     value: "baptism",
     label_key: "baptismPackage",
     tagline_key: "baptismTagline",
     description_key: "baptismDescription",
-    price_ron: 299,
-    price_eur: 59,
     delivery_time_key: "baptismDelivery",
-    is_active: true,
-    is_popular: false,
-    available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
+    price_ron: 29900,
+    price_eur: 5999,
+    available_addons: ["rushDelivery", "extraRevision", "sourceFiles", "customVideo", "personalizedAudioMessage"],
     includes: [
-      { include_key: "baptismInclude1", include_order: 1 },
-      { include_key: "baptismInclude2", include_order: 2 },
-      { include_key: "baptismInclude3", include_order: 3 },
-      { include_key: "baptismInclude4", include_order: 4 },
-      { include_key: "baptismInclude5", include_order: 5 },
-      { include_key: "baptismInclude6", include_order: 6 }
+      { id: "bp1", include_key: "baptismInclude1", include_order: 1 },
+      { id: "bp2", include_key: "baptismInclude2", include_order: 2 },
+      { id: "bp3", include_key: "baptismInclude3", include_order: 3 },
+      { id: "bp4", include_key: "baptismInclude4", include_order: 4 },
+      { id: "bp5", include_key: "baptismInclude5", include_order: 5 },
+      { id: "bp6", include_key: "baptismInclude6", include_order: 6 }
     ],
     steps: [
       {
-        id: "step1",
+        id: "baptism_step1",
         step_number: 1,
-        title_key: "childDetails",
+        title_key: "baptismStep1Title",
         fields: [
           {
-            id: "field1",
+            id: "childName",
             field_name: "childName",
             field_type: "text",
-            label_key: "childName",
-            placeholder_key: "childName",
+            placeholder_key: "baptismChildNamePlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field2",
-            field_name: "baptismDate",
-            field_type: "date",
-            label_key: "baptismDate",
-            placeholder_key: "baptismDate",
-            required: true,
+            id: "nameMeaning",
+            field_name: "nameMeaning",
+            field_type: "text",
+            placeholder_key: "baptismNameMeaningPlaceholder",
+            required: false,
             field_order: 2
           },
           {
-            id: "field3",
-            field_name: "parentsNames",
-            field_type: "text",
-            label_key: "parentsNames",
-            placeholder_key: "parentsNames",
+            id: "birthStory",
+            field_name: "birthStory",
+            field_type: "textarea",
+            placeholder_key: "baptismBirthStoryPlaceholder",
             required: true,
             field_order: 3
-          },
-          {
-            id: "field4",
-            field_name: "godparentsNames",
-            field_type: "text",
-            label_key: "godparentsNames",
-            placeholder_key: "godparentsNames",
-            required: false,
-            field_order: 4
-          },
-          {
-            id: "field5",
-            field_name: "songLanguage",
-            field_type: "select",
-            label_key: "songLanguage",
-            placeholder_key: "songLanguage",
-            required: true,
-            field_order: 5,
-            options: [
-              { value: "romanian", label_key: "romanianLanguage" },
-              { value: "english", label_key: "englishLanguage" },
-              { value: "french", label_key: "frenchLanguage" }
-            ]
           }
         ]
       },
       {
-        id: "step2",
+        id: "baptism_step2",
         step_number: 2,
-        title_key: "blessingsAndWishes",
+        title_key: "baptismStep2Title",
         fields: [
           {
-            id: "field6",
-            field_name: "blessings",
-            field_type: "textarea",
-            label_key: "blessings",
-            placeholder_key: "blessings",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "field7",
-            field_name: "futureWishes",
-            field_type: "textarea",
-            label_key: "futureWishes",
-            placeholder_key: "futureWishes",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "field8",
-            field_name: "specialMessage",
-            field_type: "textarea",
-            label_key: "specialMessage",
-            placeholder_key: "specialMessage",
-            required: false,
-            field_order: 3
-          }
-        ]
-      },
-      {
-        id: "step3",
-        step_number: 3,
-        title_key: "musicalPreferences",
-        fields: [
-          {
-            id: "field9",
-            field_name: "musicStyle",
+            id: "songAtmosphere",
+            field_name: "songAtmosphere",
             field_type: "select",
-            label_key: "musicStyle",
-            placeholder_key: "musicStyle",
+            placeholder_key: "selectSongAtmosphere",
             required: true,
             field_order: 1,
             options: [
-              { value: "lullaby", label_key: "styleLullaby" },
-              { value: "spiritual", label_key: "styleSpiritual" },
-              { value: "gentle_folk", label_key: "styleGentleFolk" },
-              { value: "classical", label_key: "styleClassical" },
-              { value: "contemporary", label_key: "styleContemporary" }
+              { value: "calm", label_key: "baptismAtmosphereCalm" },
+              { value: "playful", label_key: "baptismAtmospherePlayful" },
+              { value: "emotional", label_key: "baptismAtmosphereEmotional" }
             ]
           },
           {
-            id: "field10",
-            field_name: "referenceSong",
-            field_type: "text",
-            label_key: "referenceSong",
-            placeholder_key: "referenceSong",
-            required: false,
-            field_order: 2
+            id: "songStyle",
+            field_name: "songStyle",
+            field_type: "select",
+            placeholder_key: "selectSongStyle",
+            required: true,
+            field_order: 2,
+            options: [
+              { value: "ballad", label_key: "baptismStyleBallad" },
+              { value: "lullaby", label_key: "baptismStyleLullaby" },
+              { value: "acousticPop", label_key: "baptismStyleAcousticPop" }
+            ]
+          },
+          {
+            id: "voicePreference",
+            field_name: "voicePreference",
+            field_type: "select",
+            placeholder_key: "selectVoicePreference",
+            required: true,
+            field_order: 3,
+            options: [
+              { value: "female", label_key: "voiceFemale" },
+              { value: "male", label_key: "voiceMale" }
+            ]
           }
         ]
       }
     ]
   },
   {
-    id: 11,
+    id: "9",
     value: "comingOfAge",
     label_key: "comingOfAgePackage",
     tagline_key: "comingOfAgeTagline",
     description_key: "comingOfAgeDescription",
-    price_ron: 299,
-    price_eur: 59,
     delivery_time_key: "comingOfAgeDelivery",
-    is_active: true,
-    is_popular: false,
-    available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
+    price_ron: 29900,
+    price_eur: 5999,
+    available_addons: ["rushDelivery", "extraRevision", "sourceFiles", "customVideo", "personalizedAudioMessage"],
     includes: [
-      { include_key: "comingOfAgeInclude1", include_order: 1 },
-      { include_key: "comingOfAgeInclude2", include_order: 2 },
-      { include_key: "comingOfAgeInclude3", include_order: 3 },
-      { include_key: "comingOfAgeInclude4", include_order: 4 },
-      { include_key: "comingOfAgeInclude5", include_order: 5 },
-      { include_key: "comingOfAgeInclude6", include_order: 6 }
+      { id: "ca1", include_key: "comingOfAgeInclude1", include_order: 1 },
+      { id: "ca2", include_key: "comingOfAgeInclude2", include_order: 2 },
+      { id: "ca3", include_key: "comingOfAgeInclude3", include_order: 3 },
+      { id: "ca4", include_key: "comingOfAgeInclude4", include_order: 4 },
+      { id: "ca5", include_key: "comingOfAgeInclude5", include_order: 5 },
+      { id: "ca6", include_key: "comingOfAgeInclude6", include_order: 6 }
     ],
     steps: [
       {
-        id: "step1",
+        id: "comingOfAge_step1",
         step_number: 1,
-        title_key: "celebrantDetails",
+        title_key: "comingOfAgeStep1Title",
         fields: [
           {
-            id: "field1",
+            id: "celebrantName",
             field_name: "celebrantName",
             field_type: "text",
-            label_key: "celebrantName",
-            placeholder_key: "celebrantName",
+            placeholder_key: "comingOfAgeCelebrantNamePlaceholder",
             required: true,
             field_order: 1
           },
           {
-            id: "field2",
-            field_name: "celebrationDate",
-            field_type: "date",
-            label_key: "celebrationDate",
-            placeholder_key: "celebrationDate",
+            id: "hobbies",
+            field_name: "hobbies",
+            field_type: "textarea",
+            placeholder_key: "comingOfAgeHobbiesPlaceholder",
             required: true,
             field_order: 2
           },
           {
-            id: "field3",
-            field_name: "relationship",
-            field_type: "select",
-            label_key: "relationship",
-            placeholder_key: "relationship",
-            required: true,
-            field_order: 3,
-            options: [
-              { value: "parent", label_key: "relationshipParent" },
-              { value: "grandparent", label_key: "relationshipGrandparent" },
-              { value: "godparent", label_key: "relationshipGodparent" },
-              { value: "family", label_key: "relationshipFamily" },
-              { value: "friend", label_key: "relationshipFriend" }
-            ]
-          },
-          {
-            id: "field4",
-            field_name: "songLanguage",
-            field_type: "select",
-            label_key: "songLanguage",
-            placeholder_key: "songLanguage",
-            required: true,
-            field_order: 4,
-            options: [
-              { value: "romanian", label_key: "romanianLanguage" },
-              { value: "english", label_key: "englishLanguage" },
-              { value: "french", label_key: "frenchLanguage" }
-            ]
-          }
-        ]
-      },
-      {
-        id: "step2",
-        step_number: 2,
-        title_key: "lifeJourneyAndWishes",
-        fields: [
-          {
-            id: "field5",
-            field_name: "personalityTraits",
+            id: "personalMessage",
+            field_name: "personalMessage",
             field_type: "textarea",
-            label_key: "personalityTraits",
-            placeholder_key: "personalityTraits",
-            required: true,
-            field_order: 1
-          },
-          {
-            id: "field6",
-            field_name: "achievements",
-            field_type: "textarea",
-            label_key: "achievements",
-            placeholder_key: "achievements",
-            required: true,
-            field_order: 2
-          },
-          {
-            id: "field7",
-            field_name: "futureWishes",
-            field_type: "textarea",
-            label_key: "futureWishes",
-            placeholder_key: "futureWishes",
+            placeholder_key: "comingOfAgePersonalMessagePlaceholder",
             required: true,
             field_order: 3
-          },
-          {
-            id: "field8",
-            field_name: "specialMemories",
-            field_type: "textarea",
-            label_key: "specialMemories",
-            placeholder_key: "specialMemories",
-            required: false,
-            field_order: 4
           }
         ]
       },
       {
-        id: "step3",
-        step_number: 3,
-        title_key: "musicalPreferences",
+        id: "comingOfAge_step2",
+        step_number: 2,
+        title_key: "comingOfAgeStep2Title",
         fields: [
           {
-            id: "field9",
-            field_name: "musicStyle",
+            id: "songStyle",
+            field_name: "songStyle",
             field_type: "select",
-            label_key: "musicStyle",
-            placeholder_key: "musicStyle",
+            placeholder_key: "selectSongStyle",
             required: true,
             field_order: 1,
             options: [
-              { value: "inspirational", label_key: "styleInspirational" },
-              { value: "pop_contemporary", label_key: "stylePopContemporary" },
-              { value: "folk_acoustic", label_key: "styleFolkAcoustic" },
-              { value: "uplifting", label_key: "styleUplifting" },
-              { value: "traditional", label_key: "styleTraditional" }
+              { value: "hiphop", label_key: "comingOfAgeStyleHipHop" },
+              { value: "pop", label_key: "comingOfAgeStylePop" },
+              { value: "trap", label_key: "comingOfAgeStyleTrap" },
+              { value: "lofi", label_key: "comingOfAgeStyleLofi" }
             ]
           },
           {
-            id: "field10",
-            field_name: "referenceSong",
+            id: "songVibe",
+            field_name: "songVibe",
+            field_type: "select",
+            placeholder_key: "selectSongVibe",
+            required: true,
+            field_order: 2,
+            options: [
+              { value: "emotional", label_key: "comingOfAgeVibeEmotional" },
+              { value: "fun", label_key: "comingOfAgeVibeFun" },
+              { value: "rebellious", label_key: "comingOfAgeVibeRebellious" },
+              { value: "dreamy", label_key: "comingOfAgeVibeDreamy" }
+            ]
+          },
+          {
+            id: "favoriteArtists",
+            field_name: "favoriteArtists",
             field_type: "text",
-            label_key: "referenceSong",
-            placeholder_key: "referenceSong",
+            placeholder_key: "comingOfAgeFavoriteArtistsPlaceholder",
             required: false,
-            field_order: 2
+            field_order: 3
           }
         ]
       }
@@ -1743,144 +1099,131 @@ export const packages: PackageData[] = [
   }
 ];
 
-// Add-ons configuration (unchanged from original)
-export const addOns = [
+export const addOns: Addon[] = [
   {
-    id: "1",
+    id: uuidv4(),
     addon_key: "rushDelivery",
     label_key: "rushDelivery",
     description_key: "rushDeliveryDesc",
-    price_ron: 99,
-    price_eur: 20,
-    is_active: true,
-    trigger_field_type: null,
-    trigger_field_config: {},
-    trigger_condition: "",
-    trigger_condition_value: ""
+    price_ron: 9900,
+    price_eur: 1999,
+    is_active: true
   },
   {
-    id: "2",
-    addon_key: "socialMediaRights",
-    label_key: "socialMediaRights",
-    description_key: "socialMediaRightsDesc",
-    price_ron: 0,
-    price_eur: 0,
-    is_active: true,
-    trigger_field_type: null,
-    trigger_field_config: {},
-    trigger_condition: "",
-    trigger_condition_value: ""
+    id: uuidv4(),
+    addon_key: "extraRevision",
+    label_key: "extraRevision",
+    description_key: "extraRevisionDesc",
+    price_ron: 4900,
+    price_eur: 999,
+    is_active: true
   },
   {
-    id: "3",
-    addon_key: "distributieMangoRecords",
-    label_key: "distributieMangoRecords",
-    description_key: "distributieMangoRecordsDesc",
-    price_ron: 199,
-    price_eur: 40,
-    is_active: true,
-    trigger_field_type: null,
-    trigger_field_config: {},
-    trigger_condition: "",
-    trigger_condition_value: ""
+    id: uuidv4(),
+    addon_key: "extendedLicense",
+    label_key: "extendedLicense",
+    description_key: "extendedLicenseDesc",
+    price_ron: 14900,
+    price_eur: 2999,
+    is_active: true
   },
   {
-    id: "4",
+    id: uuidv4(),
+    addon_key: "sourceFiles",
+    label_key: "sourceFiles",
+    description_key: "sourceFilesDesc",
+    price_ron: 9900,
+    price_eur: 1999,
+    is_active: true
+  },
+  {
+    id: uuidv4(),
     addon_key: "customVideo",
     label_key: "customVideo",
     description_key: "customVideoDesc",
-    price_ron: 149,
-    price_eur: 30,
+    price_ron: 14900,
+    price_eur: 2999,
     is_active: true,
     trigger_field_type: "file",
     trigger_field_config: {
-      allowedTypes: [".jpg", ".jpeg", ".png", ".mp4", ".mov"],
-      maxFiles: 10,
-      maxTotalSizeMb: 150
-    },
-    trigger_condition: "",
-    trigger_condition_value: ""
+      maxFiles: 20,
+      maxTotalSizeMb: 150,
+      allowedTypes: [".jpg", ".jpeg", ".png", ".mp4", ".mov"]
+    }
   },
   {
-    id: "5",
+    id: uuidv4(),
     addon_key: "audioMessageFromSender",
     label_key: "audioMessageFromSender",
     description_key: "audioMessageFromSenderDesc",
-    price_ron: 99,
-    price_eur: 20,
+    price_ron: 4900,
+    price_eur: 999,
+    is_active: true,
+    trigger_field_type: "audio-recorder",
+    trigger_field_config: {
+      maxDuration: 45
+    }
+  },
+  {
+    id: uuidv4(),
+    addon_key: "brandedAudioMessage",
+    label_key: "brandedAudioMessage",
+    description_key: "brandedAudioMessageDesc",
+    price_ron: 4900,
+    price_eur: 999,
     is_active: true,
     trigger_field_type: "audio-recorder",
     trigger_field_config: {
       maxDuration: 30
-    },
-    trigger_condition: "",
-    trigger_condition_value: ""
+    }
   },
   {
-    id: "6",
-    addon_key: "brandedAudioMessage",
-    label_key: "brandedAudioMessage",
-    description_key: "brandedAudioMessageDesc",
-    price_ron: 0,
-    price_eur: 0,
-    is_active: true,
-    trigger_field_type: "audio-recorder",
-    trigger_field_config: {
-      maxDuration: 15
-    },
-    trigger_condition: "",
-    trigger_condition_value: ""
-  },
-  {
-    id: "7",
+    id: uuidv4(),
     addon_key: "commercialRightsUpgrade",
     label_key: "commercialRightsUpgrade",
     description_key: "commercialRightsUpgradeDesc",
-    price_ron: 399,
-    price_eur: 80,
-    is_active: true,
-    trigger_field_type: null,
-    trigger_field_config: {},
-    trigger_condition: "",
-    trigger_condition_value: ""
+    price_ron: 19900,
+    price_eur: 3999,
+    is_active: true
   },
   {
-    id: "8",
+    id: uuidv4(),
     addon_key: "extendedSong",
     label_key: "extendedSong",
     description_key: "extendedSongDesc",
-    price_ron: 49,
-    price_eur: 10,
-    is_active: true,
-    trigger_field_type: null,
-    trigger_field_config: {},
-    trigger_condition: "",
-    trigger_condition_value: ""
+    price_ron: 9900,
+    price_eur: 1999,
+    is_active: true
   },
   {
-    id: "9",
-    addon_key: "godparentsmelody",
+    id: uuidv4(),
+    addon_key: "godparentsSpecialMelody",
     label_key: "godparentsmelody",
     description_key: "godparentsmelodyDesc",
-    price_ron: 199,
-    price_eur: 40,
-    is_active: true,
-    trigger_field_type: null,
-    trigger_field_config: {},
-    trigger_condition: "",
-    trigger_condition_value: ""
+    price_ron: 14900,
+    price_eur: 2999,
+    is_active: true
   },
   {
-    id: "10",
+    id: uuidv4(),
     addon_key: "separatedStems",
     label_key: "separatedStems",
     description_key: "separatedStemsDesc",
-    price_ron: 149,
-    price_eur: 30,
+    price_ron: 9900,
+    price_eur: 1999,
+    is_active: true
+  },
+  {
+    id: uuidv4(),
+    addon_key: "personalizedAudioMessage",
+    label_key: "personalizedAudioMessage",
+    description_key: "personalizedAudioMessageDesc",
+    price_ron: 4900,
+    price_eur: 999,
     is_active: true,
-    trigger_field_type: null,
-    trigger_field_config: {},
-    trigger_condition: "",
-    trigger_condition_value: ""
+    trigger_field_type: "audio-recorder",
+    trigger_field_config: {
+      maxDuration: 45
+    }
   }
 ];
