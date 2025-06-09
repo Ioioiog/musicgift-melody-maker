@@ -1,5 +1,3 @@
-
-
 export interface PackageData {
   id: string;
   value: string;
@@ -59,8 +57,8 @@ export const packages: PackageData[] = [
     tagline_key: "personalTagline", 
     description_key: "personalDescription",
     delivery_time_key: "personalDelivery",
-    price_ron: 29900,
-    price_eur: 5999,
+    price_ron: 299,
+    price_eur: 59,
     available_addons: ["rushDelivery", "extraRevision", "sourceFiles", "customVideo", "audioMessageFromSender"],
     includes: [
       { id: "p1", include_key: "personalInclude1", include_order: 1 },
@@ -192,8 +190,8 @@ export const packages: PackageData[] = [
     tagline_key: "premiumTagline",
     description_key: "premiumDescription",
     delivery_time_key: "premiumDelivery",
-    price_ron: 59900,
-    price_eur: 11999,
+    price_ron: 499,
+    price_eur: 99,
     available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles", "customVideo", "audioMessageFromSender"],
     includes: [
       { id: "pr1", include_key: "premiumInclude1", include_order: 1 },
@@ -355,8 +353,8 @@ export const packages: PackageData[] = [
     tagline_key: "businessTagline",
     description_key: "businessDescription",
     delivery_time_key: "businessDelivery",
-    price_ron: 149900,
-    price_eur: 29999,
+    price_ron: 499,
+    price_eur: 99,
     available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles", "brandedAudioMessage", "commercialRightsUpgrade"],
     includes: [
       { id: "b1", include_key: "businessInclude1", include_order: 1 },
@@ -488,8 +486,8 @@ export const packages: PackageData[] = [
     tagline_key: "artistTagline",
     description_key: "artistDescription",
     delivery_time_key: "artistDelivery",
-    price_ron: 199900,
-    price_eur: 39999,
+    price_ron: 7999,
+    price_eur: 1499,
     available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles", "customVideo"],
     includes: [
       { id: "a1", include_key: "artistInclude1", include_order: 1 },
@@ -612,8 +610,8 @@ export const packages: PackageData[] = [
     tagline_key: "remixTagline",
     description_key: "remixDescription",
     delivery_time_key: "remixDelivery",
-    price_ron: 19900,
-    price_eur: 3999,
+    price_ron: 499,
+    price_eur: 99,
     available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles"],
     includes: [
       { id: "r1", include_key: "remixInclude1", include_order: 1 },
@@ -708,8 +706,8 @@ export const packages: PackageData[] = [
     tagline_key: "instrumentalTagline",
     description_key: "instrumentalDescription",
     delivery_time_key: "instrumentalDelivery",
-    price_ron: 14900,
-    price_eur: 2999,
+    price_ron: 499,
+    price_eur: 99,
     available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles", "separatedStems"],
     includes: [
       { id: "i1", include_key: "instrumentalInclude1", include_order: 1 },
@@ -809,8 +807,8 @@ export const packages: PackageData[] = [
     tagline_key: "weddingTagline",
     description_key: "weddingDescription",
     delivery_time_key: "weddingDelivery",
-    price_ron: 39900,
-    price_eur: 7999,
+    price_ron: 299,
+    price_eur: 59,
     available_addons: ["rushDelivery", "extraRevision", "sourceFiles", "customVideo", "personalizedAudioMessage", "godparentsSpecialMelody"],
     includes: [
       { id: "w1", include_key: "weddingInclude1", include_order: 1 },
@@ -915,8 +913,8 @@ export const packages: PackageData[] = [
     tagline_key: "baptismTagline",
     description_key: "baptismDescription",
     delivery_time_key: "baptismDelivery",
-    price_ron: 29900,
-    price_eur: 5999,
+    price_ron: 299,
+    price_eur: 59,
     available_addons: ["rushDelivery", "extraRevision", "sourceFiles", "customVideo", "personalizedAudioMessage"],
     includes: [
       { id: "bp1", include_key: "baptismInclude1", include_order: 1 },
@@ -1012,8 +1010,8 @@ export const packages: PackageData[] = [
     tagline_key: "comingOfAgeTagline",
     description_key: "comingOfAgeDescription",
     delivery_time_key: "comingOfAgeDelivery",
-    price_ron: 29900,
-    price_eur: 5999,
+    price_ron: 299,
+    price_eur: 59,
     available_addons: ["rushDelivery", "extraRevision", "sourceFiles", "customVideo", "personalizedAudioMessage"],
     includes: [
       { id: "ca1", include_key: "comingOfAgeInclude1", include_order: 1 },
@@ -1108,8 +1106,8 @@ export const addOns: Addon[] = [
     addon_key: "rushDelivery",
     label_key: "rushDelivery",
     description_key: "rushDeliveryDesc",
-    price_ron: 9900,
-    price_eur: 1999,
+    price_ron: 99,
+    price_eur: 20,
     is_active: true
   },
   {
@@ -1117,8 +1115,8 @@ export const addOns: Addon[] = [
     addon_key: "extraRevision",
     label_key: "extraRevision",
     description_key: "extraRevisionDesc",
-    price_ron: 4900,
-    price_eur: 999,
+    price_ron: 49,
+    price_eur: 10,
     is_active: true
   },
   {
@@ -1126,8 +1124,8 @@ export const addOns: Addon[] = [
     addon_key: "extendedLicense",
     label_key: "extendedLicense",
     description_key: "extendedLicenseDesc",
-    price_ron: 14900,
-    price_eur: 2999,
+    price_ron: 149,
+    price_eur: 30,
     is_active: true
   },
   {
@@ -1135,8 +1133,8 @@ export const addOns: Addon[] = [
     addon_key: "sourceFiles",
     label_key: "sourceFiles",
     description_key: "sourceFilesDesc",
-    price_ron: 9900,
-    price_eur: 1999,
+    price_ron: 99,
+    price_eur: 20,
     is_active: true
   },
   {
@@ -1144,8 +1142,8 @@ export const addOns: Addon[] = [
     addon_key: "customVideo",
     label_key: "customVideo",
     description_key: "customVideoDesc",
-    price_ron: 14900,
-    price_eur: 2999,
+    price_ron: 149,
+    price_eur: 30,
     is_active: true,
     trigger_field_type: "file",
     trigger_field_config: {
@@ -1159,8 +1157,8 @@ export const addOns: Addon[] = [
     addon_key: "audioMessageFromSender",
     label_key: "audioMessageFromSender",
     description_key: "audioMessageFromSenderDesc",
-    price_ron: 4900,
-    price_eur: 999,
+    price_ron: 49,
+    price_eur: 10,
     is_active: true,
     trigger_field_type: "audio-recorder",
     trigger_field_config: {
@@ -1172,8 +1170,8 @@ export const addOns: Addon[] = [
     addon_key: "brandedAudioMessage",
     label_key: "brandedAudioMessage",
     description_key: "brandedAudioMessageDesc",
-    price_ron: 4900,
-    price_eur: 999,
+    price_ron: 49,
+    price_eur: 10,
     is_active: true,
     trigger_field_type: "audio-recorder",
     trigger_field_config: {
@@ -1185,8 +1183,8 @@ export const addOns: Addon[] = [
     addon_key: "commercialRightsUpgrade",
     label_key: "commercialRightsUpgrade",
     description_key: "commercialRightsUpgradeDesc",
-    price_ron: 19900,
-    price_eur: 3999,
+    price_ron: 199,
+    price_eur: 40,
     is_active: true
   },
   {
@@ -1194,8 +1192,8 @@ export const addOns: Addon[] = [
     addon_key: "extendedSong",
     label_key: "extendedSong",
     description_key: "extendedSongDesc",
-    price_ron: 9900,
-    price_eur: 1999,
+    price_ron: 99,
+    price_eur: 20,
     is_active: true
   },
   {
@@ -1203,8 +1201,8 @@ export const addOns: Addon[] = [
     addon_key: "godparentsSpecialMelody",
     label_key: "godparentsmelody",
     description_key: "godparentsmelodyDesc",
-    price_ron: 14900,
-    price_eur: 2999,
+    price_ron: 149,
+    price_eur: 30,
     is_active: true
   },
   {
@@ -1212,8 +1210,8 @@ export const addOns: Addon[] = [
     addon_key: "separatedStems",
     label_key: "separatedStems",
     description_key: "separatedStemsDesc",
-    price_ron: 9900,
-    price_eur: 1999,
+    price_ron: 99,
+    price_eur: 20,
     is_active: true
   },
   {
@@ -1221,8 +1219,8 @@ export const addOns: Addon[] = [
     addon_key: "personalizedAudioMessage",
     label_key: "personalizedAudioMessage",
     description_key: "personalizedAudioMessageDesc",
-    price_ron: 4900,
-    price_eur: 999,
+    price_ron: 49,
+    price_eur: 10,
     is_active: true,
     trigger_field_type: "audio-recorder",
     trigger_field_config: {
@@ -1230,4 +1228,3 @@ export const addOns: Addon[] = [
     }
   }
 ];
-
