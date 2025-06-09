@@ -17,14 +17,12 @@ import AddonSelectionStep from './order/AddonSelectionStep';
 import PaymentProviderSelection from './order/PaymentProviderSelection';
 import ContactLegalStep from './order/ContactLegalStep';
 import WizardNavigation from './order/WizardNavigation';
-
 interface OrderWizardProps {
   giftCard?: any;
   onComplete?: (orderData: any) => Promise<void>;
   preselectedPackage?: string;
   onOrderDataChange?: (orderData: any) => void;
 }
-
 const OrderWizard: React.FC<OrderWizardProps> = ({
   giftCard,
   onComplete,
@@ -48,16 +46,27 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   } = useOrderWizardState({
     preselectedPackage
   });
-
-  const { t } = useLanguage();
-  const { currency } = useCurrency();
-  const { toast } = useToast();
+  const {
+    t
+  } = useLanguage();
+  const {
+    currency
+  } = useCurrency();
+  const {
+    toast
+  } = useToast();
   const navigate = useNavigate();
-  const { data: packages = [] } = usePackages();
-  const { data: addons = [] } = useAddons();
-
+  const {
+    data: packages = []
+  } = usePackages();
+  const {
+    data: addons = []
+  } = useAddons();
   const selectedPackage = formData.package as string;
-  const { data: allPackageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
+  const {
+    data: allPackageSteps = [],
+    isLoading: isStepsLoading
+  } = usePackageSteps(selectedPackage);
 
   // Notify parent component of order data changes
   useEffect(() => {
@@ -315,102 +324,43 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     }
     return true;
   };
-  return (
-    <div className="w-full">
+  return <div className="w-full">
       <Card className="bg-transparent border-transparent shadow-none backdrop-blur-0">
         <CardHeader className="pb-1 pt-2 px-4 sm:px-6">
           <div className="mb-1">
             <StepIndicator steps={buildStepsData()} className="py-0 my-1 px-1 sm:px-2" />
           </div>
         </CardHeader>
-        <CardContent className="p-2 sm:p-3 py-0">
+        <CardContent className="p-2 sm:p-3 px-[43px] my-[4px] py-0">
           <AnimatePresence initial={false} mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div key={currentStep} initial={{
+            opacity: 0,
+            x: -20
+          }} animate={{
+            opacity: 1,
+            x: 0
+          }} exit={{
+            opacity: 0,
+            x: 20
+          }} transition={{
+            duration: 0.2
+          }}>
               <div className="space-y-2">
-                {currentStep === 0 ? (
-                  <PackageSelectionStep
-                    selectedPackage={formData.package}
-                    onPackageSelect={handlePackageSelect}
-                  />
-                ) : currentStepData ? (
-                  <div>
+                {currentStep === 0 ? <PackageSelectionStep selectedPackage={formData.package} onPackageSelect={handlePackageSelect} /> : currentStepData ? <div>
                     <h3 className="text-lg font-semibold text-white mb-2">
                       {t(currentStepData.title_key) || currentStepData.title_key}
                     </h3>
-                    {currentStepData.fields
-                      .filter(field => field.field_type !== 'checkbox-group')
-                      .sort((a, b) => a.field_order - b.field_order)
-                      .map(field => (
-                        <FormFieldRenderer
-                          key={field.id}
-                          field={field}
-                          value={formData[field.field_name]}
-                          onChange={value => handleInputChange(field.field_name, value)}
-                          selectedAddons={selectedAddons}
-                          onAddonChange={handleAddonChange}
-                          availableAddons={addons}
-                          addonFieldValues={addonFieldValues}
-                          onAddonFieldChange={handleAddonFieldChange}
-                          selectedPackage={selectedPackage}
-                          selectedPackageData={selectedPackageData}
-                          formData={formData}
-                        />
-                      ))}
-                  </div>
-                ) : isAddonStep ? (
-                  <AddonSelectionStep
-                    selectedPackageData={selectedPackageData}
-                    selectedAddons={selectedAddons}
-                    onAddonChange={handleAddonChange}
-                    availableAddons={addons}
-                    addonFieldValues={addonFieldValues}
-                    onAddonFieldChange={handleAddonFieldChange}
-                  />
-                ) : isContactLegalStep ? (
-                  <ContactLegalStep
-                    formData={formData}
-                    onInputChange={handleInputChange}
-                    selectedAddons={selectedAddons}
-                    onAddonChange={handleAddonChange}
-                    availableAddons={addons}
-                    addonFieldValues={addonFieldValues}
-                    onAddonFieldChange={handleAddonFieldChange}
-                    selectedPackage={selectedPackage}
-                    selectedPackageData={selectedPackageData}
-                  />
-                ) : isPaymentStep ? (
-                  <PaymentProviderSelection
-                    selectedProvider={selectedPaymentProvider}
-                    onProviderSelect={setSelectedPaymentProvider}
-                  />
-                ) : (
-                  <div className="text-center py-6">
+                    {currentStepData.fields.filter(field => field.field_type !== 'checkbox-group').sort((a, b) => a.field_order - b.field_order).map(field => <FormFieldRenderer key={field.id} field={field} value={formData[field.field_name]} onChange={value => handleInputChange(field.field_name, value)} selectedAddons={selectedAddons} onAddonChange={handleAddonChange} availableAddons={addons} addonFieldValues={addonFieldValues} onAddonFieldChange={handleAddonFieldChange} selectedPackage={selectedPackage} selectedPackageData={selectedPackageData} formData={formData} />)}
+                  </div> : isAddonStep ? <AddonSelectionStep selectedPackageData={selectedPackageData} selectedAddons={selectedAddons} onAddonChange={handleAddonChange} availableAddons={addons} addonFieldValues={addonFieldValues} onAddonFieldChange={handleAddonFieldChange} /> : isContactLegalStep ? <ContactLegalStep formData={formData} onInputChange={handleInputChange} selectedAddons={selectedAddons} onAddonChange={handleAddonChange} availableAddons={addons} addonFieldValues={addonFieldValues} onAddonFieldChange={handleAddonFieldChange} selectedPackage={selectedPackage} selectedPackageData={selectedPackageData} /> : isPaymentStep ? <PaymentProviderSelection selectedProvider={selectedPaymentProvider} onProviderSelect={setSelectedPaymentProvider} /> : <div className="text-center py-6">
                     <p className="text-white/70">{t('loadingSteps')}</p>
-                  </div>
-                )}
+                  </div>}
               </div>
             </motion.div>
           </AnimatePresence>
 
-          <WizardNavigation
-            currentStep={currentStep}
-            totalSteps={totalSteps}
-            canProceed={canProceed()}
-            isSubmitting={isSubmitting}
-            onPrev={handlePrev}
-            onNext={handleNext}
-            onSubmit={handleSubmit}
-          />
+          <WizardNavigation currentStep={currentStep} totalSteps={totalSteps} canProceed={canProceed()} isSubmitting={isSubmitting} onPrev={handlePrev} onNext={handleNext} onSubmit={handleSubmit} />
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 };
-
 export default OrderWizard;
