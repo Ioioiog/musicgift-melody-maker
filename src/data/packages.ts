@@ -1,5 +1,4 @@
 
-import { v4 as uuidv4 } from 'uuid';
 
 export interface PackageData {
   id: string;
@@ -1105,7 +1104,7 @@ export const packages: PackageData[] = [
 
 export const addOns: Addon[] = [
   {
-    id: uuidv4(),
+    id: "addon-rush-delivery",
     addon_key: "rushDelivery",
     label_key: "rushDelivery",
     description_key: "rushDeliveryDesc",
@@ -1114,7 +1113,7 @@ export const addOns: Addon[] = [
     is_active: true
   },
   {
-    id: uuidv4(),
+    id: "addon-extra-revision",
     addon_key: "extraRevision",
     label_key: "extraRevision",
     description_key: "extraRevisionDesc",
@@ -1123,7 +1122,7 @@ export const addOns: Addon[] = [
     is_active: true
   },
   {
-    id: uuidv4(),
+    id: "addon-extended-license",
     addon_key: "extendedLicense",
     label_key: "extendedLicense",
     description_key: "extendedLicenseDesc",
@@ -1132,7 +1131,7 @@ export const addOns: Addon[] = [
     is_active: true
   },
   {
-    id: uuidv4(),
+    id: "addon-source-files",
     addon_key: "sourceFiles",
     label_key: "sourceFiles",
     description_key: "sourceFilesDesc",
@@ -1141,7 +1140,7 @@ export const addOns: Addon[] = [
     is_active: true
   },
   {
-    id: uuidv4(),
+    id: "addon-custom-video",
     addon_key: "customVideo",
     label_key: "customVideo",
     description_key: "customVideoDesc",
@@ -1156,7 +1155,7 @@ export const addOns: Addon[] = [
     }
   },
   {
-    id: uuidv4(),
+    id: "addon-audio-message-from-sender",
     addon_key: "audioMessageFromSender",
     label_key: "audioMessageFromSender",
     description_key: "audioMessageFromSenderDesc",
@@ -1169,7 +1168,7 @@ export const addOns: Addon[] = [
     }
   },
   {
-    id: uuidv4(),
+    id: "addon-branded-audio-message",
     addon_key: "brandedAudioMessage",
     label_key: "brandedAudioMessage",
     description_key: "brandedAudioMessageDesc",
@@ -1182,7 +1181,7 @@ export const addOns: Addon[] = [
     }
   },
   {
-    id: uuidv4(),
+    id: "addon-commercial-rights-upgrade",
     addon_key: "commercialRightsUpgrade",
     label_key: "commercialRightsUpgrade",
     description_key: "commercialRightsUpgradeDesc",
@@ -1191,7 +1190,7 @@ export const addOns: Addon[] = [
     is_active: true
   },
   {
-    id: uuidv4(),
+    id: "addon-extended-song",
     addon_key: "extendedSong",
     label_key: "extendedSong",
     description_key: "extendedSongDesc",
@@ -1200,7 +1199,7 @@ export const addOns: Addon[] = [
     is_active: true
   },
   {
-    id: uuidv4(),
+    id: "addon-godparents-special-melody",
     addon_key: "godparentsSpecialMelody",
     label_key: "godparentsmelody",
     description_key: "godparentsmelodyDesc",
@@ -1209,7 +1208,7 @@ export const addOns: Addon[] = [
     is_active: true
   },
   {
-    id: uuidv4(),
+    id: "addon-separated-stems",
     addon_key: "separatedStems",
     label_key: "separatedStems",
     description_key: "separatedStemsDesc",
@@ -1218,7 +1217,7 @@ export const addOns: Addon[] = [
     is_active: true
   },
   {
-    id: uuidv4(),
+    id: "addon-personalized-audio-message",
     addon_key: "personalizedAudioMessage",
     label_key: "personalizedAudioMessage",
     description_key: "personalizedAudioMessageDesc",
@@ -1231,3 +1230,4 @@ export const addOns: Addon[] = [
     }
   }
 ];
+
