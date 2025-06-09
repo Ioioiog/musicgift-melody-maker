@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Wählen Sie Ihr Paket",
   selectPerfectPackage: "Wählen Sie das perfekte Paket, das zu Ihren Bedürfnissen und Ihrem Budget passt",
@@ -98,9 +99,6 @@ export const packagesTranslations = {
   noPackagesAvailable: "Momentan sind keine Pakete verfügbar.",
   checkBackLater: "Bitte schauen Sie später wieder vorbei.",
   
-  // Did You Know section
-  didYouKnow: "Wussten Sie?",
-  
   // Add-ons section
   availableAddOns: "Verfügbare Add-ons",
   enhanceYourPackage: "Verbessern Sie Ihr Paket mit zusätzlichen Optionen",
@@ -109,6 +107,15 @@ export const packagesTranslations = {
   rushDelivery: "Express-Lieferung",
   rushDeliveryDesc: "Erhalten Sie Ihr Lied in 24-48 Stunden nach der Zahlung",
   
+  extraRevision: "Zusätzliche Überarbeitung",
+  extraRevisionDesc: "Eine zusätzliche Überarbeitung für Perfektion",
+  
+  extendedLicense: "Erweiterte Lizenz",
+  extendedLicenseDesc: "Vollständige unbegrenzte kommerzielle Rechte",
+  
+  sourceFiles: "Quelldateien",
+  sourceFilesDesc: "Zugang zu allen Projektdateien (Stems, MIDI)",
+
   socialMediaRights: "Social Media Rechte",
   socialMediaRightsDesc: "Erhalten Sie die Rechte, das Lied auf jeder Social Media Plattform zu posten. Erfordert die Zustimmung zur Kennzeichnung des Liedes mit 'Music Gift by Mango Records'.",
   
@@ -116,7 +123,7 @@ export const packagesTranslations = {
   distributieMangoRecordsDesc: "Professionelle Verteilung über Mango Records",
   
   customVideo: "Individuelles Video",
-  customVideoDesc: "Animiertes Video für Ihr Lied mit Ihren Fotos und Videos",
+  customVideoDesc: "Ein personalisiertes Video erstellt mit Ihren Fotos oder/und Videos für eine vollständige Erfahrung",
   
   audioMessageFromSender: "Audio-Nachricht vom Absender",
   audioMessageFromSenderDesc: "Fügen Sie eine persönliche Audio-Nachricht vom Absender für eine zusätzliche Überraschung hinzu",
@@ -182,7 +189,13 @@ export const packagesTranslations = {
   comingOfAgeInclude5: "Professioneller Mix & Master",
   comingOfAgeInclude6: "Finale MP3, zusätzlich auf Anfrage WAV HQ Dateien",
   
-  // Form fields
+  // New Add-ons
+  personalizedAudioMessage: "Personalisierte Audio-Nachricht",
+  personalizedAudioMessageDesc: "Audio-Nachricht am Anfang des Liedes",
+  godparentsSpecialMelody: "Spezielle Melodie für Paten",
+  godparentsSpecialMelodyDesc: "Eine zweite Melodie als Überraschungsgeschenk für die Paten",
+  
+  // Wedding form fields
   weddingStep1Title: "Paar Details",
   weddingStep2Title: "Geschichte & Vorlieben",
   weddingCoupleNamesPlaceholder: "Namen von Braut & Bräutigam oder Paten eingeben",
@@ -195,6 +208,7 @@ export const packagesTranslations = {
   weddingAtmosphereElegant: "Elegant",
   weddingMusicalStylePlaceholder: "Bevorzugter Musikstil oder Inspirationslied",
   
+  // Baptism form fields
   baptismStep1Title: "Kind Informationen",
   baptismStep2Title: "Musikalische Vorlieben",
   baptismChildNamePlaceholder: "Name des Kindes",
@@ -207,11 +221,12 @@ export const packagesTranslations = {
   baptismStyleLullaby: "Wiegenlied",
   baptismStyleAcousticPop: "Akustik Pop",
   
+  // Coming of Age form fields
   comingOfAgeStep1Title: "Jubilar Informationen",
   comingOfAgeStep2Title: "Musikstil & Stimmung",
   comingOfAgeCelebrantNamePlaceholder: "Name der Person, die 18 wird",
   comingOfAgeHobbiesPlaceholder: "Ihre Hobbys, Leidenschaften und Persönlichkeitsmerkmale",
-  comingOfAgePersonalMessagePlaceholder: "Persönliche Nachricht von Familie/Freunden",
+  comingOfAgePersonalMessagePlaceholder: "Persönliche Nachricht von Familie/Freunden für den 18. Geburtstag",
   comingOfAgeStyleHipHop: "Hip-Hop",
   comingOfAgeStylePop: "Pop",
   comingOfAgeStyleTrap: "Trap",
@@ -222,6 +237,7 @@ export const packagesTranslations = {
   comingOfAgeVibeDreamy: "Träumerisch",
   comingOfAgeFavoriteArtistsPlaceholder: "Beispiele für Lieblingskünstler oder -lieder",
   
+  // Common voice options
   voiceFemale: "Weibliche Stimme",
   voiceMale: "Männliche Stimme"
 };

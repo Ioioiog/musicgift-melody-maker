@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choisissez votre forfait",
   selectPerfectPackage: "Sélectionnez le forfait parfait qui correspond à vos besoins et à votre budget",
@@ -115,7 +116,6 @@ export const packagesTranslations = {
   sourceFiles: "Fichiers sources",
   sourceFilesDesc: "Accès à tous les fichiers de projet (stems, MIDI)",
   
-  // Add-ons
   socialMediaRights: "Droits Réseaux Sociaux",
   socialMediaRightsDesc: "Obtenez les droits de publier la chanson sur toute plateforme de réseaux sociaux. Nécessite l'acceptation d'étiqueter la chanson avec 'Music Gift by Mango Records'.",
   
@@ -140,7 +140,6 @@ export const packagesTranslations = {
   godparentsmelody: "Mélodie des parrains",
   godparentsmelodyDesc: "Mélodie spéciale pour les parrains",
   
-  // New add-on
   separatedStems: "Stems Séparés",
   separatedStemsDesc: "Beat original + fichiers de pistes individuelles. Idéal pour le mixage, le remixage et la synchronisation vidéo. Inclut les droits commerciaux.",
   
@@ -154,12 +153,12 @@ export const packagesTranslations = {
   baptismTagline: "Une mélodie originale pour le jour spécial de votre petit ange",
   comingOfAgeTagline: "Un hymne personnalisé pour le voyage vers l'âge adulte",
   
-  // New Package descriptions
+  // Package descriptions
   weddingDescription: "Avez-vous rêvé de ne pas danser la danse la plus importante de votre vie sur la même chanson que d'autres ont dansée ? MusicGift crée une chanson originale, personnalisée pour la danse des mariés ou des parrains, basée sur leur histoire d'amour ou d'amitié.",
   baptismDescription: "Une mélodie originale, émouvante et personnalisée dédiée à l'enfant baptisé – idéale pour être chantée ou jouée lors de l'événement, et pour rester un souvenir à vie.",
   comingOfAgeDescription: "Un cadeau musical unique et émouvant pour un jeune homme ou une jeune femme qui atteint 18 ans – créé à partir de leur histoire, de leur énergie et de leurs aspirations.",
   
-  // New Delivery times
+  // Delivery times
   weddingDelivery: "5–7 jours ouvrables",
   baptismDelivery: "3–5 jours ouvrables",
   comingOfAgeDelivery: "5–7 jours ouvrables",
@@ -223,11 +222,11 @@ export const packagesTranslations = {
   baptismStyleAcousticPop: "Pop Acoustique",
   
   // Coming of Age form fields
-  comingOfAgeStep1Title: "Informations sur le Célébrant",
+  comingOfAgeStep1Title: "Informations sur le Célébrant de 18 ans",
   comingOfAgeStep2Title: "Style Musical et Ambiance",
   comingOfAgeCelebrantNamePlaceholder: "Nom de la personne qui atteint 18 ans",
   comingOfAgeHobbiesPlaceholder: "Leurs loisirs, passions et traits de personnalité",
-  comingOfAgePersonalMessagePlaceholder: "Message personnel de la famille/des amis",
+  comingOfAgePersonalMessagePlaceholder: "Message personnel de la famille/des amis pour les 18 ans",
   comingOfAgeStyleHipHop: "Hip-Hop",
   comingOfAgeStylePop: "Pop",
   comingOfAgeStyleTrap: "Trap",
@@ -240,5 +239,5 @@ export const packagesTranslations = {
   
   // Common voice options
   voiceFemale: "Voix Féminine",
-  voiceMale: "Voix Masculine",
+  voiceMale: "Voix Masculine"
 };

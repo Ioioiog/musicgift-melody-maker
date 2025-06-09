@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Wybierz swój pakiet",
   selectPerfectPackage: "Wybierz idealny pakiet, który pasuje do Twoich potrzeb i budżetu",
@@ -87,7 +88,7 @@ export const packagesTranslations = {
   
   // Tags
   newTag: "Nowy",
-  popularTag: "Popular",
+  popularTag: "Popularny",
   premiumTag: "Premium",
   giftTag: "Prezent",
   mostPopular: "Najpopularniejszy",
@@ -106,6 +107,15 @@ export const packagesTranslations = {
   rushDelivery: "Ekspresowa dostawa",
   rushDeliveryDesc: "Otrzymaj swoją piosenkę w 24-48 godzin od momentu płatności",
   
+  extraRevision: "Dodatkowa rewizja",
+  extraRevisionDesc: "Jedna dodatkowa rewizja dla perfekcji",
+  
+  extendedLicense: "Rozszerzona licencja",
+  extendedLicenseDesc: "Pełne nieograniczone prawa komercyjne",
+  
+  sourceFiles: "Pliki źródłowe",
+  sourceFilesDesc: "Dostęp do wszystkich plików projektu (stems, MIDI)",
+
   socialMediaRights: "Prawa do mediów społecznościowych",
   socialMediaRightsDesc: "Uzyskaj prawa do publikowania piosenki na dowolnej platformie mediów społecznościowych. Wymaga akceptacji oznaczenia piosenki jako 'Music Gift by Mango Records'.",
   
@@ -113,7 +123,7 @@ export const packagesTranslations = {
   distributieMangoRecordsDesc: "Profesjonalna dystrybucja przez Mango Records",
   
   customVideo: "Niestandardowe wideo",
-  customVideoDesc: "Animowane wideo dla twojej piosenki z twoimi zdjęciami i filmami",
+  customVideoDesc: "Spersonalizowane wideo utworzone z Twoimi zdjęciami lub/i filmami dla kompletnego doświadczenia",
   
   audioMessageFromSender: "Wiadomość audio od nadawcy",
   audioMessageFromSenderDesc: "Dodaj osobistą wiadomość audio od nadawcy dla dodatkowej niespodzianki",
@@ -136,5 +146,98 @@ export const packagesTranslations = {
   // New Special Event Package names
   weddingPackage: "Pakiet ślubny",
   baptismPackage: "Pakiet chrzcin",
-  comingOfAgePackage: "Pakiet pełnoletności"
+  comingOfAgePackage: "Pakiet pełnoletności",
+  
+  // Package taglines
+  weddingTagline: "Wasza unikalna piosenka do tańca – stworzona z Waszej historii miłosnej",
+  baptismTagline: "Oryginalna melodia na szczególny dzień Waszego aniołka",
+  comingOfAgeTagline: "Spersonalizowany hymn na podróż ku dorosłości",
+  
+  // Package descriptions
+  weddingDescription: "Czy marzyliście o tym, żeby nie tańczyć najważniejszego tańca swojego życia do tej samej piosenki, do której tańczyli inni? MusicGift tworzy oryginalną piosenkę, spersonalizowaną dla tańca państwa młodych lub rodziców chrzestnych, opartą na ich historii miłosnej lub przyjaźni.",
+  baptismDescription: "Oryginalna, wzruszająca i spersonalizowana melodia dedykowana ochrzczonemu dziecku – idealna do zaśpiewania lub odtworzenia podczas uroczystości i pozostania wspomnieniem na całe życie.",
+  comingOfAgeDescription: "Wyjątkowy i wzruszający muzyczny prezent dla młodego mężczyzny lub kobiety, która kończy 18 lat – stworzony z ich historii, energii i aspiracji.",
+  
+  // New Delivery times
+  weddingDelivery: "5–7 dni roboczych",
+  baptismDelivery: "3–5 dni roboczych",
+  comingOfAgeDelivery: "5–7 dni roboczych",
+  
+  // Wedding Package includes
+  weddingInclude1: "Sesja konsultacji kreatywnej między parą młodą a zespołem MusicGift (historia pary młodej/rodziców chrzestnych)",
+  weddingInclude2: "Spersonalizowana kompozycja melodii + tekst napisany specjalnie dla Was",
+  weddingInclude3: "Oryginalny instrumental",
+  weddingInclude4: "Ekspresyjna interpretacja wokalna",
+  weddingInclude5: "Profesjonalny mix & master",
+  weddingInclude6: "Końcowe pliki MP3, dodatkowo na żądanie WAV HQ",
+  weddingInclude7: "Darmowa rewizja (1x)",
+  weddingInclude8: "Jedna prośba o modyfikację wliczona",
+  
+  // Baptism Package includes
+  baptismInclude1: "Konsultacja z rodzicami (imię dziecka, znaczenie)",
+  baptismInclude2: "Spersonalizowany tekst o dziecku",
+  baptismInclude3: "Linia melodyczna + oryginalny instrumental",
+  baptismInclude4: "Profesjonalny głos (do wyboru: żeński/męski)",
+  baptismInclude5: "Profesjonalny mix & master",
+  baptismInclude6: "Końcowe pliki MP3, dodatkowo na żądanie WAV HQ",
+  
+  // Coming of Age Package includes
+  comingOfAgeInclude1: "Wywiad/briefing o świętującym z zespołem MusicGift",
+  comingOfAgeInclude2: "Spersonalizowany tekst o ich marzeniach, pasjach i osobowości",
+  comingOfAgeInclude3: "Dopasowany klimat (hip-hop, pop, trap, lofi, itp.)",
+  comingOfAgeInclude4: "Oryginalna piosenka skomponowana od zera",
+  comingOfAgeInclude5: "Profesjonalny mix & master",
+  comingOfAgeInclude6: "Końcowe pliki MP3, dodatkowo na żądanie WAV HQ",
+  
+  // New Add-ons
+  personalizedAudioMessage: "Spersonalizowana wiadomość audio",
+  personalizedAudioMessageDesc: "Wiadomość audio na początku piosenki",
+  godparentsSpecialMelody: "Specjalna melodia dla rodziców chrzestnych",
+  godparentsSpecialMelodyDesc: "Druga melodia jako niespodzianka dla rodziców chrzestnych",
+  
+  // Wedding form fields
+  weddingStep1Title: "Szczegóły pary",
+  weddingStep2Title: "Historia i preferencje",
+  weddingCoupleNamesPlaceholder: "Wprowadź imiona panny młodej i pana młodego lub rodziców chrzestnych",
+  weddingBrideGroom: "Panna młoda i pan młody",
+  weddingGodparents: "Rodzice chrzestni",
+  weddingHowMetPlaceholder: "Opowiedz nam, jak się poznali...",
+  weddingLoveStoryPlaceholder: "Podziel się ich szczegółową historią miłosną lub przyjaźni...",
+  weddingAtmosphereRomantic: "Romantyczna",
+  weddingAtmosphereEmotional: "Emocjonalna",
+  weddingAtmosphereElegant: "Elegancka",
+  weddingMusicalStylePlaceholder: "Preferowany styl muzyczny lub piosenka inspirująca",
+  
+  // Baptism form fields
+  baptismStep1Title: "Informacje o dziecku",
+  baptismStep2Title: "Preferencje muzyczne",
+  baptismChildNamePlaceholder: "Imię dziecka",
+  baptismNameMeaningPlaceholder: "Znaczenie imienia (opcjonalnie)",
+  baptismBirthStoryPlaceholder: "Historia narodzin / życzenia rodziców",
+  baptismAtmosphereCalm: "Spokojna",
+  baptismAtmospherePlayful: "Zabawna",
+  baptismAtmosphereEmotional: "Emocjonalna",
+  baptismStyleBallad: "Ballada",
+  baptismStyleLullaby: "Kołysanka",
+  baptismStyleAcousticPop: "Pop akustyczny",
+  
+  // Coming of Age form fields
+  comingOfAgeStep1Title: "Informacje o świętującym 18. urodziny",
+  comingOfAgeStep2Title: "Styl muzyczny i klimat",
+  comingOfAgeCelebrantNamePlaceholder: "Imię świętującego 18. urodziny",
+  comingOfAgeHobbiesPlaceholder: "Ich hobby, pasje i cechy osobowości",
+  comingOfAgePersonalMessagePlaceholder: "Osobista wiadomość od rodziny/przyjaciół na 18. urodziny",
+  comingOfAgeStyleHipHop: "Hip-Hop",
+  comingOfAgeStylePop: "Pop",
+  comingOfAgeStyleTrap: "Trap",
+  comingOfAgeStyleLofi: "Lo-Fi",
+  comingOfAgeVibeEmotional: "Emocjonalny",
+  comingOfAgeVibeFun: "Zabawny",
+  comingOfAgeVibeRebellious: "Buntowniczy",
+  comingOfAgeVibeDreamy: "Marzycielski",
+  comingOfAgeFavoriteArtistsPlaceholder: "Przykłady ulubionych artystów lub piosenek",
+  
+  // Common voice options
+  voiceFemale: "Głos żeński",
+  voiceMale: "Głos męski"
 };

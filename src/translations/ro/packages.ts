@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -71,14 +72,14 @@ export const packagesTranslations = {
   remixInclude1: "Remix complet în stilul ales",
   remixInclude2: "Label personalizabil: \"Remix by Mango Records\"",
   remixInclude3: "Mix & Master profesional",
-  remixInclude4: "Export audio: WAV + MP3",
+  remixInclude4: "Export audio: MP3, suplimentar la cerere WAV HQ",
   remixInclude5: "Versiune scurtă pentru social media (opțional)",
   remixInclude6: "Necesită trimiterea melodiei originale",
   
   instrumentalInclude1: "Instrumental original compus de la zero de echipa MusicGift",
   instrumentalInclude2: "Aranjament complet: beat, armonii, structură",
   instrumentalInclude3: "Fără voce – spațiu pentru interpretarea ta",
-  instrumentalInclude4: "Fișier audio profesional (WAV HQ sau MP3 și opțional STEM-uri separate. )",
+  instrumentalInclude4: "Fișier audio profesional (MP3, suplimentar la cerere WAV HQ și opțional STEM-uri separate)",
   instrumentalInclude5: "Licență comercială limitată",
   
   giftInclude1: "Card cadou digital valabil pentru orice pachet MusicGift",
@@ -106,6 +107,15 @@ export const packagesTranslations = {
   rushDelivery: "Livrare urgentă",
   rushDeliveryDesc: "Primește melodia în 24-48 de ore de la momentul plății",
   
+  extraRevision: "Revizie suplimentară",
+  extraRevisionDesc: "O revizie suplimentară pentru perfecțiune",
+  
+  extendedLicense: "Licență extinsă",
+  extendedLicenseDesc: "Drepturi comerciale complete și nelimitate",
+  
+  sourceFiles: "Fișiere sursă",
+  sourceFilesDesc: "Acces la toate fișierele proiectului (stems, MIDI)",
+
   socialMediaRights: "Drepturi Social Media",
   socialMediaRightsDesc: "Obții drepturile de a posta melodia pe orice platformă de social media. Necesită acceptarea etichetării melodiei cu 'Music Gift by Mango Records'.",
   
@@ -113,7 +123,7 @@ export const packagesTranslations = {
   distributieMangoRecordsDesc: "Distribuție profesională prin Mango Records",
   
   customVideo: "Video personalizat",
-  customVideoDesc: "Video animat pentru melodia ta cu fotografiile și videoclipurile tale",
+  customVideoDesc: "Un video personalizat creat cu fotografiile sau/și videoclipurile tale pentru o experiență completă",
   
   audioMessageFromSender: "Mesaj audio de la expeditor",
   audioMessageFromSenderDesc: "Adaugă un mesaj audio personal de la expeditor pentru o surpriză suplimentară",
@@ -159,7 +169,7 @@ export const packagesTranslations = {
   weddingInclude3: "Instrumental original",
   weddingInclude4: "Interpretare vocalǎ expresivǎ",
   weddingInclude5: "Mix & master profesional",
-  weddingInclude6: "Fișiere finale WAV HQ + MP3",
+  weddingInclude6: "Fișiere finale MP3, suplimentar la cerere WAV HQ",
   weddingInclude7: "Revizie gratuită (1x)",
   weddingInclude8: "O solicitare de modificare inclusă",
   
@@ -169,7 +179,7 @@ export const packagesTranslations = {
   baptismInclude3: "Linie melodică + instrumental original",
   baptismInclude4: "Voce profesională (la alegere: feminină/masculină)",
   baptismInclude5: "Mix & master profesional",
-  baptismInclude6: "Fișiere finale WAV + MP3",
+  baptismInclude6: "Fișiere finale MP3, suplimentar la cerere WAV HQ",
   
   // Coming of Age Package includes
   comingOfAgeInclude1: "Interviu/brief despre sărbătorit cu echipa MusicGift",
@@ -177,73 +187,57 @@ export const packagesTranslations = {
   comingOfAgeInclude3: "Vibe adaptat (hip-hop, pop, trap, lofi, etc.)",
   comingOfAgeInclude4: "Melodie originală compusă de la zero",
   comingOfAgeInclude5: "Mix & master profesional",
-  comingOfAgeInclude6: "Fișiere finale WAV + MP3",
+  comingOfAgeInclude6: "Fișiere finale MP3, suplimentar la cerere WAV HQ",
   
   // New Add-ons
   personalizedAudioMessage: "Mesaj Audio Personalizat",
   personalizedAudioMessageDesc: "Mesaj audio la începutul melodiei",
-  godparentsSpecialMelody: "Mélodie Spéciale pour Parrains",
-  godparentsSpecialMelodyDesc: "Une deuxième mélodie comme cadeau surprise pour les parrains",
+  godparentsSpecialMelody: "Melodie Specială pentru Nași",
+  godparentsSpecialMelodyDesc: "O a doua melodie ca surpriză cadou pentru nași",
   
   // Wedding form fields
-  weddingStep1Title: "Detalii Cuplu",
-  weddingStep2Title: "Poveste & Preferințe",
-  weddingCoupleNamesPlaceholder: "Introduceți numele mirilor sau nașilor",
-  weddingBrideGroom: "Mire & Mireasă",
+  weddingStep1Title: "Detalii cuplu",
+  weddingStep2Title: "Poveste și preferințe",
+  weddingCoupleNamesPlaceholder: "Introduceți numele miresei și mirelui sau nașilor",
+  weddingBrideGroom: "Mireasă și mire",
   weddingGodparents: "Nași",
   weddingHowMetPlaceholder: "Spuneți-ne cum s-au cunoscut...",
   weddingLoveStoryPlaceholder: "Împărtășiți povestea lor detaliată de dragoste sau prietenie...",
-  weddingAtmosphereRomantic: "Romantic",
-  weddingAtmosphereEmotional: "Emoționant",
-  weddingAtmosphereElegant: "Elegant",
-  weddingMusicalStylePlaceholder: "Stilul muzical preferat sau melodia de inspirație",
+  weddingAtmosphereRomantic: "Romantică",
+  weddingAtmosphereEmotional: "Emoțională",
+  weddingAtmosphereElegant: "Elegantă",
+  weddingMusicalStylePlaceholder: "Stilul muzical preferat sau cântecul de inspirație",
   
   // Baptism form fields
-  baptismStep1Title: "Informații Copil",
-  baptismStep2Title: "Preferințe Muzicale",
+  baptismStep1Title: "Informații despre copil",
+  baptismStep2Title: "Preferințe muzicale",
   baptismChildNamePlaceholder: "Numele copilului",
   baptismNameMeaningPlaceholder: "Semnificația numelui (opțional)",
   baptismBirthStoryPlaceholder: "Povestea nașterii / dorințele părinților",
-  baptismAtmosphereCalm: "Calm",
-  baptismAtmospherePlayful: "Jucăuș",
-  baptismAtmosphereEmotional: "Emoționant",
+  baptismAtmosphereCalm: "Calmă",
+  baptismAtmospherePlayful: "Jucăușă",
+  baptismAtmosphereEmotional: "Emoțională",
   baptismStyleBallad: "Baladă",
   baptismStyleLullaby: "Cântec de leagăn",
-  baptismStyleAcousticPop: "Pop Acustic",
+  baptismStyleAcousticPop: "Pop acustic",
   
   // Coming of Age form fields
-  comingOfAgeStep1Title: "Informații Sărbătorit",
-  comingOfAgeStep2Title: "Stil Muzical & Atmosferă",
-  comingOfAgeCelebrantNamePlaceholder: "Numele persoanei care împlinește 18 ani",
-  comingOfAgeHobbiesPlaceholder: "Hobby-urile, pasiunile și trăsăturile de personalitate",
-  comingOfAgePersonalMessagePlaceholder: "Mesaj personal de la familie/prieteni",
+  comingOfAgeStep1Title: "Informații despre sărbătoritul de 18 ani",
+  comingOfAgeStep2Title: "Stilul muzical și atmosfera",
+  comingOfAgeCelebrantNamePlaceholder: "Numele sărbătoritului de 18 ani",
+  comingOfAgeHobbiesPlaceholder: "Hobby-urile, pasiunile și trăsăturile de personalitate ale lor",
+  comingOfAgePersonalMessagePlaceholder: "Mesaj personal de la familie/prieteni pentru 18 ani",
   comingOfAgeStyleHipHop: "Hip-Hop",
   comingOfAgeStylePop: "Pop",
   comingOfAgeStyleTrap: "Trap",
   comingOfAgeStyleLofi: "Lo-Fi",
-  comingOfAgeVibeEmotional: "Emoționant",
+  comingOfAgeVibeEmotional: "Emoțională",
   comingOfAgeVibeFun: "Distractiv",
-  comingOfAgeVibeRebellious: "Rebel",
-  comingOfAgeVibeDreamy: "Visător",
-  comingOfAgeFavoriteArtistsPlaceholder: "Exemple de artiști sau melodii preferate",
+  comingOfAgeVibeRebellious: "Rebelă",
+  comingOfAgeVibeDreamy: "Visătoare",
+  comingOfAgeFavoriteArtistsPlaceholder: "Exemple de artiști sau cântece preferate",
   
   // Common voice options
-  voiceFemale: "Voce Feminină",
-  voiceMale: "Voce Masculină",
-  
-  // Did You Know sections for new packages
-  didYouKnowWedding1Title: "Wedding songs create lasting memories",
-  didYouKnowWedding1Desc: "Couples who dance to their own personalized song report stronger emotional connection to their wedding memories and play the song on anniversaries.",
-  didYouKnowWedding2Title: "Unique wedding traditions",
-  didYouKnowWedding2Desc: "Having a custom wedding song is becoming a new tradition, with 67% of couples saying they wish they had something more personal than popular songs.",
-  
-  didYouKnowBaptism1Title: "Music and child development",
-  didYouKnowBaptism1Desc: "Personalized songs for children help with emotional bonding and can become a source of comfort throughout their childhood years.",
-  didYouKnowBaptism2Title: "Family traditions through music",
-  didYouKnowBaptism2Desc: "Children who grow up with personalized songs often develop stronger family bonds and appreciation for their unique story.",
-  
-  didYouKnowComingOfAge1Title: "Music and 18th birthday celebrations",
-  didYouKnowComingOfAge1Desc: "Teenagers who receive personalized songs for their 18th birthday report higher self-esteem and stronger sense of identity during their transition to adulthood.",
-  didYouKnowComingOfAge2Title: "18th birthday milestone celebrations",
-  didYouKnowComingOfAge2Desc: "18th birthday celebrations with personalized elements are remembered more vividly and positively impact future life decisions."
+  voiceFemale: "Voce feminină",
+  voiceMale: "Voce masculină"
 };
