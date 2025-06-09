@@ -41,10 +41,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
   
   const finalTotal = Math.max(0, subtotal - giftCreditApplied);
 
-  const formatPrice = (price: number) => {
-    return `${currency === 'EUR' ? '€' : ''}${price.toFixed(2)}${currency === 'RON' ? ' RON' : ''}`;
-  };
-
   return (
     <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
       <CardHeader>
@@ -61,7 +57,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
               <h3 className="font-medium text-white">{t(selectedPackageData.label_key)}</h3>
               <p className="text-sm text-white/70">{t(selectedPackageData.description_key)}</p>
             </div>
-            <span className="font-medium text-white">{formatPrice(packagePrice)}</span>
+            <span className="font-medium text-white">{currency} {packagePrice.toFixed(2)}</span>
           </div>
         </div>
 
@@ -79,7 +75,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
                   addon && (
                     <div key={addon.addon_key} className="flex justify-between items-center text-sm">
                       <span className="text-white/80">{t(addon.label_key)}</span>
-                      <span className="text-white">{formatPrice(getAddonPrice(addon, currency))}</span>
+                      <span className="text-white">{currency} {getAddonPrice(addon, currency).toFixed(2)}</span>
                     </div>
                   )
                 ))}
@@ -93,7 +89,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
         {/* Subtotal */}
         <div className="flex justify-between items-center">
           <span className="font-medium text-white">{t('subtotal')}</span>
-          <span className="font-medium text-white">{formatPrice(subtotal)}</span>
+          <span className="font-medium text-white">{currency} {subtotal.toFixed(2)}</span>
         </div>
 
         {/* Gift Card Credit */}
@@ -103,7 +99,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
               <Gift className="w-4 h-4" />
               {t('giftCardCredit')}
             </span>
-            <span>-{formatPrice(giftCreditApplied)}</span>
+            <span>-{currency} {giftCreditApplied.toFixed(2)}</span>
           </div>
         )}
 
@@ -112,7 +108,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
         {/* Total */}
         <div className="flex justify-between items-center text-lg font-bold">
           <span className="text-white">{t('total')}</span>
-          <span className="text-white">{formatPrice(finalTotal)}</span>
+          <span className="text-white">{currency} {finalTotal.toFixed(2)}</span>
         </div>
 
         {finalTotal === 0 && (

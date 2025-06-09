@@ -1,8 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { packages, addOns } from '@/data/packages';
-import type { Package, Addon, Step, Field } from '@/types';
+import { packages, addOns, type PackageData } from '@/data/packages';
 
 export interface StepData {
   id: string;
@@ -27,9 +26,14 @@ export const usePackages = () => {
     queryFn: async () => {
       console.log('Using consolidated packages data...');
       
-      // The packages are already in the correct format matching Package interface
-      console.log('Transformed packages:', packages);
-      return packages as Package[];
+      // Sort includes by include_order for each package
+      const transformedPackages = packages.map(pkg => ({
+        ...pkg,
+        includes: pkg.includes?.sort((a: any, b: any) => a.include_order - b.include_order) || []
+      }));
+      
+      console.log('Transformed packages:', transformedPackages);
+      return transformedPackages as PackageData[];
     }
   });
 };
@@ -61,7 +65,7 @@ export const usePackageSteps = (packageValue: string) => {
           return [];
         }
 
-        // Steps are already in the correct format
+        // The steps are already in the correct format since we updated the data structure
         console.log('Steps ready for component:', packageData.steps);
         return packageData.steps as StepData[];
 
@@ -84,11 +88,11 @@ export const useAddons = () => {
     queryFn: async () => {
       console.log('Using consolidated addons data...');
       
-      // The addons are already in the correct format matching Addon interface
+      // The addons are already in the correct format, just return them
       console.log('Addons ready for components:', addOns);
-      return addOns as Addon[];
+      return addOns;
     }
   });
 };
 
-export type { Package as PackageData, Addon };
+export type { PackageData };
