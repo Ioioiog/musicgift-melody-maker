@@ -27,7 +27,7 @@ const WizardNavigation: React.FC<WizardNavigationProps> = ({
   const isLastStep = currentStep === totalSteps - 1;
 
   return (
-    <div className="flex justify-between mt-6">
+    <div className="flex justify-between mt-4">
       <Button
         variant="outline"
         onClick={onPrev}

@@ -318,12 +318,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   return (
     <div className="w-full">
       <Card className="bg-transparent border-transparent shadow-none backdrop-blur-0">
-        <CardHeader className="pb-2 pt-4 px-4 sm:px-6">
-          <div className="mb-2">
-            <StepIndicator steps={buildStepsData()} className="py-0 my-2 px-2 sm:px-4" />
+        <CardHeader className="pb-1 pt-2 px-4 sm:px-6">
+          <div className="mb-1">
+            <StepIndicator steps={buildStepsData()} className="py-0 my-1 px-1 sm:px-2" />
           </div>
         </CardHeader>
-        <CardContent className="p-3 sm:p-4 py-0">
+        <CardContent className="p-2 sm:p-3 py-0">
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={currentStep}
@@ -332,7 +332,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {currentStep === 0 ? (
                   <PackageSelectionStep
                     selectedPackage={formData.package}
@@ -340,7 +340,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                   />
                 ) : currentStepData ? (
                   <div>
-                    <h3 className="text-lg font-semibold text-white mb-3">
+                    <h3 className="text-lg font-semibold text-white mb-2">
                       {t(currentStepData.title_key) || currentStepData.title_key}
                     </h3>
                     {currentStepData.fields
