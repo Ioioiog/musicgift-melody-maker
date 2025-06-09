@@ -88,23 +88,9 @@ export const useAddons = () => {
     queryFn: async () => {
       console.log('Using consolidated addons data...');
       
-      // Transform addons array to format expected by components
-      const addonsArray = addOns.map(addon => ({
-        id: addon.id,
-        addon_key: addon.value,
-        label_key: addon.label_key,
-        description_key: addon.description_key,
-        price_ron: addon.price_ron,
-        price_eur: addon.price_eur,
-        is_active: true,
-        trigger_field_type: null,
-        trigger_field_config: {},
-        trigger_condition: 'package_in',
-        trigger_condition_value: addon.availableFor.join(',')
-      }));
-      
-      console.log('Transformed addons:', addonsArray);
-      return addonsArray;
+      // The addons are already in the correct format, just return them
+      console.log('Addons ready for components:', addOns);
+      return addOns;
     }
   });
 };
