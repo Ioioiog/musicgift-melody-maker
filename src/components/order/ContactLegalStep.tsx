@@ -165,7 +165,7 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
   return (
     <div className="space-y-6">
       <Card className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30">
-        <CardContent className="p-6">
+        <CardContent className="p-4">
           <h3 className="text-2xl font-bold text-white mb-6 pb-3 border-b border-white/20">
             {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
           </h3>
@@ -226,12 +226,12 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
             </div>
           </div>
 
-          {/* Legal Acceptance Section - More Compact */}
+          {/* Legal Acceptance Section - Very Compact */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 p-2 rounded-lg border border-orange-400/20">
+            <h4 className="text-xs font-medium text-white mb-1 bg-transparent p-1 rounded">
               {t('legalAcceptance', 'Legal Acceptance')}
             </h4>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {contactLegalStepFields
                 .filter(field => ['acceptMentionObligation', 'acceptDistribution', 'finalNote'].includes(field.field_name))
                 .sort((a, b) => a.field_order - b.field_order)
