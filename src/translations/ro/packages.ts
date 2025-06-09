@@ -30,7 +30,7 @@ export const packagesTranslations = {
   businessDescription: "Oferă brandului tău o voce memorabilă. Creat pentru companiile care vor o melodie originală pentru branding, campanii sau reclame cu impact emoțional.",
   artistDescription: "Lansează-ți cariera muzicală cu o melodie de top. Pentru artiștii dedicați care vor o melodie originală, distribuție completă și co-proprietate asupra drepturilor.",
   remixDescription: "Readuci melodia ta la viață într-un stil complet nou. Pentru artiști sau creatori care dețin drepturile asupra melodiei originale și vor o versiune remixată sau rearanjatǎ într-un alt gen.",
-  instrumentalDescription: "Creat pe baza unui instrumental construit special pentru tine. Ideal pentru artiști care vor să-și scrie propria cântec si au nevoie de un instrumental personalizat, profesionist si original.",
+  instrumentalDescription: "Creat pe baza unui instrumental construit special pentru tine. Ideal pentru artiști care vor să-și scrie propria melodie si au nevoie de un instrumental personalizat, profesionist si original.",
   giftDescription: "O poveste muzicală dăruită cadou. Perfect pentru a surprinde pe cineva drag – beneficiarul alege singur stilul și atmosfera melodiei.",
   
   // Delivery times
