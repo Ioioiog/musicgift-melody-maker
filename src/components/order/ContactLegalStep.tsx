@@ -163,53 +163,29 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
   ];
 
   return (
-    <div className="space-y-6">
-      <Card className="bg-transparent backdrop-blur-sm border border-white/10">
-        <CardContent className="p-2">
-          <h3 className="text-2xl font-bold text-white mb-6 pb-3 border-b border-white/20">
-            {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
-          </h3>
-          
-          {/* Contact Information Section */}
-          <div className="mb-8">
-            <h4 className="text-lg font-semibold text-white mb-4 bg-gradient-to-r from-blue-500/30 to-purple-500/30 p-3 rounded-lg border border-white/20">
-              {t('contactInformation', 'Contact Information')}
-            </h4>
-            <div className="space-y-6">
-              {contactLegalStepFields
-                .filter(field => ['fullName', 'email', 'phone', 'address', 'city'].includes(field.field_name))
-                .sort((a, b) => a.field_order - b.field_order)
-                .map(field => (
-                  <FormFieldRenderer
-                    key={field.id}
-                    field={field}
-                    value={formData[field.field_name]}
-                    onChange={(value) => onInputChange(field.field_name, value)}
-                    selectedAddons={selectedAddons}
-                    onAddonChange={onAddonChange}
-                    availableAddons={availableAddons}
-                    addonFieldValues={addonFieldValues}
-                    onAddonFieldChange={onAddonFieldChange}
-                    selectedPackage={selectedPackage}
-                    selectedPackageData={selectedPackageData}
-                    formData={formData}
-                  />
-                ))}
-            </div>
-          </div>
+    <div className="space-y-1.5">
+      <div className="text-center">
+        <h3 className="text-xs font-semibold text-white mb-0.5">
+          {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
+        </h3>
+        <p className="text-white/70 text-xs">
+          {t('fillContactAndLegalInfo', 'Fill in your contact details and accept the legal terms')}
+        </p>
+      </div>
 
-          {/* Invoice Information Section */}
-          <div className="mb-8">
-            <h4 className="text-lg font-semibold text-white mb-4 bg-gradient-to-r from-purple-500/30 to-pink-500/30 p-3 rounded-lg border border-white/20">
-              {t('invoiceInformation', 'Invoice Information')}
-            </h4>
-            <div className="space-y-6">
-              {contactLegalStepFields
-                .filter(field => ['invoiceType', 'companyName', 'vatCode', 'registrationNumber', 'companyAddress', 'representativeName'].includes(field.field_name))
-                .sort((a, b) => a.field_order - b.field_order)
-                .map(field => (
+      {/* Contact Information Section */}
+      <div className="mb-1">
+        <h4 className="text-xs font-medium text-white mb-1">
+          {t('contactInformation', 'Contact Information')}
+        </h4>
+        <div className="space-y-1">
+          {contactLegalStepFields
+            .filter(field => ['fullName', 'email', 'phone', 'address', 'city'].includes(field.field_name))
+            .sort((a, b) => a.field_order - b.field_order)
+            .map(field => (
+              <Card key={field.id} className="bg-gradient-to-br from-orange-500/20 to-purple-600/20 backdrop-blur-sm border border-orange-400/30 hover:border-orange-300/50 transition-colors">
+                <CardContent className="p-1.5">
                   <FormFieldRenderer
-                    key={field.id}
                     field={field}
                     value={formData[field.field_name]}
                     onChange={(value) => onInputChange(field.field_name, value)}
@@ -222,22 +198,25 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
                     selectedPackageData={selectedPackageData}
                     formData={formData}
                   />
-                ))}
-            </div>
-          </div>
+                </CardContent>
+              </Card>
+            ))}
+        </div>
+      </div>
 
-          {/* Legal Acceptance Section - Ultra Compact */}
-          <div>
-            <h4 className="text-xs font-medium text-white mb-0.5 bg-transparent">
-              {t('legalAcceptance', 'Legal Acceptance')}
-            </h4>
-            <div className="space-y-0">
-              {contactLegalStepFields
-                .filter(field => ['acceptMentionObligation', 'acceptDistribution', 'finalNote'].includes(field.field_name))
-                .sort((a, b) => a.field_order - b.field_order)
-                .map(field => (
+      {/* Invoice Information Section */}
+      <div className="mb-1">
+        <h4 className="text-xs font-medium text-white mb-1">
+          {t('invoiceInformation', 'Invoice Information')}
+        </h4>
+        <div className="space-y-1">
+          {contactLegalStepFields
+            .filter(field => ['invoiceType', 'companyName', 'vatCode', 'registrationNumber', 'companyAddress', 'representativeName'].includes(field.field_name))
+            .sort((a, b) => a.field_order - b.field_order)
+            .map(field => (
+              <Card key={field.id} className="bg-gradient-to-br from-orange-500/20 to-purple-600/20 backdrop-blur-sm border border-orange-400/30 hover:border-orange-300/50 transition-colors">
+                <CardContent className="p-1.5">
                   <FormFieldRenderer
-                    key={field.id}
                     field={field}
                     value={formData[field.field_name]}
                     onChange={(value) => onInputChange(field.field_name, value)}
@@ -250,11 +229,42 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
                     selectedPackageData={selectedPackageData}
                     formData={formData}
                   />
-                ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+                </CardContent>
+              </Card>
+            ))}
+        </div>
+      </div>
+
+      {/* Legal Acceptance Section */}
+      <div>
+        <h4 className="text-xs font-medium text-white mb-1">
+          {t('legalAcceptance', 'Legal Acceptance')}
+        </h4>
+        <div className="space-y-1">
+          {contactLegalStepFields
+            .filter(field => ['acceptMentionObligation', 'acceptDistribution', 'finalNote'].includes(field.field_name))
+            .sort((a, b) => a.field_order - b.field_order)
+            .map(field => (
+              <Card key={field.id} className="bg-gradient-to-br from-orange-500/20 to-purple-600/20 backdrop-blur-sm border border-orange-400/30 hover:border-orange-300/50 transition-colors">
+                <CardContent className="p-1.5">
+                  <FormFieldRenderer
+                    field={field}
+                    value={formData[field.field_name]}
+                    onChange={(value) => onInputChange(field.field_name, value)}
+                    selectedAddons={selectedAddons}
+                    onAddonChange={onAddonChange}
+                    availableAddons={availableAddons}
+                    addonFieldValues={addonFieldValues}
+                    onAddonFieldChange={onAddonFieldChange}
+                    selectedPackage={selectedPackage}
+                    selectedPackageData={selectedPackageData}
+                    formData={formData}
+                  />
+                </CardContent>
+              </Card>
+            ))}
+        </div>
+      </div>
     </div>
   );
 };
