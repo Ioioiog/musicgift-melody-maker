@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -111,16 +112,16 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                       pressed={isSelected}
                       onPressedChange={(pressed) => onAddonChange(addon.addon_key, pressed)}
                       size="sm"
-                      className={`h-5 w-5 rounded-full p-0 transition-all duration-200 ${
+                      className={`h-4 w-4 rounded-full p-0 transition-all duration-200 ${
                         isSelected 
                           ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg' 
                           : 'bg-white/20 hover:bg-white/30 border border-white/40 text-white/80'
                       }`}
                     >
                       {isSelected ? (
-                        <Check className="w-3 h-3" />
+                        <Check className="w-2.5 h-2.5" />
                       ) : (
-                        <Plus className="w-3 h-3" />
+                        <Plus className="w-2.5 h-2.5" />
                       )}
                     </Toggle>
                     <div className="flex-1">
