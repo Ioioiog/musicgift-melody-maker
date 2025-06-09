@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CreditCard } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface WizardNavigationProps {
@@ -24,36 +24,52 @@ const WizardNavigation: React.FC<WizardNavigationProps> = ({
   onSubmit
 }) => {
   const { t } = useLanguage();
+
   const isLastStep = currentStep === totalSteps - 1;
 
   return (
-    <div className="flex justify-between mt-4">
+    <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/20">
       <Button
+        type="button"
         variant="outline"
         onClick={onPrev}
-        disabled={currentStep === 0 || isSubmitting}
-        className="border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+        disabled={currentStep === 0}
+        className="h-8 px-3 text-xs bg-white/10 border-white/30 text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <ArrowLeft className="w-4 h-4 mr-2" />
+        <ChevronLeft className="w-3 h-3 mr-1" />
         {t('previous')}
       </Button>
-      <Button
-        onClick={isLastStep ? onSubmit : onNext}
-        disabled={!canProceed || isSubmitting}
-        className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
-      >
-        {isSubmitting ? (
-          <>
-            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-            {t('processing', 'Processing...')}
-          </>
-        ) : (
-          <>
-            {isLastStep ? t('submitOrder') : t('next')}
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </>
-        )}
-      </Button>
+
+      {isLastStep ? (
+        <Button
+          type="button"
+          onClick={onSubmit}
+          disabled={!canProceed || isSubmitting}
+          className="h-8 px-4 text-xs bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? (
+            <div className="flex items-center">
+              <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mr-1" />
+              <span>{t('processing')}</span>
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <CreditCard className="w-3 h-3 mr-1" />
+              <span>{t('completeOrder')}</span>
+            </div>
+          )}
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          onClick={onNext}
+          disabled={!canProceed}
+          className="h-8 px-3 text-xs bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {t('next')}
+          <ChevronRight className="w-3 h-3 ml-1" />
+        </Button>
+      )}
     </div>
   );
 };

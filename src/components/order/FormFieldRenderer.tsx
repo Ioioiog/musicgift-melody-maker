@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -23,6 +24,7 @@ interface FieldOption {
   value: string;
   label_key: string;
 }
+
 interface Field {
   id: string;
   field_name: string;
@@ -33,6 +35,7 @@ interface Field {
   field_order: number;
   options?: FieldOption[];
 }
+
 interface FormFieldRendererProps {
   field: Field;
   value: any;
@@ -46,6 +49,7 @@ interface FormFieldRendererProps {
   selectedPackageData?: Package;
   formData?: any;
 }
+
 const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   field,
   value,
@@ -59,12 +63,8 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   selectedPackageData,
   formData = {}
 }) => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    currency
-  } = useCurrency();
+  const { t } = useLanguage();
+  const { currency } = useCurrency();
   const [date, setDate] = useState<Date>();
   const [vatError, setVatError] = useState<string | null>(null);
 
@@ -117,6 +117,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   if (isCompanyField && !isCompanyInvoice) {
     return null;
   }
+
   const renderField = () => {
     switch (field.field_type) {
       case 'text':
@@ -125,7 +126,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       case 'url':
         const isVatField = field.field_name === 'vatCode';
         return (
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Input
               type={field.field_type}
               value={value || ''}
@@ -133,13 +134,13 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
               placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
               required={field.required}
               className={cn(
-                "h-10 text-sm border-2 border-gray-300 bg-white focus:border-orange-500 focus:ring-orange-500 focus:bg-orange-50 transition-all duration-200",
+                "h-8 text-sm border-2 border-gray-300 bg-white focus:border-orange-500 focus:ring-orange-500 focus:bg-orange-50 transition-all duration-200",
                 isVatField && vatError && "border-red-500 focus:border-red-500"
               )}
             />
             {isVatField && vatError && (
-              <div className="flex items-center space-x-2 text-red-600 text-sm bg-red-50 p-2 rounded-md">
-                <AlertCircle className="w-4 h-4" />
+              <div className="flex items-center space-x-2 text-red-600 text-xs bg-red-50 p-1.5 rounded-md">
+                <AlertCircle className="w-3 h-3" />
                 <span>{t(vatError === 'Cod TVA prea scurt' ? 'vatCodeTooShort' : 'vatCodeInvalidFormat')}</span>
               </div>
             )}
@@ -153,14 +154,14 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
             onChange={e => onChange(e.target.value)}
             placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
             required={field.required}
-            className="min-h-[100px] text-sm border-2 border-gray-300 bg-white focus:border-orange-500 focus:ring-orange-500 focus:bg-orange-50 transition-all duration-200"
+            className="min-h-[60px] text-sm border-2 border-gray-300 bg-white focus:border-orange-500 focus:ring-orange-500 focus:bg-orange-50 transition-all duration-200"
           />
         );
 
       case 'audio':
         return (
-          <div className="space-y-2">
-            <div className="bg-white border-2 border-gray-300 rounded-lg p-3">
+          <div className="space-y-1">
+            <div className="bg-white border-2 border-gray-300 rounded-lg p-2">
               <AudioRecorder
                 value={value || null}
                 onChange={audioFile => onChange(audioFile)}
@@ -168,7 +169,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
               />
             </div>
             {field.placeholder_key && (
-              <p className="text-sm text-gray-600 bg-gray-50 p-2 rounded-md">
+              <p className="text-xs text-gray-600 bg-gray-50 p-1.5 rounded-md">
                 {t(field.placeholder_key)}
               </p>
             )}
@@ -179,15 +180,15 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         if (!field.options || !Array.isArray(field.options)) {
           console.warn('Select field missing valid options:', field);
           return (
-            <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md border border-amber-200">
-              <AlertCircle className="w-4 h-4" />
-              <span className="text-sm">{t('fieldConfigurationError')}</span>
+            <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-2 rounded-md border border-amber-200">
+              <AlertCircle className="w-3 h-3" />
+              <span className="text-xs">{t('fieldConfigurationError')}</span>
             </div>
           );
         }
         return (
           <Select value={value || ''} onValueChange={onChange}>
-            <SelectTrigger className="h-10 text-sm border-2 border-gray-300 bg-white focus:border-orange-500 focus:ring-orange-500 transition-all duration-200">
+            <SelectTrigger className="h-8 text-sm border-2 border-gray-300 bg-white focus:border-orange-500 focus:ring-orange-500 transition-all duration-200">
               <SelectValue placeholder={field.placeholder_key ? t(field.placeholder_key) : t('selectOption')} />
             </SelectTrigger>
             <SelectContent className="bg-white border-2 border-gray-300">
@@ -206,14 +207,14 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
 
       case 'checkbox':
         return (
-          <div className="flex items-start space-x-3 bg-white border-2 border-gray-300 rounded-lg p-3 hover:border-orange-300 transition-all duration-200">
+          <div className="flex items-start space-x-2 bg-white border-2 border-gray-300 rounded-lg p-2 hover:border-orange-300 transition-all duration-200">
             <Checkbox
               checked={value || false}
               onCheckedChange={onChange}
               required={field.required}
-              className="mt-0.5"
+              className="mt-0"
             />
-            <Label className="text-sm leading-relaxed cursor-pointer">
+            <Label className="text-xs leading-relaxed cursor-pointer">
               {field.placeholder_key ? t(field.placeholder_key) : ''}
             </Label>
           </div>
@@ -224,49 +225,49 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         
         if (filteredAddons.length === 0) {
           return (
-            <div className="text-sm text-gray-500 italic bg-gray-50 p-4 rounded-lg text-center">
+            <div className="text-xs text-gray-500 italic bg-gray-50 p-3 rounded-lg text-center">
               {t('noAddonsAvailable')}
             </div>
           );
         }
 
         return (
-          <div className="space-y-4">
+          <div className="space-y-2">
             {filteredAddons.map(addon => (
               <Card key={addon.id} className="border-2 border-gray-300 hover:border-orange-300 transition-all duration-200 shadow-sm hover:shadow-md">
-                <CardContent className="p-4">
+                <CardContent className="p-2">
                   <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-3 flex-1">
+                    <div className="flex items-start space-x-2 flex-1">
                       <Checkbox
                         checked={selectedAddons.includes(addon.addon_key)}
                         onCheckedChange={checked => onAddonChange(addon.addon_key, checked as boolean)}
-                        className="mt-1"
+                        className="mt-0.5"
                       />
                       <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <Label className="font-bold text-base cursor-pointer text-gray-800">
+                        <div className="flex items-center space-x-1.5 mb-1">
+                          <Label className="font-bold text-sm cursor-pointer text-gray-800">
                             {t(addon.label_key)}
                           </Label>
-                          <Badge variant="secondary" className="bg-orange-100 text-orange-700 font-semibold px-2 py-1 text-xs">
+                          <Badge variant="secondary" className="bg-orange-100 text-orange-700 font-semibold px-1.5 py-0.5 text-xs">
                             +{getAddonPrice(addon, currency)} {currency}
                           </Badge>
                         </div>
                         {addon.description_key && (
-                          <p className="text-sm text-gray-700 mb-3 leading-relaxed">
+                          <p className="text-xs text-gray-700 mb-2 leading-relaxed">
                             {t(addon.description_key)}
                           </p>
                         )}
                         
                         {/* Render addon-specific fields when selected */}
                         {selectedAddons.includes(addon.addon_key) && addon.trigger_field_type && (
-                          <div className="mt-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                          <div className="mt-2 p-2 bg-orange-50 rounded-lg border border-orange-200">
                             {addon.trigger_field_type === 'file' && (
                               <div>
-                                <Label className="text-sm font-semibold mb-2 block text-gray-800">
+                                <Label className="text-xs font-semibold mb-1 block text-gray-800">
                                   {t('uploadFiles')}
                                 </Label>
-                                <div className="border-2 border-dashed border-orange-300 rounded-lg p-4 text-center bg-white hover:border-orange-400 transition-colors">
-                                  <Upload className="w-8 h-8 text-orange-400 mx-auto mb-2" />
+                                <div className="border-2 border-dashed border-orange-300 rounded-lg p-2 text-center bg-white hover:border-orange-400 transition-colors">
+                                  <Upload className="w-6 h-6 text-orange-400 mx-auto mb-1" />
                                   <Input
                                     type="file"
                                     multiple
@@ -277,11 +278,11 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                                   />
                                   <label
                                     htmlFor={`file-${addon.addon_key}`}
-                                    className="cursor-pointer text-sm text-orange-600 hover:text-orange-700 font-semibold"
+                                    className="cursor-pointer text-xs text-orange-600 hover:text-orange-700 font-semibold"
                                   >
                                     {t('clickToUploadFiles')}
                                   </label>
-                                  <p className="text-xs text-gray-600 mt-1">
+                                  <p className="text-xs text-gray-600 mt-0.5">
                                     {t('maxFiles')} {addon.trigger_field_config?.maxFiles || 10} {t('files')}, 
                                     {addon.trigger_field_config?.maxTotalSizeMb || 150}MB {t('totalSize')}
                                   </p>
@@ -291,10 +292,10 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                             
                             {addon.trigger_field_type === 'audio-recorder' && (
                               <div>
-                                <Label className="text-sm font-semibold mb-2 block text-gray-800">
+                                <Label className="text-xs font-semibold mb-1 block text-gray-800">
                                   {t('recordAudioMessage')}
                                 </Label>
-                                <div className="bg-white border-2 border-orange-200 rounded-lg p-3">
+                                <div className="bg-white border-2 border-orange-200 rounded-lg p-2">
                                   <AudioRecorder
                                     value={addonFieldValues[addon.addon_key] || null}
                                     onChange={audioFile => onAddonFieldChange(addon.addon_key, audioFile)}
@@ -321,11 +322,11 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full h-10 justify-start text-left font-normal border-2 border-gray-300 bg-white hover:border-orange-300 text-sm",
+                  "w-full h-8 justify-start text-left font-normal border-2 border-gray-300 bg-white hover:border-orange-300 text-xs",
                   !date && "text-muted-foreground"
                 )}
               >
-                <CalendarIcon className="mr-2 h-4 w-4" />
+                <CalendarIcon className="mr-2 h-3 w-3" />
                 {date ? format(date, "PPP") : (
                   <span>{field.placeholder_key ? t(field.placeholder_key) : t('pickDate')}</span>
                 )}
@@ -348,19 +349,19 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       default:
         console.warn('Unknown field type:', field.field_type);
         return (
-          <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-md border border-amber-200">
-            <AlertCircle className="w-4 h-4" />
-            <span className="text-sm">{t('unknownFieldType').replace('{fieldType}', field.field_type)}</span>
+          <div className="flex items-center space-x-2 text-amber-600 bg-amber-50 p-2 rounded-md border border-amber-200">
+            <AlertCircle className="w-3 h-3" />
+            <span className="text-xs">{t('unknownFieldType').replace('{fieldType}', field.field_type)}</span>
           </div>
         );
     }
   };
 
   return (
-    <div className="space-y-2">
-      <Label className="text-sm font-bold text-gray-800 block">
+    <div className="space-y-1">
+      <Label className="text-xs font-bold text-gray-800 block">
         {field.label_key ? t(field.label_key) : field.field_name === 'package' ? t('selectYourPackage') : field.field_name}
-        {field.required && <span className="text-orange-500 ml-1 text-base">*</span>}
+        {field.required && <span className="text-orange-500 ml-1 text-sm">*</span>}
       </Label>
       {renderField()}
     </div>
