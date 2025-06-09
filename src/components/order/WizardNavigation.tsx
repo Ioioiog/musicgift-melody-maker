@@ -24,7 +24,7 @@ const WizardNavigation: React.FC<WizardNavigationProps> = ({
     t
   } = useLanguage();
   const isLastStep = currentStep === totalSteps - 1;
-  return <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/20">
+  return <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/20 my-[110px]">
       <Button type="button" variant="outline" onClick={onPrev} disabled={currentStep === 0} className="h-8 px-3 text-xs bg-white/10 border-white/30 text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed">
         <ChevronLeft className="w-3 h-3 mr-1" />
         {t('previous')}
