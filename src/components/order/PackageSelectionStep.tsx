@@ -51,9 +51,9 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
 
   return (
-    <div className="space-y-3 py-[45px] my-[9px]">
+    <div className="space-y-2 py-2">
       <div className="text-center">
-        <p className="text-white/90 text-base font-bold py-0 my-[4px]">{t('choosePackage')}</p>
+        <p className="text-white/90 text-base font-bold">{t('choosePackage')}</p>
       </div>
 
       {/* Enhanced Compact Package Select Dropdown */}
