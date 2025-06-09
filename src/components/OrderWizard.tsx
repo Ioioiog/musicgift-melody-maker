@@ -61,16 +61,20 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const selectedPackage = formData.package as string;
   const { data: allPackageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
   
-  // Separate and order the steps: regular steps, then contact/legal step, then addons, then payment
+  // Separate and order the steps: regular steps, then addons, then contact/legal step, then payment
   const regularSteps = allPackageSteps
     .filter(step => step.title_key !== 'contactDetailsStep')
     .sort((a, b) => a.step_number - b.step_number);
   
   const contactLegalStep = allPackageSteps.find(step => step.title_key === 'contactDetailsStep');
   
-  // Build ordered steps array: package selection + regular steps + contact/legal + addons + payment
+  // Build ordered steps array: package selection + regular steps + addons + contact/legal + payment
   const packageSteps = regularSteps;
-  const totalSteps = 1 + (packageSteps?.length || 0) + (contactLegalStep ? 1 : 0) + 1 + 1;
+  const addonStepIndex = 1 + (packageSteps?.length || 0);
+  const contactLegalStepIndex = addonStepIndex + 1;
+  const paymentStepIndex = contactLegalStepIndex + (contactLegalStep ? 1 : 0);
+  const totalSteps = paymentStepIndex + 1;
+  
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
 
   useEffect(() => {
@@ -435,12 +439,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
   // Determine which step we're on
   const regularStepCount = packageSteps.length;
-  const contactLegalStepIndex = 1 + regularStepCount;
-  const addonStepIndex = contactLegalStepIndex + (contactLegalStep ? 1 : 0);
-  const paymentStepIndex = addonStepIndex + 1;
-
-  const isContactLegalStep = contactLegalStep && currentStep === contactLegalStepIndex;
   const isAddonStep = currentStep === addonStepIndex;
+  const isContactLegalStep = contactLegalStep && currentStep === contactLegalStepIndex;
   const isPaymentStep = currentStep === paymentStepIndex;
   
   const currentPackageStepIndex = currentStep - 1;
@@ -450,15 +450,15 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     if (currentStep === 0) {
       return !!formData.package;
     }
+    if (isAddonStep) {
+      return true;
+    }
     if (isContactLegalStep) {
       // Check required fields for contact/legal step
       return formData.fullName && formData.email && 
              formData.acceptMentionObligation && 
              formData.acceptDistribution && 
              formData.finalNote;
-    }
-    if (isAddonStep) {
-      return true;
     }
     if (isPaymentStep) {
       return !!selectedPaymentProvider;
@@ -496,12 +496,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                     selectedPackage={formData.package}
                     onPackageSelect={handlePackageSelect}
                   />
-                ) : isContactLegalStep ? (
+                ) : currentStepData ? (
                   <div>
                     <h3 className="text-xl font-semibold text-white mb-4">
-                      {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
+                      {t(currentStepData.title_key) || currentStepData.title_key}
                     </h3>
-                    {contactLegalStep?.fields
+                    {currentStepData.fields
+                      .filter(field => field.field_type !== 'checkbox-group')
                       .sort((a, b) => a.field_order - b.field_order)
                       .map(field => (
                         <FormFieldRenderer
@@ -529,18 +530,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                     addonFieldValues={addonFieldValues}
                     onAddonFieldChange={handleAddonFieldChange}
                   />
-                ) : isPaymentStep ? (
-                  <PaymentProviderSelection
-                    selectedProvider={selectedPaymentProvider}
-                    onProviderSelect={setSelectedPaymentProvider}
-                  />
-                ) : currentStepData ? (
+                ) : isContactLegalStep ? (
                   <div>
                     <h3 className="text-xl font-semibold text-white mb-4">
-                      {t(currentStepData.title_key) || currentStepData.title_key}
+                      {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
                     </h3>
-                    {currentStepData.fields
-                      .filter(field => field.field_type !== 'checkbox-group')
+                    {contactLegalStep?.fields
                       .sort((a, b) => a.field_order - b.field_order)
                       .map(field => (
                         <FormFieldRenderer
@@ -559,6 +554,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                         />
                       ))}
                   </div>
+                ) : isPaymentStep ? (
+                  <PaymentProviderSelection
+                    selectedProvider={selectedPaymentProvider}
+                    onProviderSelect={setSelectedPaymentProvider}
+                  />
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-white/70">{t('loadingSteps')}</p>
