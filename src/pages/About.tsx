@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -257,54 +256,6 @@ const About = () => {
                     </div>
                   </div>
                 </motion.div>
-
-                {/* Why Choose Us Section */}
-                <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{
-                opacity: 0,
-                y: 20
-              }} animate={{
-                opacity: 1,
-                y: 0
-              }} transition={{
-                duration: 0.6,
-                delay: 0.9
-              }}>
-                  <h3 className="text-xl font-bold text-white mb-4">{t('whyChooseUs')}</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <Headphones className="w-6 h-6 text-cyan-400 mt-1 flex-shrink-0" />
-                      <div>
-                        <h4 className="font-semibold text-white text-sm">{t('uniqueApproach')}</h4>
-                        <p className="text-white/80 text-sm">{t('uniqueApproachDesc')}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <Target className="w-6 h-6 text-pink-400 mt-1 flex-shrink-0" />
-                      <div>
-                        <h4 className="font-semibold text-white text-sm">{t('qualityOverQuantity')}</h4>
-                        <p className="text-white/80 text-sm">{t('qualityOverQuantityDesc')}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <Zap className="w-6 h-6 text-orange-400 mt-1 flex-shrink-0" />
-                      <div>
-                        <h4 className="font-semibold text-white text-sm">{t('fastDelivery')}</h4>
-                        <p className="text-white/80 text-sm">{t('fastDeliveryDesc')}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="w-6 h-6 text-green-400 mt-1 flex-shrink-0" />
-                      <div>
-                        <h4 className="font-semibold text-white text-sm">{t('satisfactionGuarantee')}</h4>
-                        <p className="text-white/80 text-sm">{t('satisfactionGuaranteeDesc')}</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
               </div>
             </div>
 
@@ -428,6 +379,100 @@ const About = () => {
                   </Card>
                 </motion.div>
               </div>
+            </div>
+          </div>
+
+          {/* Why Choose Us Section - Full Width */}
+          <div className="w-full mb-20">
+            <motion.div className="mb-8" initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.9
+          }}>
+              <h3 className="text-3xl font-bold text-white mb-6 text-center">{t('whyChooseUs')}</h3>
+            </motion.div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 0.9
+            }}>
+                <div className="flex items-start gap-3">
+                  <Headphones className="w-6 h-6 text-cyan-400 mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-white text-sm">{t('uniqueApproach')}</h4>
+                    <p className="text-white/80 text-sm">{t('uniqueApproachDesc')}</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 1.0
+            }}>
+                <div className="flex items-start gap-3">
+                  <Target className="w-6 h-6 text-pink-400 mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-white text-sm">{t('qualityOverQuantity')}</h4>
+                    <p className="text-white/80 text-sm">{t('qualityOverQuantityDesc')}</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 1.1
+            }}>
+                <div className="flex items-start gap-3">
+                  <Zap className="w-6 h-6 text-orange-400 mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-white text-sm">{t('fastDelivery')}</h4>
+                    <p className="text-white/80 text-sm">{t('fastDeliveryDesc')}</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 1.2
+            }}>
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-6 h-6 text-green-400 mt-1 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-semibold text-white text-sm">{t('satisfactionGuarantee')}</h4>
+                    <p className="text-white/80 text-sm">{t('satisfactionGuaranteeDesc')}</p>
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </div>
 
