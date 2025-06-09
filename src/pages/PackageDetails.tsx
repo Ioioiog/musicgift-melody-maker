@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import DidYouKnowCarousel from '@/components/DidYouKnowCarousel';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -82,7 +83,6 @@ const PackageDetails = () => {
     return `${t('orderNow')} - ${currency === 'EUR' ? '€' : 'RON'} ${getPackagePrice(pkg)}`;
   };
 
-  // Enhanced package features based on package type
   const getPackageFeatures = (packageValue: string) => {
     const baseFeatures = [
       {
@@ -116,7 +116,6 @@ const PackageDetails = () => {
     return baseFeatures;
   };
 
-  // Did you know facts based on package type
   const getDidYouKnowFacts = (packageValue: string) => {
     switch (packageValue) {
       case 'wedding':
@@ -348,7 +347,6 @@ const PackageDetails = () => {
         ];
       
       default:
-        // Fallback to personal package facts if package type is not recognized
         return [
           {
             title: t('didYouKnowPersonal1Title'),
@@ -362,7 +360,6 @@ const PackageDetails = () => {
     }
   };
 
-  // Get add-on icon based on add-on type
   function getAddonIcon(addonKey: string) {
     switch (addonKey) {
       case 'rushDelivery':
@@ -386,7 +383,6 @@ const PackageDetails = () => {
     }
   }
 
-  // Filter add-ons available for this package
   function getAvailableAddOns() {
     if (!addons || !packageData.available_addons) return [];
     
@@ -402,7 +398,6 @@ const PackageDetails = () => {
     }));
   }
 
-  // Get package-specific revision answer
   function getRevisionAnswer(packageValue: string) {
     if (packageValue === 'wedding') {
       return t('faqRevisionsAnswerWedding', 'Yes, the wedding package includes one free revision to ensure your complete satisfaction with the final product.');
@@ -474,7 +469,6 @@ const PackageDetails = () => {
                 </CardContent>
               </Card>
 
-              {/* What's Included */}
               <Card className="bg-white/10 backdrop-blur-md border border-white/20">
                 <CardHeader>
                   <CardTitle className="text-white">{t('whatsIncluded', 'What\'s included:')}</CardTitle>
@@ -491,7 +485,6 @@ const PackageDetails = () => {
                 </CardContent>
               </Card>
 
-              {/* Available Add-ons Section */}
               {availableAddOns.length > 0 && (
                 <Card className="bg-white/10 backdrop-blur-md border border-white/20">
                   <CardHeader>
@@ -524,27 +517,8 @@ const PackageDetails = () => {
                 </Card>
               )}
 
-              {/* Did You Know Section */}
-              <Card className="bg-white/10 backdrop-blur-md border border-white/20">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center">
-                    <Lightbulb className="w-5 h-5 mr-2 text-yellow-400" />
-                    {t('didYouKnow', 'Did You Know?')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    {didYouKnowFacts.map((fact, index) => (
-                      <div key={index} className="p-4 rounded-lg bg-white/5 border border-white/10">
-                        <h4 className="font-semibold text-white mb-2">{fact.title}</h4>
-                        <p className="text-white/80 text-sm leading-relaxed">{fact.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              <DidYouKnowCarousel facts={didYouKnowFacts} />
 
-              {/* FAQ Section */}
               <Card className="bg-white/10 backdrop-blur-md border border-white/20">
                 <CardHeader>
                   <CardTitle className="text-white">{t('frequentlyAsked', 'Frequently Asked Questions')}</CardTitle>
@@ -604,9 +578,7 @@ const PackageDetails = () => {
               </Card>
             </div>
 
-            {/* Sidebar */}
             <div className="space-y-6">
-              {/* Order Card */}
               <Card className="bg-white/10 backdrop-blur-md border border-white/20 sticky top-6">
                 <CardHeader>
                   <CardTitle className="text-white">{t('readyToStart', 'Ready to Start?')}</CardTitle>
@@ -633,7 +605,6 @@ const PackageDetails = () => {
                 </CardContent>
               </Card>
 
-              {/* Related Packages */}
               {relatedPackages && relatedPackages.length > 0 && (
                 <Card className="bg-white/10 backdrop-blur-md border border-white/20">
                   <CardHeader>
