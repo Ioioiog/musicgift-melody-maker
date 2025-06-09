@@ -61,7 +61,7 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
     if (price === 0) {
       return "FREE";
     }
-    return `+${price} ${currency}`;
+    return `+${currency === 'EUR' ? '€' : ''}${price}${currency === 'RON' ? ' RON' : ''}`;
   };
 
   if (filteredAddons.length === 0) {
