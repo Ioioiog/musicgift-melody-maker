@@ -18,11 +18,13 @@ import AddonSelectionStep from './order/AddonSelectionStep';
 import PaymentProviderSelection from './order/PaymentProviderSelection';
 import ContactLegalStep from './order/ContactLegalStep';
 import WizardNavigation from './order/WizardNavigation';
+
 interface OrderWizardProps {
   giftCard?: any;
   onComplete?: (orderData: any) => Promise<void>;
   preselectedPackage?: string;
 }
+
 const OrderWizard: React.FC<OrderWizardProps> = ({
   giftCard,
   onComplete,
@@ -313,13 +315,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   };
   return (
     <div className="container py-8 mx-0">
-      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
-        <CardHeader className="pb-2 pt-6">
-          <div className="mb-4">
+      <Card className="bg-white border-2 border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300">
+        <CardHeader className="pb-4 pt-8 px-8">
+          <div className="mb-6">
             <StepIndicator steps={buildStepsData()} />
           </div>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6">
+        <CardContent className="px-8 pb-8">
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={currentStep}
@@ -328,15 +330,72 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="space-y-4">
-                {currentStep === 0 ? <PackageSelectionStep selectedPackage={formData.package} onPackageSelect={handlePackageSelect} /> : currentStepData ? <div>
-                    <h3 className="text-xl font-semibold text-white mb-4">
-                      {t(currentStepData.title_key) || currentStepData.title_key}
-                    </h3>
-                    {currentStepData.fields.filter(field => field.field_type !== 'checkbox-group').sort((a, b) => a.field_order - b.field_order).map(field => <FormFieldRenderer key={field.id} field={field} value={formData[field.field_name]} onChange={value => handleInputChange(field.field_name, value)} selectedAddons={selectedAddons} onAddonChange={handleAddonChange} availableAddons={addons} addonFieldValues={addonFieldValues} onAddonFieldChange={handleAddonFieldChange} selectedPackage={selectedPackage} selectedPackageData={selectedPackageData} formData={formData} />)}
-                  </div> : isAddonStep ? <AddonSelectionStep selectedPackageData={selectedPackageData} selectedAddons={selectedAddons} onAddonChange={handleAddonChange} availableAddons={addons} addonFieldValues={addonFieldValues} onAddonFieldChange={handleAddonFieldChange} /> : isContactLegalStep ? <ContactLegalStep formData={formData} onInputChange={handleInputChange} selectedAddons={selectedAddons} onAddonChange={handleAddonChange} availableAddons={addons} addonFieldValues={addonFieldValues} onAddonFieldChange={handleAddonFieldChange} selectedPackage={selectedPackage} selectedPackageData={selectedPackageData} /> : isPaymentStep ? <PaymentProviderSelection selectedProvider={selectedPaymentProvider} onProviderSelect={setSelectedPaymentProvider} /> : <div className="text-center py-8">
-                    <p className="text-white/70">{t('loadingSteps')}</p>
-                  </div>}
+              <div className="bg-gray-50 rounded-lg p-6 min-h-[400px]">
+                {currentStep === 0 ? (
+                  <PackageSelectionStep 
+                    selectedPackage={formData.package} 
+                    onPackageSelect={handlePackageSelect} 
+                  />
+                ) : currentStepData ? (
+                  <div className="space-y-6">
+                    <div className="bg-white rounded-lg p-6 border border-gray-200">
+                      <h3 className="text-2xl font-bold text-gray-800 mb-6 pb-3 border-b border-gray-200">
+                        {t(currentStepData.title_key) || currentStepData.title_key}
+                      </h3>
+                      <div className="space-y-6">
+                        {currentStepData.fields
+                          .filter(field => field.field_type !== 'checkbox-group')
+                          .sort((a, b) => a.field_order - b.field_order)
+                          .map(field => (
+                            <FormFieldRenderer
+                              key={field.id}
+                              field={field}
+                              value={formData[field.field_name]}
+                              onChange={value => handleInputChange(field.field_name, value)}
+                              selectedAddons={selectedAddons}
+                              onAddonChange={handleAddonChange}
+                              availableAddons={addons}
+                              addonFieldValues={addonFieldValues}
+                              onAddonFieldChange={handleAddonFieldChange}
+                              selectedPackage={selectedPackage}
+                              selectedPackageData={selectedPackageData}
+                              formData={formData}
+                            />
+                          ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : isAddonStep ? (
+                  <AddonSelectionStep
+                    selectedPackageData={selectedPackageData}
+                    selectedAddons={selectedAddons}
+                    onAddonChange={handleAddonChange}
+                    availableAddons={addons}
+                    addonFieldValues={addonFieldValues}
+                    onAddonFieldChange={handleAddonFieldChange}
+                  />
+                ) : isContactLegalStep ? (
+                  <ContactLegalStep
+                    formData={formData}
+                    onInputChange={handleInputChange}
+                    selectedAddons={selectedAddons}
+                    onAddonChange={handleAddonChange}
+                    availableAddons={addons}
+                    addonFieldValues={addonFieldValues}
+                    onAddonFieldChange={handleAddonFieldChange}
+                    selectedPackage={selectedPackage}
+                    selectedPackageData={selectedPackageData}
+                  />
+                ) : isPaymentStep ? (
+                  <PaymentProviderSelection
+                    selectedProvider={selectedPaymentProvider}
+                    onProviderSelect={setSelectedPaymentProvider}
+                  />
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">{t('loadingSteps')}</p>
+                  </div>
+                )}
               </div>
             </motion.div>
           </AnimatePresence>
