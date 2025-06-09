@@ -62,7 +62,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
         <Card className="bg-gradient-to-br from-indigo-500/30 via-purple-500/25 to-pink-500/30 backdrop-blur-lg border-2 border-white/30 shadow-xl hover:shadow-purple-500/25 transition-all duration-300">
           <CardContent className="p-2">
             <Select value={selectedPackage} onValueChange={onPackageSelect}>
-              <SelectTrigger className="w-full h-12 text-left border-2 border-white/40 hover:border-purple-300/80 focus:border-purple-400 transition-all duration-300 bg-white/15 backdrop-blur-md shadow-lg hover:shadow-xl">
+              <SelectTrigger className="w-full h-10 text-left border-2 border-white/40 hover:border-purple-300/80 focus:border-purple-400 transition-all duration-300 bg-white/15 backdrop-blur-md shadow-lg hover:shadow-xl">
                 <SelectValue placeholder={
                   <div className="flex items-center text-white/80 text-sm">
                     <span>{t('selectOption')}</span>
@@ -70,32 +70,21 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                 }>
                   {selectedPackageData && (
                     <div className="flex items-center justify-between w-full pr-3">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-1.5">
                         {selectedPackageData.tag && (
-                          <Badge className={`${getTagColor(selectedPackageData.tag)} text-xs px-1.5 py-0.5 font-medium`}>
-                            <div className="flex items-center gap-1">
+                          <Badge className={`${getTagColor(selectedPackageData.tag)} text-xs px-1 py-0.5 font-medium`}>
+                            <div className="flex items-center gap-0.5">
                               {getTagIcon(selectedPackageData.tag)}
                               <span>{t(selectedPackageData.tag)}</span>
                             </div>
                           </Badge>
                         )}
-                        <div>
-                          <div className="font-bold text-white text-sm">
-                            {t(selectedPackageData.label_key)}
-                          </div>
-                          <div className="text-xs text-white/80">
-                            {t(selectedPackageData.tagline_key)}
-                          </div>
+                        <div className="font-bold text-white text-sm">
+                          {t(selectedPackageData.label_key)}
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-sm font-bold bg-gradient-to-r from-orange-300 to-yellow-300 bg-clip-text text-transparent">
-                          {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
-                        </div>
-                        <div className="flex items-center gap-1 text-xs text-white/80">
-                          <Clock className="w-2.5 h-2.5" />
-                          {t(selectedPackageData.delivery_time_key)}
-                        </div>
+                      <div className="text-sm font-bold bg-gradient-to-r from-orange-300 to-yellow-300 bg-clip-text text-transparent">
+                        {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
                       </div>
                     </div>
                   )}
@@ -110,7 +99,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                   <SelectItem 
                     key={pkg.value} 
                     value={pkg.value} 
-                    className="p-1.5 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 focus:bg-gradient-to-r focus:from-purple-50 focus:to-pink-50 cursor-pointer border-b border-gray-100/80 last:border-b-0 rounded-lg mx-0.5 my-0 transition-all duration-200"
+                    className="p-1 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 focus:bg-gradient-to-r focus:from-purple-50 focus:to-pink-50 cursor-pointer border-b border-gray-100/80 last:border-b-0 rounded-lg mx-0.5 my-0 transition-all duration-200"
                   >
                     <div className="flex items-center justify-between w-full">
                       <div className="flex items-center space-x-1 flex-1">
@@ -122,28 +111,16 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                             </div>
                           </Badge>
                         )}
-                        <div className="flex-1 min-w-0">
-                          <div className="font-bold text-gray-900 text-sm">
-                            {t(pkg.label_key)}
-                          </div>
-                          <div className="text-xs text-gray-700 font-medium">
-                            {t(pkg.tagline_key)}
-                          </div>
-                          <div className="flex items-center gap-0.5 text-xs text-gray-600 mt-0.5">
-                            <Clock className="w-2.5 h-2.5" />
-                            {t(pkg.delivery_time_key)}
-                          </div>
+                        <div className="font-medium text-gray-900 text-sm">
+                          {t(pkg.label_key)}
                         </div>
                       </div>
-                      <div className="text-right ml-1 shrink-0">
+                      <div className="text-right ml-2 shrink-0 flex items-center gap-1">
                         <div className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                           {currency === 'EUR' ? '€' : ''}{getPackagePrice(pkg, currency)}{currency === 'RON' ? ' RON' : ''}
                         </div>
                         {selectedPackage === pkg.value && (
-                          <div className="flex items-center gap-0.5 text-green-600 text-xs font-medium">
-                            <Check className="w-2.5 h-2.5" />
-                            <span>{t('selected')}</span>
-                          </div>
+                          <Check className="w-3 h-3 text-green-600" />
                         )}
                       </div>
                     </div>
