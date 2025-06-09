@@ -2,6 +2,7 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
 interface StepInfo {
@@ -18,7 +19,73 @@ interface StepIndicatorProps {
 
 const StepIndicator: React.FC<StepIndicatorProps> = ({ steps, className }) => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
+  
+  const currentStep = steps.find(step => step.isCurrent);
+  const completedStepsCount = steps.filter(step => step.isCompleted).length;
+  const progressPercentage = (completedStepsCount / (steps.length - 1)) * 100;
 
+  if (isMobile) {
+    return (
+      <div className={cn("mb-8", className)}>
+        {/* Mobile Progress Bar */}
+        <div className="mb-4">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs text-gray-600 font-medium">
+              {t('progress', 'Progress')}
+            </span>
+            <span className="text-xs text-gray-600 font-medium">
+              {Math.round(progressPercentage)}%
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              className="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-700 ease-in-out"
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Current Step Display */}
+        {currentStep && (
+          <div className="text-center">
+            <div className="flex justify-center mb-3">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-xl flex items-center justify-center relative">
+                <span className="text-lg font-bold">{currentStep.number}</span>
+                <div className="absolute inset-0 rounded-full animate-ping opacity-20 bg-orange-500" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-semibold text-orange-700 text-base">
+                {currentStep.label}
+              </h3>
+              <p className="text-xs text-gray-500">
+                {t('stepXOfY', `Step ${currentStep.number} of ${steps.length}`)}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Mini Step Dots */}
+        <div className="flex justify-center mt-4 space-x-2">
+          {steps.map((step, index) => (
+            <div
+              key={step.number}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                step.isCompleted
+                  ? 'bg-green-500'
+                  : step.isCurrent
+                    ? 'bg-orange-500 scale-125'
+                    : 'bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop layout (existing design)
   return (
     <div className={cn("mb-12", className)}>
       {/* Progress Bar Background */}
@@ -27,7 +94,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ steps, className }) => {
         <div 
           className="absolute top-5 left-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full transition-all duration-700 ease-in-out" 
           style={{
-            width: `${(steps.filter(s => s.isCompleted).length / (steps.length - 1)) * 100}%`
+            width: `${progressPercentage}%`
           }} 
         />
         
