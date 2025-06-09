@@ -445,7 +445,8 @@ const PackageDetails = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content - 2 Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             {/* Main Package Info */}
             <div className="lg:col-span-2 space-y-8">
               <Card className="bg-white/10 backdrop-blur-md border border-white/20">
@@ -531,66 +532,9 @@ const PackageDetails = () => {
               )}
 
               <DidYouKnowCarousel facts={didYouKnowFacts} />
-
-              <Card className="bg-white/10 backdrop-blur-md border border-white/20">
-                <CardHeader>
-                  <CardTitle className="text-white">{t('frequentlyAsked', 'Frequently Asked Questions')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Accordion type="single" collapsible className="w-full">
-                    <AccordionItem value="item-1" className="border-white/20">
-                      <AccordionTrigger className="text-white hover:text-white/80">
-                        {t('faqRevisions', 'Can I request revisions?')}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-white/70">
-                        {getRevisionAnswer(packageData.value)}
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-2" className="border-white/20">
-                      <AccordionTrigger className="text-white hover:text-white/80">
-                        {t('faqLanguage', 'What languages are supported?')}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-white/70">
-                        {t('faqLanguageAnswer', 'We support multiple languages including English, Romanian, French, German, Polish, and Italian.')}
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-3" className="border-white/20">
-                      <AccordionTrigger className="text-white hover:text-white/80">
-                        {t('faqRights', 'Who owns the rights to the song?')}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-white/70">
-                        {t('faqRightsAnswer', 'Rights vary by package. Personal packages include personal use rights, while business and artist packages include commercial rights.')}
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-4" className="border-white/20">
-                      <AccordionTrigger className="text-white hover:text-white/80">
-                        {t('faqDeliveryTime', 'How long does it take to receive my song?')}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-white/70">
-                        {t('faqDeliveryTimeAnswer', 'Your song will be ready within 3–5 business days after your order and story are confirmed. We want every creation to be crafted with care and professionalism.')}
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-5" className="border-white/20">
-                      <AccordionTrigger className="text-white hover:text-white/80">
-                        {t('faqDeliveryMethod', 'How will I receive my song?')}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-white/70">
-                        {t('faqDeliveryMethodAnswer', 'You will receive your personalized song via email, in high-quality format (MP3, or WAV upon request). You can download the song for up to 6 months using the link we send. After that, the link will expire and MusicGift will no longer store the song on any server, so make sure to save your file during that time.')}
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="item-6" className="border-white/20">
-                      <AccordionTrigger className="text-white hover:text-white/80">
-                        {t('faqSatisfaction', 'What if I\'m not satisfied?')}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-white/70">
-                        {t('faqSatisfactionAnswer', 'We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost.')}
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </CardContent>
-              </Card>
             </div>
 
+            {/* Sidebar */}
             <div className="space-y-6">
               <Card className="bg-white/10 backdrop-blur-md border border-white/20 sticky top-6">
                 <CardHeader>
@@ -658,6 +602,67 @@ const PackageDetails = () => {
                 </Card>
               )}
             </div>
+          </div>
+
+          {/* FAQ Section - Full Width */}
+          <div className="w-full">
+            <Card className="bg-white/10 backdrop-blur-md border border-white/20">
+              <CardHeader>
+                <CardTitle className="text-white">{t('frequentlyAsked', 'Frequently Asked Questions')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="item-1" className="border-white/20">
+                    <AccordionTrigger className="text-white hover:text-white/80">
+                      {t('faqRevisions', 'Can I request revisions?')}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white/70">
+                      {getRevisionAnswer(packageData.value)}
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-2" className="border-white/20">
+                    <AccordionTrigger className="text-white hover:text-white/80">
+                      {t('faqLanguage', 'What languages are supported?')}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white/70">
+                      {t('faqLanguageAnswer', 'We support multiple languages including English, Romanian, French, German, Polish, and Italian.')}
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-3" className="border-white/20">
+                    <AccordionTrigger className="text-white hover:text-white/80">
+                      {t('faqRights', 'Who owns the rights to the song?')}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white/70">
+                      {t('faqRightsAnswer', 'Rights vary by package. Personal packages include personal use rights, while business and artist packages include commercial rights.')}
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-4" className="border-white/20">
+                    <AccordionTrigger className="text-white hover:text-white/80">
+                      {t('faqDeliveryTime', 'How long does it take to receive my song?')}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white/70">
+                      {t('faqDeliveryTimeAnswer', 'Your song will be ready within 3–5 business days after your order and story are confirmed. We want every creation to be crafted with care and professionalism.')}
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-5" className="border-white/20">
+                    <AccordionTrigger className="text-white hover:text-white/80">
+                      {t('faqDeliveryMethod', 'How will I receive my song?')}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white/70">
+                      {t('faqDeliveryMethodAnswer', 'You will receive your personalized song via email, in high-quality format (MP3, or WAV upon request). You can download the song for up to 6 months using the link we send. After that, the link will expire and MusicGift will no longer store the song on any server, so make sure to save your file during that time.')}
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-6" className="border-white/20">
+                    <AccordionTrigger className="text-white hover:text-white/80">
+                      {t('faqSatisfaction', 'What if I\'m not satisfied?')}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-white/70">
+                      {t('faqSatisfactionAnswer', 'We work with the utmost care to capture the emotion behind your story. If there are any real issues (e.g., wrong delivery, corrupted file, etc.), we will fix them at no extra cost.')}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
