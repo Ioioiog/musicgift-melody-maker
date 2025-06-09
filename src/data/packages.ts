@@ -45,7 +45,7 @@ export const packages: PackageData[] = [
     is_active: true,
     is_popular: true,
     tag: "popular",
-    available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong", "separatedStems"],
+    available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
     includes: [
       { include_key: "personalInclude1", include_order: 1 },
       { include_key: "personalInclude2", include_order: 2 },
@@ -324,7 +324,7 @@ export const packages: PackageData[] = [
     is_active: true,
     is_popular: false,
     tag: "premium",
-    available_addons: ["rushDelivery", "customVideo", "audioMessageFromSender", "extendedSong", "separatedStems"],
+    available_addons: ["rushDelivery", "customVideo", "audioMessageFromSender", "extendedSong"],
     includes: [
       { include_key: "premiumInclude1", include_order: 1 },
       { include_key: "premiumInclude2", include_order: 2 },
@@ -343,7 +343,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "businessDelivery",
     is_active: true,
     is_popular: false,
-    available_addons: ["rushDelivery", "customVideo", "brandedAudioMessage", "commercialRightsUpgrade", "distributieMangoRecords", "separatedStems"],
+    available_addons: ["rushDelivery", "customVideo", "brandedAudioMessage", "commercialRightsUpgrade", "distributieMangoRecords"],
     includes: [
       { include_key: "businessInclude1", include_order: 1 },
       { include_key: "businessInclude2", include_order: 2 },
@@ -364,7 +364,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "artistDelivery",
     is_active: true,
     is_popular: false,
-    available_addons: ["rushDelivery", "separatedStems"],
+    available_addons: ["rushDelivery"],
     includes: [
       { include_key: "artistInclude1", include_order: 1 },
       { include_key: "artistInclude2", include_order: 2 },
@@ -384,7 +384,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "remixDelivery",
     is_active: true,
     is_popular: false,
-    available_addons: ["rushDelivery", "distributieMangoRecords", "separatedStems"],
+    available_addons: ["rushDelivery", "distributieMangoRecords"],
     includes: [
       { include_key: "remixInclude1", include_order: 1 },
       { include_key: "remixInclude2", include_order: 2 },
