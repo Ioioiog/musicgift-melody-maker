@@ -32,6 +32,9 @@ interface OrderFormData {
   representativeName?: string;
   address?: string;
   city?: string;
+  acceptMentionObligation?: boolean;
+  acceptDistribution?: boolean;
+  finalNote?: boolean;
   [key: string]: any;
 }
 
@@ -56,10 +59,18 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const { data: addons = [] } = useAddons();
   
   const selectedPackage = formData.package as string;
-  const { data: packageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
+  const { data: allPackageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
   
-  // Updated step calculation: package + form steps + addons + payment
-  const totalSteps = 1 + (packageSteps?.length || 0) + 1 + 1;
+  // Separate and order the steps: regular steps, then contact/legal step, then addons, then payment
+  const regularSteps = allPackageSteps
+    .filter(step => step.title_key !== 'contactDetailsStep')
+    .sort((a, b) => a.step_number - b.step_number);
+  
+  const contactLegalStep = allPackageSteps.find(step => step.title_key === 'contactDetailsStep');
+  
+  // Build ordered steps array: package selection + regular steps + contact/legal + addons + payment
+  const packageSteps = regularSteps;
+  const totalSteps = 1 + (packageSteps?.length || 0) + (contactLegalStep ? 1 : 0) + 1 + 1;
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
 
   useEffect(() => {
@@ -156,6 +167,15 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     if (missingFields.length > 0) {
       console.error('❌ Missing required fields:', missingFields);
       throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+    }
+
+    // Validate legal acceptance checkboxes
+    const requiredAcceptances = ['acceptMentionObligation', 'acceptDistribution', 'finalNote'];
+    const missingAcceptances = requiredAcceptances.filter(field => !formData[field]);
+    
+    if (missingAcceptances.length > 0) {
+      console.error('❌ Missing required acceptances:', missingAcceptances);
+      throw new Error('Please accept all required terms and conditions');
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -413,17 +433,31 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     }
   };
 
-  const isAddonStep = currentStep === totalSteps - 2; // Second to last step
-  const isPaymentStep = currentStep === totalSteps - 1; // Last step
-  const currentPackageStepIndex = currentStep - 1; // Account for package step (0)
-  const currentStepData = currentStep > 0 && !isAddonStep && !isPaymentStep ? packageSteps?.[currentPackageStepIndex] : null;
+  // Determine which step we're on
+  const regularStepCount = packageSteps.length;
+  const contactLegalStepIndex = 1 + regularStepCount;
+  const addonStepIndex = contactLegalStepIndex + (contactLegalStep ? 1 : 0);
+  const paymentStepIndex = addonStepIndex + 1;
+
+  const isContactLegalStep = contactLegalStep && currentStep === contactLegalStepIndex;
+  const isAddonStep = currentStep === addonStepIndex;
+  const isPaymentStep = currentStep === paymentStepIndex;
+  
+  const currentPackageStepIndex = currentStep - 1;
+  const currentStepData = currentStep > 0 && currentStep <= regularStepCount ? packageSteps?.[currentPackageStepIndex] : null;
 
   const canProceed = () => {
     if (currentStep === 0) {
       return !!formData.package;
     }
+    if (isContactLegalStep) {
+      // Check required fields for contact/legal step
+      return formData.fullName && formData.email && 
+             formData.acceptMentionObligation && 
+             formData.acceptDistribution && 
+             formData.finalNote;
+    }
     if (isAddonStep) {
-      // Addon step - always allow proceeding (addons are optional)
       return true;
     }
     if (isPaymentStep) {
@@ -462,6 +496,30 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                     selectedPackage={formData.package}
                     onPackageSelect={handlePackageSelect}
                   />
+                ) : isContactLegalStep ? (
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-4">
+                      {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
+                    </h3>
+                    {contactLegalStep?.fields
+                      .sort((a, b) => a.field_order - b.field_order)
+                      .map(field => (
+                        <FormFieldRenderer
+                          key={field.id}
+                          field={field}
+                          value={formData[field.field_name]}
+                          onChange={(value) => handleInputChange(field.field_name, value)}
+                          selectedAddons={selectedAddons}
+                          onAddonChange={handleAddonChange}
+                          availableAddons={addons}
+                          addonFieldValues={addonFieldValues}
+                          onAddonFieldChange={handleAddonFieldChange}
+                          selectedPackage={selectedPackage}
+                          selectedPackageData={selectedPackageData}
+                          formData={formData}
+                        />
+                      ))}
+                  </div>
                 ) : isAddonStep ? (
                   <AddonSelectionStep
                     selectedPackageData={selectedPackageData}
@@ -477,24 +535,30 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                     onProviderSelect={setSelectedPaymentProvider}
                   />
                 ) : currentStepData ? (
-                  currentStepData.fields
-                    .filter(field => field.field_type !== 'checkbox-group') // Remove addon fields from regular steps
-                    .map(field => (
-                      <FormFieldRenderer
-                        key={field.id}
-                        field={field}
-                        value={formData[field.field_name]}
-                        onChange={(value) => handleInputChange(field.field_name, value)}
-                        selectedAddons={selectedAddons}
-                        onAddonChange={handleAddonChange}
-                        availableAddons={addons}
-                        addonFieldValues={addonFieldValues}
-                        onAddonFieldChange={handleAddonFieldChange}
-                        selectedPackage={selectedPackage}
-                        selectedPackageData={selectedPackageData}
-                        formData={formData}
-                      />
-                    ))
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-4">
+                      {t(currentStepData.title_key) || currentStepData.title_key}
+                    </h3>
+                    {currentStepData.fields
+                      .filter(field => field.field_type !== 'checkbox-group')
+                      .sort((a, b) => a.field_order - b.field_order)
+                      .map(field => (
+                        <FormFieldRenderer
+                          key={field.id}
+                          field={field}
+                          value={formData[field.field_name]}
+                          onChange={(value) => handleInputChange(field.field_name, value)}
+                          selectedAddons={selectedAddons}
+                          onAddonChange={handleAddonChange}
+                          availableAddons={addons}
+                          addonFieldValues={addonFieldValues}
+                          onAddonFieldChange={handleAddonFieldChange}
+                          selectedPackage={selectedPackage}
+                          selectedPackageData={selectedPackageData}
+                          formData={formData}
+                        />
+                      ))}
+                  </div>
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-white/70">{t('loadingSteps')}</p>
@@ -516,7 +580,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
             </Button>
             <Button
               onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
-              disabled={!canProceed() || (currentStep > 0 && !isAddonStep && !isPaymentStep && isStepsLoading) || isSubmitting}
+              disabled={!canProceed() || (currentStep > 0 && !isAddonStep && !isPaymentStep && !isContactLegalStep && isStepsLoading) || isSubmitting}
               className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
             >
               {isSubmitting ? (
