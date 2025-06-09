@@ -18,6 +18,7 @@ import { getAddonPrice } from '@/utils/pricing';
 import { Addon } from '@/types';
 import AudioRecorder from './AudioRecorder';
 import { getVatValidationError } from '@/utils/vatValidation';
+import { usePackages } from '@/hooks/usePackageData';
 
 interface FieldOption {
   value: string;
@@ -64,23 +65,30 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   const { currency } = useCurrency();
   const [date, setDate] = useState<Date>();
   const [vatError, setVatError] = useState<string | null>(null);
+  const { data: packages = [] } = usePackages();
 
-  // Helper function to check if addon should be shown based on trigger condition
+  // Helper function to check if addon should be shown based on package's available_addons
   const shouldShowAddon = (addon: Addon, selectedPackage: string) => {
     if (!addon.is_active) return false;
     
-    if (addon.trigger_condition === 'always') return true;
-    
-    if (addon.trigger_condition === 'package_equals') {
-      return addon.trigger_condition_value === selectedPackage;
+    // Find the selected package object
+    const packageData = packages.find(pkg => pkg.value === selectedPackage);
+    if (!packageData) {
+      console.warn('Package not found:', selectedPackage);
+      return false;
     }
+
+    // Check if the addon is in the package's available_addons array
+    const isAvailable = packageData.available_addons.includes(addon.addon_key);
     
-    if (addon.trigger_condition === 'package_in') {
-      const allowedPackages = addon.trigger_condition_value?.split(',') || [];
-      return allowedPackages.includes(selectedPackage);
-    }
+    console.log('Addon availability check:', {
+      addonKey: addon.addon_key,
+      selectedPackage,
+      packageAvailableAddons: packageData.available_addons,
+      isAvailable
+    });
     
-    return false;
+    return isAvailable;
   };
 
   // Updated getSelectedPackage function
@@ -226,13 +234,14 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         );
 
       case 'checkbox-group':
-        const selectedPackage = getSelectedPackage();
-        const filteredAddons = availableAddons.filter(addon => shouldShowAddon(addon, selectedPackage));
+        const selectedPackageValue = getSelectedPackage();
+        const filteredAddons = availableAddons.filter(addon => shouldShowAddon(addon, selectedPackageValue));
         
         console.log('Rendering addon checkbox group:', {
-          selectedPackage,
-          availableAddons,
-          filteredAddons
+          selectedPackage: selectedPackageValue,
+          availableAddons: availableAddons.length,
+          filteredAddons: filteredAddons.length,
+          addonKeys: filteredAddons.map(a => a.addon_key)
         });
         
         if (filteredAddons.length === 0) {
