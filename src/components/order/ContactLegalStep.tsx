@@ -178,7 +178,7 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
         .map(field => (
           <Card 
             key={field.id} 
-            className="bg-gradient-to-br from-orange-500/20 to-purple-600/20 backdrop-blur-sm border border-orange-400/30 hover:border-orange-300/50 transition-colors"
+            className="bg-white/20 backdrop-blur-sm border border-white/30 hover:border-white/50 transition-colors"
           >
             <CardContent className="p-1.5">
               <FormFieldRenderer
