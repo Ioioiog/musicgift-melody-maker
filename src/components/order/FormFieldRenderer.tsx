@@ -5,12 +5,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Toggle } from '@/components/ui/toggle';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { CalendarIcon, Upload, AlertCircle } from 'lucide-react';
+import { CalendarIcon, Upload, AlertCircle, Plus, Check } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -208,12 +209,22 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       case 'checkbox':
         return (
           <div className="flex items-start space-x-2 bg-white border-2 border-gray-300 rounded-lg p-2 hover:border-orange-300 transition-all duration-200">
-            <Checkbox
-              checked={value || false}
-              onCheckedChange={onChange}
-              required={field.required}
-              className="mt-0"
-            />
+            <Toggle
+              pressed={value || false}
+              onPressedChange={onChange}
+              size="sm"
+              className={`h-4 w-4 rounded-full p-0 transition-all duration-200 ${
+                value 
+                  ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg' 
+                  : 'bg-white/20 hover:bg-white/30 border border-gray-400 text-gray-600'
+              }`}
+            >
+              {value ? (
+                <Check className="w-2.5 h-2.5" />
+              ) : (
+                <Plus className="w-2.5 h-2.5" />
+              )}
+            </Toggle>
             <Label className="text-xs leading-relaxed cursor-pointer">
               {field.placeholder_key ? t(field.placeholder_key) : ''}
             </Label>
