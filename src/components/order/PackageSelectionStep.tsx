@@ -87,15 +87,15 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                   )}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="w-full bg-white/95 backdrop-blur-md border-2 border-purple-200/50 shadow-2xl z-[9999] rounded-xl overflow-hidden" side="bottom" position="popper">
+              <SelectContent className="w-full bg-white/95 backdrop-blur-md border-2 border-purple-200/50 shadow-2xl z-[9999] rounded-xl overflow-hidden" side="bottom">
                 {packages.map(pkg => (
                   <SelectItem 
                     key={pkg.value} 
                     value={pkg.value} 
                     className="p-2 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 focus:bg-gradient-to-r focus:from-purple-50 focus:to-pink-50 cursor-pointer border-b border-gray-100/80 last:border-b-0 mx-1 my-0.5 rounded-lg transition-all duration-200 group h-auto min-h-[2rem]"
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <div className="flex items-center space-x-2 flex-1">
+                    <div className="flex items-center justify-between w-full gap-4">
+                      <div className="flex items-center space-x-2 flex-1 min-w-0">
                         {pkg.tag && (
                           <Badge className={`${getTagColor(pkg.tag)} text-xs px-1.5 py-0.5 shrink-0 font-medium border transition-transform duration-200 group-hover:scale-105`}>
                             <div className="flex items-center gap-1">
@@ -104,11 +104,11 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                             </div>
                           </Badge>
                         )}
-                        <div className="font-medium text-gray-900 text-sm group-hover:text-gray-700 transition-colors duration-200">
+                        <div className="font-medium text-gray-900 text-sm group-hover:text-gray-700 transition-colors duration-200 truncate">
                           {t(pkg.label_key)}
                         </div>
                       </div>
-                      <div className="text-right ml-3 shrink-0 flex items-center gap-2">
+                      <div className="flex items-center gap-2 shrink-0">
                         <div className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                           {currency === 'EUR' ? '€' : ''}{getPackagePrice(pkg, currency)}{currency === 'RON' ? ' RON' : ''}
                         </div>
