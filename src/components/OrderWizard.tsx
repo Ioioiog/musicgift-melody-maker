@@ -312,7 +312,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     return true;
   };
   return <div className="container py-8 mx-0">
-      <Card className="bg-gradient-to-br from-purple-600/90 to-purple-800/90 backdrop-blur-md border border-purple-400/30 hover:border-purple-300/50 transition-all duration-300 shadow-xl">
+      <Card className="bg-gradient-to-br from-gray-100/95 to-gray-200/95 backdrop-blur-md border border-gray-300/50 hover:border-gray-400/60 transition-all duration-300 shadow-xl">
         <CardHeader className="pb-2 pt-6">
           <div className="mb-4">
             <StepIndicator steps={buildStepsData()} className="py-0 my-[13px] px-[40px]" />
