@@ -107,18 +107,8 @@ export const packagesTranslations = {
   
   // Common add-ons
   rushDelivery: "Express-Lieferung",
-  rushDeliveryDesc: "Erhalten Sie Ihr Lied in 24-48 Stunden nach Zahlung",
+  rushDeliveryDesc: "Erhalten Sie Ihr Lied in 24-48 Stunden nach der Zahlung",
   
-  extraRevision: "Zusätzliche Überarbeitung",
-  extraRevisionDesc: "Eine zusätzliche Überarbeitung für Perfektion",
-  
-  extendedLicense: "Erweiterte Lizenz",
-  extendedLicenseDesc: "Vollständige unbegrenzte kommerzielle Rechte",
-  
-  sourceFiles: "Quelldateien",
-  sourceFilesDesc: "Zugang zu allen Projektdateien (Stems, MIDI)",
-  
-  // Add-ons
   socialMediaRights: "Social Media Rechte",
   socialMediaRightsDesc: "Erhalten Sie die Rechte, das Lied auf jeder Social Media Plattform zu posten. Erfordert die Zustimmung zur Kennzeichnung des Liedes mit 'Music Gift by Mango Records'.",
   
@@ -126,7 +116,7 @@ export const packagesTranslations = {
   distributieMangoRecordsDesc: "Professionelle Verteilung über Mango Records",
   
   customVideo: "Individuelles Video",
-  customVideoDesc: "Ein personalisiertes Video erstellt mit Ihren Fotos oder/und Videos für ein komplettes Erlebnis",
+  customVideoDesc: "Animiertes Video für Ihr Lied mit Ihren Fotos und Videos",
   
   audioMessageFromSender: "Audio-Nachricht vom Absender",
   audioMessageFromSenderDesc: "Fügen Sie eine persönliche Audio-Nachricht vom Absender für eine zusätzliche Überraschung hinzu",
@@ -143,7 +133,6 @@ export const packagesTranslations = {
   godparentsmelody: "Paten-Melodie",
   godparentsmelodyDesc: "Spezielle Melodie für Paten",
   
-  // New add-on
   separatedStems: "Getrennte Stems",
   separatedStemsDesc: "Original-Beat + individuelle Track-Dateien. Ideal für Mixing, Remixing und Video-Synchronisation. Inklusive kommerzielle Rechte.",
   

@@ -56,6 +56,14 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
     onAddonFieldChange(addonKey, audioBlob);
   };
 
+  const formatAddonPrice = (addon: Addon) => {
+    const price = getAddonPrice(addon, currency);
+    if (price === 0) {
+      return "FREE";
+    }
+    return `+${price} ${currency}`;
+  };
+
   if (filteredAddons.length === 0) {
     return (
       <div className="space-y-6">
@@ -103,8 +111,8 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                       <Label className="font-semibold text-base cursor-pointer">
                         {t(addon.label_key)}
                       </Label>
-                      <Badge variant="secondary" className="bg-purple-100 text-purple-700">
-                        +{getAddonPrice(addon, currency)} {currency}
+                      <Badge variant="secondary" className={`${getAddonPrice(addon, currency) === 0 ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}`}>
+                        {formatAddonPrice(addon)}
                       </Badge>
                     </div>
                     {addon.description_key && (

@@ -104,18 +104,8 @@ export const packagesTranslations = {
   
   // Common add-ons
   rushDelivery: "Livrare urgentă",
-  rushDeliveryDesc: "Primește melodia în 24-48 de ore de la plată",
+  rushDeliveryDesc: "Primește melodia în 24-48 de ore de la momentul plății",
   
-  extraRevision: "Revizie suplimentară",
-  extraRevisionDesc: "O revizie suplimentară pentru perfecționare",
-  
-  extendedLicense: "Licență extinsă",
-  extendedLicenseDesc: "Drepturi comerciale complete și nelimitate",
-  
-  sourceFiles: "Fișiere sursă",
-  sourceFilesDesc: "Accesul la toate fișierele de proiect (stems, MIDI)",
-  
-  // Add-ons
   socialMediaRights: "Drepturi Social Media",
   socialMediaRightsDesc: "Obții drepturile de a posta melodia pe orice platformă de social media. Necesită acceptarea etichetării melodiei cu 'Music Gift by Mango Records'.",
   
@@ -123,7 +113,7 @@ export const packagesTranslations = {
   distributieMangoRecordsDesc: "Distribuție profesională prin Mango Records",
   
   customVideo: "Video personalizat",
-  customVideoDesc: "Un videoclip personalizat creat cu fotografiile sau/și videoclipurile tale pentru o experiență completă",
+  customVideoDesc: "Video animat pentru melodia ta cu fotografiile și videoclipurile tale",
   
   audioMessageFromSender: "Mesaj audio de la expeditor",
   audioMessageFromSenderDesc: "Adaugă un mesaj audio personal de la expeditor pentru o surpriză suplimentară",
@@ -140,7 +130,6 @@ export const packagesTranslations = {
   godparentsmelody: "Melodia nașilor",
   godparentsmelodyDesc: "Melodie specială pentru nași",
   
-  // New add-on
   separatedStems: "Stem-uri Separate",
   separatedStemsDesc: "Beat original + fișiere de track individuale. Ideal pentru mixare, remixare și sincronizare video. Include drepturi comerciale.",
   

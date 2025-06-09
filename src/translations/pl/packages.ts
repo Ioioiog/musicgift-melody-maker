@@ -104,22 +104,8 @@ export const packagesTranslations = {
   
   // Common add-ons
   rushDelivery: "Ekspresowa dostawa",
-  rushDeliveryDesc: "Otrzymaj swoją piosenkę 50% szybciej",
-  rushDeliveryPrice: "+50% ceny pakietu",
+  rushDeliveryDesc: "Otrzymaj swoją piosenkę w 24-48 godzin od momentu płatności",
   
-  extraRevision: "Dodatkowa rewizja",
-  extraRevisionDesc: "Jedna dodatkowa rewizja dla perfekcji",
-  extraRevisionPrice: "€25 / 125 RON",
-  
-  extendedLicense: "Rozszerzona licencja",
-  extendedLicenseDesc: "Pełne nieograniczone prawa komercyjne",
-  extendedLicensePrice: "€99 / 499 RON",
-  
-  sourceFiles: "Pliki źródłowe",
-  sourceFilesDesc: "Dostęp do wszystkich plików projektu (stems, MIDI)",
-  sourceFilesPrice: "€75 / 375 RON",
-  
-  // Add-ons
   socialMediaRights: "Prawa do mediów społecznościowych",
   socialMediaRightsDesc: "Uzyskaj prawa do publikowania piosenki na dowolnej platformie mediów społecznościowych. Wymaga akceptacji oznaczenia piosenki jako 'Music Gift by Mango Records'.",
   
@@ -127,7 +113,7 @@ export const packagesTranslations = {
   distributieMangoRecordsDesc: "Profesjonalna dystrybucja przez Mango Records",
   
   customVideo: "Niestandardowe wideo",
-  customVideoDesc: "Spersonalizowane wideo stworzone z Twoimi zdjęciami lub/i filmami dla kompletnego doświadczenia",
+  customVideoDesc: "Animowane wideo dla twojej piosenki z twoimi zdjęciami i filmami",
   
   audioMessageFromSender: "Wiadomość audio od nadawcy",
   audioMessageFromSenderDesc: "Dodaj osobistą wiadomość audio od nadawcy dla dodatkowej niespodzianki",
@@ -144,7 +130,6 @@ export const packagesTranslations = {
   godparentsmelody: "Melodia dla rodziców chrzestnych",
   godparentsmelodyDesc: "Specjalna melodia dla rodziców chrzestnych",
   
-  // New add-on
   separatedStems: "Oddzielne Stemy",
   separatedStemsDesc: "Oryginalny beat + indywidualne pliki ścieżek. Idealny do miksowania, remiksu i synchronizacji wideo. Zawiera prawa komercyjne.",
   
