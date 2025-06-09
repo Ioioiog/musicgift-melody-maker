@@ -120,8 +120,8 @@ export const packagesTranslations = {
   socialMediaRights: "Social Media Rights",
   socialMediaRightsDesc: "Get the rights to post the song on any social media platform. Requires acceptance of tagging the song with 'Music Gift by Mango Records'.",
   
-  distributieMangoRecords: "Mango Records Distribution",
-  distributieMangoRecordsDesc: "Professional distribution through Mango Records",
+  mangoRecordsDistribution: "Mango Records Distribution",
+  mangoRecordsDistributionDesc: "Professional distribution through Mango Records network to all major streaming platforms (Spotify, Apple Music, YouTube Music, etc.)",
   
   customVideo: "Custom Video",
   customVideoDesc: "A personalized video created with your photos or/and videos for a complete experience",

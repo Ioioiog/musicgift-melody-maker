@@ -118,8 +118,8 @@ export const packagesTranslations = {
   socialMediaRights: "Drepturi Social Media",
   socialMediaRightsDesc: "Obții drepturile de a posta melodia pe orice platformă de social media. Necesită acceptarea etichetării melodiei cu 'Music Gift by Mango Records'.",
   
-  distributieMangoRecords: "Distribuție Mango Records",
-  distributieMangoRecordsDesc: "Distribuție profesională prin Mango Records",
+  mangoRecordsDistribution: "Distribuție Mango Records",
+  mangoRecordsDistributionDesc: "Distribuție profesională prin rețeaua Mango Records pe toate platformele majore de streaming (Spotify, Apple Music, YouTube Music, etc.)",
   
   customVideo: "Video personalizat",
   customVideoDesc: "Un video personalizat creat cu fotografiile sau/și videoclipurile tale pentru o experiență completă",
