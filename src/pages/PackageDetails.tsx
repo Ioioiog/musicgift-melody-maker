@@ -530,8 +530,6 @@ const PackageDetails = () => {
                   </CardContent>
                 </Card>
               )}
-
-              <DidYouKnowCarousel facts={didYouKnowFacts} />
             </div>
 
             {/* Sidebar */}
@@ -602,6 +600,11 @@ const PackageDetails = () => {
                 </Card>
               )}
             </div>
+          </div>
+
+          {/* Did You Know Section - Full Width */}
+          <div className="w-full mb-12">
+            <DidYouKnowCarousel facts={didYouKnowFacts} />
           </div>
 
           {/* FAQ Section - Full Width */}
