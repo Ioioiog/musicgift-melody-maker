@@ -145,6 +145,8 @@ export const orderTranslations = {
   invalidUrl: "Please enter a valid URL",
   fileSizeError: "File size must be less than 10MB",
   fileTypeError: "Invalid file type",
+  fieldConfigurationError: "Field configuration error: No options available",
+  unknownFieldType: "Unknown field type: {fieldType}",
   
   // Success messages
   stepCompleted: "Step completed successfully",

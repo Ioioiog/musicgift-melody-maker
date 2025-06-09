@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -184,4 +183,28 @@ export const orderTranslations = {
   // VAT validation errors
   vatCodeTooShort: "Cod TVA prea scurt",
   vatCodeInvalidFormat: "Cod TVA invalid pentru țara selectată",
+  
+  // Form validation and UI
+  required: "Obligatoriu",
+  optional: "Opțional",
+  next: "Următorul",
+  previous: "Anterior",
+  submit: "Trimite Comanda",
+  loading: "Se procesează...",
+  selectOption: "Selectează o opțiune",
+  uploadFile: "Încarcă fișier",
+  chooseDate: "Alege data",
+  
+  // Error messages
+  fieldRequired: "Acest câmp este obligatoriu",
+  invalidEmail: "Te rugăm să introduci o adresă de email validă",
+  invalidUrl: "Te rugăm să introduci un URL valid",
+  fileSizeError: "Dimensiunea fișierului trebuie să fie mai mică de 10MB",
+  fileTypeError: "Tip de fișier invalid",
+  fieldConfigurationError: "Eroare de configurare câmp: Nu sunt opțiuni disponibile",
+  unknownFieldType: "Tip de câmp necunoscut: {fieldType}",
+  
+  // Success messages
+  stepCompleted: "Pasul a fost finalizat cu succes",
+  orderSubmitted: "Comanda a fost trimisă cu succes",
 };
