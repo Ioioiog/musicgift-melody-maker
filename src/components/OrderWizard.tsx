@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -61,21 +62,153 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const selectedPackage = formData.package as string;
   const { data: allPackageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
   
-  // Separate and order the steps: regular steps, then addons, then contact/legal step, then payment
+  // Only get regular package steps (exclude contact/legal as it's now universal)
   const regularSteps = allPackageSteps
     .filter(step => step.title_key !== 'contactDetailsStep')
     .sort((a, b) => a.step_number - b.step_number);
   
-  const contactLegalStep = allPackageSteps.find(step => step.title_key === 'contactDetailsStep');
-  
-  // Build the complete step flow
+  // Build the complete step flow - Contact & Legal is now ALWAYS present
   const totalRegularSteps = regularSteps.length;
   const addonStepIndex = 1 + totalRegularSteps; // After package selection + regular steps
-  const contactLegalStepIndex = contactLegalStep ? addonStepIndex + 1 : -1; // After addons if exists
-  const paymentStepIndex = contactLegalStep ? contactLegalStepIndex + 1 : addonStepIndex + 1; // After contact/legal or addons
+  const contactLegalStepIndex = addonStepIndex + 1; // Always after addons
+  const paymentStepIndex = contactLegalStepIndex + 1; // Always after contact/legal
   const totalSteps = paymentStepIndex + 1;
   
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+
+  // Define standard Contact & Legal step fields
+  const contactLegalStepFields = [
+    {
+      id: 'fullName',
+      field_name: 'fullName',
+      field_type: 'text',
+      label_key: 'fullName',
+      placeholder_key: 'fullName',
+      required: true,
+      field_order: 1
+    },
+    {
+      id: 'email',
+      field_name: 'email',
+      field_type: 'email',
+      label_key: 'email',
+      placeholder_key: 'email',
+      required: true,
+      field_order: 2
+    },
+    {
+      id: 'phone',
+      field_name: 'phone',
+      field_type: 'tel',
+      label_key: 'phone',
+      placeholder_key: 'phone',
+      required: false,
+      field_order: 3
+    },
+    {
+      id: 'address',
+      field_name: 'address',
+      field_type: 'text',
+      label_key: 'address',
+      placeholder_key: 'address',
+      required: false,
+      field_order: 4
+    },
+    {
+      id: 'city',
+      field_name: 'city',
+      field_type: 'text',
+      label_key: 'city',
+      placeholder_key: 'city',
+      required: false,
+      field_order: 5
+    },
+    {
+      id: 'invoiceType',
+      field_name: 'invoiceType',
+      field_type: 'select',
+      label_key: 'invoiceType',
+      placeholder_key: 'invoiceType',
+      required: true,
+      field_order: 6,
+      options: [
+        { value: 'individual', label_key: 'individual' },
+        { value: 'company', label_key: 'company' }
+      ]
+    },
+    {
+      id: 'companyName',
+      field_name: 'companyName',
+      field_type: 'text',
+      label_key: 'companyName',
+      placeholder_key: 'companyName',
+      required: false,
+      field_order: 7
+    },
+    {
+      id: 'vatCode',
+      field_name: 'vatCode',
+      field_type: 'text',
+      label_key: 'vatCode',
+      placeholder_key: 'vatCode',
+      required: false,
+      field_order: 8
+    },
+    {
+      id: 'registrationNumber',
+      field_name: 'registrationNumber',
+      field_type: 'text',
+      label_key: 'registrationNumber',
+      placeholder_key: 'registrationNumber',
+      required: false,
+      field_order: 9
+    },
+    {
+      id: 'companyAddress',
+      field_name: 'companyAddress',
+      field_type: 'text',
+      label_key: 'companyAddress',
+      placeholder_key: 'companyAddress',
+      required: false,
+      field_order: 10
+    },
+    {
+      id: 'representativeName',
+      field_name: 'representativeName',
+      field_type: 'text',
+      label_key: 'representativeName',
+      placeholder_key: 'representativeName',
+      required: false,
+      field_order: 11
+    },
+    {
+      id: 'acceptMentionObligation',
+      field_name: 'acceptMentionObligation',
+      field_type: 'checkbox',
+      label_key: 'acceptMentionObligation',
+      placeholder_key: 'acceptMentionObligation',
+      required: true,
+      field_order: 12
+    },
+    {
+      id: 'acceptDistribution',
+      field_name: 'acceptDistribution',
+      field_type: 'checkbox',
+      label_key: 'acceptDistribution',
+      placeholder_key: 'acceptDistribution',
+      required: true,
+      field_order: 13
+    },
+    {
+      id: 'finalNote',
+      field_name: 'finalNote',
+      field_type: 'checkbox',
+      label_key: 'finalNote',
+      placeholder_key: 'finalNote',
+      required: true,
+      field_order: 14
+    }
+  ];
 
   useEffect(() => {
     if (preselectedPackage && packages.length > 0) {
@@ -470,19 +603,17 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       isCurrent: currentStep === addonStepIndex
     });
 
-    // Contact/Legal Step (if exists)
-    if (contactLegalStep) {
-      const contactStepNumber = addonStepNumber + 1;
-      steps.push({
-        number: contactStepNumber,
-        label: t('contactDetailsStep', 'Contact & Legal'),
-        isCompleted: currentStep > contactLegalStepIndex,
-        isCurrent: currentStep === contactLegalStepIndex
-      });
-    }
+    // Contact & Legal Step - ALWAYS present
+    const contactStepNumber = addonStepNumber + 1;
+    steps.push({
+      number: contactStepNumber,
+      label: t('contactDetailsStep', 'Contact & Legal'),
+      isCompleted: currentStep > contactLegalStepIndex,
+      isCurrent: currentStep === contactLegalStepIndex
+    });
 
     // Payment Step
-    const paymentStepNumber = contactLegalStep ? addonStepNumber + 2 : addonStepNumber + 1;
+    const paymentStepNumber = contactStepNumber + 1;
     steps.push({
       number: paymentStepNumber,
       label: t('payment', 'Payment'),
@@ -495,7 +626,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
 
   // Determine which step we're on
   const isAddonStep = currentStep === addonStepIndex;
-  const isContactLegalStep = contactLegalStep && currentStep === contactLegalStepIndex;
+  const isContactLegalStep = currentStep === contactLegalStepIndex; // Always available now
   const isPaymentStep = currentStep === paymentStepIndex;
   
   const currentPackageStepIndex = currentStep - 1;
@@ -590,7 +721,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                     <h3 className="text-xl font-semibold text-white mb-4">
                       {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
                     </h3>
-                    {contactLegalStep?.fields
+                    {contactLegalStepFields
                       .sort((a, b) => a.field_order - b.field_order)
                       .map(field => (
                         <FormFieldRenderer
