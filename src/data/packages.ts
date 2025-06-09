@@ -1,4 +1,3 @@
-
 export interface PackageData {
   id: string;
   value: string;
@@ -644,7 +643,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "remixDelivery",
     price_ron: 499,
     price_eur: 99,
-    available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo"],
+    available_addons: ["rushDelivery", "mangoRecordsDistribution", "customVideo", "separatedStems"],
     includes: [
       { id: "r1", include_key: "remixInclude1", include_order: 1 },
       { id: "r2", include_key: "remixInclude2", include_order: 2 },
@@ -1138,7 +1137,7 @@ export const addOns: Addon[] = [
     addon_key: "rushDelivery",
     label_key: "rushDelivery",
     description_key: "rushDeliveryDesc",
-    price_ron: 100,
+    price_ron: 99,
     price_eur: 20,
     is_active: true
   },
@@ -1156,7 +1155,7 @@ export const addOns: Addon[] = [
     addon_key: "mangoRecordsDistribution",
     label_key: "mangoRecordsDistribution",
     description_key: "mangoRecordsDistributionDesc",
-    price_ron: 200,
+    price_ron: 199,
     price_eur: 40,
     is_active: true
   },
@@ -1180,7 +1179,7 @@ export const addOns: Addon[] = [
     addon_key: "audioMessageFromSender",
     label_key: "audioMessageFromSender",
     description_key: "audioMessageFromSenderDesc",
-    price_ron: 100,
+    price_ron: 99,
     price_eur: 20,
     is_active: true,
     trigger_field_type: "audio-recorder",
@@ -1206,7 +1205,7 @@ export const addOns: Addon[] = [
     addon_key: "commercialRightsUpgrade",
     label_key: "commercialRightsUpgrade",
     description_key: "commercialRightsUpgradeDesc",
-    price_ron: 400,
+    price_ron: 399,
     price_eur: 80,
     is_active: true
   },
