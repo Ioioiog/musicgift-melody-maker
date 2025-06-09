@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,20 +7,23 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { usePackages } from '@/hooks/usePackageData';
 import { getPackagePrice } from '@/utils/pricing';
-
 interface PackageSelectionStepProps {
   selectedPackage?: string;
   onPackageSelect: (packageValue: string) => void;
 }
-
 const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
   selectedPackage,
   onPackageSelect
 }) => {
-  const { t } = useLanguage();
-  const { currency } = useCurrency();
-  const { data: packages = [] } = usePackages();
-
+  const {
+    t
+  } = useLanguage();
+  const {
+    currency
+  } = useCurrency();
+  const {
+    data: packages = []
+  } = usePackages();
   const getTagColor = (tag?: string) => {
     switch (tag) {
       case 'popular':
@@ -36,7 +38,6 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
         return 'bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-lg border-gray-400/50';
     }
   };
-
   const getTagIcon = (tag?: string) => {
     switch (tag) {
       case 'gift':
@@ -47,16 +48,11 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
         return null;
     }
   };
-
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
-
-  return (
-    <div className="space-y-3">
+  return <div className="space-y-3 py-[45px] my-[9px]">
       <div className="text-center">
-        <h2 className="text-xl font-bold mb-2 bg-gradient-to-r from-orange-400 via-yellow-400 to-orange-400 bg-clip-text text-transparent">
-          {t('selectYourPackage')}
-        </h2>
-        <p className="text-white/90 text-sm">{t('choosePackage')}</p>
+        
+        <p className="text-white/90 text-base font-bold py-0 my-[4px]">{t('choosePackage')}</p>
       </div>
 
       {/* Enhanced Package Select Dropdown */}
@@ -66,22 +62,17 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
             <Select value={selectedPackage} onValueChange={onPackageSelect}>
               <SelectTrigger className="w-full h-12 text-left border-2 border-white/40 hover:border-purple-300/80 focus:border-purple-400 transition-all duration-300 bg-white/15 backdrop-blur-md shadow-lg hover:shadow-xl group">
                 <div className="flex items-center justify-between w-full">
-                  <SelectValue placeholder={
-                    <div className="flex items-center text-white/80 text-sm">
+                  <SelectValue placeholder={<div className="flex items-center text-white/80 text-sm">
                       <span>{t('selectOption')}</span>
-                    </div>
-                  }>
-                    {selectedPackageData && (
-                      <div className="flex items-center justify-between w-full pr-3">
+                    </div>}>
+                    {selectedPackageData && <div className="flex items-center justify-between w-full pr-3">
                         <div className="flex items-center space-x-2">
-                          {selectedPackageData.tag && (
-                            <Badge className={`${getTagColor(selectedPackageData.tag)} text-xs px-2 py-1 font-medium border`}>
+                          {selectedPackageData.tag && <Badge className={`${getTagColor(selectedPackageData.tag)} text-xs px-2 py-1 font-medium border`}>
                               <div className="flex items-center gap-1">
                                 {getTagIcon(selectedPackageData.tag)}
                                 <span>{t(selectedPackageData.tag)}</span>
                               </div>
-                            </Badge>
-                          )}
+                            </Badge>}
                           <div className="font-bold text-white text-sm">
                             {t(selectedPackageData.label_key)}
                           </div>
@@ -89,33 +80,21 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                         <div className="text-sm font-bold bg-gradient-to-r from-orange-300 to-yellow-300 bg-clip-text text-transparent">
                           {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
                         </div>
-                      </div>
-                    )}
+                      </div>}
                   </SelectValue>
                   <ChevronDown className="w-4 h-4 text-white/70 group-hover:text-white transition-colors duration-200" />
                 </div>
               </SelectTrigger>
-              <SelectContent 
-                className="w-full bg-white/95 backdrop-blur-md border-2 border-purple-200/50 shadow-2xl z-[9999] rounded-xl overflow-hidden"
-                side="bottom"
-                position="popper"
-              >
-                {packages.map(pkg => (
-                  <SelectItem 
-                    key={pkg.value} 
-                    value={pkg.value} 
-                    className="p-3 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 focus:bg-gradient-to-r focus:from-purple-50 focus:to-pink-50 cursor-pointer border-b border-gray-100/80 last:border-b-0 mx-1 my-0.5 rounded-lg transition-all duration-200 group"
-                  >
+              <SelectContent className="w-full bg-white/95 backdrop-blur-md border-2 border-purple-200/50 shadow-2xl z-[9999] rounded-xl overflow-hidden" side="bottom" position="popper">
+                {packages.map(pkg => <SelectItem key={pkg.value} value={pkg.value} className="p-3 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 focus:bg-gradient-to-r focus:from-purple-50 focus:to-pink-50 cursor-pointer border-b border-gray-100/80 last:border-b-0 mx-1 my-0.5 rounded-lg transition-all duration-200 group">
                     <div className="flex items-center justify-between w-full">
                       <div className="flex items-center space-x-2 flex-1">
-                        {pkg.tag && (
-                          <Badge className={`${getTagColor(pkg.tag)} text-xs px-2 py-1 shrink-0 font-medium border transition-transform duration-200 group-hover:scale-105`}>
+                        {pkg.tag && <Badge className={`${getTagColor(pkg.tag)} text-xs px-2 py-1 shrink-0 font-medium border transition-transform duration-200 group-hover:scale-105`}>
                             <div className="flex items-center gap-1">
                               {getTagIcon(pkg.tag)}
                               <span>{t(pkg.tag)}</span>
                             </div>
-                          </Badge>
-                        )}
+                          </Badge>}
                         <div className="font-medium text-gray-900 text-sm group-hover:text-gray-700 transition-colors duration-200">
                           {t(pkg.label_key)}
                         </div>
@@ -124,13 +103,10 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                         <div className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                           {currency === 'EUR' ? '€' : ''}{getPackagePrice(pkg, currency)}{currency === 'RON' ? ' RON' : ''}
                         </div>
-                        {selectedPackage === pkg.value && (
-                          <Check className="w-4 h-4 text-green-600 animate-pulse" />
-                        )}
+                        {selectedPackage === pkg.value && <Check className="w-4 h-4 text-green-600 animate-pulse" />}
                       </div>
                     </div>
-                  </SelectItem>
-                ))}
+                  </SelectItem>)}
               </SelectContent>
             </Select>
           </CardContent>
@@ -138,8 +114,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
       </div>
 
       {/* Enhanced Selected Package Summary */}
-      {selectedPackageData && (
-        <div className="max-w-lg mx-auto">
+      {selectedPackageData && <div className="max-w-lg mx-auto">
           <Card className="bg-gradient-to-br from-emerald-500/25 via-teal-500/20 to-cyan-500/25 backdrop-blur-lg border-2 border-emerald-300/40 shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 animate-fade-in">
             <CardContent className="p-3">
               <div className="flex items-center justify-between">
@@ -161,22 +136,17 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                   <div className="text-lg font-bold bg-gradient-to-r from-orange-300 via-yellow-300 to-amber-300 bg-clip-text text-transparent">
                     {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
                   </div>
-                  {selectedPackageData.tag && (
-                    <Badge className={`${getTagColor(selectedPackageData.tag)} mt-1 text-xs px-2 py-1 font-medium border`}>
+                  {selectedPackageData.tag && <Badge className={`${getTagColor(selectedPackageData.tag)} mt-1 text-xs px-2 py-1 font-medium border`}>
                       <div className="flex items-center gap-1">
                         {getTagIcon(selectedPackageData.tag)}
                         <span>{t(selectedPackageData.tag)}</span>
                       </div>
-                    </Badge>
-                  )}
+                    </Badge>}
                 </div>
               </div>
             </CardContent>
           </Card>
-        </div>
-      )}
-    </div>
-  );
+        </div>}
+    </div>;
 };
-
 export default PackageSelectionStep;
