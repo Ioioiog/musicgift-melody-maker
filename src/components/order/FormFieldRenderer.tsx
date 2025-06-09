@@ -19,6 +19,7 @@ import { getAddonPrice } from '@/utils/pricing';
 import { Addon, Package } from '@/types';
 import AudioRecorder from './AudioRecorder';
 import { getVatValidationError } from '@/utils/vatValidation';
+
 interface FieldOption {
   value: string;
   label_key: string;
@@ -236,7 +237,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       case 'date':
         return <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className={cn("w-full h-8 justify-start text-left font-normal border-2 border-gray-300 bg-white hover:border-orange-300 text-xs", !date && "text-muted-foreground")}>
+              <Button variant="outline" className={cn("w-full h-6 justify-start text-left font-normal border-2 border-gray-300 bg-white hover:border-orange-300 text-xs", !date && "text-muted-foreground")}>
                 <CalendarIcon className="mr-2 h-3 w-3" />
                 {date ? format(date, "PPP") : <span>{field.placeholder_key ? t(field.placeholder_key) : t('pickDate')}</span>}
               </Button>
