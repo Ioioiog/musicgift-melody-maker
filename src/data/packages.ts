@@ -724,6 +724,181 @@ export const packages = [
         ]
       }
     ]
+  },
+  {
+    id: "gift",
+    value: "gift",
+    label_key: "giftPackage",
+    tagline_key: "giftTagline", 
+    description_key: "giftDescription",
+    price_ron: 299,
+    price_eur: 75,
+    delivery_time_key: "delivery14Days",
+    tag: "gift",
+    is_active: true,
+    includes: [
+      { include_key: "professionalComposition", include_order: 1 },
+      { include_key: "personalizedLyrics", include_order: 2 },
+      { include_key: "highQualityRecording", include_order: 3 },
+      { include_key: "mp3Download", include_order: 4 }
+    ],
+    available_addons: ["rushDelivery", "extraRevision"],
+    steps: []
+  },
+  {
+    id: "business",
+    value: "business",
+    label_key: "businessPackage",
+    tagline_key: "businessTagline",
+    description_key: "businessDescription", 
+    price_ron: 999,
+    price_eur: 250,
+    delivery_time_key: "delivery30Days",
+    tag: "business",
+    is_active: true,
+    includes: [
+      { include_key: "professionalComposition", include_order: 1 },
+      { include_key: "personalizedLyrics", include_order: 2 },
+      { include_key: "highQualityRecording", include_order: 3 },
+      { include_key: "commercialRights", include_order: 4 },
+      { include_key: "mp3Download", include_order: 5 }
+    ],
+    available_addons: ["rushDelivery", "extraRevision", "customVideo"],
+    steps: []
+  },
+  {
+    id: "remix",
+    value: "remix", 
+    label_key: "remixPackage",
+    tagline_key: "remixTagline",
+    description_key: "remixDescription",
+    price_ron: 199,
+    price_eur: 50,
+    delivery_time_key: "delivery7Days",
+    is_active: true,
+    includes: [
+      { include_key: "professionalRemix", include_order: 1 },
+      { include_key: "mp3Download", include_order: 2 }
+    ],
+    available_addons: ["rushDelivery"],
+    steps: []
+  },
+  {
+    id: "instrumental",
+    value: "instrumental",
+    label_key: "instrumentalPackage", 
+    tagline_key: "instrumentalTagline",
+    description_key: "instrumentalDescription",
+    price_ron: 399,
+    price_eur: 100,
+    delivery_time_key: "delivery14Days", 
+    is_active: true,
+    includes: [
+      { include_key: "professionalComposition", include_order: 1 },
+      { include_key: "instrumentalOnly", include_order: 2 },
+      { include_key: "mp3Download", include_order: 3 }
+    ],
+    available_addons: ["rushDelivery", "extraRevision"],
+    steps: []
+  },
+  {
+    id: "wedding",
+    value: "wedding",
+    label_key: "weddingPackage",
+    tagline_key: "weddingTagline", 
+    description_key: "weddingDescription",
+    price_ron: 599,
+    price_eur: 150,
+    delivery_time_key: "delivery21Days",
+    is_active: true,
+    includes: [
+      { include_key: "professionalComposition", include_order: 1 },
+      { include_key: "personalizedLyrics", include_order: 2 },
+      { include_key: "highQualityRecording", include_order: 3 },
+      { include_key: "weddingSpecial", include_order: 4 },
+      { include_key: "mp3Download", include_order: 5 }
+    ],
+    available_addons: ["rushDelivery", "extraRevision", "customVideo"],
+    steps: []
+  },
+  {
+    id: "baptism", 
+    value: "baptism",
+    label_key: "baptismPackage",
+    tagline_key: "baptismTagline",
+    description_key: "baptismDescription",
+    price_ron: 399,
+    price_eur: 100, 
+    delivery_time_key: "delivery14Days",
+    is_active: true,
+    includes: [
+      { include_key: "professionalComposition", include_order: 1 },
+      { include_key: "personalizedLyrics", include_order: 2 },
+      { include_key: "highQualityRecording", include_order: 3 },
+      { include_key: "mp3Download", include_order: 4 }
+    ],
+    available_addons: ["rushDelivery", "extraRevision"],
+    steps: []
+  },
+  {
+    id: "comingOfAge",
+    value: "comingOfAge", 
+    label_key: "comingOfAgePackage",
+    tagline_key: "comingOfAgeTagline",
+    description_key: "comingOfAgeDescription",
+    price_ron: 399,
+    price_eur: 100,
+    delivery_time_key: "delivery14Days",
+    is_active: true,
+    includes: [
+      { include_key: "professionalComposition", include_order: 1 },
+      { include_key: "personalizedLyrics", include_order: 2 },
+      { include_key: "highQualityRecording", include_order: 3 },
+      { include_key: "mp3Download", include_order: 4 }
+    ],
+    available_addons: ["rushDelivery", "extraRevision"],
+    steps: []
+  },
+  {
+    id: "artist",
+    value: "artist",
+    label_key: "artistPackage",
+    tagline_key: "artistTagline",
+    description_key: "artistDescription", 
+    price_ron: 1299,
+    price_eur: 325,
+    delivery_time_key: "delivery45Days",
+    is_active: true,
+    includes: [
+      { include_key: "professionalComposition", include_order: 1 },
+      { include_key: "personalizedLyrics", include_order: 2 },
+      { include_key: "highQualityRecording", include_order: 3 },
+      { include_key: "globalDistribution", include_order: 4 },
+      { include_key: "commercialRights", include_order: 5 },
+      { include_key: "mp3Download", include_order: 6 }
+    ],
+    available_addons: ["rushDelivery", "extraRevision", "customVideo", "separatedStems"],
+    steps: []
+  },
+  {
+    id: "plus",
+    value: "plus",
+    label_key: "plusPackage", 
+    tagline_key: "plusTagline",
+    description_key: "plusDescription",
+    price_ron: 499,
+    price_eur: 125,
+    delivery_time_key: "delivery14Days",
+    is_active: true,
+    includes: [
+      { include_key: "professionalComposition", include_order: 1 },
+      { include_key: "personalizedLyrics", include_order: 2 },
+      { include_key: "highQualityRecording", include_order: 3 },
+      { include_key: "extraRevisionIncluded", include_order: 4 },
+      { include_key: "mp3Download", include_order: 5 }
+    ],
+    available_addons: ["rushDelivery", "socialMediaRights"],
+    steps: []
   }
 ];
 
