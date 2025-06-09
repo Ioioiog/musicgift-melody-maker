@@ -64,8 +64,8 @@ const Packages = () => {
       </div>;
   };
 
-  // Define the desired order for packages - updated to include new special event packages
-  const packageOrder = ['personal', 'premium', 'business', 'instrumental', 'remix', 'gift', 'wedding', 'baptism', 'coming-of-age', 'plus', 'artist'];
+  // Define the desired order for packages - updated to your requested order
+  const packageOrder = ['personal', 'premium', 'gift', 'business', 'remix', 'instrumental', 'wedding', 'baptism', 'comingOfAge', 'artist', 'plus'];
 
   // Sort packages according to the defined order
   const sortedPackages = packages?.sort((a, b) => {
