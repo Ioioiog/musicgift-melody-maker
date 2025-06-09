@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 
 export interface PackageData {
@@ -10,6 +11,9 @@ export interface PackageData {
   price_ron: number;
   price_eur: number;
   available_addons: string[];
+  tag?: string;
+  is_active?: boolean;
+  is_popular?: boolean;
   includes: Array<{
     id: string;
     include_key: string;
