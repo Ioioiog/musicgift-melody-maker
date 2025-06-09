@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -59,7 +58,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const selectedPackage = formData.package as string;
   const { data: packageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
   
-  const totalSteps = 1 + (packageSteps?.length || 0) + 1;
+  const totalSteps = 1 + 1 + (packageSteps?.length || 0) + 1; // package + addons + form steps + payment
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
 
   useEffect(() => {
@@ -70,14 +69,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       }
       
       setFormData(prev => ({ ...prev, package: preselectedPackage }));
-      setCurrentStep(1);
+      setCurrentStep(1); // Go to addon step
     }
   }, [packages, preselectedPackage, navigate]);
 
   const handleNext = () => {
     if (currentStep === 0) {
       if (!formData.package) return;
-      setCurrentStep(1);
+      setCurrentStep(1); // Go to addon step
     } else if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     }
@@ -413,13 +412,18 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     }
   };
 
+  const isAddonStep = currentStep === 1;
   const isPaymentStep = currentStep === totalSteps - 1;
-  const currentPackageStepIndex = currentStep - 1;
-  const currentStepData = currentStep > 0 && !isPaymentStep ? packageSteps?.[currentPackageStepIndex] : null;
+  const currentPackageStepIndex = currentStep - 2; // Account for package step (0) and addon step (1)
+  const currentStepData = currentStep > 1 && !isPaymentStep ? packageSteps?.[currentPackageStepIndex] : null;
 
   const canProceed = () => {
     if (currentStep === 0) {
       return !!formData.package;
+    }
+    if (currentStep === 1) {
+      // Addon step - always allow proceeding (addons are optional)
+      return true;
     }
     if (isPaymentStep) {
       return !!selectedPaymentProvider;
@@ -457,28 +461,39 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                     selectedPackage={formData.package}
                     onPackageSelect={handlePackageSelect}
                   />
+                ) : isAddonStep ? (
+                  <AddonSelectionStep
+                    selectedPackageData={selectedPackageData}
+                    selectedAddons={selectedAddons}
+                    onAddonChange={handleAddonChange}
+                    availableAddons={addons}
+                    addonFieldValues={addonFieldValues}
+                    onAddonFieldChange={handleAddonFieldChange}
+                  />
                 ) : isPaymentStep ? (
                   <PaymentProviderSelection
                     selectedProvider={selectedPaymentProvider}
                     onProviderSelect={setSelectedPaymentProvider}
                   />
                 ) : currentStepData ? (
-                  currentStepData.fields.map(field => (
-                    <FormFieldRenderer
-                      key={field.id}
-                      field={field}
-                      value={formData[field.field_name]}
-                      onChange={(value) => handleInputChange(field.field_name, value)}
-                      selectedAddons={selectedAddons}
-                      onAddonChange={handleAddonChange}
-                      availableAddons={addons}
-                      addonFieldValues={addonFieldValues}
-                      onAddonFieldChange={handleAddonFieldChange}
-                      selectedPackage={selectedPackage}
-                      selectedPackageData={selectedPackageData}
-                      formData={formData}
-                    />
-                  ))
+                  currentStepData.fields
+                    .filter(field => field.field_type !== 'checkbox-group') // Remove addon fields from regular steps
+                    .map(field => (
+                      <FormFieldRenderer
+                        key={field.id}
+                        field={field}
+                        value={formData[field.field_name]}
+                        onChange={(value) => handleInputChange(field.field_name, value)}
+                        selectedAddons={selectedAddons}
+                        onAddonChange={handleAddonChange}
+                        availableAddons={addons}
+                        addonFieldValues={addonFieldValues}
+                        onAddonFieldChange={handleAddonFieldChange}
+                        selectedPackage={selectedPackage}
+                        selectedPackageData={selectedPackageData}
+                        formData={formData}
+                      />
+                    ))
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-white/70">{t('loadingSteps')}</p>
@@ -500,7 +515,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
             </Button>
             <Button
               onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
-              disabled={!canProceed() || (currentStep > 0 && !isPaymentStep && isStepsLoading) || isSubmitting}
+              disabled={!canProceed() || (currentStep > 1 && !isPaymentStep && isStepsLoading) || isSubmitting}
               className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
             >
               {isSubmitting ? (
