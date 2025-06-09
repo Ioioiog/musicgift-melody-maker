@@ -35,7 +35,6 @@ export const personalPackages: Package[] = [
     delivery_time_key: "delivery21Days",
     tag: "premium",
     is_active: true,
-    premium: true,
     includes: [
       { include_key: "professionalComposition", include_order: 1 },
       { include_key: "personalizedLyrics", include_order: 2 },
