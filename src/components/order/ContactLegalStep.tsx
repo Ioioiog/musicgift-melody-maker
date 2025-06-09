@@ -1,7 +1,7 @@
+
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent } from '@/components/ui/card';
-import { useIsMobile } from '@/hooks/use-mobile';
 import FormFieldRenderer from './FormFieldRenderer';
 
 interface ContactLegalStepProps {
@@ -28,7 +28,6 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
   selectedPackageData
 }) => {
   const { t } = useLanguage();
-  const isMobile = useIsMobile();
 
   const contactLegalStepFields = [
     {
@@ -165,16 +164,14 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
 
   return (
     <div className="space-y-1">
-      {!isMobile && (
-        <div className="text-center">
-          <h3 className="text-base font-semibold text-white mb-1">
-            {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
-          </h3>
-          <p className="text-white/70 text-sm">
-            {t('fillContactAndLegalInfo', 'Fill in your contact details and accept the legal terms')}
-          </p>
-        </div>
-      )}
+      <div className="text-center">
+        <h3 className="text-base font-semibold text-white mb-1">
+          {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
+        </h3>
+        <p className="text-white/70 text-sm">
+          {t('fillContactAndLegalInfo', 'Fill in your contact details and accept the legal terms')}
+        </p>
+      </div>
 
       {contactLegalStepFields
         .sort((a, b) => a.field_order - b.field_order)
