@@ -39,29 +39,31 @@ const DidYouKnowCarousel = ({ facts }: DidYouKnowCarouselProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Carousel
-          plugins={[plugin.current]}
-          className="w-full"
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          onMouseEnter={plugin.current.stop}
-          onMouseLeave={plugin.current.reset}
-        >
-          <CarouselContent>
-            {facts.map((fact, index) => (
-              <CarouselItem key={index} className="basis-full">
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10 min-h-[120px] flex flex-col justify-center">
-                  <h4 className="font-semibold text-white mb-2">{fact.title}</h4>
-                  <p className="text-white/80 text-sm leading-relaxed">{fact.description}</p>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="left-2 bg-white/10 border-white/20 text-white hover:bg-white/20" />
-          <CarouselNext className="right-2 bg-white/10 border-white/20 text-white hover:bg-white/20" />
-        </Carousel>
+        <div className="px-12">
+          <Carousel
+            plugins={[plugin.current]}
+            className="w-full"
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
+          >
+            <CarouselContent>
+              {facts.map((fact, index) => (
+                <CarouselItem key={index} className="basis-full">
+                  <div className="p-4 rounded-lg bg-white/5 border border-white/10 min-h-[120px] flex flex-col justify-center">
+                    <h4 className="font-semibold text-white mb-2">{fact.title}</h4>
+                    <p className="text-white/80 text-sm leading-relaxed">{fact.description}</p>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="-left-6 bg-white/10 border-white/20 text-white hover:bg-white/20" />
+            <CarouselNext className="-right-6 bg-white/10 border-white/20 text-white hover:bg-white/20" />
+          </Carousel>
+        </div>
         
         {/* Indicators */}
         <div className="flex justify-center mt-4 space-x-2">
