@@ -82,6 +82,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     }
   }, [selectedPackage, selectedAddons, formData, addonFieldValues, onOrderDataChange]);
 
+  // Auto-scroll to top when step changes to show step indicator
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, [currentStep]);
+
   // Only get regular package steps (exclude contact/legal as it's now universal)
   const regularSteps = allPackageSteps.filter(step => step.title_key !== 'contactDetailsStep').sort((a, b) => a.step_number - b.step_number);
 
