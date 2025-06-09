@@ -408,7 +408,7 @@ const PackageDetails = () => {
   const packageFeatures = getPackageFeatures(packageData.value);
   const didYouKnowFacts = getDidYouKnowFacts(packageData.value);
   const availableAddOns = getAvailableAddOns();
-  const relatedPackages = packages?.filter(pkg => pkg.value !== packageData.value).slice(0, 2);
+  const relatedPackages = packages?.filter(pkg => pkg.value !== packageData.value);
 
   return (
     <div className="min-h-screen">
@@ -610,20 +610,37 @@ const PackageDetails = () => {
                   <CardHeader>
                     <CardTitle className="text-white">{t('otherPackages', 'Other Packages')}</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    {relatedPackages.map((pkg) => (
-                      <Link key={pkg.value} to={`/packages/${pkg.value}`}>
-                        <div className="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                          <h4 className="font-semibold text-white text-sm">{t(pkg.label_key)}</h4>
-                          <p className="text-white/70 text-xs">
-                            {pkg.value === 'gift' 
-                              ? `${t('startingFrom', 'Starting from')} ${currency === 'EUR' ? '€59' : '299 RON'}`
-                              : `${currency === 'EUR' ? '€' : 'RON'} ${getPackagePrice(pkg)}`
-                            }
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-1 gap-3 max-h-96 overflow-y-auto">
+                      {relatedPackages.map((pkg) => (
+                        <Link key={pkg.value} to={`/packages/${pkg.value}`}>
+                          <div className="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
+                            <div className="flex justify-between items-center">
+                              <div className="flex-1">
+                                <h4 className="font-semibold text-white text-sm mb-1">{t(pkg.label_key)}</h4>
+                                <p className="text-white/70 text-xs">
+                                  {pkg.value === 'gift' 
+                                    ? `${t('startingFrom', 'Starting from')} ${currency === 'EUR' ? '€59' : '299 RON'}`
+                                    : `${currency === 'EUR' ? '€' : 'RON'} ${getPackagePrice(pkg)}`
+                                  }
+                                </p>
+                              </div>
+                              {pkg.tag === 'popular' && (
+                                <Badge variant="secondary" className="ml-2 text-xs">
+                                  <Star className="w-3 h-3 mr-1" />
+                                  Popular
+                                </Badge>
+                              )}
+                              {pkg.tag === 'new' && (
+                                <Badge variant="outline" className="ml-2 text-xs text-white border-white/30">
+                                  New
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               )}
