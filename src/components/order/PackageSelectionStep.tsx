@@ -56,8 +56,8 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
 
       {/* Enhanced Compact Package Select Dropdown */}
       <div className="max-w-lg mx-auto">
-        <Card className="bg-gradient-to-br from-indigo-500/30 via-purple-500/25 to-pink-500/30 backdrop-blur-lg border-2 border-white/30 shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-[1.02]">
-          <CardContent className="p-3 bg-white/30 backdrop-blur-sm">
+        <Card className="bg-gradient-to-br from-white-500/30 via-purple-500/25 to-pink-500/30 backdrop-blur-lg border-2 -bottom-0 shadow-1xl hover:shadow-white-500/25 transition-all duration-300 hover:scale-[1.02] py-0 px-0 px-0 my-0 ">
+          <CardContent className="p-3 bg-orange-500/30 backdrop-blur-sm">
             <Select value={selectedPackage} onValueChange={onPackageSelect}>
               <SelectTrigger className="w-full h-8 text-left border-2 border-white/40 hover:border-purple-300/80 focus:border-purple-400 transition-all duration-300 bg-white/15 backdrop-blur-md shadow-lg hover:shadow-xl">
                 <SelectValue placeholder={<span className="text-white/80 text-sm">{t('selectOption')}</span>}>
@@ -79,7 +79,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                     </div>}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="w-full bg-white/30 backdrop-blur-sm border-2 border-purple-200/50 shadow-2xl z-[9999] rounded-xl overflow-hidden" side="bottom">
+              <SelectContent className="w-full bg-white/95 backdrop-blur-md border-2 border-purple-200/50 shadow-2xl z-[9999] rounded-xl overflow-hidden" side="bottom">
                 {packages.map(pkg => <SelectItem key={pkg.value} value={pkg.value} className="p-2 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 focus:bg-gradient-to-r focus:from-purple-50 focus:to-pink-50 cursor-pointer border-b border-gray-100/80 last:border-b-0 mx-1 my-0.5 rounded-lg transition-all duration-200 group h-auto min-h-[2rem]">
                     <div className="flex items-center justify-between w-full gap-4">
                       <div className="flex items-center space-x-2 flex-1 min-w-0">
@@ -109,7 +109,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
 
       {/* Enhanced Selected Package Summary */}
       {selectedPackageData && <div className="max-w-lg mx-auto">
-          <Card className="bg-orange-500/30 backdrop-blur-sm border-2 border-emerald-300/40 shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 animate-fade-in">
+          <Card className="bg-gradient-to-br from-emerald-500/25 via-teal-500/20 to-cyan-500/25 backdrop-blur-lg border-2 border-emerald-300/40 shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 animate-fade-in">
             <CardContent className="p-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
