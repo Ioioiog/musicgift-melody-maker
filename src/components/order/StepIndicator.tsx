@@ -2,6 +2,7 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { cn } from '@/lib/utils';
 
 interface StepInfo {
   number: number;
@@ -12,13 +13,14 @@ interface StepInfo {
 
 interface StepIndicatorProps {
   steps: StepInfo[];
+  className?: string;
 }
 
-const StepIndicator: React.FC<StepIndicatorProps> = ({ steps }) => {
+const StepIndicator: React.FC<StepIndicatorProps> = ({ steps, className }) => {
   const { t } = useLanguage();
 
   return (
-    <div className="mb-12">
+    <div className={cn("mb-12", className)}>
       {/* Progress Bar Background */}
       <div className="relative mb-8">
         <div className="absolute top-5 left-0 w-full h-0.5 bg-gray-200 rounded-full" />
