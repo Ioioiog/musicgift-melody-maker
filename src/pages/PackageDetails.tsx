@@ -408,7 +408,20 @@ const PackageDetails = () => {
   const packageFeatures = getPackageFeatures(packageData.value);
   const didYouKnowFacts = getDidYouKnowFacts(packageData.value);
   const availableAddOns = getAvailableAddOns();
+  
+  // Debug logging for related packages
+  console.log('=== PACKAGE DEBUG INFO ===');
+  console.log('Current package:', packageData.value);
+  console.log('All packages:', packages?.map(p => ({ value: p.value, label_key: p.label_key })));
+  console.log('All package values:', packages?.map(p => p.value));
+  
   const relatedPackages = packages?.filter(pkg => pkg.value !== packageData.value);
+  console.log('Related packages (filtered):', relatedPackages?.map(p => ({ 
+    value: p.value, 
+    label_key: p.label_key,
+    translation: t(p.label_key)
+  })));
+  console.log('Related packages count:', relatedPackages?.length);
 
   return (
     <div className="min-h-screen">
@@ -611,13 +624,13 @@ const PackageDetails = () => {
                     <CardTitle className="text-white">{t('otherPackages', 'Other Packages')}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <div className="grid grid-cols-1 gap-3 max-h-96 overflow-y-auto">
+                    <div className="grid grid-cols-1 gap-3">
                       {relatedPackages.map((pkg) => (
                         <Link key={pkg.value} to={`/packages/${pkg.value}`}>
                           <div className="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
                             <div className="flex justify-between items-center">
                               <div className="flex-1">
-                                <h4 className="font-semibold text-white text-sm mb-1">{t(pkg.label_key)}</h4>
+                                <h4 className="font-semibold text-white text-sm mb-1">{t(pkg.label_key, pkg.value)}</h4>
                                 <p className="text-white/70 text-xs">
                                   {pkg.value === 'gift' 
                                     ? `${t('startingFrom', 'Starting from')} ${currency === 'EUR' ? '€59' : '299 RON'}`
