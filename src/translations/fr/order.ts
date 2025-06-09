@@ -164,10 +164,11 @@ export const orderTranslations = {
   moodEmotional: "Émotionnel",
   moodUplifting: "Revigorant",
   
-  // Language options
+  // Language options - adding Italian
   romanianLanguage: "Roumain",
   englishLanguage: "Anglais",
   frenchLanguage: "Français",
+  italianLanguage: "Italien",
   
   // Dedication message
   dedicationMessageLabel: "Message Personnel de Dédicace",

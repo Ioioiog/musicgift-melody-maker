@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   // Existing order translations
   choosePackage: "Choose Package",
@@ -163,5 +164,11 @@ export const orderTranslations = {
   packageContextGift: "Musical gift card",
   packageContextWedding: "Unique wedding dance song",
   packageContextBaptism: "Personalized baptism melody",
-  packageContextComingOfAge: "18th birthday anthem"
+  packageContextComingOfAge: "18th birthday anthem",
+
+  // Language options - adding Italian
+  romanianLanguage: "Romanian",
+  englishLanguage: "English", 
+  frenchLanguage: "French",
+  italianLanguage: "Italian"
 };
