@@ -57,11 +57,11 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
 
       {/* Professional Package Selection Card */}
       <div className="max-w-lg mx-auto">
-        <Card className="bg-white/95 backdrop-blur-sm border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01]">
+        <Card className="bg-white/20 backdrop-blur-md border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] hover:bg-white/25">
           <CardContent className="p-4">
             <Select value={selectedPackage} onValueChange={onPackageSelect}>
-              <SelectTrigger className="w-full h-12 text-left border border-gray-300 hover:border-orange-400 focus:border-orange-500 transition-all duration-300 bg-white shadow-sm hover:shadow-md">
-                <SelectValue placeholder={<span className="text-gray-500 text-sm">{t('selectOption')}</span>}>
+              <SelectTrigger className="w-full h-12 text-left border border-white/40 hover:border-orange-400 focus:border-orange-500 transition-all duration-300 bg-white/30 backdrop-blur-sm shadow-sm hover:shadow-md hover:bg-white/40">
+                <SelectValue placeholder={<span className="text-gray-700 text-sm font-medium">{t('selectOption')}</span>}>
                   {selectedPackageData && <div className="flex items-center justify-between w-full">
                       <div className="flex items-center space-x-3">
                         {selectedPackageData.tag && <Badge className={`${getTagColor(selectedPackageData.tag)} text-xs px-2 py-1 font-medium`}>
@@ -80,8 +80,8 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                     </div>}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="w-full bg-white backdrop-blur-sm border border-gray-200 shadow-xl z-[9999] rounded-lg overflow-hidden" side="bottom">
-                {packages.map(pkg => <SelectItem key={pkg.value} value={pkg.value} className="p-3 hover:bg-orange-50 focus:bg-orange-50 cursor-pointer border-b border-gray-100 last:border-b-0 mx-1 my-0.5 rounded-md transition-all duration-200 group h-auto min-h-[3rem]">
+              <SelectContent className="w-full bg-white/90 backdrop-blur-md border border-white/40 shadow-xl z-[9999] rounded-lg overflow-hidden" side="bottom">
+                {packages.map(pkg => <SelectItem key={pkg.value} value={pkg.value} className="p-3 hover:bg-orange-50/80 focus:bg-orange-50/80 cursor-pointer border-b border-gray-100/50 last:border-b-0 mx-1 my-0.5 rounded-md transition-all duration-200 group h-auto min-h-[3rem]">
                     <div className="flex items-center justify-between w-full gap-4">
                       <div className="flex items-center space-x-3 flex-1 min-w-0">
                         {pkg.tag && <Badge className={`${getTagColor(pkg.tag)} text-xs px-2 py-1 shrink-0 font-medium transition-transform duration-200 group-hover:scale-105`}>
@@ -110,18 +110,18 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
 
       {/* Professional Selected Package Summary */}
       {selectedPackageData && <div className="max-w-lg mx-auto">
-          <Card className="bg-white/95 backdrop-blur-sm border-l-4 border-l-orange-500 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
+          <Card className="bg-white/20 backdrop-blur-md border-l-4 border-l-orange-500 border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/25">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="bg-orange-100 rounded-full p-2">
+                  <div className="bg-orange-100/80 backdrop-blur-sm rounded-full p-2">
                     <Check className="w-4 h-4 text-orange-600" />
                   </div>
                   <div>
                     <span className="text-gray-900 font-semibold text-sm">
                       {t('selected')}: {t(selectedPackageData.label_key)}
                     </span>
-                    <div className="flex items-center gap-2 text-xs text-gray-600 mt-1">
+                    <div className="flex items-center gap-2 text-xs text-gray-700 mt-1">
                       <Clock className="w-3 h-3 text-orange-500" />
                       <span>{t(selectedPackageData.delivery_time_key)}</span>
                     </div>
