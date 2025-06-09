@@ -184,6 +184,37 @@ export const packages: PackageData[] = [
     ]
   },
   {
+    id: "10",
+    value: "test",
+    label_key: "testPackage",
+    tagline_key: "testTagline",
+    description_key: "testDescription",
+    delivery_time_key: "testDelivery",
+    price_ron: 1,
+    price_eur: 0.5,
+    available_addons: ["rushDelivery"],
+    includes: [
+      { id: "t1", include_key: "testInclude1", include_order: 1 }
+    ],
+    steps: [
+      {
+        id: "test_step1",
+        step_number: 1,
+        title_key: "testDetails",
+        fields: [
+          {
+            id: "testField",
+            field_name: "testField",
+            field_type: "text",
+            placeholder_key: "testFieldPlaceholder",
+            required: true,
+            field_order: 1
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "2",
     value: "premium",
     label_key: "premiumPackage",
