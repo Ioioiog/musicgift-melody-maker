@@ -1,3 +1,4 @@
+
 import type { Field, Step, FieldOption, Addon } from '@/types';
 
 export interface PackageInclude {
@@ -53,6 +54,1048 @@ export interface AddOn {
   price_eur: number;
   availableFor: string[];
 }
+
+// Personal Package Order Flow
+const personalOrderFlow: OrderFlow = {
+  steps: [
+    {
+      id: "personal-step-1",
+      step_number: 1,
+      title_key: "generalDetails",
+      fields: [
+        {
+          id: "personal_recipient_name",
+          field_name: "recipientName",
+          field_type: "text",
+          placeholder_key: "recipientName",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "personal_relationship",
+          field_name: "relationship",
+          field_type: "select",
+          placeholder_key: "relationship",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "personal_occasion",
+          field_name: "occasion",
+          field_type: "select",
+          placeholder_key: "occasion",
+          required: true,
+          field_order: 3
+        },
+        {
+          id: "personal_event_date",
+          field_name: "eventDate",
+          field_type: "date",
+          placeholder_key: "eventDate",
+          required: false,
+          field_order: 4
+        },
+        {
+          id: "personal_song_language",
+          field_name: "songLanguage",
+          field_type: "select",
+          placeholder_key: "songLanguage",
+          required: true,
+          field_order: 5
+        },
+        {
+          id: "personal_pronunciation_audio_recipient",
+          field_name: "pronunciationAudio_recipient",
+          field_type: "file",
+          placeholder_key: "pronunciationAudioRecipient",
+          required: false,
+          field_order: 6
+        }
+      ]
+    },
+    {
+      id: "personal-step-2",
+      step_number: 2,
+      title_key: "storyAndEmotionalDetails",
+      fields: [
+        {
+          id: "personal_story",
+          field_name: "story",
+          field_type: "textarea",
+          placeholder_key: "story",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "personal_emotional_tone",
+          field_name: "emotionalTone",
+          field_type: "select",
+          placeholder_key: "emotionalTone",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "personal_key_moments",
+          field_name: "keyMoments",
+          field_type: "textarea",
+          placeholder_key: "keyMoments",
+          required: true,
+          field_order: 3
+        },
+        {
+          id: "personal_special_words",
+          field_name: "specialWords",
+          field_type: "textarea",
+          placeholder_key: "specialWords",
+          required: false,
+          field_order: 4
+        },
+        {
+          id: "personal_pronunciation_audio_keywords",
+          field_name: "pronunciationAudio_keywords",
+          field_type: "file",
+          placeholder_key: "pronunciationAudioKeywords",
+          required: false,
+          field_order: 5
+        }
+      ]
+    },
+    {
+      id: "personal-step-3",
+      step_number: 3,
+      title_key: "musicalPreferences",
+      fields: [
+        {
+          id: "personal_music_style",
+          field_name: "musicStyle",
+          field_type: "select",
+          placeholder_key: "musicStyle",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "personal_voice_preference",
+          field_name: "voice_preference",
+          field_type: "radio",
+          required: true,
+          field_order: 2,
+          options: [
+            { value: "female", label_key: "voiceFemale" },
+            { value: "male", label_key: "voiceMale" }
+          ]
+        },
+        {
+          id: "personal_reference_song",
+          field_name: "referenceSong",
+          field_type: "url",
+          placeholder_key: "referenceSong",
+          required: false,
+          field_order: 3
+        }
+      ]
+    },
+    {
+      id: "personal-step-4",
+      step_number: 4,
+      title_key: "confirmation",
+      fields: [
+        {
+          id: "personal_full_name",
+          field_name: "fullName",
+          field_type: "text",
+          placeholder_key: "fullName",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "personal_email",
+          field_name: "email",
+          field_type: "email",
+          placeholder_key: "email",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "personal_phone",
+          field_name: "phone",
+          field_type: "tel",
+          placeholder_key: "phone",
+          required: false,
+          field_order: 3
+        },
+        {
+          id: "personal_accept_mention_obligation",
+          field_name: "acceptMentionObligation",
+          field_type: "checkbox",
+          placeholder_key: "acceptMentionObligation",
+          required: true,
+          field_order: 4
+        }
+      ]
+    }
+  ]
+};
+
+// Premium Package Order Flow
+const premiumOrderFlow: OrderFlow = {
+  steps: [
+    {
+      id: "premium-step-1",
+      step_number: 1,
+      title_key: "generalDetails",
+      fields: [
+        {
+          id: "premium_recipient_name",
+          field_name: "recipientName",
+          field_type: "text",
+          placeholder_key: "recipientName",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "premium_relationship",
+          field_name: "relationship",
+          field_type: "select",
+          placeholder_key: "relationship",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "premium_occasion",
+          field_name: "occasion",
+          field_type: "select",
+          placeholder_key: "occasion",
+          required: true,
+          field_order: 3
+        },
+        {
+          id: "premium_event_date",
+          field_name: "eventDate",
+          field_type: "date",
+          placeholder_key: "eventDate",
+          required: false,
+          field_order: 4
+        },
+        {
+          id: "premium_song_language",
+          field_name: "songLanguage",
+          field_type: "select",
+          placeholder_key: "songLanguage",
+          required: true,
+          field_order: 5
+        }
+      ]
+    },
+    {
+      id: "premium-step-2",
+      step_number: 2,
+      title_key: "storyAndEmotionalDetails",
+      fields: [
+        {
+          id: "premium_story",
+          field_name: "story",
+          field_type: "textarea",
+          placeholder_key: "story",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "premium_emotional_tone",
+          field_name: "emotionalTone",
+          field_type: "select",
+          placeholder_key: "emotionalTone",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "premium_key_moments",
+          field_name: "keyMoments",
+          field_type: "textarea",
+          placeholder_key: "keyMoments",
+          required: true,
+          field_order: 3
+        }
+      ]
+    },
+    {
+      id: "premium-step-3",
+      step_number: 3,
+      title_key: "musicalPreferences",
+      fields: [
+        {
+          id: "premium_music_style",
+          field_name: "musicStyle",
+          field_type: "select",
+          placeholder_key: "musicStyle",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "premium_voice_preference",
+          field_name: "voice_preference",
+          field_type: "radio",
+          required: true,
+          field_order: 2,
+          options: [
+            { value: "female", label_key: "voiceFemale" },
+            { value: "male", label_key: "voiceMale" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "premium-step-4",
+      step_number: 4,
+      title_key: "confirmation",
+      fields: [
+        {
+          id: "premium_full_name",
+          field_name: "fullName",
+          field_type: "text",
+          placeholder_key: "fullName",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "premium_email",
+          field_name: "email",
+          field_type: "email",
+          placeholder_key: "email",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "premium_phone",
+          field_name: "phone",
+          field_type: "tel",
+          placeholder_key: "phone",
+          required: false,
+          field_order: 3
+        },
+        {
+          id: "premium_accept_mention_obligation",
+          field_name: "acceptMentionObligation",
+          field_type: "checkbox",
+          placeholder_key: "acceptMentionObligation",
+          required: true,
+          field_order: 4
+        },
+        {
+          id: "premium_accept_distribution",
+          field_name: "acceptDistribution",
+          field_type: "checkbox",
+          placeholder_key: "acceptDistribution",
+          required: true,
+          field_order: 5
+        },
+        {
+          id: "premium_final_note",
+          field_name: "finalNote",
+          field_type: "checkbox",
+          placeholder_key: "finalNote",
+          required: true,
+          field_order: 6
+        }
+      ]
+    }
+  ]
+};
+
+// Business Package Order Flow
+const businessOrderFlow: OrderFlow = {
+  steps: [
+    {
+      id: "business-step-1",
+      step_number: 1,
+      title_key: "businessStep1Title",
+      fields: [
+        {
+          id: "business_company_name",
+          field_name: "company_name",
+          field_type: "text",
+          placeholder_key: "businessCompanyNamePlaceholder",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "business_industry",
+          field_name: "industry",
+          field_type: "text",
+          placeholder_key: "businessIndustryPlaceholder",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "business_brand_values",
+          field_name: "brand_values",
+          field_type: "textarea",
+          placeholder_key: "businessBrandValuesPlaceholder",
+          required: true,
+          field_order: 3
+        }
+      ]
+    },
+    {
+      id: "business-step-2",
+      step_number: 2,
+      title_key: "businessStep2Title",
+      fields: [
+        {
+          id: "business_campaign_purpose",
+          field_name: "campaign_purpose",
+          field_type: "radio",
+          required: true,
+          field_order: 1,
+          options: [
+            { value: "branding", label_key: "businessPurposeBranding" },
+            { value: "advertising", label_key: "businessPurposeAdvertising" },
+            { value: "event", label_key: "businessPurposeEvent" },
+            { value: "product_launch", label_key: "businessPurposeProductLaunch" }
+          ]
+        },
+        {
+          id: "business_target_audience",
+          field_name: "target_audience",
+          field_type: "textarea",
+          placeholder_key: "businessTargetAudiencePlaceholder",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "business_message",
+          field_name: "business_message",
+          field_type: "textarea",
+          placeholder_key: "businessMessagePlaceholder",
+          required: true,
+          field_order: 3
+        }
+      ]
+    },
+    {
+      id: "business-step-3",
+      step_number: 3,
+      title_key: "businessStep3Title",
+      fields: [
+        {
+          id: "business_music_style",
+          field_name: "music_style",
+          field_type: "select",
+          placeholder_key: "musicStyle",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "business_voice_preference",
+          field_name: "voice_preference",
+          field_type: "radio",
+          required: true,
+          field_order: 2,
+          options: [
+            { value: "female", label_key: "voiceFemale" },
+            { value: "male", label_key: "voiceMale" },
+            { value: "both", label_key: "businessVoiceBoth" }
+          ]
+        },
+        {
+          id: "business_usage_scope",
+          field_name: "usage_scope",
+          field_type: "checkbox-group",
+          required: true,
+          field_order: 3,
+          options: [
+            { value: "social_media", label_key: "businessUsageSocialMedia" },
+            { value: "tv_radio", label_key: "businessUsageTvRadio" },
+            { value: "online_ads", label_key: "businessUsageOnlineAds" },
+            { value: "events", label_key: "businessUsageEvents" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "business-step-4",
+      step_number: 4,
+      title_key: "confirmation",
+      fields: [
+        {
+          id: "business_contact_name",
+          field_name: "contact_name",
+          field_type: "text",
+          placeholder_key: "businessContactNamePlaceholder",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "business_email",
+          field_name: "email",
+          field_type: "email",
+          placeholder_key: "email",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "business_phone",
+          field_name: "phone",
+          field_type: "tel",
+          placeholder_key: "phone",
+          required: true,
+          field_order: 3
+        },
+        {
+          id: "business_accept_terms",
+          field_name: "accept_terms",
+          field_type: "checkbox",
+          placeholder_key: "businessAcceptTermsPlaceholder",
+          required: true,
+          field_order: 4
+        }
+      ]
+    }
+  ]
+};
+
+// Artist Package Order Flow
+const artistOrderFlow: OrderFlow = {
+  steps: [
+    {
+      id: "artist-step-1",
+      step_number: 1,
+      title_key: "artistStep1Title",
+      fields: [
+        {
+          id: "artist_stage_name",
+          field_name: "stage_name",
+          field_type: "text",
+          placeholder_key: "artistStageNamePlaceholder",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "artist_genre",
+          field_name: "genre",
+          field_type: "select",
+          placeholder_key: "artistGenrePlaceholder",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "artist_experience",
+          field_name: "experience",
+          field_type: "radio",
+          required: true,
+          field_order: 3,
+          options: [
+            { value: "beginner", label_key: "artistExperienceBeginner" },
+            { value: "intermediate", label_key: "artistExperienceIntermediate" },
+            { value: "professional", label_key: "artistExperienceProfessional" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "artist-step-2",
+      step_number: 2,
+      title_key: "artistStep2Title",
+      fields: [
+        {
+          id: "artist_song_concept",
+          field_name: "song_concept",
+          field_type: "textarea",
+          placeholder_key: "artistSongConceptPlaceholder",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "artist_target_audience",
+          field_name: "target_audience",
+          field_type: "textarea",
+          placeholder_key: "artistTargetAudiencePlaceholder",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "artist_inspiration",
+          field_name: "inspiration",
+          field_type: "textarea",
+          placeholder_key: "artistInspirationPlaceholder",
+          required: false,
+          field_order: 3
+        }
+      ]
+    },
+    {
+      id: "artist-step-3",
+      step_number: 3,
+      title_key: "artistStep3Title",
+      fields: [
+        {
+          id: "artist_voice_type",
+          field_name: "voice_type",
+          field_type: "radio",
+          required: true,
+          field_order: 1,
+          options: [
+            { value: "own_vocals", label_key: "artistVoiceOwnVocals" },
+            { value: "session_singer", label_key: "artistVoiceSessionSinger" }
+          ]
+        },
+        {
+          id: "artist_distribution_platforms",
+          field_name: "distribution_platforms",
+          field_type: "checkbox-group",
+          required: true,
+          field_order: 2,
+          options: [
+            { value: "spotify", label_key: "artistPlatformSpotify" },
+            { value: "apple_music", label_key: "artistPlatformAppleMusic" },
+            { value: "youtube_music", label_key: "artistPlatformYouTubeMusic" },
+            { value: "all_platforms", label_key: "artistPlatformAllPlatforms" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "artist-step-4",
+      step_number: 4,
+      title_key: "confirmation",
+      fields: [
+        {
+          id: "artist_full_name",
+          field_name: "full_name",
+          field_type: "text",
+          placeholder_key: "fullName",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "artist_email",
+          field_name: "email",
+          field_type: "email",
+          placeholder_key: "email",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "artist_phone",
+          field_name: "phone",
+          field_type: "tel",
+          placeholder_key: "phone",
+          required: true,
+          field_order: 3
+        },
+        {
+          id: "artist_accept_collaboration",
+          field_name: "accept_collaboration",
+          field_type: "checkbox",
+          placeholder_key: "artistAcceptCollaborationPlaceholder",
+          required: true,
+          field_order: 4
+        }
+      ]
+    }
+  ]
+};
+
+// Remix Package Order Flow
+const remixOrderFlow: OrderFlow = {
+  steps: [
+    {
+      id: "remix-step-1",
+      step_number: 1,
+      title_key: "remixStep1Title",
+      fields: [
+        {
+          id: "remix_original_song",
+          field_name: "original_song",
+          field_type: "file",
+          placeholder_key: "remixOriginalSongPlaceholder",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "remix_song_title",
+          field_name: "song_title",
+          field_type: "text",
+          placeholder_key: "remixSongTitlePlaceholder",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "remix_original_artist",
+          field_name: "original_artist",
+          field_type: "text",
+          placeholder_key: "remixOriginalArtistPlaceholder",
+          required: true,
+          field_order: 3
+        }
+      ]
+    },
+    {
+      id: "remix-step-2",
+      step_number: 2,
+      title_key: "remixStep2Title",
+      fields: [
+        {
+          id: "remix_target_genre",
+          field_name: "target_genre",
+          field_type: "select",
+          placeholder_key: "remixTargetGenrePlaceholder",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "remix_energy_level",
+          field_name: "energy_level",
+          field_type: "radio",
+          required: true,
+          field_order: 2,
+          options: [
+            { value: "low", label_key: "remixEnergyLow" },
+            { value: "medium", label_key: "remixEnergyMedium" },
+            { value: "high", label_key: "remixEnergyHigh" }
+          ]
+        },
+        {
+          id: "remix_reference_tracks",
+          field_name: "reference_tracks",
+          field_type: "textarea",
+          placeholder_key: "remixReferenceTracksPlaceholder",
+          required: false,
+          field_order: 3
+        }
+      ]
+    },
+    {
+      id: "remix-step-3",
+      step_number: 3,
+      title_key: "remixStep3Title",
+      fields: [
+        {
+          id: "remix_vocals_treatment",
+          field_name: "vocals_treatment",
+          field_type: "radio",
+          required: true,
+          field_order: 1,
+          options: [
+            { value: "keep_original", label_key: "remixVocalsKeepOriginal" },
+            { value: "pitch_shift", label_key: "remixVocalsPitchShift" },
+            { value: "time_stretch", label_key: "remixVocalsTimeStretch" }
+          ]
+        },
+        {
+          id: "remix_special_requests",
+          field_name: "special_requests",
+          field_type: "textarea",
+          placeholder_key: "remixSpecialRequestsPlaceholder",
+          required: false,
+          field_order: 2
+        }
+      ]
+    },
+    {
+      id: "remix-step-4",
+      step_number: 4,
+      title_key: "confirmation",
+      fields: [
+        {
+          id: "remix_full_name",
+          field_name: "full_name",
+          field_type: "text",
+          placeholder_key: "fullName",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "remix_email",
+          field_name: "email",
+          field_type: "email",
+          placeholder_key: "email",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "remix_rights_confirmation",
+          field_name: "rights_confirmation",
+          field_type: "checkbox",
+          placeholder_key: "remixRightsConfirmationPlaceholder",
+          required: true,
+          field_order: 3
+        }
+      ]
+    }
+  ]
+};
+
+// Instrumental Package Order Flow
+const instrumentalOrderFlow: OrderFlow = {
+  steps: [
+    {
+      id: "instrumental-step-1",
+      step_number: 1,
+      title_key: "instrumentalStep1Title",
+      fields: [
+        {
+          id: "instrumental_genre",
+          field_name: "genre",
+          field_type: "select",
+          placeholder_key: "instrumentalGenrePlaceholder",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "instrumental_tempo",
+          field_name: "tempo",
+          field_type: "radio",
+          required: true,
+          field_order: 2,
+          options: [
+            { value: "slow", label_key: "instrumentalTempoSlow" },
+            { value: "medium", label_key: "instrumentalTempoMedium" },
+            { value: "fast", label_key: "instrumentalTempoFast" }
+          ]
+        },
+        {
+          id: "instrumental_mood",
+          field_name: "mood",
+          field_type: "select",
+          placeholder_key: "instrumentalMoodPlaceholder",
+          required: true,
+          field_order: 3
+        }
+      ]
+    },
+    {
+      id: "instrumental-step-2",
+      step_number: 2,
+      title_key: "instrumentalStep2Title",
+      fields: [
+        {
+          id: "instrumental_structure",
+          field_name: "structure",
+          field_type: "radio",
+          required: true,
+          field_order: 1,
+          options: [
+            { value: "standard", label_key: "instrumentalStructureStandard" },
+            { value: "extended", label_key: "instrumentalStructureExtended" },
+            { value: "custom", label_key: "instrumentalStructureCustom" }
+          ]
+        },
+        {
+          id: "instrumental_key_signature",
+          field_name: "key_signature",
+          field_type: "select",
+          placeholder_key: "instrumentalKeySignaturePlaceholder",
+          required: false,
+          field_order: 2
+        }
+      ]
+    },
+    {
+      id: "instrumental-step-3",
+      step_number: 3,
+      title_key: "instrumentalStep3Title",
+      fields: [
+        {
+          id: "instrumental_usage_purpose",
+          field_name: "usage_purpose",
+          field_type: "radio",
+          required: true,
+          field_order: 1,
+          options: [
+            { value: "personal_use", label_key: "instrumentalUsagePersonal" },
+            { value: "commercial_use", label_key: "instrumentalUsageCommercial" },
+            { value: "youtube_content", label_key: "instrumentalUsageYouTube" }
+          ]
+        },
+        {
+          id: "instrumental_reference_songs",
+          field_name: "reference_songs",
+          field_type: "textarea",
+          placeholder_key: "instrumentalReferenceSongsPlaceholder",
+          required: false,
+          field_order: 2
+        }
+      ]
+    },
+    {
+      id: "instrumental-step-4",
+      step_number: 4,
+      title_key: "confirmation",
+      fields: [
+        {
+          id: "instrumental_full_name",
+          field_name: "full_name",
+          field_type: "text",
+          placeholder_key: "fullName",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "instrumental_email",
+          field_name: "email",
+          field_type: "email",
+          placeholder_key: "email",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "instrumental_accept_license",
+          field_name: "accept_license",
+          field_type: "checkbox",
+          placeholder_key: "instrumentalAcceptLicensePlaceholder",
+          required: true,
+          field_order: 3
+        }
+      ]
+    }
+  ]
+};
+
+// Plus Package Order Flow (Simplified)
+const plusOrderFlow: OrderFlow = {
+  steps: [
+    {
+      id: "plus-step-1",
+      step_number: 1,
+      title_key: "plusStep1Title",
+      fields: [
+        {
+          id: "plus_recipient_name",
+          field_name: "recipient_name",
+          field_type: "text",
+          placeholder_key: "plusRecipientNamePlaceholder",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "plus_message_content",
+          field_name: "message_content",
+          field_type: "textarea",
+          placeholder_key: "plusMessageContentPlaceholder",
+          required: true,
+          field_order: 2
+        }
+      ]
+    },
+    {
+      id: "plus-step-2",
+      step_number: 2,
+      title_key: "plusStep2Title",
+      fields: [
+        {
+          id: "plus_music_style",
+          field_name: "music_style",
+          field_type: "radio",
+          required: true,
+          field_order: 1,
+          options: [
+            { value: "happy", label_key: "plusStyleHappy" },
+            { value: "romantic", label_key: "plusStyleRomantic" },
+            { value: "energetic", label_key: "plusStyleEnergetic" }
+          ]
+        },
+        {
+          id: "plus_voice_preference",
+          field_name: "voice_preference",
+          field_type: "radio",
+          required: true,
+          field_order: 2,
+          options: [
+            { value: "female", label_key: "voiceFemale" },
+            { value: "male", label_key: "voiceMale" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "plus-step-3",
+      step_number: 3,
+      title_key: "confirmation",
+      fields: [
+        {
+          id: "plus_full_name",
+          field_name: "full_name",
+          field_type: "text",
+          placeholder_key: "fullName",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "plus_email",
+          field_name: "email",
+          field_type: "email",
+          placeholder_key: "email",
+          required: true,
+          field_order: 2
+        }
+      ]
+    }
+  ]
+};
+
+// Gift Package Order Flow (Special case - handled by GiftPurchaseWizard)
+const giftOrderFlow: OrderFlow = {
+  steps: [
+    {
+      id: "gift-step-1",
+      step_number: 1,
+      title_key: "giftStep1Title",
+      fields: [
+        {
+          id: "gift_amount",
+          field_name: "gift_amount",
+          field_type: "radio",
+          required: true,
+          field_order: 1,
+          options: [
+            { value: "299", label_key: "gift299RON" },
+            { value: "500", label_key: "gift500RON" },
+            { value: "custom", label_key: "giftCustomAmount" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "gift-step-2",
+      step_number: 2,
+      title_key: "giftStep2Title",
+      fields: [
+        {
+          id: "gift_sender_name",
+          field_name: "sender_name",
+          field_type: "text",
+          placeholder_key: "giftSenderNamePlaceholder",
+          required: true,
+          field_order: 1
+        },
+        {
+          id: "gift_recipient_name",
+          field_name: "recipient_name",
+          field_type: "text",
+          placeholder_key: "giftRecipientNamePlaceholder",
+          required: true,
+          field_order: 2
+        },
+        {
+          id: "gift_recipient_email",
+          field_name: "recipient_email",
+          field_type: "email",
+          placeholder_key: "giftRecipientEmailPlaceholder",
+          required: true,
+          field_order: 3
+        },
+        {
+          id: "gift_message",
+          field_name: "gift_message",
+          field_type: "textarea",
+          placeholder_key: "giftMessagePlaceholder",
+          required: false,
+          field_order: 4
+        }
+      ]
+    }
+  ]
+};
 
 // Wedding Package Order Flow
 const weddingOrderFlow: OrderFlow = {
@@ -324,7 +1367,7 @@ export const packages: Package[] = [
       { include_key: "plusInclude3" },
     ],
     available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "audioMessageFromSender", "extendedSong"],
-    steps: [],
+    steps: plusOrderFlow.steps,
     tag: "new",
   },
   {
@@ -343,7 +1386,7 @@ export const packages: Package[] = [
       { include_key: "personalInclude4" },
     ],
     available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "extendedSong"],
-    steps: [],
+    steps: personalOrderFlow.steps,
   },
   {
     id: "premium",
@@ -360,7 +1403,7 @@ export const packages: Package[] = [
       { include_key: "premiumInclude3" },
     ],
     available_addons: ["rushDelivery", "customVideo", "audioMessageFromSender", "extendedSong"],
-    steps: [],
+    steps: premiumOrderFlow.steps,
     tag: "popular",
   },
   {
@@ -379,7 +1422,7 @@ export const packages: Package[] = [
       { include_key: "businessInclude4" },
     ],
     available_addons: ["rushDelivery", "customVideo", "brandedAudioMessage", "commercialRightsUpgrade", "extendedSong"],
-    steps: [],
+    steps: businessOrderFlow.steps,
   },
   {
     id: "artist",
@@ -397,7 +1440,7 @@ export const packages: Package[] = [
       { include_key: "artistInclude4" },
     ],
     available_addons: [],
-    steps: [],
+    steps: artistOrderFlow.steps,
   },
   {
     id: "remix",
@@ -417,7 +1460,7 @@ export const packages: Package[] = [
       { include_key: "remixInclude6" },
     ],
     available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender"],
-    steps: [],
+    steps: remixOrderFlow.steps,
   },
   {
     id: "instrumental",
@@ -436,7 +1479,7 @@ export const packages: Package[] = [
       { include_key: "instrumentalInclude5" },
     ],
     available_addons: ["rushDelivery", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender"],
-    steps: [],
+    steps: instrumentalOrderFlow.steps,
   },
   {
     id: "gift",
@@ -453,7 +1496,7 @@ export const packages: Package[] = [
       { include_key: "giftInclude3" },
     ],
     available_addons: [],
-    steps: [],
+    steps: giftOrderFlow.steps,
     tag: "gift",
   },
   {
