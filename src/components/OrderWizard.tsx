@@ -473,6 +473,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
                       addonFieldValues={addonFieldValues}
                       onAddonFieldChange={handleAddonFieldChange}
                       selectedPackage={selectedPackage}
+                      selectedPackageData={selectedPackageData}
                       formData={formData}
                     />
                   ))

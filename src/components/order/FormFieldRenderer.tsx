@@ -15,10 +15,9 @@ import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getAddonPrice } from '@/utils/pricing';
-import { Addon } from '@/types';
+import { Addon, Package } from '@/types';
 import AudioRecorder from './AudioRecorder';
 import { getVatValidationError } from '@/utils/vatValidation';
-import { usePackages } from '@/hooks/usePackageData';
 
 interface FieldOption {
   value: string;
@@ -46,7 +45,8 @@ interface FormFieldRendererProps {
   addonFieldValues: any;
   onAddonFieldChange: (addonKey: string, fieldValue: any) => void;
   selectedPackage?: string;
-  formData?: any; // Add formData to access other field values
+  selectedPackageData?: Package;
+  formData?: any;
 }
 
 const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
@@ -59,43 +59,35 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   addonFieldValues,
   onAddonFieldChange,
   selectedPackage = '',
+  selectedPackageData,
   formData = {}
 }) => {
   const { t } = useLanguage();
   const { currency } = useCurrency();
   const [date, setDate] = useState<Date>();
   const [vatError, setVatError] = useState<string | null>(null);
-  const { data: packages = [] } = usePackages();
 
   // Helper function to check if addon should be shown based on package's available_addons
-  const shouldShowAddon = (addon: Addon, selectedPackage: string) => {
+  const shouldShowAddon = (addon: Addon) => {
     if (!addon.is_active) return false;
     
-    // Find the selected package object
-    const packageData = packages.find(pkg => pkg.value === selectedPackage);
-    if (!packageData) {
-      console.warn('Package not found:', selectedPackage);
-      return false;
+    // Use the passed package data if available
+    if (selectedPackageData) {
+      const isAvailable = selectedPackageData.available_addons.includes(addon.addon_key);
+      
+      console.log('Addon availability check:', {
+        addonKey: addon.addon_key,
+        selectedPackage: selectedPackageData.value,
+        packageAvailableAddons: selectedPackageData.available_addons,
+        isAvailable
+      });
+      
+      return isAvailable;
     }
-
-    // Check if the addon is in the package's available_addons array
-    const isAvailable = packageData.available_addons.includes(addon.addon_key);
     
-    console.log('Addon availability check:', {
-      addonKey: addon.addon_key,
-      selectedPackage,
-      packageAvailableAddons: packageData.available_addons,
-      isAvailable
-    });
-    
-    return isAvailable;
-  };
-
-  // Updated getSelectedPackage function
-  const getSelectedPackage = () => {
-    // Use the selectedPackage prop first, then fall back to field value
-    if (selectedPackage) return selectedPackage;
-    return field.field_name === 'package' ? value : '';
+    // Fallback: if no package data is provided, don't show any addons
+    console.warn('No package data provided for addon filtering');
+    return false;
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>, addonKey: string) => {
@@ -234,11 +226,10 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         );
 
       case 'checkbox-group':
-        const selectedPackageValue = getSelectedPackage();
-        const filteredAddons = availableAddons.filter(addon => shouldShowAddon(addon, selectedPackageValue));
+        const filteredAddons = availableAddons.filter(addon => shouldShowAddon(addon));
         
         console.log('Rendering addon checkbox group:', {
-          selectedPackage: selectedPackageValue,
+          selectedPackage: selectedPackageData?.value || 'none',
           availableAddons: availableAddons.length,
           filteredAddons: filteredAddons.length,
           addonKeys: filteredAddons.map(a => a.addon_key)
