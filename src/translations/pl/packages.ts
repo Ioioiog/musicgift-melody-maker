@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Wybierz swój pakiet",
   selectPerfectPackage: "Wybierz idealny pakiet, który pasuje do Twoich potrzeb i budżetu",
@@ -132,7 +131,7 @@ export const packagesTranslations = {
   brandedAudioMessageDesc: "Umieść krótką markową wiadomość głosową na początku piosenki – idealna do spersonalizowanych wprowadzeń, wiadomości kampanijnych lub sloganów marki.",
   
   commercialRightsUpgrade: "Upgrade praw komercyjnych",
-  commercialRightsUpgradeDesc: "Rozszerzone prawa komercyjne do użytku biznesowego",
+  commercialRightsUpgradeDesc: "Rozszerzone prawa komercyjne do użytku biznesowego w tv/radio",
   
   extendedSong: "Rozszerzona piosenka",
   extendedSongDesc: "Dłuższa wersja Twojej piosenki",
@@ -154,7 +153,7 @@ export const packagesTranslations = {
   comingOfAgeTagline: "Spersonalizowany hymn na podróż ku dorosłości",
   
   // Package descriptions
-  weddingDescription: "Czy marzyliście o tym, żeby nie tańczyć najważniejszego tańca swojego życia do tej samej piosenki, do której tańczyli inni? MusicGift tworzy oryginalną piosenkę, spersonalizowaną dla tańca państwa młodych lub rodziców chrzestnych, opartą na ich historii miłosnej lub przyjaźni.",
+  weddingDescription: "Czy marzyliście o tym, żeby nie tańczyć najważniejszego tańca swojego życia do tej samej piosenki, do której tańczyli inni? MusicGift tworzy oryginalną piosenkę, spersonalizowaną dla tańca państwa młodej lub rodziców chrzestnych, opartą na ich historii miłosnej lub przyjaźni.",
   baptismDescription: "Oryginalna, wzruszająca i spersonalizowana melodia dedykowana ochrzczonemu dziecku – idealna do zaśpiewania lub odtworzenia podczas uroczystości i pozostania wspomnieniem na całe życie.",
   comingOfAgeDescription: "Wyjątkowy i wzruszający muzyczny prezent dla młodego mężczyzny lub kobiety, która kończy 18 lat – stworzony z ich historii, energii i aspiracji.",
   

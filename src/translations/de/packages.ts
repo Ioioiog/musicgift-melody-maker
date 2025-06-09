@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Wählen Sie Ihr Paket",
   selectPerfectPackage: "Wählen Sie das perfekte Paket, das zu Ihren Bedürfnissen und Ihrem Budget passt",
@@ -132,7 +131,7 @@ export const packagesTranslations = {
   brandedAudioMessageDesc: "Fügen Sie eine kurze Marken-Sprachnachricht am Anfang des Liedes hinzu – perfekt für personalisierte Einführungen, Kampagnennachrichten oder Marken-Slogans.",
   
   commercialRightsUpgrade: "Kommerzielle Rechte Upgrade",
-  commercialRightsUpgradeDesc: "Erweiterte kommerzielle Rechte für geschäftliche Nutzung",
+  commercialRightsUpgradeDesc: "Erweiterte kommerzielle Rechte für geschäftliche Nutzung im TV/Radio",
   
   extendedSong: "Erweitertes Lied",
   extendedSongDesc: "Längere Version Ihres Liedes",

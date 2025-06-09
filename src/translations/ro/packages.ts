@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -132,7 +131,7 @@ export const packagesTranslations = {
   brandedAudioMessageDesc: "Include un scurt mesaj vocal de marcă la începutul melodiei – perfect pentru introduceri personalizate, mesaje de campanie sau sloganuri de marcă.",
   
   commercialRightsUpgrade: "Upgrade drepturi comerciale",
-  commercialRightsUpgradeDesc: "Drepturi comerciale extinse pentru utilizare comercială",
+  commercialRightsUpgradeDesc: "Drepturi comerciale extinse pentru utilizare comercială la tv/radio",
   
   extendedSong: "Melodie extinsă",
   extendedSongDesc: "Versiune mai lungă a melodiei tale",
