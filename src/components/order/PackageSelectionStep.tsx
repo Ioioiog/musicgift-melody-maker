@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Gift, Check, ChevronDown, Sparkles } from 'lucide-react';
+import { Clock, Gift, Check, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { usePackages } from '@/hooks/usePackageData';
@@ -61,43 +61,38 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
         <Card className="bg-gradient-to-br from-indigo-500/30 via-purple-500/25 to-pink-500/30 backdrop-blur-lg border-2 border-white/30 shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-[1.02]">
           <CardContent className="p-3">
             <Select value={selectedPackage} onValueChange={onPackageSelect}>
-              <SelectTrigger className="w-full h-10 text-left border-2 border-white/40 hover:border-purple-300/80 focus:border-purple-400 transition-all duration-300 bg-white/15 backdrop-blur-md shadow-lg hover:shadow-xl group">
-                <div className="flex items-center justify-between w-full">
-                  <SelectValue placeholder={
-                    <div className="flex items-center text-white/80 text-sm">
-                      <span>{t('selectOption')}</span>
-                    </div>
-                  }>
-                    {selectedPackageData && (
-                      <div className="flex items-center justify-between w-full pr-3">
-                        <div className="flex items-center space-x-2">
-                          {selectedPackageData.tag && (
-                            <Badge className={`${getTagColor(selectedPackageData.tag)} text-xs px-2 py-0.5 font-medium border`}>
-                              <div className="flex items-center gap-1">
-                                {getTagIcon(selectedPackageData.tag)}
-                                <span>{t(selectedPackageData.tag)}</span>
-                              </div>
-                            </Badge>
-                          )}
-                          <div className="font-bold text-white text-sm">
-                            {t(selectedPackageData.label_key)}
-                          </div>
-                        </div>
-                        <div className="text-sm font-bold bg-gradient-to-r from-orange-300 to-yellow-300 bg-clip-text text-transparent">
-                          {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
-                        </div>
+              <SelectTrigger className="w-full h-8 text-left border-2 border-white/40 hover:border-purple-300/80 focus:border-purple-400 transition-all duration-300 bg-white/15 backdrop-blur-md shadow-lg hover:shadow-xl">
+                <SelectValue placeholder={
+                  <span className="text-white/80 text-sm">{t('selectOption')}</span>
+                }>
+                  {selectedPackageData && (
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center space-x-2">
+                        {selectedPackageData.tag && (
+                          <Badge className={`${getTagColor(selectedPackageData.tag)} text-xs px-1.5 py-0.5 font-medium border`}>
+                            <div className="flex items-center gap-1">
+                              {getTagIcon(selectedPackageData.tag)}
+                              <span>{t(selectedPackageData.tag)}</span>
+                            </div>
+                          </Badge>
+                        )}
+                        <span className="font-bold text-white text-sm">
+                          {t(selectedPackageData.label_key)}
+                        </span>
                       </div>
-                    )}
-                  </SelectValue>
-                  <ChevronDown className="w-4 h-4 text-white/70 group-hover:text-white transition-colors duration-200" />
-                </div>
+                      <span className="text-sm font-bold bg-gradient-to-r from-orange-300 to-yellow-300 bg-clip-text text-transparent">
+                        {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
+                      </span>
+                    </div>
+                  )}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="w-full bg-white/95 backdrop-blur-md border-2 border-purple-200/50 shadow-2xl z-[9999] rounded-xl overflow-hidden" side="bottom" position="popper">
                 {packages.map(pkg => (
                   <SelectItem 
                     key={pkg.value} 
                     value={pkg.value} 
-                    className="p-2 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 focus:bg-gradient-to-r focus:from-purple-50 focus:to-pink-50 cursor-pointer border-b border-gray-100/80 last:border-b-0 mx-1 my-0.5 rounded-lg transition-all duration-200 group h-auto min-h-[2.5rem]"
+                    className="p-2 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 focus:bg-gradient-to-r focus:from-purple-50 focus:to-pink-50 cursor-pointer border-b border-gray-100/80 last:border-b-0 mx-1 my-0.5 rounded-lg transition-all duration-200 group h-auto min-h-[2rem]"
                   >
                     <div className="flex items-center justify-between w-full">
                       <div className="flex items-center space-x-2 flex-1">
