@@ -78,10 +78,10 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="bg-gradient-to-br from-green-500/20 to-blue-500/20 backdrop-blur-sm border border-green-400/30">
         <CardContent className="py-8">
           <div className="flex items-center justify-center">
-            <div className="w-8 h-8 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
+            <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
           </div>
         </CardContent>
       </Card>
@@ -93,10 +93,10 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
     .sort((a, b) => getProviderOrder(a.provider_name) - getProviderOrder(b.provider_name));
 
   return (
-    <Card>
+    <Card className="bg-gradient-to-br from-green-500/20 to-blue-500/20 backdrop-blur-sm border border-green-400/30">
       <CardHeader>
-        <CardTitle>{t('choosePaymentMethod', 'Choose Payment Method')}</CardTitle>
-        <p className="text-sm text-gray-600">
+        <CardTitle className="text-white">{t('choosePaymentMethod', 'Choose Payment Method')}</CardTitle>
+        <p className="text-sm text-white/80">
           {t('selectPaymentProvider', 'Select how you\'d like to pay for your order')}
         </p>
       </CardHeader>
@@ -108,13 +108,13 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
           return (
             <Card
               key={provider.id}
-              className={`transition-all ${
+              className={`transition-all bg-white/10 backdrop-blur-sm border border-white/20 ${
                 isDisabled 
-                  ? 'opacity-60 cursor-not-allowed border border-gray-200' 
-                  : `cursor-pointer hover:shadow-md ${
+                  ? 'opacity-60 cursor-not-allowed' 
+                  : `cursor-pointer hover:shadow-md hover:bg-white/20 ${
                       selectedProvider === provider.provider_name
-                        ? 'border-2 border-purple-500 shadow-lg'
-                        : 'border border-gray-200'
+                        ? 'border-2 border-orange-400 shadow-lg bg-white/20'
+                        : ''
                     }`
               }`}
               onClick={() => !isDisabled && onProviderSelect(provider.provider_name)}
@@ -166,26 +166,26 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                         getProviderIcon(provider.provider_name)
                       )}
                       {(provider.provider_name === 'smartbill' || provider.provider_name === 'stripe' || provider.provider_name === 'revolut') && (
-                        <div className="hidden">
+                        <div className="hidden text-white">
                           {getProviderIcon(provider.provider_name)}
                         </div>
                       )}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-lg">{provider.display_name}</h3>
+                        <h3 className="font-semibold text-lg text-white">{provider.display_name}</h3>
                         {isComingSoon && (
-                          <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-200">
+                          <Badge variant="outline" className="bg-orange-500/20 text-orange-300 border-orange-400/30">
                             Coming Soon
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-white/80">
                         {getProviderDescription(provider.provider_name)}
                       </p>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {provider.supported_currencies.map((curr) => (
-                          <Badge key={curr} variant="outline" className="text-xs">
+                          <Badge key={curr} variant="outline" className="text-xs bg-white/10 text-white/80 border-white/20">
                             {curr}
                           </Badge>
                         ))}
@@ -193,7 +193,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
                     </div>
                   </div>
                   {selectedProvider === provider.provider_name && !isDisabled && (
-                    <Badge className="bg-purple-100 text-purple-700">
+                    <Badge className="bg-orange-500/80 text-white">
                       {t('selected', 'Selected')}
                     </Badge>
                   )}
@@ -205,7 +205,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
 
         {supportedProviders.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-gray-500">
+            <p className="text-white/70">
               {t('noPaymentProviders', `No payment providers available for ${currency}`)}
             </p>
           </div>

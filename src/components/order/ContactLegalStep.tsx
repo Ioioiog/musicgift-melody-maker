@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Card, CardContent } from '@/components/ui/card';
 import FormFieldRenderer from './FormFieldRenderer';
 
 interface ContactLegalStepProps {
@@ -163,95 +164,97 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-lg p-6 border border-gray-200">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6 pb-3 border-b border-gray-200">
-          {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
-        </h3>
-        
-        {/* Contact Information Section */}
-        <div className="mb-8">
-          <h4 className="text-lg font-semibold text-gray-700 mb-4 bg-gray-50 p-3 rounded-lg">
-            {t('contactInformation', 'Contact Information')}
-          </h4>
-          <div className="space-y-6">
-            {contactLegalStepFields
-              .filter(field => ['fullName', 'email', 'phone', 'address', 'city'].includes(field.field_name))
-              .sort((a, b) => a.field_order - b.field_order)
-              .map(field => (
-                <FormFieldRenderer
-                  key={field.id}
-                  field={field}
-                  value={formData[field.field_name]}
-                  onChange={(value) => onInputChange(field.field_name, value)}
-                  selectedAddons={selectedAddons}
-                  onAddonChange={onAddonChange}
-                  availableAddons={availableAddons}
-                  addonFieldValues={addonFieldValues}
-                  onAddonFieldChange={onAddonFieldChange}
-                  selectedPackage={selectedPackage}
-                  selectedPackageData={selectedPackageData}
-                  formData={formData}
-                />
-              ))}
+      <Card className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30">
+        <CardContent className="p-6">
+          <h3 className="text-2xl font-bold text-white mb-6 pb-3 border-b border-white/20">
+            {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
+          </h3>
+          
+          {/* Contact Information Section */}
+          <div className="mb-8">
+            <h4 className="text-lg font-semibold text-white mb-4 bg-gradient-to-r from-blue-500/30 to-purple-500/30 p-3 rounded-lg border border-white/20">
+              {t('contactInformation', 'Contact Information')}
+            </h4>
+            <div className="space-y-6">
+              {contactLegalStepFields
+                .filter(field => ['fullName', 'email', 'phone', 'address', 'city'].includes(field.field_name))
+                .sort((a, b) => a.field_order - b.field_order)
+                .map(field => (
+                  <FormFieldRenderer
+                    key={field.id}
+                    field={field}
+                    value={formData[field.field_name]}
+                    onChange={(value) => onInputChange(field.field_name, value)}
+                    selectedAddons={selectedAddons}
+                    onAddonChange={onAddonChange}
+                    availableAddons={availableAddons}
+                    addonFieldValues={addonFieldValues}
+                    onAddonFieldChange={onAddonFieldChange}
+                    selectedPackage={selectedPackage}
+                    selectedPackageData={selectedPackageData}
+                    formData={formData}
+                  />
+                ))}
+            </div>
           </div>
-        </div>
 
-        {/* Invoice Information Section */}
-        <div className="mb-8">
-          <h4 className="text-lg font-semibold text-gray-700 mb-4 bg-gray-50 p-3 rounded-lg">
-            {t('invoiceInformation', 'Invoice Information')}
-          </h4>
-          <div className="space-y-6">
-            {contactLegalStepFields
-              .filter(field => ['invoiceType', 'companyName', 'vatCode', 'registrationNumber', 'companyAddress', 'representativeName'].includes(field.field_name))
-              .sort((a, b) => a.field_order - b.field_order)
-              .map(field => (
-                <FormFieldRenderer
-                  key={field.id}
-                  field={field}
-                  value={formData[field.field_name]}
-                  onChange={(value) => onInputChange(field.field_name, value)}
-                  selectedAddons={selectedAddons}
-                  onAddonChange={onAddonChange}
-                  availableAddons={availableAddons}
-                  addonFieldValues={addonFieldValues}
-                  onAddonFieldChange={onAddonFieldChange}
-                  selectedPackage={selectedPackage}
-                  selectedPackageData={selectedPackageData}
-                  formData={formData}
-                />
-              ))}
+          {/* Invoice Information Section */}
+          <div className="mb-8">
+            <h4 className="text-lg font-semibold text-white mb-4 bg-gradient-to-r from-purple-500/30 to-pink-500/30 p-3 rounded-lg border border-white/20">
+              {t('invoiceInformation', 'Invoice Information')}
+            </h4>
+            <div className="space-y-6">
+              {contactLegalStepFields
+                .filter(field => ['invoiceType', 'companyName', 'vatCode', 'registrationNumber', 'companyAddress', 'representativeName'].includes(field.field_name))
+                .sort((a, b) => a.field_order - b.field_order)
+                .map(field => (
+                  <FormFieldRenderer
+                    key={field.id}
+                    field={field}
+                    value={formData[field.field_name]}
+                    onChange={(value) => onInputChange(field.field_name, value)}
+                    selectedAddons={selectedAddons}
+                    onAddonChange={onAddonChange}
+                    availableAddons={availableAddons}
+                    addonFieldValues={addonFieldValues}
+                    onAddonFieldChange={onAddonFieldChange}
+                    selectedPackage={selectedPackage}
+                    selectedPackageData={selectedPackageData}
+                    formData={formData}
+                  />
+                ))}
+            </div>
           </div>
-        </div>
 
-        {/* Legal Acceptance Section */}
-        <div>
-          <h4 className="text-lg font-semibold text-gray-700 mb-4 bg-orange-50 p-3 rounded-lg border border-orange-200">
-            {t('legalAcceptance', 'Legal Acceptance')}
-          </h4>
-          <div className="space-y-4">
-            {contactLegalStepFields
-              .filter(field => ['acceptMentionObligation', 'acceptDistribution', 'finalNote'].includes(field.field_name))
-              .sort((a, b) => a.field_order - b.field_order)
-              .map(field => (
-                <FormFieldRenderer
-                  key={field.id}
-                  field={field}
-                  value={formData[field.field_name]}
-                  onChange={(value) => onInputChange(field.field_name, value)}
-                  selectedAddons={selectedAddons}
-                  onAddonChange={onAddonChange}
-                  availableAddons={availableAddons}
-                  addonFieldValues={addonFieldValues}
-                  onAddonFieldChange={onAddonFieldChange}
-                  selectedPackage={selectedPackage}
-                  selectedPackageData={selectedPackageData}
-                  formData={formData}
-                />
-              ))}
+          {/* Legal Acceptance Section */}
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-4 bg-gradient-to-r from-orange-500/30 to-red-500/30 p-3 rounded-lg border border-orange-400/30">
+              {t('legalAcceptance', 'Legal Acceptance')}
+            </h4>
+            <div className="space-y-4">
+              {contactLegalStepFields
+                .filter(field => ['acceptMentionObligation', 'acceptDistribution', 'finalNote'].includes(field.field_name))
+                .sort((a, b) => a.field_order - b.field_order)
+                .map(field => (
+                  <FormFieldRenderer
+                    key={field.id}
+                    field={field}
+                    value={formData[field.field_name]}
+                    onChange={(value) => onInputChange(field.field_name, value)}
+                    selectedAddons={selectedAddons}
+                    onAddonChange={onAddonChange}
+                    availableAddons={availableAddons}
+                    addonFieldValues={addonFieldValues}
+                    onAddonFieldChange={onAddonFieldChange}
+                    selectedPackage={selectedPackage}
+                    selectedPackageData={selectedPackageData}
+                    formData={formData}
+                  />
+                ))}
+            </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

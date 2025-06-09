@@ -76,9 +76,13 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
           </p>
         </div>
         <div className="text-center">
-          <p className="text-white/60 text-sm">
-            {t('proceedToNextStep', 'You can proceed to the next step.')}
-          </p>
+          <Card className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-white/20">
+            <CardContent className="p-6">
+              <p className="text-white/80 text-sm">
+                {t('proceedToNextStep', 'You can proceed to the next step.')}
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -97,7 +101,7 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
 
       <div className="space-y-4">
         {filteredAddons.map((addon) => (
-          <Card key={addon.id} className="border-2 hover:border-purple-200 transition-colors">
+          <Card key={addon.id} className="bg-gradient-to-br from-orange-500/20 to-purple-600/20 backdrop-blur-sm border border-orange-400/30 hover:border-orange-300/50 transition-colors">
             <CardContent className="p-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-start space-x-3 flex-1">
@@ -108,29 +112,29 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                   />
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-2">
-                      <Label className="font-semibold text-base cursor-pointer">
+                      <Label className="font-semibold text-base cursor-pointer text-white">
                         {t(addon.label_key)}
                       </Label>
-                      <Badge variant="secondary" className={`${getAddonPrice(addon, currency) === 0 ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}`}>
+                      <Badge variant="secondary" className={`${getAddonPrice(addon, currency) === 0 ? 'bg-green-500/80 text-white' : 'bg-purple-500/80 text-white'}`}>
                         {formatAddonPrice(addon)}
                       </Badge>
                     </div>
                     {addon.description_key && (
-                      <p className="text-sm text-gray-600 mb-3">
+                      <p className="text-sm text-white/80 mb-3">
                         {t(addon.description_key)}
                       </p>
                     )}
                     
                     {/* Render addon-specific fields when selected */}
                     {selectedAddons.includes(addon.addon_key) && addon.trigger_field_type && (
-                      <div className="mt-3 p-3 bg-gray-50 rounded-md">
+                      <div className="mt-3 p-3 bg-white/10 backdrop-blur-sm rounded-md border border-white/20">
                         {addon.trigger_field_type === 'file' && (
                           <div>
-                            <Label className="text-sm font-medium mb-2 block">
+                            <Label className="text-sm font-medium mb-2 block text-white">
                               {t('uploadFiles')}
                             </Label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-md p-4 text-center">
-                              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                            <div className="border-2 border-dashed border-white/40 rounded-md p-4 text-center bg-white/5">
+                              <Upload className="w-8 h-8 text-white/60 mx-auto mb-2" />
                               <Input
                                 type="file"
                                 multiple
@@ -141,11 +145,11 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                               />
                               <label
                                 htmlFor={`file-${addon.addon_key}`}
-                                className="cursor-pointer text-sm text-purple-600 hover:text-purple-700"
+                                className="cursor-pointer text-sm text-orange-300 hover:text-orange-200"
                               >
                                 {t('clickToUploadFiles')}
                               </label>
-                              <p className="text-xs text-gray-500 mt-1">
+                              <p className="text-xs text-white/60 mt-1">
                                 {t('maxFiles')} {addon.trigger_field_config?.maxFiles || 10} {t('files')}, 
                                 {addon.trigger_field_config?.maxTotalSizeMb || 150}MB {t('totalSize')}
                               </p>
@@ -155,7 +159,7 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                         
                         {addon.trigger_field_type === 'audio-recorder' && (
                           <div>
-                            <Label className="text-sm font-medium mb-2 block">
+                            <Label className="text-sm font-medium mb-2 block text-white">
                               {t('recordAudioMessage')}
                             </Label>
                             <AudioRecorder
@@ -176,10 +180,14 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
       </div>
 
       {selectedAddons.length === 0 && (
-        <div className="text-center bg-white/10 backdrop-blur-md rounded-lg p-4">
-          <p className="text-white/80 text-sm">
-            {t('noAddonsSelected', 'No add-ons selected. You can proceed without any add-ons or select some above.')}
-          </p>
+        <div className="text-center">
+          <Card className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-white/20">
+            <CardContent className="p-4">
+              <p className="text-white/80 text-sm">
+                {t('noAddonsSelected', 'No add-ons selected. You can proceed without any add-ons or select some above.')}
+              </p>
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>
