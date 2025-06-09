@@ -66,19 +66,19 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
 
   if (filteredAddons.length === 0) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-2">
         <div className="text-center">
-          <h3 className="text-xl font-semibold text-white mb-2">
+          <h3 className="text-sm font-semibold text-white mb-1">
             {t('selectAddons', 'Select Add-ons')}
           </h3>
-          <p className="text-white/70">
+          <p className="text-white/70 text-xs">
             {t('noAddonsAvailable', 'No add-ons are available for this package.')}
           </p>
         </div>
         <div className="text-center">
           <Card className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-white/20">
-            <CardContent className="p-6">
-              <p className="text-white/80 text-sm">
+            <CardContent className="p-2">
+              <p className="text-white/80 text-xs">
                 {t('proceedToNextStep', 'You can proceed to the next step.')}
               </p>
             </CardContent>
@@ -89,52 +89,52 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2">
       <div className="text-center">
-        <h3 className="text-xl font-semibold text-white mb-2">
+        <h3 className="text-sm font-semibold text-white mb-1">
           {t('selectAddons', 'Select Add-ons')}
         </h3>
-        <p className="text-white/70">
+        <p className="text-white/70 text-xs">
           {t('enhanceYourPackage', 'Enhance your package with these optional add-ons')}
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-1.5">
         {filteredAddons.map((addon) => (
           <Card key={addon.id} className="bg-gradient-to-br from-orange-500/20 to-purple-600/20 backdrop-blur-sm border border-orange-400/30 hover:border-orange-300/50 transition-colors">
-            <CardContent className="p-4">
+            <CardContent className="p-2">
               <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-3 flex-1">
+                <div className="flex items-start space-x-2 flex-1">
                   <Checkbox
                     checked={selectedAddons.includes(addon.addon_key)}
                     onCheckedChange={(checked) => onAddonChange(addon.addon_key, checked as boolean)}
-                    className="mt-1"
+                    className="mt-0.5 h-3 w-3"
                   />
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <Label className="font-semibold text-base cursor-pointer text-white">
+                    <div className="flex items-center space-x-1.5 mb-1">
+                      <Label className="font-semibold text-xs cursor-pointer text-white">
                         {t(addon.label_key)}
                       </Label>
-                      <Badge variant="secondary" className={`${getAddonPrice(addon, currency) === 0 ? 'bg-green-500/80 text-white' : 'bg-purple-500/80 text-white'}`}>
+                      <Badge variant="secondary" className={`${getAddonPrice(addon, currency) === 0 ? 'bg-green-500/80 text-white' : 'bg-purple-500/80 text-white'} text-xs px-1 py-0`}>
                         {formatAddonPrice(addon)}
                       </Badge>
                     </div>
                     {addon.description_key && (
-                      <p className="text-sm text-white/80 mb-3">
+                      <p className="text-xs text-white/80 mb-1.5">
                         {t(addon.description_key)}
                       </p>
                     )}
                     
                     {/* Render addon-specific fields when selected */}
                     {selectedAddons.includes(addon.addon_key) && addon.trigger_field_type && (
-                      <div className="mt-3 p-3 bg-white/10 backdrop-blur-sm rounded-md border border-white/20">
+                      <div className="mt-1.5 p-1.5 bg-white/10 backdrop-blur-sm rounded-md border border-white/20">
                         {addon.trigger_field_type === 'file' && (
                           <div>
-                            <Label className="text-sm font-medium mb-2 block text-white">
+                            <Label className="text-xs font-medium mb-1 block text-white">
                               {t('uploadFiles')}
                             </Label>
-                            <div className="border-2 border-dashed border-white/40 rounded-md p-4 text-center bg-white/5">
-                              <Upload className="w-8 h-8 text-white/60 mx-auto mb-2" />
+                            <div className="border-2 border-dashed border-white/40 rounded-md p-2 text-center bg-white/5">
+                              <Upload className="w-4 h-4 text-white/60 mx-auto mb-1" />
                               <Input
                                 type="file"
                                 multiple
@@ -145,11 +145,11 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                               />
                               <label
                                 htmlFor={`file-${addon.addon_key}`}
-                                className="cursor-pointer text-sm text-orange-300 hover:text-orange-200"
+                                className="cursor-pointer text-xs text-orange-300 hover:text-orange-200"
                               >
                                 {t('clickToUploadFiles')}
                               </label>
-                              <p className="text-xs text-white/60 mt-1">
+                              <p className="text-xs text-white/60 mt-0.5">
                                 {t('maxFiles')} {addon.trigger_field_config?.maxFiles || 10} {t('files')}, 
                                 {addon.trigger_field_config?.maxTotalSizeMb || 150}MB {t('totalSize')}
                               </p>
@@ -159,7 +159,7 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                         
                         {addon.trigger_field_type === 'audio-recorder' && (
                           <div>
-                            <Label className="text-sm font-medium mb-2 block text-white">
+                            <Label className="text-xs font-medium mb-1 block text-white">
                               {t('recordAudioMessage')}
                             </Label>
                             <AudioRecorder
@@ -182,8 +182,8 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
       {selectedAddons.length === 0 && (
         <div className="text-center">
           <Card className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-white/20">
-            <CardContent className="p-4">
-              <p className="text-white/80 text-sm">
+            <CardContent className="p-2">
+              <p className="text-white/80 text-xs">
                 {t('noAddonsSelected', 'No add-ons selected. You can proceed without any add-ons or select some above.')}
               </p>
             </CardContent>
