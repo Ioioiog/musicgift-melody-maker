@@ -68,11 +68,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   
   const contactLegalStep = allPackageSteps.find(step => step.title_key === 'contactDetailsStep');
   
-  // Build ordered steps array: package selection + regular steps + addons + contact/legal + payment
-  const packageSteps = regularSteps;
-  const addonStepIndex = 1 + (packageSteps?.length || 0);
-  const contactLegalStepIndex = addonStepIndex + 1;
-  const paymentStepIndex = contactLegalStepIndex + (contactLegalStep ? 1 : 0);
+  // Build the complete step flow
+  const totalRegularSteps = regularSteps.length;
+  const addonStepIndex = 1 + totalRegularSteps; // After package selection + regular steps
+  const contactLegalStepIndex = contactLegalStep ? addonStepIndex + 1 : -1; // After addons if exists
+  const paymentStepIndex = contactLegalStep ? contactLegalStepIndex + 1 : addonStepIndex + 1; // After contact/legal or addons
   const totalSteps = paymentStepIndex + 1;
   
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
@@ -437,8 +437,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     }
   };
 
-  // Calculate steps for StepIndicator
-  const getStepData = () => {
+  // Build the steps data for StepIndicator
+  const buildStepsData = () => {
     const steps = [];
     
     // Step 1: Package Selection
@@ -452,11 +452,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     // Steps 2-N: Regular Package Steps
     regularSteps.forEach((step, index) => {
       const stepNumber = index + 2;
+      const stepIndex = index + 1; // currentStep for regular steps starts at 1
       steps.push({
         number: stepNumber,
         label: t(step.title_key) || step.title_key,
-        isCompleted: currentStep > stepNumber - 1,
-        isCurrent: currentStep === stepNumber - 1
+        isCompleted: currentStep > stepIndex,
+        isCurrent: currentStep === stepIndex
       });
     });
 
@@ -493,13 +494,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   };
 
   // Determine which step we're on
-  const regularStepCount = packageSteps.length;
   const isAddonStep = currentStep === addonStepIndex;
   const isContactLegalStep = contactLegalStep && currentStep === contactLegalStepIndex;
   const isPaymentStep = currentStep === paymentStepIndex;
   
   const currentPackageStepIndex = currentStep - 1;
-  const currentStepData = currentStep > 0 && currentStep <= regularStepCount ? packageSteps?.[currentPackageStepIndex] : null;
+  const currentStepData = currentStep > 0 && currentStep <= totalRegularSteps ? regularSteps?.[currentPackageStepIndex] : null;
 
   const canProceed = () => {
     if (currentStep === 0) {
@@ -534,7 +534,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
           <div className="mb-4">
-            <StepIndicator steps={getStepData()} />
+            <StepIndicator steps={buildStepsData()} />
           </div>
 
           <AnimatePresence initial={false} mode="wait">
