@@ -163,7 +163,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                       {selectedPackageData.includes.slice(0, 3).map((include, index) => (
                         <div key={index} className="flex items-start gap-2 text-xs text-gray-700">
                           <Check className="w-3 h-3 text-green-600 mt-0.5 shrink-0" />
-                          <span>{t(include.description_key)}</span>
+                          <span>{t(include.include_key)}</span>
                         </div>
                       ))}
                       {selectedPackageData.includes.length > 3 && (
