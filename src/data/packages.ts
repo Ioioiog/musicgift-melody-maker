@@ -3,33 +3,44 @@ export const packages = [
     id: "personal",
     value: "personal",
     label_key: "personalPackage",
-    price: 299,
+    tagline_key: "personalTagline",
+    description_key: "personalDescription",
+    price_ron: 299,
+    price_eur: 75,
     delivery_time_key: "delivery14Days",
-    popular: true,
+    tag: "popular",
+    is_active: true,
+    is_popular: true,
     includes: [
-      "professionalComposition",
-      "personalizedLyrics", 
-      "highQualityRecording",
-      "mp3Download"
+      { include_key: "professionalComposition", include_order: 1 },
+      { include_key: "personalizedLyrics", include_order: 2 }, 
+      { include_key: "highQualityRecording", include_order: 3 },
+      { include_key: "mp3Download", include_order: 4 }
     ],
+    available_addons: ["rushDelivery", "extraRevision", "socialMediaRights"],
     steps: [
       {
         id: "story",
+        step_number: 1,
         title_key: "songStoryStep",
         fields: [
           {
             id: "recipient",
-            type: "text",
+            field_name: "recipient",
+            field_type: "text",
             label_key: "recipientLabel",
             placeholder_key: "recipientPlaceholder",
-            required: true
+            required: true,
+            field_order: 1
           },
           {
             id: "includeNameInSong",
-            type: "radio",
+            field_name: "includeNameInSong",
+            field_type: "radio",
             label_key: "includeNameInSongLabel",
             placeholder_key: "includeNameInSongPlaceholder",
             required: true,
+            field_order: 2,
             options: [
               { value: "yes", label_key: "yes" },
               { value: "no", label_key: "no" }
@@ -37,17 +48,21 @@ export const packages = [
           },
           {
             id: "pronunciationAudio",
-            type: "audio",
+            field_name: "pronunciationAudio",
+            field_type: "audio",
             label_key: "pronunciationAudioLabel",
             placeholder_key: "pronunciationAudioPlaceholder",
-            required: false
+            required: false,
+            field_order: 3
           },
           {
             id: "occasion",
-            type: "select",
+            field_name: "occasion",
+            field_type: "select",
             label_key: "occasionLabel",
             placeholder_key: "occasionPlaceholder",
             required: true,
+            field_order: 4,
             options: [
               { value: "birthday", label_key: "occasionBirthday" },
               { value: "anniversary", label_key: "occasionAnniversary" },
@@ -63,44 +78,55 @@ export const packages = [
           },
           {
             id: "specialRequests",
-            type: "textarea",
+            field_name: "specialRequests",
+            field_type: "textarea",
             label_key: "specialRequestsLabel",
             placeholder_key: "specialRequestsPlaceholder",
-            required: false
+            required: false,
+            field_order: 5
           },
           {
             id: "deliveryInstructions",
-            type: "textarea",
+            field_name: "deliveryInstructions",
+            field_type: "textarea",
             label_key: "deliveryInstructionsLabel", 
             placeholder_key: "deliveryInstructionsPlaceholder",
-            required: false
+            required: false,
+            field_order: 6
           }
         ]
       },
       {
         id: "personal",
+        step_number: 2,
         title_key: "personalDetailsStep",
         fields: [
           {
             id: "fullName",
-            type: "text",
+            field_name: "fullName",
+            field_type: "text",
             label_key: "fullNameLabel",
             placeholder_key: "fullNamePlaceholder",
-            required: true
+            required: true,
+            field_order: 1
           },
           {
             id: "birthDate",
-            type: "date",
+            field_name: "birthDate",
+            field_type: "date",
             label_key: "birthDateLabel",
             placeholder_key: "birthDatePlaceholder",
-            required: false
+            required: false,
+            field_order: 2
           },
           {
             id: "gender",
-            type: "select",
+            field_name: "gender",
+            field_type: "select",
             label_key: "genderLabel",
             placeholder_key: "genderPlaceholder",
             required: false,
+            field_order: 3,
             options: [
               { value: "male", label_key: "male" },
               { value: "female", label_key: "female" },
@@ -109,10 +135,12 @@ export const packages = [
           },
           {
             id: "relationship",
-            type: "select",
+            field_name: "relationship",
+            field_type: "select",
             label_key: "relationshipLabel",
             placeholder_key: "relationshipPlaceholder",
             required: true,
+            field_order: 4,
             options: [
               { value: "partner", label_key: "relationshipPartner" },
               { value: "spouse", label_key: "relationshipSpouse" },
@@ -127,50 +155,62 @@ export const packages = [
           },
           {
             id: "relationshipText",
-            type: "textarea",
+            field_name: "relationshipText",
+            field_type: "textarea",
             label_key: "relationshipTextLabel",
             placeholder_key: "relationshipTextPlaceholder",
-            required: false
+            required: false,
+            field_order: 5
           }
         ]
       },
       {
         id: "content",
+        step_number: 3,
         title_key: "contactInfoStep",
         fields: [
           {
             id: "storyDetailed",
-            type: "textarea",
+            field_name: "storyDetailed",
+            field_type: "textarea",
             label_key: "storyDetailedLabel",
             placeholder_key: "storyDetailedPlaceholder",
-            required: true
+            required: true,
+            field_order: 1
           },
           {
             id: "keywords",
-            type: "textarea",
+            field_name: "keywords",
+            field_type: "textarea",
             label_key: "keywordsLabel",
             placeholder_key: "keywordsPlaceholder",
-            required: false
+            required: false,
+            field_order: 2
           },
           {
             id: "keywordsAudio",
-            type: "audio",
+            field_name: "keywordsAudio",
+            field_type: "audio",
             label_key: "keywordsAudioLabel",
             placeholder_key: "keywordsAudioPlaceholder",
-            required: false
+            required: false,
+            field_order: 3
           }
         ]
       },
       {
         id: "musical",
+        step_number: 4,
         title_key: "musicalPreferencesStep",
         fields: [
           {
             id: "favoriteGenre",
-            type: "select",
+            field_name: "favoriteGenre",
+            field_type: "select",
             label_key: "favoriteGenreLabel",
             placeholder_key: "favoriteGenrePlaceholder",
             required: true,
+            field_order: 1,
             options: [
               { value: "pop", label_key: "stylePopContemporary" },
               { value: "rock", label_key: "styleRockBallad" },
@@ -186,10 +226,12 @@ export const packages = [
           },
           {
             id: "songLength",
-            type: "select",
+            field_name: "songLength",
+            field_type: "select",
             label_key: "songLengthLabel",
             placeholder_key: "songLengthPlaceholder",
             required: false,
+            field_order: 2,
             options: [
               { value: "short", label_key: "short" },
               { value: "medium", label_key: "medium" },
@@ -198,17 +240,21 @@ export const packages = [
           },
           {
             id: "instruments",
-            type: "textarea",
+            field_name: "instruments",
+            field_type: "textarea",
             label_key: "instrumentsLabel",
             placeholder_key: "instrumentsPlaceholder",
-            required: false
+            required: false,
+            field_order: 3
           },
           {
             id: "mood",
-            type: "select",
+            field_name: "mood",
+            field_type: "select",
             label_key: "moodLabel",
             placeholder_key: "moodPlaceholder",
             required: true,
+            field_order: 4,
             options: [
               { value: "romantic", label_key: "moodRomantic" },
               { value: "cheerful", label_key: "moodCheerful" },
@@ -222,31 +268,39 @@ export const packages = [
           },
           {
             id: "lyricsTheme",
-            type: "textarea",
+            field_name: "lyricsTheme",
+            field_type: "textarea",
             label_key: "lyricsThemeLabel",
             placeholder_key: "lyricsThemePlaceholder",
-            required: false
+            required: false,
+            field_order: 5
           },
           {
             id: "styleReference",
-            type: "text",
+            field_name: "styleReference",
+            field_type: "text",
             label_key: "styleReferenceLabel",
             placeholder_key: "styleReferencePlaceholder",
-            required: false
+            required: false,
+            field_order: 6
           },
           {
             id: "youtubeExample",
-            type: "text",
+            field_name: "youtubeExample",
+            field_type: "text",
             label_key: "youtubeExampleLabel",
             placeholder_key: "youtubeExamplePlaceholder",
-            required: false
+            required: false,
+            field_order: 7
           },
           {
             id: "voiceGender",
-            type: "radio",
+            field_name: "voiceGender",
+            field_type: "radio",
             label_key: "voiceGenderLabel",
             placeholder_key: "voiceGenderPlaceholder",
             required: true,
+            field_order: 8,
             options: [
               { value: "feminine", label_key: "voiceFeminine" },
               { value: "masculine", label_key: "voiceMasculine" },
@@ -256,10 +310,12 @@ export const packages = [
           },
           {
             id: "songLanguage",
-            type: "select",
+            field_name: "songLanguage",
+            field_type: "select",
             label_key: "songLanguageLabel",
             placeholder_key: "songLanguagePlaceholder",
             required: true,
+            field_order: 9,
             options: [
               { value: "romanian", label_key: "romanianLanguage" },
               { value: "english", label_key: "englishLanguage" },
@@ -271,28 +327,35 @@ export const packages = [
       },
       {
         id: "contact",
+        step_number: 5,
         title_key: "contactDetailsStep",
         fields: [
           {
             id: "email",
-            type: "email",
+            field_name: "email",
+            field_type: "email",
             label_key: "emailLabel",
             placeholder_key: "emailPlaceholder",
-            required: true
+            required: true,
+            field_order: 1
           },
           {
             id: "phone",
-            type: "text",
+            field_name: "phone",
+            field_type: "text",
             label_key: "phoneLabel",
             placeholder_key: "phonePlaceholder",
-            required: false
+            required: false,
+            field_order: 2
           },
           {
             id: "dedicationMessage",
-            type: "textarea",
+            field_name: "dedicationMessage",
+            field_type: "textarea",
             label_key: "dedicationMessageLabel",
             placeholder_key: "dedicationMessagePlaceholder",
-            required: false
+            required: false,
+            field_order: 3
           }
         ]
       }
@@ -302,35 +365,46 @@ export const packages = [
     id: "premium",
     value: "premium",
     label_key: "premiumPackage",
-    price: 699,
+    tagline_key: "premiumTagline",
+    description_key: "premiumDescription",
+    price_ron: 699,
+    price_eur: 175,
     delivery_time_key: "delivery21Days",
+    tag: "premium",
+    is_active: true,
     premium: true,
     includes: [
-      "professionalComposition",
-      "personalizedLyrics",
-      "highQualityRecording",
-      "globalDistribution",
-      "mp3Download",
-      "mixedMastered"
+      { include_key: "professionalComposition", include_order: 1 },
+      { include_key: "personalizedLyrics", include_order: 2 },
+      { include_key: "highQualityRecording", include_order: 3 },
+      { include_key: "globalDistribution", include_order: 4 },
+      { include_key: "mp3Download", include_order: 5 },
+      { include_key: "mixedMastered", include_order: 6 }
     ],
+    available_addons: ["rushDelivery", "extraRevision", "customVideo", "separatedStems"],
     steps: [
       {
         id: "story",
+        step_number: 1,
         title_key: "songStoryStep",
         fields: [
           {
             id: "recipient",
-            type: "text",
+            field_name: "recipient",
+            field_type: "text",
             label_key: "recipientLabel",
             placeholder_key: "recipientPlaceholder",
-            required: true
+            required: true,
+            field_order: 1
           },
           {
             id: "includeNameInSong",
-            type: "radio",
+            field_name: "includeNameInSong",
+            field_type: "radio",
             label_key: "includeNameInSongLabel",
             placeholder_key: "includeNameInSongPlaceholder",
             required: true,
+            field_order: 2,
             options: [
               { value: "yes", label_key: "yes" },
               { value: "no", label_key: "no" }
@@ -338,17 +412,21 @@ export const packages = [
           },
           {
             id: "pronunciationAudio",
-            type: "audio",
+            field_name: "pronunciationAudio",
+            field_type: "audio",
             label_key: "pronunciationAudioLabel",
             placeholder_key: "pronunciationAudioPlaceholder",
-            required: false
+            required: false,
+            field_order: 3
           },
           {
             id: "occasion",
-            type: "select",
+            field_name: "occasion",
+            field_type: "select",
             label_key: "occasionLabel",
             placeholder_key: "occasionPlaceholder",
             required: true,
+            field_order: 4,
             options: [
               { value: "birthday", label_key: "occasionBirthday" },
               { value: "anniversary", label_key: "occasionAnniversary" },
@@ -364,44 +442,55 @@ export const packages = [
           },
           {
             id: "specialRequests",
-            type: "textarea",
+            field_name: "specialRequests",
+            field_type: "textarea",
             label_key: "specialRequestsLabel",
             placeholder_key: "specialRequestsPlaceholder",
-            required: false
+            required: false,
+            field_order: 5
           },
           {
             id: "deliveryInstructions",
-            type: "textarea",
+            field_name: "deliveryInstructions",
+            field_type: "textarea",
             label_key: "deliveryInstructionsLabel", 
             placeholder_key: "deliveryInstructionsPlaceholder",
-            required: false
+            required: false,
+            field_order: 6
           }
         ]
       },
       {
         id: "personal",
+        step_number: 2,
         title_key: "personalDetailsStep",
         fields: [
           {
             id: "fullName",
-            type: "text",
+            field_name: "fullName",
+            field_type: "text",
             label_key: "fullNameLabel",
             placeholder_key: "fullNamePlaceholder",
-            required: true
+            required: true,
+            field_order: 1
           },
           {
             id: "birthDate",
-            type: "date",
+            field_name: "birthDate",
+            field_type: "date",
             label_key: "birthDateLabel",
             placeholder_key: "birthDatePlaceholder",
-            required: false
+            required: false,
+            field_order: 2
           },
           {
             id: "gender",
-            type: "select",
+            field_name: "gender",
+            field_type: "select",
             label_key: "genderLabel",
             placeholder_key: "genderPlaceholder",
             required: false,
+            field_order: 3,
             options: [
               { value: "male", label_key: "male" },
               { value: "female", label_key: "female" },
@@ -410,10 +499,12 @@ export const packages = [
           },
           {
             id: "relationship",
-            type: "select",
+            field_name: "relationship",
+            field_type: "select",
             label_key: "relationshipLabel",
             placeholder_key: "relationshipPlaceholder",
             required: true,
+            field_order: 4,
             options: [
               { value: "partner", label_key: "relationshipPartner" },
               { value: "spouse", label_key: "relationshipSpouse" },
@@ -428,50 +519,62 @@ export const packages = [
           },
           {
             id: "relationshipText",
-            type: "textarea",
+            field_name: "relationshipText",
+            field_type: "textarea",
             label_key: "relationshipTextLabel",
             placeholder_key: "relationshipTextPlaceholder",
-            required: false
+            required: false,
+            field_order: 5
           }
         ]
       },
       {
         id: "content",
+        step_number: 3,
         title_key: "contactInfoStep",
         fields: [
           {
             id: "storyDetailed",
-            type: "textarea",
+            field_name: "storyDetailed",
+            field_type: "textarea",
             label_key: "storyDetailedLabel",
             placeholder_key: "storyDetailedPlaceholder",
-            required: true
+            required: true,
+            field_order: 1
           },
           {
             id: "keywords",
-            type: "textarea",
+            field_name: "keywords",
+            field_type: "textarea",
             label_key: "keywordsLabel",
             placeholder_key: "keywordsPlaceholder",
-            required: false
+            required: false,
+            field_order: 2
           },
           {
             id: "keywordsAudio",
-            type: "audio",
+            field_name: "keywordsAudio",
+            field_type: "audio",
             label_key: "keywordsAudioLabel",
             placeholder_key: "keywordsAudioPlaceholder",
-            required: false
+            required: false,
+            field_order: 3
           }
         ]
       },
       {
         id: "musical",
+        step_number: 4,
         title_key: "musicalPreferencesStep",
         fields: [
           {
             id: "favoriteGenre",
-            type: "select",
+            field_name: "favoriteGenre",
+            field_type: "select",
             label_key: "favoriteGenreLabel",
             placeholder_key: "favoriteGenrePlaceholder",
             required: true,
+            field_order: 1,
             options: [
               { value: "pop", label_key: "stylePopContemporary" },
               { value: "rock", label_key: "styleRockBallad" },
@@ -487,10 +590,12 @@ export const packages = [
           },
           {
             id: "songLength",
-            type: "select",
+            field_name: "songLength",
+            field_type: "select",
             label_key: "songLengthLabel",
             placeholder_key: "songLengthPlaceholder",
             required: false,
+            field_order: 2,
             options: [
               { value: "short", label_key: "short" },
               { value: "medium", label_key: "medium" },
@@ -499,17 +604,21 @@ export const packages = [
           },
           {
             id: "instruments",
-            type: "textarea",
+            field_name: "instruments",
+            field_type: "textarea",
             label_key: "instrumentsLabel",
             placeholder_key: "instrumentsPlaceholder",
-            required: false
+            required: false,
+            field_order: 3
           },
           {
             id: "mood",
-            type: "select",
+            field_name: "mood",
+            field_type: "select",
             label_key: "moodLabel",
             placeholder_key: "moodPlaceholder",
             required: true,
+            field_order: 4,
             options: [
               { value: "romantic", label_key: "moodRomantic" },
               { value: "cheerful", label_key: "moodCheerful" },
@@ -523,31 +632,39 @@ export const packages = [
           },
           {
             id: "lyricsTheme",
-            type: "textarea",
+            field_name: "lyricsTheme",
+            field_type: "textarea",
             label_key: "lyricsThemeLabel",
             placeholder_key: "lyricsThemePlaceholder",
-            required: false
+            required: false,
+            field_order: 5
           },
           {
             id: "styleReference",
-            type: "text",
+            field_name: "styleReference",
+            field_type: "text",
             label_key: "styleReferenceLabel",
             placeholder_key: "styleReferencePlaceholder",
-            required: false
+            required: false,
+            field_order: 6
           },
           {
             id: "youtubeExample",
-            type: "text",
+            field_name: "youtubeExample",
+            field_type: "text",
             label_key: "youtubeExampleLabel",
             placeholder_key: "youtubeExamplePlaceholder",
-            required: false
+            required: false,
+            field_order: 7
           },
           {
             id: "voiceGender",
-            type: "radio",
+            field_name: "voiceGender",
+            field_type: "radio",
             label_key: "voiceGenderLabel",
             placeholder_key: "voiceGenderPlaceholder",
             required: true,
+            field_order: 8,
             options: [
               { value: "feminine", label_key: "voiceFeminine" },
               { value: "masculine", label_key: "voiceMasculine" },
@@ -557,10 +674,12 @@ export const packages = [
           },
           {
             id: "songLanguage",
-            type: "select",
+            field_name: "songLanguage",
+            field_type: "select",
             label_key: "songLanguageLabel",
             placeholder_key: "songLanguagePlaceholder",
             required: true,
+            field_order: 9,
             options: [
               { value: "romanian", label_key: "romanianLanguage" },
               { value: "english", label_key: "englishLanguage" },
@@ -572,28 +691,35 @@ export const packages = [
       },
       {
         id: "contact",
+        step_number: 5,
         title_key: "contactDetailsStep",
         fields: [
           {
             id: "email",
-            type: "email",
+            field_name: "email",
+            field_type: "email",
             label_key: "emailLabel",
             placeholder_key: "emailPlaceholder",
-            required: true
+            required: true,
+            field_order: 1
           },
           {
             id: "phone",
-            type: "text",
+            field_name: "phone",
+            field_type: "text",
             label_key: "phoneLabel",
             placeholder_key: "phonePlaceholder",
-            required: false
+            required: false,
+            field_order: 2
           },
           {
             id: "dedicationMessage",
-            type: "textarea",
+            field_name: "dedicationMessage",
+            field_type: "textarea",
             label_key: "dedicationMessageLabel",
             placeholder_key: "dedicationMessagePlaceholder",
-            required: false
+            required: false,
+            field_order: 3
           }
         ]
       }
@@ -601,34 +727,57 @@ export const packages = [
   }
 ];
 
-// Define the PackageData type
-export interface PackageData {
-  id: string;
-  value: string;
-  label_key: string;
-  price: number;
-  delivery_time_key: string;
-  popular?: boolean;
-  premium?: boolean;
-  includes: string[];
-  steps: Array<{
-    id: string;
-    title_key: string;
-    fields: Array<{
-      id: string;
-      type: string;
-      label_key: string;
-      placeholder_key?: string;
-      required: boolean;
-      options?: Array<{ value: string; label_key: string; }>;
-    }>;
-  }>;
-}
+// Import types from types.ts
+import type { Package, Addon } from '@/types';
 
-// Add-ons array (currently empty but needed for the hook)
-export const addOns: Array<{
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-}> = [];
+// Export type alias for backwards compatibility
+export type PackageData = Package;
+
+// Add-ons array with proper structure matching Addon interface
+export const addOns: Addon[] = [
+  {
+    id: "rushDelivery",
+    addon_key: "rushDelivery",
+    label_key: "rushDelivery",
+    description_key: "rushDeliveryDesc",
+    price_ron: 100,
+    price_eur: 25,
+    is_active: true
+  },
+  {
+    id: "extraRevision",
+    addon_key: "extraRevision", 
+    label_key: "extraRevision",
+    description_key: "extraRevisionDesc",
+    price_ron: 80,
+    price_eur: 20,
+    is_active: true
+  },
+  {
+    id: "socialMediaRights",
+    addon_key: "socialMediaRights",
+    label_key: "socialMediaRights", 
+    description_key: "socialMediaRightsDesc",
+    price_ron: 150,
+    price_eur: 38,
+    is_active: true
+  },
+  {
+    id: "customVideo",
+    addon_key: "customVideo",
+    label_key: "customVideo",
+    description_key: "customVideoDesc", 
+    price_ron: 200,
+    price_eur: 50,
+    is_active: true
+  },
+  {
+    id: "separatedStems",
+    addon_key: "separatedStems",
+    label_key: "separatedStems",
+    description_key: "separatedStemsDesc",
+    price_ron: 120,
+    price_eur: 30,
+    is_active: true
+  }
+];

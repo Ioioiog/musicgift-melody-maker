@@ -1,7 +1,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { packages, addOns, type PackageData } from '@/data/packages';
+import { packages, addOns } from '@/data/packages';
+import type { Package, Addon, Step, Field } from '@/types';
 
 export interface StepData {
   id: string;
@@ -26,14 +27,9 @@ export const usePackages = () => {
     queryFn: async () => {
       console.log('Using consolidated packages data...');
       
-      // Sort includes by include_order for each package (if available)
-      const transformedPackages = packages.map(pkg => ({
-        ...pkg,
-        includes: pkg.includes || []
-      }));
-      
-      console.log('Transformed packages:', transformedPackages);
-      return transformedPackages as PackageData[];
+      // The packages are already in the correct format matching Package interface
+      console.log('Transformed packages:', packages);
+      return packages as Package[];
     }
   });
 };
@@ -65,24 +61,9 @@ export const usePackageSteps = (packageValue: string) => {
           return [];
         }
 
-        // Transform the steps to match the StepData interface
-        const transformedSteps: StepData[] = packageData.steps.map((step, index) => ({
-          id: step.id,
-          step_number: index + 1,
-          title_key: step.title_key,
-          fields: step.fields.map((field, fieldIndex) => ({
-            id: field.id,
-            field_name: field.id,
-            field_type: field.type,
-            placeholder_key: field.placeholder_key,
-            required: field.required,
-            field_order: fieldIndex + 1,
-            options: field.options
-          }))
-        }));
-
-        console.log('Steps ready for component:', transformedSteps);
-        return transformedSteps;
+        // Steps are already in the correct format
+        console.log('Steps ready for component:', packageData.steps);
+        return packageData.steps as StepData[];
 
       } catch (error) {
         console.error('Error in usePackageSteps:', error);
@@ -103,11 +84,11 @@ export const useAddons = () => {
     queryFn: async () => {
       console.log('Using consolidated addons data...');
       
-      // The addons are already in the correct format, just return them
+      // The addons are already in the correct format matching Addon interface
       console.log('Addons ready for components:', addOns);
-      return addOns;
+      return addOns as Addon[];
     }
   });
 };
 
-export type { PackageData };
+export type { Package as PackageData, Addon };
