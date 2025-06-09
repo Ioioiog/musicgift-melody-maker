@@ -7,6 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { usePackages } from '@/hooks/usePackageData';
 import { getPackagePrice } from '@/utils/pricing';
+
 interface PackageSelectionStepProps {
   selectedPackage?: string;
   onPackageSelect: (packageValue: string) => void;
@@ -57,7 +58,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
       {/* Enhanced Compact Package Select Dropdown */}
       <div className="max-w-lg mx-auto">
         <Card className="bg-gradient-to-br from-indigo-500/30 via-purple-500/25 to-pink-500/30 backdrop-blur-lg border-2 border-white/30 shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-[1.02]">
-          <CardContent className="p-3">
+          <CardContent className="p-3 bg-orange-500/30 backdrop-blur-sm">
             <Select value={selectedPackage} onValueChange={onPackageSelect}>
               <SelectTrigger className="w-full h-8 text-left border-2 border-white/40 hover:border-purple-300/80 focus:border-purple-400 transition-all duration-300 bg-white/15 backdrop-blur-md shadow-lg hover:shadow-xl">
                 <SelectValue placeholder={<span className="text-white/80 text-sm">{t('selectOption')}</span>}>
