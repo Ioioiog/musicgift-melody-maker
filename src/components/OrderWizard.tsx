@@ -311,34 +311,23 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     }
     return true;
   };
-  return <div className="container py-8 mx-0 my-[83px]">
+  return (
+    <div className="container py-8 mx-0">
       <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
         <CardHeader className="pb-2 pt-6">
-          <CardTitle className="text-2xl font-bold text-white">
-            {t('orderDetails')}
-          </CardTitle>
-          <p className="text-white/80">
-            {t('completeAllSteps')}
-          </p>
-        </CardHeader>
-        <CardContent className="p-4 sm:p-6">
           <div className="mb-4">
             <StepIndicator steps={buildStepsData()} />
           </div>
-
+        </CardHeader>
+        <CardContent className="p-4 sm:p-6">
           <AnimatePresence initial={false} mode="wait">
-            <motion.div key={currentStep} initial={{
-            opacity: 0,
-            x: -20
-          }} animate={{
-            opacity: 1,
-            x: 0
-          }} exit={{
-            opacity: 0,
-            x: 20
-          }} transition={{
-            duration: 0.2
-          }}>
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.2 }}
+            >
               <div className="space-y-4">
                 {currentStep === 0 ? <PackageSelectionStep selectedPackage={formData.package} onPackageSelect={handlePackageSelect} /> : currentStepData ? <div>
                     <h3 className="text-xl font-semibold text-white mb-4">
@@ -352,13 +341,29 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             </motion.div>
           </AnimatePresence>
 
-          <WizardNavigation currentStep={currentStep} totalSteps={totalSteps} canProceed={canProceed()} isSubmitting={isSubmitting} onPrev={handlePrev} onNext={handleNext} onSubmit={handleSubmit} />
+          <WizardNavigation 
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            canProceed={canProceed()}
+            isSubmitting={isSubmitting}
+            onPrev={handlePrev}
+            onNext={handleNext}
+            onSubmit={handleSubmit}
+          />
         </CardContent>
       </Card>
 
-      {selectedPackage && <div className="mt-8">
-          <OrderSummary selectedPackage={selectedPackage} selectedAddons={selectedAddons} giftCard={giftCard} />
-        </div>}
-    </div>;
+      {selectedPackage && (
+        <div className="mt-8">
+          <OrderSummary 
+            selectedPackage={selectedPackage}
+            selectedAddons={selectedAddons}
+            giftCard={giftCard}
+          />
+        </div>
+      )}
+    </div>
+  );
 };
+
 export default OrderWizard;
