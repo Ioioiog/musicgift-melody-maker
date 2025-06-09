@@ -58,7 +58,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
   const selectedPackage = formData.package as string;
   const { data: packageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
   
-  const totalSteps = 1 + 1 + (packageSteps?.length || 0) + 1; // package + addons + form steps + payment
+  // Updated step calculation: package + form steps + addons + payment
+  const totalSteps = 1 + (packageSteps?.length || 0) + 1 + 1;
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
 
   useEffect(() => {
@@ -69,14 +70,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
       }
       
       setFormData(prev => ({ ...prev, package: preselectedPackage }));
-      setCurrentStep(1); // Go to addon step
+      setCurrentStep(1); // Go to first form step
     }
   }, [packages, preselectedPackage, navigate]);
 
   const handleNext = () => {
     if (currentStep === 0) {
       if (!formData.package) return;
-      setCurrentStep(1); // Go to addon step
+      setCurrentStep(1); // Go to first form step
     } else if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     }
@@ -412,16 +413,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     }
   };
 
-  const isAddonStep = currentStep === 1;
-  const isPaymentStep = currentStep === totalSteps - 1;
-  const currentPackageStepIndex = currentStep - 2; // Account for package step (0) and addon step (1)
-  const currentStepData = currentStep > 1 && !isPaymentStep ? packageSteps?.[currentPackageStepIndex] : null;
+  const isAddonStep = currentStep === totalSteps - 2; // Second to last step
+  const isPaymentStep = currentStep === totalSteps - 1; // Last step
+  const currentPackageStepIndex = currentStep - 1; // Account for package step (0)
+  const currentStepData = currentStep > 0 && !isAddonStep && !isPaymentStep ? packageSteps?.[currentPackageStepIndex] : null;
 
   const canProceed = () => {
     if (currentStep === 0) {
       return !!formData.package;
     }
-    if (currentStep === 1) {
+    if (isAddonStep) {
       // Addon step - always allow proceeding (addons are optional)
       return true;
     }
@@ -515,7 +516,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
             </Button>
             <Button
               onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
-              disabled={!canProceed() || (currentStep > 1 && !isPaymentStep && isStepsLoading) || isSubmitting}
+              disabled={!canProceed() || (currentStep > 0 && !isAddonStep && !isPaymentStep && isStepsLoading) || isSubmitting}
               className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
             >
               {isSubmitting ? (

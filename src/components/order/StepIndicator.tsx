@@ -11,14 +11,14 @@ interface StepIndicatorProps {
 const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep, totalSteps }) => {
   const { t } = useLanguage();
   
-  // Create steps array with package selection, addon selection, form steps, and payment
+  // Create steps array with package selection, form steps, addon selection, and payment
   const steps = [
     { number: 1, label: t('choosePackage') },
-    { number: 2, label: t('selectAddons', 'Select Add-ons') },
     ...Array.from({ length: totalSteps - 3 }, (_, i) => ({
-      number: i + 3,
+      number: i + 2,
       label: `${t('stepPackage')} ${i + 1}`
     })),
+    { number: totalSteps - 1, label: t('selectAddons', 'Select Add-ons') },
     { number: totalSteps, label: t('payment', 'Payment') }
   ];
 
