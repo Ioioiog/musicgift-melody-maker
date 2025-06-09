@@ -164,7 +164,7 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
 
   return (
     <div className="space-y-1">
-      <div className="text-center">
+      <div className="text-center hidden md:block">
         <h3 className="text-base font-semibold text-white mb-1">
           {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
         </h3>
