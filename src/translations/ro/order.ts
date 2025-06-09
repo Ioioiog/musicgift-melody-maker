@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -166,6 +167,41 @@ export const orderTranslations = {
   englishLanguage: "Engleză",
   frenchLanguage: "Franceză",
   
+  // Relationship options
+  relationshipPartner: "Partener/ă",
+  relationshipSpouse: "Soț/Soție",
+  relationshipFriend: "Prieten/ă",
+  relationshipFamily: "Familie",
+  relationshipChild: "Copil",
+  relationshipParent: "Părinte",
+  relationshipSibling: "Frate/Soră",
+  relationshipColleague: "Coleg/ă",
+  relationshipOther: "Altceva",
+  
+  // Occasion options
+  occasionBirthday: "Ziua de naștere",
+  occasionAnniversary: "Aniversarea",
+  occasionWedding: "Nuntă",
+  occasionValentines: "Ziua Îndrăgostiților",
+  occasionChristmas: "Crăciun",
+  occasionGraduation: "Absolvirea",
+  occasionMothersDay: "Ziua Mamei",
+  occasionFathersDay: "Ziua Tatălui",
+  occasionJustBecause: "Doar așa",
+  occasionOther: "Altă ocazie",
+  
+  // Music style options
+  stylePopContemporary: "Pop Contemporary",
+  styleRockBallad: "Rock Ballad",
+  styleFolkAcoustic: "Folk/Acoustic",
+  styleCountry: "Country",
+  styleJazzBlues: "Jazz/Blues",
+  styleClassical: "Classical",
+  styleElectronic: "Electronic",
+  styleHipHop: "Hip Hop",
+  styleRnB: "R&B",
+  styleReggae: "Reggae",
+  
   // Dedication message
   dedicationMessageLabel: "Mesaj Personal de Dedicație",
   dedicationMessagePlaceholder: "Un mesaj personal de inclus cu cântecul tău",
@@ -187,11 +223,8 @@ export const orderTranslations = {
   // Form validation and UI
   required: "Obligatoriu",
   optional: "Opțional",
-  next: "Următorul",
-  previous: "Anterior",
   submit: "Trimite Comanda",
   loading: "Se procesează...",
-  selectOption: "Selectează o opțiune",
   uploadFile: "Încarcă fișier",
   chooseDate: "Alege data",
   
@@ -201,8 +234,6 @@ export const orderTranslations = {
   invalidUrl: "Te rugăm să introduci un URL valid",
   fileSizeError: "Dimensiunea fișierului trebuie să fie mai mică de 10MB",
   fileTypeError: "Tip de fișier invalid",
-  fieldConfigurationError: "Eroare de configurare câmp: Nu sunt opțiuni disponibile",
-  unknownFieldType: "Tip de câmp necunoscut: {fieldType}",
   
   // Success messages
   stepCompleted: "Pasul a fost finalizat cu succes",
