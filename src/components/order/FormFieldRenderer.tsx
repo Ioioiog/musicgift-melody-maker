@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -208,7 +207,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
 
       case 'checkbox':
         return (
-          <div className="flex items-start space-x-2 bg-white border-2 border-gray-300 rounded-lg p-2 hover:border-orange-300 transition-all duration-200">
+          <div className="flex items-start space-x-2 bg-transparent rounded-lg p-1 hover:bg-white/5 transition-all duration-200">
             <Toggle
               pressed={value || false}
               onPressedChange={onChange}
@@ -225,7 +224,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                 <Plus className="w-2.5 h-2.5" />
               )}
             </Toggle>
-            <Label className="text-xs leading-relaxed cursor-pointer">
+            <Label className="text-xs leading-relaxed cursor-pointer text-white/90">
               {field.placeholder_key ? t(field.placeholder_key) : ''}
             </Label>
           </div>

@@ -226,12 +226,12 @@ const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
             </div>
           </div>
 
-          {/* Legal Acceptance Section */}
+          {/* Legal Acceptance Section - More Compact */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4 bg-gradient-to-r from-orange-500/30 to-red-500/30 p-3 rounded-lg border border-orange-400/30">
+            <h4 className="text-sm font-semibold text-white mb-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 p-2 rounded-lg border border-orange-400/20">
               {t('legalAcceptance', 'Legal Acceptance')}
             </h4>
-            <div className="space-y-4">
+            <div className="space-y-1">
               {contactLegalStepFields
                 .filter(field => ['acceptMentionObligation', 'acceptDistribution', 'finalNote'].includes(field.field_name))
                 .sort((a, b) => a.field_order - b.field_order)
