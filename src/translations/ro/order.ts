@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -166,6 +165,7 @@ export const orderTranslations = {
   romanianLanguage: "Română",
   englishLanguage: "Engleză",
   frenchLanguage: "Franceză",
+  italianLanguage: "Italiană",
   
   // Relationship options
   relationshipPartner: "Partener/ă",

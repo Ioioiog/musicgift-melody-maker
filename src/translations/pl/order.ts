@@ -163,5 +163,11 @@ export const orderTranslations = {
   packageContextGift: "Muzyczna karta podarunkowa",
   packageContextWedding: "Unikalna piosenka na pierwszy taniec",
   packageContextBaptism: "Spersonalizowana melodia na chrzest",
-  packageContextComingOfAge: "Hymn na 18. urodziny"
+  packageContextComingOfAge: "Hymn na 18. urodziny",
+
+  // Language options - adding Italian
+  romanianLanguage: "Rumuński",
+  englishLanguage: "Angielski", 
+  frenchLanguage: "Francuski",
+  italianLanguage: "Włoski"
 };
