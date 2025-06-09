@@ -35,7 +35,7 @@ export interface PackageTag {
 }
 
 export interface Package {
-  id?: string;
+  id?: string | number;
   value: string;
   label_key: string;
   tagline_key: string;
@@ -44,6 +44,8 @@ export interface Package {
   price_eur: number;
   delivery_time_key: string;
   tag?: string;
+  is_active?: boolean;
+  is_popular?: boolean;
   includes?: PackageInclude[];
   available_addons: string[];
   steps: Step[];

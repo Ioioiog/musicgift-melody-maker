@@ -1,3 +1,4 @@
+
 export interface PackageData {
   id: number;
   value: string;
@@ -9,7 +10,8 @@ export interface PackageData {
   delivery_time_key: string;
   is_active: boolean;
   is_popular: boolean;
-  tags: string[];
+  tag?: string; // Change from tags array to single tag
+  available_addons: string[]; // Add missing property
   includes: Array<{
     include_key: string;
     include_order: number;
@@ -43,7 +45,8 @@ export const packages: PackageData[] = [
     delivery_time_key: "personalDelivery",
     is_active: true,
     is_popular: true,
-    tags: ["popular"],
+    tag: "popular", // Change from tags array to single tag
+    available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles", "socialMediaRights", "distributieMangoRecords", "customVideo", "audioMessageFromSender", "commercialRightsUpgrade", "extendedSong", "separatedStems"],
     includes: [
       { include_key: "personalInclude1", include_order: 1 },
       { include_key: "personalInclude2", include_order: 2 },
@@ -321,7 +324,8 @@ export const packages: PackageData[] = [
     delivery_time_key: "premiumDelivery",
     is_active: true,
     is_popular: false,
-    tags: ["premium"],
+    tag: "premium",
+    available_addons: ["rushDelivery", "extraRevision", "sourceFiles", "customVideo", "audioMessageFromSender", "extendedSong", "separatedStems"],
     includes: [
       { include_key: "premiumInclude1", include_order: 1 },
       { include_key: "premiumInclude2", include_order: 2 },
@@ -340,7 +344,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "businessDelivery",
     is_active: true,
     is_popular: false,
-    tags: [],
+    available_addons: ["rushDelivery", "extraRevision", "customVideo", "brandedAudioMessage"],
     includes: [
       { include_key: "businessInclude1", include_order: 1 },
       { include_key: "businessInclude2", include_order: 2 },
@@ -361,7 +365,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "artistDelivery",
     is_active: true,
     is_popular: false,
-    tags: [],
+    available_addons: ["rushDelivery", "extraRevision", "separatedStems"],
     includes: [
       { include_key: "artistInclude1", include_order: 1 },
       { include_key: "artistInclude2", include_order: 2 },
@@ -381,7 +385,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "remixDelivery",
     is_active: true,
     is_popular: false,
-    tags: [],
+    available_addons: ["rushDelivery", "extraRevision", "sourceFiles", "separatedStems"],
     includes: [
       { include_key: "remixInclude1", include_order: 1 },
       { include_key: "remixInclude2", include_order: 2 },
@@ -403,7 +407,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "instrumentalDelivery",
     is_active: true,
     is_popular: false,
-    tags: [],
+    available_addons: ["rushDelivery", "extraRevision", "extendedLicense", "sourceFiles", "commercialRightsUpgrade", "separatedStems"],
     includes: [
       { include_key: "instrumentalInclude1", include_order: 1 },
       { include_key: "instrumentalInclude2", include_order: 2 },
@@ -424,7 +428,8 @@ export const packages: PackageData[] = [
     delivery_time_key: "plusDelivery",
     is_active: true,
     is_popular: false,
-    tags: ["new"],
+    tag: "new",
+    available_addons: ["rushDelivery", "extraRevision", "audioMessageFromSender", "extendedSong"],
     includes: [
       { include_key: "plusInclude1", include_order: 1 },
       { include_key: "plusInclude2", include_order: 2 },
@@ -443,7 +448,8 @@ export const packages: PackageData[] = [
     delivery_time_key: "giftDelivery",
     is_active: true,
     is_popular: false,
-    tags: ["gift"],
+    tag: "gift",
+    available_addons: [],
     includes: [
       { include_key: "giftInclude1", include_order: 1 },
       { include_key: "giftInclude2", include_order: 2 },
@@ -462,7 +468,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "weddingDelivery",
     is_active: true,
     is_popular: false,
-    tags: [],
+    available_addons: ["rushDelivery", "extraRevision"],
     includes: [
       { include_key: "weddingInclude1", include_order: 1 },
       { include_key: "weddingInclude2", include_order: 2 },
@@ -486,7 +492,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "baptismDelivery",
     is_active: true,
     is_popular: false,
-    tags: [],
+    available_addons: ["rushDelivery", "extraRevision", "godparentsmelody"],
     includes: [
       { include_key: "baptismInclude1", include_order: 1 },
       { include_key: "baptismInclude2", include_order: 2 },
@@ -508,7 +514,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "comingOfAgeDelivery",
     is_active: true,
     is_popular: false,
-    tags: [],
+    available_addons: ["rushDelivery", "extraRevision"],
     includes: [
       { include_key: "comingOfAgeInclude1", include_order: 1 },
       { include_key: "comingOfAgeInclude2", include_order: 2 },
@@ -523,120 +529,172 @@ export const packages: PackageData[] = [
 
 export const addOns = [
   {
-    id: 1,
-    value: "rushDelivery",
+    id: "1", // Change to string
+    addon_key: "rushDelivery", // Change from value to addon_key
     label_key: "rushDelivery",
     description_key: "rushDeliveryDesc",
     price_ron: 150,
     price_eur: 30,
-    availableFor: ["personal", "premium", "business", "artist", "remix", "instrumental", "wedding", "baptism", "comingOfAge"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 2,
-    value: "extraRevision",
+    id: "2",
+    addon_key: "extraRevision",
     label_key: "extraRevision",
     description_key: "extraRevisionDesc",
     price_ron: 125,
     price_eur: 25,
-    availableFor: ["personal", "premium", "business", "artist", "remix", "instrumental", "wedding", "baptism", "comingOfAge"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 3,
-    value: "extendedLicense",
+    id: "3",
+    addon_key: "extendedLicense",
     label_key: "extendedLicense",
     description_key: "extendedLicenseDesc",
     price_ron: 499,
     price_eur: 99,
-    availableFor: ["personal", "instrumental"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 4,
-    value: "sourceFiles",
+    id: "4",
+    addon_key: "sourceFiles",
     label_key: "sourceFiles",
     description_key: "sourceFilesDesc",
     price_ron: 375,
     price_eur: 75,
-    availableFor: ["personal", "premium", "remix", "instrumental"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 5,
-    value: "socialMediaRights",
+    id: "5",
+    addon_key: "socialMediaRights",
     label_key: "socialMediaRights",
     description_key: "socialMediaRightsDesc",
     price_ron: 199,
     price_eur: 39,
-    availableFor: ["personal"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 6,
-    value: "distributieMangoRecords",
+    id: "6",
+    addon_key: "distributieMangoRecords",
     label_key: "distributieMangoRecords",
     description_key: "distributieMangoRecordsDesc",
     price_ron: 299,
     price_eur: 59,
-    availableFor: ["personal"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 7,
-    value: "customVideo",
+    id: "7",
+    addon_key: "customVideo",
     label_key: "customVideo",
     description_key: "customVideoDesc",
     price_ron: 399,
     price_eur: 79,
-    availableFor: ["personal", "premium", "business"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 8,
-    value: "audioMessageFromSender",
+    id: "8",
+    addon_key: "audioMessageFromSender",
     label_key: "audioMessageFromSender",
     description_key: "audioMessageFromSenderDesc",
     price_ron: 99,
     price_eur: 19,
-    availableFor: ["personal", "premium", "plus"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 9,
-    value: "brandedAudioMessage",
+    id: "9",
+    addon_key: "brandedAudioMessage",
     label_key: "brandedAudioMessage",
     description_key: "brandedAudioMessageDesc",
     price_ron: 199,
     price_eur: 39,
-    availableFor: ["business"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 10,
-    value: "commercialRightsUpgrade",
+    id: "10",
+    addon_key: "commercialRightsUpgrade",
     label_key: "commercialRightsUpgrade",
     description_key: "commercialRightsUpgradeDesc",
     price_ron: 499,
     price_eur: 99,
-    availableFor: ["personal", "instrumental"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 11,
-    value: "extendedSong",
+    id: "11",
+    addon_key: "extendedSong",
     label_key: "extendedSong",
     description_key: "extendedSongDesc",
     price_ron: 199,
     price_eur: 39,
-    availableFor: ["personal", "premium", "plus"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 12,
-    value: "godparentsmelody",
+    id: "12",
+    addon_key: "godparentsmelody",
     label_key: "godparentsmelody",
     description_key: "godparentsmelodyDesc",
     price_ron: 299,
     price_eur: 59,
-    availableFor: ["baptism"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   },
   {
-    id: 13,
-    value: "separatedStems",
+    id: "13",
+    addon_key: "separatedStems",
     label_key: "separatedStems",
     description_key: "separatedStemsDesc",
     price_ron: 249,
     price_eur: 49,
-    availableFor: ["personal", "premium", "artist", "remix", "instrumental"]
+    is_active: true,
+    trigger_field_type: null,
+    trigger_field_config: {},
+    trigger_condition: "",
+    trigger_condition_value: ""
   }
 ];
