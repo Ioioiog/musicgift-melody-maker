@@ -1,7 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
-import OrderHeroSection from "@/components/order/OrderHeroSection";
 import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -13,7 +12,6 @@ import { useEffect, useState } from "react";
 import { useGiftCardByCode } from "@/hooks/useGiftCards";
 import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
 import { useCurrency } from "@/contexts/CurrencyContext";
-
 const Order = () => {
   const {
     toast
@@ -239,61 +237,39 @@ const Order = () => {
     // No additional handling needed here
   };
   if (isLoadingGift && giftCardCode) {
-    return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{
-          backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
+    return <div className="min-h-screen flex items-center justify-center" style={{
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="text-center relative z-10">
           <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-white">{t('loadingGiftCard')}</p>
         </div>
-      </div>
-    );
+      </div>;
   }
-  return (
-    <div
-      className="min-h-screen relative overflow-hidden"
-      style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
+  return <div className="min-h-screen relative overflow-hidden" style={{
+    backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
+  }}>
       {/* Dark overlay for better contrast */}
       <div className="absolute inset-0 bg-black/20"></div>
 
       <div className="relative z-10">
         <Navigation />
         
-        {/* Add Hero Section */}
-        <OrderHeroSection />
-        
-        <section className="py-4 sm:py-6 md:py-8">
-          <div className="container mx-auto px-2 sm:px-4">
-            {isGiftPackage ? (
-              <GiftPurchaseWizard onComplete={handleGiftCardComplete} />
-            ) : (
-              <OrderWizard 
-                onComplete={handleOrderComplete} 
-                giftCard={giftCard} 
-                preselectedPackage={preselectedPackage} 
-              />
-            )}
+        <section className="pt-16 sm:pt-20 md:pt-24 py-4 sm:py-6 md:py-8">
+          <div className="container mx-auto px-2 sm:px-4 py-0 my-[85px]">
+            {isGiftPackage ? <GiftPurchaseWizard onComplete={handleGiftCardComplete} /> : <OrderWizard onComplete={handleOrderComplete} giftCard={giftCard} preselectedPackage={preselectedPackage} />}
           </div>
         </section>
 
         <Footer />
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Order;
