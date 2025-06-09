@@ -326,12 +326,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   };
   return <div className="w-full">
       <Card className="bg-transparent border-transparent shadow-none backdrop-blur-0">
-        <CardHeader className="pb-1 pt-2 px-4 sm:px-6">
+        <CardHeader className="pb-1 pt-2 px-4 sm:px-6 py-0">
           <div className="mb-1">
             <StepIndicator steps={buildStepsData()} className="py-0 my-1 px-1 sm:px-2" />
           </div>
         </CardHeader>
-        <CardContent className="p-2 sm:p-3 px-[43px] my-[4px] py-0">
+        <CardContent className="p-2 sm:p-3 px-[43px] py-0 my-0">
           <AnimatePresence initial={false} mode="wait">
             <motion.div key={currentStep} initial={{
             opacity: 0,

@@ -15,15 +15,26 @@ import { useGiftCardByCode } from "@/hooks/useGiftCards";
 import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 const Order = () => {
-  const { toast } = useToast();
-  const { t } = useLanguage();
-  const { user } = useAuth();
-  const { currency } = useCurrency();
+  const {
+    toast
+  } = useToast();
+  const {
+    t
+  } = useLanguage();
+  const {
+    user
+  } = useAuth();
+  const {
+    currency
+  } = useCurrency();
   const navigate = useNavigate();
-  const { data: packages = [] } = usePackages();
-  const { data: addons = [] } = useAddons();
+  const {
+    data: packages = []
+  } = usePackages();
+  const {
+    data: addons = []
+  } = useAddons();
   const [searchParams] = useSearchParams();
   const [orderData, setOrderData] = useState<any>(null);
   const isMobile = useIsMobile();
@@ -33,11 +44,13 @@ const Order = () => {
   const preselectedPackage = searchParams.get('package');
 
   // Fetch gift card data if code is provided
-  const { data: giftCard, isLoading: isLoadingGift } = useGiftCardByCode(giftCardCode || '');
+  const {
+    data: giftCard,
+    isLoading: isLoadingGift
+  } = useGiftCardByCode(giftCardCode || '');
 
   // Check if the preselected package is the gift package
   const isGiftPackage = preselectedPackage === 'gift';
-
   useEffect(() => {
     if (giftCardCode && giftCard) {
       toast({
@@ -46,7 +59,6 @@ const Order = () => {
       });
     }
   }, [giftCardCode, giftCard, toast, t]);
-
   const calculateTotalPrice = (packageValue: string, selectedAddons: string[]) => {
     const packageData = packages.find(pkg => pkg.value === packageValue);
     const packagePrice = packageData ? getPackagePrice(packageData, currency) : 0;
@@ -56,7 +68,6 @@ const Order = () => {
     }, 0);
     return packagePrice + addonsPrice;
   };
-
   const handleOrderComplete = async (orderData: any) => {
     try {
       console.log("🔄 Processing order with selected payment provider:", orderData.paymentProvider);
@@ -225,37 +236,31 @@ const Order = () => {
       });
     }
   };
-
   const handleGiftCardComplete = (data: any) => {
     console.log("Gift card purchase completed:", data);
     // The GiftPurchaseWizard handles its own completion flow with payment redirection
     // No additional handling needed here
   };
-
   if (isLoadingGift && giftCardCode) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="text-center relative z-10">
-          <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white">{t('loadingGiftCard')}</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen relative overflow-hidden" style={{
+    return <div className="min-h-screen flex items-center justify-center" style={{
       backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }}>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="text-center relative z-10">
+          <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white">{t('loadingGiftCard')}</p>
+        </div>
+      </div>;
+  }
+  return <div className="min-h-screen relative overflow-hidden" style={{
+    backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
+  }}>
       {/* Dark overlay for better contrast */}
       <div className="absolute inset-0 bg-black/20"></div>
 
@@ -266,48 +271,29 @@ const Order = () => {
         
         <section className="py-2 sm:py-4 md:py-6 lg:py-8">
           <div className="container mx-auto px-2 sm:px-4 lg:px-6">
-            {isGiftPackage ? (
-              <div className="max-w-4xl mx-auto">
+            {isGiftPackage ? <div className="max-w-4xl mx-auto">
                 <GiftPurchaseWizard onComplete={handleGiftCardComplete} />
-              </div>
-            ) : (
-              <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6">
+              </div> : <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6">
                 {/* Main content - Order Wizard */}
-                <div className="flex-1 order-2 lg:order-1">
-                  <OrderWizard 
-                    onComplete={handleOrderComplete} 
-                    giftCard={giftCard} 
-                    preselectedPackage={preselectedPackage}
-                    onOrderDataChange={setOrderData}
-                  />
+                <div className="flex-1 order-2 lg:order-1 my-0">
+                  <OrderWizard onComplete={handleOrderComplete} giftCard={giftCard} preselectedPackage={preselectedPackage} onOrderDataChange={setOrderData} />
                 </div>
                 
                 {/* Mobile Order Summary - Above wizard on mobile */}
-                {isMobile && orderData?.selectedPackage && (
-                  <div className="order-1 lg:hidden">
-                    <OrderSidebarSummary 
-                      orderData={orderData}
-                      giftCard={giftCard}
-                    />
-                  </div>
-                )}
+                {isMobile && orderData?.selectedPackage && <div className="order-1 lg:hidden">
+                    <OrderSidebarSummary orderData={orderData} giftCard={giftCard} />
+                  </div>}
                 
                 {/* Desktop Sidebar - Order Summary */}
                 <div className="hidden lg:block lg:w-80 xl:w-96 order-3 lg:order-2">
-                  <OrderSidebarSummary 
-                    orderData={orderData}
-                    giftCard={giftCard}
-                  />
+                  <OrderSidebarSummary orderData={orderData} giftCard={giftCard} />
                 </div>
-              </div>
-            )}
+              </div>}
           </div>
         </section>
 
         <Footer />
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Order;

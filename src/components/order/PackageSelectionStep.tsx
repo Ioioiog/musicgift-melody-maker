@@ -49,7 +49,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
   return <div className="space-y-4">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent">
+        <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent my-0 py-0">
           {t('selectYourPackage')}
         </h2>
         <p className="text-white/90 text-base">{t('choosePackage')}</p>
