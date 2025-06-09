@@ -38,7 +38,7 @@ const WizardNavigation: React.FC<WizardNavigationProps> = ({
               <CreditCard className="w-3 h-3 mr-1" />
               <span>{t('completeOrder')}</span>
             </div>}
-        </Button> : <Button type="button" onClick={onNext} disabled={!canProceed} className="h-8 px-3 text-xs text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-orange-500 hover:bg-orange-400">
+        </Button> : <Button type="button" onClick={onNext} disabled={!canProceed} className="h-8 px-3 text-xs text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-black-500 ">
           {t('next')}
           <ChevronRight className="w-3 h-3 ml-1" />
         </Button>}
