@@ -317,7 +317,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   };
   return (
     <div className="w-full">
-      <Card className="bg-gradient-to-br from-gray-100/95 to-gray-200/95 backdrop-blur-md border border-gray-300/50 hover:border-gray-400/60 transition-all duration-300 shadow-xl">
+      <Card className="bg-transparent border-transparent shadow-none backdrop-blur-0">
         <CardHeader className="pb-2 pt-4 px-4 sm:px-6">
           <div className="mb-2">
             <StepIndicator steps={buildStepsData()} className="py-0 my-2 px-2 sm:px-4" />
