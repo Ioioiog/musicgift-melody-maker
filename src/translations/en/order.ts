@@ -150,18 +150,16 @@ export const orderTranslations = {
   stepCompleted: "Step completed successfully",
   orderSubmitted: "Order submitted successfully",
   
-  // Package-specific context
-  packageContext: {
-    personal: "Create a personalized song for someone special",
-    premium: "Professional song with global distribution",
-    business: "Custom music for your brand",
-    artist: "Launch your music career",
-    remix: "Transform your existing song",
-    instrumental: "Custom instrumental track",
-    plus: "Quick musical message",
-    gift: "Musical gift card",
-    wedding: "Unique wedding dance song",
-    baptism: "Personalized baptism melody",
-    "coming-of-age": "18th birthday anthem"
-  }
+  // Package-specific context (flattened)
+  packageContextPersonal: "Create a personalized song for someone special",
+  packageContextPremium: "Professional song with global distribution",
+  packageContextBusiness: "Custom music for your brand",
+  packageContextArtist: "Launch your music career",
+  packageContextRemix: "Transform your existing song",
+  packageContextInstrumental: "Custom instrumental track",
+  packageContextPlus: "Quick musical message",
+  packageContextGift: "Musical gift card",
+  packageContextWedding: "Unique wedding dance song",
+  packageContextBaptism: "Personalized baptism melody",
+  packageContextComingOfAge: "18th birthday anthem"
 };
