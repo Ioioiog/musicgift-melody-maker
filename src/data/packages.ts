@@ -17,7 +17,7 @@ export const packages = [
       { include_key: "highQualityRecording", include_order: 3 },
       { include_key: "mp3Download", include_order: 4 }
     ],
-    available_addons: ["rushDelivery", "extraRevision", "socialMediaRights"],
+    available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: [
       {
         id: "story",
@@ -381,7 +381,7 @@ export const packages = [
       { include_key: "mp3Download", include_order: 5 },
       { include_key: "mixedMastered", include_order: 6 }
     ],
-    available_addons: ["rushDelivery", "extraRevision", "customVideo", "separatedStems"],
+    available_addons: ["rushDelivery", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: [
       {
         id: "story",
@@ -742,7 +742,7 @@ export const packages = [
       { include_key: "highQualityRecording", include_order: 3 },
       { include_key: "mp3Download", include_order: 4 }
     ],
-    available_addons: ["rushDelivery", "extraRevision"],
+    available_addons: [],
     steps: []
   },
   {
@@ -763,7 +763,7 @@ export const packages = [
       { include_key: "commercialRights", include_order: 4 },
       { include_key: "mp3Download", include_order: 5 }
     ],
-    available_addons: ["rushDelivery", "extraRevision", "customVideo"],
+    available_addons: ["rushDelivery", "mangoRecordsDistribution", "customVideo", "brandedAudioMessage", "commercialRightsUpgrade"],
     steps: []
   },
   {
@@ -780,7 +780,7 @@ export const packages = [
       { include_key: "professionalRemix", include_order: 1 },
       { include_key: "mp3Download", include_order: 2 }
     ],
-    available_addons: ["rushDelivery"],
+    available_addons: ["rushDelivery", "mangoRecordsDistribution", "customVideo"],
     steps: []
   },
   {
@@ -798,7 +798,7 @@ export const packages = [
       { include_key: "instrumentalOnly", include_order: 2 },
       { include_key: "mp3Download", include_order: 3 }
     ],
-    available_addons: ["rushDelivery", "extraRevision"],
+    available_addons: ["rushDelivery", "mangoRecordsDistribution", "customVideo", "separatedStems"],
     steps: []
   },
   {
@@ -818,7 +818,7 @@ export const packages = [
       { include_key: "weddingSpecial", include_order: 4 },
       { include_key: "mp3Download", include_order: 5 }
     ],
-    available_addons: ["rushDelivery", "extraRevision", "customVideo"],
+    available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo", "audioMessageFromSender", "extendedSong", "godparentsMelody"],
     steps: []
   },
   {
@@ -837,7 +837,7 @@ export const packages = [
       { include_key: "highQualityRecording", include_order: 3 },
       { include_key: "mp3Download", include_order: 4 }
     ],
-    available_addons: ["rushDelivery", "extraRevision"],
+    available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: []
   },
   {
@@ -856,7 +856,7 @@ export const packages = [
       { include_key: "highQualityRecording", include_order: 3 },
       { include_key: "mp3Download", include_order: 4 }
     ],
-    available_addons: ["rushDelivery", "extraRevision"],
+    available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo", "audioMessageFromSender", "extendedSong"],
     steps: []
   },
   {
@@ -877,7 +877,7 @@ export const packages = [
       { include_key: "commercialRights", include_order: 5 },
       { include_key: "mp3Download", include_order: 6 }
     ],
-    available_addons: ["rushDelivery", "extraRevision", "customVideo", "separatedStems"],
+    available_addons: [],
     steps: []
   },
   {
@@ -897,7 +897,7 @@ export const packages = [
       { include_key: "extraRevisionIncluded", include_order: 4 },
       { include_key: "mp3Download", include_order: 5 }
     ],
-    available_addons: ["rushDelivery", "socialMediaRights"],
+    available_addons: [],
     steps: []
   }
 ];
@@ -908,23 +908,14 @@ import type { Package, Addon } from '@/types';
 // Export type alias for backwards compatibility
 export type PackageData = Package;
 
-// Add-ons array with proper structure matching Addon interface
+// Updated Add-ons array with all 10 addons and proper structure matching Addon interface
 export const addOns: Addon[] = [
   {
     id: "rushDelivery",
     addon_key: "rushDelivery",
     label_key: "rushDelivery",
     description_key: "rushDeliveryDesc",
-    price_ron: 100,
-    price_eur: 25,
-    is_active: true
-  },
-  {
-    id: "extraRevision",
-    addon_key: "extraRevision", 
-    label_key: "extraRevision",
-    description_key: "extraRevisionDesc",
-    price_ron: 80,
+    price_ron: 99,
     price_eur: 20,
     is_active: true
   },
@@ -933,8 +924,17 @@ export const addOns: Addon[] = [
     addon_key: "socialMediaRights",
     label_key: "socialMediaRights", 
     description_key: "socialMediaRightsDesc",
-    price_ron: 150,
-    price_eur: 38,
+    price_ron: 0,
+    price_eur: 0,
+    is_active: true
+  },
+  {
+    id: "mangoRecordsDistribution",
+    addon_key: "mangoRecordsDistribution",
+    label_key: "mangoRecordsDistribution",
+    description_key: "mangoRecordsDistributionDesc",
+    price_ron: 199,
+    price_eur: 40,
     is_active: true
   },
   {
@@ -942,8 +942,61 @@ export const addOns: Addon[] = [
     addon_key: "customVideo",
     label_key: "customVideo",
     description_key: "customVideoDesc", 
-    price_ron: 200,
-    price_eur: 50,
+    price_ron: 149,
+    price_eur: 30,
+    is_active: true
+  },
+  {
+    id: "audioMessageFromSender",
+    addon_key: "audioMessageFromSender",
+    label_key: "audioMessageFromSender",
+    description_key: "audioMessageFromSenderDesc",
+    price_ron: 99,
+    price_eur: 20,
+    is_active: true,
+    trigger_field_type: "audio-recorder",
+    trigger_field_config: {
+      maxDuration: 30
+    }
+  },
+  {
+    id: "brandedAudioMessage",
+    addon_key: "brandedAudioMessage",
+    label_key: "brandedAudioMessage",
+    description_key: "brandedAudioMessageDesc",
+    price_ron: 0,
+    price_eur: 0,
+    is_active: true,
+    trigger_field_type: "audio-recorder",
+    trigger_field_config: {
+      maxDuration: 15
+    }
+  },
+  {
+    id: "commercialRightsUpgrade",
+    addon_key: "commercialRightsUpgrade",
+    label_key: "commercialRightsUpgrade",
+    description_key: "commercialRightsUpgradeDesc",
+    price_ron: 399,
+    price_eur: 80,
+    is_active: true
+  },
+  {
+    id: "extendedSong",
+    addon_key: "extendedSong",
+    label_key: "extendedSong",
+    description_key: "extendedSongDesc",
+    price_ron: 49,
+    price_eur: 10,
+    is_active: true
+  },
+  {
+    id: "godparentsMelody",
+    addon_key: "godparentsMelody",
+    label_key: "godparentsMelody",
+    description_key: "godparentsMelodyDesc",
+    price_ron: 199,
+    price_eur: 40,
     is_active: true
   },
   {
@@ -951,7 +1004,7 @@ export const addOns: Addon[] = [
     addon_key: "separatedStems",
     label_key: "separatedStems",
     description_key: "separatedStemsDesc",
-    price_ron: 120,
+    price_ron: 149,
     price_eur: 30,
     is_active: true
   }
