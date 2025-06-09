@@ -437,6 +437,61 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
     }
   };
 
+  // Calculate steps for StepIndicator
+  const getStepData = () => {
+    const steps = [];
+    
+    // Step 1: Package Selection
+    steps.push({
+      number: 1,
+      label: t('choosePackage'),
+      isCompleted: currentStep > 0,
+      isCurrent: currentStep === 0
+    });
+
+    // Steps 2-N: Regular Package Steps
+    regularSteps.forEach((step, index) => {
+      const stepNumber = index + 2;
+      steps.push({
+        number: stepNumber,
+        label: t(step.title_key) || step.title_key,
+        isCompleted: currentStep > stepNumber - 1,
+        isCurrent: currentStep === stepNumber - 1
+      });
+    });
+
+    // Addons Step
+    const addonStepNumber = regularSteps.length + 2;
+    steps.push({
+      number: addonStepNumber,
+      label: t('selectAddons', 'Select Add-ons'),
+      isCompleted: currentStep > addonStepIndex,
+      isCurrent: currentStep === addonStepIndex
+    });
+
+    // Contact/Legal Step (if exists)
+    if (contactLegalStep) {
+      const contactStepNumber = addonStepNumber + 1;
+      steps.push({
+        number: contactStepNumber,
+        label: t('contactDetailsStep', 'Contact & Legal'),
+        isCompleted: currentStep > contactLegalStepIndex,
+        isCurrent: currentStep === contactLegalStepIndex
+      });
+    }
+
+    // Payment Step
+    const paymentStepNumber = contactLegalStep ? addonStepNumber + 2 : addonStepNumber + 1;
+    steps.push({
+      number: paymentStepNumber,
+      label: t('payment', 'Payment'),
+      isCompleted: false, // Payment is never completed in this flow
+      isCurrent: currentStep === paymentStepIndex
+    });
+
+    return steps;
+  };
+
   // Determine which step we're on
   const regularStepCount = packageSteps.length;
   const isAddonStep = currentStep === addonStepIndex;
@@ -479,7 +534,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({ giftCard, onComplete, presele
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
           <div className="mb-4">
-            <StepIndicator currentStep={currentStep + 1} totalSteps={totalSteps} />
+            <StepIndicator steps={getStepData()} />
           </div>
 
           <AnimatePresence initial={false} mode="wait">
