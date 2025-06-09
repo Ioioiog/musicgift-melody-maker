@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Gift, Check, Sparkles } from 'lucide-react';
+import { Clock, Gift, Check, Sparkles, Star, Music, Headphones } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { usePackages } from '@/hooks/usePackageData';
@@ -108,35 +108,83 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
         </Card>
       </div>
 
-      {/* Professional Selected Package Summary */}
+      {/* Enhanced Selected Package Summary */}
       {selectedPackageData && <div className="max-w-lg mx-auto">
           <Card className="bg-white/20 backdrop-blur-md border-l-4 border-l-orange-500 border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/25">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="bg-orange-100/80 backdrop-blur-sm rounded-full p-2">
-                    <Check className="w-4 h-4 text-orange-600" />
-                  </div>
-                  <div>
-                    <span className="text-gray-900 font-semibold text-sm">
-                      {t('selected')}: {t(selectedPackageData.label_key)}
-                    </span>
-                    <div className="flex items-center gap-2 text-xs text-gray-700 mt-1">
-                      <Clock className="w-3 h-3 text-orange-500" />
-                      <span>{t(selectedPackageData.delivery_time_key)}</span>
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                {/* Header with package name and price */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-orange-100/80 backdrop-blur-sm rounded-full p-2">
+                      <Check className="w-4 h-4 text-orange-600" />
+                    </div>
+                    <div>
+                      <span className="text-gray-900 font-semibold text-base">
+                        {t(selectedPackageData.label_key)}
+                      </span>
+                      <div className="flex items-center gap-2 text-xs text-gray-700 mt-1">
+                        <Clock className="w-3 h-3 text-orange-500" />
+                        <span>{t(selectedPackageData.delivery_time_key)}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold text-orange-600">
-                    {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-orange-600">
+                      {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
+                    </div>
+                    {selectedPackageData.tag && <Badge className={`${getTagColor(selectedPackageData.tag)} mt-2 text-xs px-2 py-1 font-medium`}>
+                        <div className="flex items-center gap-1">
+                          {getTagIcon(selectedPackageData.tag)}
+                          <span>{t(selectedPackageData.tag)}</span>
+                        </div>
+                      </Badge>}
                   </div>
-                  {selectedPackageData.tag && <Badge className={`${getTagColor(selectedPackageData.tag)} mt-2 text-xs px-2 py-1 font-medium`}>
-                      <div className="flex items-center gap-1">
-                        {getTagIcon(selectedPackageData.tag)}
-                        <span>{t(selectedPackageData.tag)}</span>
-                      </div>
-                    </Badge>}
+                </div>
+
+                {/* Package Description */}
+                <div className="bg-orange-50/50 backdrop-blur-sm rounded-lg p-3 border border-orange-200/50">
+                  <div className="flex items-start gap-2">
+                    <Music className="w-4 h-4 text-orange-600 mt-0.5 shrink-0" />
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      {t(`${selectedPackageData.value}Description`)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Package Features */}
+                {selectedPackageData.includes && selectedPackageData.includes.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Star className="w-4 h-4 text-orange-600" />
+                      <h4 className="text-sm font-semibold text-gray-900">{t('whatsIncluded')}</h4>
+                    </div>
+                    <div className="space-y-1.5">
+                      {selectedPackageData.includes.slice(0, 3).map((include, index) => (
+                        <div key={index} className="flex items-start gap-2 text-xs text-gray-700">
+                          <Check className="w-3 h-3 text-green-600 mt-0.5 shrink-0" />
+                          <span>{t(include.description_key)}</span>
+                        </div>
+                      ))}
+                      {selectedPackageData.includes.length > 3 && (
+                        <div className="text-xs text-orange-600 font-medium">
+                          +{selectedPackageData.includes.length - 3} more features...
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Quick Stats */}
+                <div className="flex items-center justify-between pt-2 border-t border-white/20">
+                  <div className="flex items-center gap-1">
+                    <Headphones className="w-3 h-3 text-orange-500" />
+                    <span className="text-xs text-gray-600">{t('professionalQuality')}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-orange-500" />
+                    <span className="text-xs text-gray-600">{t(selectedPackageData.delivery_time_key)}</span>
+                  </div>
                 </div>
               </div>
             </CardContent>
