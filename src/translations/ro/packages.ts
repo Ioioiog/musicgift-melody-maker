@@ -136,8 +136,8 @@ export const packagesTranslations = {
   extendedSong: "Melodie extinsă",
   extendedSongDesc: "Versiune mai lungă a melodiei tale",
   
-  godparentsmelody: "Melodia nașilor",
-  godparentsmelodyDesc: "Melodie specială pentru nași",
+  godparentsMelody: "Melodia nașilor",
+  godparentsMelodyDesc: "Melodie specială pentru nași",
   
   separatedStems: "Stem-uri Separate",
   separatedStemsDesc: "Beat original + fișiere de track individuale. Ideal pentru mixare, remixare și sincronizare video. Include drepturi comerciale.",
