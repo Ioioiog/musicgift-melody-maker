@@ -133,7 +133,7 @@ export const packagesTranslations = {
   brandedAudioMessageDesc: "Include a short branded voice message at the beginning of the song – perfect for personalized introductions, campaign messages, or brand slogans.",
   
   commercialRightsUpgrade: "Commercial Rights Upgrade",
-  commercialRightsUpgradeDesc: "Extended commercial rights for business use",
+  commercialRightsUpgradeDesc: "Extended commercial rights for business use on tv/radio",
   
   extendedSong: "Extended Song",
   extendedSongDesc: "Longer version of your song",
