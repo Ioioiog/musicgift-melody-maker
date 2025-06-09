@@ -334,7 +334,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             <StepIndicator steps={buildStepsData()} className="py-0 my-0 px-0" />
           </div>
         </CardHeader>
-        <CardContent className="p-1 sm:p-2 px-2 py-0 my-0">
+        <CardContent className="p-1.5 space-y-1">
           <AnimatePresence initial={false} mode="wait">
             <motion.div 
               key={currentStep} 
