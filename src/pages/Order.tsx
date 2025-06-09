@@ -2,6 +2,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
 import OrderHeroSection from "@/components/order/OrderHeroSection";
+import OrderSidebarSummary from "@/components/order/OrderSidebarSummary";
 import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -13,40 +14,28 @@ import { useEffect, useState } from "react";
 import { useGiftCardByCode } from "@/hooks/useGiftCards";
 import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
 import { useCurrency } from "@/contexts/CurrencyContext";
+
 const Order = () => {
-  const {
-    toast
-  } = useToast();
-  const {
-    t
-  } = useLanguage();
-  const {
-    user
-  } = useAuth();
-  const {
-    currency
-  } = useCurrency();
+  const { toast } = useToast();
+  const { t } = useLanguage();
+  const { user } = useAuth();
+  const { currency } = useCurrency();
   const navigate = useNavigate();
-  const {
-    data: packages = []
-  } = usePackages();
-  const {
-    data: addons = []
-  } = useAddons();
+  const { data: packages = [] } = usePackages();
+  const { data: addons = [] } = useAddons();
   const [searchParams] = useSearchParams();
+  const [orderData, setOrderData] = useState<any>(null);
 
   // Extract gift card parameters from URL
   const giftCardCode = searchParams.get('gift');
   const preselectedPackage = searchParams.get('package');
 
   // Fetch gift card data if code is provided
-  const {
-    data: giftCard,
-    isLoading: isLoadingGift
-  } = useGiftCardByCode(giftCardCode || '');
+  const { data: giftCard, isLoading: isLoadingGift } = useGiftCardByCode(giftCardCode || '');
 
   // Check if the preselected package is the gift package
   const isGiftPackage = preselectedPackage === 'gift';
+
   useEffect(() => {
     if (giftCardCode && giftCard) {
       toast({
@@ -55,6 +44,7 @@ const Order = () => {
       });
     }
   }, [giftCardCode, giftCard, toast, t]);
+
   const calculateTotalPrice = (packageValue: string, selectedAddons: string[]) => {
     const packageData = packages.find(pkg => pkg.value === packageValue);
     const packagePrice = packageData ? getPackagePrice(packageData, currency) : 0;
@@ -64,6 +54,7 @@ const Order = () => {
     }, 0);
     return packagePrice + addonsPrice;
   };
+
   const handleOrderComplete = async (orderData: any) => {
     try {
       console.log("🔄 Processing order with selected payment provider:", orderData.paymentProvider);
@@ -232,11 +223,13 @@ const Order = () => {
       });
     }
   };
+
   const handleGiftCardComplete = (data: any) => {
     console.log("Gift card purchase completed:", data);
     // The GiftPurchaseWizard handles its own completion flow with payment redirection
     // No additional handling needed here
   };
+
   if (isLoadingGift && giftCardCode) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{
@@ -253,6 +246,7 @@ const Order = () => {
       </div>
     );
   }
+
   return (
     <div className="min-h-screen relative overflow-hidden" style={{
       backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
@@ -273,11 +267,25 @@ const Order = () => {
             {isGiftPackage ? (
               <GiftPurchaseWizard onComplete={handleGiftCardComplete} />
             ) : (
-              <OrderWizard 
-                onComplete={handleOrderComplete} 
-                giftCard={giftCard} 
-                preselectedPackage={preselectedPackage} 
-              />
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Main content - Order Wizard */}
+                <div className="flex-1 lg:max-w-4xl">
+                  <OrderWizard 
+                    onComplete={handleOrderComplete} 
+                    giftCard={giftCard} 
+                    preselectedPackage={preselectedPackage}
+                    onOrderDataChange={setOrderData}
+                  />
+                </div>
+                
+                {/* Sidebar - Order Summary */}
+                <div className="lg:w-80 xl:w-96">
+                  <OrderSidebarSummary 
+                    orderData={orderData}
+                    giftCard={giftCard}
+                  />
+                </div>
+              </div>
             )}
           </div>
         </section>
