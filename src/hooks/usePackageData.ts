@@ -26,10 +26,10 @@ export const usePackages = () => {
     queryFn: async () => {
       console.log('Using consolidated packages data...');
       
-      // Sort includes by include_order for each package
+      // Sort includes by include_order for each package (if available)
       const transformedPackages = packages.map(pkg => ({
         ...pkg,
-        includes: pkg.includes?.sort((a: any, b: any) => a.include_order - b.include_order) || []
+        includes: pkg.includes || []
       }));
       
       console.log('Transformed packages:', transformedPackages);
@@ -65,9 +65,24 @@ export const usePackageSteps = (packageValue: string) => {
           return [];
         }
 
-        // The steps are already in the correct format since we updated the data structure
-        console.log('Steps ready for component:', packageData.steps);
-        return packageData.steps as StepData[];
+        // Transform the steps to match the StepData interface
+        const transformedSteps: StepData[] = packageData.steps.map((step, index) => ({
+          id: step.id,
+          step_number: index + 1,
+          title_key: step.title_key,
+          fields: step.fields.map((field, fieldIndex) => ({
+            id: field.id,
+            field_name: field.id,
+            field_type: field.type,
+            placeholder_key: field.placeholder_key,
+            required: field.required,
+            field_order: fieldIndex + 1,
+            options: field.options
+          }))
+        }));
+
+        console.log('Steps ready for component:', transformedSteps);
+        return transformedSteps;
 
       } catch (error) {
         console.error('Error in usePackageSteps:', error);

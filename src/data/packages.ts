@@ -600,3 +600,35 @@ export const packages = [
     ]
   }
 ];
+
+// Define the PackageData type
+export interface PackageData {
+  id: string;
+  value: string;
+  label_key: string;
+  price: number;
+  delivery_time_key: string;
+  popular?: boolean;
+  premium?: boolean;
+  includes: string[];
+  steps: Array<{
+    id: string;
+    title_key: string;
+    fields: Array<{
+      id: string;
+      type: string;
+      label_key: string;
+      placeholder_key?: string;
+      required: boolean;
+      options?: Array<{ value: string; label_key: string; }>;
+    }>;
+  }>;
+}
+
+// Add-ons array (currently empty but needed for the hook)
+export const addOns: Array<{
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+}> = [];
