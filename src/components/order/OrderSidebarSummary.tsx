@@ -162,10 +162,10 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({ orderData, gi
               <div className="mt-4 p-3 bg-white/5 rounded-lg border border-white/10">
                 <h5 className="text-white text-xs font-medium mb-2">{t('packageIncludes', 'Pachetul include:')}</h5>
                 <ul className="space-y-1">
-                  {selectedPackageData.includes.slice(0, 3).map((feature: string, index: number) => (
+                  {selectedPackageData.includes.slice(0, 3).map((includeItem, index) => (
                     <li key={index} className="text-white/70 text-xs flex items-center gap-2">
                       <div className="w-1 h-1 bg-white/70 rounded-full"></div>
-                      {feature}
+                      {typeof includeItem === 'string' ? includeItem : t(includeItem.include_key)}
                     </li>
                   ))}
                   {selectedPackageData.includes.length > 3 && (
