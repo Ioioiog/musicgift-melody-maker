@@ -1,10 +1,14 @@
+
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Play, ExternalLink, Quote, Star, Volume2, VolumeX, X } from "lucide-react";
+import { Play, ExternalLink, Quote, Star, Volume2, VolumeX, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import type { CarouselApi } from "@/components/ui/carousel";
 
 export default function TestimonialSlider() {
   const { t } = useLanguage();
@@ -14,6 +18,28 @@ export default function TestimonialSlider() {
     type: 'upload' | 'youtube';
     title: string;
   } | null>(null);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+
+  const autoplay = Autoplay({
+    delay: 4000,
+    stopOnInteraction: true,
+    stopOnMouseEnter: true,
+  });
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
 
   if (isLoading) {
     return (
@@ -172,16 +198,15 @@ export default function TestimonialSlider() {
   };
 
   // Render testimonial card component
-  const TestimonialCard = ({ testimonial, index }: { testimonial: any; index: number }) => {
+  const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
     const type = getTestimonialType(testimonial);
     
     return (
       <motion.div
-        key={`${testimonial.id}-${index}`}
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: (index % testimonials.length) * 0.1 }}
-        className="flex-shrink-0 w-80"
+        transition={{ duration: 0.4 }}
+        className="h-full"
       >
         {/* Text-only testimonial - glassmorphism design */}
         {type === 'text-only' && (
@@ -314,39 +339,46 @@ export default function TestimonialSlider() {
 
   return (
     <div className="py-[26px]">
-      <style>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .animate-scroll {
-          animation: scroll 60s linear infinite;
-        }
-        .animate-scroll:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
-      
-      <div className="max-w-full mx-auto px-0">
-        <div className="overflow-hidden">
-          <div className="flex gap-4 animate-scroll" style={{
-            minWidth: 'max-content'
-          }}>
-            {/* First set of testimonials */}
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard key={testimonial.id} testimonial={testimonial} index={index} />
+      <div className="max-w-full mx-auto px-4">
+        <Carousel
+          setApi={setApi}
+          className="w-full"
+          opts={{
+            align: "start",
+            loop: true,
+            slidesToScroll: 1,
+          }}
+          plugins={[autoplay]}
+        >
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {testimonials.map((testimonial) => (
+              <CarouselItem key={testimonial.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                <div className="h-full">
+                  <TestimonialCard testimonial={testimonial} />
+                </div>
+              </CarouselItem>
             ))}
-            
-            {/* Duplicate set for seamless scrolling */}
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard key={`duplicate-${testimonial.id}`} testimonial={testimonial} index={index} />
+          </CarouselContent>
+          
+          {/* Custom Navigation Buttons */}
+          <CarouselPrevious className="absolute -left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-200" />
+          <CarouselNext className="absolute -right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-200" />
+          
+          {/* Pagination Dots */}
+          <div className="flex justify-center gap-2 mt-6">
+            {Array.from({ length: count }, (_, index) => (
+              <button
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                  index === current - 1 
+                    ? 'bg-white w-6' 
+                    : 'bg-white/40 hover:bg-white/60'
+                }`}
+                onClick={() => api?.scrollTo(index)}
+              />
             ))}
           </div>
-        </div>
+        </Carousel>
       </div>
 
       {/* Maximized Video Modal */}
