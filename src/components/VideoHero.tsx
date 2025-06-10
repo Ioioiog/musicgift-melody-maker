@@ -197,12 +197,12 @@ const VideoHero = () => {
         ))}
       </div>
 
-      {/* Video Background - Removed purple gradient */}
+      {/* Video Background - Updated to match HeroContent purple gradient */}
       <video 
         ref={videoRef} 
         loop 
         playsInline 
-        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center bg-black" 
+        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800" 
         key={videoSrc}
       >
         <source src={videoSrc} type="video/mp4" />
@@ -212,9 +212,9 @@ const VideoHero = () => {
       {/* Enhanced overlay with gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
 
-      {/* Loading Overlay - Updated to match HeroContent */}
+      {/* Loading Overlay - Updated to match HeroContent with purple gradient */}
       {isLoading && (
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 flex items-center justify-center z-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20">
           <div className="text-white text-xl">Loading...</div>
         </div>
       )}
