@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,20 +7,23 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { usePackages } from '@/hooks/usePackageData';
 import { getPackagePrice } from '@/utils/pricing';
-
 interface PackageSelectionStepProps {
   selectedPackage?: string;
   onPackageSelect: (packageValue: string) => void;
 }
-
 const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
   selectedPackage,
   onPackageSelect
 }) => {
-  const { t } = useLanguage();
-  const { currency } = useCurrency();
-  const { data: packages = [] } = usePackages();
-
+  const {
+    t
+  } = useLanguage();
+  const {
+    currency
+  } = useCurrency();
+  const {
+    data: packages = []
+  } = usePackages();
   const getTagColor = (tag?: string) => {
     switch (tag) {
       case 'popular':
@@ -36,7 +38,6 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
         return 'bg-gray-500 text-white shadow-sm border-gray-400';
     }
   };
-
   const getTagIcon = (tag?: string) => {
     switch (tag) {
       case 'gift':
@@ -47,9 +48,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
         return null;
     }
   };
-
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
-
   return <div className="space-y-6 my-0 py-0">
       <div className="text-center">
         <p className="text-white/90 text-base font-bold py-0 my-0">{t('choosePackage')}</p>
@@ -153,45 +152,25 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                 </div>
 
                 {/* Package Features */}
-                {selectedPackageData.includes && selectedPackageData.includes.length > 0 && (
-                  <div className="space-y-3">
+                {selectedPackageData.includes && selectedPackageData.includes.length > 0 && <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <Star className="w-4 h-4 text-orange-600" />
                       <h4 className="text-sm font-semibold text-gray-900">{t('whatsIncluded')}</h4>
                     </div>
                     <div className="grid grid-cols-1 gap-2">
-                      {selectedPackageData.includes.map((include, index) => (
-                        <div key={index} className="flex items-start gap-2 text-xs text-gray-700 bg-green-50/50 p-2 rounded-md">
+                      {selectedPackageData.includes.map((include, index) => <div key={index} className="flex items-start gap-2 text-xs text-gray-700 bg-green-50/50 p-2 rounded-md">
                           <Check className="w-3 h-3 text-green-600 mt-0.5 shrink-0" />
                           <span>{t(include.include_key)}</span>
-                        </div>
-                      ))}
+                        </div>)}
                     </div>
-                  </div>
-                )}
+                  </div>}
 
                 {/* Package Stats Grid */}
-                <div className="grid grid-cols-2 gap-4 pt-3 border-t border-white/20">
-                  <div className="flex items-center gap-2 bg-white/30 p-2 rounded-md">
-                    <Headphones className="w-4 h-4 text-orange-500" />
-                    <div>
-                      <div className="text-xs font-medium text-gray-900">{t('quality')}</div>
-                      <div className="text-xs text-gray-600">{t('professional')}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/30 p-2 rounded-md">
-                    <Calendar className="w-4 h-4 text-orange-500" />
-                    <div>
-                      <div className="text-xs font-medium text-gray-900">{t('delivery')}</div>
-                      <div className="text-xs text-gray-600">{t(selectedPackageData.delivery_time_key)}</div>
-                    </div>
-                  </div>
-                </div>
+                
               </div>
             </CardContent>
           </Card>
         </div>}
     </div>;
 };
-
 export default PackageSelectionStep;
