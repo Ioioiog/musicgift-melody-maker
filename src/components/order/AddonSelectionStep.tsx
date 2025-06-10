@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -11,6 +10,7 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { getAddonPrice } from '@/utils/pricing';
 import { Addon, Package } from '@/types';
 import AudioRecorder from './AudioRecorder';
+import GodparentsDetailsForm from './GodparentsDetailsForm';
 
 interface AddonSelectionStepProps {
   selectedPackageData?: Package;
@@ -180,6 +180,16 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                                 value={addonFieldValues[addon.addon_key] || null}
                                 onChange={(audioFile) => onAddonFieldChange(addon.addon_key, audioFile)}
                                 maxDuration={addon.trigger_field_config?.maxDuration || 30}
+                              />
+                            </div>
+                          )}
+                          
+                          {addon.trigger_field_type === 'godparents-details' && (
+                            <div>
+                              <GodparentsDetailsForm
+                                values={addonFieldValues[addon.addon_key] || {}}
+                                onChange={onAddonFieldChange}
+                                addonKey={addon.addon_key}
                               />
                             </div>
                           )}

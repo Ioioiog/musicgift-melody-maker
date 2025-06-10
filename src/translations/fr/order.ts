@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Chargement des forfaits...",
   loadingSteps: "Chargement des étapes...",
@@ -181,4 +180,22 @@ export const orderTranslations = {
   // VAT validation errors
   vatCodeTooShort: "Code TVA trop court",
   vatCodeInvalidFormat: "Code TVA invalide pour le pays sélectionné",
+  
+  // Godparents Melody addon translations
+  godparentsMelodyAddon: "Mélodie des Parrains",
+  godparentsMelodyAddonDescription: "Une mélodie spéciale dédiée aux parrains",
+  godparentsDetails: "Détails des Parrains",
+  godparentsNames: "Noms des Parrains",
+  godparentsNamesPlaceholder: "Entrez les noms des parrains",
+  godparentsNamesPronunciation: "Prononciation des Noms des Parrains",
+  godparentsRelationshipToCouple: "Comment connaissez-vous les parrains ?",
+  godparentsRelationshipToCouplelaceholder: "Décrivez votre relation avec les parrains",
+  godparentsSpecialQualities: "Qu'est-ce qui les rend spéciaux en tant que parrains ?",
+  godparentsSpecialQualitiesPlaceholder: "Décrivez leurs qualités spéciales et pourquoi ils ont été choisis",
+  godparentsRoleInWedding: "Leur rôle spécifique dans la cérémonie",
+  godparentsRoleInWeddingPlaceholder: "Décrivez leur rôle pendant la cérémonie de mariage",
+  messageToGodparents: "Ce que vous voulez leur exprimer",
+  messageToGodparentsPlaceholder: "Votre message personnel aux parrains",
+  godparentsMelodyStyle: "Quel style voulez-vous pour la chanson ?",
+  godparentsMelodyStylePlaceholder: "Décrivez le style ou partagez un lien YouTube avec un style de chanson similaire"
 };

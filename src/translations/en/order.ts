@@ -170,5 +170,23 @@ export const orderTranslations = {
   romanianLanguage: "Romanian",
   englishLanguage: "English", 
   frenchLanguage: "French",
-  italianLanguage: "Italian"
+  italianLanguage: "Italian",
+
+  // Godparents Melody addon translations
+  godparentsMelodyAddon: "Godparents Melody",
+  godparentsMelodyAddonDescription: "A special melody dedicated to the godparents",
+  godparentsDetails: "Godparents Details", 
+  godparentsNames: "Godparents Names",
+  godparentsNamesPlaceholder: "Enter the godparents' names",
+  godparentsNamesPronunciation: "Godparents Names Pronunciation",
+  godparentsRelationshipToCouple: "How do you know the godparents?",
+  godparentsRelationshipToCouplelaceholder: "Describe your relationship with the godparents",
+  godparentsSpecialQualities: "What makes them special as godparents?",
+  godparentsSpecialQualitiesPlaceholder: "Describe their special qualities and why they were chosen",
+  godparentsRoleInWedding: "Their specific role in the ceremony",
+  godparentsRoleInWeddingPlaceholder: "Describe their role during the wedding ceremony",
+  messageToGodparents: "What you want to express to them",
+  messageToGodparentsPlaceholder: "Your personal message to the godparents",
+  godparentsMelodyStyle: "What style do you want the song to have?",
+  godparentsMelodyStylePlaceholder: "Describe the style or share a YouTube link with similar song style"
 };
