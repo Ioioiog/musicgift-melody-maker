@@ -150,12 +150,12 @@ const VideoHero = () => {
 
   return (
     <section className="video-hero relative overflow-hidden h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen">
-      {/* Video Background */}
+      {/* Video Background with branded gradient background for mobile */}
       <video
         ref={videoRef}
         loop
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center bg-black"
+        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 md:bg-black"
         key={videoSrc}
       >
         <source src={videoSrc} type="video/mp4" />
@@ -164,7 +164,7 @@ const VideoHero = () => {
 
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="absolute inset-0 bg-black flex items-center justify-center z-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20">
           <div className="text-white text-xl">Loading...</div>
         </div>
       )}
