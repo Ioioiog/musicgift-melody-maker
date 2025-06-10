@@ -42,19 +42,19 @@ const Index = () => {
         </div>
       </div>
 
+      {/* Impact Cards - Moved before steps */}
+      <div className="relative overflow-hidden" style={backgroundStyle}>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative z-10">
+          <ImpactCards />
+        </div>
+      </div>
+
       {/* Animated Step Flow */}
       <div className="relative overflow-hidden" style={backgroundStyle}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative z-10">
           <AnimatedStepFlow />
-        </div>
-      </div>
-
-      {/* Impact Cards */}
-      <div className="relative overflow-hidden" style={backgroundStyle}>
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative z-10">
-          <ImpactCards />
         </div>
       </div>
 
