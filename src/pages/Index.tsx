@@ -1,5 +1,3 @@
-
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -14,19 +12,17 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 import { Heart, Music, ShoppingCart, Gift } from "lucide-react";
 import { motion } from "framer-motion";
-
 const Index = () => {
-  const { t } = useLanguage();
-
+  const {
+    t
+  } = useLanguage();
   const backgroundStyle = {
     backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   };
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Video Hero Section */}
@@ -96,7 +92,7 @@ const Index = () => {
             </Link>
             
             <Link to="/gift">
-              <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white border-0 min-w-[180px]">
+              <Button size="lg" className="border-red-200 min-w-[180px] bg-fuchsia-600 hover:bg-fuchsia-500">
                 <Gift className="w-5 h-5 mr-2" />
                 {t('buyGiftCard', 'Buy a Gift Card')}
               </Button>
@@ -113,9 +109,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
-
