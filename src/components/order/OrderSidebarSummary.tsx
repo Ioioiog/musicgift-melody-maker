@@ -167,10 +167,10 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
                     {t('packageIncludes', 'Pachetul include')}
                   </h4>
                   <div className="space-y-1">
-                    {selectedPackageData.includes.map((feature: string, index: number) => (
-                      <div key={index} className="flex items-start gap-2 text-xs text-white/80">
+                    {selectedPackageData.includes.map((include, index) => (
+                      <div key={include.id || index} className="flex items-start gap-2 text-xs text-white/80">
                         <span className="text-white/60 mt-1">•</span>
-                        <span className="flex-1 leading-relaxed">{t(feature)}</span>
+                        <span className="flex-1 leading-relaxed">{t(include.include_key)}</span>
                       </div>
                     ))}
                   </div>
