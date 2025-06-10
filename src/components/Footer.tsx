@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music, ArrowUp } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -283,7 +284,7 @@ const Footer = () => {
         {/* Enhanced Visual Separator */}
         <div className="border-t border-gray-300/20 mt-8 sm:mt-16 relative"></div>
 
-        {/* Enhanced Final Copyright Section - Now with lighter colors */}
+        {/* Enhanced Final Copyright Section */}
         <div className="mt-8 sm:mt-12 pt-8 sm:pt-12 relative overflow-hidden">
           {/* Full Width Enhanced Gradient Background with lighter colors */}
           <div className="absolute inset-0 w-full" style={{
@@ -304,7 +305,12 @@ const Footer = () => {
             <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-200/60 via-gray-100/30 to-transparent"></div>
           </div>
           
-          
+          {/* Copyright Text Content */}
+          <div className="relative z-10 text-center py-6">
+            <p className="text-gray-700 text-sm font-medium">
+              © 2025 MusicGift.ro. All rights reserved. Made by RED DOMAIN with ❤️ for music lovers
+            </p>
+          </div>
 
           {/* Subtle fade to bottom effect */}
           <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-100/20 to-transparent pointer-events-none"></div>
