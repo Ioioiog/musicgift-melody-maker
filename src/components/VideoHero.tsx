@@ -3,6 +3,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
 const VideoHero = () => {
   const { t, language } = useLanguage();
@@ -150,6 +151,31 @@ const VideoHero = () => {
 
   return (
     <section className="video-hero relative overflow-hidden h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen">
+      {/* Animated background particles for mobile */}
+      <div className="absolute inset-0 overflow-hidden md:hidden">
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-white/30 rounded-full"
+            initial={{
+              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 800),
+              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 600),
+              scale: 0
+            }}
+            animate={{
+              y: [null, -100, (typeof window !== 'undefined' ? window.innerHeight : 600) + 100],
+              scale: [0, 1, 0],
+              opacity: [0, 0.8, 0]
+            }}
+            transition={{
+              duration: Math.random() * 8 + 12,
+              repeat: Infinity,
+              delay: Math.random() * 5
+            }}
+          />
+        ))}
+      </div>
+
       {/* Video Background with branded gradient background and mobile filters */}
       <video
         ref={videoRef}
