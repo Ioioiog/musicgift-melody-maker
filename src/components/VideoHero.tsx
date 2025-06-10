@@ -160,9 +160,9 @@ const VideoHero = () => {
   const mobileHeight = getMobileHeight();
   const sectionStyle = isMobile && mobileHeight ? {
     height: mobileHeight,
-    minHeight: '60vh'
+    minHeight: '50vh'
   } : {};
-  return <section className={`video-hero relative overflow-hidden ${isMobile ? 'min-h-[60vh]' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
+  return <section className={`video-hero relative overflow-hidden ${isMobile ? 'min-h-[50vh]' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
       {/* Background image - Behind everything */}
       <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
       backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)'
@@ -210,11 +210,11 @@ const VideoHero = () => {
         </button>}
 
       {/* Dark Overlay - Enhanced with gradient overlay similar to HeroContent */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-purple-900/30 to-black/80 py-[4px] my-0"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-purple-900/30 to-black/80"></div>
 
       {/* Title at Bottom */}
-      <div className="absolute bottom-12 sm:bottom-16 md:bottom-20 left-0 right-0 z-10 text-center text-white px-4">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold animate-float bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+      <div className={`absolute ${isMobile ? 'bottom-6 sm:bottom-8' : 'bottom-12 sm:bottom-16 md:bottom-20'} left-0 right-0 z-10 text-center text-white px-4`}>
+        <h1 className={`${isMobile ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-3xl md:text-4xl lg:text-6xl'} font-bold animate-float bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent`}>
           {t('heroTitle')}
         </h1>
       </div>
