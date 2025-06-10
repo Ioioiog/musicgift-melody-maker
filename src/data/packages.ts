@@ -548,6 +548,60 @@ export const packages: Package[] = [
             placeholder_key: "businessValuesPlaceholder",
             required: true,
             field_order: 3
+          },
+          {
+            id: "companySize",
+            field_name: "companySize",
+            field_type: "select",
+            placeholder_key: "selectCompanySize",
+            required: true,
+            field_order: 4,
+            options: [
+              { value: "startup", label_key: "companySizeStartup" },
+              { value: "small", label_key: "companySizeSmall" },
+              { value: "medium", label_key: "companySizeMedium" },
+              { value: "large", label_key: "companySizeLarge" }
+            ]
+          },
+          {
+            id: "targetMarket",
+            field_name: "targetMarket",
+            field_type: "textarea",
+            placeholder_key: "targetMarketPlaceholder",
+            required: true,
+            field_order: 5
+          },
+          {
+            id: "brandPersonality",
+            field_name: "brandPersonality",
+            field_type: "select",
+            placeholder_key: "selectBrandPersonality",
+            required: true,
+            field_order: 6,
+            options: [
+              { value: "professional", label_key: "brandPersonalityProfessional" },
+              { value: "friendly", label_key: "brandPersonalityFriendly" },
+              { value: "innovative", label_key: "brandPersonalityInnovative" },
+              { value: "trustworthy", label_key: "brandPersonalityTrustworthy" },
+              { value: "energetic", label_key: "brandPersonalityEnergetic" },
+              { value: "sophisticated", label_key: "brandPersonalitySophisticated" }
+            ]
+          },
+          {
+            id: "companyHistory",
+            field_name: "companyHistory",
+            field_type: "textarea",
+            placeholder_key: "companyHistoryPlaceholder",
+            required: false,
+            field_order: 7
+          },
+          {
+            id: "uniqueSellingProposition",
+            field_name: "uniqueSellingProposition",
+            field_type: "textarea",
+            placeholder_key: "uniqueSellingPropositionPlaceholder",
+            required: true,
+            field_order: 8
           }
         ]
       },
@@ -599,6 +653,38 @@ export const packages: Package[] = [
             placeholder_key: "targetAudiencePlaceholder",
             required: true,
             field_order: 4
+          },
+          {
+            id: "usageContext",
+            field_name: "usageContext",
+            field_type: "select",
+            placeholder_key: "selectUsageContext",
+            required: true,
+            field_order: 5,
+            options: [
+              { value: "companyEvents", label_key: "usageContextCompanyEvents" },
+              { value: "marketingCampaigns", label_key: "usageContextMarketingCampaigns" },
+              { value: "websiteSocialMedia", label_key: "usageContextWebsiteSocialMedia" },
+              { value: "tradeShows", label_key: "usageContextTradeShows" },
+              { value: "internalMotivation", label_key: "usageContextInternalMotivation" },
+              { value: "customerExperience", label_key: "usageContextCustomerExperience" }
+            ]
+          },
+          {
+            id: "desiredEmotionalResponse",
+            field_name: "desiredEmotionalResponse",
+            field_type: "select",
+            placeholder_key: "selectDesiredEmotionalResponse",
+            required: true,
+            field_order: 6,
+            options: [
+              { value: "trust", label_key: "emotionalResponseTrust" },
+              { value: "excitement", label_key: "emotionalResponseExcitement" },
+              { value: "inspiration", label_key: "emotionalResponseInspiration" },
+              { value: "confidence", label_key: "emotionalResponseConfidence" },
+              { value: "nostalgia", label_key: "emotionalResponseNostalgia" },
+              { value: "pride", label_key: "emotionalResponsePride" }
+            ]
           }
         ]
       },
@@ -630,6 +716,30 @@ export const packages: Package[] = [
             placeholder_key: "additionalInfoPlaceholder",
             required: false,
             field_order: 3
+          },
+          {
+            id: "competitorAnalysis",
+            field_name: "competitorAnalysis",
+            field_type: "textarea",
+            placeholder_key: "competitorAnalysisPlaceholder",
+            required: false,
+            field_order: 4
+          },
+          {
+            id: "callToAction",
+            field_name: "callToAction",
+            field_type: "text",
+            placeholder_key: "callToActionPlaceholder",
+            required: false,
+            field_order: 5
+          },
+          {
+            id: "seasonalTemporalRelevance",
+            field_name: "seasonalTemporalRelevance",
+            field_type: "text",
+            placeholder_key: "seasonalTemporalRelevancePlaceholder",
+            required: false,
+            field_order: 6
           }
         ]
       }
@@ -680,6 +790,70 @@ export const packages: Package[] = [
             placeholder_key: "artistInfluencesPlaceholder",
             required: true,
             field_order: 3
+          },
+          {
+            id: "realName",
+            field_name: "realName",
+            field_type: "text",
+            placeholder_key: "realNamePlaceholder",
+            required: true,
+            field_order: 4
+          },
+          {
+            id: "yearsActive",
+            field_name: "yearsActive",
+            field_type: "text",
+            placeholder_key: "yearsActivePlaceholder",
+            required: true,
+            field_order: 5
+          },
+          {
+            id: "previousReleases",
+            field_name: "previousReleases",
+            field_type: "textarea",
+            placeholder_key: "previousReleasesPlaceholder",
+            required: false,
+            field_order: 6
+          },
+          {
+            id: "performanceExperience",
+            field_name: "performanceExperience",
+            field_type: "textarea",
+            placeholder_key: "performanceExperiencePlaceholder",
+            required: true,
+            field_order: 7
+          },
+          {
+            id: "socialMediaFollowing",
+            field_name: "socialMediaFollowing",
+            field_type: "text",
+            placeholder_key: "socialMediaFollowingPlaceholder",
+            required: false,
+            field_order: 8
+          },
+          {
+            id: "musicEducationTraining",
+            field_name: "musicEducationTraining",
+            field_type: "textarea",
+            placeholder_key: "musicEducationTrainingPlaceholder",
+            required: false,
+            field_order: 9
+          },
+          {
+            id: "careerGoals",
+            field_name: "careerGoals",
+            field_type: "textarea",
+            placeholder_key: "careerGoalsPlaceholder",
+            required: true,
+            field_order: 10
+          },
+          {
+            id: "targetAudience",
+            field_name: "targetAudience",
+            field_type: "textarea",
+            placeholder_key: "targetAudiencePlaceholder",
+            required: true,
+            field_order: 11
           }
         ]
       },
@@ -723,6 +897,35 @@ export const packages: Package[] = [
               { value: "hiphop", label_key: "hiphopStyle" },
               { value: "rnb", label_key: "rnbStyle" }
             ]
+          },
+          {
+            id: "vocalStyle",
+            field_name: "vocalStyle",
+            field_type: "textarea",
+            placeholder_key: "vocalStylePlaceholder",
+            required: true,
+            field_order: 4
+          },
+          {
+            id: "lyricalThemes",
+            field_name: "lyricalThemes",
+            field_type: "textarea",
+            placeholder_key: "lyricalThemesPlaceholder",
+            required: true,
+            field_order: 5
+          },
+          {
+            id: "musicalComplexity",
+            field_name: "musicalComplexity",
+            field_type: "select",
+            placeholder_key: "selectMusicalComplexity",
+            required: true,
+            field_order: 6,
+            options: [
+              { value: "simple", label_key: "musicalComplexitySimple" },
+              { value: "moderate", label_key: "musicalComplexityModerate" },
+              { value: "complex", label_key: "musicalComplexityComplex" }
+            ]
           }
         ]
       },
@@ -754,6 +957,33 @@ export const packages: Package[] = [
             placeholder_key: "additionalInfoPlaceholder",
             required: false,
             field_order: 3
+          },
+          {
+            id: "marketingBudget",
+            field_name: "marketingBudget",
+            field_type: "select",
+            placeholder_key: "selectMarketingBudget",
+            required: false,
+            field_order: 4,
+            options: [
+              { value: "under1000", label_key: "marketingBudgetUnder1000" },
+              { value: "1000to5000", label_key: "marketingBudget1000to5000" },
+              { value: "5000plus", label_key: "marketingBudget5000plus" },
+              { value: "tbd", label_key: "marketingBudgetTBD" }
+            ]
+          },
+          {
+            id: "releaseStrategy",
+            field_name: "releaseStrategy",
+            field_type: "select",
+            placeholder_key: "selectReleaseStrategy",
+            required: true,
+            field_order: 5,
+            options: [
+              { value: "single", label_key: "releaseStrategySingle" },
+              { value: "ep", label_key: "releaseStrategyEP" },
+              { value: "album", label_key: "releaseStrategyAlbum" }
+            ]
           }
         ]
       }
@@ -894,12 +1124,26 @@ export const packages: Package[] = [
             ]
           },
           {
+            id: "instrumentalLength",
+            field_name: "instrumentalLength",
+            field_type: "select",
+            placeholder_key: "selectInstrumentalLength",
+            required: true,
+            field_order: 2,
+            options: [
+              { value: "1to2min", label_key: "instrumentalLength1to2" },
+              { value: "2to3min", label_key: "instrumentalLength2to3" },
+              { value: "3to4min", label_key: "instrumentalLength3to4" },
+              { value: "4plusmin", label_key: "instrumentalLength4plus" }
+            ]
+          },
+          {
             id: "instrumentalMood",
             field_name: "instrumentalMood",
             field_type: "select",
             placeholder_key: "selectInstrumentalMood",
             required: true,
-            field_order: 2,
+            field_order: 3,
             options: [
               { value: "energetic", label_key: "energeticMood" },
               { value: "chill", label_key: "chillMood" },
@@ -914,7 +1158,7 @@ export const packages: Package[] = [
             field_type: "select",
             placeholder_key: "selectInstrumentalTempo",
             required: true,
-            field_order: 3,
+            field_order: 4,
             options: [
               { value: "slow", label_key: "slowTempo" },
               { value: "medium", label_key: "mediumTempo" },
@@ -951,6 +1195,29 @@ export const packages: Package[] = [
             placeholder_key: "additionalInfoPlaceholder",
             required: false,
             field_order: 3
+          },
+          {
+            id: "intendedUse",
+            field_name: "intendedUse",
+            field_type: "select",
+            placeholder_key: "selectIntendedUse",
+            required: true,
+            field_order: 4,
+            options: [
+              { value: "backgroundMusic", label_key: "intendedUseBackgroundMusic" },
+              { value: "vocalRecordingBase", label_key: "intendedUseVocalRecordingBase" },
+              { value: "performance", label_key: "intendedUsePerformance" },
+              { value: "meditationRelaxation", label_key: "intendedUseMeditationRelaxation" },
+              { value: "contentCreation", label_key: "intendedUseContentCreation" }
+            ]
+          },
+          {
+            id: "loopRequirements",
+            field_name: "loopRequirements",
+            field_type: "checkbox",
+            placeholder_key: "loopRequirementsPlaceholder",
+            required: false,
+            field_order: 5
           }
         ]
       }
@@ -1009,6 +1276,55 @@ export const packages: Package[] = [
             placeholder_key: "weddingHowMetPlaceholder",
             required: true,
             field_order: 3
+          },
+          {
+            id: "coupleNamesPronunciation",
+            field_name: "coupleNamesPronunciation",
+            field_type: "audio-recorder",
+            placeholder_key: "coupleNamesPronunciationPlaceholder",
+            required: false,
+            field_order: 4
+          },
+          {
+            id: "relationshipDuration",
+            field_name: "relationshipDuration",
+            field_type: "text",
+            placeholder_key: "relationshipDurationPlaceholder",
+            required: false,
+            field_order: 5
+          },
+          {
+            id: "weddingDate",
+            field_name: "weddingDate",
+            field_type: "date",
+            placeholder_key: "weddingDatePlaceholder",
+            required: false,
+            field_order: 6
+          },
+          {
+            id: "weddingVenueType",
+            field_name: "weddingVenueType",
+            field_type: "select",
+            placeholder_key: "selectWeddingVenueType",
+            required: false,
+            field_order: 7,
+            options: [
+              { value: "church", label_key: "weddingVenueChurch" },
+              { value: "outdoor", label_key: "weddingVenueOutdoor" },
+              { value: "beach", label_key: "weddingVenueBeach" },
+              { value: "garden", label_key: "weddingVenueGarden" },
+              { value: "ballroom", label_key: "weddingVenueBallroom" },
+              { value: "destination", label_key: "weddingVenueDestination" },
+              { value: "other", label_key: "weddingVenueOther" }
+            ]
+          },
+          {
+            id: "weddingThemeStyle",
+            field_name: "weddingThemeStyle",
+            field_type: "text",
+            placeholder_key: "weddingThemeStylePlaceholder",
+            required: false,
+            field_order: 8
           }
         ]
       },
@@ -1109,6 +1425,54 @@ export const packages: Package[] = [
             placeholder_key: "baptismBirthStoryPlaceholder",
             required: true,
             field_order: 3
+          },
+          {
+            id: "childNamePronunciation",
+            field_name: "childNamePronunciation",
+            field_type: "audio-recorder",
+            placeholder_key: "childNamePronunciationPlaceholder",
+            required: false,
+            field_order: 4
+          },
+          {
+            id: "childAge",
+            field_name: "childAge",
+            field_type: "text",
+            placeholder_key: "childAgePlaceholder",
+            required: true,
+            field_order: 5
+          },
+          {
+            id: "parentsNames",
+            field_name: "parentsNames",
+            field_type: "text",
+            placeholder_key: "parentsNamesPlaceholder",
+            required: true,
+            field_order: 6
+          },
+          {
+            id: "familyTraditions",
+            field_name: "familyTraditions",
+            field_type: "textarea",
+            placeholder_key: "familyTraditionsPlaceholder",
+            required: false,
+            field_order: 7
+          },
+          {
+            id: "baptismDate",
+            field_name: "baptismDate",
+            field_type: "date",
+            placeholder_key: "baptismDatePlaceholder",
+            required: false,
+            field_order: 8
+          },
+          {
+            id: "churchVenue",
+            field_name: "churchVenue",
+            field_type: "text",
+            placeholder_key: "churchVenuePlaceholder",
+            required: false,
+            field_order: 9
           }
         ]
       },
@@ -1154,6 +1518,54 @@ export const packages: Package[] = [
               { value: "female", label_key: "voiceFemale" },
               { value: "male", label_key: "voiceMale" }
             ]
+          },
+          {
+            id: "blessingPrayerElements",
+            field_name: "blessingPrayerElements",
+            field_type: "textarea",
+            placeholder_key: "blessingPrayerElementsPlaceholder",
+            required: false,
+            field_order: 4
+          },
+          {
+            id: "childPersonality",
+            field_name: "childPersonality",
+            field_type: "textarea",
+            placeholder_key: "childPersonalityPlaceholder",
+            required: false,
+            field_order: 5
+          },
+          {
+            id: "futureHopes",
+            field_name: "futureHopes",
+            field_type: "textarea",
+            placeholder_key: "futureHopesPlaceholder",
+            required: false,
+            field_order: 6
+          },
+          {
+            id: "familyMessage",
+            field_name: "familyMessage",
+            field_type: "textarea",
+            placeholder_key: "familyMessagePlaceholder",
+            required: false,
+            field_order: 7
+          },
+          {
+            id: "godparentsMention",
+            field_name: "godparentsMention",
+            field_type: "checkbox",
+            placeholder_key: "godparentsMentionPlaceholder",
+            required: false,
+            field_order: 8
+          },
+          {
+            id: "godparentsNames",
+            field_name: "godparentsNames",
+            field_type: "text",
+            placeholder_key: "godparentsNamesPlaceholder",
+            required: false,
+            field_order: 9
           }
         ]
       }
@@ -1206,6 +1618,61 @@ export const packages: Package[] = [
             placeholder_key: "comingOfAgePersonalMessagePlaceholder",
             required: true,
             field_order: 3
+          },
+          {
+            id: "celebrantNamePronunciation",
+            field_name: "celebrantNamePronunciation",
+            field_type: "audio-recorder",
+            placeholder_key: "celebrantNamePronunciationPlaceholder",
+            required: false,
+            field_order: 4
+          },
+          {
+            id: "ageMilestone",
+            field_name: "ageMilestone",
+            field_type: "select",
+            placeholder_key: "selectAgeMilestone",
+            required: true,
+            field_order: 5,
+            options: [
+              { value: "13th", label_key: "ageMilestone13th" },
+              { value: "16th", label_key: "ageMilestone16th" },
+              { value: "18th", label_key: "ageMilestone18th" },
+              { value: "21st", label_key: "ageMilestone21st" },
+              { value: "other", label_key: "ageMilestoneOther" }
+            ]
+          },
+          {
+            id: "personalAchievements",
+            field_name: "personalAchievements",
+            field_type: "textarea",
+            placeholder_key: "personalAchievementsPlaceholder",
+            required: false,
+            field_order: 6
+          },
+          {
+            id: "personalityTraits",
+            field_name: "personalityTraits",
+            field_type: "textarea",
+            placeholder_key: "personalityTraitsPlaceholder",
+            required: true,
+            field_order: 7
+          },
+          {
+            id: "futureAspirations",
+            field_name: "futureAspirations",
+            field_type: "textarea",
+            placeholder_key: "futureAspirationsPlaceholder",
+            required: false,
+            field_order: 8
+          },
+          {
+            id: "favoriteMemories",
+            field_name: "favoriteMemories",
+            field_type: "textarea",
+            placeholder_key: "favoriteMemoriesPlaceholder",
+            required: false,
+            field_order: 9
           }
         ]
       },
@@ -1225,7 +1692,10 @@ export const packages: Package[] = [
               { value: "hiphop", label_key: "comingOfAgeStyleHipHop" },
               { value: "pop", label_key: "comingOfAgeStylePop" },
               { value: "trap", label_key: "comingOfAgeStyleTrap" },
-              { value: "lofi", label_key: "comingOfAgeStyleLofi" }
+              { value: "lofi", label_key: "comingOfAgeStyleLofi" },
+              { value: "rock", label_key: "comingOfAgeStyleRock" },
+              { value: "rnb", label_key: "comingOfAgeStyleRnB" },
+              { value: "electronic", label_key: "comingOfAgeStyleElectronic" }
             ]
           },
           {
@@ -1239,7 +1709,9 @@ export const packages: Package[] = [
               { value: "emotional", label_key: "comingOfAgeVibeEmotional" },
               { value: "fun", label_key: "comingOfAgeVibeFun" },
               { value: "rebellious", label_key: "comingOfAgeVibeRebellious" },
-              { value: "dreamy", label_key: "comingOfAgeVibeDreamy" }
+              { value: "dreamy", label_key: "comingOfAgeVibeDreamy" },
+              { value: "motivational", label_key: "comingOfAgeVibeMotivational" },
+              { value: "confident", label_key: "comingOfAgeVibeConfident" }
             ]
           },
           {
@@ -1249,6 +1721,59 @@ export const packages: Package[] = [
             placeholder_key: "comingOfAgeFavoriteArtistsPlaceholder",
             required: false,
             field_order: 3
+          },
+          {
+            id: "lyricalThemes",
+            field_name: "lyricalThemes",
+            field_type: "select",
+            placeholder_key: "selectLyricalThemes",
+            required: true,
+            field_order: 4,
+            options: [
+              { value: "growingUp", label_key: "lyricalThemesGrowingUp" },
+              { value: "dreams", label_key: "lyricalThemesDreams" },
+              { value: "friendship", label_key: "lyricalThemesFriendship" },
+              { value: "family", label_key: "lyricalThemesFamily" },
+              { value: "independence", label_key: "lyricalThemesIndependence" },
+              { value: "success", label_key: "lyricalThemesSuccess" },
+              { value: "adventure", label_key: "lyricalThemesAdventure" }
+            ]
+          },
+          {
+            id: "culturalReferences",
+            field_name: "culturalReferences",
+            field_type: "textarea",
+            placeholder_key: "culturalReferencesPlaceholder",
+            required: false,
+            field_order: 5
+          },
+          {
+            id: "energyLevel",
+            field_name: "energyLevel",
+            field_type: "select",
+            placeholder_key: "selectEnergyLevel",
+            required: true,
+            field_order: 6,
+            options: [
+              { value: "highEnergy", label_key: "energyLevelHigh" },
+              { value: "moderate", label_key: "energyLevelModerate" },
+              { value: "chill", label_key: "energyLevelChill" },
+              { value: "mixed", label_key: "energyLevelMixed" }
+            ]
+          },
+          {
+            id: "collaborationPreference",
+            field_name: "collaborationPreference",
+            field_type: "select",
+            placeholder_key: "selectCollaborationPreference",
+            required: false,
+            field_order: 7,
+            options: [
+              { value: "soloArtist", label_key: "collaborationSolo" },
+              { value: "featuredGuest", label_key: "collaborationFeatured" },
+              { value: "groupChoir", label_key: "collaborationGroup" },
+              { value: "spokenWord", label_key: "collaborationSpokenWord" }
+            ]
           }
         ]
       }
