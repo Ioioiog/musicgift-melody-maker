@@ -31,7 +31,6 @@ export const packagesTranslations = {
   businessDescription: "Give your brand a memorable voice. Created for companies that want an original song for branding, campaigns or ads with emotional impact.",
   artistDescription: "Launch your musical career with a top song. For dedicated artists who want an original song, complete distribution and co-ownership of rights.",
   remixDescription: "Bring your song back to life in a completely new style. For artists or creators who own the rights to the original song and want a remixed or rearranged version in another genre.",
-  instrumentalDescription: "Created based on an instrumental built especially for you. Ideal for artists who want to write their own song and need a personalized, professional and original instrumental.",
   giftDescription: "A musical story given as a gift. Perfect for surprising someone dear – the recipient chooses the style and atmosphere of the song themselves.",
   
   // Delivery times
