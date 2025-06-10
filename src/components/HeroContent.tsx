@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Gift, Music } from 'lucide-react';
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const HeroContent = () => {
   const { t } = useLanguage();
@@ -32,19 +33,24 @@ const HeroContent = () => {
         <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
           {t('heroContentSubtitle') || 'Transform your memories into beautiful, custom songs with our AI-powered music creation platform.'}
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link to="/order">
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white">
-              <Music className="w-5 h-5 mr-2" />
-              {t('startCreating') || 'Start Creating'}
-            </Button>
-          </Link>
-          <Link to="/packages">
-            <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50">
-              <Gift className="w-5 h-5 mr-2" />
-              {t('viewPackages') || 'View Packages'}
-            </Button>
-          </Link>
+        
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <motion.a 
+            href="/order" 
+            className="bg-white text-purple-800 font-bold py-3 px-6 rounded-full text-base hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl" 
+            whileHover={{ scale: 1.05 }} 
+            whileTap={{ scale: 0.95 }}
+          >
+            {t('startYourSong') || 'Start Your Song'}
+          </motion.a>
+          <motion.a 
+            href="/packages" 
+            className="border-2 border-white text-white font-bold py-3 px-6 rounded-full text-base hover:bg-white hover:text-purple-800 transition-all duration-300" 
+            whileHover={{ scale: 1.05 }} 
+            whileTap={{ scale: 0.95 }}
+          >
+            {t('viewPackages') || 'View Packages'}
+          </motion.a>
         </div>
       </div>
     </section>

@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -12,17 +13,19 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 import { Heart, Sparkles, Music } from "lucide-react";
 import { motion } from "framer-motion";
+
 const Index = () => {
-  const {
-    t
-  } = useLanguage();
+  const { t } = useLanguage();
+
   const backgroundStyle = {
     backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   };
-  return <div className="min-h-screen">
+
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Video Hero Section */}
@@ -32,34 +35,13 @@ const Index = () => {
       <section className="py-20 px-4 text-white relative overflow-hidden" style={backgroundStyle}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="max-w-4xl mx-auto relative z-10">
-          <motion.div className="text-center bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-2xl border border-white/30 p-6" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.2
-        }}>
-            
-            
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <motion.a href="/order" className="bg-white text-purple-800 font-bold py-3 px-6 rounded-full text-base hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl" whileHover={{
-              scale: 1.05
-            }} whileTap={{
-              scale: 0.95
-            }}>
-                {t('startYourSong') || 'Start Your Song'}
-              </motion.a>
-              <motion.a href="/packages" className="border-2 border-white text-white font-bold py-3 px-6 rounded-full text-base hover:bg-white hover:text-purple-800 transition-all duration-300" whileHover={{
-              scale: 1.05
-            }} whileTap={{
-              scale: 0.95
-            }}>
-                {t('viewPackages') || 'View Packages'}
-              </motion.a>
-            </div>
+          <motion.div 
+            className="text-center bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-2xl border border-white/30 p-6" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {/* Removed the buttons from here - they are now in HeroContent */}
           </motion.div>
         </div>
 
@@ -130,6 +112,8 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
