@@ -110,7 +110,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
       {/* Enhanced Selected Package Summary */}
       {selectedPackageData && <div className="max-w-lg mx-auto">
           <Card className="bg-white/20 backdrop-blur-md border-l-4 border-l-orange-500 border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/25">
-            <CardContent className="p-6">
+            <CardContent className="p-6 mx-0 my-0 px-[9px]">
               <div className="space-y-6">
                 {/* Header with package name and price */}
                 <div className="flex items-center justify-between">
