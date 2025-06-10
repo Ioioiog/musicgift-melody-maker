@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { Gift, Package, Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { Gift, Package, Plus, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -36,6 +37,8 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   } = useCurrency();
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+  const [showAllFeatures, setShowAllFeatures] = useState(false);
+
   if (!orderData?.selectedPackage) {
     return <div className={isMobile ? "mb-4" : "lg:sticky lg:top-4"}>
         <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-20">
@@ -56,18 +59,27 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
         </Card>
       </div>;
   }
+
   const selectedPackageData = packages.find(pkg => pkg.value === orderData.selectedPackage);
   const selectedAddonsData = (orderData.selectedAddons || []).map(addonKey => addons.find(addon => addon.addon_key === addonKey)).filter(Boolean);
+  
   if (!selectedPackageData) return null;
+  
   const packagePrice = getPackagePrice(selectedPackageData, currency);
   const addonsPrice = selectedAddonsData.reduce((total, addon) => total + (addon ? getAddonPrice(addon, currency) : 0), 0);
   const subtotal = packagePrice + addonsPrice;
+  
   let giftCreditApplied = 0;
   if (giftCard) {
     const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
     giftCreditApplied = Math.min(giftBalance, subtotal);
   }
   const finalTotal = Math.max(0, subtotal - giftCreditApplied);
+
+  // Determine how many features to show initially
+  const featuresToShow = showAllFeatures ? selectedPackageData.includes?.length || 0 : (isMobile ? 3 : 4);
+  const hasMoreFeatures = (selectedPackageData.includes?.length || 0) > featuresToShow;
+
   return <div className={isMobile ? "mb-4" : "lg:sticky lg:top-4"}>
       <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-20">
         <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-6 py-2 sm:py-[15px] my-[1px]">
@@ -154,22 +166,55 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
                 {t('fullyPaidWithGiftCard', 'Plătit complet cu cardul cadou')}
               </Badge>}
 
-            {/* Package Features Preview - Condensed for mobile */}
-            {selectedPackageData.includes && <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-white/5 rounded-lg border border-white/10">
-                <h5 className="text-white text-xs font-medium mb-2">
-                  {t('packageIncludes', 'Pachetul include:')}
-                </h5>
-                <ul className="space-y-1">
-                  {selectedPackageData.includes.slice(0, isMobile ? 2 : 3).map((includeItem, index) => <li key={index} className="text-white/70 text-xs flex items-center gap-2">
-                      <div className="w-1 h-1 bg-white/70 rounded-full shrink-0"></div>
-                      <span className="truncate">
-                        {typeof includeItem === 'string' ? includeItem : t(includeItem.include_key)}
-                      </span>
-                    </li>)}
-                  {selectedPackageData.includes.length > (isMobile ? 2 : 3) && <li className="text-white/50 text-xs">
-                      +{selectedPackageData.includes.length - (isMobile ? 2 : 3)} {t('moreFeatures', 'mai multe caracteristici')}
-                    </li>}
-                </ul>
+            {/* Enhanced Package Features - Full Details */}
+            {selectedPackageData.includes && selectedPackageData.includes.length > 0 && <div className="mt-4 sm:mt-6">
+                <Separator className="bg-white/20 mb-3 sm:mb-4" />
+                <div className="bg-white/5 rounded-lg border border-white/10 p-3 sm:p-4">
+                  <h5 className="text-white text-sm font-semibold mb-3 flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    {t('packageIncludes', 'Pachetul include:')}
+                  </h5>
+                  <div className="space-y-2 sm:space-y-3">
+                    {selectedPackageData.includes.slice(0, featuresToShow).map((includeItem, index) => (
+                      <div key={index} className="flex items-start gap-2 sm:gap-3 p-2 bg-white/5 rounded-md border border-white/10">
+                        <div className="w-1.5 h-1.5 bg-green-400 rounded-full shrink-0 mt-2"></div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white/90 text-xs sm:text-sm leading-relaxed">
+                            {typeof includeItem === 'string' ? includeItem : t(includeItem.include_key)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {hasMoreFeatures && !showAllFeatures && (
+                    <div className="mt-3 text-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowAllFeatures(true)}
+                        className="text-white/70 hover:text-white hover:bg-white/10 text-xs"
+                      >
+                        <ChevronDown className="w-3 h-3 mr-1" />
+                        Show {(selectedPackageData.includes?.length || 0) - featuresToShow} more features
+                      </Button>
+                    </div>
+                  )}
+                  
+                  {showAllFeatures && hasMoreFeatures && (
+                    <div className="mt-3 text-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowAllFeatures(false)}
+                        className="text-white/70 hover:text-white hover:bg-white/10 text-xs"
+                      >
+                        <ChevronUp className="w-3 h-3 mr-1" />
+                        Show less
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>}
           </CardContent>}
       </Card>
