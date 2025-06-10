@@ -19,6 +19,12 @@ const packages: Package[] = [
       "Full rights",
       "Fast turnaround"
     ],
+    includes: [
+      { id: "personal-1", include_key: "personalInclude1", include_order: 1 },
+      { id: "personal-2", include_key: "personalInclude2", include_order: 2 },
+      { id: "personal-3", include_key: "personalInclude3", include_order: 3 },
+      { id: "personal-4", include_key: "personalInclude4", include_order: 4 }
+    ],
     available_addons: ["rushDelivery", "socialMediaRights"],
     is_active: true,
     category: "basic"
@@ -40,6 +46,11 @@ const packages: Package[] = [
       "Music video",
       "Marketing support",
       "Dedicated producer"
+    ],
+    includes: [
+      { id: "premium-1", include_key: "premiumInclude1", include_order: 1 },
+      { id: "premium-2", include_key: "premiumInclude2", include_order: 2 },
+      { id: "premium-3", include_key: "premiumInclude3", include_order: 3 }
     ],
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo"],
     is_active: true,
@@ -63,6 +74,13 @@ const packages: Package[] = [
       "Sound effects",
       "Unlimited revisions"
     ],
+    includes: [
+      { id: "business-1", include_key: "businessInclude1", include_order: 1 },
+      { id: "business-2", include_key: "businessInclude2", include_order: 2 },
+      { id: "business-3", include_key: "businessInclude3", include_order: 3 },
+      { id: "business-4", include_key: "businessInclude4", include_order: 4 },
+      { id: "business-5", include_key: "businessInclude5", include_order: 5 }
+    ],
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo"],
     is_active: true,
     category: "commercial"
@@ -84,6 +102,12 @@ const packages: Package[] = [
       "Distribution support",
       "Artist branding",
       "Long-term support"
+    ],
+    includes: [
+      { id: "artist-1", include_key: "artistInclude1", include_order: 1 },
+      { id: "artist-2", include_key: "artistInclude2", include_order: 2 },
+      { id: "artist-3", include_key: "artistInclude3", include_order: 3 },
+      { id: "artist-4", include_key: "artistInclude4", include_order: 4 }
     ],
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo"],
     is_active: true,
@@ -107,6 +131,14 @@ const packages: Package[] = [
       "Radio edit",
       "Extended version"
     ],
+    includes: [
+      { id: "remix-1", include_key: "remixInclude1", include_order: 1 },
+      { id: "remix-2", include_key: "remixInclude2", include_order: 2 },
+      { id: "remix-3", include_key: "remixInclude3", include_order: 3 },
+      { id: "remix-4", include_key: "remixInclude4", include_order: 4 },
+      { id: "remix-5", include_key: "remixInclude5", include_order: 5 },
+      { id: "remix-6", include_key: "remixInclude6", include_order: 6 }
+    ],
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo"],
     is_active: true,
     category: "advanced"
@@ -129,11 +161,18 @@ const packages: Package[] = [
       "Loopable version",
       "Stem files"
     ],
+    includes: [
+      { id: "instrumental-1", include_key: "instrumentalInclude1", include_order: 1 },
+      { id: "instrumental-2", include_key: "instrumentalInclude2", include_order: 2 },
+      { id: "instrumental-3", include_key: "instrumentalInclude3", include_order: 3 },
+      { id: "instrumental-4", include_key: "instrumentalInclude4", include_order: 4 },
+      { id: "instrumental-5", include_key: "instrumentalInclude5", include_order: 5 }
+    ],
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo"],
     is_active: true,
     category: "basic"
   },
-    {
+  {
     value: "plus",
     label: "Plus Package",
     label_key: "plusPackage",
@@ -150,6 +189,11 @@ const packages: Package[] = [
       "Digital delivery",
       "Fast turnaround",
       "Simple and easy"
+    ],
+    includes: [
+      { id: "plus-1", include_key: "plusInclude1", include_order: 1 },
+      { id: "plus-2", include_key: "plusInclude2", include_order: 2 },
+      { id: "plus-3", include_key: "plusInclude3", include_order: 3 }
     ],
     available_addons: ["rushDelivery"],
     is_active: true,
@@ -173,6 +217,11 @@ const packages: Package[] = [
       "No expiration",
       "Perfect for any occasion"
     ],
+    includes: [
+      { id: "gift-1", include_key: "giftInclude1", include_order: 1 },
+      { id: "gift-2", include_key: "giftInclude2", include_order: 2 },
+      { id: "gift-3", include_key: "giftInclude3", include_order: 3 }
+    ],
     available_addons: [],
     is_active: true,
     category: "other"
@@ -194,6 +243,16 @@ const packages: Package[] = [
       "Reception version",
       "Digital delivery",
       "Commercial usage rights"
+    ],
+    includes: [
+      { id: "wedding-1", include_key: "weddingInclude1", include_order: 1 },
+      { id: "wedding-2", include_key: "weddingInclude2", include_order: 2 },
+      { id: "wedding-3", include_key: "weddingInclude3", include_order: 3 },
+      { id: "wedding-4", include_key: "weddingInclude4", include_order: 4 },
+      { id: "wedding-5", include_key: "weddingInclude5", include_order: 5 },
+      { id: "wedding-6", include_key: "weddingInclude6", include_order: 6 },
+      { id: "wedding-7", include_key: "weddingInclude7", include_order: 7 },
+      { id: "wedding-8", include_key: "weddingInclude8", include_order: 8 }
     ],
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo", "godparentsMelody"],
     is_active: true,
@@ -217,6 +276,14 @@ const packages: Package[] = [
       "Digital delivery",
       "Keepsake audio file"
     ],
+    includes: [
+      { id: "baptism-1", include_key: "baptismInclude1", include_order: 1 },
+      { id: "baptism-2", include_key: "baptismInclude2", include_order: 2 },
+      { id: "baptism-3", include_key: "baptismInclude3", include_order: 3 },
+      { id: "baptism-4", include_key: "baptismInclude4", include_order: 4 },
+      { id: "baptism-5", include_key: "baptismInclude5", include_order: 5 },
+      { id: "baptism-6", include_key: "baptismInclude6", include_order: 6 }
+    ],
     available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "godparentsMelody"],
     is_active: true,
     category: "special_occasion"
@@ -238,6 +305,14 @@ const packages: Package[] = [
       "Reflection version",
       "Digital delivery", 
       "Social media ready"
+    ],
+    includes: [
+      { id: "comingOfAge-1", include_key: "comingOfAgeInclude1", include_order: 1 },
+      { id: "comingOfAge-2", include_key: "comingOfAgeInclude2", include_order: 2 },
+      { id: "comingOfAge-3", include_key: "comingOfAgeInclude3", include_order: 3 },
+      { id: "comingOfAge-4", include_key: "comingOfAgeInclude4", include_order: 4 },
+      { id: "comingOfAge-5", include_key: "comingOfAgeInclude5", include_order: 5 },
+      { id: "comingOfAge-6", include_key: "comingOfAgeInclude6", include_order: 6 }
     ],
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo"],
     is_active: true,

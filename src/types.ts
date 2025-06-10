@@ -1,7 +1,7 @@
-
 export interface PackageInclude {
   include_key: string;
   include_order?: number;
+  id?: string;
 }
 
 export interface FieldOption {
