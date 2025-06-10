@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -57,10 +58,10 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
 
       {/* Professional Package Selection Card */}
       <div className="max-w-lg mx-auto">
-        <Card className="bg-white/20 backdrop-blur-md border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] hover:bg-white/25">
+        <Card className="bg-white/10 backdrop-blur-sm border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] hover:bg-white/15">
           <CardContent className="p-4">
             <Select value={selectedPackage} onValueChange={onPackageSelect}>
-              <SelectTrigger className="w-full h-12 text-left border border-white/40 hover:border-orange-400 focus:border-orange-500 transition-all duration-300 bg-white/30 backdrop-blur-sm shadow-sm hover:shadow-md hover:bg-white/40">
+              <SelectTrigger className="w-full h-12 text-left border border-white/40 hover:border-orange-400 focus:border-orange-500 transition-all duration-300 bg-white/10 backdrop-blur-sm shadow-sm hover:shadow-md hover:bg-white/20">
                 <SelectValue placeholder={<span className="text-gray-700 text-sm font-medium">{t('selectOption')}</span>}>
                   {selectedPackageData && (
                     <span className="font-semibold text-gray-900 text-sm">
@@ -104,7 +105,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
       {/* Enhanced Selected Package Summary */}
       {selectedPackageData && (
         <div className="max-w-lg mx-auto">
-          <Card className="bg-white/20 backdrop-blur-md border-l-4 border-l-orange-500 border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/25">
+          <Card className="bg-white/10 backdrop-blur-sm border-l-4 border-l-orange-500 border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/15">
             <CardContent className="p-6 mx-0 my-0 px-[9px]">
               <div className="space-y-6">
                 {/* Header with package name and price */}
@@ -139,7 +140,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                 </div>
 
                 {/* Package Description */}
-                <div className="bg-orange-50/50 backdrop-blur-sm rounded-lg p-3 border border-orange-200/50">
+                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/20">
                   <div className="flex items-start gap-2">
                     <Music className="w-4 h-4 text-orange-600 mt-0.5 shrink-0" />
                     <p className="text-sm text-gray-700 leading-relaxed">
@@ -157,7 +158,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                     </div>
                     <div className="grid grid-cols-1 gap-2">
                       {selectedPackageData.includes.map((include, index) => (
-                        <div key={include.id || index} className="flex items-start gap-2 text-xs text-gray-700 bg-green-50/50 p-2 rounded-md">
+                        <div key={include.id || index} className="flex items-start gap-2 text-xs text-gray-700 bg-white/20 p-2 rounded-md">
                           <Check className="w-3 h-3 text-green-600 mt-0.5 shrink-0" />
                           <span>{t(include.include_key)}</span>
                         </div>
