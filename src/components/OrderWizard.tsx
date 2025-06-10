@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -103,21 +104,27 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const totalSteps = paymentStepIndex + 1;
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
 
-  // Fix the step indexing logic - the issue was here!
-  const currentPackageStepIndex = currentStep - 1; // currentStep 1 -> index 0, currentStep 2 -> index 1, etc.
+  // FIXED: Correct the step indexing logic
+  // When currentStep = 1, we want regularSteps[0]
+  // When currentStep = 2, we want regularSteps[1], etc.
+  const currentPackageStepIndex = currentStep - 1;
   const isRegularPackageStep = currentStep >= 1 && currentStep <= totalRegularSteps;
-  const currentStepData = isRegularPackageStep ? regularSteps[currentPackageStepIndex] : null;
+  const currentStepData = isRegularPackageStep && regularSteps.length > currentPackageStepIndex 
+    ? regularSteps[currentPackageStepIndex] 
+    : null;
 
   // Add debugging for step data calculation
-  console.log('🔍 Step Data Calculation:', {
+  console.log('🔍 Step Data Calculation (FIXED):', {
     currentStep,
     totalRegularSteps,
     currentPackageStepIndex,
     isRegularPackageStep,
+    regularStepsAvailable: regularSteps.length,
     currentStepData: currentStepData ? { 
       id: currentStepData.id, 
       title_key: currentStepData.title_key,
-      fieldsCount: currentStepData.fields?.length 
+      fieldsCount: currentStepData.fields?.length,
+      fields: currentStepData.fields?.map(f => ({ name: f.field_name, type: f.field_type }))
     } : null
   });
 
