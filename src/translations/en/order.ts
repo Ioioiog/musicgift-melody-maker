@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -25,7 +26,7 @@ export const orderTranslations = {
   next: "Next",
   submitting: "Submitting...",
   completeOrder: "Complete order",
-  choosePackage: "Choose Package",
+  choosePackage: "Choose package",
   pickDate: "Pick date",
   orderDetails: "Order details",
   completeAllSteps: "Complete all steps to finalize your order.",
@@ -76,12 +77,6 @@ export const orderTranslations = {
   testimonialQuote: "\"The perfect gift for music lovers! The personalized song was absolutely beautiful and made our anniversary unforgettable.\"",
   testimonialAuthor: "- Sarah M., Happy Customer",
   
-  // Existing order translations
-  generalDetails: "General Details",
-  storyAndEmotionalDetails: "Story & Emotional Details",
-  musicalPreferences: "Musical Preferences",
-  confirmation: "Confirmation",
-  
   // Common form fields
   recipientName: "Recipient Name",
   relationship: "Relationship",
@@ -94,14 +89,14 @@ export const orderTranslations = {
   keyMoments: "Key Moments",
   specialWords: "Special Words/Phrases",
   pronunciationAudioKeywords: "Pronunciation Audio (Keywords)",
-  musicStyle: "Musical Style",
+  musicStyle: "Music Style",
   referenceSong: "Reference Song/Artist (Optional)",
   fullName: "Your Full Name",
   email: "Email Address",
   phone: "Phone Number (Optional)",
   acceptMentionObligation: "I accept the mention obligation",
   acceptDistribution: "I accept distribution",
-  finalNote: "I agree to the final terms",
+  finalNote: "I agree to final terms",
   voiceFemale: "Female Voice",
   voiceMale: "Male Voice",
   voiceDuet: "Duet (Both Voices)",
@@ -112,7 +107,7 @@ export const orderTranslations = {
   recipientNamePronunciationPlaceholder: "Record how to pronounce the recipient's name",
   favoriteGenrePlaceholder: "What's their favorite music genre?",
   hobbiesPlaceholder: "Tell us about their hobbies and interests",
-  selectSpecialOccasion: "Select the special occasion",
+  selectSpecialOccasion: "Select special occasion",
   birthdayOccasion: "Birthday",
   anniversaryOccasion: "Anniversary",
   valentineOccasion: "Valentine's Day",
@@ -138,8 +133,8 @@ export const orderTranslations = {
   brandPersonalityTrustworthy: "Trustworthy",
   brandPersonalityEnergetic: "Energetic",
   brandPersonalitySophisticated: "Sophisticated",
-  companyHistoryPlaceholder: "Brief company background and milestones",
-  uniqueSellingPropositionPlaceholder: "What makes your business unique?",
+  companyHistoryPlaceholder: "Brief company history and milestones",
+  uniqueSellingPropositionPlaceholder: "What makes your company unique?",
   selectUsageContext: "Select usage context",
   usageContextCompanyEvents: "Company Events",
   usageContextMarketingCampaigns: "Marketing Campaigns",
@@ -154,7 +149,7 @@ export const orderTranslations = {
   emotionalResponseConfidence: "Confidence",
   emotionalResponseNostalgia: "Nostalgia",
   emotionalResponsePride: "Pride",
-  competitorAnalysisPlaceholder: "How do you want to differentiate from competitors?",
+  competitorAnalysisPlaceholder: "How do you want to differentiate from competition?",
   callToActionPlaceholder: "What action should listeners take?",
   seasonalTemporalRelevancePlaceholder: "Any time-sensitive elements?",
 
@@ -162,12 +157,12 @@ export const orderTranslations = {
   realNamePlaceholder: "Your real name",
   yearsActivePlaceholder: "How many years have you been active in music?",
   previousReleasesPlaceholder: "List any previous songs, albums, or EPs",
-  performanceExperiencePlaceholder: "Describe your live performance background",
-  socialMediaFollowingPlaceholder: "Current follower counts across platforms",
+  performanceExperiencePlaceholder: "Describe your live performance experience",
+  socialMediaFollowingPlaceholder: "Current follower count across platforms",
   musicEducationTrainingPlaceholder: "Any formal music education or training",
   careerGoalsPlaceholder: "What are your music career goals?",
   vocalStylePlaceholder: "Describe your vocal style and range",
-  lyricalThemesPlaceholder: "What topics do you typically sing about?",
+  lyricalThemesPlaceholder: "What subjects do you usually sing about?",
   selectMusicalComplexity: "Select musical complexity",
   musicalComplexitySimple: "Simple/Commercial",
   musicalComplexityModerate: "Moderate",
@@ -208,7 +203,7 @@ export const orderTranslations = {
   weddingVenueBallroom: "Ballroom",
   weddingVenueDestination: "Destination",
   weddingVenueOther: "Other",
-  weddingThemeStylePlaceholder: "Wedding theme/style (e.g., Vintage, Modern, Rustic, Elegant)",
+  weddingThemeStylePlaceholder: "Wedding theme/style (e.g. Vintage, Modern, Rustic, Elegant)",
 
   // Baptism Package Enhanced Fields
   childNamePronunciationPlaceholder: "Record how to pronounce the child's name",
@@ -216,11 +211,11 @@ export const orderTranslations = {
   parentsNamesPlaceholder: "Parents' names",
   familyTraditionsPlaceholder: "Religious or cultural traditions important to your family",
   baptismDatePlaceholder: "Choose baptism date",
-  churchVenuePlaceholder: "Church or venue name",
+  churchVenuePlaceholder: "Name of church or venue",
   blessingPrayerElementsPlaceholder: "Any specific blessings or prayers to include",
   childPersonalityPlaceholder: "What is the child like?",
   futureHopesPlaceholder: "Your hopes and dreams for the child",
-  familyMessagePlaceholder: "Message from the family",
+  familyMessagePlaceholder: "Message from family",
   godparentsMentionPlaceholder: "Include godparents in the song",
   godparentsNamesPlaceholder: "Godparents' names",
 
@@ -258,7 +253,7 @@ export const orderTranslations = {
 
   // Plus Package
   plusStep1Title: "Basic Information",
-  plusStep2Title: "Style Preferences", 
+  plusStep2Title: "Style Preferences",
   plusRecipientNamePlaceholder: "Who is this musical message for?",
   plusMessageContentPlaceholder: "What would you like to say in your musical message?",
   plusStyleHappy: "Happy & Upbeat",
@@ -278,20 +273,20 @@ export const orderTranslations = {
   businessPurposeProductLaunch: "Product Launch",
   businessTargetAudiencePlaceholder: "Describe your target audience",
   businessMessagePlaceholder: "What message do you want to convey?",
-  businessVoiceBoth: "Both Male & Female",
+  businessVoiceBoth: "Both Male and Female Voice",
   businessUsageSocialMedia: "Social Media",
   businessUsageTvRadio: "TV & Radio",
   businessUsageOnlineAds: "Online Advertising",
   businessUsageEvents: "Corporate Events",
-  businessContactNamePlaceholder: "Primary contact person",
-  businessAcceptTermsPlaceholder: "I accept the commercial terms and conditions",
+  businessContactNamePlaceholder: "Main contact person",
+  businessAcceptTermsPlaceholder: "I accept the commercial terms",
 
   // Artist Package
   artistStep1Title: "Artist Information",
   artistStep2Title: "Song Concept",
   artistStep3Title: "Distribution & Rights",
   artistStageNamePlaceholder: "Your stage/artist name",
-  artistGenrePlaceholder: "Select your primary genre",
+  artistGenrePlaceholder: "Select your main genre",
   artistExperienceBeginner: "Beginner",
   artistExperienceIntermediate: "Intermediate",
   artistExperienceProfessional: "Professional",
@@ -332,7 +327,7 @@ export const orderTranslations = {
   instrumentalTempoSlow: "Slow (60-90 BPM)",
   instrumentalTempoMedium: "Medium (90-120 BPM)",
   instrumentalTempoFast: "Fast (120+ BPM)",
-  instrumentalMoodPlaceholder: "Select the mood/feeling",
+  instrumentalMoodPlaceholder: "Select mood/feeling",
   instrumentalStructureStandard: "Standard Song Structure",
   instrumentalStructureExtended: "Extended/Cinematic",
   instrumentalStructureCustom: "Custom Structure",
@@ -352,7 +347,7 @@ export const orderTranslations = {
   giftSenderNamePlaceholder: "Your name",
   giftRecipientNamePlaceholder: "Recipient's name",
   giftRecipientEmailPlaceholder: "Recipient's email",
-  giftMessagePlaceholder: "Personal message for the recipient",
+  giftMessagePlaceholder: "Personal message for recipient",
 
   // Form validation and UI
   required: "Required",
@@ -386,7 +381,7 @@ export const orderTranslations = {
   packageContextBaptism: "Personalized baptism melody",
   packageContextComingOfAge: "18th birthday anthem",
 
-  // Language options - adding Italian
+  // Language options
   romanianLanguage: "Romanian",
   englishLanguage: "English", 
   frenchLanguage: "French",

@@ -1,12 +1,81 @@
 
 export const orderTranslations = {
-  // Existing order translations
-  choosePackage: "Paket Wählen",
+  loadingPackages: "Lade Pakete...",
+  loadingSteps: "Lade Schritte...",
+  errorLoadingSteps: "Fehler beim Laden der Schritte",
+  errorLoadingStepsDesc: "Konfiguration für dieses Paket kann nicht geladen werden. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.",
+  chooseAnotherPackage: "Anderes Paket wählen",
+  tryAgain: "Nochmal versuchen",
+  noStepsConfigured: "Keine Schritte konfiguriert",
+  noStepsConfiguredDesc: "Dieses Paket hat noch keine konfigurierten Schritte. Bitte kontaktieren Sie den Support oder wählen Sie ein anderes Paket.",
+  selectYourPackage: "Wählen Sie Ihr Paket",
+  selectOption: "Option auswählen",
+  selected: "Ausgewählt",
+  more: "mehr",
+  completeRequiredFields: "Bitte füllen Sie alle Pflichtfelder aus",
+  completeRequiredFieldsDesc: "Stellen Sie sicher, dass alle Pflichtfelder ausgefüllt sind, bevor Sie fortfahren.",
+  somethingWentWrong: "Etwas ist schief gelaufen",
+  tryAgainSupport: "Bitte versuchen Sie es erneut oder kontaktieren Sie den Support, wenn das Problem weiterhin besteht.",
   stepPackage: "Schritt",
-  generalDetails: "Allgemeine Details",
-  storyAndEmotionalDetails: "Geschichte & Emotionale Details",
-  musicalPreferences: "Musikalische Vorlieben",
-  confirmation: "Bestätigung",
+  of: "von",
+  progress: "Fortschritt",
+  whatsIncluded: "Was ist enthalten",
+  professionalQuality: "Professionelle Qualität",
+  previous: "Zurück",
+  continue: "Weiter",
+  next: "Weiter",
+  submitting: "Wird gesendet...",
+  completeOrder: "Bestellung abschließen",
+  choosePackage: "Paket wählen",
+  pickDate: "Datum wählen",
+  orderDetails: "Bestelldetails",
+  completeAllSteps: "Schließen Sie alle Schritte ab, um Ihre Bestellung zu finalisieren.",
+  submitOrder: "Bestellung abschicken",
+  loadingGiftCard: "Lade Geschenkkarte...",
+  giftCardApplied: "Geschenkkarte angewendet",
+  giftCardAppliedDesc: "Geschenkkarte ist bereit für Ihre Bestellung verwendet zu werden.",
+  
+  // Toast messages
+  orderSuccess: "Bestellung erstellt",
+  orderSuccessMessage: "Ihre Bestellung wurde erfolgreich erstellt. Dies verwendet Demo-Daten.",
+  orderError: "Fehler",
+  orderErrorMessage: "Ein Fehler ist aufgetreten",
+  
+  // Help section
+  needHelp: "Hilfe benötigt?",
+  mondayToFriday: "Montag - Freitag, 9:00 - 18:00",
+  
+  // Package tags
+  popular: "Beliebt",
+  premium: "Premium",
+  new: "Neu",
+  gift: "Geschenk",
+  
+  // Order Summary
+  orderSummary: "Bestellübersicht",
+  addons: "Zusatzleistungen",
+  subtotal: "Zwischensumme",
+  total: "Gesamt",
+  giftCardDiscount: "Geschenkkarten-Rabatt",
+  fullyCoveredByGiftCard: "Vollständig von Geschenkkarte abgedeckt",
+  giftCardFrom: "Von:",
+  giftCardBalance: "Guthaben:",
+  giftCardRemaining: "Verbleibt nach Bestellung:",
+  
+  // Form Field Renderer
+  noAddonsAvailable: "Keine Zusatzleistungen für dieses Paket verfügbar",
+  fieldConfigurationError: "Feldkonfigurationsfehler: Keine Optionen verfügbar",
+  unknownFieldType: "Unbekannter Feldtyp: {fieldType}",
+  uploadFiles: "Dateien hochladen",
+  clickToUploadFiles: "Klicken Sie zum Hochladen von Dateien",
+  maxFiles: "Max.",
+  files: "Dateien",
+  totalSize: "gesamt",
+  recordAudioMessage: "Audio-Nachricht aufnehmen",
+  
+  // Testimonial
+  testimonialQuote: "\"Das perfekte Geschenk für Musikliebhaber! Das personalisierte Lied war absolut wunderschön und machte unseren Jahrestag unvergesslich.\"",
+  testimonialAuthor: "- Sarah M., Zufriedene Kundin",
   
   // Common form fields
   recipientName: "Name des Empfängers",
@@ -283,11 +352,8 @@ export const orderTranslations = {
   // Form validation and UI
   required: "Erforderlich",
   optional: "Optional",
-  next: "Weiter",
-  previous: "Zurück",
-  submit: "Bestellung Aufgeben",
+  submit: "Bestellung abschicken",
   loading: "Verarbeitung...",
-  selectOption: "Option wählen",
   uploadFile: "Datei hochladen",
   chooseDate: "Datum wählen",
   
@@ -295,10 +361,8 @@ export const orderTranslations = {
   fieldRequired: "Dieses Feld ist erforderlich",
   invalidEmail: "Bitte geben Sie eine gültige E-Mail-Adresse ein",
   invalidUrl: "Bitte geben Sie eine gültige URL ein",
-  fileSizeError: "Die Dateigröße muss unter 10MB liegen",
+  fileSizeError: "Dateigröße muss kleiner als 10MB sein",
   fileTypeError: "Ungültiger Dateityp",
-  fieldConfigurationError: "Feldkonfigurationsfehler: Keine Optionen verfügbar",
-  unknownFieldType: "Unbekannter Feldtyp: {fieldType}",
   
   // Success messages
   stepCompleted: "Schritt erfolgreich abgeschlossen",
@@ -306,20 +370,20 @@ export const orderTranslations = {
   
   // Package-specific context (flattened)
   packageContextPersonal: "Erstellen Sie ein personalisiertes Lied für jemand Besonderen",
-  packageContextPremium: "Professioneller Song mit globaler Distribution",
+  packageContextPremium: "Professionelles Lied mit globaler Distribution",
   packageContextBusiness: "Maßgeschneiderte Musik für Ihre Marke",
   packageContextArtist: "Starten Sie Ihre Musikkarriere",
   packageContextRemix: "Verwandeln Sie Ihren bestehenden Song",
-  packageContextInstrumental: "Maßgeschneiderter Instrumentaltrack",
+  packageContextInstrumental: "Maßgeschneiderte Instrumentalmusik",
   packageContextPlus: "Schnelle musikalische Nachricht",
   packageContextGift: "Musikalische Geschenkkarte",
-  packageContextWedding: "Einzigartiger Hochzeitstanz-Song",
+  packageContextWedding: "Einzigartiges Hochzeitstanzlied",
   packageContextBaptism: "Personalisierte Taufmelodie",
   packageContextComingOfAge: "18. Geburtstags-Hymne",
 
-  // Language options - adding Italian
+  // Language options
   romanianLanguage: "Rumänisch",
-  englishLanguage: "Englisch", 
+  englishLanguage: "Englisch",
   frenchLanguage: "Französisch",
   italianLanguage: "Italienisch"
 };
