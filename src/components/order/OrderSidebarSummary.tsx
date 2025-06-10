@@ -37,7 +37,6 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   } = useCurrency();
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
-  const [showAllFeatures, setShowAllFeatures] = useState(false);
 
   if (!orderData?.selectedPackage) {
     return <div className={isMobile ? "mb-4" : "lg:sticky lg:top-4"}>
@@ -75,10 +74,6 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
     giftCreditApplied = Math.min(giftBalance, subtotal);
   }
   const finalTotal = Math.max(0, subtotal - giftCreditApplied);
-
-  // Determine how many features to show initially
-  const featuresToShow = showAllFeatures ? selectedPackageData.includes?.length || 0 : (isMobile ? 3 : 4);
-  const hasMoreFeatures = (selectedPackageData.includes?.length || 0) > featuresToShow;
 
   return <div className={isMobile ? "mb-4" : "lg:sticky lg:top-4"}>
       <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-20">
@@ -166,7 +161,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
                 {t('fullyPaidWithGiftCard', 'Plătit complet cu cardul cadou')}
               </Badge>}
 
-            {/* Enhanced Package Features - Full Details */}
+            {/* All Package Features in One Card */}
             {selectedPackageData.includes && selectedPackageData.includes.length > 0 && <div className="mt-4 sm:mt-6">
                 <Separator className="bg-white/20 mb-3 sm:mb-4" />
                 <div className="bg-white/5 rounded-lg border border-white/10 p-3 sm:p-4">
@@ -175,7 +170,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
                     {t('packageIncludes', 'Pachetul include:')}
                   </h5>
                   <div className="space-y-2 sm:space-y-3">
-                    {selectedPackageData.includes.slice(0, featuresToShow).map((includeItem, index) => (
+                    {selectedPackageData.includes.map((includeItem, index) => (
                       <div key={index} className="flex items-start gap-2 sm:gap-3 p-2 bg-white/5 rounded-md border border-white/10">
                         <div className="w-1.5 h-1.5 bg-green-400 rounded-full shrink-0 mt-2"></div>
                         <div className="flex-1 min-w-0">
@@ -186,34 +181,6 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
                       </div>
                     ))}
                   </div>
-                  
-                  {hasMoreFeatures && !showAllFeatures && (
-                    <div className="mt-3 text-center">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowAllFeatures(true)}
-                        className="text-white/70 hover:text-white hover:bg-white/10 text-xs"
-                      >
-                        <ChevronDown className="w-3 h-3 mr-1" />
-                        Show {(selectedPackageData.includes?.length || 0) - featuresToShow} more features
-                      </Button>
-                    </div>
-                  )}
-                  
-                  {showAllFeatures && hasMoreFeatures && (
-                    <div className="mt-3 text-center">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowAllFeatures(false)}
-                        className="text-white/70 hover:text-white hover:bg-white/10 text-xs"
-                      >
-                        <ChevronUp className="w-3 h-3 mr-1" />
-                        Show less
-                      </Button>
-                    </div>
-                  )}
                 </div>
               </div>}
           </CardContent>}
