@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -19,41 +20,47 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     )
 
-    const { giftCardId } = await req.json()
+    const { discountCodeId, customerEmail, customerName } = await req.json()
 
-    // Get gift card details
-    const { data: giftCard, error: giftError } = await supabaseClient
-      .from('gift_cards')
+    // Get discount code details
+    const { data: discountCode, error: discountError } = await supabaseClient
+      .from('discount_codes')
       .select('*')
-      .eq('id', giftCardId)
+      .eq('id', discountCodeId)
       .single()
 
-    if (giftError || !giftCard) {
-      throw new Error('Gift card not found')
+    if (discountError || !discountCode) {
+      throw new Error('Discount code not found')
     }
 
-    // Check if gift card is active and payment completed
-    if (giftCard.status !== 'active' || giftCard.payment_status !== 'completed') {
-      throw new Error('Gift card is not ready for delivery')
+    // Check if discount code is active
+    if (!discountCode.is_active) {
+      throw new Error('Discount code is not active')
     }
 
-    // Create redemption URL
-    const redemptionUrl = `${Deno.env.get('SITE_URL')}/gift?gift=${giftCard.code}`
-    const giftAmount = (giftCard.gift_amount || 0) / 100
+    const discountAmount = discountCode.discount_type === 'percentage' 
+      ? `${discountCode.discount_value}%` 
+      : `${discountCode.discount_value / 100} RON`
 
-    // Prepare email content with consistent styling
+    const expiryDate = discountCode.expires_at 
+      ? new Date(discountCode.expires_at).toLocaleDateString() 
+      : 'No expiry'
+
+    const redemptionUrl = `${Deno.env.get('SITE_URL')}/order`
+
+    // Prepare email content
     const emailHtml = `
       <!DOCTYPE html>
       <html>
         <head>
           <meta charset="utf-8">
-          <title>Your Musical Gift Awaits!</title>
+          <title>Your Exclusive Discount Code!</title>
           <style>
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
             .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
             .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
-            .gift-card { background: white; border: 2px dashed #667eea; padding: 20px; margin: 20px 0; text-align: center; border-radius: 10px; }
+            .discount-card { background: white; border: 2px dashed #667eea; padding: 20px; margin: 20px 0; text-align: center; border-radius: 10px; }
             .code { font-size: 24px; font-weight: bold; color: #667eea; letter-spacing: 2px; margin: 10px 0; }
             .amount { font-size: 28px; font-weight: bold; color: #764ba2; }
             .btn { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; margin: 20px 0; }
@@ -63,46 +70,41 @@ serve(async (req) => {
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎵 Your Musical Gift Has Arrived! 🎵</h1>
-              <p>Someone special has sent you a personalized song</p>
+              <h1>🎵 Exclusive Discount Just for You! 🎵</h1>
+              <p>Your special discount code is ready to use</p>
             </div>
             
             <div class="content">
-              <h2>Hello ${giftCard.recipient_name}!</h2>
+              <h2>Hello ${customerName}!</h2>
               
-              <p><strong>${giftCard.sender_name}</strong> has sent you a special musical gift!</p>
+              <p>We're excited to offer you an exclusive discount on your next personalized song!</p>
               
-              ${giftCard.message_text ? `
-                <div style="background: white; padding: 20px; border-left: 4px solid #667eea; margin: 20px 0; font-style: italic;">
-                  "${giftCard.message_text}"
-                </div>
-              ` : ''}
-              
-              <div class="gift-card">
-                <h3>🎁 Gift Card Details</h3>
-                <div class="amount">${giftAmount} RON</div>
-                <div class="code">${giftCard.code}</div>
-                <p>Use this code to create your personalized song</p>
+              <div class="discount-card">
+                <h3>💳 Your Discount Code</h3>
+                <div class="amount">${discountAmount} OFF</div>
+                <div class="code">${discountCode.code}</div>
+                <p>Use this code at checkout to save on your order</p>
               </div>
               
               <div style="text-align: center;">
-                <a href="${redemptionUrl}" class="btn">Redeem Your Gift Card</a>
+                <a href="${redemptionUrl}" class="btn">Create Your Song Now</a>
               </div>
               
-              <h3>How it works:</h3>
+              <h3>How to use your discount:</h3>
               <ol>
-                <li>Click the "Redeem Your Gift Card" button above</li>
-                <li>Enter your gift card code: <strong>${giftCard.code}</strong></li>
+                <li>Click "Create Your Song Now" above or visit our order page</li>
                 <li>Choose your preferred music package</li>
-                <li>Share your story and preferences</li>
-                <li>Receive your personalized song within a few days</li>
+                <li>At checkout, enter your discount code: <strong>${discountCode.code}</strong></li>
+                <li>Enjoy your savings and your personalized song!</li>
               </ol>
               
-              <p><strong>Your gift card expires on:</strong> ${new Date(giftCard.expires_at || '').toLocaleDateString()}</p>
+              <p><strong>Code expires:</strong> ${expiryDate}</p>
+              ${discountCode.minimum_order_amount > 0 ? `<p><strong>Minimum order:</strong> ${discountCode.minimum_order_amount / 100} RON</p>` : ''}
+              ${discountCode.usage_limit ? `<p><strong>Uses remaining:</strong> ${discountCode.usage_limit - discountCode.used_count}</p>` : ''}
             </div>
             
             <div class="footer">
-              <p>This gift card was purchased through MusicGift</p>
+              <p>This discount code was sent from MusicGift</p>
               <p>If you have any questions, please contact our support team</p>
             </div>
           </div>
@@ -111,41 +113,40 @@ serve(async (req) => {
     `
 
     const emailText = `
-      Your Musical Gift Has Arrived!
+      Your Exclusive Discount Code!
       
-      Hello ${giftCard.recipient_name}!
+      Hello ${customerName}!
       
-      ${giftCard.sender_name} has sent you a special musical gift worth ${giftAmount} RON!
+      We're excited to offer you an exclusive discount: ${discountAmount} OFF your next personalized song!
       
-      ${giftCard.message_text ? `Message: "${giftCard.message_text}"` : ''}
+      Discount Code: ${discountCode.code}
       
-      Gift Card Code: ${giftCard.code}
-      
-      To redeem your gift card:
+      To use your discount:
       1. Visit: ${redemptionUrl}
-      2. Enter your code: ${giftCard.code}
-      3. Choose your music package and share your story
-      4. Receive your personalized song within a few days
+      2. Choose your music package
+      3. Enter code: ${discountCode.code} at checkout
+      4. Enjoy your savings!
       
-      Your gift card expires on: ${new Date(giftCard.expires_at || '').toLocaleDateString()}
+      Code expires: ${expiryDate}
+      ${discountCode.minimum_order_amount > 0 ? `Minimum order: ${discountCode.minimum_order_amount / 100} RON` : ''}
       
       Thank you for choosing MusicGift!
     `
 
-    // Send email via Brevo with consistent sender and tags
+    // Send email via Brevo
     const emailData = {
       sender: {
         name: "MusicGift",
-        email: "gifts@musicgift.com"
+        email: "discounts@musicgift.com"
       },
       to: [{
-        email: giftCard.recipient_email,
-        name: giftCard.recipient_name
+        email: customerEmail,
+        name: customerName
       }],
-      subject: `🎵 Musical Gift from ${giftCard.sender_name} - ${giftAmount} RON`,
+      subject: `🎵 ${discountAmount} OFF Your Next Song - Code: ${discountCode.code}`,
       htmlContent: emailHtml,
       textContent: emailText,
-      tags: ["gift-card", "delivery", "brevo-integration"]
+      tags: ["discount-code", "manual-send"]
     }
 
     const brevoResponse = await fetch(BREVO_API_URL, {
@@ -162,17 +163,17 @@ serve(async (req) => {
       throw new Error(`Email delivery failed: ${errorData.message || 'Unknown error'}`)
     }
 
-    console.log(`Gift card email sent successfully to ${giftCard.recipient_email}`)
+    console.log(`Discount code email sent successfully to ${customerEmail}`)
 
     return new Response(
-      JSON.stringify({ success: true, message: 'Gift card email sent successfully' }),
+      JSON.stringify({ success: true, message: 'Discount code email sent successfully' }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
       },
     )
   } catch (error) {
-    console.error('Gift card email error:', error)
+    console.error('Discount code email error:', error)
     return new Response(
       JSON.stringify({ 
         success: false, 

@@ -78,7 +78,7 @@ export const useCreateAutoRule = () => {
       queryClient.invalidateQueries({ queryKey: ['auto-generation-rules'] });
       toast({
         title: 'Success',
-        description: 'Auto-generation rule created successfully',
+        description: 'Auto-generation rule created successfully. Discount codes will be automatically sent via Brevo email when triggered.',
       });
     },
     onError: (error) => {
