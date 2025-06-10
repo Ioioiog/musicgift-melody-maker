@@ -3,8 +3,10 @@ import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music, ArrowUp } fro
 import { useLanguage } from "@/contexts/LanguageContext";
 import LegalModals, { useLegalModals } from "@/components/LegalModals";
 import LegalCompliance from "@/components/LegalCompliance";
+import NewsletterForm from "@/components/NewsletterForm";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -269,6 +271,30 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Newsletter Section - New Addition */}
+        <div className="mt-8 sm:mt-12 space-y-3 sm:space-y-4">
+          <div className="relative text-center">
+            <h3 className="text-gray-800 font-bold text-lg mb-2">
+              {t('stayUpdated')}
+            </h3>
+            <div className="w-12 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto mb-4"></div>
+            <p className="text-sm text-gray-600 mb-6 max-w-md mx-auto">
+              {t('subscribeNewsletter')}
+            </p>
+          </div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6 }}
+            className="max-w-md mx-auto"
+          >
+            <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-4">
+              <NewsletterForm />
+            </div>
+          </motion.div>
+        </div>
+
         {/* Legal Compliance Section - Full Width */}
         <div className="mt-6 sm:mt-12 space-y-3 sm:space-y-4">
           <div className="relative text-center sm:text-left">
@@ -323,3 +349,5 @@ const Footer = () => {
 };
 
 export default Footer;
+
+</edits_to_apply>
