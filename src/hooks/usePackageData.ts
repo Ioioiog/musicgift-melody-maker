@@ -1,7 +1,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { packages, addons, type Package as PackageData } from '@/data/packages';
+import { packages, addons } from '@/data/packages';
+import { Package } from '@/types';
 
 export interface StepData {
   id: string;
@@ -33,7 +34,7 @@ export const usePackages = () => {
       }));
       
       console.log('Transformed packages:', transformedPackages);
-      return transformedPackages as PackageData[];
+      return transformedPackages as Package[];
     }
   });
 };
@@ -95,4 +96,4 @@ export const useAddons = () => {
   });
 };
 
-export type { PackageData };
+export type { Package as PackageData };
