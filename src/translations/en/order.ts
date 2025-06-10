@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   // Existing order translations
   choosePackage: "Choose Package",
@@ -165,45 +166,6 @@ export const orderTranslations = {
   packageContextBaptism: "Personalized baptism melody",
   packageContextComingOfAge: "18th birthday anthem",
 
-  // New step titles
-  recipientDetails: "Recipient Details",
-  messageDetails: "Message Details",
-  
-  // New field labels and placeholders
-  vocalPreference: "Vocal Preference",
-  songStyleExample: "Song Style Youtube Example",
-  recipientPronunciation: "Recipient Name Pronunciation (Audio)",
-  recipientFavoriteGenre: "Recipient's Favorite Music Genre",
-  recipientHobbies: "Recipient's Hobbies/Interests",
-  specialOccasion: "Special Occasion",
-  specialMemories: "Special Memories",
-  sharedExperiences: "Shared Experiences",
-  insideJokes: "Inside Jokes/References",
-  futureWishes: "Future Wishes",
-  
-  // Vocal preference options
-  voiceDuet: "Duet",
-  
-  // Special occasion options
-  occasionBirthday: "Birthday",
-  occasionAnniversary: "Anniversary", 
-  occasionGraduation: "Graduation",
-  occasionApology: "Apology",
-  occasionThankYou: "Thank You",
-  occasionJustBecause: "Just Because",
-  
-  // Placeholders for new fields
-  vocalPreferencePlaceholder: "Select preferred vocal type",
-  songStyleExamplePlaceholder: "Do you have a YouTube link for a similar song style?",
-  recipientPronunciationPlaceholder: "Record how to pronounce the recipient's name",
-  recipientFavoriteGenrePlaceholder: "What's their favorite music genre?",
-  recipientHobbiesPlaceholder: "Tell us about their hobbies and interests",
-  specialOccasionPlaceholder: "What's the special occasion?",
-  specialMemoriesPlaceholder: "Share special memories with this person",
-  sharedExperiencesPlaceholder: "Describe experiences you've shared together",
-  insideJokesPlaceholder: "Any special references only you two would understand",
-  futureWishesPlaceholder: "What you wish for them in the future",
-  
   // Language options - adding Italian
   romanianLanguage: "Romanian",
   englishLanguage: "English", 
