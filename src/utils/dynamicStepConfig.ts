@@ -161,72 +161,24 @@ const fieldNameToLabelKey: Record<string, string> = {
 };
 
 export const transformStepsForWizard = (steps: any[]): Step[] => {
-  console.log('🔍 transformStepsForWizard - Input steps:', steps);
-  
-  const transformedSteps = steps.map((step, index) => {
-    console.log(`🔍 Transforming step ${index + 1}:`, {
-      id: step.id,
-      title_key: step.title_key,
-      step_number: step.step_number,
-      fieldsCount: step.fields?.length || 0,
-      rawFields: step.fields
-    });
-
-    const transformedStep = {
-      id: step.id || (index + 1).toString(),
-      step_number: step.step_number || index + 1,
-      title_key: step.title_key || step.title,
-      fields: step.step_fields?.map((field: any): Field => {
-        console.log(`🔍 Transforming field:`, field);
-        return {
-          id: field.id || field.field_name,
-          field_name: field.field_name,
-          field_type: field.field_type,
-          // Use provided label_key or fallback to mapped value or field_name
-          label_key: field.label_key || fieldNameToLabelKey[field.field_name] || field.field_name,
-          placeholder_key: field.placeholder_key,
-          required: field.is_required || field.required || false,
-          field_order: field.field_order || 0,
-          options: field.field_options ? (
-            typeof field.field_options === 'string' 
-              ? JSON.parse(field.field_options) 
-              : field.field_options
-          ) : undefined
-        };
-      }) || step.fields?.map((field: any): Field => {
-        console.log(`🔍 Transforming direct field:`, field);
-        return {
-          id: field.id || field.field_name,
-          field_name: field.field_name,
-          field_type: field.field_type,
-          // Use provided label_key or fallback to mapped value or field_name
-          label_key: field.label_key || fieldNameToLabelKey[field.field_name] || field.field_name,
-          placeholder_key: field.placeholder_key,
-          required: field.is_required || field.required || false,
-          field_order: field.field_order || 0,
-          options: field.field_options ? (
-            typeof field.field_options === 'string' 
-              ? JSON.parse(field.field_options) 
-              : field.field_options
-          ) : undefined
-        };
-      }) || []
-    };
-
-    console.log(`🔍 Transformed step ${index + 1} result:`, {
-      id: transformedStep.id,
-      title_key: transformedStep.title_key,
-      fieldsCount: transformedStep.fields.length,
-      fields: transformedStep.fields.map(f => ({ 
-        field_name: f.field_name, 
-        field_type: f.field_type,
-        label_key: f.label_key 
-      }))
-    });
-
-    return transformedStep;
-  });
-
-  console.log('🔍 transformStepsForWizard - Final result:', transformedSteps);
-  return transformedSteps;
+  return steps.map((step, index) => ({
+    id: step.id || (index + 1).toString(),
+    step_number: step.step_number || index + 1,
+    title_key: step.title_key || step.title,
+    fields: step.step_fields?.map((field: any): Field => ({
+      id: field.id || field.field_name,
+      field_name: field.field_name,
+      field_type: field.field_type,
+      // Use provided label_key or fallback to mapped value or field_name
+      label_key: field.label_key || fieldNameToLabelKey[field.field_name] || field.field_name,
+      placeholder_key: field.placeholder_key,
+      required: field.is_required || field.required || false,
+      field_order: field.field_order || 0,
+      options: field.field_options ? (
+        typeof field.field_options === 'string' 
+          ? JSON.parse(field.field_options) 
+          : field.field_options
+      ) : undefined
+    })) || []
+  }));
 };
