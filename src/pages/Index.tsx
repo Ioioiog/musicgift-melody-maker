@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -13,19 +12,17 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 import { Heart, Sparkles, Music } from "lucide-react";
 import { motion } from "framer-motion";
-
 const Index = () => {
-  const { t } = useLanguage();
-
+  const {
+    t
+  } = useLanguage();
   const backgroundStyle = {
     backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   };
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Video Hero Section */}
@@ -71,7 +68,7 @@ const Index = () => {
 
       {/* CTA Section */}
       <section className="py-20 px-4 text-white text-center relative overflow-hidden" style={backgroundStyle}>
-        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-black/20 my-[61px]"></div>
         <div className="max-w-4xl mx-auto relative z-10">
           <Sparkles className="w-16 h-16 mx-auto mb-6 text-yellow-400" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -90,8 +87,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
