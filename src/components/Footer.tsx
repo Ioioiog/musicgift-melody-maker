@@ -100,7 +100,7 @@ const Footer = () => {
           <ArrowUp className="w-5 h-5 text-white" />
         </Button>}
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10 py-6 sm:py-8">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 sm:py-8 py-[21px]">
         {/* Main 4-column layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           
@@ -281,7 +281,7 @@ const Footer = () => {
 
         {/* Enhanced Visual Separator */}
         <div className="border-t border-white/10 mt-8 sm:mt-16 relative">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent my-0 px-[28px] py-[174px]"></div>
         </div>
 
         {/* Enhanced Final Copyright Section - Now with stronger visual impact */}
@@ -299,7 +299,7 @@ const Footer = () => {
             <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/30 via-transparent to-pink-900/30"></div>
             
             {/* Vignette effect for natural ending */}
-            <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/60"></div>
+            <div className="bg-transparent"></div>
             
             {/* Bottom fade effect */}
             <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
