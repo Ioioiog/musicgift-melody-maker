@@ -6,7 +6,6 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -15,7 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCreateDiscountCode } from "@/hooks/useDiscountCodes";
 import { useToast } from "@/hooks/use-toast";
 import { CalendarIcon } from "lucide-react";
@@ -71,12 +69,25 @@ const DiscountCodeForm = () => {
 
   const onSubmit = async (data: DiscountCodeFormData) => {
     try {
+      // Ensure all required fields are present
+      if (!data.code || !data.discountType) {
+        toast({
+          title: "Error",
+          description: "Please fill in all required fields",
+          variant: "destructive",
+        });
+        return;
+      }
+
       await createCode.mutateAsync({
-        ...data,
+        code: data.code,
+        discountType: data.discountType,
         discountValue: discountType === "percentage" ? data.discountValue : Math.round(data.discountValue * 100),
         minimumOrderAmount: data.minimumOrderAmount ? Math.round(data.minimumOrderAmount * 100) : 0,
         maximumDiscountAmount: data.maximumDiscountAmount ? Math.round(data.maximumDiscountAmount * 100) : undefined,
+        usageLimit: data.usageLimit,
         expiresAt: expiryDate?.toISOString(),
+        isActive: data.isActive,
       });
 
       toast({
