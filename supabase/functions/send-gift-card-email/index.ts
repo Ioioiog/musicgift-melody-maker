@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -136,7 +137,7 @@ serve(async (req) => {
     const emailData = {
       sender: {
         name: "MusicGift",
-        email: "gifts@musicgift.com"
+        email: "mihai.gruia@mangorecords.net"
       },
       to: [{
         email: giftCard.recipient_email,

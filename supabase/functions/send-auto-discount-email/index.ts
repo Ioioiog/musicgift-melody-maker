@@ -128,7 +128,7 @@ serve(async (req) => {
     const emailData = {
       sender: {
         name: "MusicGift",
-        email: "rewards@musicgift.com"
+        email: "mihai.gruia@mangorecords.net"
       },
       to: [{
         email: customerEmail,
