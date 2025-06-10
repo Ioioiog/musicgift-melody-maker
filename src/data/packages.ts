@@ -1,55 +1,6 @@
-export interface PackageData {
-  id: string;
-  value: string;
-  label_key: string;
-  tagline_key: string;
-  description_key: string;
-  delivery_time_key: string;
-  price_ron: number;
-  price_eur: number;
-  available_addons: string[];
-  tag?: string;
-  is_active?: boolean;
-  is_popular?: boolean;
-  includes: Array<{
-    id: string;
-    include_key: string;
-    include_order: number;
-  }>;
-  steps: Array<{
-    id: string;
-    step_number: number;
-    title_key: string;
-    fields: Array<{
-      id: string;
-      field_name: string;
-      field_type: string;
-      placeholder_key?: string;
-      required: boolean;
-      field_order: number;
-      options?: Array<{ value: string; label_key: string; }>;
-    }>;
-  }>;
-}
+import { Package, Addon } from '@/types';
 
-export interface Addon {
-  id: string;
-  addon_key: string;
-  label_key: string;
-  description_key: string;
-  price_ron: number;
-  price_eur: number;
-  is_active: boolean;
-  trigger_field_type?: string;
-  trigger_field_config?: {
-    maxFiles?: number;
-    maxTotalSizeMb?: number;
-    allowedTypes?: string[];
-    maxDuration?: number;
-  };
-}
-
-export const packages: PackageData[] = [
+export const packages: Package[] = [
   {
     id: "1",
     value: "personal",
@@ -59,6 +10,9 @@ export const packages: PackageData[] = [
     delivery_time_key: "personalDelivery",
     price_ron: 299,
     price_eur: 59,
+    tag: "popular",
+    is_active: true,
+    is_popular: true,
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo", "audioMessageFromSender", "extendedSong"],
     includes: [
       { id: "p1", include_key: "personalInclude1", include_order: 1 },
@@ -108,6 +62,27 @@ export const packages: PackageData[] = [
               { value: "folk", label_key: "folkStyle" },
               { value: "jazz", label_key: "jazzStyle" }
             ]
+          },
+          {
+            id: "vocalPreference",
+            field_name: "vocalPreference",
+            field_type: "select",
+            placeholder_key: "selectVocalPreference",
+            required: true,
+            field_order: 4,
+            options: [
+              { value: "female", label_key: "voiceFemale" },
+              { value: "male", label_key: "voiceMale" },
+              { value: "duet", label_key: "voiceDuet" }
+            ]
+          },
+          {
+            id: "songStyleYoutube",
+            field_name: "songStyleYoutube",
+            field_type: "url",
+            placeholder_key: "songStyleYoutubePlaceholder",
+            required: false,
+            field_order: 5
           }
         ]
       },
@@ -125,12 +100,20 @@ export const packages: PackageData[] = [
             field_order: 1
           },
           {
+            id: "recipientNamePronunciation",
+            field_name: "recipientNamePronunciation",
+            field_type: "audio-recorder",
+            placeholder_key: "recipientNamePronunciationPlaceholder",
+            required: false,
+            field_order: 2
+          },
+          {
             id: "recipientAge",
             field_name: "recipientAge",
             field_type: "text",
             placeholder_key: "recipientAgePlaceholder",
             required: false,
-            field_order: 2
+            field_order: 3
           },
           {
             id: "recipientRelation",
@@ -138,7 +121,7 @@ export const packages: PackageData[] = [
             field_type: "text",
             placeholder_key: "recipientRelationPlaceholder",
             required: true,
-            field_order: 3
+            field_order: 4
           },
           {
             id: "recipientPersonality",
@@ -146,7 +129,39 @@ export const packages: PackageData[] = [
             field_type: "textarea",
             placeholder_key: "recipientPersonalityPlaceholder",
             required: true,
-            field_order: 4
+            field_order: 5
+          },
+          {
+            id: "favoriteGenre",
+            field_name: "favoriteGenre",
+            field_type: "text",
+            placeholder_key: "favoriteGenrePlaceholder",
+            required: false,
+            field_order: 6
+          },
+          {
+            id: "hobbies",
+            field_name: "hobbies",
+            field_type: "textarea",
+            placeholder_key: "hobbiesPlaceholder",
+            required: false,
+            field_order: 7
+          },
+          {
+            id: "specialOccasion",
+            field_name: "specialOccasion",
+            field_type: "select",
+            placeholder_key: "selectSpecialOccasion",
+            required: false,
+            field_order: 8,
+            options: [
+              { value: "birthday", label_key: "birthdayOccasion" },
+              { value: "anniversary", label_key: "anniversaryOccasion" },
+              { value: "valentine", label_key: "valentineOccasion" },
+              { value: "graduation", label_key: "graduationOccasion" },
+              { value: "wedding", label_key: "weddingOccasion" },
+              { value: "other", label_key: "otherOccasion" }
+            ]
           }
         ]
       },
@@ -172,12 +187,36 @@ export const packages: PackageData[] = [
             field_order: 2
           },
           {
+            id: "sharedExperiences",
+            field_name: "sharedExperiences",
+            field_type: "textarea",
+            placeholder_key: "sharedExperiencesPlaceholder",
+            required: false,
+            field_order: 3
+          },
+          {
+            id: "insideJokes",
+            field_name: "insideJokes",
+            field_type: "textarea",
+            placeholder_key: "insideJokesPlaceholder",
+            required: false,
+            field_order: 4
+          },
+          {
+            id: "futureWishes",
+            field_name: "futureWishes",
+            field_type: "textarea",
+            placeholder_key: "futureWishesPlaceholder",
+            required: false,
+            field_order: 5
+          },
+          {
             id: "additionalInfo",
             field_name: "additionalInfo",
             field_type: "textarea",
             placeholder_key: "additionalInfoPlaceholder",
             required: false,
-            field_order: 3
+            field_order: 6
           }
         ]
       }
@@ -223,6 +262,7 @@ export const packages: PackageData[] = [
     delivery_time_key: "premiumDelivery",
     price_ron: 499,
     price_eur: 99,
+    tag: "premium",
     available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "audioMessageFromSender", "extendedSong"],
     includes: [
       { id: "pr1", include_key: "premiumInclude1", include_order: 1 },
@@ -271,6 +311,27 @@ export const packages: PackageData[] = [
               { value: "electronic", label_key: "electronicStyle" },
               { value: "hiphop", label_key: "hiphopStyle" }
             ]
+          },
+          {
+            id: "vocalPreference",
+            field_name: "vocalPreference",
+            field_type: "select",
+            placeholder_key: "selectVocalPreference",
+            required: true,
+            field_order: 4,
+            options: [
+              { value: "female", label_key: "voiceFemale" },
+              { value: "male", label_key: "voiceMale" },
+              { value: "duet", label_key: "voiceDuet" }
+            ]
+          },
+          {
+            id: "songStyleYoutube",
+            field_name: "songStyleYoutube",
+            field_type: "url",
+            placeholder_key: "songStyleYoutubePlaceholder",
+            required: false,
+            field_order: 5
           }
         ]
       },
@@ -288,12 +349,20 @@ export const packages: PackageData[] = [
             field_order: 1
           },
           {
+            id: "recipientNamePronunciation",
+            field_name: "recipientNamePronunciation",
+            field_type: "audio-recorder",
+            placeholder_key: "recipientNamePronunciationPlaceholder",
+            required: false,
+            field_order: 2
+          },
+          {
             id: "recipientAge",
             field_name: "recipientAge",
             field_type: "text",
             placeholder_key: "recipientAgePlaceholder",
             required: false,
-            field_order: 2
+            field_order: 3
           },
           {
             id: "recipientRelation",
@@ -301,7 +370,7 @@ export const packages: PackageData[] = [
             field_type: "text",
             placeholder_key: "recipientRelationPlaceholder",
             required: true,
-            field_order: 3
+            field_order: 4
           },
           {
             id: "recipientPersonality",
@@ -309,7 +378,39 @@ export const packages: PackageData[] = [
             field_type: "textarea",
             placeholder_key: "recipientPersonalityPlaceholder",
             required: true,
-            field_order: 4
+            field_order: 5
+          },
+          {
+            id: "favoriteGenre",
+            field_name: "favoriteGenre",
+            field_type: "text",
+            placeholder_key: "favoriteGenrePlaceholder",
+            required: false,
+            field_order: 6
+          },
+          {
+            id: "hobbies",
+            field_name: "hobbies",
+            field_type: "textarea",
+            placeholder_key: "hobbiesPlaceholder",
+            required: false,
+            field_order: 7
+          },
+          {
+            id: "specialOccasion",
+            field_name: "specialOccasion",
+            field_type: "select",
+            placeholder_key: "selectSpecialOccasion",
+            required: false,
+            field_order: 8,
+            options: [
+              { value: "birthday", label_key: "birthdayOccasion" },
+              { value: "anniversary", label_key: "anniversaryOccasion" },
+              { value: "valentine", label_key: "valentineOccasion" },
+              { value: "graduation", label_key: "graduationOccasion" },
+              { value: "wedding", label_key: "weddingOccasion" },
+              { value: "other", label_key: "otherOccasion" }
+            ]
           }
         ]
       },
@@ -335,12 +436,36 @@ export const packages: PackageData[] = [
             field_order: 2
           },
           {
+            id: "sharedExperiences",
+            field_name: "sharedExperiences",
+            field_type: "textarea",
+            placeholder_key: "sharedExperiencesPlaceholder",
+            required: false,
+            field_order: 3
+          },
+          {
+            id: "insideJokes",
+            field_name: "insideJokes",
+            field_type: "textarea",
+            placeholder_key: "insideJokesPlaceholder",
+            required: false,
+            field_order: 4
+          },
+          {
+            id: "futureWishes",
+            field_name: "futureWishes",
+            field_type: "textarea",
+            placeholder_key: "futureWishesPlaceholder",
+            required: false,
+            field_order: 5
+          },
+          {
             id: "additionalInfo",
             field_name: "additionalInfo",
             field_type: "textarea",
             placeholder_key: "additionalInfoPlaceholder",
             required: false,
-            field_order: 3
+            field_order: 6
           }
         ]
       },

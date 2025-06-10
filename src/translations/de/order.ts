@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   // Existing order translations
   choosePackage: "Paket Wählen",
@@ -29,6 +30,25 @@ export const orderTranslations = {
   finalNote: "Ich stimme den finalen Bedingungen zu",
   voiceFemale: "Weibliche Stimme",
   voiceMale: "Männliche Stimme",
+  voiceDuet: "Duett (Beide Stimmen)",
+
+  // New field translations for enhanced packages
+  selectVocalPreference: "Stimmvorliebe auswählen",
+  songStyleYoutubePlaceholder: "Teilen Sie einen YouTube-Link eines Liedstils, der Ihnen gefällt (optional)",
+  recipientNamePronunciationPlaceholder: "Nehmen Sie auf, wie der Name des Empfängers ausgesprochen wird",
+  favoriteGenrePlaceholder: "Was ist ihr Lieblings-Musikgenre?",
+  hobbiesPlaceholder: "Erzählen Sie uns von ihren Hobbys und Interessen",
+  selectSpecialOccasion: "Besonderen Anlass auswählen",
+  birthdayOccasion: "Geburtstag",
+  anniversaryOccasion: "Jahrestag",
+  valentineOccasion: "Valentinstag",
+  graduationOccasion: "Abschluss",
+  weddingOccasion: "Hochzeit",
+  otherOccasion: "Andere",
+  specialMemoriesPlaceholder: "Teilen Sie besondere Erinnerungen, die Sie zusammen haben",
+  sharedExperiencesPlaceholder: "Beschreiben Sie Erfahrungen, die Sie zusammen gemacht haben",
+  insideJokesPlaceholder: "Interne Witze oder lustige Momente?",
+  futureWishesPlaceholder: "Was sind Ihre Wünsche für ihre Zukunft?",
 
   // Plus Package
   plusStep1Title: "Grundinformationen",

@@ -153,6 +153,8 @@ export const orderTranslations = {
   voiceMasculine: "Voix Masculine",
   voiceDuet: "Duo",
   voiceMusicGiftChoice: "Choix de MusicGift",
+  voiceFemale: "Voix Féminine",
+  voiceMale: "Voix Masculine",
   
   // Mood options
   moodRomantic: "Romantique",
@@ -169,6 +171,24 @@ export const orderTranslations = {
   englishLanguage: "Anglais",
   frenchLanguage: "Français",
   italianLanguage: "Italien",
+  
+  // New field translations for enhanced packages
+  selectVocalPreference: "Sélectionnez la préférence vocale",
+  songStyleYoutubePlaceholder: "Partagez un lien YouTube d'un style de chanson que vous aimez (optionnel)",
+  recipientNamePronunciationPlaceholder: "Enregistrez comment prononcer le nom du destinataire",
+  favoriteGenrePlaceholder: "Quel est leur genre musical préféré ?",
+  hobbiesPlaceholder: "Parlez-nous de leurs passe-temps et intérêts",
+  selectSpecialOccasion: "Sélectionnez l'occasion spéciale",
+  birthdayOccasion: "Anniversaire",
+  anniversaryOccasion: "Anniversaire de mariage",
+  valentineOccasion: "Saint-Valentin",
+  graduationOccasion: "Remise de diplôme",
+  weddingOccasion: "Mariage",
+  otherOccasion: "Autre",
+  specialMemoriesPlaceholder: "Partagez des souvenirs spéciaux que vous avez ensemble",
+  sharedExperiencesPlaceholder: "Décrivez les expériences que vous avez partagées ensemble",
+  insideJokesPlaceholder: "Des blagues intérieures ou des moments amusants ?",
+  futureWishesPlaceholder: "Quels sont vos souhaits pour leur avenir ?",
   
   // Dedication message
   dedicationMessageLabel: "Message Personnel de Dédicace",

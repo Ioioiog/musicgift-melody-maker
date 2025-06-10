@@ -30,6 +30,25 @@ export const orderTranslations = {
   finalNote: "I agree to the final terms",
   voiceFemale: "Female Voice",
   voiceMale: "Male Voice",
+  voiceDuet: "Duet (Both Voices)",
+
+  // New field translations for enhanced packages
+  selectVocalPreference: "Select vocal preference",
+  songStyleYoutubePlaceholder: "Share a YouTube link of a song style you like (optional)",
+  recipientNamePronunciationPlaceholder: "Record how to pronounce the recipient's name",
+  favoriteGenrePlaceholder: "What's their favorite music genre?",
+  hobbiesPlaceholder: "Tell us about their hobbies and interests",
+  selectSpecialOccasion: "Select the special occasion",
+  birthdayOccasion: "Birthday",
+  anniversaryOccasion: "Anniversary",
+  valentineOccasion: "Valentine's Day",
+  graduationOccasion: "Graduation",
+  weddingOccasion: "Wedding",
+  otherOccasion: "Other",
+  specialMemoriesPlaceholder: "Share special memories you have together",
+  sharedExperiencesPlaceholder: "Describe experiences you've shared together",
+  insideJokesPlaceholder: "Any inside jokes or funny moments?",
+  futureWishesPlaceholder: "What are your wishes for their future?",
 
   // Plus Package
   plusStep1Title: "Basic Information",
