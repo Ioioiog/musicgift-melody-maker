@@ -126,7 +126,6 @@ export const orderTranslations = {
   
   // Musical preference fields
   favoriteGenreLabel: "Genre Musical Préféré",
-  favoriteGenrePlaceholder: "Quel genre préféreriez-vous ?",
   songLengthLabel: "Durée Préférée de la Chanson",
   songLengthPlaceholder: "Quelle durée devrait avoir la chanson ?",
   instrumentsLabel: "Instruments Préférés",
