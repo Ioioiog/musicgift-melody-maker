@@ -31,29 +31,7 @@ const Index = () => {
       {/* Video Hero Section */}
       <VideoHero />
 
-      {/* Call to Action Section - Added from About page */}
-      <section className="py-20 px-4 text-white relative overflow-hidden" style={backgroundStyle}>
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="max-w-4xl mx-auto relative z-10">
-          <motion.div 
-            className="text-center bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-2xl border border-white/30 p-6" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            {/* Removed the buttons from here - they are now in HeroContent */}
-          </motion.div>
-        </div>
-
-        {/* Scroll Indicator - Moved from VideoHero */}
-        <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 scroll-indicator">
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse"></div>
-          </div>
-        </div>
-      </section>
-
-      {/* Hero Content Section */}
+      {/* Hero Content Section - Now contains the main call to action */}
       <HeroContent />
 
       {/* Scenario Hero Component */}
