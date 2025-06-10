@@ -649,5 +649,3 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
 };
 
 export default GiftPurchaseWizard;
-
-}
