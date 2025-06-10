@@ -27,18 +27,18 @@ const Footer = () => {
 
   return (
     <>
-      {/* Back to Top Button - Moved outside footer to ensure it's always on top */}
+      {/* Back to Top Button - Moved to left side with orange color */}
       {showBackToTop && (
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           transition={{ duration: 0.3 }}
-          className="fixed bottom-6 right-6 z-[99999]"
+          className="fixed bottom-6 left-6 z-[99999]"
         >
           <Button 
             onClick={scrollToTop} 
-            className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 shadow-2xl transition-all duration-300 hover:scale-110 border-4 border-white/30 backdrop-blur-sm" 
+            className="w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-2xl transition-all duration-300 hover:scale-110 border-4 border-white/30 backdrop-blur-sm" 
             size="icon"
             aria-label="Back to top"
           >
@@ -246,3 +246,5 @@ const Footer = () => {
 };
 
 export default Footer;
+
+</edits_to_apply>
