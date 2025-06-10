@@ -6,4 +6,9 @@ export const heroTranslations = {
   heroCtaSubtitle: "Pozwól nam pomóc ci stworzyć spersonalizowany prezent muzyczny, który będzie ceniony na zawsze",
   seePackages: "Zobacz pakiety",
   listenToSamples: "Posłuchaj próbek",
+  
+  // Trust indicators
+  trustedByThousands: "Zaufały nam tysiące",
+  customCompositions: "Niestandardowe kompozycje",
+  perfectGifts: "Idealne prezenty",
 };
