@@ -159,6 +159,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         );
 
       case 'audio':
+      case 'audio-recorder':
         return (
           <div className="space-y-1">
             <div className="bg-white/10 border-2 border-white/30 rounded-lg p-2">
