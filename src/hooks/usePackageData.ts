@@ -50,7 +50,7 @@ export const usePackageSteps = (packageValue: string) => {
         return [];
       }
 
-      console.log('Getting steps for package from consolidated data:', packageValue);
+      console.log('🔍 Getting steps for package from consolidated data:', packageValue);
 
       try {
         // Find the package in consolidated data
@@ -61,17 +61,49 @@ export const usePackageSteps = (packageValue: string) => {
           throw new Error(`Package not found: ${packageValue}`);
         }
 
-        console.log('Found package data:', packageData);
+        console.log('🔍 Found package data:', packageData);
+        console.log('🔍 Package steps before transformation:', packageData.steps);
 
         if (!packageData.steps || packageData.steps.length === 0) {
           console.warn('No steps found for package:', packageValue);
           return [];
         }
 
+        // Log each step before transformation
+        packageData.steps.forEach((step, index) => {
+          console.log(`🔍 Step ${index + 1} before transformation:`, {
+            id: step.id,
+            title_key: step.title_key,
+            step_number: step.step_number,
+            fieldsCount: step.fields?.length || 0,
+            fields: step.fields?.map(f => ({ 
+              field_name: f.field_name, 
+              field_type: f.field_type,
+              label_key: f.label_key 
+            })) || []
+          });
+        });
+
         // Transform steps to ensure all fields have proper label_key for translations
         const transformedSteps = transformStepsForWizard(packageData.steps);
         
-        console.log('Steps transformed with label_key mapping:', transformedSteps);
+        console.log('🔍 Steps after transformation:', transformedSteps);
+        
+        // Log each transformed step
+        transformedSteps.forEach((step, index) => {
+          console.log(`🔍 Transformed Step ${index + 1}:`, {
+            id: step.id,
+            title_key: step.title_key,
+            step_number: step.step_number,
+            fieldsCount: step.fields?.length || 0,
+            fields: step.fields?.map(f => ({ 
+              field_name: f.field_name, 
+              field_type: f.field_type,
+              label_key: f.label_key 
+            })) || []
+          });
+        });
+        
         return transformedSteps as StepData[];
 
       } catch (error) {
