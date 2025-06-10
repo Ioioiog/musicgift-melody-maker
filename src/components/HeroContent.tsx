@@ -85,9 +85,7 @@ const HeroContent = () => {
           duration: 0.6,
           delay: 0.6
         }}>
-            <span className="bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
-              {t('heroCtaTitle') || 'Ready to Create Something Special?'}
-            </span>
+            
           </motion.h2>
           
           <motion.p className="text-xl md:text-2xl text-white/90 mb-12 max-w-4xl mx-auto leading-relaxed" initial={{
@@ -135,27 +133,7 @@ const HeroContent = () => {
           </motion.div>
 
           {/* Trust indicators */}
-          <motion.div className="flex flex-wrap justify-center items-center gap-8 text-white/70 text-sm" initial={{
-          opacity: 0
-        }} animate={{
-          opacity: 1
-        }} transition={{
-          duration: 0.6,
-          delay: 1.2
-        }}>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span>1000+ Happy Customers</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-              <span>★ 4.9/5 Rating</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-              <span>Fast Delivery</span>
-            </div>
-          </motion.div>
+          
         </motion.div>
       </div>
 
