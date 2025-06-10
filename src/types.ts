@@ -37,18 +37,24 @@ export interface PackageTag {
 export interface Package {
   id?: string | number;
   value: string;
+  label: string;
   label_key: string;
-  tagline_key: string;
+  tagline_key?: string;
+  description: string;
   description_key: string;
   price_ron: number;
   price_eur: number;
-  delivery_time_key: string;
+  price_usd: number;
+  delivery_time_key?: string;
   tag?: string;
   is_active?: boolean;
   is_popular?: boolean;
   includes?: PackageInclude[];
   available_addons: string[];
-  steps: Step[];
+  steps?: Step[];
+  color: string;
+  features: string[];
+  category: string;
 }
 
 export interface Addon {
@@ -58,6 +64,7 @@ export interface Addon {
   description_key: string;
   price_ron: number;
   price_eur: number;
+  price_usd: number;
   is_active?: boolean;
   trigger_field_type?: any;
   trigger_field_config?: any;
