@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +9,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useIsMobile } from '@/hooks/use-mobile';
-
 interface OrderSidebarSummaryProps {
   orderData?: {
     selectedPackage?: string;
@@ -18,7 +16,6 @@ interface OrderSidebarSummaryProps {
   };
   giftCard?: any;
 }
-
 const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   orderData,
   giftCard
@@ -37,7 +34,6 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   } = useCurrency();
   const isMobile = useIsMobile();
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
-
   if (!orderData?.selectedPackage) {
     return <div className={isMobile ? "mb-4" : "lg:sticky lg:top-4"}>
         <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-20">
@@ -58,23 +54,18 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
         </Card>
       </div>;
   }
-
   const selectedPackageData = packages.find(pkg => pkg.value === orderData.selectedPackage);
   const selectedAddonsData = (orderData.selectedAddons || []).map(addonKey => addons.find(addon => addon.addon_key === addonKey)).filter(Boolean);
-  
   if (!selectedPackageData) return null;
-  
   const packagePrice = getPackagePrice(selectedPackageData, currency);
   const addonsPrice = selectedAddonsData.reduce((total, addon) => total + (addon ? getAddonPrice(addon, currency) : 0), 0);
   const subtotal = packagePrice + addonsPrice;
-  
   let giftCreditApplied = 0;
   if (giftCard) {
     const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
     giftCreditApplied = Math.min(giftBalance, subtotal);
   }
   const finalTotal = Math.max(0, subtotal - giftCreditApplied);
-
   return <div className={isMobile ? "mb-4" : "lg:sticky lg:top-4"}>
       <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-20">
         <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-6 py-2 sm:py-[15px] my-[1px]">
@@ -97,9 +88,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
                   <h3 className="font-medium text-white text-xs sm:text-sm truncate">
                     {t(selectedPackageData.label_key)}
                   </h3>
-                  <p className="text-xs text-white/70 mt-1 line-clamp-2">
-                    {t(selectedPackageData.description_key)}
-                  </p>
+                  
                 </div>
                 <span className="font-medium text-white text-xs sm:text-sm shrink-0">
                   {currency} {packagePrice.toFixed(2)}
@@ -164,23 +153,10 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
             {/* Compact Package Features */}
             {selectedPackageData.includes && selectedPackageData.includes.length > 0 && <div className="mt-4 sm:mt-6">
                 <Separator className="bg-white/20 mb-3 sm:mb-4" />
-                <div className="bg-white/5 rounded-lg border border-white/10 p-2 sm:p-3">
-                  <h5 className="text-white text-xs sm:text-sm font-semibold mb-2 flex items-center gap-2">
-                    <CheckCircle className="w-3 h-3 sm:w-4 h-4 text-green-400" />
-                    {t('packageIncludes', 'Pachetul include:')}
-                  </h5>
-                  <div className="space-y-1">
-                    {selectedPackageData.includes.map((includeItem, index) => (
-                      <div key={index} className="text-white/90 text-xs leading-relaxed px-1">
-                        • {typeof includeItem === 'string' ? includeItem : t(includeItem.include_key)}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                
               </div>}
           </CardContent>}
       </Card>
     </div>;
 };
-
 export default OrderSidebarSummary;
