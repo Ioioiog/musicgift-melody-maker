@@ -281,7 +281,7 @@ const Footer = () => {
 
         {/* Enhanced Visual Separator */}
         <div className="border-t border-white/10 mt-8 sm:mt-16 relative">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent my-0 px-[28px] py-[174px]"></div>
+          
         </div>
 
         {/* Enhanced Final Copyright Section - Now with stronger visual impact */}
@@ -305,31 +305,7 @@ const Footer = () => {
             <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
           </div>
           
-          <div className="container mx-auto px-4 sm:px-6 relative z-10">
-            <div className="flex flex-col items-center justify-center space-y-6 py-8 sm:py-0">
-              {/* Enhanced Brand Signature */}
-              <div className="text-center space-y-4">
-                <div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl py-6 shadow-2xl hover:bg-white/25 transition-all duration-500 group max-w-2xl px-[141px]">
-                  <p className="text-sm sm:text-base text-white font-bold text-center group-hover:text-white/90 transition-colors duration-300 leading-relaxed">
-                    {t('copyright')}
-                  </p>
-                  
-                  {/* Tagline */}
-                  
-                </div>
-              </div>
-              
-              {/* Enhanced decorative musical elements */}
-              <div className="flex items-center space-x-8 opacity-70">
-                
-                
-                
-              </div>
-
-              {/* Final closing element */}
-              <div className="w-24 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent rounded-full"></div>
-            </div>
-          </div>
+          
 
           {/* Subtle fade to bottom effect */}
           <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
