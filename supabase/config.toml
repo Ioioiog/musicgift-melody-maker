@@ -4,6 +4,9 @@ project_id = "ehvzhnzqcbzuirovwjsr"
 [functions.stripe-webhook]
 verify_jwt = false
 
+[functions.brevo-email-webhook]
+verify_jwt = false
+
 [functions.imap-fetch-emails]
 verify_jwt = true
 
