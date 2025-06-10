@@ -160,6 +160,54 @@ export type Database = {
         }
         Relationships: []
       }
+      discount_codes: {
+        Row: {
+          code: string
+          created_at: string
+          created_by: string | null
+          discount_type: string
+          discount_value: number
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          maximum_discount_amount: number | null
+          minimum_order_amount: number | null
+          updated_at: string
+          usage_limit: number | null
+          used_count: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          created_by?: string | null
+          discount_type: string
+          discount_value: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          maximum_discount_amount?: number | null
+          minimum_order_amount?: number | null
+          updated_at?: string
+          usage_limit?: number | null
+          used_count?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          discount_type?: string
+          discount_value?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          maximum_discount_amount?: number | null
+          minimum_order_amount?: number | null
+          updated_at?: string
+          usage_limit?: number | null
+          used_count?: number
+        }
+        Relationships: []
+      }
       email_accounts: {
         Row: {
           available_folders: Json | null
@@ -568,6 +616,8 @@ export type Database = {
         Row: {
           created_at: string | null
           currency: string
+          discount_amount: number | null
+          discount_code: string | null
           form_data: Json
           gift_card_id: string | null
           gift_credit_applied: number | null
@@ -611,6 +661,8 @@ export type Database = {
         Insert: {
           created_at?: string | null
           currency?: string
+          discount_amount?: number | null
+          discount_code?: string | null
           form_data: Json
           gift_card_id?: string | null
           gift_credit_applied?: number | null
@@ -654,6 +706,8 @@ export type Database = {
         Update: {
           created_at?: string | null
           currency?: string
+          discount_amount?: number | null
+          discount_code?: string | null
           form_data?: Json
           gift_card_id?: string | null
           gift_credit_applied?: number | null
@@ -1017,6 +1071,15 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
         }
         Returns: boolean
+      }
+      validate_discount_code: {
+        Args: { code_input: string; order_total: number }
+        Returns: {
+          is_valid: boolean
+          discount_amount: number
+          discount_type: string
+          error_message: string
+        }[]
       }
     }
     Enums: {

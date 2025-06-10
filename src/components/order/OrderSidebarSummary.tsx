@@ -4,41 +4,46 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { Gift, Package, Plus, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
+import { Gift, Package, Plus, ChevronDown, ChevronUp, CheckCircle, Tag } from 'lucide-react';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useIsMobile } from '@/hooks/use-mobile';
+import CodeInputSection from './CodeInputSection';
+
 interface OrderSidebarSummaryProps {
   orderData?: {
     selectedPackage?: string;
     selectedAddons?: string[];
   };
   giftCard?: any;
+  onGiftCardChange?: (giftCard: any) => void;
+  onDiscountChange?: (discount: { code: string; amount: number; type: string } | null) => void;
 }
+
 const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   orderData,
-  giftCard
+  giftCard,
+  onGiftCardChange,
+  onDiscountChange
 }) => {
-  const {
-    data: packages = []
-  } = usePackages();
-  const {
-    data: addons = []
-  } = useAddons();
-  const {
-    t
-  } = useLanguage();
-  const {
-    currency
-  } = useCurrency();
+  const { data: packages = [] } = usePackages();
+  const { data: addons = [] } = useAddons();
+  const { t } = useLanguage();
+  const { currency } = useCurrency();
   const isMobile = useIsMobile();
+
+  // Local state for applied codes
+  const [appliedGiftCard, setAppliedGiftCard] = useState(giftCard);
+  const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; amount: number; type: string } | null>(null);
 
   // Explicitly set to collapsed by default on mobile
   const [isCollapsed, setIsCollapsed] = useState(true);
+
   if (!orderData?.selectedPackage) {
-    return <div className={isMobile ? "mb-2" : ""}>
+    return (
+      <div className={isMobile ? "mb-2" : ""}>
         <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
           <CardHeader className="pb-3 px-3 sm:px-6 py-2 sm:py-4">
             <CardTitle className="flex items-center gap-2 text-white text-sm sm:text-lg">
@@ -55,21 +60,58 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
             </div>
           </CardContent>
         </Card>
-      </div>;
+      </div>
+    );
   }
+
   const selectedPackageData = packages.find(pkg => pkg.value === orderData.selectedPackage);
-  const selectedAddonsData = (orderData.selectedAddons || []).map(addonKey => addons.find(addon => addon.addon_key === addonKey)).filter(Boolean);
+  const selectedAddonsData = (orderData.selectedAddons || [])
+    .map(addonKey => addons.find(addon => addon.addon_key === addonKey))
+    .filter(Boolean);
+
   if (!selectedPackageData) return null;
+
   const packagePrice = getPackagePrice(selectedPackageData, currency);
-  const addonsPrice = selectedAddonsData.reduce((total, addon) => total + (addon ? getAddonPrice(addon, currency) : 0), 0);
+  const addonsPrice = selectedAddonsData.reduce((total, addon) => 
+    total + (addon ? getAddonPrice(addon, currency) : 0), 0
+  );
   const subtotal = packagePrice + addonsPrice;
+
+  // Calculate gift card credit
   let giftCreditApplied = 0;
-  if (giftCard) {
-    const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
+  if (appliedGiftCard) {
+    const giftBalance = (appliedGiftCard.gift_amount || 0) / 100; // Convert from cents
     giftCreditApplied = Math.min(giftBalance, subtotal);
   }
-  const finalTotal = Math.max(0, subtotal - giftCreditApplied);
-  return <div className={isMobile ? "mb-2" : ""}>
+
+  // Apply discount
+  const discountAmount = appliedDiscount?.amount || 0;
+  const totalAfterGift = Math.max(0, subtotal - giftCreditApplied);
+  const finalDiscount = Math.min(discountAmount, totalAfterGift);
+  const finalTotal = Math.max(0, totalAfterGift - finalDiscount);
+
+  const handleGiftCardApplied = (newGiftCard: any) => {
+    setAppliedGiftCard(newGiftCard);
+    onGiftCardChange?.(newGiftCard);
+  };
+
+  const handleGiftCardRemoved = () => {
+    setAppliedGiftCard(null);
+    onGiftCardChange?.(null);
+  };
+
+  const handleDiscountApplied = (discount: { code: string; amount: number; type: string }) => {
+    setAppliedDiscount(discount);
+    onDiscountChange?.(discount);
+  };
+
+  const handleDiscountRemoved = () => {
+    setAppliedDiscount(null);
+    onDiscountChange?.(null);
+  };
+
+  return (
+    <div className={isMobile ? "mb-2" : ""}>
       <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl py-[16px] my-[32px]">
         <CardHeader className="pb-1 sm:pb-3 px-3 sm:px-6 py-1 sm:py-[15px] my-[1px]">
           <div className="flex items-center justify-between">
@@ -77,13 +119,21 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
               <Package className="w-4 h-4 sm:w-5 sm:h-5" />
               {t('orderSummary', 'Rezumatul comenzii')}
             </CardTitle>
-            {isMobile && <Button variant="ghost" size="sm" onClick={() => setIsCollapsed(!isCollapsed)} className="text-white hover:bg-white/10 p-1 h-6 w-6">
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="text-white hover:bg-white/10 p-1 h-6 w-6"
+              >
                 {isCollapsed ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
-              </Button>}
+              </Button>
+            )}
           </div>
         </CardHeader>
         
-        {(!isMobile || !isCollapsed) && <CardContent className="space-y-2 sm:space-y-4 px-3 sm:px-6 pb-2 sm:pb-6 my-[4px] py-0">
+        {(!isMobile || !isCollapsed) && (
+          <CardContent className="space-y-2 sm:space-y-4 px-3 sm:px-6 pb-2 sm:pb-6 my-[4px] py-0">
             {/* Package Section */}
             <div className="space-y-1 sm:space-y-3">
               <div className="flex justify-between items-start gap-2">
@@ -91,7 +141,6 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
                   <h3 className="font-medium text-white text-xs sm:text-sm truncate">
                     {t(selectedPackageData.label_key)}
                   </h3>
-                  
                 </div>
                 <span className="font-medium text-white text-xs sm:text-sm shrink-0">
                   {currency} {packagePrice.toFixed(2)}
@@ -100,7 +149,8 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
             </div>
 
             {/* Add-ons Section */}
-            {selectedAddonsData.length > 0 && <>
+            {selectedAddonsData.length > 0 && (
+              <>
                 <Separator className="bg-white/20" />
                 <div>
                   <h4 className="font-medium mb-1 sm:mb-2 text-white flex items-center gap-2 text-xs sm:text-sm">
@@ -108,17 +158,20 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
                     {t('addOns', 'Suplimente')}
                   </h4>
                   <div className="space-y-1 sm:space-y-2">
-                    {selectedAddonsData.map(addon => addon && <div key={addon.addon_key} className="flex justify-between items-center text-xs gap-2">
-                          <span className="text-white/80 truncate flex-1">
-                            {t(addon.label_key)}
-                          </span>
-                          <span className="text-white shrink-0">
-                            {currency} {getAddonPrice(addon, currency).toFixed(2)}
-                          </span>
-                        </div>)}
+                    {selectedAddonsData.map(addon => addon && (
+                      <div key={addon.addon_key} className="flex justify-between items-center text-xs gap-2">
+                        <span className="text-white/80 truncate flex-1">
+                          {t(addon.label_key)}
+                        </span>
+                        <span className="text-white shrink-0">
+                          {currency} {getAddonPrice(addon, currency).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </>}
+              </>
+            )}
 
             <Separator className="bg-white/20" />
 
@@ -133,13 +186,37 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
             </div>
 
             {/* Gift Card Credit */}
-            {giftCard && giftCreditApplied > 0 && <div className="flex justify-between items-center text-green-400 text-xs sm:text-sm gap-2">
+            {appliedGiftCard && giftCreditApplied > 0 && (
+              <div className="flex justify-between items-center text-green-400 text-xs sm:text-sm gap-2">
                 <span className="flex items-center gap-1 sm:gap-2 truncate">
                   <Gift className="w-3 h-3 sm:w-4 h-4 shrink-0" />
                   <span className="truncate">{t('giftCardCredit', 'Credit card cadou')}</span>
                 </span>
                 <span className="shrink-0">-{currency} {giftCreditApplied.toFixed(2)}</span>
-              </div>}
+              </div>
+            )}
+
+            {/* Discount */}
+            {appliedDiscount && finalDiscount > 0 && (
+              <div className="flex justify-between items-center text-blue-400 text-xs sm:text-sm gap-2">
+                <span className="flex items-center gap-1 sm:gap-2 truncate">
+                  <Tag className="w-3 h-3 sm:w-4 h-4 shrink-0" />
+                  <span className="truncate">{t('discount', 'Reducere')} ({appliedDiscount.code})</span>
+                </span>
+                <span className="shrink-0">-{currency} {finalDiscount.toFixed(2)}</span>
+              </div>
+            )}
+
+            {/* Code Input Section */}
+            <CodeInputSection
+              onGiftCardApplied={handleGiftCardApplied}
+              onDiscountApplied={handleDiscountApplied}
+              onGiftCardRemoved={handleGiftCardRemoved}
+              onDiscountRemoved={handleDiscountRemoved}
+              appliedGiftCard={appliedGiftCard}
+              appliedDiscount={appliedDiscount}
+              orderTotal={subtotal}
+            />
 
             <Separator className="bg-white/20" />
 
@@ -149,17 +226,21 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
               <span className="text-white">{currency} {finalTotal.toFixed(2)}</span>
             </div>
 
-            {finalTotal === 0 && <Badge variant="secondary" className="w-full justify-center bg-green-500/20 text-green-300 border-green-400/30 text-xs">
-                {t('fullyPaidWithGiftCard', 'Plătit complet cu cardul cadou')}
-              </Badge>}
-
-            {/* Package Features */}
-            {selectedPackageData.includes && selectedPackageData.includes.length > 0 && <div className="mt-2 sm:mt-6">
-                
-                
-              </div>}
-          </CardContent>}
+            {finalTotal === 0 && (
+              <Badge variant="secondary" className="w-full justify-center bg-green-500/20 text-green-300 border-green-400/30 text-xs">
+                {giftCreditApplied > 0 && finalDiscount > 0 
+                  ? t('fullyPaidWithCredits', 'Plătit complet cu credite')
+                  : giftCreditApplied > 0 
+                    ? t('fullyPaidWithGiftCard', 'Plătit complet cu cardul cadou')
+                    : t('fullyPaidWithDiscount', 'Plătit complet cu reducerea')
+                }
+              </Badge>
+            )}
+          </CardContent>
+        )}
       </Card>
-    </div>;
+    </div>
+  );
 };
+
 export default OrderSidebarSummary;

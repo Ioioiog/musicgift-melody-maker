@@ -37,6 +37,8 @@ export interface OrderData {
   gift_credit_applied?: number;
   is_gift_redemption?: boolean;
   gift_card_id?: string;
+  discount_code?: string;
+  discount_amount?: number;
   form_data: any; // JSON data from Supabase
   created_at?: string;
   updated_at?: string;
