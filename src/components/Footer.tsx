@@ -35,62 +35,62 @@ const Footer = () => {
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   }}>
-      {/* Enhanced Multi-layer Background System */}
+      {/* Lighter Multi-layer Background System */}
       <div className="absolute inset-0">
-        {/* Base gradient layer */}
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/60 via-violet-800/70 to-indigo-900/80"></div>
+        {/* Much lighter base gradient layer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-gray-100/70 to-gray-200/60"></div>
         
-        {/* Secondary gradient for depth */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/40 via-transparent to-pink-600/30"></div>
+        {/* Subtle secondary gradient for minimal depth */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-purple-100/30 via-transparent to-pink-100/20"></div>
         
-        {/* Radial gradient for focus */}
-        <div className="absolute inset-0 bg-gradient-radial from-transparent via-purple-800/20 to-black/40"></div>
+        {/* Very light radial gradient */}
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-purple-50/20 to-gray-100/30"></div>
         
-        {/* Subtle pulse animation overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/30 animate-pulse opacity-60"></div>
+        {/* Subtle pulse animation overlay - much lighter */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-purple-50/20 animate-pulse opacity-30"></div>
       </div>
 
-      {/* Subtle grid pattern overlay */}
+      {/* Keep the grid pattern but make it lighter */}
       <div style={{
-      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-    }} className="absolute inset-0 opacity-30"></div>
+      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+    }} className="absolute inset-0 opacity-20"></div>
 
-      {/* Enhanced animated musical notes pattern overlay */}
-      <div className="absolute inset-0 pointer-events-none z-0 opacity-20">
-        <div className="absolute top-4 left-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{
+      {/* Musical notes pattern overlay - keep purple but make more subtle */}
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-15">
+        <div className="absolute top-4 left-8 w-3 h-3 bg-purple-500/40 rounded-full animate-pulse" style={{
         animationDelay: '0s'
       }}></div>
-        <div className="absolute top-8 right-12 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{
+        <div className="absolute top-8 right-12 w-2 h-2 bg-purple-600/50 rounded-full animate-pulse" style={{
         animationDelay: '0.5s'
       }}></div>
-        <div className="absolute top-16 left-1/4 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{
+        <div className="absolute top-16 left-1/4 w-2.5 h-2.5 bg-purple-500/45 rounded-full animate-pulse" style={{
         animationDelay: '1s'
       }}></div>
-        <div className="absolute top-20 right-1/3 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{
+        <div className="absolute top-20 right-1/3 w-3 h-3 bg-purple-600/40 rounded-full animate-pulse" style={{
         animationDelay: '1.5s'
       }}></div>
-        <div className="absolute top-32 left-1/2 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{
+        <div className="absolute top-32 left-1/2 w-2 h-2 bg-purple-500/50 rounded-full animate-pulse" style={{
         animationDelay: '2s'
       }}></div>
-        <div className="absolute bottom-1/4 left-16 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{
+        <div className="absolute bottom-1/4 left-16 w-2.5 h-2.5 bg-purple-600/45 rounded-full animate-pulse" style={{
         animationDelay: '2.5s'
       }}></div>
-        <div className="absolute bottom-1/3 right-1/4 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{
+        <div className="absolute bottom-1/3 right-1/4 w-3 h-3 bg-purple-500/40 rounded-full animate-pulse" style={{
         animationDelay: '3s'
       }}></div>
-        <div className="absolute bottom-20 left-1/3 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{
+        <div className="absolute bottom-20 left-1/3 w-2 h-2 bg-purple-600/50 rounded-full animate-pulse" style={{
         animationDelay: '3.5s'
       }}></div>
-        <div className="absolute bottom-4 right-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{
+        <div className="absolute bottom-4 right-8 w-3 h-3 bg-purple-500/40 rounded-full animate-pulse" style={{
         animationDelay: '4s'
       }}></div>
-        <div className="absolute bottom-8 left-1/5 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{
+        <div className="absolute bottom-8 left-1/5 w-2.5 h-2.5 bg-purple-600/45 rounded-full animate-pulse" style={{
         animationDelay: '4.5s'
       }}></div>
-        <div className="absolute top-1/2 left-8 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{
+        <div className="absolute top-1/2 left-8 w-2 h-2 bg-purple-500/50 rounded-full animate-pulse" style={{
         animationDelay: '5s'
       }}></div>
-        <div className="absolute top-1/3 right-16 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{
+        <div className="absolute top-1/3 right-16 w-3 h-3 bg-purple-600/40 rounded-full animate-pulse" style={{
         animationDelay: '5.5s'
       }}></div>
       </div>
@@ -107,18 +107,18 @@ const Footer = () => {
           {/* Column 1: Brand & Social */}
           <div className="space-y-3 sm:space-y-4 text-center sm:text-left">
             <Link to="/" className="inline-block group">
-              <div className="backdrop-blur-sm border border-black/10 p-2 sm:p-3 transition-all duration-300 group-hover:border-black/20 group-hover:scale-105 bg-transparent rounded-lg px-[39px] py-[26px]">
+              <div className="backdrop-blur-sm border border-gray-200/30 p-2 sm:p-3 transition-all duration-300 group-hover:border-gray-300/40 group-hover:scale-105 bg-white/20 rounded-lg px-[39px] py-[26px]">
                 <img src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" alt="MusicGift by Mango Records" className="h-18s m:h-18 md:h-18 w-auto object-cover drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mx-auto sm:mx-0" />
               </div>
             </Link>
             
-            <p className="text-gray-800 leading-relaxed text-xs font-medium">
+            <p className="text-gray-700 leading-relaxed text-xs font-medium">
               {t('footerDescription')}
             </p>
             
             {/* Social Links */}
             <div className="space-y-2">
-              <h4 className="text-gray-900 font-bold text-xs uppercase tracking-wider">
+              <h4 className="text-gray-800 font-bold text-xs uppercase tracking-wider">
                 {t('followUs') || 'Follow Us'}
               </h4>
               <div className="flex justify-center sm:justify-start space-x-2">
@@ -147,8 +147,8 @@ const Footer = () => {
                 href,
                 label,
                 color
-              }) => <a key={label} href={href} className={`w-8 h-8 bg-white/10 backdrop-blur-sm border border-black/10 ${color} rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-black/30 group touch-manipulation min-h-[32px]`} aria-label={label}>
-                    <Icon className="w-4 h-4 text-gray-700 group-hover:text-white transition-colors duration-300" />
+              }) => <a key={label} href={href} className={`w-8 h-8 bg-white/20 backdrop-blur-sm border border-gray-200/30 ${color} rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-gray-300/40 group touch-manipulation min-h-[32px]`} aria-label={label}>
+                    <Icon className="w-4 h-4 text-gray-600 group-hover:text-white transition-colors duration-300" />
                   </a>)}
               </div>
             </div>
@@ -157,7 +157,7 @@ const Footer = () => {
           {/* Column 2: Quick Navigation */}
           <div className="space-y-3 sm:space-y-4 text-center sm:text-left">
             <div className="relative">
-              <h3 className="text-gray-900 font-bold text-sm mb-1">
+              <h3 className="text-gray-800 font-bold text-sm mb-1">
                 {t('quickLinks')}
               </h3>
               <div className="w-8 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
@@ -186,7 +186,7 @@ const Footer = () => {
               to,
               label
             }) => <li key={to}>
-                  <Link to={to} className="text-gray-700 hover:text-gray-900 transition-all duration-300 relative group inline-block py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start">
+                  <Link to={to} className="text-gray-600 hover:text-gray-800 transition-all duration-300 relative group inline-block py-0.5 px-1 rounded text-xs hover:bg-white/20 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start">
                     <span className="relative z-10">{label}</span>
                     <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                   </Link>
@@ -197,7 +197,7 @@ const Footer = () => {
           {/* Column 3: Legal & Policies */}
           <div className="space-y-3 sm:space-y-4 text-center sm:text-left">
             <div className="relative">
-              <h3 className="text-gray-900 font-bold text-sm mb-1">
+              <h3 className="text-gray-800 font-bold text-sm mb-1">
                 {t('legal')}
               </h3>
               <div className="w-8 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
@@ -205,25 +205,25 @@ const Footer = () => {
             
             <ul className="space-y-0.5">
               <li>
-                <button onClick={openTerms} className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
+                <button onClick={openTerms} className="text-gray-600 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/20 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
                   <span className="relative z-10">{t('termsConditions')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                 </button>
               </li>
               <li>
-                <button onClick={openPrivacy} className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
+                <button onClick={openPrivacy} className="text-gray-600 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/20 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
                   <span className="relative z-10">{t('privacyPolicy')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                 </button>
               </li>
               <li>
-                <button onClick={openRefund} className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
+                <button onClick={openRefund} className="text-gray-600 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/20 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
                   <span className="relative z-10">{t('refundPolicy')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                 </button>
               </li>
               <li>
-                <button onClick={openCookie} className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
+                <button onClick={openCookie} className="text-gray-600 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/20 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
                   <span className="relative z-10">{t('cookiePolicy')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                 </button>
@@ -234,7 +234,7 @@ const Footer = () => {
           {/* Column 4: Contact Info Only */}
           <div className="space-y-3 sm:space-y-4 text-center sm:text-left">
             <div className="relative">
-              <h3 className="text-gray-900 font-bold text-sm mb-1">
+              <h3 className="text-gray-800 font-bold text-sm mb-1">
                 {t('contactInfo')}
               </h3>
               <div className="w-8 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
@@ -258,8 +258,8 @@ const Footer = () => {
               icon: Icon,
               text,
               href
-            }) => <a key={text} href={href} className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition-all duration-300 group p-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm border border-transparent hover:border-black/10 touch-manipulation min-h-[36px]">
-                  <div className="w-6 h-6 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-black/10 rounded-lg flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300 flex-shrink-0">
+            }) => <a key={text} href={href} className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-all duration-300 group p-1.5 rounded-lg hover:bg-white/20 backdrop-blur-sm border border-transparent hover:border-gray-200/30 touch-manipulation min-h-[36px]">
+                  <div className="w-6 h-6 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-gray-200/30 rounded-lg flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300 flex-shrink-0">
                     <Icon className="w-3 h-3" />
                   </div>
                   <span className="text-xs font-medium break-words">{text}</span>
@@ -271,7 +271,7 @@ const Footer = () => {
         {/* Legal Compliance Section - Full Width */}
         <div className="mt-6 sm:mt-12 space-y-3 sm:space-y-4">
           <div className="relative text-center sm:text-left">
-            <h3 className="text-gray-900 font-bold text-sm mb-1">
+            <h3 className="text-gray-800 font-bold text-sm mb-1">
               {t('legalCompliance')}
             </h3>
             <div className="w-8 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mx-auto sm:mx-0"></div>
@@ -280,35 +280,35 @@ const Footer = () => {
         </div>
 
         {/* Enhanced Visual Separator */}
-        <div className="border-t border-white/10 mt-8 sm:mt-16 relative">
+        <div className="border-t border-gray-300/20 mt-8 sm:mt-16 relative">
           
         </div>
 
-        {/* Enhanced Final Copyright Section - Now with stronger visual impact */}
+        {/* Enhanced Final Copyright Section - Now with lighter colors */}
         <div className="mt-8 sm:mt-12 pt-8 sm:pt-12 relative overflow-hidden">
-          {/* Full Width Enhanced Gradient Background with deeper colors */}
+          {/* Full Width Enhanced Gradient Background with lighter colors */}
           <div className="absolute inset-0 w-full" style={{
           backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
         }}>
-            {/* Enhanced layered background effects with stronger gradients */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-800/70 via-violet-700/60 to-pink-800/70"></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-800/50 via-purple-700/40 to-fuchsia-800/55"></div>
-            <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/30 via-transparent to-pink-900/30"></div>
+            {/* Much lighter layered background effects */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-100/50 via-violet-50/40 to-pink-100/50"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-purple-50/20 to-fuchsia-50/35"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-purple-100/20 via-transparent to-pink-100/20"></div>
             
-            {/* Vignette effect for natural ending */}
+            {/* Very light vignette effect */}
             <div className="bg-transparent"></div>
             
-            {/* Bottom fade effect */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+            {/* Subtle bottom fade effect */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-200/60 via-gray-100/30 to-transparent"></div>
           </div>
           
           
 
           {/* Subtle fade to bottom effect */}
-          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-100/20 to-transparent pointer-events-none"></div>
         </div>
       </div>
 
