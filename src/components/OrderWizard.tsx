@@ -48,27 +48,23 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   } = useOrderWizardState({
     preselectedPackage
   });
-  const {
-    t
-  } = useLanguage();
-  const {
-    currency
-  } = useCurrency();
-  const {
-    toast
-  } = useToast();
+  const { t } = useLanguage();
+  const { currency } = useCurrency();
+  const { toast } = useToast();
   const navigate = useNavigate();
-  const {
-    data: packages = []
-  } = usePackages();
-  const {
-    data: addons = []
-  } = useAddons();
+  const { data: packages = [] } = usePackages();
+  const { data: addons = [] } = useAddons();
   const selectedPackage = formData.package as string;
-  const {
-    data: allPackageSteps = [],
-    isLoading: isStepsLoading
-  } = usePackageSteps(selectedPackage);
+  const { data: allPackageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
+
+  // Add debugging logs
+  console.log('🔍 OrderWizard Debug Info:', {
+    currentStep,
+    selectedPackage,
+    allPackageStepsLength: allPackageSteps.length,
+    isStepsLoading,
+    allPackageSteps
+  });
 
   // Notify parent component of order data changes
   useEffect(() => {
@@ -93,6 +89,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   // Only get regular package steps (exclude contact/legal as it's now universal)
   const regularSteps = allPackageSteps.filter(step => step.title_key !== 'contactDetailsStep').sort((a, b) => a.step_number - b.step_number);
 
+  // Add more debugging for regularSteps
+  console.log('🔍 Regular Steps Debug:', {
+    regularStepsLength: regularSteps.length,
+    regularSteps: regularSteps.map(step => ({ id: step.id, title_key: step.title_key, step_number: step.step_number }))
+  });
+
   // Build the complete step flow - Contact & Legal is now ALWAYS present
   const totalRegularSteps = regularSteps.length;
   const addonStepIndex = 1 + totalRegularSteps; // After package selection + regular steps
@@ -100,6 +102,25 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const paymentStepIndex = contactLegalStepIndex + 1; // Always after contact/legal
   const totalSteps = paymentStepIndex + 1;
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+
+  // Fix the step indexing logic - the issue was here!
+  const currentPackageStepIndex = currentStep - 1; // currentStep 1 -> index 0, currentStep 2 -> index 1, etc.
+  const isRegularPackageStep = currentStep >= 1 && currentStep <= totalRegularSteps;
+  const currentStepData = isRegularPackageStep ? regularSteps[currentPackageStepIndex] : null;
+
+  // Add debugging for step data calculation
+  console.log('🔍 Step Data Calculation:', {
+    currentStep,
+    totalRegularSteps,
+    currentPackageStepIndex,
+    isRegularPackageStep,
+    currentStepData: currentStepData ? { 
+      id: currentStepData.id, 
+      title_key: currentStepData.title_key,
+      fieldsCount: currentStepData.fields?.length 
+    } : null
+  });
+
   const handleNext = () => {
     if (currentStep === 0) {
       if (!formData.package) return;
@@ -315,8 +336,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const isAddonStep = currentStep === addonStepIndex;
   const isContactLegalStep = currentStep === contactLegalStepIndex;
   const isPaymentStep = currentStep === paymentStepIndex;
-  const currentPackageStepIndex = currentStep - 1;
-  const currentStepData = currentStep > 0 && currentStep <= totalRegularSteps ? regularSteps?.[currentPackageStepIndex] : null;
+
   const canProceed = () => {
     if (currentStep === 0) {
       return !!formData.package;
