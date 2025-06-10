@@ -12,6 +12,7 @@ import { contactTranslations } from './contact';
 import { unsubscribeTranslations } from './unsubscribe';
 import { faqTranslations } from './faq';
 import { didYouKnowTranslations } from './didYouKnow';
+import { collaborationTranslations } from './collaboration';
 
 export const roTranslations = {
   ...navigationTranslations,
@@ -27,4 +28,5 @@ export const roTranslations = {
   ...unsubscribeTranslations,
   ...faqTranslations,
   ...didYouKnowTranslations,
+  ...collaborationTranslations,
 };
