@@ -475,6 +475,38 @@ const About = () => {
               </motion.div>
             </div>
           </div>
+
+          {/* Call to Action Section */}
+          <motion.div 
+            className="text-center bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-2xl border border-white/30 p-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.2 }}
+          >
+            <Music className="w-12 h-12 text-white mx-auto mb-3 opacity-80" />
+            <h2 className="text-2xl font-bold text-white mb-3">{t('readyToStart') || 'Ready to Create Your Song?'}</h2>
+            <p className="text-base text-white/90 mb-4 max-w-xl mx-auto leading-relaxed">
+              {t('readyToStartDesc') || 'Join thousands of satisfied customers who have turned their stories into beautiful, personalized songs.'}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <motion.a
+                href="/order"
+                className="bg-white text-purple-800 font-bold py-3 px-6 rounded-full text-base hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {t('startYourSong') || 'Start Your Song'}
+              </motion.a>
+              <motion.a
+                href="/packages"
+                className="border-2 border-white text-white font-bold py-3 px-6 rounded-full text-base hover:bg-white hover:text-purple-800 transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {t('viewPackages') || 'View Packages'}
+              </motion.a>
+            </div>
+          </motion.div>
         </div>
       </section>
 
