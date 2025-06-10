@@ -25,6 +25,17 @@ export interface DiscountValidation {
   error_message: string;
 }
 
+export interface CreateDiscountCodeData {
+  code: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+  minimumOrderAmount?: number;
+  maximumDiscountAmount?: number;
+  usageLimit?: number;
+  expiresAt?: string;
+  isActive: boolean;
+}
+
 export const useValidateDiscountCode = () => {
   const { toast } = useToast();
 
@@ -74,11 +85,110 @@ export const useDiscountCodes = () => {
       const { data, error } = await supabase
         .from('discount_codes')
         .select('*')
-        .eq('is_active', true)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data as DiscountCode[];
     }
+  });
+};
+
+export const useCreateDiscountCode = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: CreateDiscountCodeData) => {
+      const { data: result, error } = await supabase
+        .from('discount_codes')
+        .insert({
+          code: data.code.toUpperCase(),
+          discount_type: data.discountType,
+          discount_value: data.discountValue,
+          minimum_order_amount: data.minimumOrderAmount || 0,
+          maximum_discount_amount: data.maximumDiscountAmount,
+          usage_limit: data.usageLimit,
+          expires_at: data.expiresAt,
+          is_active: data.isActive,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['discount-codes'] });
+    },
+  });
+};
+
+export const useUpdateDiscountCode = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Partial<CreateDiscountCodeData> }) => {
+      const updateData: any = {};
+      
+      if (data.code) updateData.code = data.code.toUpperCase();
+      if (data.discountType) updateData.discount_type = data.discountType;
+      if (data.discountValue !== undefined) updateData.discount_value = data.discountValue;
+      if (data.minimumOrderAmount !== undefined) updateData.minimum_order_amount = data.minimumOrderAmount;
+      if (data.maximumDiscountAmount !== undefined) updateData.maximum_discount_amount = data.maximumDiscountAmount;
+      if (data.usageLimit !== undefined) updateData.usage_limit = data.usageLimit;
+      if (data.expiresAt !== undefined) updateData.expires_at = data.expiresAt;
+      if (data.isActive !== undefined) updateData.is_active = data.isActive;
+
+      const { data: result, error } = await supabase
+        .from('discount_codes')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['discount-codes'] });
+    },
+  });
+};
+
+export const useDeleteDiscountCode = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('discount_codes')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['discount-codes'] });
+    },
+  });
+};
+
+export const useToggleDiscountCode = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) => {
+      const { data: result, error } = await supabase
+        .from('discount_codes')
+        .update({ is_active: isActive })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['discount-codes'] });
+    },
   });
 };

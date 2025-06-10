@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -8,14 +9,18 @@ import PackageManagement from "@/components/admin/PackageManagement";
 import NewsletterManagement from "@/components/admin/NewsletterManagement";
 import CampaignsManagement from "@/components/admin/CampaignsManagement";
 import GiftCardsManagement from "@/components/admin/GiftCardsManagement";
+import DiscountCodesManagement from "@/components/admin/DiscountCodesManagement";
 import PaymentProvidersManagement from "@/components/admin/PaymentProvidersManagement";
 import EmailManagement from "@/components/admin/EmailManagement";
 import TestimonialsManagement from "@/components/admin/TestimonialsManagement";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
+
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("packages");
-  return <AuthGuard>
+
+  return (
+    <AuthGuard>
       <RoleGuard allowedRoles={['admin', 'super_admin']}>
         <div className="min-h-screen bg-gray-50">
           <Navigation />
@@ -28,7 +33,7 @@ const Admin = () => {
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
               <div className="w-full overflow-x-auto bg-white rounded-lg border shadow-sm">
-                <TabsList className="flex w-full min-w-[1000px] sm:min-w-full h-auto p-2 justify-start gap-1 bg-gray-50/50">
+                <TabsList className="flex w-full min-w-[1200px] sm:min-w-full h-auto p-2 justify-start gap-1 bg-gray-50/50">
                   <TabsTrigger value="packages" className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50">
                     📦 Packages
                   </TabsTrigger>
@@ -40,6 +45,9 @@ const Admin = () => {
                   </TabsTrigger>
                   <TabsTrigger value="gift-cards" className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50">
                     🎁 Gift Cards
+                  </TabsTrigger>
+                  <TabsTrigger value="discount-codes" className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50">
+                    🎫 Discount Codes
                   </TabsTrigger>
                   <TabsTrigger value="payments" className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50">
                     💳 Payments
@@ -75,6 +83,10 @@ const Admin = () => {
                 <GiftCardsManagement />
               </TabsContent>
 
+              <TabsContent value="discount-codes" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
+                <DiscountCodesManagement />
+              </TabsContent>
+
               <TabsContent value="payments" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <PaymentProvidersManagement />
               </TabsContent>
@@ -100,6 +112,8 @@ const Admin = () => {
           <Footer />
         </div>
       </RoleGuard>
-    </AuthGuard>;
+    </AuthGuard>
+  );
 };
+
 export default Admin;
