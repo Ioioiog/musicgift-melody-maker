@@ -206,7 +206,7 @@ export default function TestimonialSlider() {
           </div>}
 
         {/* Video testimonials - glassmorphism design */}
-        {type !== 'text-only' && <div className="bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 hover:border-white/40 transition-all duration-300 p-6 h-full flex flex-col group hover:shadow-xl shadow-lg">
+        {type !== 'text-only' && <div className="bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 hover:border-white/40 transition-all duration-300 p-6 h-full flex flex-col group hover:shadow-xl shadow-lg px-[25px] py-[7px]">
             {/* Quote icon for consistency */}
             <div className="mb-4">
               <Quote className="w-6 h-6 text-white opacity-60" />
@@ -262,7 +262,7 @@ export default function TestimonialSlider() {
           </div>}
       </motion.div>;
   };
-  return <div className="py-[26px]">
+  return <div className="py-[10px]">
       <div className="max-w-full mx-auto px-4">
         <Carousel setApi={setApi} className="w-full" opts={{
         align: "start",
@@ -282,7 +282,7 @@ export default function TestimonialSlider() {
           <CarouselNext className="absolute -right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-200" />
           
           {/* Enhanced Pagination Dots */}
-          <div className="flex justify-center items-center gap-3 mt-8 px-4">
+          <div className="flex justify-center items-center gap-3 mt-8 px-4 my-[10px]">
             
             
             {/* Progress indicator */}
