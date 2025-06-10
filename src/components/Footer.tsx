@@ -1,12 +1,28 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music, ArrowUp } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LegalModals, { useLegalModals } from "@/components/LegalModals";
 import LegalCompliance from "@/components/LegalCompliance";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
 const Footer = () => {
   const { t } = useLanguage();
   const { openTerms, openPrivacy, openRefund, openCookie } = useLegalModals();
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 500);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <footer className="relative overflow-hidden" style={{
@@ -15,15 +31,30 @@ const Footer = () => {
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }}>
+      {/* Enhanced Multi-layer Background System */}
+      <div className="absolute inset-0">
+        {/* Base gradient layer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/60 via-violet-800/70 to-indigo-900/80"></div>
+        
+        {/* Secondary gradient for depth */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/40 via-transparent to-pink-600/30"></div>
+        
+        {/* Radial gradient for focus */}
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-purple-800/20 to-black/40"></div>
+        
+        {/* Subtle pulse animation overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/30 animate-pulse opacity-60"></div>
+      </div>
+
       {/* Subtle grid pattern overlay */}
       <div
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
         }}
-        className="inset-0.5 inset-0 -bottom-0.5 bg-violet-500 bg-gradient-purple"
+        className="absolute inset-0 opacity-30"
       ></div>
 
-      {/* Footer-contained animated musical notes pattern overlay */}
+      {/* Enhanced animated musical notes pattern overlay */}
       <div className="absolute inset-0 pointer-events-none z-0 opacity-20">
         <div className="absolute top-4 left-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
         <div className="absolute top-8 right-12 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
@@ -38,6 +69,17 @@ const Footer = () => {
         <div className="absolute top-1/2 left-8 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '5s' }}></div>
         <div className="absolute top-1/3 right-16 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '5.5s' }}></div>
       </div>
+
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <Button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 border-2 border-white/20 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 animate-fade-in"
+          size="icon"
+        >
+          <ArrowUp className="w-5 h-5 text-white" />
+        </Button>
+      )}
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 py-6 sm:py-8">
         {/* Main 4-column layout */}
@@ -202,9 +244,14 @@ const Footer = () => {
           <LegalCompliance />
         </div>
 
-        {/* Enhanced Bottom Section - Copyright with Purple Musical Background - Now Full Width */}
-        <div className="border-t border-black/10 mt-6 sm:mt-12 pt-6 sm:pt-8 relative overflow-hidden">
-          {/* Full Width Enhanced Gradient Background */}
+        {/* Enhanced Visual Separator */}
+        <div className="border-t border-white/10 mt-8 sm:mt-16 relative">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+        </div>
+
+        {/* Enhanced Final Copyright Section - Now with stronger visual impact */}
+        <div className="mt-8 sm:mt-12 pt-8 sm:pt-12 relative overflow-hidden">
+          {/* Full Width Enhanced Gradient Background with deeper colors */}
           <div
             className="absolute inset-0 w-full"
             style={{
@@ -214,34 +261,60 @@ const Footer = () => {
               backgroundRepeat: 'no-repeat'
             }}
           >
-            {/* Enhanced layered background effects */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/50 via-violet-600/40 to-pink-600/50 animate-pulse"></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/30 via-purple-600/25 to-fuchsia-600/35 opacity-80"></div>
-            <div className="absolute inset-0 bg-gradient-to-tr from-purple-800/20 via-transparent to-pink-800/20"></div>
+            {/* Enhanced layered background effects with stronger gradients */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-800/70 via-violet-700/60 to-pink-800/70"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-800/50 via-purple-700/40 to-fuchsia-800/55"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/30 via-transparent to-pink-900/30"></div>
+            
+            {/* Vignette effect for natural ending */}
+            <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/60"></div>
+            
+            {/* Bottom fade effect */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
           </div>
           
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
-            <div className="flex flex-col items-center justify-center space-y-4 py-[8px] my-[14px] mx-0">
-              <div className="bg-white/15 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 shadow-lg hover:bg-white/20 transition-all duration-300 group">
-                <p className="text-xs text-white font-semibold text-center group-hover:text-white/90 transition-colors duration-300">
-                  {t('copyright')}
-                </p>
+            <div className="flex flex-col items-center justify-center space-y-6 py-8 sm:py-12">
+              {/* Enhanced Brand Signature */}
+              <div className="text-center space-y-4">
+                <div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl px-8 py-6 shadow-2xl hover:bg-white/25 transition-all duration-500 group max-w-2xl">
+                  <p className="text-sm sm:text-base text-white font-bold text-center group-hover:text-white/90 transition-colors duration-300 leading-relaxed">
+                    {t('copyright')}
+                  </p>
+                  
+                  {/* Tagline */}
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                    <p className="text-xs sm:text-sm text-white/90 font-medium italic">
+                      "Where every moment becomes a melody, and every memory turns into music"
+                    </p>
+                  </div>
+                </div>
               </div>
               
-              {/* Decorative musical elements */}
-              <div className="flex items-center space-x-4 opacity-60">
-                <div className="w-8 h-8 bg-gradient-to-br from-purple-400/30 to-pink-400/30 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center">
-                  <Music className="w-4 h-4 text-white" />
+              {/* Enhanced decorative musical elements */}
+              <div className="flex items-center space-x-8 opacity-70">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-400/40 to-pink-400/40 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center animate-pulse">
+                  <Music className="w-5 h-5 text-white" />
                 </div>
-                <div className="flex space-x-1">
-                  <div className="w-1 h-4 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
-                  <div className="w-1 h-6 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
-                  <div className="w-1 h-3 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
-                  <div className="w-1 h-5 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
+                <div className="flex space-x-2">
+                  <div className="w-2 h-8 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-12 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-6 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                  <div className="w-2 h-10 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                  <div className="w-2 h-4 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                </div>
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-400/40 to-pink-400/40 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center animate-pulse">
+                  <Music className="w-5 h-5 text-white" />
                 </div>
               </div>
+
+              {/* Final closing element */}
+              <div className="w-24 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent rounded-full"></div>
             </div>
           </div>
+
+          {/* Subtle fade to bottom effect */}
+          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
         </div>
       </div>
 
