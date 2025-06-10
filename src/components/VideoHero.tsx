@@ -150,12 +150,12 @@ const VideoHero = () => {
 
   return (
     <section className="video-hero relative overflow-hidden h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen">
-      {/* Video Background with branded gradient background for mobile */}
+      {/* Video Background with branded gradient background and mobile filters */}
       <video
         ref={videoRef}
         loop
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 md:bg-black"
+        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 md:bg-black filter blur-sm brightness-110 saturate-125 md:filter-none"
         key={videoSrc}
       >
         <source src={videoSrc} type="video/mp4" />
