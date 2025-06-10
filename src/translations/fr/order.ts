@@ -182,7 +182,7 @@ export const orderTranslations = {
   instrumentalLength1to2: "1-2 minutes",
   instrumentalLength2to3: "2-3 minutes",
   instrumentalLength3to4: "3-4 minutes",
-  instrumentalLength4plus: "4+ minutes",
+  instrumentalLength4plus: "4+ minutesselect",
   selectIntendedUse: "Sélectionnez l'usage prévu",
   intendedUseBackgroundMusic: "Musique de Fond",
   intendedUseVocalRecordingBase: "Base d'Enregistrement Vocal",
@@ -317,7 +317,7 @@ export const orderTranslations = {
   remixVocalsPitchShift: "Changer la Hauteur des Voix",
   remixVocalsTimeStretch: "Étirer les Voix dans le Temps",
   remixSpecialRequestsPlaceholder: "Demandes spéciales ou modifications ?",
-  remixRightsConfirmationPlaceholder: "Je confirme posséder les droits sur cette chanson",
+  remixRightsConfirmationPlaceholder: "Je confirme que je possède les droits de cette chanson",
 
   // Instrumental Package
   instrumentalStep1Title: "Style Musical",
@@ -329,9 +329,9 @@ export const orderTranslations = {
   instrumentalTempoFast: "Rapide (120+ BPM)",
   instrumentalMoodPlaceholder: "Sélectionnez l'ambiance/sentiment",
   instrumentalStructureStandard: "Structure de Chanson Standard",
-  instrumentalStructureExtended: "Étendue/Cinématique",
+  instrumentalStructureExtended: "Étendue/Cinématographique",
   instrumentalStructureCustom: "Structure Personnalisée",
-  instrumentalKeySignaturePlaceholder: "Signature tonale préférée (Optionnel)",
+  instrumentalKeySignaturePlaceholder: "Signature de clé préférée (Optionnel)",
   instrumentalUsagePersonal: "Usage Personnel",
   instrumentalUsageCommercial: "Usage Commercial",
   instrumentalUsageYouTube: "Contenu YouTube",
@@ -342,7 +342,7 @@ export const orderTranslations = {
   giftStep1Title: "Montant de la Carte Cadeau",
   giftStep2Title: "Détails du Cadeau",
   gift299RON: "299 RON",
-  gift500RON: "500 RON",
+  gift500RON: "500 RON", 
   giftCustomAmount: "Montant Personnalisé",
   giftSenderNamePlaceholder: "Votre nom",
   giftRecipientNamePlaceholder: "Nom du destinataire",
@@ -361,16 +361,14 @@ export const orderTranslations = {
   chooseDate: "Choisir la date",
   
   // Error messages
-  fieldRequired: "Ce champ est requis",
-  invalidEmail: "Veuillez saisir une adresse email valide",
-  invalidUrl: "Veuillez saisir une URL valide",
-  fileSizeError: "La taille du fichier doit être inférieure à 10MB",
+  fieldRequired: "Ce champ est obligatoire",
+  invalidEmail: "Veuillez entrer une adresse email valide",
+  invalidUrl: "Veuillez entrer une URL valide",
+  fileSizeError: "La taille du fichier doit être inférieure à 10 Mo",
   fileTypeError: "Type de fichier invalide",
-  fieldConfigurationError: "Erreur de configuration du champ : Aucune option disponible",
-  unknownFieldType: "Type de champ inconnu : {fieldType}",
   
   // Success messages
-  stepCompleted: "Étape complétée avec succès",
+  stepCompleted: "Étape terminée avec succès",
   orderSubmitted: "Commande soumise avec succès",
   
   // Package-specific context (flattened)
@@ -390,103 +388,5 @@ export const orderTranslations = {
   romanianLanguage: "Roumain",
   englishLanguage: "Anglais",
   frenchLanguage: "Français",
-  italianLanguage: "Italien",
-
-  // Form field labels and placeholders
-  recipientLabel: "Nom du Destinataire",
-  recipientPlaceholder: "Pour qui est cette chanson ?",
-  includeNameInSongLabel: "Inclure le nom dans la chanson",
-  includeNameInSongPlaceholder: "Devons-nous mentionner le nom du destinataire dans les paroles ?",
-  pronunciationAudioLabel: "Prononciation du Nom (Audio)",
-  pronunciationAudioPlaceholder: "Enregistrez comment prononcer le nom du destinataire",
-  occasionLabel: "Occasion",
-  occasionPlaceholder: "Quelle est l'occasion spéciale ? (ex : anniversaire, noces, remise de diplôme)",
-  specialRequestsLabel: "Demandes Spéciales",
-  specialRequestsPlaceholder: "Messages spéciaux, souvenirs ou thèmes que vous aimeriez inclure ?",
-  deliveryInstructionsLabel: "Instructions de Livraison",
-  deliveryInstructionsPlaceholder: "Préférences ou instructions spécifiques de livraison ?",
-  
-  // Step titles
-  songStoryStep: "L'Histoire de Votre Chanson",
-  personalDetailsStep: "Détails Personnels",
-  contactInfoStep: "Informations de Contact",
-  musicalPreferencesStep: "Préférences Musicales",
-  addonsStep: "Suppléments & Extras",
-  contactDetailsStep: "Coordonnées",
-  legalAcceptancesStep: "Acceptations Légales",
-  
-  // Contact and personal info fields
-  fullNameLabel: "Nom Complet",
-  fullNamePlaceholder: "Votre nom complet",
-  emailLabel: "Adresse Email",
-  emailPlaceholder: "votre.email@exemple.fr",
-  phoneLabel: "Numéro de Téléphone",
-  phonePlaceholder: "Votre numéro de téléphone",
-  birthDateLabel: "Date de Naissance",
-  birthDatePlaceholder: "Sélectionnez votre date de naissance",
-  genderLabel: "Genre",
-  genderPlaceholder: "Sélectionnez le genre",
-  relationshipLabel: "Relation avec le Destinataire",
-  relationshipPlaceholder: "Comment connaissez-vous le destinataire ?",
-  relationshipTextLabel: "Décrivez Votre Relation",
-  relationshipTextPlaceholder: "Parlez-nous davantage de votre relation avec le destinataire",
-  
-  // Story and content fields
-  storyDetailedLabel: "Histoire Détaillée",
-  storyDetailedPlaceholder: "Partagez plus de détails sur votre histoire, vos souvenirs ou ce qui rend cette personne spéciale",
-  keywordsLabel: "Mots-Clés Importants",
-  keywordsPlaceholder: "Listez les mots importants, noms ou phrases à inclure dans la chanson",
-  keywordsAudioLabel: "Prononciation des Mots-Clés (Audio)",
-  keywordsAudioPlaceholder: "Enregistrez la prononciation des mots ou noms difficiles",
-  
-  // Musical preference fields
-  favoriteGenreLabel: "Genre Musical Préféré",
-  songLengthLabel: "Durée Préférée de la Chanson",
-  songLengthPlaceholder: "Quelle durée devrait avoir la chanson ?",
-  instrumentsLabel: "Instruments Préférés",
-  instrumentsPlaceholder: "Des instruments spécifiques que vous aimeriez mettre en avant ?",
-  moodLabel: "Ambiance de la Chanson",
-  moodPlaceholder: "Quelle ambiance devrait avoir la chanson ?",
-  lyricsThemeLabel: "Thème des Paroles",
-  lyricsThemePlaceholder: "Sur quoi les paroles devraient-elles se concentrer ?",
-  styleReferenceLabel: "Référence de Style",
-  styleReferencePlaceholder: "Un artiste ou style de chanson spécifique que vous aimeriez référencer ?",
-  youtubeExampleLabel: "Exemple YouTube",
-  youtubeExamplePlaceholder: "Partagez un lien YouTube d'un style de chanson que vous aimez",
-  
-  // Voice type fields
-  voiceGenderLabel: "Type de Voix Préféré",
-  voiceGenderPlaceholder: "Sélectionnez le type de voix",
-  
-  // Song language fields
-  songLanguageLabel: "Langue de la Chanson",
-  songLanguagePlaceholder: "Sélectionnez la langue",
-  
-  // Voice type options
-  voiceFeminine: "Voix Féminine",
-  voiceMasculine: "Voix Masculine",
-  voiceDuet: "Duo",
-  voiceMusicGiftChoice: "Choix de MusicGift",
-  
-  // Mood options
-  moodRomantic: "Romantique",
-  moodCheerful: "Joyeux",
-  moodNostalgic: "Nostalgique",
-  moodEnergetic: "Énergique",
-  moodMelancholic: "Mélancolique",
-  moodInspirational: "Inspirant",
-  moodEmotional: "Émotionnel",
-  moodUplifting: "Revigorant",
-  
-  // Dedication message
-  dedicationMessageLabel: "Message Personnel de Dédicace",
-  dedicationMessagePlaceholder: "Un message personnel à inclure avec votre chanson",
-  
-  // VAT field
-  vatCodeLabel: "Code TVA",
-  vatCodePlaceholder: "FR12345678901",
-  
-  // VAT validation errors
-  vatCodeTooShort: "Code TVA trop court",
-  vatCodeInvalidFormat: "Code TVA invalide pour le pays sélectionné",
+  italianLanguage: "Italien"
 };

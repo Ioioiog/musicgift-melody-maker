@@ -1,8 +1,82 @@
-
 export const orderTranslations = {
-  // Existing order translations
-  choosePackage: "Choose Package",
+  loadingPackages: "Loading packages...",
+  loadingSteps: "Loading steps...",
+  errorLoadingSteps: "Error loading steps",
+  errorLoadingStepsDesc: "Unable to load configuration for this package. Please try again or contact support.",
+  chooseAnotherPackage: "Choose another package",
+  tryAgain: "Try again",
+  noStepsConfigured: "No steps configured",
+  noStepsConfiguredDesc: "This package doesn't have steps configured yet. Please contact support or choose a different package.",
+  selectYourPackage: "Select your package",
+  selectOption: "Select an option",
+  selected: "Selected",
+  more: "more",
+  completeRequiredFields: "Please complete all required fields",
+  completeRequiredFieldsDesc: "Make sure all required fields are filled before continuing.",
+  somethingWentWrong: "Something went wrong",
+  tryAgainSupport: "Please try again or contact support if the problem persists.",
   stepPackage: "Step",
+  of: "of",
+  progress: "Progress",
+  whatsIncluded: "What's included",
+  professionalQuality: "Professional quality",
+  previous: "Previous",
+  continue: "Continue",
+  next: "Next",
+  submitting: "Submitting...",
+  completeOrder: "Complete order",
+  choosePackage: "Choose Package",
+  pickDate: "Pick date",
+  orderDetails: "Order details",
+  completeAllSteps: "Complete all steps to finalize your order.",
+  submitOrder: "Submit order",
+  loadingGiftCard: "Loading gift card...",
+  giftCardApplied: "Gift card applied",
+  giftCardAppliedDesc: "Gift card is ready to be used for your order.",
+  
+  // Toast messages
+  orderSuccess: "Order created",
+  orderSuccessMessage: "Your order has been created successfully. This uses demo data.",
+  orderError: "Error",
+  orderErrorMessage: "An error occurred",
+  
+  // Help section
+  needHelp: "Need help?",
+  mondayToFriday: "Monday - Friday, 9:00 - 18:00",
+  
+  // Package tags
+  popular: "Popular",
+  premium: "Premium",
+  new: "New",
+  gift: "Gift",
+  
+  // Order Summary
+  orderSummary: "Order Summary",
+  addons: "Add-ons",
+  subtotal: "Subtotal",
+  total: "Total",
+  giftCardDiscount: "Gift Card Discount",
+  fullyCoveredByGiftCard: "Fully covered by gift card",
+  giftCardFrom: "From:",
+  giftCardBalance: "Balance:",
+  giftCardRemaining: "Remaining after order:",
+  
+  // Form Field Renderer
+  noAddonsAvailable: "No add-ons available for this package",
+  fieldConfigurationError: "Field configuration error: No options available",
+  unknownFieldType: "Unknown field type: {fieldType}",
+  uploadFiles: "Upload Files",
+  clickToUploadFiles: "Click to upload files",
+  maxFiles: "Max.",
+  files: "files",
+  totalSize: "total",
+  recordAudioMessage: "Record Audio Message",
+  
+  // Testimonial
+  testimonialQuote: "\"The perfect gift for music lovers! The personalized song was absolutely beautiful and made our anniversary unforgettable.\"",
+  testimonialAuthor: "- Sarah M., Happy Customer",
+  
+  // Existing order translations
   generalDetails: "General Details",
   storyAndEmotionalDetails: "Story & Emotional Details",
   musicalPreferences: "Musical Preferences",
@@ -283,11 +357,8 @@ export const orderTranslations = {
   // Form validation and UI
   required: "Required",
   optional: "Optional",
-  next: "Next",
-  previous: "Previous",
   submit: "Submit Order",
   loading: "Processing...",
-  selectOption: "Select an option",
   uploadFile: "Upload file",
   chooseDate: "Choose date",
   
@@ -297,8 +368,6 @@ export const orderTranslations = {
   invalidUrl: "Please enter a valid URL",
   fileSizeError: "File size must be less than 10MB",
   fileTypeError: "Invalid file type",
-  fieldConfigurationError: "Field configuration error: No options available",
-  unknownFieldType: "Unknown field type: {fieldType}",
   
   // Success messages
   stepCompleted: "Step completed successfully",
