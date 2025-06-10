@@ -161,23 +161,18 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
                 {t('fullyPaidWithGiftCard', 'Plătit complet cu cardul cadou')}
               </Badge>}
 
-            {/* All Package Features in One Card */}
+            {/* Compact Package Features */}
             {selectedPackageData.includes && selectedPackageData.includes.length > 0 && <div className="mt-4 sm:mt-6">
                 <Separator className="bg-white/20 mb-3 sm:mb-4" />
-                <div className="bg-white/5 rounded-lg border border-white/10 p-3 sm:p-4">
-                  <h5 className="text-white text-sm font-semibold mb-3 flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-400" />
+                <div className="bg-white/5 rounded-lg border border-white/10 p-2 sm:p-3">
+                  <h5 className="text-white text-xs sm:text-sm font-semibold mb-2 flex items-center gap-2">
+                    <CheckCircle className="w-3 h-3 sm:w-4 h-4 text-green-400" />
                     {t('packageIncludes', 'Pachetul include:')}
                   </h5>
-                  <div className="space-y-2 sm:space-y-3">
+                  <div className="space-y-1">
                     {selectedPackageData.includes.map((includeItem, index) => (
-                      <div key={index} className="flex items-start gap-2 sm:gap-3 p-2 bg-white/5 rounded-md border border-white/10">
-                        <div className="w-1.5 h-1.5 bg-green-400 rounded-full shrink-0 mt-2"></div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-white/90 text-xs sm:text-sm leading-relaxed">
-                            {typeof includeItem === 'string' ? includeItem : t(includeItem.include_key)}
-                          </p>
-                        </div>
+                      <div key={index} className="text-white/90 text-xs leading-relaxed px-1">
+                        • {typeof includeItem === 'string' ? includeItem : t(includeItem.include_key)}
                       </div>
                     ))}
                   </div>
