@@ -2,7 +2,7 @@
 import { packageSteps } from '@/data/packages';
 
 export interface PackageStepField {
-  id: number;
+  id: string;
   field_name: string;
   field_type: string;
   placeholder_key: string;

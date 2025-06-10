@@ -7,7 +7,7 @@ export const packageSteps = {
       title_key: "generalDetails",
       fields: [
         { 
-          id: 1, 
+          id: "1", 
           field_name: "recipientName", 
           field_type: "text", 
           placeholder_key: "recipientName", 
@@ -15,7 +15,7 @@ export const packageSteps = {
           field_order: 1 
         },
         { 
-          id: 2, 
+          id: "2", 
           field_name: "vocalPreference", 
           field_type: "select", 
           placeholder_key: "vocalPreference", 
@@ -28,7 +28,7 @@ export const packageSteps = {
           ]
         },
         { 
-          id: 3, 
+          id: "3", 
           field_name: "songStyleExample", 
           field_type: "textarea", 
           placeholder_key: "songStyleExample", 
@@ -36,7 +36,7 @@ export const packageSteps = {
           field_order: 3 
         },
         { 
-          id: 4, 
+          id: "4", 
           field_name: "relationship", 
           field_type: "select", 
           placeholder_key: "relationship", 
@@ -44,7 +44,7 @@ export const packageSteps = {
           field_order: 4 
         },
         { 
-          id: 5, 
+          id: "5", 
           field_name: "songLanguage", 
           field_type: "select", 
           placeholder_key: "songLanguage", 
@@ -64,7 +64,7 @@ export const packageSteps = {
       title_key: "recipientDetails",
       fields: [
         { 
-          id: 6, 
+          id: "6", 
           field_name: "recipientPronunciation", 
           field_type: "audio", 
           placeholder_key: "recipientPronunciation", 
@@ -72,7 +72,7 @@ export const packageSteps = {
           field_order: 1 
         },
         { 
-          id: 7, 
+          id: "7", 
           field_name: "recipientFavoriteGenre", 
           field_type: "text", 
           placeholder_key: "recipientFavoriteGenre", 
@@ -80,7 +80,7 @@ export const packageSteps = {
           field_order: 2 
         },
         { 
-          id: 8, 
+          id: "8", 
           field_name: "recipientHobbies", 
           field_type: "textarea", 
           placeholder_key: "recipientHobbies", 
@@ -88,7 +88,7 @@ export const packageSteps = {
           field_order: 3 
         },
         { 
-          id: 9, 
+          id: "9", 
           field_name: "specialOccasion", 
           field_type: "select", 
           placeholder_key: "specialOccasion", 
@@ -104,7 +104,7 @@ export const packageSteps = {
           ]
         },
         { 
-          id: 10, 
+          id: "10", 
           field_name: "eventDate", 
           field_type: "date", 
           placeholder_key: "eventDate", 
@@ -118,7 +118,7 @@ export const packageSteps = {
       title_key: "messageDetails",
       fields: [
         { 
-          id: 11, 
+          id: "11", 
           field_name: "story", 
           field_type: "textarea", 
           placeholder_key: "story", 
@@ -126,7 +126,7 @@ export const packageSteps = {
           field_order: 1 
         },
         { 
-          id: 12, 
+          id: "12", 
           field_name: "specialMemories", 
           field_type: "textarea", 
           placeholder_key: "specialMemories", 
@@ -134,7 +134,7 @@ export const packageSteps = {
           field_order: 2 
         },
         { 
-          id: 13, 
+          id: "13", 
           field_name: "sharedExperiences", 
           field_type: "textarea", 
           placeholder_key: "sharedExperiences", 
@@ -142,7 +142,7 @@ export const packageSteps = {
           field_order: 3 
         },
         { 
-          id: 14, 
+          id: "14", 
           field_name: "insideJokes", 
           field_type: "textarea", 
           placeholder_key: "insideJokes", 
@@ -150,7 +150,7 @@ export const packageSteps = {
           field_order: 4 
         },
         { 
-          id: 15, 
+          id: "15", 
           field_name: "futureWishes", 
           field_type: "textarea", 
           placeholder_key: "futureWishes", 
@@ -158,7 +158,7 @@ export const packageSteps = {
           field_order: 5 
         },
         { 
-          id: 16, 
+          id: "16", 
           field_name: "emotionalTone", 
           field_type: "select", 
           placeholder_key: "emotionalTone", 
@@ -166,7 +166,7 @@ export const packageSteps = {
           field_order: 6 
         },
         { 
-          id: 17, 
+          id: "17", 
           field_name: "keyMoments", 
           field_type: "textarea", 
           placeholder_key: "keyMoments", 
@@ -174,7 +174,7 @@ export const packageSteps = {
           field_order: 7 
         },
         { 
-          id: 18, 
+          id: "18", 
           field_name: "specialWords", 
           field_type: "textarea", 
           placeholder_key: "specialWords", 
@@ -188,7 +188,7 @@ export const packageSteps = {
       title_key: "musicalPreferences",
       fields: [
         { 
-          id: 19, 
+          id: "19", 
           field_name: "musicStyle", 
           field_type: "select", 
           placeholder_key: "musicStyle", 
@@ -196,7 +196,7 @@ export const packageSteps = {
           field_order: 1 
         },
         { 
-          id: 20, 
+          id: "20", 
           field_name: "referenceSong", 
           field_type: "url", 
           placeholder_key: "referenceSong", 
@@ -212,7 +212,7 @@ export const packageSteps = {
       title_key: "generalDetails",
       fields: [
         { 
-          id: 21, 
+          id: "21", 
           field_name: "recipientName", 
           field_type: "text", 
           placeholder_key: "recipientName", 
@@ -220,7 +220,7 @@ export const packageSteps = {
           field_order: 1 
         },
         { 
-          id: 22, 
+          id: "22", 
           field_name: "vocalPreference", 
           field_type: "select", 
           placeholder_key: "vocalPreference", 
@@ -233,7 +233,7 @@ export const packageSteps = {
           ]
         },
         { 
-          id: 23, 
+          id: "23", 
           field_name: "songStyleExample", 
           field_type: "textarea", 
           placeholder_key: "songStyleExample", 
@@ -241,7 +241,7 @@ export const packageSteps = {
           field_order: 3 
         },
         { 
-          id: 24, 
+          id: "24", 
           field_name: "relationship", 
           field_type: "select", 
           placeholder_key: "relationship", 
@@ -249,7 +249,7 @@ export const packageSteps = {
           field_order: 4 
         },
         { 
-          id: 25, 
+          id: "25", 
           field_name: "songLanguage", 
           field_type: "select", 
           placeholder_key: "songLanguage", 
@@ -269,7 +269,7 @@ export const packageSteps = {
       title_key: "recipientDetails",
       fields: [
         { 
-          id: 26, 
+          id: "26", 
           field_name: "recipientPronunciation", 
           field_type: "audio", 
           placeholder_key: "recipientPronunciation", 
@@ -277,7 +277,7 @@ export const packageSteps = {
           field_order: 1 
         },
         { 
-          id: 27, 
+          id: "27", 
           field_name: "recipientFavoriteGenre", 
           field_type: "text", 
           placeholder_key: "recipientFavoriteGenre", 
@@ -285,7 +285,7 @@ export const packageSteps = {
           field_order: 2 
         },
         { 
-          id: 28, 
+          id: "28", 
           field_name: "recipientHobbies", 
           field_type: "textarea", 
           placeholder_key: "recipientHobbies", 
@@ -293,7 +293,7 @@ export const packageSteps = {
           field_order: 3 
         },
         { 
-          id: 29, 
+          id: "29", 
           field_name: "specialOccasion", 
           field_type: "select", 
           placeholder_key: "specialOccasion", 
@@ -309,7 +309,7 @@ export const packageSteps = {
           ]
         },
         { 
-          id: 30, 
+          id: "30", 
           field_name: "eventDate", 
           field_type: "date", 
           placeholder_key: "eventDate", 
@@ -323,7 +323,7 @@ export const packageSteps = {
       title_key: "messageDetails",
       fields: [
         { 
-          id: 31, 
+          id: "31", 
           field_name: "story", 
           field_type: "textarea", 
           placeholder_key: "story", 
@@ -331,7 +331,7 @@ export const packageSteps = {
           field_order: 1 
         },
         { 
-          id: 32, 
+          id: "32", 
           field_name: "specialMemories", 
           field_type: "textarea", 
           placeholder_key: "specialMemories", 
@@ -339,7 +339,7 @@ export const packageSteps = {
           field_order: 2 
         },
         { 
-          id: 33, 
+          id: "33", 
           field_name: "sharedExperiences", 
           field_type: "textarea", 
           placeholder_key: "sharedExperiences", 
@@ -347,7 +347,7 @@ export const packageSteps = {
           field_order: 3 
         },
         { 
-          id: 34, 
+          id: "34", 
           field_name: "insideJokes", 
           field_type: "textarea", 
           placeholder_key: "insideJokes", 
@@ -355,7 +355,7 @@ export const packageSteps = {
           field_order: 4 
         },
         { 
-          id: 35, 
+          id: "35", 
           field_name: "futureWishes", 
           field_type: "textarea", 
           placeholder_key: "futureWishes", 
@@ -363,7 +363,7 @@ export const packageSteps = {
           field_order: 5 
         },
         { 
-          id: 36, 
+          id: "36", 
           field_name: "emotionalTone", 
           field_type: "select", 
           placeholder_key: "emotionalTone", 
@@ -371,7 +371,7 @@ export const packageSteps = {
           field_order: 6 
         },
         { 
-          id: 37, 
+          id: "37", 
           field_name: "keyMoments", 
           field_type: "textarea", 
           placeholder_key: "keyMoments", 
@@ -379,7 +379,7 @@ export const packageSteps = {
           field_order: 7 
         },
         { 
-          id: 38, 
+          id: "38", 
           field_name: "specialWords", 
           field_type: "textarea", 
           placeholder_key: "specialWords", 
@@ -393,7 +393,7 @@ export const packageSteps = {
       title_key: "musicalPreferences",
       fields: [
         { 
-          id: 39, 
+          id: "39", 
           field_name: "musicStyle", 
           field_type: "select", 
           placeholder_key: "musicStyle", 
@@ -401,7 +401,7 @@ export const packageSteps = {
           field_order: 1 
         },
         { 
-          id: 40, 
+          id: "40", 
           field_name: "referenceSong", 
           field_type: "url", 
           placeholder_key: "referenceSong", 
@@ -412,3 +412,45 @@ export const packageSteps = {
     }
   ]
 };
+
+// Mock packages data to maintain compatibility with existing components
+export const packages = [
+  {
+    id: '1',
+    value: 'personal',
+    label_key: 'personalPackage',
+    description_key: 'personalPackageDesc',
+    price_ron: 29900,
+    price_eur: 6000,
+    price_usd: 6500,
+    delivery_time_key: '3-5 days',
+    includes: []
+  },
+  {
+    id: '2',
+    value: 'premium',
+    label_key: 'premiumPackage',
+    description_key: 'premiumPackageDesc',
+    price_ron: 59900,
+    price_eur: 12000,
+    price_usd: 13000,
+    delivery_time_key: '5-7 days',
+    includes: []
+  }
+];
+
+// Mock addons data
+export const addOns = [];
+
+// Type definition for compatibility
+export interface PackageData {
+  id: string;
+  value: string;
+  label_key: string;
+  description_key: string;
+  price_ron: number;
+  price_eur: number;
+  price_usd: number;
+  delivery_time_key: string;
+  includes: any[];
+}

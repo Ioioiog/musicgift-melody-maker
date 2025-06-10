@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Chargement des forfaits...",
   loadingSteps: "Chargement des étapes...",
@@ -150,7 +151,6 @@ export const orderTranslations = {
   // Voice type options
   voiceFeminine: "Voix Féminine",
   voiceMasculine: "Voix Masculine",
-  voiceDuet: "Duo",
   voiceMusicGiftChoice: "Choix de MusicGift",
   
   // Mood options
@@ -198,6 +198,8 @@ export const orderTranslations = {
   futureWishes: "Souhaits d'Avenir",
   
   // Vocal preference options
+  voiceMale: "Voix Masculine",
+  voiceFemale: "Voix Féminine",
   voiceDuet: "Duo",
   
   // Special occasion options
