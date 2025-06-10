@@ -169,23 +169,5 @@ export const orderTranslations = {
   romanianLanguage: "Rumuński",
   englishLanguage: "Angielski", 
   frenchLanguage: "Francuski",
-  italianLanguage: "Włoski",
-
-  // Godparents Melody addon translations
-  godparentsMelodyAddon: "Melodia Rodziców Chrzestnych",
-  godparentsMelodyAddonDescription: "Specjalna melodia dedykowana rodzicom chrzestnym",
-  godparentsDetails: "Szczegóły Rodziców Chrzestnych",
-  godparentsNames: "Imiona Rodziców Chrzestnych",
-  godparentsNamesPlaceholder: "Wprowadź imiona rodziców chrzestnych",
-  godparentsNamesPronunciation: "Wymowa Imion Rodziców Chrzestnych",
-  godparentsRelationshipToCouple: "Jak znasz rodziców chrzestnych?",
-  godparentsRelationshipToCouplelaceholder: "Opisz swoją relację z rodzicami chrzestnymi",
-  godparentsSpecialQualities: "Co czyni ich wyjątkowymi jako rodziców chrzestnych?",
-  godparentsSpecialQualitiesPlaceholder: "Opisz ich specjalne cechy i dlaczego zostali wybrani",
-  godparentsRoleInWedding: "Ich konkretna rola w ceremonii",
-  godparentsRoleInWeddingPlaceholder: "Opisz ich rolę podczas ceremonii ślubnej",
-  messageToGodparents: "Co chcesz im wyrazić",
-  messageToGodparentsPlaceholder: "Twoja osobista wiadomość do rodziców chrzestnych",
-  godparentsMelodyStyle: "Jaki styl ma mieć piosenka?",
-  godparentsMelodyStylePlaceholder: "Opisz styl lub udostępnij link YouTube z podobnym stylem piosenki"
+  italianLanguage: "Włoski"
 };

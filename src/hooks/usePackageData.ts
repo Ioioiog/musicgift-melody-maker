@@ -1,8 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { packages, addons } from '@/data/packages';
-import { Package } from '@/types';
+import { packages, addOns, type PackageData } from '@/data/packages';
 
 export interface StepData {
   id: string;
@@ -34,7 +33,7 @@ export const usePackages = () => {
       }));
       
       console.log('Transformed packages:', transformedPackages);
-      return transformedPackages as Package[];
+      return transformedPackages as PackageData[];
     }
   });
 };
@@ -90,10 +89,10 @@ export const useAddons = () => {
       console.log('Using consolidated addons data...');
       
       // The addons are already in the correct format, just return them
-      console.log('Addons ready for components:', addons);
-      return addons;
+      console.log('Addons ready for components:', addOns);
+      return addOns;
     }
   });
 };
 
-export type { Package as PackageData };
+export type { PackageData };

@@ -33,14 +33,6 @@ export const packagesTranslations = {
   instrumentalDescription: "Creat pe baza unui instrumental construit special pentru tine. Ideal pentru artiști care vor să-și scrie propria melodie si au nevoie de un instrumental personalizat, profesionist si original.",
   giftDescription: "O poveste muzicală dăruită cadou. Perfect pentru a surprinde pe cineva drag – beneficiarul alege singur stilul și atmosfera melodiei.",
   
-  // Missing translations for Gift Card
-  giftCard: "Card Cadou",
-  giftCardDescription: "O poveste muzicală dăruită cadou",
-  
-  // Missing translations for Business Jingle
-  businessJingle: "Jingle Business",
-  businessJingleDescription: "Muzică personalizată pentru a-ți îmbunătăți brandul",
-  
   // Delivery times
   plusDelivery: "1–2 zile lucrătoare",
   personalDelivery: "3–5 zile lucrătoare",

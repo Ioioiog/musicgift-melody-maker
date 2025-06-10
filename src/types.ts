@@ -1,7 +1,7 @@
+
 export interface PackageInclude {
   include_key: string;
   include_order?: number;
-  id?: string;
 }
 
 export interface FieldOption {
@@ -37,24 +37,18 @@ export interface PackageTag {
 export interface Package {
   id?: string | number;
   value: string;
-  label: string;
   label_key: string;
-  tagline_key?: string;
-  description: string;
+  tagline_key: string;
   description_key: string;
   price_ron: number;
   price_eur: number;
-  price_usd: number;
-  delivery_time_key?: string;
+  delivery_time_key: string;
   tag?: string;
   is_active?: boolean;
   is_popular?: boolean;
   includes?: PackageInclude[];
   available_addons: string[];
-  steps?: Step[];
-  color: string;
-  features: string[];
-  category: string;
+  steps: Step[];
 }
 
 export interface Addon {
@@ -64,7 +58,6 @@ export interface Addon {
   description_key: string;
   price_ron: number;
   price_eur: number;
-  price_usd: number;
   is_active?: boolean;
   trigger_field_type?: any;
   trigger_field_config?: any;

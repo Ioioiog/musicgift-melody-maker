@@ -169,23 +169,5 @@ export const orderTranslations = {
   romanianLanguage: "Rumänisch",
   englishLanguage: "Englisch", 
   frenchLanguage: "Französisch",
-  italianLanguage: "Italienisch",
-
-  // Godparents Melody addon translations
-  godparentsMelodyAddon: "Paten-Melodie",
-  godparentsMelodyAddonDescription: "Eine besondere Melodie für die Paten",
-  godparentsDetails: "Paten-Details",
-  godparentsNames: "Namen der Paten",
-  godparentsNamesPlaceholder: "Geben Sie die Namen der Paten ein",
-  godparentsNamesPronunciation: "Aussprache der Paten-Namen",
-  godparentsRelationshipToCouple: "Wie kennen Sie die Paten?",
-  godparentsRelationshipToCouplelaceholder: "Beschreiben Sie Ihre Beziehung zu den Paten",
-  godparentsSpecialQualities: "Was macht sie als Paten besonders?",
-  godparentsSpecialQualitiesPlaceholder: "Beschreiben Sie ihre besonderen Eigenschaften und warum sie gewählt wurden",
-  godparentsRoleInWedding: "Ihre spezifische Rolle in der Zeremonie",
-  godparentsRoleInWeddingPlaceholder: "Beschreiben Sie ihre Rolle während der Hochzeitszeremonie",
-  messageToGodparents: "Was Sie ihnen ausdrücken möchten",
-  messageToGodparentsPlaceholder: "Ihre persönliche Nachricht an die Paten",
-  godparentsMelodyStyle: "Welchen Stil soll das Lied haben?",
-  godparentsMelodyStylePlaceholder: "Beschreiben Sie den Stil oder teilen Sie einen YouTube-Link mit ähnlichem Liedstil"
+  italianLanguage: "Italienisch"
 };

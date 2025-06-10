@@ -18,7 +18,6 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { getAddonPrice } from '@/utils/pricing';
 import { Addon, Package } from '@/types';
 import AudioRecorder from './AudioRecorder';
-import GodparentsDetailsForm from './GodparentsDetailsForm';
 import { getVatValidationError } from '@/utils/vatValidation';
 
 interface FieldOption {
@@ -307,16 +306,6 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
                                     maxDuration={addon.trigger_field_config?.maxDuration || 30}
                                   />
                                 </div>
-                              </div>
-                            )}
-                            
-                            {addon.trigger_field_type === 'godparents-details' && (
-                              <div>
-                                <GodparentsDetailsForm
-                                  values={addonFieldValues[addon.addon_key] || {}}
-                                  onChange={onAddonFieldChange}
-                                  addonKey={addon.addon_key}
-                                />
                               </div>
                             )}
                           </div>
