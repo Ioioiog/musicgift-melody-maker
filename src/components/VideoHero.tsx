@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
@@ -154,7 +155,7 @@ const VideoHero = () => {
         ref={videoRef}
         loop
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover sm:object-center"
+        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center bg-black"
         key={videoSrc}
       >
         <source src={videoSrc} type="video/mp4" />
