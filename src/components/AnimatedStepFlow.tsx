@@ -190,7 +190,7 @@ const AnimatedStepFlow = () => {
                   })}
                   </div>
                   <div>
-                    <div className="text-xs font-medium text-white/90 mb-1">
+                    <div className="text-xs font-medium text-white/90 mb-1 mx-[153px] px-[28px]">
                       {steps[activeStep].title}
                     </div>
                     <h3 className="text-xl font-bold text-white">
@@ -219,7 +219,7 @@ const AnimatedStepFlow = () => {
 
               {/* Footer Note */}
               <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 relative z-10 border border-white/30">
-                <p className="text-xs text-white italic">
+                <p className="text-xs text-white italic mx-[132px]">
                   {steps[activeStep].details.footer}
                 </p>
               </div>
