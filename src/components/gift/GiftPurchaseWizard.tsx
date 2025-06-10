@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -98,7 +97,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
     setCustomAmount(value);
   };
 
-  const validateCustomAmount = (amount: string) => {
+  const validateCustomAmount = (amount: string): boolean => {
     const parsed = parseFloat(amount);
     if (isNaN(parsed) || parsed <= 0) return false;
     
@@ -146,14 +145,14 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
     }
   };
 
-  const canProceed = () => {
+  const canProceed = (): boolean => {
     switch (currentStep) {
       case 0:
-        return selectedAmountType === 'preset' || (selectedAmountType === 'custom' && customAmount && validateCustomAmount(customAmount));
+        return selectedAmountType === 'preset' || (selectedAmountType === 'custom' && customAmount !== '' && validateCustomAmount(customAmount));
       case 1:
-        return formData.sender_name && formData.sender_email && formData.recipient_name && formData.recipient_email;
+        return !!(formData.sender_name && formData.sender_email && formData.recipient_name && formData.recipient_email);
       case 2:
-        return selectedDesign;
+        return !!selectedDesign;
       case 3:
         return true;
       default:
