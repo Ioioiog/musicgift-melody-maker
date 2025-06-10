@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { packages, addOns } from '@/data/packages';
 import { Package, Addon } from '@/types';
+import { transformStepsForWizard } from '@/utils/dynamicStepConfig';
 
 export interface StepData {
   id: string;
@@ -12,6 +13,7 @@ export interface StepData {
     id: string;
     field_name: string;
     field_type: string;
+    label_key?: string;
     placeholder_key?: string;
     required: boolean;
     field_order: number;
@@ -66,9 +68,11 @@ export const usePackageSteps = (packageValue: string) => {
           return [];
         }
 
-        // The steps are already in the correct format since we updated the data structure
-        console.log('Steps ready for component:', packageData.steps);
-        return packageData.steps as StepData[];
+        // Transform steps to ensure all fields have proper label_key for translations
+        const transformedSteps = transformStepsForWizard(packageData.steps);
+        
+        console.log('Steps transformed with label_key mapping:', transformedSteps);
+        return transformedSteps as StepData[];
 
       } catch (error) {
         console.error('Error in usePackageSteps:', error);
