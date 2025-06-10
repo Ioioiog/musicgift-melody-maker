@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Gift, Check, Sparkles, Star, Music, Headphones, X, AlertCircle, Info, Users, Calendar, FileAudio, Video, Globe } from 'lucide-react';
+import { Clock, Gift, Check, Sparkles, Star, Music, Headphones, Calendar } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { usePackages } from '@/hooks/usePackageData';
@@ -46,67 +46,6 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
       default:
         return null;
     }
-  };
-
-  // Define what's NOT included based on package type
-  const getExclusions = (packageValue: string) => {
-    const commonExclusions = [
-      { key: 'noCommercialRights', icon: Globe },
-      { key: 'noPhysicalDelivery', icon: AlertCircle },
-      { key: 'noRefunds', icon: X }
-    ];
-
-    const packageSpecificExclusions: { [key: string]: Array<{ key: string; icon: any }> } = {
-      personal: [
-        { key: 'noDistribution', icon: Globe },
-        { key: 'noCommercialUse', icon: Users },
-        { key: 'noSeparateStems', icon: FileAudio }
-      ],
-      premium: [
-        { key: 'noCommercialUse', icon: Users },
-        { key: 'noSeparateStems', icon: FileAudio }
-      ],
-      business: [
-        { key: 'noPersonalUse', icon: Users }
-      ],
-      test: [
-        { key: 'noFullProduction', icon: AlertCircle },
-        { key: 'noCommercialRights', icon: Globe }
-      ]
-    };
-
-    return [...commonExclusions, ...(packageSpecificExclusions[packageValue] || [])];
-  };
-
-  // Additional package features
-  const getAdditionalFeatures = (packageValue: string) => {
-    const commonFeatures = [
-      { key: 'professionalMixing', icon: Headphones },
-      { key: 'qualityGuarantee', icon: Star },
-      { key: 'customerSupport', icon: Users }
-    ];
-
-    const packageSpecificFeatures: { [key: string]: Array<{ key: string; icon: any }> } = {
-      personal: [
-        { key: 'personalLyrics', icon: Music },
-        { key: 'emotionalConnection', icon: Star }
-      ],
-      premium: [
-        { key: 'distributionReady', icon: Globe },
-        { key: 'professionalMastering', icon: FileAudio }
-      ],
-      business: [
-        { key: 'brandAlignment', icon: Users },
-        { key: 'commercialLicense', icon: Globe }
-      ],
-      artist: [
-        { key: 'fullRights', icon: Globe },
-        { key: 'stemFiles', icon: FileAudio },
-        { key: 'artistCollaboration', icon: Users }
-      ]
-    };
-
-    return [...commonFeatures, ...(packageSpecificFeatures[packageValue] || [])];
   };
 
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
@@ -230,44 +169,6 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                     </div>
                   </div>
                 )}
-
-                {/* Additional Features */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Info className="w-4 h-4 text-blue-600" />
-                    <h4 className="text-sm font-semibold text-gray-900">{t('additionalFeatures')}</h4>
-                  </div>
-                  <div className="grid grid-cols-1 gap-2">
-                    {getAdditionalFeatures(selectedPackageData.value).map((feature, index) => {
-                      const IconComponent = feature.icon;
-                      return (
-                        <div key={index} className="flex items-start gap-2 text-xs text-gray-700 bg-blue-50/50 p-2 rounded-md">
-                          <IconComponent className="w-3 h-3 text-blue-600 mt-0.5 shrink-0" />
-                          <span>{t(feature.key)}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* What's NOT Included */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <X className="w-4 h-4 text-red-600" />
-                    <h4 className="text-sm font-semibold text-gray-900">{t('notIncluded')}</h4>
-                  </div>
-                  <div className="grid grid-cols-1 gap-2">
-                    {getExclusions(selectedPackageData.value).map((exclusion, index) => {
-                      const IconComponent = exclusion.icon;
-                      return (
-                        <div key={index} className="flex items-start gap-2 text-xs text-gray-600 bg-red-50/50 p-2 rounded-md border border-red-100/50">
-                          <IconComponent className="w-3 h-3 text-red-500 mt-0.5 shrink-0" />
-                          <span>{t(exclusion.key)}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
 
                 {/* Package Stats Grid */}
                 <div className="grid grid-cols-2 gap-4 pt-3 border-t border-white/20">
