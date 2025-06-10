@@ -1,4 +1,3 @@
-
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
@@ -364,19 +363,41 @@ export default function TestimonialSlider() {
           <CarouselPrevious className="absolute -left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-200" />
           <CarouselNext className="absolute -right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-200" />
           
-          {/* Pagination Dots */}
-          <div className="flex justify-center gap-2 mt-6">
-            {Array.from({ length: count }, (_, index) => (
-              <button
-                key={index}
-                className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                  index === current - 1 
-                    ? 'bg-white w-6' 
-                    : 'bg-white/40 hover:bg-white/60'
-                }`}
-                onClick={() => api?.scrollTo(index)}
-              />
-            ))}
+          {/* Enhanced Pagination Dots */}
+          <div className="flex justify-center items-center gap-3 mt-8 px-4">
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-full px-4 py-2 border border-white/20">
+              {Array.from({ length: count }, (_, index) => (
+                <motion.button
+                  key={index}
+                  className={`relative overflow-hidden transition-all duration-300 rounded-full ${
+                    index === current - 1 
+                      ? 'w-8 h-3 bg-gradient-to-r from-white to-white/80' 
+                      : 'w-3 h-3 bg-white/40 hover:bg-white/60'
+                  }`}
+                  onClick={() => api?.scrollTo(index)}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                  aria-label={`Go to slide ${index + 1}`}
+                >
+                  {index === current - 1 && (
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+                  <span className="sr-only">
+                    Slide {index + 1} {index === current - 1 ? '(current)' : ''}
+                  </span>
+                </motion.button>
+              ))}
+            </div>
+            
+            {/* Progress indicator */}
+            <div className="text-white/60 text-sm font-medium bg-white/10 backdrop-blur-md rounded-full px-3 py-1 border border-white/20">
+              {current} / {count}
+            </div>
           </div>
         </Carousel>
       </div>
