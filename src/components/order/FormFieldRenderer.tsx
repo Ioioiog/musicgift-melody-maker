@@ -20,6 +20,165 @@ import { Addon, Package } from '@/types';
 import AudioRecorder from './AudioRecorder';
 import { getVatValidationError } from '@/utils/vatValidation';
 
+// Comprehensive mapping of field names to their corresponding translation keys
+const fieldNameToLabelKey: Record<string, string> = {
+  // General fields
+  songTheme: 'songTheme',
+  songLanguage: 'songLanguage',
+  songStyle: 'musicStyle',
+  vocalPreference: 'voicePreference',
+  songStyleYoutube: 'referenceSong',
+  
+  // Recipient fields
+  recipientName: 'recipientName',
+  recipientNamePronunciation: 'pronunciationAudioRecipient',
+  recipientRelation: 'relationship',
+  recipientAge: 'recipientAge',
+  recipientPersonality: 'recipientPersonality',
+  
+  // Message fields
+  specialMessage: 'specialMessage',
+  specialMemories: 'specialMemories',
+  sharedExperiences: 'sharedExperiences',
+  insideJokes: 'insideJokes',
+  futureWishes: 'futureWishes',
+  
+  // Occasion fields
+  occasion: 'occasion',
+  eventDate: 'eventDate',
+  specialOccasion: 'specialOccasion',
+  
+  // Music preferences
+  favoriteGenre: 'favoriteGenre',
+  hobbies: 'hobbies',
+  emotionalTone: 'emotionalTone',
+  keyMoments: 'keyMoments',
+  specialWords: 'specialWords',
+  pronunciationAudioKeywords: 'pronunciationAudioKeywords',
+  referenceSong: 'referenceSong',
+  
+  // Contact fields
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  city: 'city',
+  
+  // Business fields
+  businessName: 'businessName',
+  businessIndustry: 'businessIndustry',
+  businessValues: 'businessValues',
+  companySize: 'companySize',
+  targetMarket: 'targetMarket',
+  brandPersonality: 'brandPersonality',
+  companyHistory: 'companyHistory',
+  uniqueSellingProposition: 'uniqueSellingProposition',
+  
+  // Song requirements
+  songPurpose: 'songPurpose',
+  targetAudience: 'targetAudience',
+  usageContext: 'usageContext',
+  desiredEmotionalResponse: 'desiredEmotionalResponse',
+  keyMessages: 'keyMessages',
+  brandGuidelines: 'brandGuidelines',
+  additionalInfo: 'additionalInfo',
+  competitorAnalysis: 'competitorAnalysis',
+  callToAction: 'callToAction',
+  seasonalTemporalRelevance: 'seasonalTemporalRelevance',
+  
+  // Original song fields
+  originalSongTitle: 'originalSongTitle',
+  originalArtist: 'originalArtist',
+  originalSongLink: 'originalSongLink',
+  
+  // Remix fields
+  remixStyle: 'remixStyle',
+  remixMood: 'remixMood',
+  remixInstructions: 'remixInstructions',
+  
+  // Instrumental fields
+  instrumentalStyle: 'instrumentalStyle',
+  instrumentalMood: 'instrumentalMood',
+  instrumentalTempo: 'instrumentalTempo',
+  instrumentalDescription: 'instrumentalDescription',
+  instrumentalReferences: 'instrumentalReferences',
+  loopRequirements: 'loopRequirements',
+  
+  // Wedding fields
+  coupleNames: 'coupleNames',
+  coupleType: 'coupleType',
+  howMet: 'howMet',
+  coupleNamesPronunciation: 'coupleNamesPronunciation',
+  relationshipDuration: 'relationshipDuration',
+  weddingDate: 'weddingDate',
+  weddingVenueType: 'weddingVenueType',
+  weddingThemeStyle: 'weddingThemeStyle',
+  loveStory: 'loveStory',
+  songAtmosphere: 'songAtmosphere',
+  musicalStyle: 'musicalStyle',
+  voicePreference: 'voicePreference',
+  
+  // Baptism fields
+  childName: 'childName',
+  nameMeaning: 'nameMeaning',
+  birthStory: 'birthStory',
+  childNamePronunciation: 'childNamePronunciation',
+  childAge: 'childAge',
+  parentsNames: 'parentsNames',
+  familyTraditions: 'familyTraditions',
+  baptismDate: 'baptismDate',
+  churchVenue: 'churchVenue',
+  blessingPrayerElements: 'blessingPrayerElements',
+  childPersonality: 'childPersonality',
+  futureHopes: 'futureHopes',
+  familyMessage: 'familyMessage',
+  godparentsMention: 'godparentsMention',
+  godparentsNames: 'godparentsNames',
+  
+  // Coming of age fields
+  celebrantName: 'celebrantName',
+  celebrantNamePronunciation: 'celebrantNamePronunciation',
+  ageMilestone: 'ageMilestone',
+  personalAchievements: 'personalAchievements',
+  personalityTraits: 'personalityTraits',
+  futureAspirations: 'futureAspirations',
+  favoriteMemories: 'favoriteMemories',
+  songVibe: 'songVibe',
+  favoriteArtists: 'favoriteArtists',
+  lyricalThemes: 'lyricalThemes',
+  culturalReferences: 'culturalReferences',
+  energyLevel: 'energyLevel',
+  collaborationPreference: 'collaborationPreference',
+  
+  // Artist package fields
+  realName: 'fullName',
+  yearsActive: 'yearsActive',
+  previousReleases: 'previousReleases',
+  performanceExperience: 'performanceExperience',
+  socialMediaFollowing: 'socialMediaFollowing',
+  musicEducationTraining: 'musicEducationTraining',
+  careerGoals: 'careerGoals',
+  vocalStyle: 'vocalStyle',
+  musicalComplexity: 'musicalComplexity',
+  marketingBudget: 'marketingBudget',
+  releaseStrategy: 'releaseStrategy',
+  
+  // Instrumental package enhanced fields
+  instrumentalLength: 'instrumentalLength',
+  intendedUse: 'intendedUse',
+  
+  // Legal fields
+  invoiceType: 'invoiceType',
+  companyName: 'companyName',
+  vatCode: 'vatCode',
+  registrationNumber: 'registrationNumber',
+  companyAddress: 'companyAddress',
+  representativeName: 'representativeName',
+  acceptMentionObligation: 'acceptMentionObligation',
+  acceptDistribution: 'acceptDistribution',
+  finalNote: 'finalNote'
+};
+
 interface FieldOption {
   value: string;
   label_key: string;
@@ -68,6 +227,23 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   } = useCurrency();
   const [date, setDate] = useState<Date>();
   const [vatError, setVatError] = useState<string | null>(null);
+
+  // Get the appropriate label key with fallback mapping
+  const getLabelKey = (field: Field): string => {
+    // First try to use the provided label_key
+    if (field.label_key) {
+      return field.label_key;
+    }
+    
+    // Fallback to mapping from field_name
+    const mappedKey = fieldNameToLabelKey[field.field_name];
+    if (mappedKey) {
+      return mappedKey;
+    }
+    
+    // Final fallback to field_name itself
+    return field.field_name;
+  };
 
   // Helper function to check if addon should be shown based on package's available_addons
   const shouldShowAddon = (addon: Addon) => {
@@ -363,7 +539,7 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   return (
     <div className="space-y-1">
       <Label className="text-xs font-bold text-white block my-[6px] py-0">
-        {field.label_key ? t(field.label_key) : field.field_name === 'package' ? t('selectYourPackage') : field.field_name}
+        {t(getLabelKey(field)) || field.field_name}
         {field.required && <span className="text-orange-400 ml-1 text-sm">*</span>}
       </Label>
       {renderField()}
