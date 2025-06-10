@@ -187,18 +187,7 @@ img {
   }
 }
 
-.video-hero video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translateX(-50%) translateY(-50%);
-  object-fit: cover;
-  z-index: 0;
-}
+/* Removed conflicting video styles that were overriding Tailwind classes */
 
 /* Enhanced animations for the video background */
 @keyframes fadeInUp {
