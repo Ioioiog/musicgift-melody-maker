@@ -9,6 +9,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useIsMobile } from '@/hooks/use-mobile';
+
 interface OrderSidebarSummaryProps {
   orderData?: {
     selectedPackage?: string;
@@ -16,6 +17,7 @@ interface OrderSidebarSummaryProps {
   };
   giftCard?: any;
 }
+
 const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   orderData,
   giftCard
@@ -33,7 +35,10 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
     currency
   } = useCurrency();
   const isMobile = useIsMobile();
-  const [isCollapsed, setIsCollapsed] = useState(isMobile);
+  
+  // Explicitly set to collapsed by default on mobile
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
   if (!orderData?.selectedPackage) {
     return <div className={isMobile ? "mb-4" : ""}>
         <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
@@ -54,18 +59,24 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
         </Card>
       </div>;
   }
+
   const selectedPackageData = packages.find(pkg => pkg.value === orderData.selectedPackage);
   const selectedAddonsData = (orderData.selectedAddons || []).map(addonKey => addons.find(addon => addon.addon_key === addonKey)).filter(Boolean);
+
   if (!selectedPackageData) return null;
+
   const packagePrice = getPackagePrice(selectedPackageData, currency);
   const addonsPrice = selectedAddonsData.reduce((total, addon) => total + (addon ? getAddonPrice(addon, currency) : 0), 0);
   const subtotal = packagePrice + addonsPrice;
+
   let giftCreditApplied = 0;
   if (giftCard) {
     const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
     giftCreditApplied = Math.min(giftBalance, subtotal);
   }
+
   const finalTotal = Math.max(0, subtotal - giftCreditApplied);
+
   return <div className={isMobile ? "mb-4" : ""}>
       <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl py-0 my-0">
         <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-6 py-2 sm:py-[15px] my-[1px]">
@@ -80,7 +91,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
           </div>
         </CardHeader>
         
-        {!isCollapsed && <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-3 sm:pb-6 my-[8px] py-0">
+        {(!isMobile || !isCollapsed) && <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-3 sm:pb-6 my-[8px] py-0">
             {/* Package Section */}
             <div className="space-y-2 sm:space-y-3">
               <div className="flex justify-between items-start gap-2">
@@ -159,4 +170,5 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
       </Card>
     </div>;
 };
+
 export default OrderSidebarSummary;
