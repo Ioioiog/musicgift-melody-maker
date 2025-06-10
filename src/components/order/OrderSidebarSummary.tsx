@@ -36,7 +36,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
   if (!orderData?.selectedPackage) {
     return <div className={isMobile ? "mb-4" : "lg:sticky lg:top-4"}>
-        <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
+        <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-8">
           <CardHeader className="pb-3 px-3 sm:px-6 py-3 sm:py-4">
             <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
               <Package className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -67,7 +67,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   }
   const finalTotal = Math.max(0, subtotal - giftCreditApplied);
   return <div className={isMobile ? "mb-4" : "lg:sticky lg:top-4"}>
-      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
+      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-8">
         <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-6 py-2 sm:py-[15px] my-[1px]">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
@@ -134,7 +134,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
             {/* Gift Card Credit */}
             {giftCard && giftCreditApplied > 0 && <div className="flex justify-between items-center text-green-400 text-xs sm:text-sm gap-2">
                 <span className="flex items-center gap-1 sm:gap-2 truncate">
-                  <Gift className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
+                  <Gift className="w-3 h-3 sm:w-4 h-4 shrink-0" />
                   <span className="truncate">{t('giftCardCredit', 'Credit card cadou')}</span>
                 </span>
                 <span className="shrink-0">-{currency} {giftCreditApplied.toFixed(2)}</span>
