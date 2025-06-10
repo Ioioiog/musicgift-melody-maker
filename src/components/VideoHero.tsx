@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
@@ -171,12 +172,10 @@ const VideoHero = () => {
 
   return (
     <section className={`video-hero relative overflow-hidden ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
-      {/* Background image - Only visible on desktop */}
-      {!isMobile && (
-        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-          backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)'
-        }}></div>
-      )}
+      {/* Background image - Visible on desktop and mobile */}
+      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
+        backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)'
+      }}></div>
 
       {/* Animated background particles - Mobile only */}
       <div className="absolute inset-0 overflow-hidden md:hidden">
@@ -203,12 +202,13 @@ const VideoHero = () => {
         ))}
       </div>
 
-      {/* Video Background */}
+      {/* Video Background - Positioned below navbar on mobile */}
       <video
         ref={videoRef}
         loop
         playsInline
-        className={`absolute top-0 left-0 w-full h-full object-cover object-center`}
+        className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover object-center`}
+        style={isMobile ? { height: mobileHeight } : {}}
         key={videoSrc}
       >
         <source src={videoSrc} type="video/mp4" />
@@ -217,14 +217,14 @@ const VideoHero = () => {
 
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20">
+        <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20`} style={isMobile ? { height: mobileHeight } : {}}>
           <div className="text-white text-xl">Loading...</div>
         </div>
       )}
 
       {/* Play Button Overlay */}
       {showPlayButton && !isLoading && (
-        <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-20">
+        <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-black/30 flex items-center justify-center z-20`} style={isMobile ? { height: mobileHeight } : {}}>
           <Button
             onClick={handlePlayWithAudio}
             size="lg"
@@ -248,7 +248,7 @@ const VideoHero = () => {
       )}
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
+      <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50`} style={isMobile ? { height: mobileHeight } : {}}></div>
 
       {/* Title at Bottom */}
       <div className={`absolute ${isMobile ? 'bottom-4' : 'bottom-12 sm:bottom-16 md:bottom-20'} left-0 right-0 z-10 text-center text-white px-4`}>
