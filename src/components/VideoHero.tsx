@@ -171,6 +171,12 @@ const VideoHero = () => {
       }`} 
       style={sectionStyle}
     >
+      {/* Background image - Behind everything */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
+        style={{ backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)' }}
+      ></div>
+
       {/* Animated background particles - Mobile only */}
       <div className="absolute inset-0 overflow-hidden md:hidden">
         {[...Array(20)].map((_, i) => (
@@ -196,23 +202,17 @@ const VideoHero = () => {
         ))}
       </div>
 
-      {/* Video Background - Updated to match HeroContent purple gradient */}
+      {/* Video Background - Now with transparent background to show background image */}
       <video 
         ref={videoRef} 
         loop 
         playsInline 
-        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800" 
+        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center" 
         key={videoSrc}
       >
         <source src={videoSrc} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-
-      {/* Background image overlay - Using your uploaded purple musical background */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
-        style={{ backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)' }}
-      ></div>
 
       {/* Loading Overlay - Updated to match HeroContent with purple gradient */}
       {isLoading && (
