@@ -9,6 +9,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useIsMobile } from '@/hooks/use-mobile';
+
 interface OrderSidebarSummaryProps {
   orderData?: {
     selectedPackage?: string;
@@ -16,6 +17,7 @@ interface OrderSidebarSummaryProps {
   };
   giftCard?: any;
 }
+
 const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   orderData,
   giftCard
@@ -36,7 +38,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
   if (!orderData?.selectedPackage) {
     return <div className={isMobile ? "mb-4" : "lg:sticky lg:top-4"}>
-        <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-8">
+        <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-20">
           <CardHeader className="pb-3 px-3 sm:px-6 py-3 sm:py-4">
             <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
               <Package className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -67,7 +69,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   }
   const finalTotal = Math.max(0, subtotal - giftCreditApplied);
   return <div className={isMobile ? "mb-4" : "lg:sticky lg:top-4"}>
-      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-8">
+      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl mt-20">
         <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-6 py-2 sm:py-[15px] my-[1px]">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
@@ -173,4 +175,5 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
       </Card>
     </div>;
 };
+
 export default OrderSidebarSummary;
