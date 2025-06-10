@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Toggle } from '@/components/ui/toggle';
 import { Upload, Plus, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -63,6 +64,9 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
     }
     return `+${price} ${currency}`;
   };
+
+  // Check if Godparents Melody addon is selected
+  const isGodparentsAddonSelected = selectedAddons.includes('godparents-melody');
 
   if (filteredAddons.length === 0) {
     return (
@@ -193,6 +197,120 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
           );
         })}
       </div>
+
+      {/* Godparents Details Section - Conditional */}
+      {isGodparentsAddonSelected && (
+        <Card className="bg-white/10 backdrop-blur-sm border border-orange-400/50 mt-2">
+          <CardContent className="p-2">
+            <h4 className="text-sm font-semibold text-white mb-2 flex items-center">
+              <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+              Godparents Details
+            </h4>
+            
+            <div className="space-y-2">
+              {/* Godparents Names - Required */}
+              <div>
+                <Label className="text-xs font-medium text-white mb-1 block">
+                  Godparents Names <span className="text-red-400">*</span>
+                </Label>
+                <Input
+                  value={addonFieldValues.godparents_names || ''}
+                  onChange={(e) => onAddonFieldChange('godparents_names', e.target.value)}
+                  placeholder="Enter the godparents' full names"
+                  className="bg-white/20 border-white/30 text-white placeholder-white/60 text-xs h-8"
+                  required
+                />
+              </div>
+
+              {/* Godparents Names Pronunciation - Optional */}
+              <div>
+                <Label className="text-xs font-medium text-white mb-1 block">
+                  Godparents Names Pronunciation (Optional)
+                </Label>
+                <AudioRecorder
+                  value={addonFieldValues.godparents_pronunciation || null}
+                  onChange={(audioFile) => onAddonFieldChange('godparents_pronunciation', audioFile)}
+                  maxDuration={30}
+                  className="text-xs"
+                />
+              </div>
+
+              {/* Godparents Relationship to Couple - Required */}
+              <div>
+                <Label className="text-xs font-medium text-white mb-1 block">
+                  How do you know the godparents? <span className="text-red-400">*</span>
+                </Label>
+                <Input
+                  value={addonFieldValues.godparents_relationship || ''}
+                  onChange={(e) => onAddonFieldChange('godparents_relationship', e.target.value)}
+                  placeholder="e.g., Best friends since college, Family members, etc."
+                  className="bg-white/20 border-white/30 text-white placeholder-white/60 text-xs h-8"
+                  required
+                />
+              </div>
+
+              {/* Godparents Special Qualities - Required */}
+              <div>
+                <Label className="text-xs font-medium text-white mb-1 block">
+                  What makes them special as godparents? <span className="text-red-400">*</span>
+                </Label>
+                <Textarea
+                  value={addonFieldValues.godparents_qualities || ''}
+                  onChange={(e) => onAddonFieldChange('godparents_qualities', e.target.value)}
+                  placeholder="Describe their special qualities, values, and what makes them perfect for this role..."
+                  className="bg-white/20 border-white/30 text-white placeholder-white/60 text-xs min-h-[60px] resize-none"
+                  rows={3}
+                  required
+                />
+              </div>
+
+              {/* Godparents Role in Wedding - Optional */}
+              <div>
+                <Label className="text-xs font-medium text-white mb-1 block">
+                  Their specific role in the ceremony (Optional)
+                </Label>
+                <Textarea
+                  value={addonFieldValues.godparents_role || ''}
+                  onChange={(e) => onAddonFieldChange('godparents_role', e.target.value)}
+                  placeholder="Will they be giving readings, holding rings, special blessings, etc.?"
+                  className="bg-white/20 border-white/30 text-white placeholder-white/60 text-xs min-h-[50px] resize-none"
+                  rows={2}
+                />
+              </div>
+
+              {/* Message to Godparents - Required */}
+              <div>
+                <Label className="text-xs font-medium text-white mb-1 block">
+                  What you want to express to them <span className="text-red-400">*</span>
+                </Label>
+                <Textarea
+                  value={addonFieldValues.godparents_message || ''}
+                  onChange={(e) => onAddonFieldChange('godparents_message', e.target.value)}
+                  placeholder="Your heartfelt message to the godparents - gratitude, hopes, promises..."
+                  className="bg-white/20 border-white/30 text-white placeholder-white/60 text-xs min-h-[60px] resize-none"
+                  rows={3}
+                  required
+                />
+              </div>
+
+              {/* Godparents Melody Style - Required */}
+              <div>
+                <Label className="text-xs font-medium text-white mb-1 block">
+                  Godparents Melody Style <span className="text-red-400">*</span>
+                </Label>
+                <Textarea
+                  value={addonFieldValues.godparents_melody_style || ''}
+                  onChange={(e) => onAddonFieldChange('godparents_melody_style', e.target.value)}
+                  placeholder="Same as Main Song, Different Style, Instrumental Only? Do you have a YouTube link to a similar song?"
+                  className="bg-white/20 border-white/30 text-white placeholder-white/60 text-xs min-h-[60px] resize-none"
+                  rows={3}
+                  required
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {selectedAddons.length === 0 && (
         <div className="text-center">
