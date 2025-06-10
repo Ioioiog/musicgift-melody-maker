@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -111,6 +112,25 @@ export const orderTranslations = {
   step: "Step",
   payment: "Payment",
   
+  // Section Headers
+  generalDetails: "General Details",
+  songTheme: "Song Theme",
+  businessDetails: "Business Details",
+  recipientDetails: "Recipient Details",
+  songRequirements: "Song Requirements",
+  additionalRequirements: "Additional Requirements",
+  originalSongDetails: "Original Song Details",
+  messageDetails: "Message Details",
+  remixRequirements: "Remix Requirements",
+  instrumentalDetails: "Instrumental Details",
+  instrumentalRequirements: "Instrumental Requirements",
+  coupleDetails: "Couple Details",
+  childInformation: "Child Information",
+  celebrantInformation: "Celebrant Information",
+  storyAndEmotionalDetails: "Story and Emotional Details",
+  musicalPreferences: "Musical Preferences",
+  confirmation: "Confirmation",
+  
   // Package Descriptions
   personalDescription: "Create a heartfelt, personalized song for someone special in your life",
   premiumDescription: "Professional song production with global distribution on major streaming platforms",
@@ -130,10 +150,12 @@ export const orderTranslations = {
   
   // Common form fields
   recipientName: "Recipient Name",
+  recipientNamePlaceholder: "Enter the recipient's name",
   relationship: "Relationship",
   occasion: "Occasion",
   eventDate: "Event Date (Optional)",
   songLanguage: "Song Language",
+  selectSongLanguage: "Select song language",
   pronunciationAudioRecipient: "Pronunciation Audio (Recipient Name)",
   story: "Your Story",
   emotionalTone: "Emotional Tone",
@@ -141,6 +163,7 @@ export const orderTranslations = {
   specialWords: "Special Words/Phrases",
   pronunciationAudioKeywords: "Pronunciation Audio (Keywords)",
   musicStyle: "Music Style",
+  selectSongStyle: "Select song style",
   referenceSong: "Reference Song/Artist (Optional)",
   fullName: "Your Full Name",
   email: "Email Address",
@@ -151,6 +174,136 @@ export const orderTranslations = {
   voiceFemale: "Female Voice",
   voiceMale: "Male Voice",
   voiceDuet: "Duet (Both Voices)",
+
+  // Song Theme
+  songThemePlaceholder: "Describe the main theme of the song...",
+  
+  // Business fields
+  businessName: "Business Name",
+  businessNamePlaceholder: "Enter your company name",
+  businessIndustry: "Business Industry",
+  businessValues: "Business Values",
+  businessValuesPlaceholder: "Describe your brand values and personality",
+  companySize: "Company Size",
+  targetMarket: "Target Market",
+  brandPersonality: "Brand Personality",
+  companyHistory: "Company History",
+  uniqueSellingProposition: "Unique Selling Proposition",
+  
+  // Song Requirements
+  songPurpose: "Song Purpose",
+  songPurposePlaceholder: "Describe the purpose and goal of the song",
+  targetAudience: "Target Audience",
+  targetAudiencePlaceholder: "Describe your target audience",
+  usageContext: "Usage Context",
+  desiredEmotionalResponse: "Desired Emotional Response",
+  keyMessages: "Key Messages",
+  keyMessagesPlaceholder: "What are the key messages to convey?",
+  brandGuidelines: "Brand Guidelines",
+  brandGuidelinesPlaceholder: "Any specific brand guidelines",
+  additionalInfo: "Additional Information",
+  additionalInfoPlaceholder: "Any additional information",
+  competitorAnalysis: "Competitor Analysis",
+  callToAction: "Call to Action",
+  seasonalTemporalRelevance: "Seasonal/Temporal Relevance",
+  
+  // Recipient Details
+  recipientAge: "Recipient Age",
+  recipientAgePlaceholder: "Enter the recipient's age",
+  recipientRelation: "Recipient Relation",
+  recipientRelationPlaceholder: "Describe your relationship",
+  recipientPersonality: "Recipient Personality",
+  recipientPersonalityPlaceholder: "Describe the recipient's personality",
+  favoriteGenre: "Favorite Genre",
+  hobbies: "Hobbies and Interests",
+  specialOccasion: "Special Occasion",
+  
+  // Original Song Details
+  originalSongTitle: "Original Song Title",
+  originalSongTitlePlaceholder: "Enter the original song title",
+  originalArtist: "Original Artist",
+  originalArtistPlaceholder: "Enter the original artist name",
+  originalSongLink: "Original Song Link",
+  originalSongLinkPlaceholder: "Enter the original song link",
+  
+  // Message Details
+  specialMessage: "Special Message",
+  specialMessagePlaceholder: "Write your special message",
+  specialMemories: "Special Memories",
+  sharedExperiences: "Shared Experiences",
+  insideJokes: "Inside Jokes",
+  futureWishes: "Future Wishes",
+  
+  // Remix Requirements
+  remixStyle: "Remix Style",
+  selectRemixStyle: "Select remix style",
+  remixMood: "Remix Mood",
+  selectRemixMood: "Select remix mood",
+  remixInstructions: "Remix Instructions",
+  remixInstructionsPlaceholder: "Provide specific instructions for the remix",
+  
+  // Instrumental Details
+  instrumentalStyle: "Instrumental Style",
+  selectInstrumentalStyle: "Select instrumental style",
+  instrumentalMood: "Instrumental Mood",
+  selectInstrumentalMood: "Select instrumental mood",
+  instrumentalTempo: "Instrumental Tempo",
+  selectInstrumentalTempo: "Select instrumental tempo",
+  instrumentalDescription: "Instrumental Description",
+  instrumentalDescriptionPlaceholder: "Describe the desired instrumental",
+  instrumentalReferences: "Instrumental References",
+  instrumentalReferencesPlaceholder: "Provide references for the instrumental",
+  loopRequirements: "Loop Requirements",
+  
+  // Couple Details
+  coupleNames: "Couple Names",
+  coupleType: "Couple Type",
+  selectCoupleType: "Select couple type",
+  howMet: "How They Met",
+  coupleNamesPronunciation: "Couple Names Pronunciation",
+  relationshipDuration: "Relationship Duration",
+  weddingDate: "Wedding Date",
+  weddingVenueType: "Wedding Venue Type",
+  weddingThemeStyle: "Wedding Theme/Style",
+  loveStory: "Love Story",
+  songAtmosphere: "Song Atmosphere",
+  selectSongAtmosphere: "Select song atmosphere",
+  musicalStyle: "Musical Style",
+  voicePreference: "Voice Preference",
+  selectVoicePreference: "Select voice preference",
+  
+  // Child Information
+  childName: "Child Name",
+  nameMeaning: "Name Meaning",
+  birthStory: "Birth Story",
+  childNamePronunciation: "Child Name Pronunciation",
+  childAge: "Child Age",
+  parentsNames: "Parents Names",
+  familyTraditions: "Family Traditions",
+  baptismDate: "Baptism Date",
+  churchVenue: "Church/Venue",
+  blessingPrayerElements: "Blessing/Prayer Elements",
+  childPersonality: "Child Personality",
+  futureHopes: "Future Hopes",
+  familyMessage: "Family Message",
+  godparentsMention: "Godparents Mention",
+  godparentsNames: "Godparents Names",
+  
+  // Celebrant Information
+  celebrantName: "Celebrant Name",
+  celebrantNamePronunciation: "Celebrant Name Pronunciation",
+  ageMilestone: "Age Milestone",
+  personalAchievements: "Personal Achievements",
+  personalityTraits: "Personality Traits",
+  futureAspirations: "Future Aspirations",
+  favoriteMemories: "Favorite Memories",
+  songVibe: "Song Vibe",
+  selectSongVibe: "Select song vibe",
+  favoriteArtists: "Favorite Artists",
+  lyricalThemes: "Lyrical Themes",
+  culturalReferences: "Cultural References",
+  energyLevel: "Energy Level",
+  collaborationPreference: "Collaboration Preference",
 
   // New field translations for enhanced packages
   selectVocalPreference: "Select vocal preference",

@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Ładowanie pakietów...",
   loadingSteps: "Ładowanie kroków...",
@@ -111,6 +112,25 @@ export const orderTranslations = {
   step: "Krok",
   payment: "Płatność",
   
+  // Section Headers
+  generalDetails: "Szczegóły Ogólne",
+  songTheme: "Temat Piosenki",
+  businessDetails: "Szczegóły Firmy",
+  recipientDetails: "Szczegóły Odbiorcy",
+  songRequirements: "Wymagania Piosenki",
+  additionalRequirements: "Dodatkowe Wymagania",
+  originalSongDetails: "Szczegóły Oryginalnej Piosenki",
+  messageDetails: "Szczegóły Wiadomości",
+  remixRequirements: "Wymagania Remiksu",
+  instrumentalDetails: "Szczegóły Instrumentalu",
+  instrumentalRequirements: "Wymagania Instrumentalu",
+  coupleDetails: "Szczegóły Pary",
+  childInformation: "Informacje o Dziecku",
+  celebrantInformation: "Informacje o Świętującym",
+  storyAndEmotionalDetails: "Historia i Szczegóły Emocjonalne",
+  musicalPreferences: "Preferencje Muzyczne",
+  confirmation: "Potwierdzenie",
+  
   // Package Descriptions
   personalDescription: "Stwórz wzruszającą, spersonalizowaną piosenkę dla kogoś wyjątkowego w Twoim życiu",
   premiumDescription: "Profesjonalna produkcja piosenek z globalną dystrybucją na głównych platformach streamingowych",
@@ -128,20 +148,14 @@ export const orderTranslations = {
   testimonialQuote: "\"Idealny prezent dla miłośników muzyki! Spersonalizowana piosenka była absolutnie piękna i sprawiła, że nasza rocznica stała się niezapomniana.\"",
   testimonialAuthor: "- Sarah M., Zadowolona Klientka",
   
-  // Existing order translations
-  choosePackage: "Wybierz Pakiet",
-  stepPackage: "Krok",
-  generalDetails: "Szczegóły Ogólne",
-  storyAndEmotionalDetails: "Historia i Szczegóły Emocjonalne",
-  musicalPreferences: "Preferencje Muzyczne",
-  confirmation: "Potwierdzenie",
-  
   // Common form fields
   recipientName: "Imię Odbiorcy",
+  recipientNamePlaceholder: "Wprowadź imię odbiorcy",
   relationship: "Relacja",
   occasion: "Okazja",
   eventDate: "Data Wydarzenia (Opcjonalnie)",
   songLanguage: "Język Piosenki",
+  selectSongLanguage: "Wybierz język piosenki",
   pronunciationAudioRecipient: "Audio Wymowy (Imię Odbiorcy)",
   story: "Twoja Historia",
   emotionalTone: "Ton Emocjonalny",
@@ -149,6 +163,7 @@ export const orderTranslations = {
   specialWords: "Specjalne Słowa/Frazy",
   pronunciationAudioKeywords: "Audio Wymowy (Słowa Kluczowe)",
   musicStyle: "Styl Muzyczny",
+  selectSongStyle: "Wybierz styl piosenki",
   referenceSong: "Piosenka/Artysta Referencyjny (Opcjonalnie)",
   fullName: "Twoje Pełne Imię",
   email: "Adres Email",
@@ -159,6 +174,136 @@ export const orderTranslations = {
   voiceFemale: "Głos Kobiecy",
   voiceMale: "Głos Męski",
   voiceDuet: "Duet (Oba Głosy)",
+
+  // Song Theme
+  songThemePlaceholder: "Opisz główny temat piosenki...",
+  
+  // Business fields
+  businessName: "Nazwa Firmy",
+  businessNamePlaceholder: "Wprowadź nazwę swojej firmy",
+  businessIndustry: "Branża",
+  businessValues: "Wartości Firmy",
+  businessValuesPlaceholder: "Opisz wartości i osobowość swojej marki",
+  companySize: "Wielkość Firmy",
+  targetMarket: "Rynek Docelowy",
+  brandPersonality: "Osobowość Marki",
+  companyHistory: "Historia Firmy",
+  uniqueSellingProposition: "Unikalna Propozycja Wartości",
+  
+  // Song Requirements
+  songPurpose: "Cel Piosenki",
+  songPurposePlaceholder: "Opisz cel i zadanie piosenki",
+  targetAudience: "Grupa Docelowa",
+  targetAudiencePlaceholder: "Opisz swoją grupę docelową",
+  usageContext: "Kontekst Użycia",
+  desiredEmotionalResponse: "Pożądana Reakcja Emocjonalna",
+  keyMessages: "Kluczowe Wiadomości",
+  keyMessagesPlaceholder: "Jakie są kluczowe wiadomości do przekazania?",
+  brandGuidelines: "Wytyczne Marki",
+  brandGuidelinesPlaceholder: "Wszelkie specjalne wytyczne marki",
+  additionalInfo: "Dodatkowe Informacje",
+  additionalInfoPlaceholder: "Wszelkie dodatkowe informacje",
+  competitorAnalysis: "Analiza Konkurencji",
+  callToAction: "Wezwanie do Działania",
+  seasonalTemporalRelevance: "Znaczenie Czasowe",
+  
+  // Recipient Details
+  recipientAge: "Wiek Odbiorcy",
+  recipientAgePlaceholder: "Wprowadź wiek odbiorcy",
+  recipientRelation: "Relacja z Odbiorcą",
+  recipientRelationPlaceholder: "Opisz swoją relację",
+  recipientPersonality: "Osobowość Odbiorcy",
+  recipientPersonalityPlaceholder: "Opisz osobowość odbiorcy",
+  favoriteGenre: "Ulubiony Gatunek",
+  hobbies: "Hobby i Zainteresowania",
+  specialOccasion: "Specjalna Okazja",
+  
+  // Original Song Details
+  originalSongTitle: "Tytuł Oryginalnej Piosenki",
+  originalSongTitlePlaceholder: "Wprowadź tytuł oryginalnej piosenki",
+  originalArtist: "Oryginalny Artysta",
+  originalArtistPlaceholder: "Wprowadź nazwę oryginalnego artysty",
+  originalSongLink: "Link do Oryginalnej Piosenki",
+  originalSongLinkPlaceholder: "Wprowadź link do oryginalnej piosenki",
+  
+  // Message Details
+  specialMessage: "Specjalna Wiadomość",
+  specialMessagePlaceholder: "Napisz swoją specjalną wiadomość",
+  specialMemories: "Specjalne Wspomnienia",
+  sharedExperiences: "Wspólne Doświadczenia",
+  insideJokes: "Wewnętrzne Żarty",
+  futureWishes: "Życzenia na Przyszłość",
+  
+  // Remix Requirements
+  remixStyle: "Styl Remiksu",
+  selectRemixStyle: "Wybierz styl remiksu",
+  remixMood: "Nastrój Remiksu",
+  selectRemixMood: "Wybierz nastrój remiksu",
+  remixInstructions: "Instrukcje Remiksu",
+  remixInstructionsPlaceholder: "Podaj szczegółowe instrukcje dla remiksu",
+  
+  // Instrumental Details
+  instrumentalStyle: "Styl Instrumentalny",
+  selectInstrumentalStyle: "Wybierz styl instrumentalny",
+  instrumentalMood: "Nastrój Instrumentalny",
+  selectInstrumentalMood: "Wybierz nastrój instrumentalny",
+  instrumentalTempo: "Tempo Instrumentalne",
+  selectInstrumentalTempo: "Wybierz tempo instrumentalne",
+  instrumentalDescription: "Opis Instrumentalu",
+  instrumentalDescriptionPlaceholder: "Opisz pożądany instrumental",
+  instrumentalReferences: "Referencje Instrumentalne",
+  instrumentalReferencesPlaceholder: "Podaj referencje dla instrumentalu",
+  loopRequirements: "Wymagania Pętli",
+  
+  // Couple Details
+  coupleNames: "Imiona Pary",
+  coupleType: "Typ Pary",
+  selectCoupleType: "Wybierz typ pary",
+  howMet: "Jak się Poznali",
+  coupleNamesPronunciation: "Wymowa Imion Pary",
+  relationshipDuration: "Czas Trwania Związku",
+  weddingDate: "Data Ślubu",
+  weddingVenueType: "Typ Miejsca Ślubu",
+  weddingThemeStyle: "Temat/Styl Ślubu",
+  loveStory: "Historia Miłości",
+  songAtmosphere: "Atmosfera Piosenki",
+  selectSongAtmosphere: "Wybierz atmosferę piosenki",
+  musicalStyle: "Styl Muzyczny",
+  voicePreference: "Preferencja Głosu",
+  selectVoicePreference: "Wybierz preferencję głosu",
+  
+  // Child Information
+  childName: "Imię Dziecka",
+  nameMeaning: "Znaczenie Imienia",
+  birthStory: "Historia Narodzin",
+  childNamePronunciation: "Wymowa Imienia Dziecka",
+  childAge: "Wiek Dziecka",
+  parentsNames: "Imiona Rodziców",
+  familyTraditions: "Tradycje Rodzinne",
+  baptismDate: "Data Chrztu",
+  churchVenue: "Kościół/Miejsce",
+  blessingPrayerElements: "Elementy Błogosławieństwa/Modlitwy",
+  childPersonality: "Osobowość Dziecka",
+  futureHopes: "Nadzieje na Przyszłość",
+  familyMessage: "Wiadomość od Rodziny",
+  godparentsMention: "Wzmianka o Chrzestnych",
+  godparentsNames: "Imiona Chrzestnych",
+  
+  // Celebrant Information
+  celebrantName: "Imię Świętującego",
+  celebrantNamePronunciation: "Wymowa Imienia Świętującego",
+  ageMilestone: "Kamień Milowy Wieku",
+  personalAchievements: "Osobiste Osiągnięcia",
+  personalityTraits: "Cechy Osobowości",
+  futureAspirations: "Aspiracje na Przyszłość",
+  favoriteMemories: "Ulubione Wspomnienia",
+  songVibe: "Klimat Piosenki",
+  selectSongVibe: "Wybierz klimat piosenki",
+  favoriteArtists: "Ulubieni Artyści",
+  lyricalThemes: "Tematy Liryczne",
+  culturalReferences: "Odniesienia Kulturowe",
+  energyLevel: "Poziom Energii",
+  collaborationPreference: "Preferencja Współpracy",
 
   // New field translations for enhanced packages
   selectVocalPreference: "Wybierz preferencje wokalne",

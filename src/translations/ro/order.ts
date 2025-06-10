@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă etapele...",
@@ -111,6 +112,25 @@ export const orderTranslations = {
   step: "Pasul",
   payment: "Plată",
   
+  // Section Headers
+  generalDetails: "Detalii Generale",
+  songTheme: "Tema Cântecului",
+  businessDetails: "Detalii Afacere",
+  recipientDetails: "Detalii Destinatar",
+  songRequirements: "Cerințe Cântec",
+  additionalRequirements: "Cerințe Adiționale",
+  originalSongDetails: "Detalii Cântec Original",
+  messageDetails: "Detalii Mesaj",
+  remixRequirements: "Cerințe Remix",
+  instrumentalDetails: "Detalii Instrumental",
+  instrumentalRequirements: "Cerințe Instrumental",
+  coupleDetails: "Detalii Cuplu",
+  childInformation: "Informații Copil",
+  celebrantInformation: "Informații Sărbătorit",
+  storyAndEmotionalDetails: "Poveste și Detalii Emoționale",
+  musicalPreferences: "Preferințe Muzicale",
+  confirmation: "Confirmare",
+  
   // Package Descriptions
   personalDescription: "Creați un cântec emoționant și personalizat pentru cineva special din viața dvs.",
   premiumDescription: "Producție profesională de cântece cu distribuție globală pe platformele majore de streaming",
@@ -130,10 +150,12 @@ export const orderTranslations = {
   
   // Common form fields
   recipientName: "Numele Destinatarului",
+  recipientNamePlaceholder: "Introduceți numele destinatarului",
   relationship: "Relația",
   occasion: "Ocazia",
   eventDate: "Data Evenimentului (Opțional)",
   songLanguage: "Limba Cântecului",
+  selectSongLanguage: "Selectați limba cântecului",
   pronunciationAudioRecipient: "Audio Pronunție (Numele Destinatarului)",
   story: "Povestea Dvs.",
   emotionalTone: "Tonul Emoțional",
@@ -141,6 +163,7 @@ export const orderTranslations = {
   specialWords: "Cuvinte/Fraze Speciale",
   pronunciationAudioKeywords: "Audio Pronunție (Cuvinte Cheie)",
   musicStyle: "Stilul Muzical",
+  selectSongStyle: "Selectați stilul cântecului",
   referenceSong: "Cântec/Artist de Referință (Opțional)",
   fullName: "Numele Dvs. Complet",
   email: "Adresa de Email",
@@ -151,6 +174,136 @@ export const orderTranslations = {
   voiceFemale: "Voce Feminină",
   voiceMale: "Voce Masculină",
   voiceDuet: "Duet (Ambele Voci)",
+
+  // Song Theme
+  songThemePlaceholder: "Descrieți tema principală a cântecului...",
+  
+  // Business fields
+  businessName: "Numele Afacerii",
+  businessNamePlaceholder: "Introduceți numele companiei dvs.",
+  businessIndustry: "Industria Afacerii",
+  businessValues: "Valorile Afacerii",
+  businessValuesPlaceholder: "Descrieți valorile mărcii și personalitatea dvs.",
+  companySize: "Dimensiunea Companiei",
+  targetMarket: "Piața Țintă",
+  brandPersonality: "Personalitatea Mărcii",
+  companyHistory: "Istoria Companiei",
+  uniqueSellingProposition: "Propunerea Unică de Vânzare",
+  
+  // Song Requirements
+  songPurpose: "Scopul Cântecului",
+  songPurposePlaceholder: "Descrieți scopul și obiectivul cântecului",
+  targetAudience: "Publicul Țintă",
+  targetAudiencePlaceholder: "Descrieți publicul dvs. țintă",
+  usageContext: "Contextul de Utilizare",
+  desiredEmotionalResponse: "Răspunsul Emoțional Dorit",
+  keyMessages: "Mesajele Cheie",
+  keyMessagesPlaceholder: "Care sunt mesajele cheie de transmis?",
+  brandGuidelines: "Ghidurile Mărcii",
+  brandGuidelinesPlaceholder: "Orice ghiduri specifice ale mărcii",
+  additionalInfo: "Informații Adiționale",
+  additionalInfoPlaceholder: "Orice informații suplimentare",
+  competitorAnalysis: "Analiza Concurenței",
+  callToAction: "Îndemnul la Acțiune",
+  seasonalTemporalRelevance: "Relevanța Sezonieră/Temporală",
+  
+  // Recipient Details
+  recipientAge: "Vârsta Destinatarului",
+  recipientAgePlaceholder: "Introduceți vârsta destinatarului",
+  recipientRelation: "Relația cu Destinatarul",
+  recipientRelationPlaceholder: "Descrieți relația dvs.",
+  recipientPersonality: "Personalitatea Destinatarului",
+  recipientPersonalityPlaceholder: "Descrieți personalitatea destinatarului",
+  favoriteGenre: "Genul Preferat",
+  hobbies: "Hobby-uri și Interese",
+  specialOccasion: "Ocazia Specială",
+  
+  // Original Song Details
+  originalSongTitle: "Titlul Cântecului Original",
+  originalSongTitlePlaceholder: "Introduceți titlul cântecului original",
+  originalArtist: "Artistul Original",
+  originalArtistPlaceholder: "Introduceți numele artistului original",
+  originalSongLink: "Link-ul Cântecului Original",
+  originalSongLinkPlaceholder: "Introduceți link-ul cântecului original",
+  
+  // Message Details
+  specialMessage: "Mesajul Special",
+  specialMessagePlaceholder: "Scrieți mesajul dvs. special",
+  specialMemories: "Amintiri Speciale",
+  sharedExperiences: "Experiențe Împărtășite",
+  insideJokes: "Glume Interne",
+  futureWishes: "Dorințe pentru Viitor",
+  
+  // Remix Requirements
+  remixStyle: "Stilul Remix-ului",
+  selectRemixStyle: "Selectați stilul remix-ului",
+  remixMood: "Atmosfera Remix-ului",
+  selectRemixMood: "Selectați atmosfera remix-ului",
+  remixInstructions: "Instrucțiuni Remix",
+  remixInstructionsPlaceholder: "Furnizați instrucțiuni specifice pentru remix",
+  
+  // Instrumental Details
+  instrumentalStyle: "Stilul Instrumental",
+  selectInstrumentalStyle: "Selectați stilul instrumental",
+  instrumentalMood: "Atmosfera Instrumentală",
+  selectInstrumentalMood: "Selectați atmosfera instrumentală",
+  instrumentalTempo: "Tempo-ul Instrumental",
+  selectInstrumentalTempo: "Selectați tempo-ul instrumental",
+  instrumentalDescription: "Descrierea Instrumentalului",
+  instrumentalDescriptionPlaceholder: "Descrieți instrumentalul dorit",
+  instrumentalReferences: "Referințele Instrumentalului",
+  instrumentalReferencesPlaceholder: "Furnizați referințe pentru instrumental",
+  loopRequirements: "Cerințe pentru Bucle",
+  
+  // Couple Details
+  coupleNames: "Numele Cuplului",
+  coupleType: "Tipul Cuplului",
+  selectCoupleType: "Selectați tipul cuplului",
+  howMet: "Cum S-au Cunoscut",
+  coupleNamesPronunciation: "Pronunția Numelor Cuplului",
+  relationshipDuration: "Durata Relației",
+  weddingDate: "Data Nunții",
+  weddingVenueType: "Tipul Locației de Nuntă",
+  weddingThemeStyle: "Tema/Stilul Nunții",
+  loveStory: "Povestea de Dragoste",
+  songAtmosphere: "Atmosfera Cântecului",
+  selectSongAtmosphere: "Selectați atmosfera cântecului",
+  musicalStyle: "Stilul Muzical",
+  voicePreference: "Preferința Vocii",
+  selectVoicePreference: "Selectați preferința vocii",
+  
+  // Child Information
+  childName: "Numele Copilului",
+  nameMeaning: "Semnificația Numelui",
+  birthStory: "Povestea Nașterii",
+  childNamePronunciation: "Pronunția Numelui Copilului",
+  childAge: "Vârsta Copilului",
+  parentsNames: "Numele Părinților",
+  familyTraditions: "Tradițiile Familiei",
+  baptismDate: "Data Botezului",
+  churchVenue: "Biserica/Locația",
+  blessingPrayerElements: "Elemente de Binecuvântare/Rugăciune",
+  childPersonality: "Personalitatea Copilului",
+  futureHopes: "Speranțe pentru Viitor",
+  familyMessage: "Mesajul Familiei",
+  godparentsMention: "Menționarea Nașilor",
+  godparentsNames: "Numele Nașilor",
+  
+  // Celebrant Information
+  celebrantName: "Numele Sărbătoritului",
+  celebrantNamePronunciation: "Pronunția Numelui Sărbătoritului",
+  ageMilestone: "Momentul Important de Vârstă",
+  personalAchievements: "Realizări Personale",
+  personalityTraits: "Trăsături de Personalitate",
+  futureAspirations: "Aspirații pentru Viitor",
+  favoriteMemories: "Amintiri Preferate",
+  songVibe: "Atmosfera Cântecului",
+  selectSongVibe: "Selectați atmosfera cântecului",
+  favoriteArtists: "Artiști Preferați",
+  lyricalThemes: "Teme Lirice",
+  culturalReferences: "Referințe Culturale",
+  energyLevel: "Nivelul de Energie",
+  collaborationPreference: "Preferința de Colaborare",
 
   // New field translations for enhanced packages
   selectVocalPreference: "Selectați preferința vocală",
