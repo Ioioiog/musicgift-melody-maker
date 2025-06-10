@@ -1,4 +1,5 @@
 
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -24,15 +25,8 @@ const HeroContent = () => {
     };
   }, []);
 
-  const backgroundStyle = {
-    backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
-  };
-
   return (
-    <section className="py-8 px-4 text-white relative overflow-hidden" style={backgroundStyle}>
+    <section className="py-8 px-4 text-white relative overflow-hidden">
       {/* Enhanced overlay with gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
       
@@ -122,3 +116,4 @@ const HeroContent = () => {
 };
 
 export default HeroContent;
+

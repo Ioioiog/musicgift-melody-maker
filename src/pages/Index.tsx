@@ -32,8 +32,13 @@ const Index = () => {
       {/* Video Hero Section */}
       <VideoHero />
 
-      {/* Hero Content Section - Now contains the main call to action */}
-      <HeroContent />
+      {/* Hero Content Section - Now with background */}
+      <div className="relative overflow-hidden" style={backgroundStyle}>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative z-10">
+          <HeroContent />
+        </div>
+      </div>
 
       {/* Scenario Hero Component */}
       <div className="relative overflow-hidden" style={backgroundStyle}>
@@ -43,7 +48,7 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Impact Cards - Moved before steps */}
+      {/* Impact Cards - Already has background */}
       <div className="relative overflow-hidden" style={backgroundStyle}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative z-10">
@@ -67,7 +72,7 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Collaboration Section */}
+      {/* Collaboration Section - Already has background */}
       <CollaborationSection />
 
       {/* CTA Section */}
