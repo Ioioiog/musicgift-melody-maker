@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
@@ -7,12 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Toggle } from '@/components/ui/toggle';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Upload, Plus, Check } from 'lucide-react';
+import { Upload, Plus, Check, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getAddonPrice } from '@/utils/pricing';
 import { Addon, Package } from '@/types';
 import AudioRecorder from './AudioRecorder';
+import { uploadFile, uploadMultipleFiles } from '@/utils/fileUpload';
+import { useToast } from '@/hooks/use-toast';
 
 interface AddonSelectionStepProps {
   selectedPackageData?: Package;
@@ -33,6 +34,8 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
 }) => {
   const { t } = useLanguage();
   const { currency } = useCurrency();
+  const { toast } = useToast();
+  const [uploadingFiles, setUploadingFiles] = useState<Record<string, boolean>>({});
 
   // Filter addons based on the selected package
   const shouldShowAddon = (addon: Addon) => {
@@ -47,15 +50,75 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
 
   const filteredAddons = availableAddons.filter(addon => shouldShowAddon(addon));
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>, addonKey: string) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, addonKey: string) => {
     const files = event.target.files;
-    if (files) {
-      onAddonFieldChange(addonKey, Array.from(files));
+    if (!files || files.length === 0) return;
+
+    setUploadingFiles(prev => ({ ...prev, [addonKey]: true }));
+    
+    try {
+      // Upload all files
+      const fileArray = Array.from(files);
+      const uploadResults = await uploadMultipleFiles(fileArray, addonKey);
+      
+      // Store file URLs in addon field values
+      onAddonFieldChange(addonKey, uploadResults.map(result => ({
+        url: result.url,
+        fileName: result.fileName,
+        fileType: result.fileType,
+        fileSize: result.fileSize,
+        path: result.path
+      })));
+      
+      toast({
+        title: t('filesUploaded', 'Files uploaded'),
+        description: t('filesUploadedSuccessfully', `${fileArray.length} file(s) uploaded successfully`),
+      });
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      toast({
+        title: t('uploadError', 'Upload Error'),
+        description: t('uploadErrorMessage', 'There was an error uploading your files. Please try again.'),
+        variant: 'destructive'
+      });
+    } finally {
+      setUploadingFiles(prev => ({ ...prev, [addonKey]: false }));
+      
+      // Reset the file input to allow uploading the same file again
+      event.target.value = '';
     }
   };
 
-  const handleAudioRecording = (audioBlob: Blob, addonKey: string) => {
-    onAddonFieldChange(addonKey, audioBlob);
+  const handleAudioRecording = async (audioBlob: Blob, addonKey: string) => {
+    setUploadingFiles(prev => ({ ...prev, [addonKey]: true }));
+    
+    try {
+      // Upload audio recording
+      const result = await uploadFile(audioBlob, addonKey);
+      
+      // Store audio URL in addon field values
+      onAddonFieldChange(addonKey, {
+        url: result.url,
+        fileName: result.fileName,
+        fileType: result.fileType,
+        fileSize: result.fileSize,
+        path: result.path
+      });
+      
+      toast({
+        title: t('audioSaved', 'Audio Saved'),
+        description: t('audioSavedSuccessfully', 'Your audio recording has been saved successfully'),
+      });
+    } catch (error) {
+      console.error('Error uploading audio:', error);
+      toast({
+        title: t('uploadError', 'Upload Error'),
+        description: t('audioUploadErrorMessage', 'There was an error saving your audio recording. Please try again.'),
+        variant: 'destructive'
+      });
+    } finally {
+      setUploadingFiles(prev => ({ ...prev, [addonKey]: false }));
+    }
   };
 
   const formatAddonPrice = (addon: Addon) => {
@@ -161,17 +224,40 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                                   onChange={(e) => handleFileUpload(e, addon.addon_key)}
                                   className="hidden"
                                   id={`file-${addon.addon_key}`}
+                                  disabled={uploadingFiles[addon.addon_key]}
                                 />
                                 <label
                                   htmlFor={`file-${addon.addon_key}`}
-                                  className="cursor-pointer text-xs text-orange-300 hover:text-orange-200"
+                                  className={`cursor-pointer text-xs text-orange-300 hover:text-orange-200 ${uploadingFiles[addon.addon_key] ? 'opacity-50' : ''}`}
                                 >
-                                  {t('clickToUploadFiles')}
+                                  {uploadingFiles[addon.addon_key] ? (
+                                    <span className="flex items-center justify-center">
+                                      <Loader2 className="w-3 h-3 animate-spin mr-1" />
+                                      {t('uploadingFiles')}
+                                    </span>
+                                  ) : (
+                                    t('clickToUploadFiles')
+                                  )}
                                 </label>
                                 <p className="text-xs text-white/60 mt-0.5">
                                   {t('maxFiles')} {addon.trigger_field_config?.maxFiles || 10} {t('files')}, 
                                   {addon.trigger_field_config?.maxTotalSizeMb || 150}MB {t('totalSize')}
                                 </p>
+                                
+                                {/* Display uploaded files */}
+                                {addonFieldValues[addon.addon_key] && Array.isArray(addonFieldValues[addon.addon_key]) && addonFieldValues[addon.addon_key].length > 0 && (
+                                  <div className="mt-2 border-t border-white/10 pt-1.5">
+                                    <p className="text-xs font-medium text-white mb-1">{t('uploadedFiles')}:</p>
+                                    <ul className="text-xs text-white/80">
+                                      {addonFieldValues[addon.addon_key].map((file: any, index: number) => (
+                                        <li key={index} className="flex items-center space-x-1">
+                                          <Check className="w-3 h-3 text-green-400" />
+                                          <span className="truncate">{file.fileName}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           )}
@@ -182,10 +268,23 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                                 {t('recordAudioMessage')}
                               </Label>
                               <AudioRecorder
-                                value={addonFieldValues[addon.addon_key] || null}
-                                onChange={(audioFile) => onAddonFieldChange(addon.addon_key, audioFile)}
+                                value={addonFieldValues[addon.addon_key] ? new File([new Blob()], "audio.webm", { type: "audio/webm" }) : null}
+                                onChange={(audioBlob) => handleAudioRecording(audioBlob, addon.addon_key)}
                                 maxDuration={addon.trigger_field_config?.maxDuration || 30}
+                                disabled={uploadingFiles[addon.addon_key]}
                               />
+                              
+                              {/* Display uploaded audio */}
+                              {addonFieldValues[addon.addon_key] && addonFieldValues[addon.addon_key].url && (
+                                <div className="mt-2 border-t border-white/10 pt-1.5">
+                                  <p className="text-xs font-medium text-white mb-1">{t('savedAudio')}:</p>
+                                  <div className="flex items-center space-x-2">
+                                    <Check className="w-3 h-3 text-green-400" />
+                                    <span className="text-xs text-white/80">{t('audioSavedSuccessfully')}</span>
+                                  </div>
+                                  <audio controls className="w-full mt-2 h-8" src={addonFieldValues[addon.addon_key].url} />
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
@@ -249,11 +348,20 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                   Godparents Names Pronunciation (Optional)
                 </Label>
                 <AudioRecorder
-                  value={addonFieldValues.godparents_pronunciation || null}
-                  onChange={(audioFile) => onAddonFieldChange('godparents_pronunciation', audioFile)}
+                  value={addonFieldValues.godparents_pronunciation?.url ? new File([new Blob()], "audio.webm", { type: "audio/webm" }) : null}
+                  onChange={(audioBlob) => handleAudioRecording(audioBlob, 'godparents_pronunciation')}
                   maxDuration={30}
                   className="text-xs"
+                  disabled={uploadingFiles['godparents_pronunciation']}
                 />
+                
+                {/* Display uploaded audio */}
+                {addonFieldValues.godparents_pronunciation && addonFieldValues.godparents_pronunciation.url && (
+                  <div className="mt-2 border-t border-white/10 pt-1.5">
+                    <p className="text-xs font-medium text-white mb-1">{t('savedAudio')}:</p>
+                    <audio controls className="w-full mt-2 h-8" src={addonFieldValues.godparents_pronunciation.url} />
+                  </div>
+                )}
               </div>
 
               {/* Godparents Relationship to Couple - Required */}

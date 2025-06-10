@@ -1,4 +1,3 @@
-
 export interface OrderFormData {
   fullName?: string;
   email?: string;
@@ -6,6 +5,14 @@ export interface OrderFormData {
   recipientName?: string;
   customerName?: string;
   [key: string]: any; // Allow for additional dynamic form fields
+}
+
+export interface FileMetadata {
+  url: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  path?: string;
 }
 
 export interface OrderData {
@@ -40,6 +47,7 @@ export interface OrderData {
   discount_code?: string;
   discount_amount?: number;
   form_data: any; // JSON data from Supabase
+  files?: FileMetadata[];
   created_at?: string;
   updated_at?: string;
   user_id?: string;

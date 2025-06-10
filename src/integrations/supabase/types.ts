@@ -731,6 +731,56 @@ export type Database = {
         }
         Relationships: []
       }
+      order_attachments: {
+        Row: {
+          addon_key: string
+          created_at: string | null
+          field_name: string
+          file_name: string
+          file_size: number
+          file_type: string
+          file_url: string
+          id: string
+          order_id: string | null
+          updated_at: string | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          addon_key: string
+          created_at?: string | null
+          field_name: string
+          file_name: string
+          file_size: number
+          file_type: string
+          file_url: string
+          id?: string
+          order_id?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          addon_key?: string
+          created_at?: string | null
+          field_name?: string
+          file_name?: string
+          file_size?: number
+          file_type?: string
+          file_url?: string
+          id?: string
+          order_id?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_attachments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           created_at: string | null

@@ -15,6 +15,7 @@ import { useGiftCardByCode } from "@/hooks/useGiftCards";
 import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { FileMetadata } from "@/types/order";
 
 const Order = () => {
   const { toast } = useToast();
@@ -58,6 +59,49 @@ const Order = () => {
       return total + (addon ? getAddonPrice(addon, currency) : 0);
     }, 0);
     return packagePrice + addonsPrice;
+  };
+
+  // Extract file metadata from addonFieldValues
+  const extractFileData = (addonFieldValues: Record<string, any>) => {
+    const fileData: Record<string, any> = {};
+    
+    // Go through all addon field values
+    Object.entries(addonFieldValues).forEach(([key, value]) => {
+      // Check if the value has a url property (single file/audio)
+      if (value && typeof value === 'object' && 'url' in value) {
+        fileData[key] = value;
+      } 
+      // Check if it's an array of file objects
+      else if (Array.isArray(value) && value.length > 0 && 'url' in value[0]) {
+        fileData[key] = value;
+      }
+    });
+    
+    return fileData;
+  };
+
+  // Associate uploaded files with the order after creation
+  const associateFilesWithOrder = async (orderId: string, addonFieldValues: Record<string, any>) => {
+    const fileData = extractFileData(addonFieldValues);
+    
+    // Skip if no files to associate
+    if (Object.keys(fileData).length === 0) {
+      return;
+    }
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('associate-files-with-order', {
+        body: { orderId, fileData }
+      });
+      
+      if (error) {
+        console.error('Error associating files with order:', error);
+      } else {
+        console.log(`✅ Files associated with order:`, data);
+      }
+    } catch (error) {
+      console.error('Error invoking associate-files function:', error);
+    }
   };
 
   const handleOrderComplete = async (orderData: any) => {
@@ -183,6 +227,9 @@ const Order = () => {
         navigate('/payment/error?orderId=' + paymentResponse?.orderId + '&error=' + errorCode);
         return;
       }
+
+      // Associate files with the created order
+      await associateFilesWithOrder(paymentResponse.orderId, orderData.addonFieldValues || {});
 
       // If gift card was used, create redemption record
       if (appliedGiftCard && giftCreditApplied > 0) {
