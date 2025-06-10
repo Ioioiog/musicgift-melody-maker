@@ -68,9 +68,6 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
   // Check if Godparents Melody addon is selected - FIXED KEY
   const isGodparentsAddonSelected = selectedAddons.includes('godparentsMelody');
 
-  // Check if Social Media Rights addon is selected
-  const isSocialMediaRightsSelected = selectedAddons.includes('socialMediaRights');
-
   if (filteredAddons.length === 0) {
     return (
       <div className="space-y-1.5">
@@ -190,6 +187,26 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                               />
                             </div>
                           )}
+                        </div>
+                      )}
+
+                      {/* Social Media Rights Agreement - Show within this addon's card */}
+                      {isSelected && addon.addon_key === 'socialMediaRights' && (
+                        <div className="mt-1 p-1 bg-white/10 backdrop-blur-sm rounded-md border border-white/20">
+                          <div className="flex items-start space-x-2">
+                            <Checkbox
+                              id="social-media-agreement"
+                              checked={addonFieldValues.social_media_agreement || false}
+                              onCheckedChange={(checked) => onAddonFieldChange('social_media_agreement', checked)}
+                              className="mt-0.5"
+                            />
+                            <Label 
+                              htmlFor="social-media-agreement" 
+                              className="text-xs text-white cursor-pointer leading-relaxed"
+                            >
+                              I accept if I post the song on any social media platform I will tag 'Music Gift by Mango Records'.
+                            </Label>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -315,33 +332,6 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
         </Card>
       )}
 
-      {/* Social Media Rights Agreement Section - Conditional */}
-      {isSocialMediaRightsSelected && (
-        <Card className="bg-white/10 backdrop-blur-sm border border-blue-400/50 mt-2">
-          <CardContent className="p-2">
-            <h4 className="text-sm font-semibold text-white mb-2 flex items-center">
-              <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-              Social Media Rights Agreement
-            </h4>
-            
-            <div className="flex items-start space-x-2">
-              <Checkbox
-                id="social-media-agreement"
-                checked={addonFieldValues.social_media_agreement || false}
-                onCheckedChange={(checked) => onAddonFieldChange('social_media_agreement', checked)}
-                className="mt-0.5"
-              />
-              <Label 
-                htmlFor="social-media-agreement" 
-                className="text-xs text-white cursor-pointer leading-relaxed"
-              >
-                I accept if I post the song on any social media platform I will tag 'Music Gift by Mango Records'.
-              </Label>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {selectedAddons.length === 0 && (
         <div className="text-center">
           <Card className="bg-white/10 backdrop-blur-sm border border-white/20">
@@ -358,3 +348,5 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
 };
 
 export default AddonSelectionStep;
+
+</edits_to_apply>
