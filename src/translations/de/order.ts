@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Lade Pakete...",
   loadingSteps: "Lade Schritte...",
@@ -72,6 +71,58 @@ export const orderTranslations = {
   files: "Dateien",
   totalSize: "gesamt",
   recordAudioMessage: "Audio-Nachricht aufnehmen",
+  
+  // Universal UI Elements
+  selectAddons: "Zusatzleistungen auswählen",
+  enhanceYourPackage: "Verbessern Sie Ihr Paket mit zusätzlichen Optionen",
+  contactDetailsStep: "Kontaktdetails & Rechtliches",
+  fillContactAndLegalInfo: "Füllen Sie Ihre Kontaktdaten aus und akzeptieren Sie die rechtlichen Bedingungen",
+  choosePaymentMethod: "Zahlungsmethode wählen",
+  selectPaymentProvider: "Wählen Sie, wie Sie für Ihre Bestellung bezahlen möchten",
+  proceedToNextStep: "Sie können zum nächsten Schritt gehen",
+  
+  // File Upload
+  uploadingFiles: "Dateien werden hochgeladen...",
+  filesUploaded: "Dateien hochgeladen",
+  filesUploadedSuccessfully: "Dateien erfolgreich hochgeladen",
+  uploadedFiles: "Hochgeladene Dateien",
+  savedAudio: "Audio gespeichert",
+  audioSaved: "Audio Gespeichert",
+  audioSavedSuccessfully: "Audio erfolgreich gespeichert",
+  audioUploadErrorMessage: "Beim Speichern Ihrer Audioaufnahme ist ein Fehler aufgetreten",
+  
+  // Company/Invoice Details
+  invoiceType: "Rechnungstyp",
+  individual: "Privatperson",
+  company: "Unternehmen",
+  companyName: "Firmenname",
+  vatCode: "USt-IdNr.",
+  registrationNumber: "Registrierungsnummer",
+  companyAddress: "Firmenadresse",
+  representativeName: "Name des Vertreters",
+  address: "Adresse",
+  city: "Stadt",
+  
+  // VAT Validation
+  vatCodeTooShort: "USt-IdNr. ist zu kurz",
+  vatCodeInvalidFormat: "Ungültiges USt-IdNr. Format",
+  
+  // Step Progress
+  step: "Schritt",
+  payment: "Zahlung",
+  
+  // Package Descriptions
+  personalDescription: "Erstellen Sie ein berührendes, personalisiertes Lied für jemand Besonderen in Ihrem Leben",
+  premiumDescription: "Professionelle Liedproduktion mit globaler Distribution auf großen Streaming-Plattformen",
+  businessDescription: "Maßgeschneiderte Musik passend zu Ihrer Markenidentität und Marketingbedürfnissen",
+  artistDescription: "Starten Sie Ihre Musikkarriere mit professioneller Produktion und Distribution",
+  remixDescription: "Verwandeln Sie Ihr bestehendes Lied mit frischen Beats und moderner Produktion",
+  instrumentalDescription: "Maßgeschneiderter Instrumental-Track perfekt für Ihre kreativen Projekte",
+  plusDescription: "Schnelle und erschwingliche musikalische Nachricht für jeden Anlass",
+  giftDescription: "Musikalische Geschenkkarte, die Ihrem Liebsten ermöglicht, ihr perfektes Lied zu wählen",
+  weddingDescription: "Ihr einzigartiges Hochzeitstanzlied, nur für Ihren besonderen Tag erstellt",
+  baptismDescription: "Personalisierte Melodie zur Feier dieses heiligen Meilensteins",
+  comingOfAgeDescription: "Feierliche Hymne für diesen wichtigen Lebensübergang",
   
   // Testimonial
   testimonialQuote: "\"Das perfekte Geschenk für Musikliebhaber! Das personalisierte Lied war absolut wunderschön und machte unseren Jahrestag unvergesslich.\"",

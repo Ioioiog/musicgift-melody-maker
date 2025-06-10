@@ -1,5 +1,133 @@
-
 export const orderTranslations = {
+  loadingPackages: "Ładowanie pakietów...",
+  loadingSteps: "Ładowanie kroków...",
+  errorLoadingSteps: "Błąd ładowania kroków",
+  errorLoadingStepsDesc: "Nie można załadować konfiguracji dla tego pakietu. Spróbuj ponownie lub skontaktuj się z obsługą.",
+  chooseAnotherPackage: "Wybierz inny pakiet",
+  tryAgain: "Spróbuj ponownie",
+  noStepsConfigured: "Brak skonfigurowanych kroków",
+  noStepsConfiguredDesc: "Ten pakiet nie ma jeszcze skonfigurowanych kroków. Skontaktuj się z obsługą lub wybierz inny pakiet.",
+  selectYourPackage: "Wybierz swój pakiet",
+  selectOption: "Wybierz opcję",
+  selected: "Wybrane",
+  more: "więcej",
+  completeRequiredFields: "Proszę wypełnić wszystkie wymagane pola",
+  completeRequiredFieldsDesc: "Upewnij się, że wszystkie wymagane pola są wypełnione przed kontynuowaniem.",
+  somethingWentWrong: "Coś poszło nie tak",
+  tryAgainSupport: "Spróbuj ponownie lub skontaktuj się z obsługą, jeśli problem się utrzymuje.",
+  stepPackage: "Krok",
+  of: "z",
+  progress: "Postęp",
+  whatsIncluded: "Co jest zawarte",
+  professionalQuality: "Profesjonalna jakość",
+  previous: "Poprzedni",
+  continue: "Kontynuuj",
+  next: "Następny",
+  submitting: "Wysyłanie...",
+  completeOrder: "Złóż zamówienie",
+  choosePackage: "Wybierz pakiet",
+  pickDate: "Wybierz datę",
+  orderDetails: "Szczegóły zamówienia",
+  completeAllSteps: "Ukończ wszystkie kroki, aby sfinalizować zamówienie.",
+  submitOrder: "Złóż zamówienie",
+  loadingGiftCard: "Ładowanie karty podarunkowej...",
+  giftCardApplied: "Karta podarunkowa zastosowana",
+  giftCardAppliedDesc: "Karta podarunkowa jest gotowa do użycia dla Twojego zamówienia.",
+  
+  // Toast messages
+  orderSuccess: "Zamówienie utworzone",
+  orderSuccessMessage: "Twoje zamówienie zostało pomyślnie utworzone. To używa danych demonstracyjnych.",
+  orderError: "Błąd",
+  orderErrorMessage: "Wystąpił błąd",
+  
+  // Help section
+  needHelp: "Potrzebujesz pomocy?",
+  mondayToFriday: "Poniedziałek - Piątek, 9:00 - 18:00",
+  
+  // Package tags
+  popular: "Popularne",
+  premium: "Premium",
+  new: "Nowe",
+  gift: "Prezent",
+  
+  // Order Summary
+  orderSummary: "Podsumowanie Zamówienia",
+  addons: "Dodatki",
+  subtotal: "Suma częściowa",
+  total: "Łącznie",
+  giftCardDiscount: "Zniżka z Karty Podarunkowej",
+  fullyCoveredByGiftCard: "W pełni pokryte przez kartę podarunkową",
+  giftCardFrom: "Od:",
+  giftCardBalance: "Saldo:",
+  giftCardRemaining: "Pozostało po zamówieniu:",
+  
+  // Form Field Renderer
+  noAddonsAvailable: "Brak dostępnych dodatków dla tego pakietu",
+  fieldConfigurationError: "Błąd konfiguracji pola: Brak dostępnych opcji",
+  unknownFieldType: "Nieznany typ pola: {fieldType}",
+  uploadFiles: "Prześlij Pliki",
+  clickToUploadFiles: "Kliknij, aby przesłać pliki",
+  maxFiles: "Maks.",
+  files: "pliki",
+  totalSize: "łącznie",
+  recordAudioMessage: "Nagraj Wiadomość Audio",
+  
+  // Universal UI Elements
+  selectAddons: "Wybierz Dodatki",
+  enhanceYourPackage: "Ulepsz swój pakiet dodatkowymi opcjami",
+  contactDetailsStep: "Dane Kontaktowe i Prawne",
+  fillContactAndLegalInfo: "Wypełnij dane kontaktowe i zaakceptuj warunki prawne",
+  choosePaymentMethod: "Wybierz Metodę Płatności",
+  selectPaymentProvider: "Wybierz sposób płatności za zamówienie",
+  proceedToNextStep: "Możesz przejść do następnego kroku",
+  
+  // File Upload
+  uploadingFiles: "Przesyłanie plików...",
+  filesUploaded: "Pliki przesłane",
+  filesUploadedSuccessfully: "Pliki przesłane pomyślnie",
+  uploadedFiles: "Przesłane pliki",
+  savedAudio: "Audio zapisane",
+  audioSaved: "Audio Zapisane",
+  audioSavedSuccessfully: "Audio zapisane pomyślnie",
+  audioUploadErrorMessage: "Wystąpił błąd podczas zapisywania nagrania audio",
+  
+  // Company/Invoice Details
+  invoiceType: "Typ Faktury",
+  individual: "Osoba Fizyczna",
+  company: "Firma",
+  companyName: "Nazwa Firmy",
+  vatCode: "NIP",
+  registrationNumber: "Numer Rejestracyjny",
+  companyAddress: "Adres Firmy",
+  representativeName: "Imię Przedstawiciela",
+  address: "Adres",
+  city: "Miasto",
+  
+  // VAT Validation
+  vatCodeTooShort: "NIP jest za krótki",
+  vatCodeInvalidFormat: "Nieprawidłowy format NIP",
+  
+  // Step Progress
+  step: "Krok",
+  payment: "Płatność",
+  
+  // Package Descriptions
+  personalDescription: "Stwórz wzruszającą, spersonalizowaną piosenkę dla kogoś wyjątkowego w Twoim życiu",
+  premiumDescription: "Profesjonalna produkcja piosenek z globalną dystrybucją na głównych platformach streamingowych",
+  businessDescription: "Muzyka dostosowana do tożsamości Twojej marki i potrzeb marketingowych",
+  artistDescription: "Rozpocznij karierę muzyczną z profesjonalną produkcją i dystrybucją",
+  remixDescription: "Przekształć swoją istniejącą piosenkę świeżymi rytmami i nowoczesną produkcją",
+  instrumentalDescription: "Niestandardowa ścieżka instrumentalna idealna dla Twoich kreatywnych projektów",
+  plusDescription: "Szybka i przystępna cenowo wiadomość muzyczna na każdą okazję",
+  giftDescription: "Muzyczna karta podarunkowa pozwalająca bliskiej osobie wybrać idealną piosenkę",
+  weddingDescription: "Twoja unikalna piosenka taneczna na ślub, stworzona specjalnie na Twój wyjątkowy dzień",
+  baptismDescription: "Spersonalizowana melodia na uczczenie tego świętego momentu",
+  comingOfAgeDescription: "Celebracyjny hymn na to ważne przejście w życiu",
+  
+  // Testimonial
+  testimonialQuote: "\"Idealny prezent dla miłośników muzyki! Spersonalizowana piosenka była absolutnie piękna i sprawiła, że nasza rocznica stała się niezapomniana.\"",
+  testimonialAuthor: "- Sarah M., Zadowolona Klientka",
+  
   // Existing order translations
   choosePackage: "Wybierz Pakiet",
   stepPackage: "Krok",
@@ -283,22 +411,17 @@ export const orderTranslations = {
   // Form validation and UI
   required: "Wymagane",
   optional: "Opcjonalne",
-  next: "Dalej",
-  previous: "Wstecz",
   submit: "Złóż Zamówienie",
   loading: "Przetwarzanie...",
-  selectOption: "Wybierz opcję",
   uploadFile: "Prześlij plik",
   chooseDate: "Wybierz datę",
   
   // Error messages
   fieldRequired: "To pole jest wymagane",
-  invalidEmail: "Wprowadź poprawny adres email",
-  invalidUrl: "Wprowadź poprawny URL",
+  invalidEmail: "Wprowadź prawidłowy adres email",
+  invalidUrl: "Wprowadź prawidłowy URL",
   fileSizeError: "Rozmiar pliku musi być mniejszy niż 10MB",
   fileTypeError: "Nieprawidłowy typ pliku",
-  fieldConfigurationError: "Błąd konfiguracji pola: Brak dostępnych opcji",
-  unknownFieldType: "Nieznany typ pola: {fieldType}",
   
   // Success messages
   stepCompleted: "Krok ukończony pomyślnie",
@@ -310,16 +433,16 @@ export const orderTranslations = {
   packageContextBusiness: "Niestandardowa muzyka dla Twojej marki",
   packageContextArtist: "Rozpocznij swoją karierę muzyczną",
   packageContextRemix: "Przekształć swoją istniejącą piosenkę",
-  packageContextInstrumental: "Niestandardowy utwór instrumentalny",
-  packageContextPlus: "Szybka muzyczna wiadomość",
+  packageContextInstrumental: "Niestandardowa ścieżka instrumentalna",
+  packageContextPlus: "Szybka wiadomość muzyczna",
   packageContextGift: "Muzyczna karta podarunkowa",
-  packageContextWedding: "Unikalna piosenka na pierwszy taniec",
+  packageContextWedding: "Unikalna piosenka taneczna na ślub",
   packageContextBaptism: "Spersonalizowana melodia na chrzest",
-  packageContextComingOfAge: "Hymn na 18. urodziny",
+  packageContextComingOfAge: "Hymn 18. urodzin",
 
   // Language options
   romanianLanguage: "Rumuński",
-  englishLanguage: "Angielski", 
+  englishLanguage: "Angielski",
   frenchLanguage: "Francuski",
   italianLanguage: "Włoski"
 };

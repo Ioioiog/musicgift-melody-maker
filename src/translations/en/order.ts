@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -72,6 +71,58 @@ export const orderTranslations = {
   files: "files",
   totalSize: "total",
   recordAudioMessage: "Record Audio Message",
+  
+  // Universal UI Elements
+  selectAddons: "Select Add-ons",
+  enhanceYourPackage: "Enhance your package with additional options",
+  contactDetailsStep: "Contact Details & Legal",
+  fillContactAndLegalInfo: "Fill in your contact details and accept the legal terms",
+  choosePaymentMethod: "Choose Payment Method",
+  selectPaymentProvider: "Select how you'd like to pay for your order",
+  proceedToNextStep: "You can proceed to the next step",
+  
+  // File Upload
+  uploadingFiles: "Uploading files...",
+  filesUploaded: "Files uploaded",
+  filesUploadedSuccessfully: "Files uploaded successfully",
+  uploadedFiles: "Uploaded files",
+  savedAudio: "Saved audio",
+  audioSaved: "Audio Saved",
+  audioSavedSuccessfully: "Audio saved successfully",
+  audioUploadErrorMessage: "There was an error saving your audio recording",
+  
+  // Company/Invoice Details
+  invoiceType: "Invoice Type",
+  individual: "Individual",
+  company: "Company",
+  companyName: "Company Name",
+  vatCode: "VAT Code",
+  registrationNumber: "Registration Number",
+  companyAddress: "Company Address",
+  representativeName: "Representative Name",
+  address: "Address",
+  city: "City",
+  
+  // VAT Validation
+  vatCodeTooShort: "VAT code is too short",
+  vatCodeInvalidFormat: "Invalid VAT code format",
+  
+  // Step Progress
+  step: "Step",
+  payment: "Payment",
+  
+  // Package Descriptions
+  personalDescription: "Create a heartfelt, personalized song for someone special in your life",
+  premiumDescription: "Professional song production with global distribution on major streaming platforms",
+  businessDescription: "Custom music tailored to your brand identity and marketing needs",
+  artistDescription: "Launch your music career with professional production and distribution",
+  remixDescription: "Transform your existing song with fresh beats and modern production",
+  instrumentalDescription: "Custom instrumental track perfect for your creative projects",
+  plusDescription: "Quick and affordable musical message for any occasion",
+  giftDescription: "Musical gift card that lets your loved one choose their perfect song",
+  weddingDescription: "Your unique wedding dance song, created just for your special day",
+  baptismDescription: "Personalized melody to celebrate this sacred milestone",
+  comingOfAgeDescription: "Celebratory anthem for this important life transition",
   
   // Testimonial
   testimonialQuote: "\"The perfect gift for music lovers! The personalized song was absolutely beautiful and made our anniversary unforgettable.\"",

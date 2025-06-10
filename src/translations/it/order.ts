@@ -1,4 +1,133 @@
 export const orderTranslations = {
+  loadingPackages: "Caricamento pacchetti...",
+  loadingSteps: "Caricamento passaggi...",
+  errorLoadingSteps: "Errore nel caricamento dei passaggi",
+  errorLoadingStepsDesc: "Impossibile caricare la configurazione per questo pacchetto. Riprova o contatta il supporto.",
+  chooseAnotherPackage: "Scegli un altro pacchetto",
+  tryAgain: "Riprova",
+  noStepsConfigured: "Nessun passaggio configurato",
+  noStepsConfiguredDesc: "Questo pacchetto non ha ancora passaggi configurati. Contatta il supporto o scegli un pacchetto diverso.",
+  selectYourPackage: "Seleziona il tuo pacchetto",
+  selectOption: "Seleziona un'opzione",
+  selected: "Selezionato",
+  more: "altro",
+  completeRequiredFields: "Completa tutti i campi obbligatori",
+  completeRequiredFieldsDesc: "Assicurati che tutti i campi obbligatori siano compilati prima di continuare.",
+  somethingWentWrong: "Qualcosa è andato storto",
+  tryAgainSupport: "Riprova o contatta il supporto se il problema persiste.",
+  stepPackage: "Passaggio",
+  of: "di",
+  progress: "Progresso",
+  whatsIncluded: "Cosa è incluso",
+  professionalQuality: "Qualità professionale",
+  previous: "Precedente",
+  continue: "Continua",
+  next: "Successivo",
+  submitting: "Invio in corso...",
+  completeOrder: "Completa ordine",
+  choosePackage: "Scegli pacchetto",
+  pickDate: "Scegli data",
+  orderDetails: "Dettagli ordine",
+  completeAllSteps: "Completa tutti i passaggi per finalizzare il tuo ordine.",
+  submitOrder: "Invia ordine",
+  loadingGiftCard: "Caricamento carta regalo...",
+  giftCardApplied: "Carta regalo applicata",
+  giftCardAppliedDesc: "La carta regalo è pronta per essere utilizzata per il tuo ordine.",
+  
+  // Toast messages
+  orderSuccess: "Ordine creato",
+  orderSuccessMessage: "Il tuo ordine è stato creato con successo. Questo usa dati dimostrativi.",
+  orderError: "Errore",
+  orderErrorMessage: "Si è verificato un errore",
+  
+  // Help section
+  needHelp: "Hai bisogno di aiuto?",
+  mondayToFriday: "Lunedì - Venerdì, 9:00 - 18:00",
+  
+  // Package tags
+  popular: "Popolare",
+  premium: "Premium",
+  new: "Nuovo",
+  gift: "Regalo",
+  
+  // Order Summary
+  orderSummary: "Riepilogo Ordine",
+  addons: "Componenti aggiuntivi",
+  subtotal: "Subtotale",
+  total: "Totale",
+  giftCardDiscount: "Sconto Carta Regalo",
+  fullyCoveredByGiftCard: "Completamente coperto dalla carta regalo",
+  giftCardFrom: "Da:",
+  giftCardBalance: "Saldo:",
+  giftCardRemaining: "Rimanente dopo l'ordine:",
+  
+  // Form Field Renderer
+  noAddonsAvailable: "Nessun componente aggiuntivo disponibile per questo pacchetto",
+  fieldConfigurationError: "Errore di configurazione campo: Nessuna opzione disponibile",
+  unknownFieldType: "Tipo di campo sconosciuto: {fieldType}",
+  uploadFiles: "Carica File",
+  clickToUploadFiles: "Clicca per caricare file",
+  maxFiles: "Max.",
+  files: "file",
+  totalSize: "totale",
+  recordAudioMessage: "Registra Messaggio Audio",
+  
+  // Universal UI Elements
+  selectAddons: "Seleziona Componenti Aggiuntivi",
+  enhanceYourPackage: "Migliora il tuo pacchetto con opzioni aggiuntive",
+  contactDetailsStep: "Dettagli Contatto e Legali",
+  fillContactAndLegalInfo: "Compila i tuoi dettagli di contatto e accetta i termini legali",
+  choosePaymentMethod: "Scegli Metodo di Pagamento",
+  selectPaymentProvider: "Seleziona come vuoi pagare per il tuo ordine",
+  proceedToNextStep: "Puoi procedere al passaggio successivo",
+  
+  // File Upload
+  uploadingFiles: "Caricamento file...",
+  filesUploaded: "File caricati",
+  filesUploadedSuccessfully: "File caricati con successo",
+  uploadedFiles: "File caricati",
+  savedAudio: "Audio salvato",
+  audioSaved: "Audio Salvato",
+  audioSavedSuccessfully: "Audio salvato con successo",
+  audioUploadErrorMessage: "Si è verificato un errore nel salvare la tua registrazione audio",
+  
+  // Company/Invoice Details
+  invoiceType: "Tipo Fattura",
+  individual: "Privato",
+  company: "Azienda",
+  companyName: "Nome Azienda",
+  vatCode: "Codice IVA",
+  registrationNumber: "Numero di Registrazione",
+  companyAddress: "Indirizzo Azienda",
+  representativeName: "Nome Rappresentante",
+  address: "Indirizzo",
+  city: "Città",
+  
+  // VAT Validation
+  vatCodeTooShort: "Il codice IVA è troppo corto",
+  vatCodeInvalidFormat: "Formato codice IVA non valido",
+  
+  // Step Progress
+  step: "Passaggio",
+  payment: "Pagamento",
+  
+  // Package Descriptions
+  personalDescription: "Crea una canzone toccante e personalizzata per qualcuno di speciale nella tua vita",
+  premiumDescription: "Produzione professionale di canzoni con distribuzione globale sulle principali piattaforme di streaming",
+  businessDescription: "Musica personalizzata adattata all'identità del tuo brand e alle esigenze di marketing",
+  artistDescription: "Lancia la tua carriera musicale con produzione e distribuzione professionale",
+  remixDescription: "Trasforma la tua canzone esistente con ritmi freschi e produzione moderna",
+  instrumentalDescription: "Traccia strumentale personalizzata perfetta per i tuoi progetti creativi",
+  plusDescription: "Messaggio musicale rapido e conveniente per ogni occasione",
+  giftDescription: "Carta regalo musicale che permette alla persona cara di scegliere la canzone perfetta",
+  weddingDescription: "La tua canzone da ballo matrimoniale unica, creata appositamente per il tuo giorno speciale",
+  baptismDescription: "Melodia personalizzata per celebrare questo momento sacro",
+  comingOfAgeDescription: "Inno celebrativo per questa importante transizione di vita",
+  
+  // Testimonial
+  testimonialQuote: "\"Il regalo perfetto per gli amanti della musica! La canzone personalizzata era assolutamente bella e ha reso il nostro anniversario indimenticabile.\"",
+  testimonialAuthor: "- Sarah M., Cliente Soddisfatta",
+  
   // Existing order translations
   choosePackage: "Scegli Pacchetto",
   stepPackage: "Passo",
@@ -282,11 +411,8 @@ export const orderTranslations = {
   // Form validation and UI
   required: "Richiesto",
   optional: "Opzionale",
-  next: "Avanti",
-  previous: "Precedente",
   submit: "Invia Ordine",
   loading: "Elaborazione...",
-  selectOption: "Seleziona un'opzione",
   uploadFile: "Carica file",
   chooseDate: "Scegli data",
   
@@ -296,8 +422,6 @@ export const orderTranslations = {
   invalidUrl: "Inserisci un URL valido",
   fileSizeError: "La dimensione del file deve essere inferiore a 10MB",
   fileTypeError: "Tipo di file non valido",
-  fieldConfigurationError: "Errore configurazione campo: Nessuna opzione disponibile",
-  unknownFieldType: "Tipo di campo sconosciuto: {fieldType}",
   
   // Success messages
   stepCompleted: "Passo completato con successo",

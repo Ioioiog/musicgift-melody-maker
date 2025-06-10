@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă etapele...",
@@ -72,6 +71,58 @@ export const orderTranslations = {
   files: "fișiere",
   totalSize: "total",
   recordAudioMessage: "Înregistrați Mesaj Audio",
+  
+  // Universal UI Elements
+  selectAddons: "Selectați Suplimente",
+  enhanceYourPackage: "Îmbunătățiți pachetul cu opțiuni suplimentare",
+  contactDetailsStep: "Date de Contact și Juridice",
+  fillContactAndLegalInfo: "Completați datele de contact și acceptați termenii juridici",
+  choosePaymentMethod: "Alegeți Metoda de Plată",
+  selectPaymentProvider: "Selectați cum doriți să plătiți comanda",
+  proceedToNextStep: "Puteți trece la următorul pas",
+  
+  // File Upload
+  uploadingFiles: "Se încarcă fișierele...",
+  filesUploaded: "Fișiere încărcate",
+  filesUploadedSuccessfully: "Fișierele au fost încărcate cu succes",
+  uploadedFiles: "Fișiere încărcate",
+  savedAudio: "Audio salvat",
+  audioSaved: "Audio Salvat",
+  audioSavedSuccessfully: "Audio-ul a fost salvat cu succes",
+  audioUploadErrorMessage: "A apărut o eroare la salvarea înregistrării audio",
+  
+  // Company/Invoice Details
+  invoiceType: "Tip Factură",
+  individual: "Persoană Fizică",
+  company: "Companie",
+  companyName: "Numele Companiei",
+  vatCode: "Cod TVA",
+  registrationNumber: "Număr de Înregistrare",
+  companyAddress: "Adresa Companiei",
+  representativeName: "Numele Reprezentantului",
+  address: "Adresa",
+  city: "Orașul",
+  
+  // VAT Validation
+  vatCodeTooShort: "Codul TVA este prea scurt",
+  vatCodeInvalidFormat: "Format invalid pentru codul TVA",
+  
+  // Step Progress
+  step: "Pasul",
+  payment: "Plată",
+  
+  // Package Descriptions
+  personalDescription: "Creați un cântec emoționant și personalizat pentru cineva special din viața dvs.",
+  premiumDescription: "Producție profesională de cântece cu distribuție globală pe platformele majore de streaming",
+  businessDescription: "Muzică personalizată adaptată identității mărcii și nevoilor de marketing",
+  artistDescription: "Lansați-vă cariera muzicală cu producție și distribuție profesională",
+  remixDescription: "Transformați cântecul existent cu ritmuri fresh și producție modernă",
+  instrumentalDescription: "Pistă instrumentală personalizată perfectă pentru proiectele creative",
+  plusDescription: "Mesaj muzical rapid și accesibil pentru orice ocazie",
+  giftDescription: "Card cadou muzical care permite persoanei dragi să aleagă cântecul perfect",
+  weddingDescription: "Cântecul unic de dans de nuntă, creat special pentru ziua voastră specială",
+  baptismDescription: "Melodie personalizată pentru a sărbători acest moment sacru",
+  comingOfAgeDescription: "Imn de sărbătoare pentru această tranziție importantă în viață",
   
   // Testimonial
   testimonialQuote: "\"Cadoul perfect pentru iubitorii de muzică! Cântecul personalizat a fost absolut frumos și ne-a făcut aniversarea de neuitat.\"",
