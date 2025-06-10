@@ -1,5 +1,4 @@
 
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -105,9 +104,9 @@ const HeroContent = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.4 }}
           >
-            <span className="text-sm">✨ Trusted by thousands</span>
-            <span className="text-sm">🎵 Custom compositions</span>
-            <span className="text-sm">💝 Perfect gifts</span>
+            <span className="text-sm">✨ {t('trustedByThousands')}</span>
+            <span className="text-sm">🎵 {t('customCompositions')}</span>
+            <span className="text-sm">💝 {t('perfectGifts')}</span>
           </motion.div>
         </motion.div>
       </div>
@@ -116,4 +115,3 @@ const HeroContent = () => {
 };
 
 export default HeroContent;
-
