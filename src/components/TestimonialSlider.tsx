@@ -1,4 +1,3 @@
-
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
@@ -315,7 +314,7 @@ export default function TestimonialSlider() {
 
   return (
     <div className="py-[26px]">
-      <style jsx>{`
+      <style>{`
         @keyframes scroll {
           0% {
             transform: translateX(0);
