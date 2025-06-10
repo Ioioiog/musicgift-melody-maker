@@ -246,5 +246,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
-</edits_to_apply>
