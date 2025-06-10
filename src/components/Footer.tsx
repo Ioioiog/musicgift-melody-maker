@@ -3,65 +3,40 @@ import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide
 import { useLanguage } from "@/contexts/LanguageContext";
 import LegalModals, { useLegalModals } from "@/components/LegalModals";
 import LegalCompliance from "@/components/LegalCompliance";
+
 const Footer = () => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    openTerms,
-    openPrivacy,
-    openRefund,
-    openCookie
-  } = useLegalModals();
-  return <footer className="relative overflow-hidden" style={{
-    backgroundImage: 'url(/lovable-uploads/80488a4f-b392-4eca-b181-f587474721fd.png)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
-  }}>
+  const { t } = useLanguage();
+  const { openTerms, openPrivacy, openRefund, openCookie } = useLegalModals();
+
+  return (
+    <footer className="relative overflow-hidden" style={{
+      backgroundImage: 'url(/lovable-uploads/80488a4f-b392-4eca-b181-f587474721fd.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
       {/* Subtle grid pattern overlay */}
-      <div style={{
-      backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-    }} className="inset-0.5 inset-0 -bottom-0.5 bg-violet-500 bg-gradient-purple"></div>
+      <div
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}
+        className="inset-0.5 inset-0 -bottom-0.5 bg-violet-500 bg-gradient-purple"
+      ></div>
 
       {/* Footer-contained animated musical notes pattern overlay */}
       <div className="absolute inset-0 pointer-events-none z-0 opacity-20">
-        <div className="absolute top-4 left-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{
-        animationDelay: '0s'
-      }}></div>
-        <div className="absolute top-8 right-12 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{
-        animationDelay: '0.5s'
-      }}></div>
-        <div className="absolute top-16 left-1/4 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{
-        animationDelay: '1s'
-      }}></div>
-        <div className="absolute top-20 right-1/3 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{
-        animationDelay: '1.5s'
-      }}></div>
-        <div className="absolute top-32 left-1/2 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{
-        animationDelay: '2s'
-      }}></div>
-        <div className="absolute bottom-1/4 left-16 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{
-        animationDelay: '2.5s'
-      }}></div>
-        <div className="absolute bottom-1/3 right-1/4 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{
-        animationDelay: '3s'
-      }}></div>
-        <div className="absolute bottom-20 left-1/3 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{
-        animationDelay: '3.5s'
-      }}></div>
-        <div className="absolute bottom-4 right-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{
-        animationDelay: '4s'
-      }}></div>
-        <div className="absolute bottom-8 left-1/5 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{
-        animationDelay: '4.5s'
-      }}></div>
-        <div className="absolute top-1/2 left-8 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{
-        animationDelay: '5s'
-      }}></div>
-        <div className="absolute top-1/3 right-16 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{
-        animationDelay: '5.5s'
-      }}></div>
+        <div className="absolute top-4 left-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
+        <div className="absolute top-8 right-12 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute top-16 left-1/4 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-20 right-1/3 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute top-32 left-1/2 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-1/4 left-16 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{ animationDelay: '2.5s' }}></div>
+        <div className="absolute bottom-1/3 right-1/4 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '3s' }}></div>
+        <div className="absolute bottom-20 left-1/3 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '3.5s' }}></div>
+        <div className="absolute bottom-4 right-8 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute bottom-8 left-1/5 w-2.5 h-2.5 bg-white/35 rounded-full animate-pulse" style={{ animationDelay: '4.5s' }}></div>
+        <div className="absolute top-1/2 left-8 w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '5s' }}></div>
+        <div className="absolute top-1/3 right-16 w-3 h-3 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '5.5s' }}></div>
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 py-6 sm:py-8">
@@ -86,34 +61,21 @@ const Footer = () => {
                 {t('followUs') || 'Follow Us'}
               </h4>
               <div className="flex justify-center sm:justify-start space-x-2">
-                {[{
-                icon: Facebook,
-                href: "https://www.facebook.com/MusicGiftofficialpage/",
-                label: "Facebook",
-                color: "hover:bg-blue-600"
-              }, {
-                icon: Instagram,
-                href: "https://www.instagram.com/musicgiftofficial/",
-                label: "Instagram",
-                color: "hover:bg-pink-600"
-              }, {
-                icon: Youtube,
-                href: "https://www.youtube.com/@MangoRecordsChannel",
-                label: "YouTube",
-                color: "hover:bg-red-600"
-              }, {
-                icon: Music,
-                href: "https://www.tiktok.com/@musicgiftofficial",
-                label: "TikTok",
-                color: "hover:bg-gray-800"
-              }].map(({
-                icon: Icon,
-                href,
-                label,
-                color
-              }) => <a key={label} href={href} className={`w-8 h-8 bg-white/10 backdrop-blur-sm border border-black/10 ${color} rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-black/30 group touch-manipulation min-h-[32px]`} aria-label={label}>
+                {[
+                  { icon: Facebook, href: "https://www.facebook.com/MusicGiftofficialpage/", label: "Facebook", color: "hover:bg-blue-600" },
+                  { icon: Instagram, href: "https://www.instagram.com/musicgiftofficial/", label: "Instagram", color: "hover:bg-pink-600" },
+                  { icon: Youtube, href: "https://www.youtube.com/@MangoRecordsChannel", label: "YouTube", color: "hover:bg-red-600" },
+                  { icon: Music, href: "https://www.tiktok.com/@musicgiftofficial", label: "TikTok", color: "hover:bg-gray-800" }
+                ].map(({ icon: Icon, href, label, color }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    className={`w-8 h-8 bg-white/10 backdrop-blur-sm border border-black/10 ${color} rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-black/30 group touch-manipulation min-h-[32px]`}
+                    aria-label={label}
+                  >
                     <Icon className="w-4 h-4 text-gray-700 group-hover:text-white transition-colors duration-300" />
-                  </a>)}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
@@ -128,33 +90,24 @@ const Footer = () => {
             </div>
             
             <ul className="space-y-0.5">
-              {[{
-              to: "/",
-              label: t('home')
-            }, {
-              to: "/about",
-              label: t('about')
-            }, {
-              to: "/packages",
-              label: t('packages')
-            }, {
-              to: "/how-it-works",
-              label: t('howItWorks')
-            }, {
-              to: "/testimonials",
-              label: t('testimonials')
-            }, {
-              to: "/admin",
-              label: t('admin')
-            }].map(({
-              to,
-              label
-            }) => <li key={to}>
-                  <Link to={to} className="text-gray-700 hover:text-gray-900 transition-all duration-300 relative group inline-block py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start">
+              {[
+                { to: "/", label: t('home') },
+                { to: "/about", label: t('about') },
+                { to: "/packages", label: t('packages') },
+                { to: "/how-it-works", label: t('howItWorks') },
+                { to: "/testimonials", label: t('testimonials') },
+                { to: "/admin", label: t('admin') }
+              ].map(({ to, label }) => (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    className="text-gray-700 hover:text-gray-900 transition-all duration-300 relative group inline-block py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start"
+                  >
                     <span className="relative z-10">{label}</span>
                     <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                   </Link>
-                </li>)}
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -169,25 +122,37 @@ const Footer = () => {
             
             <ul className="space-y-0.5">
               <li>
-                <button onClick={openTerms} className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
+                <button
+                  onClick={openTerms}
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full"
+                >
                   <span className="relative z-10">{t('termsConditions')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                 </button>
               </li>
               <li>
-                <button onClick={openPrivacy} className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
+                <button
+                  onClick={openPrivacy}
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full"
+                >
                   <span className="relative z-10">{t('privacyPolicy')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                 </button>
               </li>
               <li>
-                <button onClick={openRefund} className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
+                <button
+                  onClick={openRefund}
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full"
+                >
                   <span className="relative z-10">{t('refundPolicy')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                 </button>
               </li>
               <li>
-                <button onClick={openCookie} className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full">
+                <button
+                  onClick={openCookie}
+                  className="text-gray-700 hover:text-purple-600 transition-all duration-300 relative group py-0.5 px-1 rounded text-xs hover:bg-white/10 backdrop-blur-sm touch-manipulation min-h-[28px] flex items-center justify-center sm:justify-start w-full"
+                >
                   <span className="relative z-10">{t('cookiePolicy')}</span>
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></div>
                 </button>
@@ -206,28 +171,22 @@ const Footer = () => {
             
             {/* Contact Information */}
             <div className="space-y-2">
-              {[{
-              icon: Mail,
-              text: "info@musicgift.ro",
-              href: "mailto:info@musicgift.ro"
-            }, {
-              icon: Phone,
-              text: "+40 723 141 501",
-              href: "tel:+40723141501"
-            }, {
-              icon: MapPin,
-              text: "Strada Fabrica de Glucoza 6-8, București",
-              href: "#"
-            }].map(({
-              icon: Icon,
-              text,
-              href
-            }) => <a key={text} href={href} className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition-all duration-300 group p-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm border border-transparent hover:border-black/10 touch-manipulation min-h-[36px]">
+              {[
+                { icon: Mail, text: "info@musicgift.ro", href: "mailto:info@musicgift.ro" },
+                { icon: Phone, text: "+40 723 141 501", href: "tel:+40723141501" },
+                { icon: MapPin, text: "Strada Fabrica de Glucoza 6-8, București", href: "#" }
+              ].map(({ icon: Icon, text, href }) => (
+                <a
+                  key={text}
+                  href={href}
+                  className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition-all duration-300 group p-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm border border-transparent hover:border-black/10 touch-manipulation min-h-[36px]"
+                >
                   <div className="w-6 h-6 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-black/10 rounded-lg flex items-center justify-center group-hover:from-purple-500/30 group-hover:to-pink-500/30 transition-all duration-300 flex-shrink-0">
                     <Icon className="w-3 h-3" />
                   </div>
                   <span className="text-xs font-medium break-words">{text}</span>
-                </a>)}
+                </a>
+              ))}
             </div>
           </div>
         </div>
@@ -246,15 +205,19 @@ const Footer = () => {
         {/* Enhanced Bottom Section - Copyright with Purple Musical Background - Now Full Width */}
         <div className="border-t border-black/10 mt-6 sm:mt-12 pt-6 sm:pt-8 relative overflow-hidden">
           {/* Full Width Enhanced Gradient Background */}
-          <div className="absolute inset-0 w-full" style={{
-          backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}>
+          <div
+            className="absolute inset-0 w-full"
+            style={{
+              backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          >
             {/* Enhanced layered background effects */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 via-violet-600/25 to-pink-600/30"></div>
-            <div className=""></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/50 via-violet-600/40 to-pink-600/50 animate-pulse"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/30 via-purple-600/25 to-fuchsia-600/35 opacity-80"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-purple-800/20 via-transparent to-pink-800/20"></div>
           </div>
           
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
@@ -284,6 +247,8 @@ const Footer = () => {
 
       {/* Include the Legal Modals */}
       <LegalModals t={t} />
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;
