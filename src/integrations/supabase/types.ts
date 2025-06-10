@@ -261,45 +261,57 @@ export type Database = {
       }
       discount_email_deliveries: {
         Row: {
+          bounce_reason: string | null
           brevo_message_id: string | null
+          clicked_at: string | null
           created_at: string
           delivered_at: string | null
           delivery_status: string
           discount_code: string
           discount_code_id: string | null
           email_type: string
+          engagement_score: number | null
           error_message: string | null
           id: string
+          opened_at: string | null
           recipient_email: string
           recipient_name: string | null
           sent_at: string
           updated_at: string
         }
         Insert: {
+          bounce_reason?: string | null
           brevo_message_id?: string | null
+          clicked_at?: string | null
           created_at?: string
           delivered_at?: string | null
           delivery_status?: string
           discount_code: string
           discount_code_id?: string | null
           email_type: string
+          engagement_score?: number | null
           error_message?: string | null
           id?: string
+          opened_at?: string | null
           recipient_email: string
           recipient_name?: string | null
           sent_at?: string
           updated_at?: string
         }
         Update: {
+          bounce_reason?: string | null
           brevo_message_id?: string | null
+          clicked_at?: string | null
           created_at?: string
           delivered_at?: string | null
           delivery_status?: string
           discount_code?: string
           discount_code_id?: string | null
           email_type?: string
+          engagement_score?: number | null
           error_message?: string | null
           id?: string
+          opened_at?: string | null
           recipient_email?: string
           recipient_name?: string | null
           sent_at?: string

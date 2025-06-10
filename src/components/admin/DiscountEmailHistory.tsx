@@ -19,12 +19,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useDiscountEmailDeliveries, useDiscountEmailDeliveryStats } from "@/hooks/useDiscountEmailDeliveries";
-import { Mail, Search, Filter } from "lucide-react";
+import { useDiscountEmailDeliveries, useDiscountEmailDeliveryStats, useRefreshEmailDeliveries } from "@/hooks/useDiscountEmailDeliveries";
+import { Mail, Search, Filter, RefreshCw, Eye, MousePointer, Zap } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const DiscountEmailHistory = () => {
   const { data: deliveries, isLoading } = useDiscountEmailDeliveries();
   const { data: stats } = useDiscountEmailDeliveryStats();
+  const { refreshDeliveries } = useRefreshEmailDeliveries();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
@@ -41,18 +44,38 @@ const DiscountEmailHistory = () => {
     return matchesSearch && matchesType && matchesStatus;
   });
 
+  const handleRefresh = () => {
+    refreshDeliveries();
+    toast({
+      title: "Refreshed",
+      description: "Email delivery data has been refreshed",
+    });
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'sent': return 'default';
       case 'delivered': return 'default';
-      case 'bounced': return 'destructive';
+      case 'opened': return 'default';
+      case 'clicked': return 'default';
+      case 'bounced':
+      case 'hard_bounced':
+      case 'soft_bounced':
       case 'failed': return 'destructive';
+      case 'unsubscribed': return 'secondary';
       default: return 'secondary';
     }
   };
 
   const getTypeColor = (type: string) => {
     return type === 'manual' ? 'outline' : 'secondary';
+  };
+
+  const getEngagementIcon = (status: string, engagementScore: number) => {
+    if (status === 'clicked') return <MousePointer className="h-3 w-3 text-green-600" />;
+    if (status === 'opened') return <Eye className="h-3 w-3 text-blue-600" />;
+    if (engagementScore > 0) return <Zap className="h-3 w-3 text-yellow-600" />;
+    return null;
   };
 
   if (isLoading) {
@@ -63,7 +86,7 @@ const DiscountEmailHistory = () => {
     <div className="space-y-6">
       {/* Stats Cards */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Total Emails</CardTitle>
@@ -78,52 +101,72 @@ const DiscountEmailHistory = () => {
           
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Successfully Sent</CardTitle>
+              <CardTitle className="text-sm font-medium">Delivered</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stats.sent}</div>
+              <div className="text-2xl font-bold text-green-600">{stats.delivered + stats.opened + stats.clicked}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.total > 0 ? Math.round((stats.sent / stats.total) * 100) : 0}% success rate
+                {stats.total > 0 ? Math.round(((stats.delivered + stats.opened + stats.clicked) / stats.total) * 100) : 0}% delivery rate
               </p>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Failed</CardTitle>
+              <CardTitle className="text-sm font-medium">Opened</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">{stats.failed}</div>
+              <div className="text-2xl font-bold text-blue-600">{stats.opened + stats.clicked}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.total > 0 ? Math.round((stats.failed / stats.total) * 100) : 0}% failure rate
+                {stats.total > 0 ? Math.round(((stats.opened + stats.clicked) / stats.total) * 100) : 0}% open rate
               </p>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Bounced</CardTitle>
+              <CardTitle className="text-sm font-medium">Clicked</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-orange-600">{stats.bounced}</div>
+              <div className="text-2xl font-bold text-purple-600">{stats.clicked}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.total > 0 ? Math.round((stats.bounced / stats.total) * 100) : 0}% bounce rate
+                {stats.total > 0 ? Math.round((stats.clicked / stats.total) * 100) : 0}% click rate
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Failed/Bounced</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-600">{stats.bounced + stats.failed}</div>
+              <p className="text-xs text-muted-foreground">
+                {stats.total > 0 ? Math.round(((stats.bounced + stats.failed) / stats.total) * 100) : 0}% failure rate
               </p>
             </CardContent>
           </Card>
         </div>
       )}
 
-      {/* Filters */}
+      {/* Email History Table */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Mail className="h-5 w-5" />
-            Email Delivery History
-          </CardTitle>
-          <CardDescription>
-            Track all discount code emails sent manually and automatically generated.
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Mail className="h-5 w-5" />
+                Email Delivery History
+              </CardTitle>
+              <CardDescription>
+                Track all discount code emails with real-time status updates from Brevo.
+              </CardDescription>
+            </div>
+            <Button onClick={handleRefresh} variant="outline" size="sm">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -157,6 +200,8 @@ const DiscountEmailHistory = () => {
                 <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="sent">Sent</SelectItem>
                 <SelectItem value="delivered">Delivered</SelectItem>
+                <SelectItem value="opened">Opened</SelectItem>
+                <SelectItem value="clicked">Clicked</SelectItem>
                 <SelectItem value="bounced">Bounced</SelectItem>
                 <SelectItem value="failed">Failed</SelectItem>
               </SelectContent>
@@ -171,15 +216,16 @@ const DiscountEmailHistory = () => {
                   <TableHead>Code</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Engagement</TableHead>
                   <TableHead>Sent At</TableHead>
-                  <TableHead>Brevo ID</TableHead>
-                  <TableHead>Error</TableHead>
+                  <TableHead>Last Updated</TableHead>
+                  <TableHead>Error/Bounce</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {!filteredDeliveries || filteredDeliveries.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground">
+                    <TableCell colSpan={8} className="text-center text-muted-foreground">
                       No email deliveries found.
                     </TableCell>
                   </TableRow>
@@ -201,20 +247,37 @@ const DiscountEmailHistory = () => {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={getStatusColor(delivery.delivery_status)}>
-                          {delivery.delivery_status}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={getStatusColor(delivery.delivery_status)}>
+                            {delivery.delivery_status.replace('_', ' ')}
+                          </Badge>
+                          {getEngagementIcon(delivery.delivery_status, delivery.engagement_score)}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          {delivery.delivered_at && (
+                            <div>Delivered: {new Date(delivery.delivered_at).toLocaleString()}</div>
+                          )}
+                          {delivery.opened_at && (
+                            <div>Opened: {new Date(delivery.opened_at).toLocaleString()}</div>
+                          )}
+                          {delivery.clicked_at && (
+                            <div>Clicked: {new Date(delivery.clicked_at).toLocaleString()}</div>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell>
                         {new Date(delivery.sent_at).toLocaleString()}
                       </TableCell>
-                      <TableCell className="font-mono text-sm">
-                        {delivery.brevo_message_id || '-'}
+                      <TableCell>
+                        {new Date(delivery.updated_at).toLocaleString()}
                       </TableCell>
                       <TableCell>
-                        {delivery.error_message ? (
-                          <div className="text-sm text-red-600 max-w-xs truncate" title={delivery.error_message}>
-                            {delivery.error_message}
+                        {delivery.bounce_reason || delivery.error_message ? (
+                          <div className="text-sm text-red-600 max-w-xs truncate" 
+                               title={delivery.bounce_reason || delivery.error_message}>
+                            {delivery.bounce_reason || delivery.error_message}
                           </div>
                         ) : (
                           '-'
