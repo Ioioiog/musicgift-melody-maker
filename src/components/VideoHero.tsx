@@ -1,25 +1,26 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-
 const VideoHero = () => {
-  const { t, language } = useLanguage();
+  const {
+    t,
+    language
+  } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showPlayButton, setShowPlayButton] = useState(false);
   const [hasAudio, setHasAudio] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentVideoSrc, setCurrentVideoSrc] = useState('');
-  const [videoDimensions, setVideoDimensions] = useState({ width: 0, height: 0 });
+  const [videoDimensions, setVideoDimensions] = useState({
+    width: 0,
+    height: 0
+  });
   const isMobile = useIsMobile();
 
   // Select video based on language with fallback
-  const videoSrc = language === 'ro' 
-    ? '/lovable-uploads/Jingle Musicgift master.mp4'
-    : '/lovable-uploads/MusicGiftvideoENG.mp4';
-
+  const videoSrc = language === 'ro' ? '/lovable-uploads/Jingle Musicgift master.mp4' : '/lovable-uploads/MusicGiftvideoENG.mp4';
   console.log('VideoHero: Current language:', language, 'Video source:', videoSrc);
 
   // Calculate mobile height based on video aspect ratio
@@ -27,11 +28,9 @@ const VideoHero = () => {
     if (!isMobile || !videoDimensions.width || !videoDimensions.height) {
       return undefined;
     }
-    
     const screenWidth = window.innerWidth;
     const aspectRatio = videoDimensions.width / videoDimensions.height;
     const calculatedHeight = screenWidth / aspectRatio;
-    
     return `${calculatedHeight}px`;
   };
 
@@ -59,10 +58,8 @@ const VideoHero = () => {
       cleanupVideo();
       setIsLoading(true);
     }
-
     console.log('VideoHero: Setting up video for language:', language);
     setCurrentVideoSrc(videoSrc);
-    
     const handleLoadedMetadata = () => {
       console.log('VideoHero: Video metadata loaded');
       setVideoDimensions({
@@ -70,46 +67,39 @@ const VideoHero = () => {
         height: video.videoHeight
       });
     };
-
     const handleCanPlay = () => {
       console.log('VideoHero: Video can play, attempting autoplay');
       setIsLoading(false);
       // Try to play with audio first
       video.muted = false;
       const playPromise = video.play();
-      
       if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            console.log('VideoHero: Autoplay with audio succeeded');
-            setHasAudio(true);
-            setShowPlayButton(false);
-          })
-          .catch((error) => {
-            console.log('VideoHero: Autoplay with audio blocked, falling back to muted:', error);
-            // Autoplay with audio blocked, fall back to muted
-            video.muted = true;
-            video.play().then(() => {
-              setShowPlayButton(true);
-              setHasAudio(false);
-            }).catch((muteError) => {
-              console.log('VideoHero: Even muted autoplay failed:', muteError);
-              setIsLoading(false);
-            });
+        playPromise.then(() => {
+          console.log('VideoHero: Autoplay with audio succeeded');
+          setHasAudio(true);
+          setShowPlayButton(false);
+        }).catch(error => {
+          console.log('VideoHero: Autoplay with audio blocked, falling back to muted:', error);
+          // Autoplay with audio blocked, fall back to muted
+          video.muted = true;
+          video.play().then(() => {
+            setShowPlayButton(true);
+            setHasAudio(false);
+          }).catch(muteError => {
+            console.log('VideoHero: Even muted autoplay failed:', muteError);
+            setIsLoading(false);
           });
+        });
       }
     };
-
     const handleError = () => {
       console.log('VideoHero: Video failed to load');
       setIsLoading(false);
     };
-
     const handleLoadStart = () => {
       console.log('VideoHero: Video load started');
       setIsLoading(true);
     };
-
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
     video.addEventListener('canplay', handleCanPlay);
     video.addEventListener('error', handleError);
@@ -127,7 +117,6 @@ const VideoHero = () => {
     if (currentVideoSrc !== videoSrc) {
       video.load();
     }
-
     return () => {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata);
       video.removeEventListener('canplay', handleCanPlay);
@@ -144,26 +133,22 @@ const VideoHero = () => {
       cleanupVideo();
     };
   }, []);
-
   const handlePlayWithAudio = () => {
     const video = videoRef.current;
     if (!video) return;
-
     console.log('VideoHero: User clicked play with audio');
     video.muted = false;
     video.play().then(() => {
       setHasAudio(true);
       setShowPlayButton(false);
-    }).catch((error) => {
+    }).catch(error => {
       console.log('VideoHero: Failed to play with audio:', error);
       // Keep the play button if it still fails
     });
   };
-
   const handleToggleAudio = () => {
     const video = videoRef.current;
     if (!video) return;
-
     console.log('VideoHero: Toggling audio, current hasAudio:', hasAudio);
     if (hasAudio) {
       video.muted = true;
@@ -173,67 +158,38 @@ const VideoHero = () => {
       setHasAudio(true);
     }
   };
-
   const mobileHeight = getMobileHeight();
-  const sectionStyle = isMobile && mobileHeight 
-    ? { height: mobileHeight, minHeight: '60vh' } 
-    : {};
-
-  return (
-    <section 
-      className={`video-hero relative overflow-hidden ${
-        isMobile 
-          ? 'min-h-[60vh]' 
-          : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'
-      }`}
-      style={sectionStyle}
-    >
+  const sectionStyle = isMobile && mobileHeight ? {
+    height: mobileHeight,
+    minHeight: '60vh'
+  } : {};
+  return <section className={`video-hero relative overflow-hidden ${isMobile ? 'min-h-[60vh]' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
       {/* Video Background with branded gradient background for mobile */}
-      <video
-        ref={videoRef}
-        loop
-        playsInline
-        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 md:bg-black"
-        key={videoSrc}
-      >
+      <video ref={videoRef} loop playsInline className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 md:bg-black" key={videoSrc}>
         <source src={videoSrc} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
       {/* Loading Overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20">
+      {isLoading && <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20">
           <div className="text-white text-xl">Loading...</div>
-        </div>
-      )}
+        </div>}
 
       {/* Play Button Overlay */}
-      {showPlayButton && !isLoading && (
-        <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-20">
-          <Button
-            onClick={handlePlayWithAudio}
-            size="lg"
-            className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
-          >
+      {showPlayButton && !isLoading && <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-20">
+          <Button onClick={handlePlayWithAudio} size="lg" className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm">
             <Play className="w-8 h-8 mr-2" />
             {t('playWithSound', 'Play with Sound')}
           </Button>
-        </div>
-      )}
+        </div>}
 
       {/* Audio Control Button - Positioned below navbar */}
-      {!showPlayButton && !isLoading && (
-        <button
-          onClick={handleToggleAudio}
-          className="absolute top-16 sm:top-20 md:top-24 right-4 z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 p-3 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm"
-          aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
-        >
+      {!showPlayButton && !isLoading && <button onClick={handleToggleAudio} className="absolute top-16 sm:top-20 md:top-24 right-4 z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 p-3 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm" aria-label={hasAudio ? 'Mute video' : 'Unmute video'}>
           <Volume2 className={`w-6 h-6 ${hasAudio ? 'opacity-100' : 'opacity-60'}`} />
-        </button>
-      )}
+        </button>}
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute inset-0 bg-transparent py-0 my-[46px]"></div>
 
       {/* Title at Bottom */}
       <div className="absolute bottom-12 sm:bottom-16 md:bottom-20 left-0 right-0 z-10 text-center text-white px-4">
@@ -241,8 +197,6 @@ const VideoHero = () => {
           {t('heroTitle')}
         </h1>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default VideoHero;
