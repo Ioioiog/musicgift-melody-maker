@@ -25,7 +25,6 @@ const VideoHero = () => {
   const videoSrc = language === 'ro' ? '/lovable-uploads/Jingle Musicgift master.mp4' : '/lovable-uploads/MusicGiftvideoENG.mp4';
   console.log('VideoHero: Current language:', language, 'Video source:', videoSrc);
 
-  // Calculate mobile height based on video aspect ratio
   const getMobileHeight = () => {
     if (!isMobile || !videoDimensions.width || !videoDimensions.height) {
       return undefined;
@@ -209,8 +208,11 @@ const VideoHero = () => {
         Your browser does not support the video tag.
       </video>
 
-      {/* Enhanced overlay with gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
+      {/* Background image overlay - Using your uploaded purple musical background */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
+        style={{ backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)' }}
+      ></div>
 
       {/* Loading Overlay - Updated to match HeroContent with purple gradient */}
       {isLoading && (
