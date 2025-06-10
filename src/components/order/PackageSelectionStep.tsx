@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Gift, Check, Sparkles, Star, Music, Headphones } from 'lucide-react';
+import { Clock, Gift, Check, Sparkles, Star, Music, Headphones, X, AlertCircle, Info, Users, Calendar, FileAudio, Video, Globe } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { usePackages } from '@/hooks/usePackageData';
@@ -46,6 +46,67 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
       default:
         return null;
     }
+  };
+
+  // Define what's NOT included based on package type
+  const getExclusions = (packageValue: string) => {
+    const commonExclusions = [
+      { key: 'noCommercialRights', icon: Globe },
+      { key: 'noPhysicalDelivery', icon: AlertCircle },
+      { key: 'noRefunds', icon: X }
+    ];
+
+    const packageSpecificExclusions: { [key: string]: Array<{ key: string; icon: any }> } = {
+      personal: [
+        { key: 'noDistribution', icon: Globe },
+        { key: 'noCommercialUse', icon: Users },
+        { key: 'noSeparateStems', icon: FileAudio }
+      ],
+      premium: [
+        { key: 'noCommercialUse', icon: Users },
+        { key: 'noSeparateStems', icon: FileAudio }
+      ],
+      business: [
+        { key: 'noPersonalUse', icon: Users }
+      ],
+      test: [
+        { key: 'noFullProduction', icon: AlertCircle },
+        { key: 'noCommercialRights', icon: Globe }
+      ]
+    };
+
+    return [...commonExclusions, ...(packageSpecificExclusions[packageValue] || [])];
+  };
+
+  // Additional package features
+  const getAdditionalFeatures = (packageValue: string) => {
+    const commonFeatures = [
+      { key: 'professionalMixing', icon: Headphones },
+      { key: 'qualityGuarantee', icon: Star },
+      { key: 'customerSupport', icon: Users }
+    ];
+
+    const packageSpecificFeatures: { [key: string]: Array<{ key: string; icon: any }> } = {
+      personal: [
+        { key: 'personalLyrics', icon: Music },
+        { key: 'emotionalConnection', icon: Star }
+      ],
+      premium: [
+        { key: 'distributionReady', icon: Globe },
+        { key: 'professionalMastering', icon: FileAudio }
+      ],
+      business: [
+        { key: 'brandAlignment', icon: Users },
+        { key: 'commercialLicense', icon: Globe }
+      ],
+      artist: [
+        { key: 'fullRights', icon: Globe },
+        { key: 'stemFiles', icon: FileAudio },
+        { key: 'artistCollaboration', icon: Users }
+      ]
+    };
+
+    return [...commonFeatures, ...(packageSpecificFeatures[packageValue] || [])];
   };
 
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
@@ -112,7 +173,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
       {selectedPackageData && <div className="max-w-lg mx-auto">
           <Card className="bg-white/20 backdrop-blur-md border-l-4 border-l-orange-500 border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/25">
             <CardContent className="p-6">
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {/* Header with package name and price */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -154,36 +215,75 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
 
                 {/* Package Features */}
                 {selectedPackageData.includes && selectedPackageData.includes.length > 0 && (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <Star className="w-4 h-4 text-orange-600" />
                       <h4 className="text-sm font-semibold text-gray-900">{t('whatsIncluded')}</h4>
                     </div>
-                    <div className="space-y-1.5">
-                      {selectedPackageData.includes.slice(0, 3).map((include, index) => (
-                        <div key={index} className="flex items-start gap-2 text-xs text-gray-700">
+                    <div className="grid grid-cols-1 gap-2">
+                      {selectedPackageData.includes.map((include, index) => (
+                        <div key={index} className="flex items-start gap-2 text-xs text-gray-700 bg-green-50/50 p-2 rounded-md">
                           <Check className="w-3 h-3 text-green-600 mt-0.5 shrink-0" />
                           <span>{t(include.include_key)}</span>
                         </div>
                       ))}
-                      {selectedPackageData.includes.length > 3 && (
-                        <div className="text-xs text-orange-600 font-medium">
-                          +{selectedPackageData.includes.length - 3} more features...
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
 
-                {/* Quick Stats */}
-                <div className="flex items-center justify-between pt-2 border-t border-white/20">
-                  <div className="flex items-center gap-1">
-                    <Headphones className="w-3 h-3 text-orange-500" />
-                    <span className="text-xs text-gray-600">{t('professionalQuality')}</span>
+                {/* Additional Features */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Info className="w-4 h-4 text-blue-600" />
+                    <h4 className="text-sm font-semibold text-gray-900">{t('additionalFeatures')}</h4>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-orange-500" />
-                    <span className="text-xs text-gray-600">{t(selectedPackageData.delivery_time_key)}</span>
+                  <div className="grid grid-cols-1 gap-2">
+                    {getAdditionalFeatures(selectedPackageData.value).map((feature, index) => {
+                      const IconComponent = feature.icon;
+                      return (
+                        <div key={index} className="flex items-start gap-2 text-xs text-gray-700 bg-blue-50/50 p-2 rounded-md">
+                          <IconComponent className="w-3 h-3 text-blue-600 mt-0.5 shrink-0" />
+                          <span>{t(feature.key)}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* What's NOT Included */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <X className="w-4 h-4 text-red-600" />
+                    <h4 className="text-sm font-semibold text-gray-900">{t('notIncluded')}</h4>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2">
+                    {getExclusions(selectedPackageData.value).map((exclusion, index) => {
+                      const IconComponent = exclusion.icon;
+                      return (
+                        <div key={index} className="flex items-start gap-2 text-xs text-gray-600 bg-red-50/50 p-2 rounded-md border border-red-100/50">
+                          <IconComponent className="w-3 h-3 text-red-500 mt-0.5 shrink-0" />
+                          <span>{t(exclusion.key)}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Package Stats Grid */}
+                <div className="grid grid-cols-2 gap-4 pt-3 border-t border-white/20">
+                  <div className="flex items-center gap-2 bg-white/30 p-2 rounded-md">
+                    <Headphones className="w-4 h-4 text-orange-500" />
+                    <div>
+                      <div className="text-xs font-medium text-gray-900">{t('quality')}</div>
+                      <div className="text-xs text-gray-600">{t('professional')}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/30 p-2 rounded-md">
+                    <Calendar className="w-4 h-4 text-orange-500" />
+                    <div>
+                      <div className="text-xs font-medium text-gray-900">{t('delivery')}</div>
+                      <div className="text-xs text-gray-600">{t(selectedPackageData.delivery_time_key)}</div>
+                    </div>
                   </div>
                 </div>
               </div>
