@@ -152,24 +152,25 @@ const VideoHero = () => {
     }
   };
 
+  // Calculate mobile height for 16:9 aspect ratio
   const getMobileHeight = () => {
-    if (!isMobile || !videoDimensions.width || !videoDimensions.height) {
+    if (!isMobile) {
       return undefined;
     }
     const screenWidth = window.innerWidth;
-    const aspectRatio = videoDimensions.width / videoDimensions.height;
-    const calculatedHeight = screenWidth / aspectRatio;
+    // Force 16:9 aspect ratio on mobile
+    const calculatedHeight = (screenWidth * 9) / 16;
     return `${calculatedHeight}px`;
   };
 
   const mobileHeight = getMobileHeight();
   const sectionStyle = isMobile && mobileHeight ? {
     height: mobileHeight,
-    minHeight: '50vh'
+    minHeight: 'auto'
   } : {};
 
   return (
-    <section className={`video-hero relative overflow-hidden ${isMobile ? 'min-h-[50vh]' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
+    <section className={`video-hero relative overflow-hidden ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
       {/* Background image - Only visible on desktop */}
       {!isMobile && (
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
@@ -207,7 +208,7 @@ const VideoHero = () => {
         ref={videoRef}
         loop
         playsInline
-        className={`absolute top-0 left-0 w-full h-full ${isMobile ? 'object-cover' : 'object-contain md:object-cover'} object-center`}
+        className={`absolute top-0 left-0 w-full h-full object-cover object-center`}
         key={videoSrc}
       >
         <source src={videoSrc} type="video/mp4" />
@@ -247,11 +248,11 @@ const VideoHero = () => {
       )}
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-purple-900/30 to-black/80"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
 
       {/* Title at Bottom */}
-      <div className={`absolute ${isMobile ? 'bottom-6 sm:bottom-8' : 'bottom-12 sm:bottom-16 md:bottom-20'} left-0 right-0 z-10 text-center text-white px-4`}>
-        <h1 className={`${isMobile ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-3xl md:text-4xl lg:text-6xl'} font-bold animate-float bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent`}>
+      <div className={`absolute ${isMobile ? 'bottom-4' : 'bottom-12 sm:bottom-16 md:bottom-20'} left-0 right-0 z-10 text-center text-white px-4`}>
+        <h1 className={`${isMobile ? 'text-lg' : 'text-2xl sm:text-3xl md:text-4xl lg:text-6xl'} font-bold animate-float bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent`}>
           {t('heroTitle')}
         </h1>
       </div>
