@@ -100,7 +100,7 @@ const Footer = () => {
           <ArrowUp className="w-5 h-5 text-white" />
         </Button>}
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10 sm:py-8 py-[21px]">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 sm:py-1 py-[1px]">
         {/* Main 4-column layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           
