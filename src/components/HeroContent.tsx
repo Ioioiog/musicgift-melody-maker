@@ -32,7 +32,7 @@ const HeroContent = () => {
   };
 
   return (
-    <section className="py-20 px-4 text-white relative overflow-hidden min-h-screen flex items-center" style={backgroundStyle}>
+    <section className="py-8 px-4 text-white relative overflow-hidden" style={backgroundStyle}>
       {/* Enhanced overlay with gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
       
@@ -62,38 +62,14 @@ const HeroContent = () => {
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10 w-full">
-        {/* Scroll Indicator - Now at the top */}
         <motion.div 
-          className="flex justify-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <motion.div 
-            className="flex flex-col items-center gap-2 text-white/80"
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <span className="text-sm font-medium">Scroll to explore</span>
-            <div className="w-8 h-12 border-2 border-white/50 rounded-full flex justify-center relative overflow-hidden">
-              <motion.div 
-                className="w-1.5 h-3 bg-white/70 rounded-full mt-2"
-                animate={{ y: [0, 16, 0], opacity: [1, 0, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </div>
-            <ArrowDown className="w-4 h-4 animate-bounce" />
-          </motion.div>
-        </motion.div>
-
-        <motion.div 
-          className="text-center bg-gradient-to-r from-white/10 via-white/15 to-white/10 backdrop-blur-lg rounded-3xl border border-white/20 p-8 md:p-12 shadow-2xl"
+          className="text-center bg-gradient-to-r from-white/10 via-white/15 to-white/10 backdrop-blur-lg rounded-3xl border border-white/20 p-6 md:p-8 shadow-2xl"
           initial={{ opacity: 0, y: 30, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <motion.p 
-            className="text-xl md:text-2xl text-white/90 mb-12 max-w-4xl mx-auto leading-relaxed"
+            className="text-lg md:text-xl text-white/90 mb-8 max-w-4xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.0 }}
@@ -102,7 +78,7 @@ const HeroContent = () => {
           </motion.p>
           
           <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.2 }}
