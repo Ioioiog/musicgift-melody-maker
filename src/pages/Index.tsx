@@ -68,7 +68,7 @@ const Index = () => {
 
       {/* CTA Section */}
       <section style={backgroundStyle} className="px-4 text-white text-center relative overflow-hidden my-0 py-[44px]">
-        <div className="absolute inset-0 bg-black/20 my-[33px] py-0"></div>
+        <div className="absolute inset-0 bg-black/20 py-0 my-0"></div>
         <div className="max-w-4xl mx-auto relative z-10">
           <Sparkles className="w-16 h-16 mx-auto mb-6 text-yellow-400" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
