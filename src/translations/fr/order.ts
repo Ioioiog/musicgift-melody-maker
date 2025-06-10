@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Chargement des forfaits...",
   loadingSteps: "Chargement des étapes...",
@@ -181,4 +180,43 @@ export const orderTranslations = {
   // VAT validation errors
   vatCodeTooShort: "Code TVA trop court",
   vatCodeInvalidFormat: "Code TVA invalide pour le pays sélectionné",
+  
+  // New step titles
+  recipientDetails: "Détails du Destinataire",
+  messageDetails: "Détails du Message",
+  
+  // New field labels and placeholders
+  vocalPreference: "Préférence Vocale",
+  songStyleExample: "Exemple de Style Musical YouTube",
+  recipientPronunciation: "Prononciation du Nom du Destinataire (Audio)",
+  recipientFavoriteGenre: "Genre Musical Préféré du Destinataire",
+  recipientHobbies: "Loisirs/Intérêts du Destinataire",
+  specialOccasion: "Occasion Spéciale",
+  specialMemories: "Souvenirs Spéciaux",
+  sharedExperiences: "Expériences Partagées",
+  insideJokes: "Blagues/Références Privées",
+  futureWishes: "Souhaits d'Avenir",
+  
+  // Vocal preference options
+  voiceDuet: "Duo",
+  
+  // Special occasion options
+  occasionBirthday: "Anniversaire",
+  occasionAnniversary: "Anniversaire de Mariage",
+  occasionGraduation: "Remise de Diplôme",
+  occasionApology: "Excuses",
+  occasionThankYou: "Remerciement",
+  occasionJustBecause: "Juste Parce Que",
+  
+  // Placeholders for new fields
+  vocalPreferencePlaceholder: "Sélectionnez le type vocal préféré",
+  songStyleExamplePlaceholder: "Avez-vous un lien YouTube pour un style de chanson similaire ?",
+  recipientPronunciationPlaceholder: "Enregistrez comment prononcer le nom du destinataire",
+  recipientFavoriteGenrePlaceholder: "Quel est leur genre musical préféré ?",
+  recipientHobbiesPlaceholder: "Parlez-nous de leurs loisirs et intérêts",
+  specialOccasionPlaceholder: "Quelle est l'occasion spéciale ?",
+  specialMemoriesPlaceholder: "Partagez des souvenirs spéciaux avec cette personne",
+  sharedExperiencesPlaceholder: "Décrivez les expériences que vous avez partagées ensemble",
+  insideJokesPlaceholder: "Des références spéciales que vous deux seuls comprendriez",
+  futureWishesPlaceholder: "Ce que vous lui souhaitez pour l'avenir",
 };

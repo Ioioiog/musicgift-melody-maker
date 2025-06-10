@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePackages, useAddons, usePackageSteps } from '@/hooks/usePackageData';
+import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useOrderWizardState } from '@/hooks/useOrderWizardState';
 import { validateFormData, prepareOrderData } from '@/utils/orderValidation';
+import { usePackageStepsData } from '@/hooks/usePackageStepsData';
 import FormFieldRenderer from './order/FormFieldRenderer';
 import StepIndicator from './order/StepIndicator';
 import PackageSelectionStep from './order/PackageSelectionStep';
@@ -65,10 +66,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     data: addons = []
   } = useAddons();
   const selectedPackage = formData.package as string;
-  const {
-    data: allPackageSteps = [],
-    isLoading: isStepsLoading
-  } = usePackageSteps(selectedPackage);
+  
+  // Use the new package steps data instead of Supabase
+  const allPackageSteps = usePackageStepsData(selectedPackage);
 
   // Notify parent component of order data changes
   useEffect(() => {
