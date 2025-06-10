@@ -310,9 +310,15 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
               placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
               required={field.required}
               className={cn(
-                "h-8 text-sm border-2 border-white/30 bg-white/10 focus:border-orange-500 focus:ring-orange-500 focus:bg-white/20 transition-all duration-200 text-white placeholder:text-white/60",
+                "h-8 text-sm border-2 border-white/30 focus:border-orange-500 focus:ring-orange-500 transition-all duration-200",
+                "bg-white/10 !bg-white/10 text-white !text-white placeholder:text-white/60 !placeholder:text-white/60",
+                "focus:bg-white/20 !focus:bg-white/20",
                 isVatField && vatError && "border-red-500 focus:border-red-500"
               )}
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.1) !important',
+                color: 'white !important'
+              }}
             />
             {isVatField && vatError && (
               <div className="flex items-center space-x-2 text-red-300 text-xs bg-red-500/20 p-1.5 rounded-md border border-red-400/30">
@@ -330,7 +336,15 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
             onChange={(e) => onChange(e.target.value)}
             placeholder={field.placeholder_key ? t(field.placeholder_key) : ''}
             required={field.required}
-            className="min-h-[60px] text-sm border-2 border-white/30 bg-white/10 focus:border-orange-500 focus:ring-orange-500 focus:bg-white/20 transition-all duration-200 text-white placeholder:text-white/60"
+            className={cn(
+              "min-h-[60px] text-sm border-2 border-white/30 focus:border-orange-500 focus:ring-orange-500 transition-all duration-200",
+              "bg-white/10 !bg-white/10 text-white !text-white placeholder:text-white/60 !placeholder:text-white/60",
+              "focus:bg-white/20 !focus:bg-white/20"
+            )}
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.1) !important',
+              color: 'white !important'
+            }}
           />
         );
 
