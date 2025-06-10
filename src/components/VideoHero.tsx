@@ -246,8 +246,8 @@ const VideoHero = () => {
         </button>
       )}
 
-      {/* Dark Overlay - kept minimal to not interfere with particles */}
-      <div className="absolute inset-0 bg-transparent py-0 my-[46px]"></div>
+      {/* Dark Overlay - Enhanced with gradient overlay similar to HeroContent */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 py-0 my-[46px]"></div>
 
       {/* Title at Bottom */}
       <div className="absolute bottom-12 sm:bottom-16 md:bottom-20 left-0 right-0 z-10 text-center text-white px-4">
