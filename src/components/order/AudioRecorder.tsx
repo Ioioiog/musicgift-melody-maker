@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mic, Square, Play, Pause, RotateCcw } from 'lucide-react';
@@ -241,11 +240,10 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
               disabled={disabled}
             >
               {isPlaying ? (
-                <Pause className="w-4 h-4 mr-2" />
+                <Pause className="w-4 h-4" />
               ) : (
-                <Play className="w-4 h-4 mr-2" />
+                <Play className="w-4 h-4" />
               )}
-              {isPlaying ? 'Pause' : 'Play'}
             </Button>
             
             <Button
