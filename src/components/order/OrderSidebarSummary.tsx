@@ -9,7 +9,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useIsMobile } from '@/hooks/use-mobile';
-
 interface OrderSidebarSummaryProps {
   orderData?: {
     selectedPackage?: string;
@@ -17,7 +16,6 @@ interface OrderSidebarSummaryProps {
   };
   giftCard?: any;
 }
-
 const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   orderData,
   giftCard
@@ -35,10 +33,9 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
     currency
   } = useCurrency();
   const isMobile = useIsMobile();
-  
+
   // Explicitly set to collapsed by default on mobile
   const [isCollapsed, setIsCollapsed] = useState(true);
-
   if (!orderData?.selectedPackage) {
     return <div className={isMobile ? "mb-4" : ""}>
         <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
@@ -59,26 +56,20 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
         </Card>
       </div>;
   }
-
   const selectedPackageData = packages.find(pkg => pkg.value === orderData.selectedPackage);
   const selectedAddonsData = (orderData.selectedAddons || []).map(addonKey => addons.find(addon => addon.addon_key === addonKey)).filter(Boolean);
-
   if (!selectedPackageData) return null;
-
   const packagePrice = getPackagePrice(selectedPackageData, currency);
   const addonsPrice = selectedAddonsData.reduce((total, addon) => total + (addon ? getAddonPrice(addon, currency) : 0), 0);
   const subtotal = packagePrice + addonsPrice;
-
   let giftCreditApplied = 0;
   if (giftCard) {
     const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
     giftCreditApplied = Math.min(giftBalance, subtotal);
   }
-
   const finalTotal = Math.max(0, subtotal - giftCreditApplied);
-
   return <div className={isMobile ? "mb-4" : ""}>
-      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl py-0 my-0">
+      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl py-[22px] my-[64px]">
         <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-6 py-2 sm:py-[15px] my-[1px]">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
@@ -170,5 +161,4 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
       </Card>
     </div>;
 };
-
 export default OrderSidebarSummary;
