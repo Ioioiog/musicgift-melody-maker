@@ -4,6 +4,7 @@ import { Play, Volume2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion } from 'framer-motion';
+
 const VideoHero = () => {
   const {
     t,
@@ -23,6 +24,7 @@ const VideoHero = () => {
   // Select video based on language with fallback
   const videoSrc = language === 'ro' ? '/lovable-uploads/Jingle Musicgift master.mp4' : '/lovable-uploads/MusicGiftvideoENG.mp4';
   console.log('VideoHero: Current language:', language, 'Video source:', videoSrc);
+
   const getMobileHeight = () => {
     if (!isMobile || !videoDimensions.width || !videoDimensions.height) {
       return undefined;
@@ -162,52 +164,87 @@ const VideoHero = () => {
     height: mobileHeight,
     minHeight: '60vh'
   } : {};
-  return <section className={`video-hero relative overflow-hidden ${isMobile ? 'min-h-[60vh]' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
+  return (
+    <section 
+      className={`video-hero relative overflow-hidden ${
+        isMobile ? 'min-h-[60vh]' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'
+      }`} 
+      style={sectionStyle}
+    >
       {/* Background image - Behind everything */}
-      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-      backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)'
-    }}></div>
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
+        style={{ backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)' }}
+      ></div>
 
       {/* Animated background particles - Mobile only */}
       <div className="absolute inset-0 overflow-hidden md:hidden">
-        {[...Array(20)].map((_, i) => <motion.div key={i} className="absolute w-2 h-2 bg-white/20 rounded-full" initial={{
-        x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
-        y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
-        scale: 0
-      }} animate={{
-        y: [null, -100, (typeof window !== 'undefined' ? window.innerHeight : 800) + 100],
-        scale: [0, 1, 0],
-        opacity: [0, 0.8, 0]
-      }} transition={{
-        duration: Math.random() * 10 + 10,
-        repeat: Infinity,
-        delay: Math.random() * 5
-      }} />)}
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-white/20 rounded-full"
+            initial={{
+              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
+              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+              scale: 0
+            }}
+            animate={{
+              y: [null, -100, (typeof window !== 'undefined' ? window.innerHeight : 800) + 100],
+              scale: [0, 1, 0],
+              opacity: [0, 0.8, 0]
+            }}
+            transition={{
+              duration: Math.random() * 10 + 10,
+              repeat: Infinity,
+              delay: Math.random() * 5
+            }}
+          />
+        ))}
       </div>
 
       {/* Video Background - Now with transparent background to show background image */}
-      <video ref={videoRef} loop playsInline key={videoSrc} className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center absolute inset-0 overflow-hidden">
+      <video 
+        ref={videoRef} 
+        loop 
+        playsInline 
+        className="absolute top-0 left-0 w-full h-full object-contain md:object-cover object-center" 
+        key={videoSrc}
+      >
         <source src={videoSrc} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
       {/* Loading Overlay - Updated to match HeroContent with purple gradient */}
-      {isLoading && <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20">
+      {isLoading && (
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20">
           <div className="text-white text-xl">Loading...</div>
-        </div>}
+        </div>
+      )}
 
       {/* Play Button Overlay */}
-      {showPlayButton && !isLoading && <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-20">
-          <Button onClick={handlePlayWithAudio} size="lg" className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm">
+      {showPlayButton && !isLoading && (
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-20">
+          <Button 
+            onClick={handlePlayWithAudio} 
+            size="lg" 
+            className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
+          >
             <Play className="w-8 h-8 mr-2" />
             {t('playWithSound', 'Play with Sound')}
           </Button>
-        </div>}
+        </div>
+      )}
 
       {/* Audio Control Button - Positioned below navbar */}
-      {!showPlayButton && !isLoading && <button onClick={handleToggleAudio} className="absolute top-16 sm:top-20 md:top-24 right-4 z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 p-3 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm" aria-label={hasAudio ? 'Mute video' : 'Unmute video'}>
+      {!showPlayButton && !isLoading && (
+        <button 
+          onClick={handleToggleAudio} 
+          className="absolute top-16 sm:top-20 md:top-24 right-4 z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 p-3 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm" 
+          aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
+        >
           <Volume2 className={`w-6 h-6 ${hasAudio ? 'opacity-100' : 'opacity-60'}`} />
-        </button>}
+        </button>
+      )}
 
       {/* Dark Overlay - kept minimal to not interfere with particles */}
       <div className="absolute inset-0 bg-transparent py-0 my-[46px]"></div>
@@ -218,6 +255,8 @@ const VideoHero = () => {
           {t('heroTitle')}
         </h1>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default VideoHero;
