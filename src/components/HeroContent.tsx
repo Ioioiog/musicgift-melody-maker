@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -102,15 +101,6 @@ const HeroContent = () => {
             <Music className="w-16 h-16 text-yellow-400 animate-pulse" />
           </motion.div>
 
-          <motion.h2 
-            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-          >
-            {t('heroCtaTitle') || 'Ready to Create Magic?'}
-          </motion.h2>
-          
           <motion.p 
             className="text-xl md:text-2xl text-white/90 mb-12 max-w-4xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
