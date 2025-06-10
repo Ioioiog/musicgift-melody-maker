@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music, ArrowUp } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -91,11 +90,11 @@ const Footer = () => {
       }}></div>
       </div>
 
-      {/* Back to Top Button */}
+      {/* Back to Top Button - moved to bottom-left */}
       {showBackToTop && (
         <Button 
           onClick={scrollToTop} 
-          className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-orange-500 hover:bg-orange-600 border-2 border-white/20 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 animate-fade-in" 
+          className="fixed bottom-8 left-8 z-50 w-12 h-12 rounded-full bg-orange-500 hover:bg-orange-600 border-2 border-white/20 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 animate-fade-in" 
           size="icon"
         >
           <ArrowUp className="w-5 h-5 text-white" />
