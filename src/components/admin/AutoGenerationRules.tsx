@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -17,9 +16,28 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
+import { 
+  useAutoGenerationRules, 
+  useCreateAutoRule, 
+  useToggleAutoRule, 
+  useDeleteAutoRule,
+  CreateAutoRuleData 
+} from "@/hooks/useAutoGenerationRules";
+import { Trash2, Edit } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const autoRuleSchema = z.object({
+  name: z.string().min(1, "Name is required"),
   enabled: z.boolean(),
   triggerType: z.enum(["order_completed", "first_order", "order_amount"]),
   discountType: z.enum(["percentage", "fixed"]),
@@ -31,52 +49,34 @@ const autoRuleSchema = z.object({
   limitPerCustomer: z.number().min(1).optional(),
 });
 
-type AutoRuleFormData = z.infer<typeof autoRuleSchema>;
-
 const AutoGenerationRules = () => {
-  const { toast } = useToast();
-  const [rules, setRules] = useState<AutoRuleFormData[]>([
-    {
-      enabled: false,
-      triggerType: "order_completed",
-      discountType: "percentage",
-      discountValue: 10,
-      validityDays: 30,
-      codePrefix: "RETURN",
-      limitPerCustomer: 1,
-    },
-  ]);
+  const { data: rules, isLoading } = useAutoGenerationRules();
+  const createRule = useCreateAutoRule();
+  const toggleRule = useToggleAutoRule();
+  const deleteRule = useDeleteAutoRule();
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm<AutoRuleFormData>({
+  } = useForm<CreateAutoRuleData>({
     resolver: zodResolver(autoRuleSchema),
-    defaultValues: rules[0],
+    defaultValues: {
+      enabled: false,
+      validityDays: 30,
+      minimumOrderAmount: 0,
+    },
   });
 
   const triggerType = watch("triggerType");
   const discountType = watch("discountType");
 
-  const onSubmit = async (data: AutoRuleFormData) => {
-    try {
-      // Here you would save the rules to your backend
-      console.log("Saving auto-generation rule:", data);
-      
-      toast({
-        title: "Success",
-        description: "Auto-generation rule saved successfully",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to save auto-generation rule",
-        variant: "destructive",
-      });
-    }
+  const onSubmit = async (data: CreateAutoRuleData) => {
+    await createRule.mutateAsync(data);
+    reset();
   };
 
   const getTriggerDescription = (type: string) => {
@@ -92,6 +92,18 @@ const AutoGenerationRules = () => {
     }
   };
 
+  const handleToggle = (id: string, enabled: boolean) => {
+    toggleRule.mutate({ id, enabled });
+  };
+
+  const handleDelete = (id: string) => {
+    deleteRule.mutate(id);
+  };
+
+  if (isLoading) {
+    return <div>Loading auto-generation rules...</div>;
+  }
+
   return (
     <div className="space-y-6">
       <Card>
@@ -102,40 +114,60 @@ const AutoGenerationRules = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {rules.length === 0 ? (
+          {!rules || rules.length === 0 ? (
             <p className="text-muted-foreground text-center py-4">
               No auto-generation rules configured yet.
             </p>
           ) : (
             <div className="space-y-4">
-              {rules.map((rule, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="space-y-1">
+              {rules.map((rule) => (
+                <div key={rule.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="space-y-1 flex-1">
                     <div className="flex items-center gap-2">
                       <Badge variant={rule.enabled ? "default" : "secondary"}>
                         {rule.enabled ? "Active" : "Inactive"}
                       </Badge>
-                      <span className="font-medium">{rule.codePrefix}XXXX</span>
+                      <span className="font-medium">{rule.name}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {rule.code_prefix}XXXX
+                      </span>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      {getTriggerDescription(rule.triggerType)}
+                      {getTriggerDescription(rule.trigger_type)}
                     </p>
                     <p className="text-sm">
-                      {rule.discountType === "percentage" 
-                        ? `${rule.discountValue}% off` 
-                        : `${rule.discountValue} RON off`}
-                      {rule.validityDays && ` • Valid for ${rule.validityDays} days`}
+                      {rule.discount_type === "percentage" 
+                        ? `${rule.discount_value}% off` 
+                        : `${rule.discount_value / 100} RON off`}
+                      {rule.validity_days && ` • Valid for ${rule.validity_days} days`}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch
                       checked={rule.enabled}
-                      onCheckedChange={(checked) => {
-                        const updatedRules = [...rules];
-                        updatedRules[index].enabled = checked;
-                        setRules(updatedRules);
-                      }}
+                      onCheckedChange={(checked) => handleToggle(rule.id, checked)}
                     />
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Auto-Generation Rule</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete "{rule.name}"? This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => handleDelete(rule.id)}>
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </div>
               ))}
@@ -154,6 +186,36 @@ const AutoGenerationRules = () => {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Rule Name */}
+              <div className="space-y-2">
+                <Label htmlFor="name">Rule Name *</Label>
+                <Input
+                  id="name"
+                  {...register("name")}
+                  placeholder="e.g., First Order Welcome"
+                />
+                {errors.name && (
+                  <p className="text-sm text-destructive">{errors.name.message}</p>
+                )}
+              </div>
+
+              {/* Code Prefix */}
+              <div className="space-y-2">
+                <Label htmlFor="codePrefix">Code Prefix *</Label>
+                <Input
+                  id="codePrefix"
+                  {...register("codePrefix")}
+                  placeholder="RETURN"
+                  className="uppercase"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Generated codes will be: {watch("codePrefix") || "PREFIX"}XXXX
+                </p>
+                {errors.codePrefix && (
+                  <p className="text-sm text-destructive">{errors.codePrefix.message}</p>
+                )}
+              </div>
+
               {/* Trigger Type */}
               <div className="space-y-2">
                 <Label htmlFor="triggerType">Trigger Event *</Label>
@@ -170,20 +232,9 @@ const AutoGenerationRules = () => {
                 <p className="text-xs text-muted-foreground">
                   {getTriggerDescription(triggerType)}
                 </p>
-              </div>
-
-              {/* Code Prefix */}
-              <div className="space-y-2">
-                <Label htmlFor="codePrefix">Code Prefix *</Label>
-                <Input
-                  id="codePrefix"
-                  {...register("codePrefix")}
-                  placeholder="RETURN"
-                  className="uppercase"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Generated codes will be: {watch("codePrefix") || "PREFIX"}XXXX
-                </p>
+                {errors.triggerType && (
+                  <p className="text-sm text-destructive">{errors.triggerType.message}</p>
+                )}
               </div>
 
               {/* Discount Type */}
@@ -198,6 +249,9 @@ const AutoGenerationRules = () => {
                     <SelectItem value="fixed">Fixed Amount</SelectItem>
                   </SelectContent>
                 </Select>
+                {errors.discountType && (
+                  <p className="text-sm text-destructive">{errors.discountType.message}</p>
+                )}
               </div>
 
               {/* Discount Value */}
@@ -212,6 +266,9 @@ const AutoGenerationRules = () => {
                   {...register("discountValue", { valueAsNumber: true })}
                   placeholder={discountType === "percentage" ? "10" : "50.00"}
                 />
+                {errors.discountValue && (
+                  <p className="text-sm text-destructive">{errors.discountValue.message}</p>
+                )}
               </div>
 
               {/* Validity Days */}
@@ -223,6 +280,9 @@ const AutoGenerationRules = () => {
                   {...register("validityDays", { valueAsNumber: true })}
                   placeholder="30"
                 />
+                {errors.validityDays && (
+                  <p className="text-sm text-destructive">{errors.validityDays.message}</p>
+                )}
               </div>
 
               {/* Limit Per Customer */}

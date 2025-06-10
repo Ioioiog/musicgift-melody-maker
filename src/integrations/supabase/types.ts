@@ -160,6 +160,57 @@ export type Database = {
         }
         Relationships: []
       }
+      discount_auto_rules: {
+        Row: {
+          code_prefix: string
+          created_at: string
+          created_by: string | null
+          discount_type: string
+          discount_value: number
+          enabled: boolean
+          id: string
+          limit_per_customer: number | null
+          maximum_discount_amount: number | null
+          minimum_order_amount: number | null
+          name: string
+          trigger_type: string
+          updated_at: string
+          validity_days: number
+        }
+        Insert: {
+          code_prefix: string
+          created_at?: string
+          created_by?: string | null
+          discount_type: string
+          discount_value: number
+          enabled?: boolean
+          id?: string
+          limit_per_customer?: number | null
+          maximum_discount_amount?: number | null
+          minimum_order_amount?: number | null
+          name: string
+          trigger_type: string
+          updated_at?: string
+          validity_days: number
+        }
+        Update: {
+          code_prefix?: string
+          created_at?: string
+          created_by?: string | null
+          discount_type?: string
+          discount_value?: number
+          enabled?: boolean
+          id?: string
+          limit_per_customer?: number | null
+          maximum_discount_amount?: number | null
+          minimum_order_amount?: number | null
+          name?: string
+          trigger_type?: string
+          updated_at?: string
+          validity_days?: number
+        }
+        Relationships: []
+      }
       discount_codes: {
         Row: {
           code: string
