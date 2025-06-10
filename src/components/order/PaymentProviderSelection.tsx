@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -78,7 +77,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
 
   if (isLoading) {
     return (
-      <Card className="bg-gradient-to-br from-green-500/20 to-blue-500/20 backdrop-blur-sm border border-green-400/30">
+      <Card className="bg-white/10 backdrop-blur-sm border border-white/30">
         <CardContent className="py-8">
           <div className="flex items-center justify-center">
             <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
@@ -93,7 +92,7 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
     .sort((a, b) => getProviderOrder(a.provider_name) - getProviderOrder(b.provider_name));
 
   return (
-    <Card className="bg-gradient-to-br from-green-500/20 to-blue-500/20 backdrop-blur-sm border border-green-400/30">
+    <Card className="bg-white/10 backdrop-blur-sm border border-white/30">
       <CardHeader>
         <CardTitle className="text-white">{t('choosePaymentMethod', 'Choose Payment Method')}</CardTitle>
         <p className="text-sm text-white/80">

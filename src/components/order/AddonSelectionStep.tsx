@@ -76,7 +76,7 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
           </p>
         </div>
         <div className="text-center">
-          <Card className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-white/20">
+          <Card className="bg-white/10 backdrop-blur-sm border border-white/20">
             <CardContent className="p-1.5">
               <p className="text-white/80 text-xs">
                 {t('proceedToNextStep', 'You can proceed to the next step.')}
@@ -104,7 +104,7 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
           const isSelected = selectedAddons.includes(addon.addon_key);
           
           return (
-            <Card key={addon.id} className="bg-gradient-to-br from-orange-500/20 to-purple-600/20 backdrop-blur-sm border border-orange-400/30 hover:border-orange-300/50 transition-colors">
+            <Card key={addon.id} className="bg-white/10 backdrop-blur-sm border border-white/30 hover:border-white/40 transition-colors">
               <CardContent className="p-1.5">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-1.5 flex-1">
@@ -196,7 +196,7 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
 
       {selectedAddons.length === 0 && (
         <div className="text-center">
-          <Card className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-white/20">
+          <Card className="bg-white/10 backdrop-blur-sm border border-white/20">
             <CardContent className="p-1.5">
               <p className="text-white/80 text-xs">
                 {t('noAddonsSelected', 'No add-ons selected. You can proceed without any add-ons or select some above.')}
