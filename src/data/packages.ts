@@ -1,4 +1,26 @@
 
+import { Package, Step, Field } from '@/types';
+
+// Convert packageSteps to proper Step format
+const convertPackageStepsToSteps = (packageValue: string): Step[] => {
+  const steps = packageSteps[packageValue as keyof typeof packageSteps] || [];
+  return steps.map(step => ({
+    id: `${packageValue}_step_${step.step_number}`,
+    step_number: step.step_number,
+    title_key: step.title_key,
+    fields: step.fields.map(field => ({
+      id: field.id,
+      field_name: field.field_name,
+      field_type: field.field_type,
+      label_key: field.placeholder_key, // Use placeholder_key as label_key for compatibility
+      placeholder_key: field.placeholder_key,
+      required: field.required,
+      field_order: field.field_order,
+      options: field.options
+    } as Field))
+  } as Step));
+};
+
 // Package step configurations for the order wizard
 export const packageSteps = {
   personal: [
@@ -413,44 +435,46 @@ export const packageSteps = {
   ]
 };
 
-// Mock packages data to maintain compatibility with existing components
-export const packages = [
+// Main packages data that fully complies with Package interface
+export const packages: Package[] = [
   {
     id: '1',
     value: 'personal',
     label_key: 'personalPackage',
+    tagline_key: 'personalPackageTagline',
     description_key: 'personalPackageDesc',
     price_ron: 29900,
     price_eur: 6000,
     price_usd: 6500,
     delivery_time_key: '3-5 days',
-    includes: []
+    tag: 'popular',
+    is_active: true,
+    is_popular: true,
+    includes: [],
+    available_addons: [],
+    steps: convertPackageStepsToSteps('personal')
   },
   {
     id: '2',
     value: 'premium',
     label_key: 'premiumPackage',
+    tagline_key: 'premiumPackageTagline',
     description_key: 'premiumPackageDesc',
     price_ron: 59900,
     price_eur: 12000,
     price_usd: 13000,
     delivery_time_key: '5-7 days',
-    includes: []
+    tag: 'premium',
+    is_active: true,
+    is_popular: false,
+    includes: [],
+    available_addons: [],
+    steps: convertPackageStepsToSteps('premium')
   }
 ];
 
 // Mock addons data
 export const addOns = [];
 
-// Type definition for compatibility
-export interface PackageData {
-  id: string;
-  value: string;
-  label_key: string;
-  description_key: string;
-  price_ron: number;
-  price_eur: number;
-  price_usd: number;
-  delivery_time_key: string;
-  includes: any[];
-}
+// Export the Package type for compatibility
+export type { Package };
