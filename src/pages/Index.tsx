@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -10,19 +11,21 @@ import CollaborationSection from "@/components/CollaborationSection";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
-import { Heart, Sparkles, Music } from "lucide-react";
+import { Heart, Sparkles, Music, ShoppingCart, Gift } from "lucide-react";
 import { motion } from "framer-motion";
+
 const Index = () => {
-  const {
-    t
-  } = useLanguage();
+  const { t } = useLanguage();
+
   const backgroundStyle = {
     backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   };
-  return <div className="min-h-screen">
+
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Video Hero Section */}
@@ -77,16 +80,36 @@ const Index = () => {
           <p className="text-xl mb-8 opacity-90">
             {t('heroCtaSubtitle')}
           </p>
-          <Link to="/packages">
-            <Button size="lg" className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm">
-              <Heart className="w-5 h-5 mr-2" />
-              {t('getStarted')}
-            </Button>
-          </Link>
+          
+          {/* Three Call-to-Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link to="/order">
+              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white border-0 min-w-[180px]">
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                {t('orderNow')}
+              </Button>
+            </Link>
+            
+            <Link to="/gift">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white border-0 min-w-[180px]">
+                <Gift className="w-5 h-5 mr-2" />
+                {t('buyGiftCard', 'Buy a Gift Card')}
+              </Button>
+            </Link>
+            
+            <Link to="/packages">
+              <Button size="lg" className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm min-w-[180px]">
+                <Music className="w-5 h-5 mr-2" />
+                {t('seePackages')}
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
