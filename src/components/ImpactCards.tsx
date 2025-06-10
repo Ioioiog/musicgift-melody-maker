@@ -172,7 +172,7 @@ const ImpactCards = () => {
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   };
-  return <section className="py-16 relative overflow-hidden" style={backgroundStyle}>
+  return <section style={backgroundStyle} className="relative overflow-hidden py-[26px] my-0">
       
       <div className="max-w-full mx-auto px-0 relative z-10">
         <div className="overflow-hidden">
