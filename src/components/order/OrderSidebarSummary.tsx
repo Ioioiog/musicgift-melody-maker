@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -37,17 +38,17 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   // Explicitly set to collapsed by default on mobile
   const [isCollapsed, setIsCollapsed] = useState(true);
   if (!orderData?.selectedPackage) {
-    return <div className={isMobile ? "mb-4" : ""}>
+    return <div className={isMobile ? "mb-2" : ""}>
         <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
-          <CardHeader className="pb-3 px-3 sm:px-6 py-3 sm:py-4">
-            <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
+          <CardHeader className="pb-3 px-3 sm:px-6 py-2 sm:py-4">
+            <CardTitle className="flex items-center gap-2 text-white text-sm sm:text-lg">
               <Package className="w-4 h-4 sm:w-5 sm:h-5" />
               {t('orderSummary', 'Rezumatul comenzii')}
             </CardTitle>
           </CardHeader>
           <CardContent className="px-3 sm:px-6">
-            <div className="text-center py-6 sm:py-8">
-              <Package className="w-10 h-10 sm:w-12 sm:h-12 text-white/40 mx-auto mb-3" />
+            <div className="text-center py-4 sm:py-8">
+              <Package className="w-8 h-8 sm:w-12 sm:h-12 text-white/40 mx-auto mb-2" />
               <p className="text-white/70 text-xs sm:text-sm">
                 {t('selectPackageToSeePrice', 'Alege un pachet pentru a vedea prețul')}
               </p>
@@ -68,23 +69,23 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
     giftCreditApplied = Math.min(giftBalance, subtotal);
   }
   const finalTotal = Math.max(0, subtotal - giftCreditApplied);
-  return <div className={isMobile ? "mb-4" : ""}>
-      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl py-[22px] my-[64px]">
-        <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-6 py-2 sm:py-[15px] my-[1px]">
+  return <div className={isMobile ? "mb-2" : ""}>
+      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl py-[16px] my-[32px]">
+        <CardHeader className="pb-1 sm:pb-3 px-3 sm:px-6 py-1 sm:py-[15px] my-[1px]">
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
+            <CardTitle className="flex items-center gap-2 text-white text-sm sm:text-lg">
               <Package className="w-4 h-4 sm:w-5 sm:h-5" />
               {t('orderSummary', 'Rezumatul comenzii')}
             </CardTitle>
-            {isMobile && <Button variant="ghost" size="sm" onClick={() => setIsCollapsed(!isCollapsed)} className="text-white hover:bg-white/10 p-1 h-8 w-8">
-                {isCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+            {isMobile && <Button variant="ghost" size="sm" onClick={() => setIsCollapsed(!isCollapsed)} className="text-white hover:bg-white/10 p-1 h-6 w-6">
+                {isCollapsed ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
               </Button>}
           </div>
         </CardHeader>
         
-        {(!isMobile || !isCollapsed) && <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-3 sm:pb-6 my-[8px] py-0">
+        {(!isMobile || !isCollapsed) && <CardContent className="space-y-2 sm:space-y-4 px-3 sm:px-6 pb-2 sm:pb-6 my-[4px] py-0">
             {/* Package Section */}
-            <div className="space-y-2 sm:space-y-3">
+            <div className="space-y-1 sm:space-y-3">
               <div className="flex justify-between items-start gap-2">
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-white text-xs sm:text-sm truncate">
@@ -102,7 +103,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
             {selectedAddonsData.length > 0 && <>
                 <Separator className="bg-white/20" />
                 <div>
-                  <h4 className="font-medium mb-2 text-white flex items-center gap-2 text-xs sm:text-sm">
+                  <h4 className="font-medium mb-1 sm:mb-2 text-white flex items-center gap-2 text-xs sm:text-sm">
                     <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                     {t('addOns', 'Suplimente')}
                   </h4>
@@ -143,7 +144,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
             <Separator className="bg-white/20" />
 
             {/* Total */}
-            <div className="flex justify-between items-center text-base sm:text-lg font-bold bg-gradient-to-r from-orange-500/20 to-yellow-500/20 p-2 sm:p-3 rounded-lg border border-orange-400/30">
+            <div className="flex justify-between items-center text-sm sm:text-lg font-bold bg-gradient-to-r from-orange-500/20 to-yellow-500/20 p-2 sm:p-3 rounded-lg border border-orange-400/30">
               <span className="text-white">{t('total', 'Total')}</span>
               <span className="text-white">{currency} {finalTotal.toFixed(2)}</span>
             </div>
@@ -153,7 +154,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
               </Badge>}
 
             {/* Package Features */}
-            {selectedPackageData.includes && selectedPackageData.includes.length > 0 && <div className="mt-4 sm:mt-6">
+            {selectedPackageData.includes && selectedPackageData.includes.length > 0 && <div className="mt-2 sm:mt-6">
                 
                 
               </div>}
