@@ -5,17 +5,12 @@ import LegalModals, { useLegalModals } from "@/components/LegalModals";
 import LegalCompliance from "@/components/LegalCompliance";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+
 const Footer = () => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    openTerms,
-    openPrivacy,
-    openRefund,
-    openCookie
-  } = useLegalModals();
+  const { t } = useLanguage();
+  const { openTerms, openPrivacy, openRefund, openCookie } = useLegalModals();
   const [showBackToTop, setShowBackToTop] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 500);
@@ -23,18 +18,18 @@ const Footer = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-  return <footer className="relative overflow-hidden" style={{
-    backgroundImage: 'url(/lovable-uploads/80488a4f-b392-4eca-b181-f587474721fd.png)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
-  }}>
+
+  return (
+    <footer className="relative overflow-hidden" style={{
+      backgroundImage: 'url(/lovable-uploads/80488a4f-b392-4eca-b181-f587474721fd.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
       {/* Lighter Multi-layer Background System */}
       <div className="absolute inset-0">
         {/* Much lighter base gradient layer */}
@@ -96,9 +91,15 @@ const Footer = () => {
       </div>
 
       {/* Back to Top Button */}
-      {showBackToTop && <Button onClick={scrollToTop} className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-orange-500 hover:bg-orange-600 border-2 border-white/20 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 animate-fade-in" size="icon">
+      {showBackToTop && (
+        <Button 
+          onClick={scrollToTop} 
+          className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-orange-500 hover:bg-orange-600 border-2 border-white/20 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 animate-fade-in" 
+          size="icon"
+        >
           <ArrowUp className="w-5 h-5 text-white" />
-        </Button>}
+        </Button>
+      )}
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 sm:py-1 py-[1px]">
         {/* Main 4-column layout */}
@@ -280,9 +281,7 @@ const Footer = () => {
         </div>
 
         {/* Enhanced Visual Separator */}
-        <div className="border-t border-gray-300/20 mt-8 sm:mt-16 relative">
-          
-        </div>
+        <div className="border-t border-gray-300/20 mt-8 sm:mt-16 relative"></div>
 
         {/* Enhanced Final Copyright Section - Now with lighter colors */}
         <div className="mt-8 sm:mt-12 pt-8 sm:pt-12 relative overflow-hidden">
@@ -314,6 +313,8 @@ const Footer = () => {
 
       {/* Include the Legal Modals */}
       <LegalModals t={t} />
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;
