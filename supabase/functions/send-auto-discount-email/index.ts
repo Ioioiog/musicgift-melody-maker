@@ -151,8 +151,37 @@ serve(async (req) => {
 
     if (!brevoResponse.ok) {
       const errorData = await brevoResponse.json()
+      
+      // Log failed email delivery
+      await supabaseClient
+        .from('discount_email_deliveries')
+        .insert({
+          discount_code_id: discountCode.id,
+          discount_code: discountCode.code,
+          recipient_email: customerEmail,
+          recipient_name: customerName,
+          email_type: 'auto_generated',
+          delivery_status: 'failed',
+          error_message: errorData.message || 'Unknown Brevo error'
+        })
+
       throw new Error(`Email delivery failed: ${errorData.message || 'Unknown error'}`)
     }
+
+    const brevoResult = await brevoResponse.json()
+
+    // Log successful email delivery
+    await supabaseClient
+      .from('discount_email_deliveries')
+      .insert({
+        discount_code_id: discountCode.id,
+        discount_code: discountCode.code,
+        recipient_email: customerEmail,
+        recipient_name: customerName,
+        email_type: 'auto_generated',
+        delivery_status: 'sent',
+        brevo_message_id: brevoResult.messageId
+      })
 
     console.log(`Auto-generated discount email sent successfully to ${customerEmail}`)
 

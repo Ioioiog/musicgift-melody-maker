@@ -6,6 +6,7 @@ import DiscountCodesTable from "./DiscountCodesTable";
 import DiscountCodeForm from "./DiscountCodeForm";
 import AutoGenerationRules from "./AutoGenerationRules";
 import DiscountCodeAnalytics from "./DiscountCodeAnalytics";
+import DiscountEmailHistory from "./DiscountEmailHistory";
 
 const DiscountCodesManagement = () => {
   const [activeTab, setActiveTab] = useState("codes");
@@ -20,10 +21,11 @@ const DiscountCodesManagement = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="codes">Discount Codes</TabsTrigger>
           <TabsTrigger value="create">Create Code</TabsTrigger>
           <TabsTrigger value="rules">Auto Generation</TabsTrigger>
+          <TabsTrigger value="email-history">Email History</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
@@ -67,6 +69,10 @@ const DiscountCodesManagement = () => {
               <AutoGenerationRules />
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="email-history" className="space-y-4">
+          <DiscountEmailHistory />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">

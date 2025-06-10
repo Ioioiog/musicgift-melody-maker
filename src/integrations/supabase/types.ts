@@ -259,6 +259,62 @@ export type Database = {
         }
         Relationships: []
       }
+      discount_email_deliveries: {
+        Row: {
+          brevo_message_id: string | null
+          created_at: string
+          delivered_at: string | null
+          delivery_status: string
+          discount_code: string
+          discount_code_id: string | null
+          email_type: string
+          error_message: string | null
+          id: string
+          recipient_email: string
+          recipient_name: string | null
+          sent_at: string
+          updated_at: string
+        }
+        Insert: {
+          brevo_message_id?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          delivery_status?: string
+          discount_code: string
+          discount_code_id?: string | null
+          email_type: string
+          error_message?: string | null
+          id?: string
+          recipient_email: string
+          recipient_name?: string | null
+          sent_at?: string
+          updated_at?: string
+        }
+        Update: {
+          brevo_message_id?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          delivery_status?: string
+          discount_code?: string
+          discount_code_id?: string | null
+          email_type?: string
+          error_message?: string | null
+          id?: string
+          recipient_email?: string
+          recipient_name?: string | null
+          sent_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discount_email_deliveries_discount_code_id_fkey"
+            columns: ["discount_code_id"]
+            isOneToOne: false
+            referencedRelation: "discount_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_accounts: {
         Row: {
           available_folders: Json | null
