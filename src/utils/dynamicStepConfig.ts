@@ -1,22 +1,24 @@
 
-import type { Step, StepField } from '@/types';
+import type { Step, Field } from '@/types';
 
 export const transformStepsForWizard = (steps: any[]): Step[] => {
   return steps.map((step, index) => ({
-    id: index + 1,
-    title: step.title,
-    description: step.description,
-    fields: step.step_fields.map((field: any): StepField => ({
-      name: field.field_name,
-      label_key: field.label_key, // Add this line to include label_key for translations
-      type: field.field_type,
-      required: field.is_required,
-      placeholder: field.placeholder,
-      options: field.field_options ? JSON.parse(field.field_options) : undefined,
-      validation: field.validation_rules ? JSON.parse(field.validation_rules) : undefined,
-      conditional_logic: field.conditional_logic ? JSON.parse(field.conditional_logic) : undefined,
-      section: field.section,
-      order: field.field_order
-    }))
+    id: step.id || (index + 1).toString(),
+    step_number: step.step_number || index + 1,
+    title_key: step.title_key || step.title,
+    fields: step.step_fields?.map((field: any): Field => ({
+      id: field.id || field.field_name,
+      field_name: field.field_name,
+      field_type: field.field_type,
+      label_key: field.label_key, // Include label_key for translations
+      placeholder_key: field.placeholder_key,
+      required: field.is_required || field.required || false,
+      field_order: field.field_order || 0,
+      options: field.field_options ? (
+        typeof field.field_options === 'string' 
+          ? JSON.parse(field.field_options) 
+          : field.field_options
+      ) : undefined
+    })) || []
   }));
 };
