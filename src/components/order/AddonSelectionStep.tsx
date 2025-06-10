@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -65,8 +64,8 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
     return `+${price} ${currency}`;
   };
 
-  // Check if Godparents Melody addon is selected
-  const isGodparentsAddonSelected = selectedAddons.includes('godparents-melody');
+  // Check if Godparents Melody addon is selected - FIXED KEY
+  const isGodparentsAddonSelected = selectedAddons.includes('godparentsMelody');
 
   if (filteredAddons.length === 0) {
     return (
