@@ -15,6 +15,7 @@ import { useGiftCardByCode } from "@/hooks/useGiftCards";
 import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 const Order = () => {
   const {
     toast
@@ -273,7 +274,7 @@ const Order = () => {
           <div className="container mx-auto px-2 sm:px-4 lg:px-6">
             {isGiftPackage ? <div className="max-w-4xl mx-auto">
                 <GiftPurchaseWizard onComplete={handleGiftCardComplete} />
-              </div> : <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6">
+              </div> : <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6 lg:items-end">
                 {/* Main content - Order Wizard */}
                 <div className="flex-1 order-2 lg:order-1 my-0">
                   <OrderWizard onComplete={handleOrderComplete} giftCard={giftCard} preselectedPackage={preselectedPackage} onOrderDataChange={setOrderData} />
@@ -296,4 +297,5 @@ const Order = () => {
       </div>
     </div>;
 };
+
 export default Order;
