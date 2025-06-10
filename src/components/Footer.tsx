@@ -16,7 +16,7 @@ const Footer = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 500);
+      setShowBackToTop(window.scrollY > 300); // Lowered threshold from 500 to 300
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -35,15 +35,23 @@ const Footer = () => {
         }}></div>
       </div>
 
-      {/* Back to Top Button */}
+      {/* Back to Top Button - Fixed positioning and improved visibility */}
       {showBackToTop && (
-        <Button 
-          onClick={scrollToTop} 
-          className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-purple-600 hover:bg-purple-700 shadow-lg transition-all duration-300 hover:scale-110" 
-          size="icon"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.3 }}
         >
-          <ArrowUp className="w-5 h-5 text-white" />
-        </Button>
+          <Button 
+            onClick={scrollToTop} 
+            className="fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full bg-purple-600 hover:bg-purple-700 shadow-2xl transition-all duration-300 hover:scale-110 border-2 border-white/20" 
+            size="icon"
+            aria-label="Back to top"
+          >
+            <ArrowUp className="w-6 h-6 text-white" />
+          </Button>
+        </motion.div>
       )}
 
       <div className="container mx-auto px-6 relative z-10">
