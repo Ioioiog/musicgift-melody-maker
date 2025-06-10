@@ -96,7 +96,7 @@ const Footer = () => {
       </div>
 
       {/* Back to Top Button */}
-      {showBackToTop && <Button onClick={scrollToTop} className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 border-2 border-white/20 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 animate-fade-in" size="icon">
+      {showBackToTop && <Button onClick={scrollToTop} className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-orange-500 hover:bg-orange-600 border-2 border-white/20 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-110 animate-fade-in" size="icon">
           <ArrowUp className="w-5 h-5 text-white" />
         </Button>}
 
