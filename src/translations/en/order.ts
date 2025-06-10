@@ -75,7 +75,6 @@ export const orderTranslations = {
   
   // Universal UI Elements
   selectAddons: "Select Add-ons",
-  enhanceYourPackage: "Enhance your package with additional options",
   contactDetailsStep: "Contact Details & Legal",
   fillContactAndLegalInfo: "Fill in your contact details and accept the legal terms",
   choosePaymentMethod: "Choose Payment Method",
@@ -130,19 +129,6 @@ export const orderTranslations = {
   storyAndEmotionalDetails: "Story and Emotional Details",
   musicalPreferences: "Musical Preferences",
   confirmation: "Confirmation",
-  
-  // Package Descriptions
-  personalDescription: "Create a heartfelt, personalized song for someone special in your life",
-  premiumDescription: "Professional song production with global distribution on major streaming platforms",
-  businessDescription: "Custom music tailored to your brand identity and marketing needs",
-  artistDescription: "Launch your music career with professional production and distribution",
-  remixDescription: "Transform your existing song with fresh beats and modern production",
-  instrumentalDescription: "Custom instrumental track perfect for your creative projects",
-  plusDescription: "Quick and affordable musical message for any occasion",
-  giftDescription: "Musical gift card that lets your loved one choose their perfect song",
-  weddingDescription: "Your unique wedding dance song, created just for your special day",
-  baptismDescription: "Personalized melody to celebrate this sacred milestone",
-  comingOfAgeDescription: "Celebratory anthem for this important life transition",
   
   // Testimonial
   testimonialQuote: "\"The perfect gift for music lovers! The personalized song was absolutely beautiful and made our anniversary unforgettable.\"",
@@ -572,19 +558,6 @@ export const orderTranslations = {
   stepCompleted: "Step completed successfully",
   orderSubmitted: "Order submitted successfully",
   
-  // Package-specific context (flattened)
-  packageContextPersonal: "Create a personalized song for someone special",
-  packageContextPremium: "Professional song with global distribution",
-  packageContextBusiness: "Custom music for your brand",
-  packageContextArtist: "Launch your music career",
-  packageContextRemix: "Transform your existing song",
-  packageContextInstrumental: "Custom instrumental track",
-  packageContextPlus: "Quick musical message",
-  packageContextGift: "Musical gift card",
-  packageContextWedding: "Unique wedding dance song",
-  packageContextBaptism: "Personalized baptism melody",
-  packageContextComingOfAge: "18th birthday anthem",
-
   // Language options
   romanianLanguage: "Romanian",
   englishLanguage: "English", 
