@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Youtube, Music } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -216,37 +215,42 @@ const Footer = () => {
           <LegalCompliance />
         </div>
 
-        {/* Enhanced Bottom Section - Copyright with Purple Musical Background */}
-        <div 
-          className="border-t border-black/10 mt-6 sm:mt-12 pt-6 sm:pt-8 relative overflow-hidden"
-          style={{
-            backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
-        >
-          {/* Enhanced layered background effects */}
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 via-violet-600/25 to-pink-600/30"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/10 to-violet-600/20"></div>
+        {/* Enhanced Bottom Section - Copyright with Purple Musical Background - Now Full Width */}
+        <div className="border-t border-black/10 mt-6 sm:mt-12 pt-6 sm:pt-8 relative overflow-hidden">
+          {/* Full Width Enhanced Gradient Background */}
+          <div 
+            className="absolute inset-0 w-full"
+            style={{
+              backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          >
+            {/* Enhanced layered background effects */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 via-violet-600/25 to-pink-600/30"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/10 to-violet-600/20"></div>
+          </div>
           
-          <div className="flex flex-col items-center justify-center space-y-4 relative z-10">
-            <div className="bg-white/15 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 shadow-lg hover:bg-white/20 transition-all duration-300 group">
-              <p className="text-xs text-white font-semibold text-center group-hover:text-white/90 transition-colors duration-300">
-                {t('copyright')}
-              </p>
-            </div>
-            
-            {/* Decorative musical elements */}
-            <div className="flex items-center space-x-4 opacity-60">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-400/30 to-pink-400/30 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center">
-                <Music className="w-4 h-4 text-white" />
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <div className="bg-white/15 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 shadow-lg hover:bg-white/20 transition-all duration-300 group">
+                <p className="text-xs text-white font-semibold text-center group-hover:text-white/90 transition-colors duration-300">
+                  {t('copyright')}
+                </p>
               </div>
-              <div className="flex space-x-1">
-                <div className="w-1 h-4 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
-                <div className="w-1 h-6 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
-                <div className="w-1 h-3 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
-                <div className="w-1 h-5 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
+              
+              {/* Decorative musical elements */}
+              <div className="flex items-center space-x-4 opacity-60">
+                <div className="w-8 h-8 bg-gradient-to-br from-purple-400/30 to-pink-400/30 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center">
+                  <Music className="w-4 h-4 text-white" />
+                </div>
+                <div className="flex space-x-1">
+                  <div className="w-1 h-4 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
+                  <div className="w-1 h-6 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
+                  <div className="w-1 h-3 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
+                  <div className="w-1 h-5 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full"></div>
+                </div>
               </div>
             </div>
           </div>
