@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Toggle } from '@/components/ui/toggle';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Upload, Plus, Check } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -66,6 +67,9 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
 
   // Check if Godparents Melody addon is selected - FIXED KEY
   const isGodparentsAddonSelected = selectedAddons.includes('godparentsMelody');
+
+  // Check if Social Media Rights addon is selected
+  const isSocialMediaRightsSelected = selectedAddons.includes('socialMediaRights');
 
   if (filteredAddons.length === 0) {
     return (
@@ -306,6 +310,33 @@ const AddonSelectionStep: React.FC<AddonSelectionStepProps> = ({
                   required
                 />
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Social Media Rights Agreement Section - Conditional */}
+      {isSocialMediaRightsSelected && (
+        <Card className="bg-white/10 backdrop-blur-sm border border-blue-400/50 mt-2">
+          <CardContent className="p-2">
+            <h4 className="text-sm font-semibold text-white mb-2 flex items-center">
+              <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+              Social Media Rights Agreement
+            </h4>
+            
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="social-media-agreement"
+                checked={addonFieldValues.social_media_agreement || false}
+                onCheckedChange={(checked) => onAddonFieldChange('social_media_agreement', checked)}
+                className="mt-0.5"
+              />
+              <Label 
+                htmlFor="social-media-agreement" 
+                className="text-xs text-white cursor-pointer leading-relaxed"
+              >
+                I accept if I post the song on any social media platform I will tag 'Music Gift by Mango Records'.
+              </Label>
             </div>
           </CardContent>
         </Card>
