@@ -22,7 +22,8 @@ serve(async (req) => {
     console.log('Brevo webhook received:', JSON.stringify(webhookData, null, 2))
 
     // Extract event data from Brevo webhook payload
-    const { event, email, 'message-id': messageId, date, reason, link } = webhookData
+    // Brevo sends 'id' instead of 'message-id'
+    const { event, email, id: messageId, date, reason, link } = webhookData
 
     if (!messageId || !email) {
       console.log('Missing required fields in webhook payload')
@@ -75,11 +76,11 @@ serve(async (req) => {
       updateData.bounce_reason = reason || 'Unknown bounce reason'
     }
 
-    // Update the email delivery record
+    // Update the email delivery record using the correct message ID field
     const { data, error } = await supabaseClient
       .from('discount_email_deliveries')
       .update(updateData)
-      .eq('brevo_message_id', messageId)
+      .eq('brevo_message_id', messageId.toString())
       .eq('recipient_email', email)
       .select()
 
