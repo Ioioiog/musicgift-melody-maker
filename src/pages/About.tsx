@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -397,7 +398,7 @@ const About = () => {
               <h3 className="text-3xl font-bold text-white mb-6 text-center">{t('whyChooseUs')}</h3>
             </motion.div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6">
               <motion.div className="bg-white/10 backdrop-blur-md rounded-lg shadow-lg border border-white/20 p-6" initial={{
               opacity: 0,
               y: 20
