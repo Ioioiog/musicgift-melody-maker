@@ -182,7 +182,7 @@ export const orderTranslations = {
   instrumentalLength1to2: "1-2 minutes",
   instrumentalLength2to3: "2-3 minutes",
   instrumentalLength3to4: "3-4 minutes",
-  instrumentalLength4plus: "4+ minutesselect",
+  instrumentalLength4plus: "4+ minutes",
   selectIntendedUse: "Sélectionnez l'usage prévu",
   intendedUseBackgroundMusic: "Musique de Fond",
   intendedUseVocalRecordingBase: "Base d'Enregistrement Vocal",
@@ -352,11 +352,8 @@ export const orderTranslations = {
   // Form validation and UI
   required: "Requis",
   optional: "Optionnel",
-  next: "Suivant",
-  previous: "Précédent",
   submit: "Soumettre la Commande",
   loading: "Traitement...",
-  selectOption: "Sélectionnez une option",
   uploadFile: "Télécharger le fichier",
   chooseDate: "Choisir la date",
   
