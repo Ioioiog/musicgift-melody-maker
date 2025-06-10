@@ -3,6 +3,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const VideoHero = () => {
   const { t, language } = useLanguage();
@@ -11,6 +12,8 @@ const VideoHero = () => {
   const [hasAudio, setHasAudio] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentVideoSrc, setCurrentVideoSrc] = useState('');
+  const [videoDimensions, setVideoDimensions] = useState({ width: 0, height: 0 });
+  const isMobile = useIsMobile();
 
   // Select video based on language with fallback
   const videoSrc = language === 'ro' 
@@ -18,6 +21,19 @@ const VideoHero = () => {
     : '/lovable-uploads/MusicGiftvideoENG.mp4';
 
   console.log('VideoHero: Current language:', language, 'Video source:', videoSrc);
+
+  // Calculate mobile height based on video aspect ratio
+  const getMobileHeight = () => {
+    if (!isMobile || !videoDimensions.width || !videoDimensions.height) {
+      return undefined;
+    }
+    
+    const screenWidth = window.innerWidth;
+    const aspectRatio = videoDimensions.width / videoDimensions.height;
+    const calculatedHeight = screenWidth / aspectRatio;
+    
+    return `${calculatedHeight}px`;
+  };
 
   // Cleanup function to stop video and reset states
   const cleanupVideo = () => {
@@ -47,6 +63,14 @@ const VideoHero = () => {
     console.log('VideoHero: Setting up video for language:', language);
     setCurrentVideoSrc(videoSrc);
     
+    const handleLoadedMetadata = () => {
+      console.log('VideoHero: Video metadata loaded');
+      setVideoDimensions({
+        width: video.videoWidth,
+        height: video.videoHeight
+      });
+    };
+
     const handleCanPlay = () => {
       console.log('VideoHero: Video can play, attempting autoplay');
       setIsLoading(false);
@@ -86,6 +110,7 @@ const VideoHero = () => {
       setIsLoading(true);
     };
 
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
     video.addEventListener('canplay', handleCanPlay);
     video.addEventListener('error', handleError);
     video.addEventListener('loadstart', handleLoadStart);
@@ -104,6 +129,7 @@ const VideoHero = () => {
     }
 
     return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
       video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('error', handleError);
       video.removeEventListener('loadstart', handleLoadStart);
@@ -148,8 +174,20 @@ const VideoHero = () => {
     }
   };
 
+  const mobileHeight = getMobileHeight();
+  const sectionStyle = isMobile && mobileHeight 
+    ? { height: mobileHeight, minHeight: '60vh' } 
+    : {};
+
   return (
-    <section className="video-hero relative overflow-hidden h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen">
+    <section 
+      className={`video-hero relative overflow-hidden ${
+        isMobile 
+          ? 'min-h-[60vh]' 
+          : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'
+      }`}
+      style={sectionStyle}
+    >
       {/* Video Background with branded gradient background for mobile */}
       <video
         ref={videoRef}
