@@ -152,35 +152,66 @@ function extractProformaDetails(order: any): { series: string, number: string } 
 }
 
 async function checkProformaInvoiceStatus(auth: string, companyVat: string, proformaSeries: string, proformaNumber: string) {
-  const estimateInvoicesUrl = `https://ws.smartbill.ro/SBORO/api/estimate/invoices?cif=${companyVat}&seriesName=${encodeURIComponent(proformaSeries)}&number=${encodeURIComponent(proformaNumber)}`
+  // Properly encode URL parameters to handle special characters
+  const encodedSeries = encodeURIComponent(proformaSeries)
+  const encodedNumber = encodeURIComponent(proformaNumber)
+  const encodedCif = encodeURIComponent(companyVat)
+  
+  const estimateInvoicesUrl = `https://ws.smartbill.ro/SBORO/api/estimate/invoices?cif=${encodedCif}&seriesName=${encodedSeries}&number=${encodedNumber}`
   
   console.log('🔍 Checking proforma invoice status:', {
     series: proformaSeries,
     number: proformaNumber,
+    cif: companyVat,
     url: estimateInvoicesUrl
   })
   
-  const response = await rateLimitedFetch(estimateInvoicesUrl, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Basic ${auth}`,
-      'Accept': 'application/xml',
-      'Content-Type': 'application/xml',
-    },
-  })
+  try {
+    // Use PUT method as shown in SmartBill documentation
+    const response = await rateLimitedFetch(estimateInvoicesUrl, {
+      method: 'PUT', // Changed from GET to PUT based on documentation
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Accept': 'application/xml',
+        'Content-Type': 'application/xml',
+      },
+    })
 
-  console.log('📊 SmartBill API response status:', response.status, response.statusText)
+    console.log('📊 SmartBill API response status:', response.status, response.statusText)
 
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.log('❌ Estimate invoices API error:', response.status, response.statusText, errorText.substring(0, 200))
-    throw new Error(`SmartBill API error: ${response.status} ${response.statusText} - ${errorText.substring(0, 100)}`)
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.log('❌ Estimate invoices API error:', response.status, response.statusText, errorText.substring(0, 500))
+      
+      // Handle specific SmartBill errors more gracefully
+      if (response.status === 400) {
+        if (errorText.includes('seria proformei trebuie specificata') || errorText.includes('seriesName')) {
+          throw new Error(`SmartBill API error: Series name parameter issue. Series: "${proformaSeries}", Number: "${proformaNumber}"`)
+        }
+        if (errorText.includes('nu a fost facturata') || errorText.includes('not invoiced')) {
+          // This is expected when proforma hasn't been invoiced yet
+          return { areInvoicesCreated: false, invoices: [], errorText: 'Proforma not yet invoiced' }
+        }
+      }
+      
+      throw new Error(`SmartBill API error: ${response.status} ${response.statusText} - ${errorText.substring(0, 200)}`)
+    }
+
+    const xmlText = await response.text()
+    console.log('📊 Raw XML response:', xmlText.substring(0, 500))
+    
+    return parseXmlResponse(xmlText)
+    
+  } catch (error) {
+    console.error('❌ Error in checkProformaInvoiceStatus:', error)
+    
+    // Re-throw with more context
+    if (error.message.includes('SmartBill API error')) {
+      throw error
+    } else {
+      throw new Error(`Network or parsing error: ${error.message}`)
+    }
   }
-
-  const xmlText = await response.text()
-  console.log('📊 Raw XML response:', xmlText.substring(0, 500))
-  
-  return parseXmlResponse(xmlText)
 }
 
 serve(async (req) => {
@@ -238,28 +269,60 @@ serve(async (req) => {
       );
     }
 
-    // Get SmartBill credentials
+    // Get SmartBill credentials with validation
     const smartbillUsername = Deno.env.get('SMARTBILL_USERNAME');
     const smartbillToken = Deno.env.get('SMARTBILL_TOKEN');
     const smartbillCompanyVat = Deno.env.get('SMARTBILL_COMPANY_VAT');
     
     if (!smartbillUsername || !smartbillToken || !smartbillCompanyVat) {
-      console.error('❌ SmartBill credentials not configured');
+      console.error('❌ SmartBill credentials not configured properly:', {
+        hasUsername: !!smartbillUsername,
+        hasToken: !!smartbillToken,
+        hasVat: !!smartbillCompanyVat
+      });
       return new Response(
         JSON.stringify({ error: 'SmartBill credentials not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
+    // Create auth token with proper base64 encoding
     const smartbillAuth = btoa(`${smartbillUsername}:${smartbillToken}`);
+    console.log('🔐 SmartBill auth created, username length:', smartbillUsername.length);
     
     // Extract proforma series and number
     const { series: proformaSeries, number: proformaNumber } = extractProformaDetails(order)
 
     console.log('📄 Checking proforma:', { series: proformaSeries, number: proformaNumber });
 
+    // Validate series and number before API call
+    if (!proformaSeries || !proformaNumber) {
+      console.error('❌ Invalid proforma series or number:', { series: proformaSeries, number: proformaNumber });
+      return new Response(
+        JSON.stringify({ error: 'Invalid proforma series or number extracted from order data' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Check if proforma has been invoiced
-    const invoiceData = await checkProformaInvoiceStatus(smartbillAuth, smartbillCompanyVat, proformaSeries, proformaNumber);
+    let invoiceData: SmartBillEstimateInvoicesResponse;
+    try {
+      invoiceData = await checkProformaInvoiceStatus(smartbillAuth, smartbillCompanyVat, proformaSeries, proformaNumber);
+    } catch (error) {
+      console.error('❌ Failed to check proforma status:', error);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Failed to check proforma status with SmartBill',
+          details: error.message,
+          debugInfo: {
+            proformaSeries,
+            proformaNumber,
+            companyVat: smartbillCompanyVat
+          }
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     console.log('📊 Invoice data from SmartBill:', invoiceData)
 
