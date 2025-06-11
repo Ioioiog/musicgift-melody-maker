@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -90,6 +91,44 @@ const SmartBillPaymentManager = () => {
     });
   };
 
+  const normalizePaymentStatus = (status: string): { paymentStatus: string; orderStatus: string } => {
+    const normalizedStatus = status?.toLowerCase() || 'unknown';
+    
+    switch (normalizedStatus) {
+      case 'paid':
+      case 'completed':
+      case 'success':
+      case 'successful':
+      case 'confirmed':
+      case 'approved':
+        return { paymentStatus: 'completed', orderStatus: 'confirmed' };
+      
+      case 'failed':
+      case 'error':
+      case 'declined':
+      case 'rejected':
+        return { paymentStatus: 'failed', orderStatus: 'cancelled' };
+      
+      case 'cancelled':
+      case 'canceled':
+      case 'voided':
+        return { paymentStatus: 'cancelled', orderStatus: 'cancelled' };
+      
+      case 'pending':
+      case 'processing':
+      case 'in_progress':
+      case 'awaiting':
+        return { paymentStatus: 'pending', orderStatus: 'pending' };
+      
+      case 'refunded':
+      case 'reversed':
+        return { paymentStatus: 'refunded', orderStatus: 'refunded' };
+      
+      default:
+        return { paymentStatus: 'pending', orderStatus: 'pending' };
+    }
+  };
+
   const handleCheckPaymentStatus = async (orderId: string) => {
     setOrderLoading(orderId, 'checking-payment');
     try {
@@ -126,7 +165,7 @@ const SmartBillPaymentManager = () => {
         toast({
           title: "Payment Status Checked",
           description: message,
-          variant: paymentConfirmed ? "default" : "secondary"
+          variant: paymentConfirmed ? "default" : "default"
         });
         
         await fetchProformas();
@@ -650,14 +689,14 @@ const SmartBillPaymentManager = () => {
         <div className="bg-gray-50 p-4 rounded-lg">
           <h4 className="font-medium mb-2">Action Buttons Guide:</h4>
           <ul className="text-sm space-y-1 text-gray-600">
-            <li><Badge variant="outline" className="mr-2">💳</Badge> Check Payment - Check if proforma payment was completed</li>
+            <li><Badge variant="outline" className="mr-2">💳</Badge> Check Payment - Check if proforma payment was completed using SmartBill API</li>
             <li><Badge variant="outline" className="mr-2">🔄</Badge> Sync - Check if proforma has been converted to invoice in SmartBill</li>
             <li><Badge variant="outline" className="mr-2">📄</Badge> Convert - Convert proforma to invoice (when paid)</li>
             <li><Badge variant="outline" className="mr-2">👁</Badge> PDF - View proforma PDF document</li>
             <li><Badge variant="outline" className="mr-2">🔗</Badge> Invoice - View invoice (when available)</li>
           </ul>
           <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm">
-            <strong>Note:</strong> If amounts show as 0, this indicates data inconsistency. The system will try to find the amount from different fields.
+            <strong>Note:</strong> Payment check uses the same logic as webhook processing for consistent status updates.
           </div>
         </div>
       </CardContent>
