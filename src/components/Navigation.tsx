@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -38,15 +37,21 @@ const Navigation = () => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       
-      // Check if click is outside all menu areas and buttons
-      const isOutsideMainMenu = mainMenuRef.current && !mainMenuRef.current.contains(target) && 
-                                mainMenuButtonRef.current && !mainMenuButtonRef.current.contains(target);
-      const isOutsideUserDropdown = userDropdownRef.current && !userDropdownRef.current.contains(target) && 
-                                   userDropdownButtonRef.current && !userDropdownButtonRef.current.contains(target);
-      const isOutsideLanguageCurrency = languageCurrencyDropdownRef.current && !languageCurrencyDropdownRef.current.contains(target) && 
-                                       languageCurrencyButtonRef.current && !languageCurrencyButtonRef.current.contains(target);
+      // Check if any menu is open first
+      if (!isMenuOpen && !isUserDropdownOpen && !isLanguageCurrencyDropdownOpen) {
+        return;
+      }
 
-      if (isOutsideMainMenu && isOutsideUserDropdown && isOutsideLanguageCurrency) {
+      // Check if click is inside any menu area or button
+      const isInsideMainMenu = (mainMenuRef.current && mainMenuRef.current.contains(target)) || 
+                              (mainMenuButtonRef.current && mainMenuButtonRef.current.contains(target));
+      const isInsideUserDropdown = (userDropdownRef.current && userDropdownRef.current.contains(target)) || 
+                                  (userDropdownButtonRef.current && userDropdownButtonRef.current.contains(target));
+      const isInsideLanguageCurrency = (languageCurrencyDropdownRef.current && languageCurrencyDropdownRef.current.contains(target)) || 
+                                      (languageCurrencyButtonRef.current && languageCurrencyButtonRef.current.contains(target));
+
+      // If click is outside all menu areas, close all menus
+      if (!isInsideMainMenu && !isInsideUserDropdown && !isInsideLanguageCurrency) {
         closeAllMenus();
       }
     };
@@ -66,7 +71,7 @@ const Navigation = () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscapeKey);
     };
-  }, []);
+  }, [isMenuOpen, isUserDropdownOpen, isLanguageCurrencyDropdownOpen]);
 
   const getOrderText = () => {
     switch (language) {
