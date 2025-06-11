@@ -60,8 +60,9 @@ serve(async (req) => {
 
     console.log('🌐 Original payment URL:', order.smartbill_payment_url);
 
-    // Extract reqId from the payment URL
-    let reqId = '';
+    // Extract payment ID from the payment URL
+    let paymentId = '';
+    let finalUrl = order.smartbill_payment_url;
     
     try {
       // If it's an l.mpy.ro URL, we need to follow the redirect to get the full URL
@@ -73,41 +74,59 @@ serve(async (req) => {
           redirect: 'follow'
         });
         
-        const finalUrl = redirectResponse.url;
+        finalUrl = redirectResponse.url;
         console.log('🎯 Final URL after redirect:', finalUrl);
-        
-        // Extract reqId from the final URL
-        const reqIdMatch = finalUrl.match(/reqId[\/=]([^&\/]+)/);
+      }
+
+      // Extract payment ID from various URL formats
+      console.log('🔍 Extracting payment ID from URL:', finalUrl);
+      
+      // Pattern 1: /qp/{payment_id} format (most common after redirect)
+      const qpMatch = finalUrl.match(/\/qp\/([^\/\?&]+)/);
+      if (qpMatch) {
+        paymentId = qpMatch[1];
+        console.log('✅ Extracted payment ID from /qp/ format:', paymentId);
+      }
+      
+      // Pattern 2: reqId parameter or path
+      if (!paymentId) {
+        const reqIdMatch = finalUrl.match(/reqId[\/=]([^&\/\?]+)/);
         if (reqIdMatch) {
-          reqId = reqIdMatch[1];
+          paymentId = reqIdMatch[1];
+          console.log('✅ Extracted payment ID from reqId format:', paymentId);
         }
-      } else {
-        // Direct URL, extract reqId
-        const reqIdMatch = order.smartbill_payment_url.match(/reqId[\/=]([^&\/]+)/);
-        if (reqIdMatch) {
-          reqId = reqIdMatch[1];
+      }
+      
+      // Pattern 3: Direct payment ID in URL path
+      if (!paymentId) {
+        const pathMatch = finalUrl.match(/\/([a-zA-Z0-9\-_]+)(?:\?|$)/);
+        if (pathMatch && pathMatch[1] && pathMatch[1].length > 10) {
+          paymentId = pathMatch[1];
+          console.log('✅ Extracted payment ID from path format:', paymentId);
         }
       }
 
-      if (!reqId) {
-        throw new Error('Could not extract reqId from payment URL');
+      if (!paymentId) {
+        throw new Error('Could not extract payment ID from URL using any known pattern');
       }
 
-      console.log('🔑 Extracted reqId:', reqId);
+      console.log('🔑 Final extracted payment ID:', paymentId);
 
     } catch (error) {
-      console.error('❌ Error extracting reqId:', error);
+      console.error('❌ Error extracting payment ID:', error);
       return new Response(
         JSON.stringify({ 
           success: false,
-          error: 'Failed to extract payment ID from URL' 
+          error: 'Failed to extract payment ID from URL',
+          details: error.message,
+          url: finalUrl
         }),
         { status: 500, headers: corsHeaders }
       );
     }
 
-    // Build the status check URL
-    const statusUrl = `https://secure.mobilpay.ro/default/card2/status/reqId/${reqId}`;
+    // Build the status check URL using the payment ID
+    const statusUrl = `https://secure.mobilpay.ro/qp/${paymentId}/status`;
     console.log('🔍 Checking status at URL:', statusUrl);
 
     // Fetch the status page
@@ -121,7 +140,20 @@ serve(async (req) => {
       });
 
       if (!statusResponse.ok) {
-        throw new Error(`HTTP ${statusResponse.status}: ${statusResponse.statusText}`);
+        // Try alternative status URL format
+        const altStatusUrl = `https://secure.mobilpay.ro/default/card2/status/reqId/${paymentId}`;
+        console.log('🔄 Trying alternative status URL:', altStatusUrl);
+        
+        statusResponse = await fetch(altStatusUrl, {
+          method: 'GET',
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          }
+        });
+        
+        if (!statusResponse.ok) {
+          throw new Error(`HTTP ${statusResponse.status}: ${statusResponse.statusText}`);
+        }
       }
 
     } catch (error) {
@@ -129,7 +161,8 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           success: false,
-          error: 'Failed to fetch payment status page' 
+          error: 'Failed to fetch payment status page',
+          details: error.message
         }),
         { status: 500, headers: corsHeaders }
       );
@@ -147,7 +180,9 @@ serve(async (req) => {
     // Check for payment completion indicators
     if (htmlContent.includes('Plata dumneavoastră a fost finalizată') || 
         htmlContent.includes('plată finalizată') ||
-        htmlContent.includes('Mulțumim! Plata')) {
+        htmlContent.includes('Mulțumim! Plata') ||
+        htmlContent.includes('Payment completed') ||
+        htmlContent.includes('Transaction successful')) {
       paymentStatus = 'completed';
       paymentMessage = 'Payment completed successfully';
       console.log('✅ Payment detected as COMPLETED');
@@ -155,7 +190,8 @@ serve(async (req) => {
     // Check for pending/processing indicators
     else if (htmlContent.includes('În procesare') || 
              htmlContent.includes('procesare') ||
-             htmlContent.includes('pending')) {
+             htmlContent.includes('pending') ||
+             htmlContent.includes('Processing')) {
       paymentStatus = 'pending';
       paymentMessage = 'Payment is still processing';
       console.log('⏳ Payment detected as PENDING');
@@ -170,7 +206,8 @@ serve(async (req) => {
     // Check for failed payment indicators
     else if (htmlContent.includes('eșuată') || 
              htmlContent.includes('failed') ||
-             htmlContent.includes('respins')) {
+             htmlContent.includes('respins') ||
+             htmlContent.includes('declined')) {
       paymentStatus = 'failed';
       paymentMessage = 'Payment failed';
       console.log('❌ Payment detected as FAILED');
@@ -178,7 +215,11 @@ serve(async (req) => {
     else {
       paymentStatus = 'unknown';
       paymentMessage = 'Could not determine payment status from page content';
-      console.log('❓ Payment status UNKNOWN');
+      console.log('❓ Payment status UNKNOWN - analyzing page content...');
+      
+      // Log a snippet of the content for debugging
+      const snippet = htmlContent.substring(0, 500);
+      console.log('📝 Page content snippet:', snippet);
     }
 
     // Update order status if payment is completed and current status is different
@@ -215,7 +256,7 @@ serve(async (req) => {
 
     console.log('📊 Final status check result:', {
       orderId,
-      reqId,
+      paymentId,
       paymentStatus,
       statusChanged,
       paymentMessage
@@ -225,7 +266,8 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         orderId,
-        reqId,
+        reqId: paymentId, // Keep this for backwards compatibility
+        paymentId,
         paymentStatus,
         paymentMessage,
         statusChanged,
