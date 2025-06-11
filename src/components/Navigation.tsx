@@ -123,63 +123,73 @@ const Navigation = () => {
                   <Settings className="w-5 h-5 text-gray-700" />
                 </button>
 
-                {/* Language/Currency Dropdown for Mobile */}
+                {/* Language/Currency Dropdown for Mobile - Matching main menu */}
                 {isLanguageCurrencyDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white/98 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 z-50 animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
+                  <div className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto absolute right-0 top-full mt-2 w-56">
                     {/* Currency Section */}
-                    <div className="px-3 py-2 bg-gradient-to-r from-gray-50 to-gray-50 rounded-t-xl border-b border-gray-100">
-                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Currency</div>
-                    </div>
-                    <div className="py-1">
-                      <button 
-                        onClick={() => {
-                          setCurrency('EUR');
-                          setIsLanguageCurrencyDropdownOpen(false);
-                        }}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-gray-700 hover:text-orange-700 hover:bg-orange-50 transition-all duration-200 touch-manipulation ${currency === 'EUR' ? "bg-orange-100 text-orange-700 font-semibold" : ""}`}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <CurrencyIcon currency="EUR" className="w-3 h-3" />
-                          <span className="text-sm">EUR</span>
-                        </div>
-                        {currency === 'EUR' && <Check className="w-3 h-3" />}
-                      </button>
-                      <button 
-                        onClick={() => {
-                          setCurrency('RON');
-                          setIsLanguageCurrencyDropdownOpen(false);
-                        }}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-gray-700 hover:text-orange-700 hover:bg-orange-50 transition-all duration-200 touch-manipulation ${currency === 'RON' ? "bg-orange-100 text-orange-700 font-semibold" : ""}`}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <CurrencyIcon currency="RON" className="w-3 h-3" />
-                          <span className="text-sm">RON</span>
-                        </div>
-                        {currency === 'RON' && <Check className="w-3 h-3" />}
-                      </button>
+                    <div className="mb-6">
+                      <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
+                        Currency
+                      </div>
+                      <div className="flex flex-col space-y-1">
+                        <button 
+                          onClick={() => {
+                            setCurrency('EUR');
+                            setIsLanguageCurrencyDropdownOpen(false);
+                          }}
+                          className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center text-right ${currency === 'EUR' ? "text-violet-600 bg-violet-50" : "text-gray-700"}`}
+                        >
+                          <div className="flex items-center space-x-2 w-full justify-between">
+                            <div className="flex items-center space-x-2">
+                              <CurrencyIcon currency="EUR" className="w-3 h-3" />
+                              <span className="text-sm">EUR</span>
+                            </div>
+                            {currency === 'EUR' && <Check className="w-3 h-3" />}
+                          </div>
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setCurrency('RON');
+                            setIsLanguageCurrencyDropdownOpen(false);
+                          }}
+                          className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center text-right ${currency === 'RON' ? "text-violet-600 bg-violet-50" : "text-gray-700"}`}
+                        >
+                          <div className="flex items-center space-x-2 w-full justify-between">
+                            <div className="flex items-center space-x-2">
+                              <CurrencyIcon currency="RON" className="w-3 h-3" />
+                              <span className="text-sm">RON</span>
+                            </div>
+                            {currency === 'RON' && <Check className="w-3 h-3" />}
+                          </div>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Language Section */}
-                    <div className="px-3 py-2 bg-gradient-to-r from-gray-50 to-gray-50 border-t border-gray-100">
-                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Language</div>
-                    </div>
-                    <div className="py-1">
-                      {languages.map(lang => (
-                        <button 
-                          key={lang}
-                          onClick={() => {
-                            setLanguage(lang);
-                            setIsLanguageCurrencyDropdownOpen(false);
-                          }}
-                          className={`w-full flex items-center justify-between px-3 py-2 text-gray-700 hover:text-purple-700 hover:bg-purple-50 transition-all duration-200 touch-manipulation ${language === lang ? "bg-purple-100 text-purple-700 font-semibold" : ""}`}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <Globe className="w-3 h-3" />
-                            <span className="text-sm">{languageNames[lang]}</span>
-                          </div>
-                          {language === lang && <Check className="w-3 h-3" />}
-                        </button>
-                      ))}
+                    <div className="pt-4 border-t border-gray-200">
+                      <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
+                        Language
+                      </div>
+                      <div className="flex flex-col space-y-1">
+                        {languages.map(lang => (
+                          <button 
+                            key={lang}
+                            onClick={() => {
+                              setLanguage(lang);
+                              setIsLanguageCurrencyDropdownOpen(false);
+                            }}
+                            className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center text-right ${language === lang ? "text-violet-600 bg-violet-50" : "text-gray-700"}`}
+                          >
+                            <div className="flex items-center space-x-2 w-full justify-between">
+                              <div className="flex items-center space-x-2">
+                                <Globe className="w-3 h-3" />
+                                <span className="text-sm">{languageNames[lang]}</span>
+                              </div>
+                              {language === lang && <Check className="w-3 h-3" />}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -205,40 +215,53 @@ const Navigation = () => {
                   </Link>
                 )}
 
-                {/* User Dropdown for Mobile */}
+                {/* User Dropdown for Mobile - Matching main menu */}
                 {user && isUserDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white/98 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 z-50 animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
+                  <div className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto absolute right-0 top-full mt-2 w-56">
                     {/* User Info Header */}
-                    <div className="px-3 py-2 bg-gradient-to-r from-gray-50 to-gray-50 rounded-t-xl border-b border-gray-100">
-                      <div className="text-sm font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
-                      <div className="text-xs text-gray-500 truncate">{user.email}</div>
+                    <div className="mb-6">
+                      <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
+                        User Account
+                      </div>
+                      <div className="px-4 py-2">
+                        <div className="text-sm font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
+                        <div className="text-xs text-gray-500 truncate">{user.email}</div>
+                      </div>
                     </div>
                     
                     {/* User Actions */}
-                    <div className="py-1">
-                      <Link 
-                        to="/settings" 
-                        className="flex items-center px-3 py-2 text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-200 touch-manipulation"
-                        onClick={() => setIsUserDropdownOpen(false)}
-                      >
-                        <User className="w-3 h-3 mr-2" />
-                        <span className="text-sm">{t('accountSettings')}</span>
-                      </Link>
-                      <Link 
-                        to="/history" 
-                        className="flex items-center px-3 py-2 text-gray-700 hover:text-green-700 hover:bg-green-50 transition-all duration-200 touch-manipulation"
-                        onClick={() => setIsUserDropdownOpen(false)}
-                      >
-                        <History className="w-3 h-3 mr-2" />
-                        <span className="text-sm">{t('history')}</span>
-                      </Link>
-                      <button 
-                        onClick={handleSignOut}
-                        className="flex items-center w-full px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200 touch-manipulation"
-                      >
-                        <LogOut className="w-3 h-3 mr-2" />
-                        <span className="text-sm">{t('signOut')}</span>
-                      </button>
+                    <div className="pt-4 border-t border-gray-200">
+                      <div className="flex flex-col space-y-1">
+                        <Link 
+                          to="/settings" 
+                          className="text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center text-right"
+                          onClick={() => setIsUserDropdownOpen(false)}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <User className="w-3 h-3" />
+                            <span className="text-sm">{t('accountSettings')}</span>
+                          </div>
+                        </Link>
+                        <Link 
+                          to="/history" 
+                          className="text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center text-right"
+                          onClick={() => setIsUserDropdownOpen(false)}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <History className="w-3 h-3" />
+                            <span className="text-sm">{t('history')}</span>
+                          </div>
+                        </Link>
+                        <button 
+                          onClick={handleSignOut}
+                          className="text-base font-medium transition-colors duration-200 hover:text-red-600 px-4 py-3 rounded-lg hover:bg-red-50 touch-manipulation min-h-[44px] flex items-center text-right w-full"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <LogOut className="w-3 h-3" />
+                            <span className="text-sm">{t('signOut')}</span>
+                          </div>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
