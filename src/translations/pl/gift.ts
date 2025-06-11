@@ -2,22 +2,22 @@
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Podziel się Darem Muzyki",
-  givePersonalizedSong: "Podaruj komuś wyjątkowemu spersonalizowaną piosenkę, którą będzie cenić na zawsze.",
-  createDigitalGiftCard: "Stwórz cyfrową kartę podarunkową i pozwól im wybrać ich idealne muzyczne doświadczenie.",
+  givePersonalizedSong: "Podaruj komuś wyjątkową personalizowaną piosenką, którą będzie cenić na zawsze.",
+  createDigitalGiftCard: "Stwórz cyfrową kartę podarunkową i pozwól im wybrać idealne doświadczenie muzyczne.",
   
   // Tab labels
   buyGiftCard: "Kup Kartę Podarunkową",
   redeemGiftCard: "Wykorzystaj Kartę Podarunkową",
   
   // Gift purchase wizard
-  purchaseGiftCard: "Zakup Karty Podarunkowej",
+  purchaseGiftCard: "Kup Kartę Podarunkową",
   chooseGiftCardAmount: "Wybierz Kwotę Karty Podarunkowej",
   selectGiftCardValue: "Wybierz wartość karty podarunkowej, którą chcesz wysłać.",
   enterCustomValue: "Wprowadź Własną Wartość",
   customAmount: "Niestandardowa Kwota",
   enterAmountIn: "Wprowadź kwotę w",
   amountMustBeBetween: "Kwota musi być między",
-  nextDetails: "Dalej: Szczegóły",
+  nextDetails: "Następny: Szczegóły",
   
   // Gift details step
   enterGiftDetails: "Wprowadź Szczegóły Prezentu",
@@ -26,15 +26,15 @@ export const giftTranslations = {
   yourEmail: "Twój Email",
   recipientName: "Imię Odbiorcy",
   recipientEmail: "Email Odbiorcy",
-  personalMessage: "Wiadomość Osobista (Opcjonalna)",
+  personalMessage: "Wiadomość Osobista (Opcjonalne)",
   writePersonalMessage: "Napisz osobistą wiadomość dla odbiorcy",
-  deliveryDate: "Data Dostawy (Opcjonalna)",
+  deliveryDate: "Data Dostawy (Opcjonalne)",
   pickDate: "Wybierz datę",
-  nextDesign: "Dalej: Design",
+  nextDesign: "Następny: Design",
   
   // Design selection step
   selectDesign: "Wybierz Design",
-  chooseDesignPreview: "Wybierz design i zobacz, jak będzie wyglądać twoja karta podarunkowa.",
+  chooseDesignPreview: "Wybierz design i zobacz, jak będzie wyglądać Twoja karta podarunkowa.",
   availableDesigns: "Dostępne Designy",
   livePreview: "Podgląd na Żywo",
   yourCardWillInclude: "Twoja karta będzie zawierać:",
@@ -43,7 +43,7 @@ export const giftTranslations = {
   recipient: "Odbiorca",
   from: "Od",
   personalMessageIncluded: "Wiadomość osobista",
-  nextReview: "Dalej: Przegląd",
+  nextReview: "Następny: Przegląd",
   
   // Review step
   reviewGiftCard: "Przejrzyj Kartę Podarunkową",
@@ -51,8 +51,8 @@ export const giftTranslations = {
   amount: "Kwota",
   design: "Design",
   deliveryDateLabel: "Data Dostawy",
-  immediate: "Natychmiastowa",
-  finalPreview: "Finalna Podgląd",
+  immediate: "Natychmiast",
+  finalPreview: "Ostateczny Podgląd",
   processing: "Przetwarzanie...",
   pay: "Zapłać",
   
@@ -60,7 +60,7 @@ export const giftTranslations = {
   redeemYourGiftCard: "Wykorzystaj Kartę Podarunkową",
   enterGiftCardCode: "Wprowadź kod karty podarunkowej, aby zobaczyć dostępne pakiety",
   giftCardCode: "Kod Karty Podarunkowej",
-  enterCodeHere: "Wprowadź tutaj kod karty podarunkowej",
+  enterCodeHere: "Wprowadź kod karty podarunkowej tutaj",
   checkGiftCard: "Sprawdź Kartę Podarunkową",
   validatingCode: "Sprawdzanie kodu...",
   
@@ -74,20 +74,20 @@ export const giftTranslations = {
   packagePrice: "Cena Pakietu",
   giftCardCredit: "Kredyt Karty Podarunkowej",
   additionalPayment: "Wymagana Dodatkowa Płatność",
-  youWillReceiveRefund: "Otrzymasz zwrot",
+  youWillReceiveRefund: "Otrzymasz zwrot w wysokości",
   proceedWithPackage: "Kontynuuj z",
   
   // Messages and notifications
   giftCardCreated: "Karta Podarunkowa Utworzona!",
   giftCardWillBeDelivered: "została utworzona i zostanie dostarczona do",
   giftCardApplied: "Karta Podarunkowa Zastosowana!",
-  proceedingToComplete: "Kontynuowanie zakończenia zamówienia pakietu",
+  proceedingToComplete: "Kontynuowanie ukończenia zamówienia pakietu",
   packageOrder: ".",
   pleaseSignInToPurchase: "Zaloguj się, aby kupić kartę podarunkową",
   
   // Payment success
-  paymentSuccessful: "Płatność Pomyślna!",
-  giftCardSentSuccessfully: "Twoja karta podarunkowa została pomyślnie wysłana",
+  paymentSuccessful: "Płatność Udana!",
+  giftCardSentSuccessfully: "Twoja karta podarunkowa została wysłana pomyślnie",
   giftCardEmailSent: "Karta podarunkowa została wysłana na adres email odbiorcy.",
   orderNumber: "Numer Zamówienia",
   returnToGifts: "Powrót do Prezentów",
@@ -101,7 +101,7 @@ export const giftTranslations = {
   
   // Common actions
   back: "Wstecz",
-  next: "Dalej",
+  next: "Następny",
   signIn: "Zaloguj się",
   default: "Domyślny",
 };
