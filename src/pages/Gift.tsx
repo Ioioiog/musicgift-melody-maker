@@ -105,7 +105,7 @@ const Gift = () => {
         >
           <div className="max-w-4xl mx-auto">
             {paymentStatus === 'success' ? (
-              <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-purple-200/30 backdrop-blur-sm p-6">
+              <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-orange-500/30 backdrop-blur-sm p-6">
                 <GiftPaymentSuccess />
               </div>
             ) : (
@@ -136,10 +136,10 @@ const Gift = () => {
                 </TabsList>
 
                 <TabsContent value="purchase">
-                  <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-purple-200/30 backdrop-blur-sm overflow-hidden">
+                  <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-orange-500/30 backdrop-blur-sm overflow-hidden">
                     {/* Decorative elements */}
-                    <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-purple-400/15 to-transparent rounded-full blur-lg" />
-                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-indigo-400/10 to-transparent rounded-full blur-md" />
+                    <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-orange-500/15 to-transparent rounded-full blur-lg" />
+                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-orange-500/10 to-transparent rounded-full blur-md" />
                     
                     <div className="relative z-10 p-6">
                       <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
@@ -148,10 +148,10 @@ const Gift = () => {
                 </TabsContent>
 
                 <TabsContent value="redeem">
-                  <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-purple-200/30 backdrop-blur-sm overflow-hidden">
+                  <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-orange-500/30 backdrop-blur-sm overflow-hidden">
                     {/* Decorative elements */}
-                    <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-purple-400/15 to-transparent rounded-full blur-lg" />
-                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-indigo-400/10 to-transparent rounded-full blur-md" />
+                    <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-orange-500/15 to-transparent rounded-full blur-lg" />
+                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-orange-500/10 to-transparent rounded-full blur-md" />
                     
                     <div className="relative z-10 p-6">
                       <GiftRedemption onRedemption={handleGiftRedemption} />

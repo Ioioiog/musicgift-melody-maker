@@ -87,6 +87,7 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Customer Testimonials",
   testimonialsSubtitle: "Discover the beautiful stories of those who chose to transform their memories into personalized music",
+  shareYourExperience: "Share Your Experience",
 
   // Package Details Page - Missing translations
   backToPackages: "Back to Packages",
