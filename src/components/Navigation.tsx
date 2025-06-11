@@ -125,45 +125,45 @@ const Navigation = () => {
 
                 {/* Language/Currency Dropdown for Mobile */}
                 {isLanguageCurrencyDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-64 bg-white/98 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200/50 z-50 animate-in slide-in-from-top-2 duration-200">
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white/98 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 z-50 animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
                     {/* Currency Section */}
-                    <div className="px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-t-xl border-b border-gray-100">
+                    <div className="px-3 py-2 bg-gradient-to-r from-gray-50 to-gray-50 rounded-t-xl border-b border-gray-100">
                       <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Currency</div>
                     </div>
-                    <div className="py-2">
+                    <div className="py-1">
                       <button 
                         onClick={() => {
                           setCurrency('EUR');
                           setIsLanguageCurrencyDropdownOpen(false);
                         }}
-                        className={`w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:text-orange-700 hover:bg-orange-50 transition-all duration-200 touch-manipulation ${currency === 'EUR' ? "bg-orange-100 text-orange-700 font-semibold" : ""}`}
+                        className={`w-full flex items-center justify-between px-3 py-2 text-gray-700 hover:text-orange-700 hover:bg-orange-50 transition-all duration-200 touch-manipulation ${currency === 'EUR' ? "bg-orange-100 text-orange-700 font-semibold" : ""}`}
                       >
-                        <div className="flex items-center space-x-3">
-                          <CurrencyIcon currency="EUR" className="w-4 h-4" />
-                          <span className="font-medium">EUR</span>
+                        <div className="flex items-center space-x-2">
+                          <CurrencyIcon currency="EUR" className="w-3 h-3" />
+                          <span className="text-sm">EUR</span>
                         </div>
-                        {currency === 'EUR' && <Check className="w-4 h-4" />}
+                        {currency === 'EUR' && <Check className="w-3 h-3" />}
                       </button>
                       <button 
                         onClick={() => {
                           setCurrency('RON');
                           setIsLanguageCurrencyDropdownOpen(false);
                         }}
-                        className={`w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:text-orange-700 hover:bg-orange-50 transition-all duration-200 touch-manipulation ${currency === 'RON' ? "bg-orange-100 text-orange-700 font-semibold" : ""}`}
+                        className={`w-full flex items-center justify-between px-3 py-2 text-gray-700 hover:text-orange-700 hover:bg-orange-50 transition-all duration-200 touch-manipulation ${currency === 'RON' ? "bg-orange-100 text-orange-700 font-semibold" : ""}`}
                       >
-                        <div className="flex items-center space-x-3">
-                          <CurrencyIcon currency="RON" className="w-4 h-4" />
-                          <span className="font-medium">RON</span>
+                        <div className="flex items-center space-x-2">
+                          <CurrencyIcon currency="RON" className="w-3 h-3" />
+                          <span className="text-sm">RON</span>
                         </div>
-                        {currency === 'RON' && <Check className="w-4 h-4" />}
+                        {currency === 'RON' && <Check className="w-3 h-3" />}
                       </button>
                     </div>
 
                     {/* Language Section */}
-                    <div className="px-4 py-2 bg-gradient-to-r from-gray-50 to-gray-50 border-t border-gray-100">
+                    <div className="px-3 py-2 bg-gradient-to-r from-gray-50 to-gray-50 border-t border-gray-100">
                       <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Language</div>
                     </div>
-                    <div className="py-2">
+                    <div className="py-1">
                       {languages.map(lang => (
                         <button 
                           key={lang}
@@ -171,13 +171,13 @@ const Navigation = () => {
                             setLanguage(lang);
                             setIsLanguageCurrencyDropdownOpen(false);
                           }}
-                          className={`w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:text-purple-700 hover:bg-purple-50 transition-all duration-200 touch-manipulation ${language === lang ? "bg-purple-100 text-purple-700 font-semibold" : ""}`}
+                          className={`w-full flex items-center justify-between px-3 py-2 text-gray-700 hover:text-purple-700 hover:bg-purple-50 transition-all duration-200 touch-manipulation ${language === lang ? "bg-purple-100 text-purple-700 font-semibold" : ""}`}
                         >
-                          <div className="flex items-center space-x-3">
-                            <Globe className="w-4 h-4" />
-                            <span className="font-medium">{languageNames[lang]}</span>
+                          <div className="flex items-center space-x-2">
+                            <Globe className="w-3 h-3" />
+                            <span className="text-sm">{languageNames[lang]}</span>
                           </div>
-                          {language === lang && <Check className="w-4 h-4" />}
+                          {language === lang && <Check className="w-3 h-3" />}
                         </button>
                       ))}
                     </div>
@@ -207,37 +207,37 @@ const Navigation = () => {
 
                 {/* User Dropdown for Mobile */}
                 {user && isUserDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-64 bg-white/98 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200/50 z-50 animate-in slide-in-from-top-2 duration-200">
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white/98 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 z-50 animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
                     {/* User Info Header */}
-                    <div className="px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-t-xl border-b border-gray-100">
-                      <div className="font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
+                    <div className="px-3 py-2 bg-gradient-to-r from-gray-50 to-gray-50 rounded-t-xl border-b border-gray-100">
+                      <div className="text-sm font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
                       <div className="text-xs text-gray-500 truncate">{user.email}</div>
                     </div>
                     
                     {/* User Actions */}
-                    <div className="py-2">
+                    <div className="py-1">
                       <Link 
                         to="/settings" 
-                        className="flex items-center px-4 py-3 text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-200 touch-manipulation"
+                        className="flex items-center px-3 py-2 text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-200 touch-manipulation"
                         onClick={() => setIsUserDropdownOpen(false)}
                       >
-                        <User className="w-4 h-4 mr-3" />
-                        <span className="font-medium">{t('accountSettings')}</span>
+                        <User className="w-3 h-3 mr-2" />
+                        <span className="text-sm">{t('accountSettings')}</span>
                       </Link>
                       <Link 
                         to="/history" 
-                        className="flex items-center px-4 py-3 text-gray-700 hover:text-green-700 hover:bg-green-50 transition-all duration-200 touch-manipulation"
+                        className="flex items-center px-3 py-2 text-gray-700 hover:text-green-700 hover:bg-green-50 transition-all duration-200 touch-manipulation"
                         onClick={() => setIsUserDropdownOpen(false)}
                       >
-                        <History className="w-4 h-4 mr-3" />
-                        <span className="font-medium">{t('history')}</span>
+                        <History className="w-3 h-3 mr-2" />
+                        <span className="text-sm">{t('history')}</span>
                       </Link>
                       <button 
                         onClick={handleSignOut}
-                        className="flex items-center w-full px-4 py-3 text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200 touch-manipulation"
+                        className="flex items-center w-full px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200 touch-manipulation"
                       >
-                        <LogOut className="w-4 h-4 mr-3" />
-                        <span className="font-medium">{t('signOut')}</span>
+                        <LogOut className="w-3 h-3 mr-2" />
+                        <span className="text-sm">{t('signOut')}</span>
                       </button>
                     </div>
                   </div>
