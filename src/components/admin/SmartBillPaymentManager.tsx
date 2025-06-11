@@ -183,8 +183,8 @@ const SmartBillPaymentManager = () => {
         throw error;
       }
 
-      // The PDF data should be returned as a blob
-      if (data) {
+      // The response should be a PDF blob
+      if (data && data instanceof ArrayBuffer) {
         // Create a blob URL and open in new tab
         const blob = new Blob([data], { type: 'application/pdf' });
         const url = URL.createObjectURL(blob);
@@ -197,8 +197,32 @@ const SmartBillPaymentManager = () => {
           title: "Proforma PDF",
           description: "PDF opened in new tab"
         });
+      } else if (data && typeof data === 'object' && data.error) {
+        throw new Error(data.error);
       } else {
-        throw new Error('No PDF data received');
+        // Try to handle the response as a blob
+        try {
+          const response = await supabase.functions.invoke('smartbill-view-proforma', {
+            body: { orderId }
+          });
+          
+          if (response.data) {
+            // Create blob URL from the response
+            const url = URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+            window.open(url, '_blank');
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            
+            toast({
+              title: "Proforma PDF",
+              description: "PDF opened in new tab"
+            });
+          } else {
+            throw new Error('No PDF data received');
+          }
+        } catch (blobError) {
+          console.error('Error creating blob:', blobError);
+          throw new Error('Failed to process PDF data');
+        }
       }
     } catch (error) {
       console.error('Error fetching proforma PDF:', error);

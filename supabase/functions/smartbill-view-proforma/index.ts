@@ -31,6 +31,36 @@ async function rateLimitedFetch(url: string, options: RequestInit) {
   return fetch(url, options)
 }
 
+function extractProformaDetails(order: any): { series: string, number: string } {
+  let proformaSeries = 'STRP' // Default series
+  let proformaNumber = order.smartbill_proforma_id || ''
+
+  // Try to extract from smartbill_proforma_data if available
+  if (order.smartbill_proforma_data) {
+    try {
+      // Handle if it's a string (XML) or object
+      let proformaData = order.smartbill_proforma_data
+      
+      if (typeof proformaData === 'string') {
+        // Parse XML to extract series and number
+        const seriesMatch = proformaData.match(/<series>(.*?)<\/series>/)
+        const numberMatch = proformaData.match(/<number>(.*?)<\/number>/)
+        
+        if (seriesMatch) proformaSeries = seriesMatch[1]
+        if (numberMatch) proformaNumber = numberMatch[1]
+      } else if (typeof proformaData === 'object') {
+        // Handle as JSON object
+        proformaSeries = proformaData.series || 'STRP'
+        proformaNumber = proformaData.number || order.smartbill_proforma_id
+      }
+    } catch (error) {
+      console.log('⚠️ Error parsing proforma data:', error)
+    }
+  }
+
+  return { series: proformaSeries, number: proformaNumber }
+}
+
 async function fetchProformaPDF(auth: string, companyVat: string, proformaSeries: string, proformaNumber: string) {
   const pdfUrl = `https://ws.smartbill.ro/SBORO/api/estimate/pdf?cif=${companyVat}&seriesname=${encodeURIComponent(proformaSeries)}&number=${encodeURIComponent(proformaNumber)}`
   
@@ -50,7 +80,8 @@ async function fetchProformaPDF(auth: string, companyVat: string, proformaSeries
   })
 
   if (!response.ok) {
-    console.log('❌ PDF fetch error:', response.status, response.statusText)
+    const errorText = await response.text()
+    console.log('❌ PDF fetch error:', response.status, response.statusText, errorText.substring(0, 200))
     throw new Error(`SmartBill PDF API error: ${response.status} ${response.statusText}`)
   }
 
@@ -107,14 +138,10 @@ serve(async (req) => {
         );
       }
 
-      proformaNumber = order.smartbill_proforma_id;
-
-      // Extract series from proforma data if available
-      if (order.smartbill_proforma_data) {
-        const proformaData = order.smartbill_proforma_data as SmartBillInvoiceData;
-        proformaSeries = proformaData.series || 'STRP';
-        proformaNumber = proformaData.number || order.smartbill_proforma_id;
-      }
+      // Extract proforma details properly
+      const details = extractProformaDetails(order)
+      proformaSeries = details.series
+      proformaNumber = details.number
     }
 
     // Get SmartBill credentials

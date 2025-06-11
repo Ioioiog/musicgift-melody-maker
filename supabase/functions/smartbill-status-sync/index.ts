@@ -40,6 +40,78 @@ async function rateLimitedFetch(url: string, options: RequestInit) {
   return fetch(url, options)
 }
 
+function parseXmlResponse(xmlText: string): SmartBillEstimateInvoicesResponse {
+  console.log('📄 Parsing XML response:', xmlText.substring(0, 500))
+  
+  // Check for error messages first
+  const errorMatch = xmlText.match(/<errorText>(.*?)<\/errorText>/s)
+  if (errorMatch) {
+    console.log('⚠️ SmartBill API returned error:', errorMatch[1])
+    // If proforma not invoiced yet, this is not an error - just means pending
+    if (errorMatch[1].includes('nu a fost facturata')) {
+      return { areInvoicesCreated: false, invoices: [], errorText: errorMatch[1] }
+    }
+    return { areInvoicesCreated: false, invoices: [], errorText: errorMatch[1] }
+  }
+
+  // Check for areInvoicesCreated
+  const areInvoicesCreatedMatch = xmlText.match(/<areInvoicesCreated>(.*?)<\/areInvoicesCreated>/s)
+  const areInvoicesCreated = areInvoicesCreatedMatch?.[1] === 'true' || areInvoicesCreatedMatch?.[1] === '1'
+
+  // Parse invoices if they exist
+  const invoices: Array<{series: string, number: string}> = []
+  
+  // Find all invoice blocks
+  const invoiceMatches = xmlText.matchAll(/<invoice>(.*?)<\/invoice>/gs)
+  for (const match of invoiceMatches) {
+    const invoiceXml = match[1]
+    const seriesMatch = invoiceXml.match(/<series>(.*?)<\/series>/)
+    const numberMatch = invoiceXml.match(/<number>(.*?)<\/number>/)
+    
+    if (seriesMatch && numberMatch) {
+      invoices.push({
+        series: seriesMatch[1],
+        number: numberMatch[1]
+      })
+    }
+  }
+
+  return {
+    areInvoicesCreated,
+    invoices
+  }
+}
+
+function extractProformaDetails(order: any): { series: string, number: string } {
+  let proformaSeries = 'STRP' // Default series
+  let proformaNumber = order.smartbill_proforma_id || ''
+
+  // Try to extract from smartbill_proforma_data if available
+  if (order.smartbill_proforma_data) {
+    try {
+      // Handle if it's a string (XML) or object
+      let proformaData = order.smartbill_proforma_data
+      
+      if (typeof proformaData === 'string') {
+        // Parse XML to extract series and number
+        const seriesMatch = proformaData.match(/<series>(.*?)<\/series>/)
+        const numberMatch = proformaData.match(/<number>(.*?)<\/number>/)
+        
+        if (seriesMatch) proformaSeries = seriesMatch[1]
+        if (numberMatch) proformaNumber = numberMatch[1]
+      } else if (typeof proformaData === 'object') {
+        // Handle as JSON object
+        proformaSeries = proformaData.series || 'STRP'
+        proformaNumber = proformaData.number || order.smartbill_proforma_id
+      }
+    } catch (error) {
+      console.log('⚠️ Error parsing proforma data:', error)
+    }
+  }
+
+  return { series: proformaSeries, number: proformaNumber }
+}
+
 async function checkProformaInvoiceStatus(auth: string, companyVat: string, proformaSeries: string, proformaNumber: string) {
   const estimateInvoicesUrl = `https://ws.smartbill.ro/SBORO/api/estimate/invoices?cif=${companyVat}&seriesName=${encodeURIComponent(proformaSeries)}&number=${encodeURIComponent(proformaNumber)}`
   
@@ -63,19 +135,10 @@ async function checkProformaInvoiceStatus(auth: string, companyVat: string, prof
     throw new Error(`SmartBill API error: ${response.status} ${response.statusText}`)
   }
 
-  const data: SmartBillEstimateInvoicesResponse = await response.json()
-  console.log('📊 Estimate invoices data:', data)
+  const xmlText = await response.text()
+  console.log('📊 Raw XML response:', xmlText.substring(0, 500))
   
-  if (data.errorText) {
-    console.log('⚠️ SmartBill API returned error:', data.errorText)
-    // If proforma not invoiced yet, this is not an error - just means pending
-    if (data.errorText.includes('nu a fost facturata')) {
-      return { areInvoicesCreated: false, invoices: [] }
-    }
-    throw new Error(data.errorText)
-  }
-
-  return data
+  return parseXmlResponse(xmlText)
 }
 
 Deno.serve(async (req) => {
@@ -141,14 +204,7 @@ Deno.serve(async (req) => {
     const smartbillAuth = btoa(`${smartbillUsername}:${smartbillToken}`);
     
     // Extract proforma series and number
-    let proformaSeries = 'STRP'; // Default series
-    let proformaNumber = order.smartbill_proforma_id;
-    
-    if (order.smartbill_proforma_data) {
-      const proformaData = order.smartbill_proforma_data as SmartBillInvoiceData;
-      proformaSeries = proformaData.series || 'STRP';
-      proformaNumber = proformaData.number || order.smartbill_proforma_id;
-    }
+    const { series: proformaSeries, number: proformaNumber } = extractProformaDetails(order)
 
     console.log('📄 Checking proforma:', { series: proformaSeries, number: proformaNumber });
 
