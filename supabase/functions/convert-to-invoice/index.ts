@@ -111,10 +111,13 @@ serve(async (req) => {
     const token = Deno.env.get('SMARTBILL_TOKEN')
     const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
     const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
+    const invoiceSeries = Deno.env.get('SMARTBILL_INVOICE_SERIES') || 'MNG'
 
     if (!username || !token || !companyVat) {
       throw new Error('SmartBill configuration incomplete')
     }
+
+    console.log('📄 Using invoice series:', invoiceSeries)
 
     // Convert price based on payment provider - but check if it's already correct
     let convertedPrice = order.total_price
@@ -156,7 +159,8 @@ serve(async (req) => {
       convertedPrice,
       formattedPrice,
       clientName,
-      packageName: order.package_name
+      packageName: order.package_name,
+      invoiceSeries
     })
 
     // Create invoice XML
@@ -173,7 +177,7 @@ serve(async (req) => {
     <email>${escapeXml(clientEmail)}</email>
   </client>
   <issueDate>${issueDate}</issueDate>
-  <seriesName>FACT</seriesName>
+  <seriesName>${escapeXml(invoiceSeries)}</seriesName>
   <dueDate>${dueDate}</dueDate>
   <product>
     <name>${escapeXml(`${order.package_name} - Cadou Musical Personalizat`)}</name>
@@ -217,8 +221,8 @@ serve(async (req) => {
     const seriesMatch = responseText.match(/<series>(.*?)<\/series>/)
     
     const invoiceNumber = numberMatch?.[1] || null
-    const invoiceSeries = seriesMatch?.[1] || 'FACT'
-    const invoiceId = invoiceNumber ? `${invoiceSeries}${invoiceNumber}` : null
+    const invoiceSeriesFromResponse = seriesMatch?.[1] || invoiceSeries
+    const invoiceId = invoiceNumber ? `${invoiceSeriesFromResponse}${invoiceNumber}` : null
     
     if (!invoiceId) {
       throw new Error('SmartBill did not return a valid invoice ID')
