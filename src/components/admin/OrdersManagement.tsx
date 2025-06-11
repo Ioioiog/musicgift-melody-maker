@@ -1108,5 +1108,3 @@ const OrdersManagement = () => {
 };
 
 export default OrdersManagement;
-
-}
