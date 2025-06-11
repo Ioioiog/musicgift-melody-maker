@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ResponsiveTable } from "@/components/ui/responsive-table";
 import { TableCell } from "@/components/ui/table";
-import { RefreshCw, FileText, CheckCircle, AlertCircle, Search, ExternalLink, Eye } from "lucide-react";
+import { RefreshCw, FileText, CheckCircle, AlertCircle, Search, ExternalLink, Eye, CreditCard } from "lucide-react";
 
 interface ProformaOrder {
   id: string;
@@ -89,6 +88,63 @@ const SmartBillPaymentManager = () => {
       delete newState[orderId];
       return newState;
     });
+  };
+
+  const handleCheckPaymentStatus = async (orderId: string) => {
+    setOrderLoading(orderId, 'checking-payment');
+    try {
+      console.log('Checking payment status for order:', orderId);
+      
+      const { data, error } = await supabase.functions.invoke('smartbill-status-sync', {
+        body: { orderId }
+      });
+
+      console.log('Payment check response:', data);
+
+      if (error) {
+        console.error('Payment check error:', error);
+        throw error;
+      }
+
+      if (data?.success) {
+        const paymentConfirmed = data.paymentConfirmed;
+        const statusChanged = data.statusChanged;
+        
+        let message = '';
+        if (paymentConfirmed) {
+          message = `✅ Payment confirmed! Status: ${data.currentPaymentStatus}`;
+        } else if (data.documentFound) {
+          message = `⏳ Payment pending. Status: ${data.currentPaymentStatus}`;
+        } else {
+          message = `⚠️ Document not found in SmartBill (might be too new)`;
+        }
+        
+        if (statusChanged) {
+          message += ' - Status updated in database';
+        }
+        
+        toast({
+          title: "Payment Status Checked",
+          description: message,
+          variant: paymentConfirmed ? "default" : "secondary"
+        });
+        
+        await fetchProformas();
+      } else {
+        const errorMsg = data?.error || 'Failed to check payment status';
+        console.error('Payment check failed:', errorMsg);
+        throw new Error(errorMsg);
+      }
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+      toast({
+        title: "Payment Check Failed",
+        description: error.message || "Failed to check payment status. Check console for details.",
+        variant: "destructive"
+      });
+    } finally {
+      clearOrderLoading(orderId);
+    }
   };
 
   const handleSyncPaymentStatus = async (orderId: string) => {
@@ -383,6 +439,17 @@ const SmartBillPaymentManager = () => {
             <Button
               size="sm"
               variant="outline"
+              onClick={() => handleCheckPaymentStatus(order.id)}
+              disabled={!!isActionLoading}
+              className="h-8 px-2"
+              title="Check if proforma payment was completed"
+            >
+              <CreditCard className={`w-3 h-3 ${isActionLoading === 'checking-payment' ? 'animate-spin' : ''}`} />
+            </Button>
+            
+            <Button
+              size="sm"
+              variant="outline"
               onClick={() => handleSyncPaymentStatus(order.id)}
               disabled={!!isActionLoading}
               className="h-8 px-2"
@@ -471,6 +538,17 @@ const SmartBillPaymentManager = () => {
         </div>
         
         <div className="flex flex-wrap gap-2 pt-2 border-t">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => handleCheckPaymentStatus(order.id)}
+            disabled={!!isActionLoading}
+            className="flex items-center gap-1"
+          >
+            <CreditCard className={`w-3 h-3 ${isActionLoading === 'checking-payment' ? 'animate-spin' : ''}`} />
+            Check Payment
+          </Button>
+          
           <Button
             size="sm"
             variant="outline"
@@ -572,6 +650,7 @@ const SmartBillPaymentManager = () => {
         <div className="bg-gray-50 p-4 rounded-lg">
           <h4 className="font-medium mb-2">Action Buttons Guide:</h4>
           <ul className="text-sm space-y-1 text-gray-600">
+            <li><Badge variant="outline" className="mr-2">💳</Badge> Check Payment - Check if proforma payment was completed</li>
             <li><Badge variant="outline" className="mr-2">🔄</Badge> Sync - Check if proforma has been converted to invoice in SmartBill</li>
             <li><Badge variant="outline" className="mr-2">📄</Badge> Convert - Convert proforma to invoice (when paid)</li>
             <li><Badge variant="outline" className="mr-2">👁</Badge> PDF - View proforma PDF document</li>
