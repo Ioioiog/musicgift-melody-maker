@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -148,14 +147,23 @@ const SmartBillPaymentManager = () => {
       if (data?.success) {
         const paymentConfirmed = data.paymentConfirmed;
         const statusChanged = data.statusChanged;
+        const documentType = data.documentType;
         
         let message = '';
-        if (paymentConfirmed) {
+        let variant: "default" | "destructive" = "default";
+        
+        if (documentType === 'proforma') {
+          message = `⚠️ Proforma detected: ${data.message}`;
+          variant = "default";
+        } else if (paymentConfirmed) {
           message = `✅ Payment confirmed! Status: ${data.currentPaymentStatus}`;
+          variant = "default";
         } else if (data.documentFound) {
           message = `⏳ Payment pending. Status: ${data.currentPaymentStatus}`;
+          variant = "default";
         } else {
           message = `⚠️ Document not found in SmartBill (might be too new)`;
+          variant = "default";
         }
         
         if (statusChanged) {
@@ -165,7 +173,7 @@ const SmartBillPaymentManager = () => {
         toast({
           title: "Payment Status Checked",
           description: message,
-          variant: paymentConfirmed ? "default" : "default"
+          variant
         });
         
         await fetchProformas();
@@ -422,6 +430,37 @@ const SmartBillPaymentManager = () => {
     return 0;
   };
 
+  const getDocumentTypeInfo = (order: ProformaOrder) => {
+    const hasInvoice = !!order.smartbill_invoice_id;
+    const hasProforma = !!order.smartbill_proforma_id;
+    
+    if (hasInvoice) {
+      return {
+        type: 'invoice',
+        canCheckPayment: true,
+        primaryAction: 'check_payment',
+        statusText: 'Invoice (can check payment)',
+        statusColor: 'text-green-600'
+      };
+    } else if (hasProforma) {
+      return {
+        type: 'proforma',
+        canCheckPayment: false,
+        primaryAction: 'convert',
+        statusText: 'Proforma (payment via Netopia)',
+        statusColor: 'text-blue-600'
+      };
+    } else {
+      return {
+        type: 'unknown',
+        canCheckPayment: false,
+        primaryAction: 'none',
+        statusText: 'No document',
+        statusColor: 'text-gray-400'
+      };
+    }
+  };
+
   const headers = [
     "Proforma ID",
     "Customer",
@@ -436,11 +475,17 @@ const SmartBillPaymentManager = () => {
     const { email, name } = getCustomerInfo(order);
     const isActionLoading = actionLoading[order.id];
     const amount = getOrderAmount(order);
+    const docInfo = getDocumentTypeInfo(order);
 
     return (
       <>
         <TableCell className="font-mono text-sm">
-          {order.smartbill_proforma_id?.slice(0, 12)}...
+          <div className="flex flex-col">
+            <span>{order.smartbill_proforma_id?.slice(0, 12)}...</span>
+            <span className={`text-xs ${docInfo.statusColor}`}>
+              {docInfo.statusText}
+            </span>
+          </div>
         </TableCell>
         <TableCell>
           <div className="flex flex-col">
@@ -477,11 +522,14 @@ const SmartBillPaymentManager = () => {
           <div className="flex flex-wrap gap-1">
             <Button
               size="sm"
-              variant="outline"
+              variant={docInfo.canCheckPayment ? "default" : "outline"}
               onClick={() => handleCheckPaymentStatus(order.id)}
               disabled={!!isActionLoading}
               className="h-8 px-2"
-              title="Check if proforma payment was completed"
+              title={docInfo.canCheckPayment ? 
+                "Check invoice payment status" : 
+                "Proforma: payment detected via Netopia webhook"
+              }
             >
               <CreditCard className={`w-3 h-3 ${isActionLoading === 'checking-payment' ? 'animate-spin' : ''}`} />
             </Button>
@@ -538,6 +586,7 @@ const SmartBillPaymentManager = () => {
     const { email, name } = getCustomerInfo(order);
     const isActionLoading = actionLoading[order.id];
     const amount = getOrderAmount(order);
+    const docInfo = getDocumentTypeInfo(order);
 
     return (
       <div className="space-y-3">
@@ -579,7 +628,7 @@ const SmartBillPaymentManager = () => {
         <div className="flex flex-wrap gap-2 pt-2 border-t">
           <Button
             size="sm"
-            variant="outline"
+            variant={docInfo.canCheckPayment ? "default" : "outline"}
             onClick={() => handleCheckPaymentStatus(order.id)}
             disabled={!!isActionLoading}
             className="flex items-center gap-1"
@@ -687,16 +736,21 @@ const SmartBillPaymentManager = () => {
         )}
 
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h4 className="font-medium mb-2">Action Buttons Guide:</h4>
-          <ul className="text-sm space-y-1 text-gray-600">
-            <li><Badge variant="outline" className="mr-2">💳</Badge> Check Payment - Check if proforma payment was completed using SmartBill API</li>
-            <li><Badge variant="outline" className="mr-2">🔄</Badge> Sync - Check if proforma has been converted to invoice in SmartBill</li>
-            <li><Badge variant="outline" className="mr-2">📄</Badge> Convert - Convert proforma to invoice (when paid)</li>
-            <li><Badge variant="outline" className="mr-2">👁</Badge> PDF - View proforma PDF document</li>
-            <li><Badge variant="outline" className="mr-2">🔗</Badge> Invoice - View invoice (when available)</li>
+          <h4 className="font-medium mb-2">Payment Detection Guide:</h4>
+          <ul className="text-sm space-y-2 text-gray-600">
+            <li><Badge variant="outline" className="mr-2">🔵</Badge> <strong>Proformas:</strong> Payment detected automatically via Netopia webhooks when customer pays</li>
+            <li><Badge variant="outline" className="mr-2">🟢</Badge> <strong>Invoices:</strong> Payment status can be checked manually using SmartBill API</li>
+            <li><Badge variant="outline" className="mr-2">📄</Badge> <strong>Convert:</strong> Convert paid proforma to invoice for formal documentation</li>
+            <li><Badge variant="outline" className="mr-2">👁</Badge> <strong>PDF:</strong> View proforma/invoice documents</li>
           </ul>
+          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
+            <strong>Netopia Integration:</strong> When customers pay SmartBill proformas via Netopia, 
+            payments are automatically detected and order status is updated in real-time via webhook notifications.
+            No manual checking needed for proforma payments.
+          </div>
           <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm">
-            <strong>Note:</strong> Payment check uses the same logic as webhook processing for consistent status updates.
+            <strong>Note:</strong> SmartBill API only supports payment status checking for invoices, not proformas. 
+            Proforma payments are detected via Netopia webhook integration.
           </div>
         </div>
       </CardContent>
@@ -705,3 +759,5 @@ const SmartBillPaymentManager = () => {
 };
 
 export default SmartBillPaymentManager;
+
+</edits_to_apply>

@@ -1,3 +1,4 @@
+
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -23,28 +24,31 @@ async function rateLimitedFetch(url: string, options: RequestInit) {
   return fetch(url, options)
 }
 
-function extractDocumentDetails(order: any): { series: string, number: string, documentId: string } {
+function extractDocumentDetails(order: any): { series: string, number: string, documentId: string, documentType: string } {
   console.log('📋 Extracting document details from order:', {
     smartbill_proforma_id: order.smartbill_proforma_id,
     smartbill_invoice_id: order.smartbill_invoice_id
   })
 
-  // Try to extract from smartbill_proforma_id first (since we create proformas with payment links)
-  let documentId = order.smartbill_proforma_id
+  let documentId = null
+  let documentType = 'unknown'
   
-  // If no proforma ID, check if we have invoice ID
-  if (!documentId && order.smartbill_invoice_id) {
+  // Check if we have an invoice first (invoices can be checked for payment status)
+  if (order.smartbill_invoice_id) {
     documentId = order.smartbill_invoice_id
+    documentType = 'invoice'
+  } else if (order.smartbill_proforma_id) {
+    documentId = order.smartbill_proforma_id
+    documentType = 'proforma'
   }
 
   if (!documentId) {
     throw new Error('No SmartBill document ID found in order')
   }
 
-  console.log('📄 Working with document ID:', documentId)
+  console.log('📄 Working with document:', { documentId, documentType })
 
   // Extract series and number using regex
-  // Expected formats: "STRP123", "Prof456", "mng789", etc.
   const seriesMatch = documentId.match(/^([a-zA-Z]+)/)
   const numberMatch = documentId.match(/(\d+)$/)
   
@@ -56,9 +60,9 @@ function extractDocumentDetails(order: any): { series: string, number: string, d
   const series = seriesMatch[1]
   const number = numberMatch[1]
 
-  console.log('✅ Extracted details:', { series, number, documentId })
+  console.log('✅ Extracted details:', { series, number, documentId, documentType })
 
-  return { series, number, documentId }
+  return { series, number, documentId, documentType }
 }
 
 async function checkPaymentStatus(auth: string, companyVat: string, series: string, number: string) {
@@ -89,7 +93,6 @@ async function checkPaymentStatus(auth: string, companyVat: string, series: stri
       
       // Handle specific SmartBill errors
       if (response.status === 400 && errorText.includes('Factura nu a fost gasita')) {
-        // Document not found - this is normal for very new documents
         return { 
           found: false,
           paid: false,
@@ -143,7 +146,6 @@ serve(async (req) => {
 
     console.log('🚀 SmartBill Status Sync - Starting...')
 
-    // Parse request body
     const { orderId } = await req.json();
     
     if (!orderId) {
@@ -155,7 +157,6 @@ serve(async (req) => {
 
     console.log(`🔍 Syncing status for order: ${orderId}`);
 
-    // Get the order from database
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .select('*')
@@ -179,7 +180,6 @@ serve(async (req) => {
       total_price: order.total_price
     })
 
-    // Check if we have SmartBill document
     if (!order.smartbill_proforma_id && !order.smartbill_invoice_id) {
       console.log('❌ No SmartBill document found');
       return new Response(
@@ -188,7 +188,6 @@ serve(async (req) => {
       );
     }
 
-    // Get SmartBill credentials
     const smartbillUsername = Deno.env.get('SMARTBILL_USERNAME') || Deno.env.get('SMARTBILL_EMAIL');
     const smartbillToken = Deno.env.get('SMARTBILL_TOKEN');
     const smartbillCompanyVat = Deno.env.get('SMARTBILL_COMPANY_VAT');
@@ -201,11 +200,9 @@ serve(async (req) => {
       );
     }
 
-    // Create auth token
     const smartbillAuth = btoa(`${smartbillUsername}:${smartbillToken}`);
     console.log('🔐 SmartBill auth created');
     
-    // Extract document details
     let documentDetails;
     try {
       documentDetails = extractDocumentDetails(order);
@@ -220,10 +217,41 @@ serve(async (req) => {
       );
     }
 
-    const { series, number, documentId } = documentDetails;
-    console.log('📄 Checking document:', { series, number, documentId });
+    const { series, number, documentId, documentType } = documentDetails;
+    
+    // Check if this is a proforma - SmartBill doesn't support payment status checking for proformas
+    if (documentType === 'proforma') {
+      console.log('📄 Document is a proforma - payment status checking not supported by SmartBill');
+      
+      return new Response(
+        JSON.stringify({
+          success: true,
+          orderId,
+          statusChanged: false,
+          documentFound: true,
+          paymentConfirmed: false,
+          documentType: 'proforma',
+          currentSmartbillStatus: order.smartbill_payment_status,
+          currentPaymentStatus: order.payment_status,
+          currentOrderStatus: order.status,
+          paymentData: null,
+          message: 'Payment status checking not available for proformas. Convert to invoice or use Netopia webhooks for payment detection.',
+          limitation: 'SmartBill API does not support payment status checking for proformas, only invoices',
+          suggestion: 'Use "Convert to Invoice" after payment is confirmed, or ensure Netopia webhook is configured',
+          debugInfo: {
+            documentId,
+            series,
+            number,
+            documentType
+          }
+        }),
+        { status: 200, headers: corsHeaders }
+      );
+    }
 
-    // Check payment status
+    // If we have an invoice, proceed with payment status check
+    console.log('📄 Checking invoice payment status:', { series, number, documentId });
+
     let paymentResult;
     try {
       paymentResult = await checkPaymentStatus(smartbillAuth, smartbillCompanyVat, series, number);
@@ -240,29 +268,22 @@ serve(async (req) => {
 
     console.log('📊 Payment result:', paymentResult)
 
-    // Determine new status based on payment result
     let newSmartbillStatus = order.smartbill_payment_status;
     let newPaymentStatus = order.payment_status;
     let newOrderStatus = order.status;
 
     if (paymentResult.found && paymentResult.paid) {
-      // Payment confirmed
       newSmartbillStatus = 'confirmed';
       newPaymentStatus = 'completed';
       newOrderStatus = 'completed';
-      
       console.log(`✅ Payment confirmed for order ${orderId}`);
     } else if (paymentResult.found && !paymentResult.paid) {
-      // Document found but not paid
       newSmartbillStatus = 'pending';
       console.log('ℹ️ Payment still pending');
     } else if (!paymentResult.found) {
-      // Document not found (might be too new)
-      console.log('⚠️ Document not found in SmartBill - might be too new');
-      // Keep current status
+      console.log('⚠️ Invoice not found in SmartBill - might be too new');
     }
 
-    // Update order if status changed
     const updateData: any = {
       updated_at: new Date().toISOString(),
       webhook_processed_at: new Date().toISOString()
@@ -308,6 +329,7 @@ serve(async (req) => {
         statusChanged,
         documentFound: paymentResult.found,
         paymentConfirmed: paymentResult.paid,
+        documentType,
         currentSmartbillStatus: newSmartbillStatus,
         currentPaymentStatus: newPaymentStatus,
         currentOrderStatus: newOrderStatus,
@@ -317,6 +339,7 @@ serve(async (req) => {
           documentId,
           series,
           number,
+          documentType,
           paymentResult
         }
       }),
