@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,23 +17,21 @@ interface GiftRedemptionProps {
 const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
   const [giftCardCode, setGiftCardCode] = useState('');
   const [validatedGiftCard, setValidatedGiftCard] = useState<any>(null);
-  const [isValidating, setIsValidating] = useState(false);
   
   const { toast } = useToast();
   const { t } = useLanguage();
-  const { mutateAsync: validateGiftCard } = useValidateGiftCard();
+  const { mutateAsync: validateGiftCard, isPending: isValidating } = useValidateGiftCard();
 
   const handleValidateGiftCard = async () => {
     if (!giftCardCode.trim()) return;
     
     try {
-      setIsValidating(true);
       const result = await validateGiftCard(giftCardCode.trim());
       setValidatedGiftCard(result);
       
       toast({
         title: t('validGiftCard'),
-        description: `${t('giftCardValue')}: ${result.amount} ${result.currency}`,
+        description: `${t('giftCardValue')}: ${result.amount_eur || result.gift_amount} ${result.currency}`,
       });
     } catch (error) {
       console.error('Error validating gift card:', error);
@@ -42,8 +41,6 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
         variant: "destructive",
       });
       setValidatedGiftCard(null);
-    } finally {
-      setIsValidating(false);
     }
   };
 
@@ -89,7 +86,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
                   disabled={!giftCardCode.trim() || isValidating}
                   className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700"
                 >
-                  {isValidating ? t('validatingCode') : t('checkGiftCard')}
+                  {isValidating ? t('validatingCode') : t('validate')}
                 </Button>
               </div>
             </div>
@@ -111,7 +108,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">{t('giftCardValue')}:</span>
                   <span className="font-medium text-green-600">
-                    {validatedGiftCard.amount} {validatedGiftCard.currency}
+                    {validatedGiftCard.amount_eur || validatedGiftCard.gift_amount} {validatedGiftCard.currency}
                   </span>
                 </div>
                 {validatedGiftCard.message_text && (

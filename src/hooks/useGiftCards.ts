@@ -207,6 +207,22 @@ export const useGiftCardByCode = (code: string) => {
   });
 };
 
+export const useValidateGiftCard = () => {
+  return useMutation({
+    mutationFn: async (code: string) => {
+      const { data, error } = await supabase
+        .from('gift_cards')
+        .select('*')
+        .eq('code', code)
+        .eq('status', 'active')
+        .single();
+
+      if (error) throw error;
+      return data as GiftCard;
+    },
+  });
+};
+
 export const useGiftCardBalance = (cardId: string) => {
   return useQuery({
     queryKey: ['gift-card-balance', cardId],
