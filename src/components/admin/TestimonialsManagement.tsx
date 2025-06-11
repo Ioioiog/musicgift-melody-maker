@@ -9,11 +9,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Trash2, Edit, Plus, Check, X } from "lucide-react";
+import { Trash2, Edit, Plus, Check, X, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQueryClient } from "@tanstack/react-query";
 import { VideoUpload } from "@/components/ui/video-upload";
+import { convertToYouTubeEmbed, isValidYouTubeUrl } from "@/utils/youtubeUtils";
 import type { Testimonial } from "@/hooks/useTestimonials";
 
 const TestimonialsManagement = () => {
@@ -57,14 +58,29 @@ const TestimonialsManagement = () => {
     setFormData({ ...formData, video_url: "" });
   };
 
+  const handleYouTubeLinkChange = (value: string) => {
+    setFormData({ ...formData, youtube_link: value });
+  };
+
+  const getYouTubeValidationState = () => {
+    if (!formData.youtube_link) return null;
+    return isValidYouTubeUrl(formData.youtube_link) ? 'valid' : 'invalid';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
+      // Convert YouTube URL to embed format if provided and valid
+      const processedData = {
+        ...formData,
+        youtube_link: formData.youtube_link ? convertToYouTubeEmbed(formData.youtube_link) : ""
+      };
+
       if (editingTestimonial) {
         const { error } = await supabase
           .from('testimonials')
-          .update(formData)
+          .update(processedData)
           .eq('id', editingTestimonial.id);
         
         if (error) throw error;
@@ -72,7 +88,7 @@ const TestimonialsManagement = () => {
       } else {
         const { error } = await supabase
           .from('testimonials')
-          .insert([formData]);
+          .insert([processedData]);
         
         if (error) throw error;
         toast({ title: "Success", description: "Testimonial created successfully" });
@@ -159,6 +175,8 @@ const TestimonialsManagement = () => {
     return <div>Loading testimonials...</div>;
   }
 
+  const validationState = getYouTubeValidationState();
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -221,13 +239,25 @@ const TestimonialsManagement = () => {
               </div>
 
               <div>
-                <Label htmlFor="youtube_link">YouTube Embed Link</Label>
+                <Label htmlFor="youtube_link" className="flex items-center gap-2">
+                  YouTube Video Link
+                  {validationState === 'valid' && (
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                  )}
+                  {validationState === 'invalid' && (
+                    <AlertCircle className="w-4 h-4 text-red-500" />
+                  )}
+                </Label>
                 <Input
                   id="youtube_link"
                   value={formData.youtube_link}
-                  onChange={(e) => setFormData({ ...formData, youtube_link: e.target.value })}
-                  placeholder="https://www.youtube.com/embed/VIDEO_ID"
+                  onChange={(e) => handleYouTubeLinkChange(e.target.value)}
+                  placeholder="https://www.youtube.com/watch?v=VIDEO_ID or https://youtu.be/VIDEO_ID"
+                  className={validationState === 'invalid' ? 'border-red-300 focus:border-red-500' : validationState === 'valid' ? 'border-green-300 focus:border-green-500' : ''}
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  Supports all YouTube URL formats: standard watch URLs, youtu.be links, mobile URLs, embed URLs, and YouTube Music URLs.
+                </p>
               </div>
 
               <div className="border-t pt-4">
