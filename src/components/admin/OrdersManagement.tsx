@@ -619,23 +619,63 @@ const OrdersManagement = () => {
     try {
       console.log(`Downloading proforma PDF for order: ${orderId}`);
       
-      const { data, error } = await supabase.functions.invoke('smartbill-get-proforma-pdf', {
-        body: { orderId }
-      });
-
-      if (error) {
-        console.error('PDF download error:', error);
+      // Get the current session and user info
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
         toast({ 
-          title: 'Error downloading proforma PDF', 
-          description: error.message || 'Failed to download PDF',
+          title: 'Authentication required', 
+          description: 'Please log in to download PDFs',
           variant: 'destructive' 
         });
         return;
       }
 
-      // The response should be a blob (PDF content)
-      if (data instanceof ArrayBuffer) {
-        const blob = new Blob([data], { type: 'application/pdf' });
+      // Use direct fetch to the edge function instead of supabase.functions.invoke
+      // This gives us better control over the response handling for binary data
+      const response = await fetch(
+        `https://ehvzhnzqcbzuirovwjsr.supabase.co/functions/v1/smartbill-get-proforma-pdf`, 
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVodnpobnpxY2J6dWlyb3Z3anNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MDA1NDAsImV4cCI6MjA2NDE3NjU0MH0.dCDXCQsIY2pmVfGBHnRGqi_dw3yTEfkYrOHKnKDLSqg'
+          },
+          body: JSON.stringify({ orderId })
+        }
+      );
+
+      console.log('PDF download response status:', response.status);
+      console.log('PDF download response headers:', Object.fromEntries(response.headers.entries()));
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('PDF download error response:', errorText);
+        
+        let errorMessage = 'Failed to download PDF';
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.error || errorMessage;
+        } catch (e) {
+          // If not JSON, use the raw error text
+          errorMessage = errorText || errorMessage;
+        }
+        
+        toast({ 
+          title: 'Error downloading proforma PDF', 
+          description: errorMessage,
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      // Check the content type to determine how to handle the response
+      const contentType = response.headers.get('content-type');
+      console.log('Response content type:', contentType);
+
+      if (contentType?.includes('application/pdf')) {
+        // It's a PDF, handle as blob
+        const blob = await response.blob();
         const url = URL.createObjectURL(blob);
         
         // Open PDF in new tab
@@ -648,8 +688,21 @@ const OrdersManagement = () => {
           title: 'Proforma PDF downloaded',
           description: 'The PDF has been opened in a new tab'
         });
+      } else if (contentType?.includes('application/json')) {
+        // It's an error response in JSON format
+        const errorData = await response.json();
+        console.error('PDF download error data:', errorData);
+        
+        toast({ 
+          title: 'Error downloading proforma PDF', 
+          description: errorData.error || 'Failed to download PDF',
+          variant: 'destructive' 
+        });
       } else {
-        console.error('Unexpected response format:', data);
+        // Unknown response format
+        const responseText = await response.text();
+        console.error('Unexpected response format:', contentType, responseText);
+        
         toast({ 
           title: 'Error opening PDF', 
           description: 'Unexpected response format',
