@@ -55,15 +55,22 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
 
   // Handle new canvas-based design structure
   if (templateData.elements && Array.isArray(templateData.elements)) {
+    // Use the template dimensions directly (400x250)
     const cardWidth = templateData.canvasWidth || 400;
     const cardHeight = templateData.canvasHeight || 250;
-    const scale = 320 / cardWidth; // Scale to fit preview
+    
+    // Scale the preview to fit nicely (max width 320px)
+    const maxPreviewWidth = 320;
+    const scale = Math.min(maxPreviewWidth / cardWidth, 1); // Don't upscale if already small
+    const previewWidth = cardWidth * scale;
+    const previewHeight = cardHeight * scale;
 
     return (
       <Card 
-        className="w-full max-w-md mx-auto relative overflow-hidden"
+        className="mx-auto relative overflow-hidden"
         style={{ 
-          height: cardHeight * scale,
+          width: previewWidth,
+          height: previewHeight,
           backgroundImage: design.preview_image_url ? `url(${design.preview_image_url})` : undefined,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
@@ -74,25 +81,49 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
             <div className="absolute inset-0 bg-black/10"></div>
           )}
           
-          {/* Render canvas elements */}
-          {templateData.elements.map((element: any, index: number) => (
-            <div
-              key={element.id || index}
-              className="absolute whitespace-nowrap"
-              style={{
-                left: element.x * scale,
-                top: element.y * scale,
-                fontSize: element.fontSize * scale,
-                fontFamily: element.fontFamily,
-                color: element.color,
-                fontWeight: element.bold ? 'bold' : 'normal',
-                fontStyle: element.italic ? 'italic' : 'normal',
-                zIndex: 10
-              }}
-            >
-              {replacePlaceholders(element.text)}
+          {/* Render canvas elements with proper scaling */}
+          {templateData.elements.map((element: any, index: number) => {
+            // Only render text elements and placeholders in preview
+            if (element.type !== 'text' && element.type !== 'placeholder') {
+              return null;
+            }
+
+            const elementText = replacePlaceholders(element.text || '');
+            
+            // Skip empty elements
+            if (!elementText.trim()) {
+              return null;
+            }
+
+            return (
+              <div
+                key={element.id || index}
+                className="absolute whitespace-nowrap pointer-events-none select-none"
+                style={{
+                  left: element.x * scale,
+                  top: element.y * scale,
+                  fontSize: (element.fontSize || 16) * scale,
+                  fontFamily: element.fontFamily || 'Arial',
+                  color: element.color || '#000000',
+                  fontWeight: element.bold ? 'bold' : 'normal',
+                  fontStyle: element.italic ? 'italic' : 'normal',
+                  zIndex: 10,
+                  maxWidth: previewWidth - (element.x * scale),
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {elementText}
+              </div>
+            );
+          })}
+
+          {/* Debug overlay - shows element positions (remove in production) */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="absolute top-2 left-2 bg-black/50 text-white text-xs p-1 rounded">
+              {cardWidth}×{cardHeight} (scale: {scale.toFixed(2)})
             </div>
-          ))}
+          )}
         </CardContent>
       </Card>
     );

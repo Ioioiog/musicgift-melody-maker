@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Canvas as FabricCanvas, IText, FabricImage, Rect, Circle, Line } from 'fabric';
 import { Button } from '@/components/ui/button';
@@ -56,6 +57,17 @@ const PLACEHOLDERS = [
 
 const FONTS = ['Arial', 'Georgia', 'Times New Roman', 'Courier New', 'Verdana', 'Impact'];
 
+// Template dimensions that match the actual gift card
+const TEMPLATE_WIDTH = 400;
+const TEMPLATE_HEIGHT = 250;
+
+// Canvas display dimensions (scaled up for editing)
+const CANVAS_DISPLAY_WIDTH = 800;
+const CANVAS_DISPLAY_HEIGHT = 500;
+
+// Scale factor for converting between canvas and template coordinates
+const SCALE_FACTOR = CANVAS_DISPLAY_WIDTH / TEMPLATE_WIDTH;
+
 const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   value,
   onChange,
@@ -67,6 +79,12 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   const [fabricCanvas, setFabricCanvas] = useState<FabricCanvas | null>(null);
   const [selectedObject, setSelectedObject] = useState<any>(null);
   const [toolsExpanded, setToolsExpanded] = useState(true);
+
+  // Convert template coordinates to canvas coordinates
+  const templateToCanvas = (coord: number) => coord * SCALE_FACTOR;
+  
+  // Convert canvas coordinates to template coordinates
+  const canvasToTemplate = (coord: number) => coord / SCALE_FACTOR;
 
   useEffect(() => {
     if (!fabricCanvas) return;
@@ -90,8 +108,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!canvasRef.current) return;
 
     const canvas = new FabricCanvas(canvasRef.current, {
-      width: 1050,
-      height: 600,
+      width: CANVAS_DISPLAY_WIDTH,
+      height: CANVAS_DISPLAY_HEIGHT,
       backgroundColor: '#ffffff',
     });
 
@@ -100,24 +118,16 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       FabricImage.fromURL(backgroundImage, {
         crossOrigin: 'anonymous'
       }).then((img) => {
-        const canvasAspect = canvas.width! / canvas.height!;
-        const imageAspect = img.width! / img.height!;
-        
-        let scaleX, scaleY;
-        
-        if (imageAspect > canvasAspect) {
-          scaleX = canvas.width! / img.width!;
-          scaleY = scaleX;
-        } else {
-          scaleY = canvas.height! / img.height!;
-          scaleX = scaleY;
-        }
+        // Scale background to fit canvas display size
+        const scaleX = CANVAS_DISPLAY_WIDTH / img.width!;
+        const scaleY = CANVAS_DISPLAY_HEIGHT / img.height!;
+        const scale = Math.min(scaleX, scaleY);
         
         img.set({
-          scaleX: scaleX,
-          scaleY: scaleY,
-          left: (canvas.width! - img.width! * scaleX) / 2,
-          top: (canvas.height! - img.height! * scaleY) / 2,
+          scaleX: scale,
+          scaleY: scale,
+          left: (CANVAS_DISPLAY_WIDTH - img.width! * scale) / 2,
+          top: (CANVAS_DISPLAY_HEIGHT - img.height! * scale) / 2,
           selectable: false,
           evented: false
         });
@@ -127,13 +137,13 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       });
     }
 
-    // Load existing elements
+    // Load existing elements with proper coordinate conversion
     value.elements.forEach((element, index) => {
       if (element.type === 'text' || element.type === 'placeholder') {
         const text = new IText(element.text || '', {
-          left: element.x,
-          top: element.y,
-          fontSize: element.fontSize,
+          left: templateToCanvas(element.x),
+          top: templateToCanvas(element.y),
+          fontSize: (element.fontSize || 16) * SCALE_FACTOR,
           fontFamily: element.fontFamily,
           fill: element.color,
           fontWeight: element.bold ? 'bold' : 'normal',
@@ -146,16 +156,16 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         canvas.add(text);
       } else if (element.type === 'rectangle' || element.type === 'rounded-rectangle') {
         const rect = new Rect({
-          left: element.x,
-          top: element.y,
-          width: element.width || 100,
-          height: element.height || 60,
+          left: templateToCanvas(element.x),
+          top: templateToCanvas(element.y),
+          width: templateToCanvas(element.width || 100),
+          height: templateToCanvas(element.height || 60),
           fill: element.color,
           stroke: element.strokeColor,
-          strokeWidth: element.strokeWidth || 0,
+          strokeWidth: (element.strokeWidth || 0) * SCALE_FACTOR,
           opacity: (element.opacity || 100) / 100,
-          rx: element.type === 'rounded-rectangle' ? (element.cornerRadius || 10) : 0,
-          ry: element.type === 'rounded-rectangle' ? (element.cornerRadius || 10) : 0
+          rx: element.type === 'rounded-rectangle' ? templateToCanvas(element.cornerRadius || 10) : 0,
+          ry: element.type === 'rounded-rectangle' ? templateToCanvas(element.cornerRadius || 10) : 0
         });
         rect.set('elementId', element.id);
         rect.set('elementType', element.type);
@@ -163,12 +173,12 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         canvas.add(rect);
       } else if (element.type === 'circle') {
         const circle = new Circle({
-          left: element.x,
-          top: element.y,
-          radius: element.radius || 50,
+          left: templateToCanvas(element.x),
+          top: templateToCanvas(element.y),
+          radius: templateToCanvas(element.radius || 50),
           fill: element.color,
           stroke: element.strokeColor,
-          strokeWidth: element.strokeWidth || 0,
+          strokeWidth: (element.strokeWidth || 0) * SCALE_FACTOR,
           opacity: (element.opacity || 100) / 100
         });
         circle.set('elementId', element.id);
@@ -176,9 +186,14 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         circle.set('elementIndex', index);
         canvas.add(circle);
       } else if (element.type === 'line') {
-        const line = new Line([element.x, element.y, element.x + (element.width || 100), element.y], {
+        const line = new Line([
+          templateToCanvas(element.x), 
+          templateToCanvas(element.y), 
+          templateToCanvas(element.x + (element.width || 100)), 
+          templateToCanvas(element.y)
+        ], {
           stroke: element.color,
-          strokeWidth: element.strokeWidth || 2,
+          strokeWidth: (element.strokeWidth || 2) * SCALE_FACTOR,
           opacity: (element.opacity || 100) / 100
         });
         line.set('elementId', element.id);
@@ -244,9 +259,9 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           type: elementType,
           placeholder: textObj.get('placeholderType'),
           text: textObj.text || '',
-          x: textObj.left || 0,
-          y: textObj.top || 0,
-          fontSize: textObj.fontSize || 24,
+          x: canvasToTemplate(textObj.left || 0),
+          y: canvasToTemplate(textObj.top || 0),
+          fontSize: canvasToTemplate(textObj.fontSize || 24),
           fontFamily: textObj.fontFamily || 'Arial',
           color: textObj.fill as string || '#000000',
           bold: textObj.fontWeight === 'bold',
@@ -257,27 +272,27 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         elements.push({
           id: elementId,
           type: elementType,
-          x: rectObj.left || 0,
-          y: rectObj.top || 0,
-          width: rectObj.width || 100,
-          height: rectObj.height || 60,
+          x: canvasToTemplate(rectObj.left || 0),
+          y: canvasToTemplate(rectObj.top || 0),
+          width: canvasToTemplate(rectObj.width || 100),
+          height: canvasToTemplate(rectObj.height || 60),
           color: rectObj.fill as string || '#000000',
           strokeColor: rectObj.stroke as string,
-          strokeWidth: rectObj.strokeWidth || 0,
+          strokeWidth: canvasToTemplate(rectObj.strokeWidth || 0),
           opacity: Math.round((rectObj.opacity || 1) * 100),
-          cornerRadius: elementType === 'rounded-rectangle' ? (rectObj.rx || 0) : undefined
+          cornerRadius: elementType === 'rounded-rectangle' ? canvasToTemplate(rectObj.rx || 0) : undefined
         });
       } else if (obj.type === 'circle') {
         const circleObj = obj as Circle;
         elements.push({
           id: elementId,
           type: elementType,
-          x: circleObj.left || 0,
-          y: circleObj.top || 0,
-          radius: circleObj.radius || 50,
+          x: canvasToTemplate(circleObj.left || 0),
+          y: canvasToTemplate(circleObj.top || 0),
+          radius: canvasToTemplate(circleObj.radius || 50),
           color: circleObj.fill as string || '#000000',
           strokeColor: circleObj.stroke as string,
-          strokeWidth: circleObj.strokeWidth || 0,
+          strokeWidth: canvasToTemplate(circleObj.strokeWidth || 0),
           opacity: Math.round((circleObj.opacity || 1) * 100)
         });
       } else if (obj.type === 'line') {
@@ -286,11 +301,11 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         elements.push({
           id: elementId,
           type: elementType,
-          x: lineObj.left || 0,
-          y: lineObj.top || 0,
-          width: Math.abs(coords.x2 - coords.x1),
+          x: canvasToTemplate(lineObj.left || 0),
+          y: canvasToTemplate(lineObj.top || 0),
+          width: canvasToTemplate(Math.abs(coords.x2 - coords.x1)),
           color: lineObj.stroke as string || '#000000',
-          strokeWidth: lineObj.strokeWidth || 2,
+          strokeWidth: canvasToTemplate(lineObj.strokeWidth || 2),
           opacity: Math.round((lineObj.opacity || 1) * 100)
         });
       }
@@ -298,6 +313,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
 
     onChange({
       ...value,
+      canvasWidth: TEMPLATE_WIDTH,
+      canvasHeight: TEMPLATE_HEIGHT,
       elements
     });
   };
@@ -306,9 +323,9 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!fabricCanvas) return;
 
     const text = new IText(placeholder.text, {
-      left: 50,
-      top: 50,
-      fontSize: 24,
+      left: templateToCanvas(50),
+      top: templateToCanvas(50),
+      fontSize: 24 * SCALE_FACTOR,
       fontFamily: 'Arial',
       fill: '#000000'
     });
@@ -328,9 +345,9 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!fabricCanvas) return;
 
     const text = new IText('Your text here', {
-      left: 50,
-      top: 50,
-      fontSize: 24,
+      left: templateToCanvas(50),
+      top: templateToCanvas(50),
+      fontSize: 24 * SCALE_FACTOR,
       fontFamily: 'Arial',
       fill: '#000000'
     });
@@ -349,10 +366,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!fabricCanvas) return;
 
     const rect = new Rect({
-      left: 50,
-      top: 50,
-      width: 150,
-      height: 80,
+      left: templateToCanvas(50),
+      top: templateToCanvas(50),
+      width: templateToCanvas(150),
+      height: templateToCanvas(80),
       fill: '#000000',
       stroke: '#000000',
       strokeWidth: 0,
@@ -373,16 +390,16 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!fabricCanvas) return;
 
     const rect = new Rect({
-      left: 50,
-      top: 50,
-      width: 150,
-      height: 80,
+      left: templateToCanvas(50),
+      top: templateToCanvas(50),
+      width: templateToCanvas(150),
+      height: templateToCanvas(80),
       fill: '#000000',
       stroke: '#000000',
       strokeWidth: 0,
       opacity: 1,
-      rx: 10,
-      ry: 10
+      rx: templateToCanvas(10),
+      ry: templateToCanvas(10)
     });
     
     const elementIndex = value.elements.length;
@@ -399,9 +416,9 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!fabricCanvas) return;
 
     const circle = new Circle({
-      left: 50,
-      top: 50,
-      radius: 50,
+      left: templateToCanvas(50),
+      top: templateToCanvas(50),
+      radius: templateToCanvas(50),
       fill: '#000000',
       stroke: '#000000',
       strokeWidth: 0,
@@ -421,9 +438,14 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   const addLine = () => {
     if (!fabricCanvas) return;
 
-    const line = new Line([50, 50, 200, 50], {
+    const line = new Line([
+      templateToCanvas(50), 
+      templateToCanvas(50), 
+      templateToCanvas(200), 
+      templateToCanvas(50)
+    ], {
       stroke: '#000000',
-      strokeWidth: 2,
+      strokeWidth: 2 * SCALE_FACTOR,
       opacity: 1
     });
     
@@ -445,24 +467,15 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       FabricImage.fromURL(backgroundImage, {
         crossOrigin: 'anonymous'
       }).then((img) => {
-        const canvasAspect = fabricCanvas.width! / fabricCanvas.height!;
-        const imageAspect = img.width! / img.height!;
-        
-        let scaleX, scaleY;
-        
-        if (imageAspect > canvasAspect) {
-          scaleX = fabricCanvas.width! / img.width!;
-          scaleY = scaleX;
-        } else {
-          scaleY = fabricCanvas.height! / img.height!;
-          scaleX = scaleY;
-        }
+        const scaleX = CANVAS_DISPLAY_WIDTH / img.width!;
+        const scaleY = CANVAS_DISPLAY_HEIGHT / img.height!;
+        const scale = Math.min(scaleX, scaleY);
         
         img.set({
-          scaleX: scaleX,
-          scaleY: scaleY,
-          left: (fabricCanvas.width! - img.width! * scaleX) / 2,
-          top: (fabricCanvas.height! - img.height! * scaleY) / 2,
+          scaleX: scale,
+          scaleY: scale,
+          left: (CANVAS_DISPLAY_WIDTH - img.width! * scale) / 2,
+          top: (CANVAS_DISPLAY_HEIGHT - img.height! * scale) / 2,
           selectable: false,
           evented: false
         });
@@ -575,6 +588,11 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           ref={canvasRef} 
           className="border border-gray-300 rounded shadow-sm" 
         />
+      </div>
+
+      {/* Debug Info - Shows template dimensions */}
+      <div className="text-xs text-gray-500 text-center">
+        Template: {TEMPLATE_WIDTH}×{TEMPLATE_HEIGHT}px | Canvas: {CANVAS_DISPLAY_WIDTH}×{CANVAS_DISPLAY_HEIGHT}px (Scale: {SCALE_FACTOR.toFixed(1)}×)
       </div>
     </div>
   );
