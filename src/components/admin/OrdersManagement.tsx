@@ -32,7 +32,6 @@ const OrdersManagement = () => {
   const [openPromptCards, setOpenPromptCards] = useState<Set<string>>(new Set());
   const [openPromptDetails, setOpenPromptDetails] = useState<Set<string>>(new Set());
   const [refreshingOrders, setRefreshingOrders] = useState<Set<string>>(new Set());
-  const [bulkRefreshing, setBulkRefreshing] = useState(false);
   const [creatingProforma, setCreatingProforma] = useState<Set<string>>(new Set());
   const [convertingToInvoice, setConvertingToInvoice] = useState<Set<string>>(new Set());
   const { toast } = useToast();
@@ -171,67 +170,6 @@ const OrdersManagement = () => {
         newSet.delete(orderId);
         return newSet;
       });
-    }
-  };
-
-  const bulkRefreshPaymentStatus = async () => {
-    if (bulkRefreshing) return;
-    
-    setBulkRefreshing(true);
-    
-    try {
-      console.log('Starting bulk payment status refresh');
-      
-      const { data, error } = await supabase.functions.invoke('bulk-refresh-payment-status');
-
-      if (error) {
-        console.error('Bulk payment status refresh error:', error);
-        toast({ 
-          title: 'Bulk refresh failed', 
-          description: error.message || 'Failed to refresh payment statuses',
-          variant: 'destructive' 
-        });
-        return;
-      }
-
-      if (data?.error) {
-        console.error('Bulk payment status refresh error:', data.error);
-        toast({ 
-          title: 'Bulk refresh error', 
-          description: data.error,
-          variant: 'destructive' 
-        });
-        return;
-      }
-
-      console.log('Bulk payment status refresh result:', data);
-      
-      await refetch();
-      
-      const { totalOrders, successCount, changedCount, errorCount } = data;
-      
-      if (errorCount > 0) {
-        toast({ 
-          title: `Bulk refresh completed with errors`,
-          description: `${successCount}/${totalOrders} orders processed. ${changedCount} status changes. ${errorCount} errors.`,
-          variant: 'destructive'
-        });
-      } else {
-        toast({ 
-          title: 'Bulk refresh completed',
-          description: `${successCount} orders processed successfully. ${changedCount} status changes.`
-        });
-      }
-      
-    } catch (error) {
-      console.error('Error during bulk payment status refresh:', error);
-      toast({ 
-        title: 'Bulk refresh failed', 
-        description: 'Failed to refresh payment statuses',
-        variant: 'destructive' 
-      });
-    } finally {
-      setBulkRefreshing(false);
     }
   };
 
@@ -422,65 +360,7 @@ const OrdersManagement = () => {
   };
 
   const bulkRefreshOrderStatus = async () => {
-    if (bulkRefreshing) return;
-    
-    setBulkRefreshing(true);
-    
-    try {
-      console.log('Starting bulk refresh of order statuses');
-      
-      const { data, error } = await supabase.functions.invoke('smartbill-bulk-status-sync');
-
-      if (error) {
-        console.error('Bulk SmartBill sync error:', error);
-        toast({ 
-          title: 'Bulk refresh failed', 
-          description: error.message || 'Failed to sync with SmartBill',
-          variant: 'destructive' 
-        });
-        return;
-      }
-
-      if (data?.error) {
-        console.error('Bulk SmartBill sync error:', data.error);
-        toast({ 
-          title: 'Bulk SmartBill sync error', 
-          description: data.error,
-          variant: 'destructive' 
-        });
-        return;
-      }
-
-      console.log('Bulk SmartBill sync result:', data);
-      
-      // Refetch orders to get updated data
-      await refetch();
-      
-      const { totalOrders, successCount, changedCount, errorCount } = data;
-      
-      if (errorCount > 0) {
-        toast({ 
-          title: `Bulk refresh completed with errors`,
-          description: `${successCount}/${totalOrders} orders synced successfully. ${changedCount} status changes. ${errorCount} errors.`,
-          variant: 'destructive'
-        });
-      } else {
-        toast({ 
-          title: 'Bulk refresh completed',
-          description: `${successCount} orders synced successfully. ${changedCount} status changes.`
-        });
-      }
-      
-    } catch (error) {
-      console.error('Error during bulk refresh:', error);
-      toast({ 
-        title: 'Bulk refresh failed', 
-        description: 'Failed to connect to SmartBill for bulk sync',
-        variant: 'destructive' 
-      });
-    } finally {
-      setBulkRefreshing(false);
-    }
+    // This function is no longer used since bulk refresh was removed
   };
 
   const exportOrders = () => {
@@ -1162,16 +1042,6 @@ const OrdersManagement = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
             <CardTitle className="text-xl sm:text-2xl">{t('ordersManagement', 'Orders Management')}</CardTitle>
             <div className="flex gap-2">
-              <Button 
-                onClick={bulkRefreshPaymentStatus} 
-                variant="outline" 
-                size="sm" 
-                disabled={bulkRefreshing}
-                className="relative"
-              >
-                <CreditCard className={`w-4 h-4 mr-2 ${bulkRefreshing ? 'animate-spin' : ''}`} />
-                {bulkRefreshing ? 'Bulk Refreshing...' : 'Bulk Refresh Payments'}
-              </Button>
               <Button onClick={() => refetch()} variant="outline" size="sm" disabled={isLoading}>
                 <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
                 Refresh
