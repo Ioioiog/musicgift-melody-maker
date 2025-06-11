@@ -174,71 +174,69 @@ const SmartBillPaymentManager = () => {
     try {
       console.log('Fetching proforma PDF for order:', orderId);
       
-      const response = await supabase.functions.invoke('smartbill-view-proforma', {
-        body: { orderId }
+      // Call the edge function
+      const response = await fetch(`${supabase.supabaseUrl}/functions/v1/smartbill-view-proforma`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabase.supabaseKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ orderId })
       });
 
-      if (response.error) {
-        console.error('PDF fetch error:', response.error);
-        throw response.error;
+      console.log('PDF response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('PDF fetch error:', response.status, errorText);
+        throw new Error(`Failed to fetch PDF: ${response.status} ${errorText}`);
       }
 
-      // Check if we got PDF data
-      if (response.data) {
-        let pdfBlob: Blob;
-        
-        // Handle different response types
-        if (response.data instanceof ArrayBuffer) {
-          pdfBlob = new Blob([response.data], { type: 'application/pdf' });
-        } else if (response.data instanceof Uint8Array) {
-          pdfBlob = new Blob([response.data], { type: 'application/pdf' });
-        } else if (typeof response.data === 'string') {
-          // Try to decode base64 if it's a string
-          try {
-            const binaryString = atob(response.data);
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-              bytes[i] = binaryString.charCodeAt(i);
-            }
-            pdfBlob = new Blob([bytes], { type: 'application/pdf' });
-          } catch (e) {
-            throw new Error('Invalid PDF data format');
-          }
-        } else {
-          // Assume it's already a blob or can be converted
-          pdfBlob = new Blob([response.data], { type: 'application/pdf' });
-        }
-        
-        // Create URL and open in new tab
-        const url = URL.createObjectURL(pdfBlob);
-        const newTab = window.open(url, '_blank');
-        
-        if (!newTab) {
-          // Fallback: trigger download if popup blocked
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `proforma_${proformaId}.pdf`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          
-          toast({
-            title: "PDF Downloaded",
-            description: "PDF was downloaded to your device (popup blocked)"
-          });
-        } else {
-          toast({
-            title: "PDF Opened",
-            description: "PDF opened in new tab"
-          });
-        }
-        
-        // Clean up the URL after a delay
-        setTimeout(() => URL.revokeObjectURL(url), 5000);
-        
-      } else {
-        throw new Error('No PDF data received from server');
+      // Check if the response is actually a PDF
+      const contentType = response.headers.get('content-type');
+      console.log('Response content type:', contentType);
+      
+      if (!contentType?.includes('application/pdf')) {
+        // If not PDF, try to read as JSON to get error message
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Invalid response format - expected PDF');
       }
+
+      // Convert response to blob
+      const pdfBlob = await response.blob();
+      console.log('PDF blob size:', pdfBlob.size, 'bytes');
+      
+      if (pdfBlob.size === 0) {
+        throw new Error('Received empty PDF file');
+      }
+      
+      // Create URL and open in new tab
+      const url = URL.createObjectURL(pdfBlob);
+      const newTab = window.open(url, '_blank');
+      
+      if (!newTab) {
+        // Fallback: trigger download if popup blocked
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `proforma_${proformaId}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        toast({
+          title: "PDF Downloaded",
+          description: "PDF was downloaded to your device (popup blocked)"
+        });
+      } else {
+        toast({
+          title: "PDF Opened",
+          description: "PDF opened in new tab"
+        });
+      }
+      
+      // Clean up the URL after a delay
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+        
     } catch (error) {
       console.error('Error fetching proforma PDF:', error);
       toast({
