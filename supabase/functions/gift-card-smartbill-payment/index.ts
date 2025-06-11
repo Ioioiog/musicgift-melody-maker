@@ -27,6 +27,22 @@ serve(async (req) => {
     const { giftCardId, returnUrl } = await req.json()
     console.log('Processing SmartBill payment for gift card:', giftCardId)
 
+    // Check if NETOPIA_API_KEY is configured
+    const netopiaApiKey = Deno.env.get('NETOPIA_API_KEY');
+    if (!netopiaApiKey) {
+      console.error('NETOPIA_API_KEY is not configured');
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Payment configuration is incomplete. Please contact support.' 
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500,
+        },
+      )
+    }
+
     // Get gift card details
     const { data: giftCard, error: giftError } = await supabaseClient
       .from('gift_cards')
@@ -35,6 +51,7 @@ serve(async (req) => {
       .single()
 
     if (giftError || !giftCard) {
+      console.error('Gift card error:', giftError)
       throw new Error('Gift card not found')
     }
 
@@ -109,34 +126,64 @@ serve(async (req) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-API-KEY': Deno.env.get('NETOPIA_API_KEY') || ''
+        'X-API-KEY': netopiaApiKey
       },
       body: JSON.stringify(paymentData)
     })
 
     console.log('Netopia response status:', netopiaResponse.status);
+    console.log('Netopia response headers:', Object.fromEntries(netopiaResponse.headers.entries()));
     
     // Get response text first to handle both JSON and HTML responses
     const responseText = await netopiaResponse.text();
-    console.log('Netopia response text preview:', responseText.substring(0, 200));
+    console.log('Netopia response text preview:', responseText.substring(0, 500));
+
+    // Check if response is HTML (error page)
+    if (responseText.includes('<!DOCTYPE') || responseText.includes('<html')) {
+      console.error('Received HTML error page from Netopia');
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Payment gateway configuration error. Please contact support.' 
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500,
+        },
+      )
+    }
 
     let paymentResult;
     try {
       paymentResult = JSON.parse(responseText);
     } catch (parseError) {
       console.error('Failed to parse Netopia response as JSON:', parseError);
+      console.error('Response text:', responseText);
       
-      // If response is HTML, it likely means API key is missing or incorrect
-      if (responseText.includes('<!DOCTYPE') || responseText.includes('<html')) {
-        throw new Error('Invalid API configuration. Please check your Netopia API key.');
-      }
-      
-      throw new Error(`Invalid response from payment gateway: ${responseText.substring(0, 100)}`);
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Payment gateway returned invalid response. Please try again or contact support.' 
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500,
+        },
+      )
     }
 
     if (!netopiaResponse.ok) {
       console.error('Netopia API error:', paymentResult);
-      throw new Error(`Payment gateway error: ${paymentResult.message || 'Unknown error'}`)
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: `Payment gateway error: ${paymentResult.message || 'Please try again or contact support'}` 
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500,
+        },
+      )
     }
 
     // Update gift card with payment details
@@ -172,7 +219,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error.message 
+        error: error.message || 'Payment processing failed. Please try again.' 
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
