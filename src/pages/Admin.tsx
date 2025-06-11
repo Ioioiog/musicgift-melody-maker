@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -15,17 +14,14 @@ import EmailManagement from "@/components/admin/EmailManagement";
 import TestimonialsManagement from "@/components/admin/TestimonialsManagement";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
-
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("packages");
-
-  return (
-    <AuthGuard>
+  return <AuthGuard>
       <RoleGuard allowedRoles={['admin', 'super_admin']}>
         <div className="min-h-screen bg-gray-50">
           <Navigation />
           
-          <div className="container mx-auto px-2 sm:px-4 sm:py-6 md:py-8 pt-16 sm:pt-20 py-[114px]">
+          <div className="container mx-auto px-2 sm:px-4 sm:py-6 md:py-8 pt-16 sm:pt-20 py-[235px]">
             <div className="mb-6 sm:mb-8">
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 px-[219px] text-justify">Admin Dashboard</h1>
               <p className="text-sm sm:text-base text-gray-600 px-[219px]">Manage your application settings and data</p>
@@ -112,8 +108,6 @@ const Admin = () => {
           <Footer />
         </div>
       </RoleGuard>
-    </AuthGuard>
-  );
+    </AuthGuard>;
 };
-
 export default Admin;
