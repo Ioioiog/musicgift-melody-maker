@@ -24,7 +24,7 @@ const Admin = () => {
           <div className="container mx-auto px-2 sm:px-4 sm:py-6 md:py-8 pt-16 sm:pt-20 py-[235px]">
             <div className="mb-6 sm:mb-8">
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 px-[219px] text-justify">Admin Dashboard</h1>
-              <p className="text-sm sm:text-base text-gray-600 px-[219px]">Manage your application settings and data</p>
+              <p className="text-sm text-gray-600 px-[219px] py-[66px] mx-0 sm:text-2xl">        Manage your application settings and data</p>
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
