@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ResponsiveTable } from "@/components/ui/responsive-table";
 import { TableCell } from "@/components/ui/table";
-import { RefreshCw, FileText, CheckCircle, AlertCircle, Search, ExternalLink, Eye, CreditCard } from "lucide-react";
+import { RefreshCw, FileText, CheckCircle, AlertCircle, Search, ExternalLink, Eye, CreditCard, Globe } from "lucide-react";
 
 interface ProformaOrder {
   id: string;
@@ -16,6 +16,7 @@ interface ProformaOrder {
   smartbill_invoice_id?: string;
   payment_status: string;
   smartbill_payment_status?: string;
+  smartbill_payment_url?: string;
   total_price?: number;
   total_amount?: number;
   currency: string;
@@ -125,6 +126,62 @@ const SmartBillPaymentManager = () => {
       
       default:
         return { paymentStatus: 'pending', orderStatus: 'pending' };
+    }
+  };
+
+  const handleCheckNetopiaStatus = async (orderId: string) => {
+    setOrderLoading(orderId, 'checking-netopia');
+    try {
+      console.log('Checking Netopia payment status for order:', orderId);
+      
+      const { data, error } = await supabase.functions.invoke('netopia-payment-status', {
+        body: { orderId }
+      });
+
+      console.log('Netopia status check response:', data);
+
+      if (error) {
+        console.error('Netopia status check error:', error);
+        throw error;
+      }
+
+      if (data?.success) {
+        const { paymentStatus, paymentMessage, statusChanged, reqId } = data;
+        
+        let message = `Netopia Status: ${paymentMessage}`;
+        if (reqId) {
+          message += ` (ReqID: ${reqId})`;
+        }
+        if (statusChanged) {
+          message += ' - Order status updated!';
+        }
+        
+        const variant = paymentStatus === 'completed' ? "default" : 
+                       paymentStatus === 'failed' ? "destructive" : "default";
+        
+        toast({
+          title: "Netopia Status Checked",
+          description: message,
+          variant
+        });
+        
+        if (statusChanged) {
+          await fetchProformas();
+        }
+      } else {
+        const errorMsg = data?.error || 'Failed to check Netopia payment status';
+        console.error('Netopia status check failed:', errorMsg);
+        throw new Error(errorMsg);
+      }
+    } catch (error) {
+      console.error('Error checking Netopia payment status:', error);
+      toast({
+        title: "Netopia Check Failed",
+        description: error.message || "Failed to check Netopia payment status. Check console for details.",
+        variant: "destructive"
+      });
+    } finally {
+      clearOrderLoading(orderId);
     }
   };
 
@@ -433,11 +490,13 @@ const SmartBillPaymentManager = () => {
   const getDocumentTypeInfo = (order: ProformaOrder) => {
     const hasInvoice = !!order.smartbill_invoice_id;
     const hasProforma = !!order.smartbill_proforma_id;
+    const hasNetopiaUrl = !!order.smartbill_payment_url;
     
     if (hasInvoice) {
       return {
         type: 'invoice',
         canCheckPayment: true,
+        canCheckNetopia: hasNetopiaUrl,
         primaryAction: 'check_payment',
         statusText: 'Invoice (can check payment)',
         statusColor: 'text-green-600'
@@ -446,14 +505,16 @@ const SmartBillPaymentManager = () => {
       return {
         type: 'proforma',
         canCheckPayment: false,
-        primaryAction: 'convert',
-        statusText: 'Proforma (payment via Netopia)',
-        statusColor: 'text-blue-600'
+        canCheckNetopia: hasNetopiaUrl,
+        primaryAction: 'check_netopia',
+        statusText: hasNetopiaUrl ? 'Proforma (can check Netopia)' : 'Proforma (payment via Netopia)',
+        statusColor: hasNetopiaUrl ? 'text-blue-600' : 'text-orange-600'
       };
     } else {
       return {
         type: 'unknown',
         canCheckPayment: false,
+        canCheckNetopia: false,
         primaryAction: 'none',
         statusText: 'No document',
         statusColor: 'text-gray-400'
@@ -520,6 +581,19 @@ const SmartBillPaymentManager = () => {
         </TableCell>
         <TableCell>
           <div className="flex flex-wrap gap-1">
+            {docInfo.canCheckNetopia && (
+              <Button
+                size="sm"
+                variant="default"
+                onClick={() => handleCheckNetopiaStatus(order.id)}
+                disabled={!!isActionLoading}
+                className="h-8 px-2"
+                title="Check Netopia payment status directly"
+              >
+                <Globe className={`w-3 h-3 ${isActionLoading === 'checking-netopia' ? 'animate-spin' : ''}`} />
+              </Button>
+            )}
+            
             <Button
               size="sm"
               variant={docInfo.canCheckPayment ? "default" : "outline"}
@@ -626,6 +700,19 @@ const SmartBillPaymentManager = () => {
         </div>
         
         <div className="flex flex-wrap gap-2 pt-2 border-t">
+          {docInfo.canCheckNetopia && (
+            <Button
+              size="sm"
+              variant="default"
+              onClick={() => handleCheckNetopiaStatus(order.id)}
+              disabled={!!isActionLoading}
+              className="flex items-center gap-1"
+            >
+              <Globe className={`w-3 h-3 ${isActionLoading === 'checking-netopia' ? 'animate-spin' : ''}`} />
+              Netopia
+            </Button>
+          )}
+          
           <Button
             size="sm"
             variant={docInfo.canCheckPayment ? "default" : "outline"}
@@ -738,6 +825,7 @@ const SmartBillPaymentManager = () => {
         <div className="bg-gray-50 p-4 rounded-lg">
           <h4 className="font-medium mb-2">Payment Detection Guide:</h4>
           <ul className="text-sm space-y-2 text-gray-600">
+            <li><Badge variant="outline" className="mr-2">🌐</Badge> <strong>Netopia Direct:</strong> Check payment status directly from Netopia servers (most reliable)</li>
             <li><Badge variant="outline" className="mr-2">🔵</Badge> <strong>Proformas:</strong> Payment detected automatically via Netopia webhooks when customer pays</li>
             <li><Badge variant="outline" className="mr-2">🟢</Badge> <strong>Invoices:</strong> Payment status can be checked manually using SmartBill API</li>
             <li><Badge variant="outline" className="mr-2">📄</Badge> <strong>Convert:</strong> Convert paid proforma to invoice for formal documentation</li>
@@ -746,11 +834,11 @@ const SmartBillPaymentManager = () => {
           <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
             <strong>Netopia Integration:</strong> When customers pay SmartBill proformas via Netopia, 
             payments are automatically detected and order status is updated in real-time via webhook notifications.
-            No manual checking needed for proforma payments.
+            You can also check payment status directly from Netopia using the Globe button.
           </div>
           <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm">
             <strong>Note:</strong> SmartBill API only supports payment status checking for invoices, not proformas. 
-            Proforma payments are detected via Netopia webhook integration.
+            Proforma payments are detected via Netopia webhook integration and direct Netopia status checks.
           </div>
         </div>
       </CardContent>
@@ -759,3 +847,5 @@ const SmartBillPaymentManager = () => {
 };
 
 export default SmartBillPaymentManager;
+
+</edits_to_apply>
