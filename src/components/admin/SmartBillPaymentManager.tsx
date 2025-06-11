@@ -759,5 +759,3 @@ const SmartBillPaymentManager = () => {
 };
 
 export default SmartBillPaymentManager;
-
-</edits_to_apply>
