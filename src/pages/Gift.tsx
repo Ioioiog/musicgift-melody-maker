@@ -105,7 +105,7 @@ const Gift = () => {
         >
           <div className="max-w-4xl mx-auto">
             {paymentStatus === 'success' ? (
-              <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-orange-500/30 backdrop-blur-sm p-6">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
                 <GiftPaymentSuccess />
               </div>
             ) : (
@@ -136,7 +136,7 @@ const Gift = () => {
                 </TabsList>
 
                 <TabsContent value="purchase">
-                  <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-orange-500/30 backdrop-blur-sm overflow-hidden">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
                     {/* Decorative elements */}
                     <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-orange-500/15 to-transparent rounded-full blur-lg" />
                     <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-orange-500/10 to-transparent rounded-full blur-md" />
@@ -148,7 +148,7 @@ const Gift = () => {
                 </TabsContent>
 
                 <TabsContent value="redeem">
-                  <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-orange-500/30 backdrop-blur-sm overflow-hidden">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
                     {/* Decorative elements */}
                     <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-orange-500/15 to-transparent rounded-full blur-lg" />
                     <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-orange-500/10 to-transparent rounded-full blur-md" />
