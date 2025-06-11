@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { ShoppingCart, Check, Globe, LogOut, UserCircle, User, History, ChevronDown, ChevronUp } from "lucide-react";
+import { ShoppingCart, Check, Globe, LogOut, UserCircle, User, History, ChevronDown, ChevronUp, Settings } from "lucide-react";
 import CurrencyIcon from "@/components/CurrencyIcon";
 import UnifiedSettingsMenu from "@/components/UnifiedSettingsMenu";
 
@@ -13,6 +13,7 @@ const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [isLanguageCurrencyDropdownOpen, setIsLanguageCurrencyDropdownOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const { currency, setCurrency } = useCurrency();
   const { user, signOut } = useAuth();
@@ -111,8 +112,79 @@ const Navigation = () => {
               </Link>
             </div>
 
-            {/* Mobile Right Section: User Account + Menu */}
+            {/* Mobile Right Section: Language/Currency + User Account + Menu */}
             <div className="lg:hidden flex items-center space-x-2 ml-auto">
+              {/* Mobile Language/Currency Button */}
+              <div className="relative">
+                <button 
+                  onClick={() => setIsLanguageCurrencyDropdownOpen(!isLanguageCurrencyDropdownOpen)}
+                  className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center"
+                >
+                  <Settings className="w-5 h-5 text-gray-700" />
+                </button>
+
+                {/* Language/Currency Dropdown for Mobile */}
+                {isLanguageCurrencyDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-white/98 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200/50 z-50 animate-in slide-in-from-top-2 duration-200">
+                    {/* Currency Section */}
+                    <div className="px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-t-xl border-b border-gray-100">
+                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Currency</div>
+                    </div>
+                    <div className="py-2">
+                      <button 
+                        onClick={() => {
+                          setCurrency('EUR');
+                          setIsLanguageCurrencyDropdownOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:text-orange-700 hover:bg-orange-50 transition-all duration-200 touch-manipulation ${currency === 'EUR' ? "bg-orange-100 text-orange-700 font-semibold" : ""}`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <CurrencyIcon currency="EUR" className="w-4 h-4" />
+                          <span className="font-medium">EUR</span>
+                        </div>
+                        {currency === 'EUR' && <Check className="w-4 h-4" />}
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setCurrency('RON');
+                          setIsLanguageCurrencyDropdownOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:text-orange-700 hover:bg-orange-50 transition-all duration-200 touch-manipulation ${currency === 'RON' ? "bg-orange-100 text-orange-700 font-semibold" : ""}`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <CurrencyIcon currency="RON" className="w-4 h-4" />
+                          <span className="font-medium">RON</span>
+                        </div>
+                        {currency === 'RON' && <Check className="w-4 h-4" />}
+                      </button>
+                    </div>
+
+                    {/* Language Section */}
+                    <div className="px-4 py-2 bg-gradient-to-r from-gray-50 to-gray-50 border-t border-gray-100">
+                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Language</div>
+                    </div>
+                    <div className="py-2">
+                      {languages.map(lang => (
+                        <button 
+                          key={lang}
+                          onClick={() => {
+                            setLanguage(lang);
+                            setIsLanguageCurrencyDropdownOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:text-purple-700 hover:bg-purple-50 transition-all duration-200 touch-manipulation ${language === lang ? "bg-purple-100 text-purple-700 font-semibold" : ""}`}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <Globe className="w-4 h-4" />
+                            <span className="font-medium">{languageNames[lang]}</span>
+                          </div>
+                          {language === lang && <Check className="w-4 h-4" />}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Mobile User Account Button */}
               <div className="relative">
                 {user ? (
@@ -183,7 +255,7 @@ const Navigation = () => {
             </div>
           </div>
 
-          {/* Enhanced Mobile Menu */}
+          {/* Enhanced Mobile Menu - Now simplified with only website pages */}
           {isMenuOpen && <div className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
               
               {/* Website Pages Section */}
@@ -196,57 +268,6 @@ const Navigation = () => {
                       {item.label}
                     </Link>)}
                 </nav>
-              </div>
-
-              {/* Currency Section */}
-              <div className="mb-6">
-                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
-                  Currency
-                </div>
-                <div className="space-y-1">
-                  <button 
-                    onClick={() => setCurrency('EUR')} 
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg mx-4 transition-all duration-200 min-h-[44px] touch-manipulation ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold" : "text-gray-700 hover:bg-orange-50"}`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <CurrencyIcon currency="EUR" className="w-5 h-5" />
-                      <span className="font-medium">EUR</span>
-                    </div>
-                    {currency === 'EUR' && <Check className="w-5 h-5" />}
-                  </button>
-                  <button 
-                    onClick={() => setCurrency('RON')} 
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg mx-4 transition-all duration-200 min-h-[44px] touch-manipulation ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold" : "text-gray-700 hover:bg-orange-50"}`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <CurrencyIcon currency="RON" className="w-5 h-5" />
-                      <span className="font-medium">RON</span>
-                    </div>
-                    {currency === 'RON' && <Check className="w-5 h-5" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Language Section */}
-              <div className="mb-6">
-                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
-                  Language
-                </div>
-                <div className="space-y-1">
-                  {languages.map(lang => (
-                    <button 
-                      key={lang}
-                      onClick={() => setLanguage(lang)} 
-                      className={`w-full flex items-center justify-between px-4 py-3 rounded-lg mx-4 transition-all duration-200 min-h-[44px] touch-manipulation ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold" : "text-gray-700 hover:bg-purple-50"}`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Globe className="w-5 h-5" />
-                        <span className="font-medium">{languageNames[lang]}</span>
-                      </div>
-                      {language === lang && <Check className="w-5 h-5" />}
-                    </button>
-                  ))}
-                </div>
               </div>
 
               {/* Order Button Section */}
