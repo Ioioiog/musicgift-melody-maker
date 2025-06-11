@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -187,16 +186,9 @@ const Navigation = () => {
 
             {/* Mobile Right Section: Order Button + Language/Currency + User Account + Menu */}
             <div className="lg:hidden flex items-center space-x-2 ml-auto">
-              {/* Mobile Order Button */}
-              <Link to="/order" className="relative group">
-                <div className="flex items-center bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full h-9 pl-2 pr-8 min-h-[36px] touch-manipulation">
-                  <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center mr-1.5">
-                    <ShoppingCart className="w-3 h-3 text-orange-500" />
-                  </div>
-                  <span className="text-xs font-bold">
-                    {getOrderText()}
-                  </span>
-                </div>
+              {/* Mobile Order Button - Icon Only */}
+              <Link to="/order" className="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-md transition duration-300 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center">
+                <ShoppingCart className="h-5 w-5" />
               </Link>
 
               {/* Mobile Language/Currency Button */}
@@ -251,7 +243,7 @@ const Navigation = () => {
           {isMenuOpen && (
             <div ref={mainMenuRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-gradient-to-br from-white via-violet-50/30 to-purple-50/20 backdrop-blur-xl border border-violet-200/40 overflow-hidden">
               {/* Website Pages Section */}
-              <div className="p-6 ml-32 sm:ml-40 md:ml-48">
+              <div className="p-6 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-6">
                   <h3 className="text-sm font-bold text-violet-600 uppercase tracking-wider mb-2">Website Pages</h3>
                   <div className="w-12 h-0.5 bg-gradient-to-r from-violet-400 to-purple-400 mx-auto rounded-full"></div>
@@ -284,7 +276,7 @@ const Navigation = () => {
           {isLanguageCurrencyDropdownOpen && (
             <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-gradient-to-br from-white via-emerald-50/30 to-teal-50/20 backdrop-blur-xl border border-emerald-200/40 overflow-hidden">
               {/* Currency Section */}
-              <div className="p-6 ml-32 sm:ml-40 md:ml-48">
+              <div className="p-6 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-6">
                   <h3 className="text-sm font-bold text-emerald-600 uppercase tracking-wider mb-2">Currency</h3>
                   <div className="w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 mx-auto rounded-full"></div>
@@ -334,7 +326,7 @@ const Navigation = () => {
               </div>
 
               {/* Language Section */}
-              <div className="px-6 pb-6 border-t border-emerald-200/30 ml-32 sm:ml-40 md:ml-48">
+              <div className="px-6 pb-6 border-t border-emerald-200/30 ml-36 sm:ml-44 md:ml-52">
                 <div className="pt-6">
                   <div className="text-center mb-6">
                     <h3 className="text-sm font-bold text-emerald-600 uppercase tracking-wider mb-2">Language</h3>
@@ -374,7 +366,7 @@ const Navigation = () => {
           {user && isUserDropdownOpen && (
             <div ref={userDropdownRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-gradient-to-br from-white via-rose-50/30 to-pink-50/20 backdrop-blur-xl border border-rose-200/40 overflow-hidden">
               {/* User Info Header */}
-              <div className="p-6 ml-32 sm:ml-40 md:ml-48">
+              <div className="p-6 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-6">
                   <h3 className="text-sm font-bold text-rose-600 uppercase tracking-wider mb-2">User Account</h3>
                   <div className="w-12 h-0.5 bg-gradient-to-r from-rose-400 to-pink-400 mx-auto rounded-full"></div>
@@ -396,7 +388,7 @@ const Navigation = () => {
               </div>
               
               {/* User Actions */}
-              <div className="px-6 pb-6 border-t border-rose-200/30 ml-32 sm:ml-40 md:ml-48">
+              <div className="px-6 pb-6 border-t border-rose-200/30 ml-36 sm:ml-44 md:ml-52">
                 <div className="pt-4 space-y-1">
                   <Link 
                     to="/settings" 
