@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy, RefreshCw, FileText, Receipt, CreditCard } from 'lucide-react';
+import { Eye, Download, Music, Database, ChevronDown, ChevronUp, Copy, RefreshCw, FileText, Receipt, CreditCard, ExternalLink } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -723,6 +723,18 @@ const OrdersManagement = () => {
               </Button>
             )}
 
+            {order.smartbill_proforma_id && order.smartbill_payment_url && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.open(order.smartbill_payment_url, '_blank')}
+                className="h-11 px-3"
+                title="View SmartBill Proforma"
+              >
+                <ExternalLink className="w-4 h-4" />
+              </Button>
+            )}
+
             {canConvertToInvoice && (
               <Button
                 variant="outline"
@@ -897,6 +909,18 @@ const OrdersManagement = () => {
                 title="Create SmartBill Proforma"
               >
                 <FileText className={`w-4 h-4 ${isCreatingProforma ? 'animate-spin' : ''}`} />
+              </Button>
+            )}
+
+            {order.smartbill_proforma_id && order.smartbill_payment_url && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.open(order.smartbill_payment_url, '_blank')}
+                title="View SmartBill Proforma"
+                className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+              >
+                <ExternalLink className="w-4 h-4" />
               </Button>
             )}
 
