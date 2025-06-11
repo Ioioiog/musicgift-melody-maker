@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,9 +15,10 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCreateGiftCard, useGiftCardDesigns } from '@/hooks/useGiftCards';
-import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
 import { useToast } from '@/hooks/use-toast';
 import GiftCardPreview from './GiftCardPreview';
+import PaymentProviderSelection from '@/components/order/PaymentProviderSelection';
+import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
 
 interface GiftPurchaseWizardProps {
   onComplete: (data: any) => void;
@@ -38,6 +40,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
   const [customAmount, setCustomAmount] = useState('');
   const [isCustomAmount, setIsCustomAmount] = useState(false);
   const [selectedDesignId, setSelectedDesignId] = useState<string>('');
+  const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('');
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
   
   const [formData, setFormData] = useState({
@@ -79,6 +82,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
     { key: 'amount', title: t('stepAmount') },
     { key: 'details', title: t('stepDetails') },
     { key: 'design', title: t('stepDesign') },
+    { key: 'payment', title: t('stepPayment') },
     { key: 'review', title: t('stepReview') }
   ];
 
@@ -135,7 +139,9 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
                formData.recipient_name && formData.recipient_email;
       case 2: // Design step
         return selectedDesignId || designs.length === 0;
-      case 3: // Review step
+      case 3: // Payment provider step
+        return selectedPaymentProvider;
+      case 4: // Review step
         return true;
       default:
         return false;
@@ -176,13 +182,14 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
       const giftCard = await createGiftCard.mutateAsync(giftCardData);
       console.log('Gift card created:', giftCard);
 
-      // Step 2: Initiate payment
-      console.log('Initiating payment for gift card:', giftCard.id);
+      // Step 2: Initiate payment with selected provider
+      console.log('Initiating payment for gift card:', giftCard.id, 'with provider:', selectedPaymentProvider);
       const returnUrl = `${window.location.origin}/gift?payment=success`;
       
       await giftCardPayment.mutateAsync({
         giftCardId: giftCard.id,
-        returnUrl
+        returnUrl,
+        paymentProvider: selectedPaymentProvider
       });
 
       // The payment hook will automatically redirect to the payment URL
@@ -465,8 +472,27 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
               </div>
             )}
 
-            {/* Step 3: Review */}
+            {/* Step 3: Payment Provider Selection */}
             {currentStep === 3 && (
+              <div className="space-y-4">
+                <div className="text-center mb-4">
+                  <h3 className="text-lg font-semibold text-purple-600 mb-2">
+                    {t('choosePaymentMethod')}
+                  </h3>
+                  <p className="text-sm text-purple-500">
+                    {t('selectPaymentProvider')}
+                  </p>
+                </div>
+
+                <PaymentProviderSelection
+                  selectedProvider={selectedPaymentProvider}
+                  onProviderSelect={setSelectedPaymentProvider}
+                />
+              </div>
+            )}
+
+            {/* Step 4: Review */}
+            {currentStep === 4 && (
               <div className="space-y-4">
                 <div className="text-center mb-4">
                   <h3 className="text-lg font-semibold text-purple-600 mb-2">
@@ -497,6 +523,9 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
                         <div className="font-medium">{selectedDesign.name}</div>
                       </>
                     )}
+                    
+                    <div className="text-purple-600">{t('paymentMethod')}:</div>
+                    <div className="font-medium">{selectedPaymentProvider}</div>
                     
                     {deliveryDate && (
                       <>
