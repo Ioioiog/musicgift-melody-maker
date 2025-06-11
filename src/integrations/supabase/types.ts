@@ -581,6 +581,7 @@ export type Database = {
           gift_amount: number | null
           id: string
           message_text: string | null
+          netopia_order_id: string | null
           package_type: string | null
           payment_status: string | null
           recipient_email: string
@@ -588,7 +589,11 @@ export type Database = {
           sender_email: string
           sender_name: string
           sender_user_id: string | null
+          smartbill_proforma_id: string | null
+          smartbill_proforma_status: string | null
           status: string | null
+          stripe_customer_id: string | null
+          stripe_session_id: string | null
           updated_at: string
         }
         Insert: {
@@ -604,6 +609,7 @@ export type Database = {
           gift_amount?: number | null
           id?: string
           message_text?: string | null
+          netopia_order_id?: string | null
           package_type?: string | null
           payment_status?: string | null
           recipient_email: string
@@ -611,7 +617,11 @@ export type Database = {
           sender_email: string
           sender_name: string
           sender_user_id?: string | null
+          smartbill_proforma_id?: string | null
+          smartbill_proforma_status?: string | null
           status?: string | null
+          stripe_customer_id?: string | null
+          stripe_session_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -627,6 +637,7 @@ export type Database = {
           gift_amount?: number | null
           id?: string
           message_text?: string | null
+          netopia_order_id?: string | null
           package_type?: string | null
           payment_status?: string | null
           recipient_email?: string
@@ -634,7 +645,11 @@ export type Database = {
           sender_email?: string
           sender_name?: string
           sender_user_id?: string | null
+          smartbill_proforma_id?: string | null
+          smartbill_proforma_status?: string | null
           status?: string | null
+          stripe_customer_id?: string | null
+          stripe_session_id?: string | null
           updated_at?: string
         }
         Relationships: [

@@ -41,3 +41,21 @@ export const formatAmount = (
   
   return displayAmount.toFixed(2);
 };
+
+/**
+ * Converts amount for SmartBill based on payment provider
+ * Stripe amounts are in cents and need to be converted back to base currency
+ * Other providers store amounts in base currency
+ */
+export const convertAmountForSmartBill = (
+  amount: number,
+  paymentProvider?: string
+): number => {
+  if (paymentProvider === 'stripe' || paymentProvider === 'revolut') {
+    // Convert from cents to base currency
+    return amount / 100;
+  }
+  
+  // Return as-is for other providers (already in base currency)
+  return amount;
+};

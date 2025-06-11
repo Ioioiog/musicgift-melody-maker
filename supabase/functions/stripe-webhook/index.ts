@@ -262,6 +262,118 @@ async function handleCheckoutSessionCompleted(supabaseClient: any, event: any, w
   const session = event.data.object;
   console.log('💳 Payment successful for session:', session.id);
 
+  // Check if this is a gift card payment
+  if (session.metadata?.type === 'gift_card') {
+    await handleGiftCardPayment(supabaseClient, session, webhookEventId);
+    return;
+  }
+
+  // Handle regular order payments
+  await handleOrderPayment(supabaseClient, session, webhookEventId);
+}
+
+// Handle gift card payment completion
+async function handleGiftCardPayment(supabaseClient: any, session: any, webhookEventId?: string) {
+  const giftCardId = session.metadata?.gift_card_id;
+  
+  if (!giftCardId) {
+    console.error('❌ No gift card ID found in session metadata');
+    return;
+  }
+
+  console.log('🎁 Processing gift card payment for:', giftCardId);
+
+  // Find gift card
+  const { data: giftCard, error: findError } = await supabaseClient
+    .from('gift_cards')
+    .select('*')
+    .eq('id', giftCardId)
+    .single();
+
+  if (findError || !giftCard) {
+    console.error('❌ Gift card not found:', giftCardId);
+    throw new Error(`Gift card not found: ${giftCardId}`);
+  }
+
+  // Check if already processed
+  if (giftCard.payment_status === 'completed') {
+    console.log('⚠️ Gift card payment already processed:', giftCardId);
+    return;
+  }
+
+  // Update gift card payment status
+  const { error: updateError } = await supabaseClient
+    .from('gift_cards')
+    .update({
+      payment_status: 'completed',
+      stripe_session_id: session.id,
+      stripe_customer_id: session.customer,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', giftCardId);
+
+  if (updateError) {
+    console.error('❌ Error updating gift card:', updateError);
+    throw updateError;
+  }
+
+  console.log('✅ Gift card payment updated successfully:', giftCardId);
+
+  // Create SmartBill proforma for gift card
+  try {
+    console.log('📄 Creating SmartBill proforma for gift card:', giftCardId);
+    
+    const proformaResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/create-gift-card-proforma`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
+      },
+      body: JSON.stringify({ giftCardId })
+    });
+
+    const proformaResponseText = await proformaResponse.text();
+    console.log('📄 SmartBill proforma response:', proformaResponseText);
+
+    if (proformaResponse.ok) {
+      try {
+        const proformaResult = JSON.parse(proformaResponseText);
+        if (proformaResult.success) {
+          console.log('✅ SmartBill proforma created successfully for gift card:', proformaResult.proformaId);
+        } else {
+          console.error('❌ SmartBill proforma creation failed for gift card:', proformaResult.error);
+        }
+      } catch (parseError) {
+        console.error('❌ Failed to parse SmartBill response for gift card:', parseError);
+      }
+    } else {
+      console.error('❌ SmartBill proforma request failed for gift card:', proformaResponse.status, proformaResponseText);
+      
+      // Update gift card with proforma failure status
+      await supabaseClient
+        .from('gift_cards')
+        .update({
+          smartbill_proforma_status: 'failed',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', giftCardId);
+    }
+  } catch (proformaError) {
+    console.error('💥 Error calling SmartBill proforma function for gift card:', proformaError);
+    
+    // Update gift card with proforma failure status
+    await supabaseClient
+      .from('gift_cards')
+      .update({
+        smartbill_proforma_status: 'failed',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', giftCardId);
+  }
+}
+
+// Handle regular order payment completion
+async function handleOrderPayment(supabaseClient: any, session: any, webhookEventId?: string) {
   // Find order by stripe session ID with improved error handling
   console.log('🔍 Looking for order with stripe_session_id:', session.id);
   
@@ -329,6 +441,23 @@ async function handleCheckoutSessionExpired(supabaseClient: any, event: any) {
   const session = event.data.object;
   console.log('⏰ Checkout session expired:', session.id);
 
+  // Handle gift card expiration
+  if (session.metadata?.type === 'gift_card') {
+    const giftCardId = session.metadata?.gift_card_id;
+    if (giftCardId) {
+      await supabaseClient
+        .from('gift_cards')
+        .update({
+          payment_status: 'expired',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', giftCardId);
+      console.log('✅ Updated expired session for gift card:', giftCardId);
+    }
+    return;
+  }
+
+  // Handle order expiration
   const { data: order } = await supabaseClient
     .from('orders')
     .select('id')
