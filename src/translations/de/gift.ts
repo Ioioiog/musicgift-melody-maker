@@ -1,9 +1,9 @@
 
 export const giftTranslations = {
   // Gift page hero
-  shareGiftOfMusic: "Teilen Sie das Geschenk der Musik",
-  givePersonalizedSong: "Schenken Sie jemandem Besonderen ein personalisiertes Lied, das er für immer schätzen wird.",
-  createDigitalGiftCard: "Erstellen Sie eine digitale Geschenkkarte und lassen Sie sie ihre perfekte Musikerfahrung wählen.",
+  shareGiftOfMusic: "Teile das Geschenk der Musik",
+  givePersonalizedSong: "Schenke jemandem Besonderen ein personalisiertes Lied, das sie für immer schätzen werden.",
+  createDigitalGiftCard: "Erstelle eine digitale Geschenkkarte und lass sie ihre perfekte musikalische Erfahrung wählen.",
   
   // Tab labels
   buyGiftCard: "Geschenkkarte Kaufen",
@@ -11,35 +11,35 @@ export const giftTranslations = {
   
   // Gift purchase wizard
   purchaseGiftCard: "Geschenkkarte Kaufen",
-  chooseGiftCardAmount: "Wählen Sie den Geschenkkarten-Betrag",
-  selectGiftCardValue: "Wählen Sie den Wert der Geschenkkarte, die Sie senden möchten.",
-  enterCustomValue: "Eigenen Wert Eingeben",
+  chooseGiftCardAmount: "Geschenkkartenbetrag Wählen",
+  selectGiftCardValue: "Wähle den Wert der Geschenkkarte, die du senden möchtest.",
+  enterCustomValue: "Benutzerdefinierten Wert Eingeben",
   customAmount: "Benutzerdefinierter Betrag",
   enterAmountIn: "Betrag eingeben in",
-  amountMustBeBetween: "Der Betrag muss zwischen",
+  amountMustBeBetween: "Betrag muss zwischen",
   nextDetails: "Weiter: Details",
   
   // Gift details step
-  enterGiftDetails: "Geschenk-Details Eingeben",
-  tellUsWhoGiftFor: "Sagen Sie uns, für wen dieses Geschenk ist.",
-  yourName: "Ihr Name",
-  yourEmail: "Ihre E-Mail",
+  enterGiftDetails: "Geschenkdetails Eingeben",
+  tellUsWhoGiftFor: "Sag uns, für wen dieses Geschenk ist.",
+  yourName: "Dein Name",
+  yourEmail: "Deine E-Mail",
   recipientName: "Name des Empfängers",
   recipientEmail: "E-Mail des Empfängers",
   personalMessage: "Persönliche Nachricht (Optional)",
-  writePersonalMessage: "Schreiben Sie eine persönliche Nachricht für den Empfänger",
+  writePersonalMessage: "Schreibe eine persönliche Nachricht für den Empfänger",
   deliveryDate: "Lieferdatum (Optional)",
   pickDate: "Datum wählen",
   nextDesign: "Weiter: Design",
   
   // Design selection step
   selectDesign: "Design Auswählen",
-  chooseDesignPreview: "Wählen Sie ein Design und sehen Sie, wie Ihre Geschenkkarte aussehen wird.",
+  chooseDesignPreview: "Wähle ein Design und sieh, wie deine Geschenkkarte aussehen wird.",
   availableDesigns: "Verfügbare Designs",
   livePreview: "Live-Vorschau",
-  yourCardWillInclude: "Ihre Karte wird enthalten:",
+  yourCardWillInclude: "Deine Karte wird enthalten:",
   cardValue: "Kartenwert",
-  uniqueGiftCardCode: "Eindeutiger Geschenkkarten-Code",
+  uniqueGiftCardCode: "Einzigartiger Geschenkkarten-Code",
   recipient: "Empfänger",
   from: "Von",
   personalMessageIncluded: "Persönliche Nachricht",
@@ -58,9 +58,9 @@ export const giftTranslations = {
   
   // Gift redemption
   redeemYourGiftCard: "Geschenkkarte Einlösen",
-  enterGiftCardCode: "Geben Sie Ihren Geschenkkarten-Code ein, um verfügbare Pakete zu sehen",
+  enterGiftCardCode: "Gib deinen Geschenkkarten-Code ein, um verfügbare Pakete zu sehen",
   giftCardCode: "Geschenkkarten-Code",
-  enterCodeHere: "Geben Sie hier Ihren Geschenkkarten-Code ein",
+  enterCodeHere: "Gib hier deinen Geschenkkarten-Code ein",
   checkGiftCard: "Geschenkkarte Prüfen",
   validatingCode: "Code wird validiert...",
   
@@ -70,24 +70,24 @@ export const giftTranslations = {
   giftCardValue: "Geschenkkarten-Wert",
   messageFromSender: "Nachricht vom Absender",
   choosePackage: "Paket Wählen",
-  selectPackageToRedeem: "Wählen Sie das Paket, das Sie mit Ihrer Geschenkkarte einlösen möchten",
-  packagePrice: "Paketpreis",
+  selectPackageToRedeem: "Wähle das Paket, das du mit deiner Geschenkkarte einlösen möchtest",
+  packagePrice: "Paket-Preis",
   giftCardCredit: "Geschenkkarten-Guthaben",
   additionalPayment: "Zusätzliche Zahlung Erforderlich",
-  youWillReceiveRefund: "Sie erhalten eine Rückerstattung von",
+  youWillReceiveRefund: "Du erhältst eine Rückerstattung von",
   proceedWithPackage: "Fortfahren mit",
   
   // Messages and notifications
   giftCardCreated: "Geschenkkarte Erstellt!",
   giftCardWillBeDelivered: "wurde erstellt und wird an",
   giftCardApplied: "Geschenkkarte Angewendet!",
-  proceedingToComplete: "Fortfahren, um Ihre",
-  packageOrder: "Paket-Bestellung abzuschließen.",
-  pleaseSignInToPurchase: "Bitte melden Sie sich an, um eine Geschenkkarte zu kaufen",
+  proceedingToComplete: "Fortfahren mit der Vollendung deiner",
+  packageOrder: "Paket-Bestellung.",
+  pleaseSignInToPurchase: "Bitte melde dich an, um eine Geschenkkarte zu kaufen",
   
   // Payment success
   paymentSuccessful: "Zahlung Erfolgreich!",
-  giftCardSentSuccessfully: "Ihre Geschenkkarte wurde erfolgreich gesendet",
+  giftCardSentSuccessfully: "Deine Geschenkkarte wurde erfolgreich gesendet",
   giftCardEmailSent: "Die Geschenkkarte wurde an die E-Mail-Adresse des Empfängers gesendet.",
   orderNumber: "Bestellnummer",
   returnToGifts: "Zurück zu Geschenken",
@@ -96,8 +96,8 @@ export const giftTranslations = {
   invalidGiftCardCode: "Ungültiger Geschenkkarten-Code. Bitte überprüfen und erneut versuchen.",
   giftCardAlreadyUsed: "Diese Geschenkkarte wurde bereits verwendet.",
   giftCardExpired: "Diese Geschenkkarte ist abgelaufen.",
-  failedToCreateGiftCard: "Erstellung der Geschenkkarte fehlgeschlagen. Bitte erneut versuchen.",
-  failedToValidateGiftCard: "Validierung der Geschenkkarte fehlgeschlagen. Bitte erneut versuchen.",
+  failedToCreateGiftCard: "Geschenkkarte konnte nicht erstellt werden. Bitte erneut versuchen.",
+  failedToValidateGiftCard: "Geschenkkarte konnte nicht validiert werden. Bitte erneut versuchen.",
   
   // Common actions
   back: "Zurück",
@@ -108,18 +108,18 @@ export const giftTranslations = {
   // New missing translations
   stepAmount: "Betrag",
   stepDetails: "Details",
-  stepDesign: "Design",
+  stepDesign: "Design", 
   stepReview: "Überprüfung",
-  selectPerfectValue: "Wählen Sie den perfekten Wert für Ihr musikalisches Geschenk.",
+  selectPerfectValue: "Wähle den perfekten Wert für dein musikalisches Geschenk.",
   popular: "Beliebt",
   enterCustomAmount: "Benutzerdefinierten Betrag Eingeben",
-  tellUsWhoGiftFor: "Sagen Sie uns, für wen dieses besondere Geschenk ist.",
-  enterYourFullName: "Geben Sie Ihren vollständigen Namen ein",
-  enterRecipientName: "Geben Sie den Namen des Empfängers ein",
-  writeHeartfeltMessage: "Schreiben Sie eine herzliche Nachricht...",
-  chooseDeliveryDate: "Wählen Sie das Lieferdatum",
-  confirmDetailsBeforePayment: "Bestätigen Sie Ihre Angaben vor der Zahlung.",
+  tellUsWhoGiftFor: "Sag uns, für wen dieses besondere Geschenk ist.",
+  enterYourFullName: "Gib deinen vollständigen Namen ein",
+  enterRecipientName: "Gib den Namen des Empfängers ein",
+  writeHeartfeltMessage: "Schreibe eine herzliche Nachricht...",
+  chooseDeliveryDate: "Lieferdatum wählen",
+  confirmDetailsBeforePayment: "Bestätige deine Details, bevor du zur Zahlung gehst.",
   stepXOfY: "Schritt {{current}} von {{total}}",
   customAmountLabel: "Benutzerdefinierter Betrag",
-  validate: "Validieren",
+  validateGiftCard: "Validieren",
 };

@@ -1,4 +1,3 @@
-
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Share the Gift of Music",
@@ -107,7 +106,7 @@ export const giftTranslations = {
   
   // New missing translations
   stepAmount: "Amount",
-  stepDetails: "Details",
+  stepDetails: "Details", 
   stepDesign: "Design",
   stepReview: "Review",
   selectPerfectValue: "Select the perfect value for your musical gift.",
@@ -121,5 +120,5 @@ export const giftTranslations = {
   confirmDetailsBeforePayment: "Confirm your details before proceeding to payment.",
   stepXOfY: "Step {{current}} of {{total}}",
   customAmountLabel: "Custom Amount",
-  validate: "Validate",
+  validateGiftCard: "Validate",
 };

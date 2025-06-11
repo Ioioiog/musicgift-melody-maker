@@ -1,4 +1,3 @@
-
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Partagez le Cadeau de la Musique",
@@ -121,5 +120,5 @@ export const giftTranslations = {
   confirmDetailsBeforePayment: "Confirmez vos détails avant de procéder au paiement.",
   stepXOfY: "Étape {{current}} sur {{total}}",
   customAmountLabel: "Montant Personnalisé",
-  validate: "Valider",
+  validateGiftCard: "Valider",
 };

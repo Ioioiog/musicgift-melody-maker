@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -86,7 +85,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({ onRedemption }) => {
                   disabled={!giftCardCode.trim() || isValidating}
                   className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700"
                 >
-                  {isValidating ? t('validatingCode') : t('validate')}
+                  {isValidating ? t('validatingCode') : t('validateGiftCard')}
                 </Button>
               </div>
             </div>
