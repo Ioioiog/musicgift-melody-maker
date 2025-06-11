@@ -240,31 +240,31 @@ const Navigation = () => {
             </div>
           </div>
 
-          {/* Enhanced Mobile Menu - With improved styling and consistent alignment */}
+          {/* Enhanced Mobile Menu - Compact styling */}
           {isMenuOpen && (
-            <div ref={mainMenuRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-white/20 backdrop-blur-xl border border-white/30 overflow-hidden">
+            <div ref={mainMenuRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-white/10 backdrop-blur-xl border border-white/20 overflow-hidden">
               {/* Website Pages Section */}
-              <div className="p-6 ml-36 sm:ml-44 md:ml-52">
-                <div className="text-center mb-6">
-                  <h3 className="text-sm font-bold text-violet-600 uppercase tracking-wider mb-2">Website Pages</h3>
-                  <div className="w-12 h-0.5 bg-gradient-to-r from-violet-400 to-purple-400 mx-auto rounded-full"></div>
+              <div className="p-3 ml-36 sm:ml-44 md:ml-52">
+                <div className="text-center mb-3">
+                  <h3 className="text-xs font-bold text-violet-600 uppercase tracking-wider mb-1">Website Pages</h3>
+                  <div className="w-8 h-0.5 bg-gradient-to-r from-violet-400 to-purple-400 mx-auto rounded-full"></div>
                 </div>
                 
-                <nav className="space-y-1">
+                <nav className="space-y-0.5">
                   {navItems.map(item => (
                     <Link 
                       key={item.path + item.label} 
                       to={item.path} 
-                      className={`group flex items-center justify-center text-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
+                      className={`group flex items-center justify-center text-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
                         location.pathname === item.path 
-                          ? "bg-white/30 backdrop-blur-sm text-violet-700 shadow-lg font-semibold" 
+                          ? "bg-white/20 backdrop-blur-sm text-violet-700 shadow-lg font-semibold" 
                           : "text-gray-700 hover:text-violet-700"
                       }`} 
                       onClick={closeAllMenus}
                     >
-                      <span className="font-medium text-base">{item.label}</span>
+                      <span className="font-medium text-sm">{item.label}</span>
                       {location.pathname === item.path && (
-                        <div className="ml-2 w-2 h-2 bg-violet-600 rounded-full animate-pulse"></div>
+                        <div className="ml-2 w-1.5 h-1.5 bg-violet-600 rounded-full animate-pulse"></div>
                       )}
                     </Link>
                   ))}
@@ -273,34 +273,34 @@ const Navigation = () => {
             </div>
           )}
 
-          {/* Language/Currency Dropdown for Mobile - Enhanced styling and consistent alignment */}
+          {/* Language/Currency Dropdown for Mobile - Compact styling */}
           {isLanguageCurrencyDropdownOpen && (
-            <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-white/20 backdrop-blur-xl border border-white/30 overflow-hidden">
+            <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-white/10 backdrop-blur-xl border border-white/20 overflow-hidden">
               {/* Currency Section */}
-              <div className="p-6 ml-36 sm:ml-44 md:ml-52">
-                <div className="text-center mb-6">
-                  <h3 className="text-sm font-bold text-emerald-600 uppercase tracking-wider mb-2">Currency</h3>
-                  <div className="w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 mx-auto rounded-full"></div>
+              <div className="p-3 ml-36 sm:ml-44 md:ml-52">
+                <div className="text-center mb-3">
+                  <h3 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">Currency</h3>
+                  <div className="w-8 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 mx-auto rounded-full"></div>
                 </div>
                 
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <button 
                     onClick={() => {
                       setCurrency('EUR');
                       closeAllMenus();
                     }}
-                    className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
+                    className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
                       currency === 'EUR' 
-                        ? "bg-white/30 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
+                        ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
                         : "text-gray-700 hover:text-emerald-700"
                     }`}
                   >
-                    <div className="flex items-center space-x-3">
-                      <CurrencyIcon currency="EUR" className="w-5 h-5" />
-                      <span className="font-medium text-base">EUR</span>
+                    <div className="flex items-center space-x-2">
+                      <CurrencyIcon currency="EUR" className="w-4 h-4" />
+                      <span className="font-medium text-sm">EUR</span>
                     </div>
                     {currency === 'EUR' && (
-                      <Check className="w-5 h-5 animate-pulse" />
+                      <Check className="w-4 h-4 animate-pulse" />
                     )}
                   </button>
                   
@@ -309,32 +309,32 @@ const Navigation = () => {
                       setCurrency('RON');
                       closeAllMenus();
                     }}
-                    className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
+                    className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
                       currency === 'RON' 
-                        ? "bg-white/30 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
+                        ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
                         : "text-gray-700 hover:text-emerald-700"
                     }`}
                   >
-                    <div className="flex items-center space-x-3">
-                      <CurrencyIcon currency="RON" className="w-5 h-5" />
-                      <span className="font-medium text-base">RON</span>
+                    <div className="flex items-center space-x-2">
+                      <CurrencyIcon currency="RON" className="w-4 h-4" />
+                      <span className="font-medium text-sm">RON</span>
                     </div>
                     {currency === 'RON' && (
-                      <Check className="w-5 h-5 animate-pulse" />
+                      <Check className="w-4 h-4 animate-pulse" />
                     )}
                   </button>
                 </div>
               </div>
 
               {/* Language Section */}
-              <div className="px-6 pb-6 border-t border-white/20 ml-36 sm:ml-44 md:ml-52">
-                <div className="pt-6">
-                  <div className="text-center mb-6">
-                    <h3 className="text-sm font-bold text-emerald-600 uppercase tracking-wider mb-2">Language</h3>
-                    <div className="w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 mx-auto rounded-full"></div>
+              <div className="px-3 pb-3 border-t border-white/20 ml-36 sm:ml-44 md:ml-52">
+                <div className="pt-3">
+                  <div className="text-center mb-3">
+                    <h3 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">Language</h3>
+                    <div className="w-8 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 mx-auto rounded-full"></div>
                   </div>
                   
-                  <div className="space-y-1">
+                  <div className="space-y-0.5">
                     {languages.map(lang => (
                       <button 
                         key={lang}
@@ -342,18 +342,18 @@ const Navigation = () => {
                           setLanguage(lang);
                           closeAllMenus();
                         }}
-                        className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
+                        className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
                           language === lang 
-                            ? "bg-white/30 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
+                            ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
                             : "text-gray-700 hover:text-emerald-700"
                         }`}
                       >
-                        <div className="flex items-center space-x-3">
-                          <Globe className="w-5 h-5" />
-                          <span className="font-medium text-base">{languageNames[lang]}</span>
+                        <div className="flex items-center space-x-2">
+                          <Globe className="w-4 h-4" />
+                          <span className="font-medium text-sm">{languageNames[lang]}</span>
                         </div>
                         {language === lang && (
-                          <Check className="w-5 h-5 animate-pulse" />
+                          <Check className="w-4 h-4 animate-pulse" />
                         )}
                       </button>
                     ))}
@@ -363,58 +363,58 @@ const Navigation = () => {
             </div>
           )}
 
-          {/* User Dropdown for Mobile - Enhanced styling and consistent alignment */}
+          {/* User Dropdown for Mobile - Compact styling */}
           {user && isUserDropdownOpen && (
-            <div ref={userDropdownRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-white/20 backdrop-blur-xl border border-white/30 overflow-hidden">
+            <div ref={userDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-white/10 backdrop-blur-xl border border-white/20 overflow-hidden">
               {/* User Info Header */}
-              <div className="p-6 ml-36 sm:ml-44 md:ml-52">
-                <div className="text-center mb-6">
-                  <h3 className="text-sm font-bold text-rose-600 uppercase tracking-wider mb-2">User Account</h3>
-                  <div className="w-12 h-0.5 bg-gradient-to-r from-rose-400 to-pink-400 mx-auto rounded-full"></div>
+              <div className="p-3 ml-36 sm:ml-44 md:ml-52">
+                <div className="text-center mb-3">
+                  <h3 className="text-xs font-bold text-rose-600 uppercase tracking-wider mb-1">User Account</h3>
+                  <div className="w-8 h-0.5 bg-gradient-to-r from-rose-400 to-pink-400 mx-auto rounded-full"></div>
                 </div>
                 
-                <div className="bg-white/30 backdrop-blur-sm rounded-xl p-4 mb-6 text-center border border-white/20">
-                  <div className="flex items-center justify-center mb-2">
-                    <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                      <User className="w-6 h-6 text-white" />
+                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 mb-3 text-center border border-white/20">
+                  <div className="flex items-center justify-center mb-1">
+                    <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-white" />
                     </div>
                   </div>
-                  <div className="text-base font-semibold text-gray-800 mb-1">
+                  <div className="text-sm font-semibold text-gray-800 mb-0.5">
                     {user.user_metadata?.full_name || 'User'}
                   </div>
-                  <div className="text-sm text-gray-600 truncate">
+                  <div className="text-xs text-gray-600 truncate">
                     {user.email}
                   </div>
                 </div>
               </div>
               
               {/* User Actions */}
-              <div className="px-6 pb-6 border-t border-white/20 ml-36 sm:ml-44 md:ml-52">
-                <div className="pt-4 space-y-1">
+              <div className="px-3 pb-3 border-t border-white/20 ml-36 sm:ml-44 md:ml-52">
+                <div className="pt-2 space-y-0.5">
                   <Link 
                     to="/settings" 
-                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
+                    className="group w-full flex items-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
                     onClick={closeAllMenus}
                   >
-                    <User className="w-5 h-5 mr-3" />
-                    <span className="font-medium text-base">{t('accountSettings')}</span>
+                    <User className="w-4 h-4 mr-2" />
+                    <span className="font-medium text-sm">{t('accountSettings')}</span>
                   </Link>
                   
                   <Link 
                     to="/history" 
-                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
+                    className="group w-full flex items-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
                     onClick={closeAllMenus}
                   >
-                    <History className="w-5 h-5 mr-3" />
-                    <span className="font-medium text-base">{t('history')}</span>
+                    <History className="w-4 h-4 mr-2" />
+                    <span className="font-medium text-sm">{t('history')}</span>
                   </Link>
                   
                   <button 
                     onClick={handleSignOut}
-                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-red-600 hover:text-red-700"
+                    className="group w-full flex items-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-red-600 hover:text-red-700"
                   >
-                    <LogOut className="w-5 h-5 mr-3" />
-                    <span className="font-medium text-base">{t('signOut')}</span>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    <span className="font-medium text-sm">{t('signOut')}</span>
                   </button>
                 </div>
               </div>
