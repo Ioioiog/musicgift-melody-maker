@@ -8,6 +8,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { formatCurrency } from '@/utils/currencyUtils';
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -153,7 +154,13 @@ const PaymentSuccess = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Sumă:</span>
-                        <span className="font-semibold">{orderDetails.total_price} {orderDetails.currency || 'RON'}</span>
+                        <span className="font-semibold">
+                          {formatCurrency(
+                            orderDetails.total_price, 
+                            orderDetails.currency || 'RON',
+                            orderDetails.payment_provider
+                          )}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Status plată:</span>
