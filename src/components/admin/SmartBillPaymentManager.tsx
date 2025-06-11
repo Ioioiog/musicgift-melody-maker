@@ -17,6 +17,7 @@ interface ProformaOrder {
   smartbill_invoice_id?: string;
   payment_status: string;
   smartbill_payment_status?: string;
+  total_price?: number;
   total_amount?: number;
   currency: string;
   created_at: string;
@@ -93,11 +94,16 @@ const SmartBillPaymentManager = () => {
   const handleSyncPaymentStatus = async (orderId: string) => {
     setOrderLoading(orderId, 'syncing');
     try {
+      console.log('Starting sync for order:', orderId);
+      
       const { data, error } = await supabase.functions.invoke('smartbill-status-sync', {
         body: { orderId }
       });
 
+      console.log('Sync response:', data);
+
       if (error) {
+        console.error('Sync error:', error);
         throw error;
       }
 
@@ -110,13 +116,15 @@ const SmartBillPaymentManager = () => {
         });
         await fetchProformas();
       } else {
-        throw new Error(data?.error || 'Failed to sync status');
+        const errorMsg = data?.error || 'Failed to sync status';
+        console.error('Sync failed:', errorMsg);
+        throw new Error(errorMsg);
       }
     } catch (error) {
       console.error('Error syncing payment status:', error);
       toast({
         title: "Sync Failed",
-        description: error.message || "Failed to sync payment status",
+        description: error.message || "Failed to sync payment status. Check console for details.",
         variant: "destructive"
       });
     } finally {
@@ -224,6 +232,29 @@ const SmartBillPaymentManager = () => {
     return { email, name };
   };
 
+  const getOrderAmount = (order: ProformaOrder): number => {
+    // First try total_price, then total_amount, then from form_data
+    if (order.total_price && order.total_price > 0) {
+      return order.total_price;
+    }
+    
+    if (order.total_amount && order.total_amount > 0) {
+      return order.total_amount;
+    }
+    
+    // Try to get from form_data
+    const formData = order.form_data || {};
+    if (formData.totalPrice && formData.totalPrice > 0) {
+      return formData.totalPrice;
+    }
+    
+    if (formData.total && formData.total > 0) {
+      return formData.total;
+    }
+    
+    return 0;
+  };
+
   const headers = [
     "Proforma ID",
     "Customer",
@@ -237,7 +268,7 @@ const SmartBillPaymentManager = () => {
   const renderRow = (order: ProformaOrder, index: number) => {
     const { email, name } = getCustomerInfo(order);
     const isActionLoading = actionLoading[order.id];
-    const amount = order.total_amount || 0;
+    const amount = getOrderAmount(order);
 
     return (
       <>
@@ -251,7 +282,14 @@ const SmartBillPaymentManager = () => {
           </div>
         </TableCell>
         <TableCell>
-          {amount} {order.currency}
+          <div className="flex flex-col">
+            <span className={amount === 0 ? "text-red-500 font-medium" : ""}>
+              {amount} {order.currency}
+            </span>
+            {amount === 0 && (
+              <span className="text-xs text-red-400">Check data</span>
+            )}
+          </div>
         </TableCell>
         <TableCell>
           {getStatusBadge(order.payment_status, order.smartbill_payment_status)}
@@ -276,6 +314,7 @@ const SmartBillPaymentManager = () => {
               onClick={() => handleSyncPaymentStatus(order.id)}
               disabled={!!isActionLoading}
               className="h-8 px-2"
+              title="Sync payment status with SmartBill"
             >
               <RefreshCw className={`w-3 h-3 ${isActionLoading === 'syncing' ? 'animate-spin' : ''}`} />
             </Button>
@@ -286,6 +325,7 @@ const SmartBillPaymentManager = () => {
               onClick={() => handleConvertToInvoice(order.id)}
               disabled={!!isActionLoading || !!order.smartbill_invoice_id}
               className="h-8 px-2"
+              title="Convert proforma to invoice"
             >
               <FileText className="w-3 h-3" />
             </Button>
@@ -295,6 +335,7 @@ const SmartBillPaymentManager = () => {
               variant="outline"
               onClick={() => handleShowProforma(order.smartbill_proforma_id)}
               className="h-8 px-2"
+              title="View proforma details"
             >
               <Eye className="w-3 h-3" />
             </Button>
@@ -305,6 +346,7 @@ const SmartBillPaymentManager = () => {
               onClick={() => handleShowInvoice(order.smartbill_invoice_id)}
               disabled={!order.smartbill_invoice_id}
               className="h-8 px-2"
+              title="View invoice"
             >
               <ExternalLink className="w-3 h-3" />
             </Button>
@@ -317,7 +359,7 @@ const SmartBillPaymentManager = () => {
   const renderMobileCard = (order: ProformaOrder, index: number) => {
     const { email, name } = getCustomerInfo(order);
     const isActionLoading = actionLoading[order.id];
-    const amount = order.total_amount || 0;
+    const amount = getOrderAmount(order);
 
     return (
       <div className="space-y-3">
@@ -336,7 +378,10 @@ const SmartBillPaymentManager = () => {
           </div>
           <div>
             <span className="font-medium">Amount:</span>
-            <p>{amount} {order.currency}</p>
+            <p className={amount === 0 ? "text-red-500" : ""}>
+              {amount} {order.currency}
+              {amount === 0 && <span className="text-xs text-red-400 block">Check data</span>}
+            </p>
           </div>
           <div>
             <span className="font-medium">Invoice:</span>
@@ -460,6 +505,9 @@ const SmartBillPaymentManager = () => {
             <li><Badge variant="outline" className="mr-2">👁</Badge> Proforma - View proforma details</li>
             <li><Badge variant="outline" className="mr-2">🔗</Badge> Invoice - View invoice (when available)</li>
           </ul>
+          <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm">
+            <strong>Note:</strong> If amounts show as 0, this indicates data inconsistency. The system will try to find the amount from different fields.
+          </div>
         </div>
       </CardContent>
     </Card>
