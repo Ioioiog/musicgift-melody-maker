@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +18,8 @@ import { useToast } from '@/hooks/use-toast';
 import GiftCardPreview from './GiftCardPreview';
 import PaymentProviderSelection from '@/components/order/PaymentProviderSelection';
 import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
+import { useGiftCardPaymentState } from '@/hooks/useGiftCardPaymentState';
+import PendingPaymentNotification from './PendingPaymentNotification';
 
 interface GiftPurchaseWizardProps {
   onComplete: (data: any) => void;
@@ -43,6 +45,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
   const [selectedDesignId, setSelectedDesignId] = useState<string>('');
   const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('');
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
+  const [showPendingNotification, setShowPendingNotification] = useState(true);
   const [formData, setFormData] = useState({
     sender_name: user?.user_metadata?.full_name || '',
     sender_email: user?.email || '',
@@ -54,6 +57,16 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
   const { data: designs = [] } = useGiftCardDesigns();
   const createGiftCard = useCreateGiftCard();
   const giftCardPayment = useGiftCardPayment();
+  
+  // Use the new payment state management hook
+  const {
+    pendingGiftCards,
+    isLoadingPending,
+    paymentReturn,
+    findReusablePendingCard,
+    loadPendingGiftCards,
+    updateGiftCardStatus
+  } = useGiftCardPaymentState();
 
   // Check authentication status
   if (!user) {
@@ -128,6 +141,30 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
     }));
   };
 
+  // Handle continuing with existing pending payment
+  const handleContinuePendingPayment = async (pendingCard: any) => {
+    try {
+      console.log('Continuing payment for existing gift card:', pendingCard.id);
+      const returnUrl = `${window.location.origin}/gift?payment=success`;
+      
+      // Use smartbill as default payment provider for existing cards
+      await giftCardPayment.mutateAsync({
+        giftCardId: pendingCard.id,
+        returnUrl,
+        paymentProvider: 'smartbill'
+      });
+      
+      setShowPendingNotification(false);
+    } catch (error) {
+      console.error('Error continuing pending payment:', error);
+      toast({
+        title: "Error",
+        description: "Failed to continue with existing payment. Please try creating a new gift card.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const canProceed = () => {
     switch (currentStep) {
       case 0:
@@ -163,6 +200,23 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
     }
 
     try {
+      const finalAmount = getFinalAmount();
+      
+      // Check if there's a reusable pending gift card with the same amount and currency
+      const existingPendingCard = findReusablePendingCard(finalAmount, currency);
+      
+      if (existingPendingCard) {
+        // Ask user if they want to use the existing card or create a new one
+        const useExisting = window.confirm(
+          `You have a pending gift card for ${finalAmount} ${currency}. Would you like to continue with that payment instead of creating a new one?`
+        );
+        
+        if (useExisting) {
+          await handleContinuePendingPayment(existingPendingCard);
+          return;
+        }
+      }
+
       // Step 1: Create the gift card
       const giftCardData = {
         sender_user_id: user.id,
@@ -172,9 +226,9 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
         recipient_email: formData.recipient_email,
         message_text: formData.message_text || null,
         currency,
-        gift_amount: getFinalAmount(),
-        amount_ron: currency === 'RON' ? getFinalAmount() : null,
-        amount_eur: currency === 'EUR' ? getFinalAmount() : null,
+        gift_amount: finalAmount,
+        amount_ron: currency === 'RON' ? finalAmount : null,
+        amount_eur: currency === 'EUR' ? finalAmount : null,
         design_id: selectedDesignId || null,
         delivery_date: deliveryDate ? deliveryDate.toISOString() : null,
         status: 'active',
@@ -249,6 +303,15 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       </CardHeader>
 
       <CardContent className="p-3">
+        {/* Show pending payment notification */}
+        {showPendingNotification && (
+          <PendingPaymentNotification
+            pendingCards={pendingGiftCards}
+            onContinuePayment={handleContinuePendingPayment}
+            onDismiss={() => setShowPendingNotification(false)}
+          />
+        )}
+
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -590,3 +653,5 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
 };
 
 export default GiftPurchaseWizard;
+
+}
