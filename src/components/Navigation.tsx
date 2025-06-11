@@ -242,7 +242,7 @@ const Navigation = () => {
 
           {/* Enhanced Mobile Menu - With improved styling and consistent alignment */}
           {isMenuOpen && (
-            <div ref={mainMenuRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-gradient-to-br from-white via-violet-50/30 to-purple-50/20 backdrop-blur-xl border border-violet-200/40 overflow-hidden">
+            <div ref={mainMenuRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-white/20 backdrop-blur-xl border border-white/30 overflow-hidden">
               {/* Website Pages Section */}
               <div className="p-6 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-6">
@@ -255,16 +255,16 @@ const Navigation = () => {
                     <Link 
                       key={item.path + item.label} 
                       to={item.path} 
-                      className={`group flex items-center justify-center text-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-violet-100 hover:to-purple-100 hover:shadow-md transform hover:scale-[1.02] ${
+                      className={`group flex items-center justify-center text-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
                         location.pathname === item.path 
-                          ? "bg-gradient-to-r from-violet-500 to-purple-500 text-white shadow-lg" 
+                          ? "bg-white/30 backdrop-blur-sm text-violet-700 shadow-lg font-semibold" 
                           : "text-gray-700 hover:text-violet-700"
                       }`} 
                       onClick={closeAllMenus}
                     >
                       <span className="font-medium text-base">{item.label}</span>
                       {location.pathname === item.path && (
-                        <div className="ml-2 w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                        <div className="ml-2 w-2 h-2 bg-violet-600 rounded-full animate-pulse"></div>
                       )}
                     </Link>
                   ))}
@@ -275,7 +275,7 @@ const Navigation = () => {
 
           {/* Language/Currency Dropdown for Mobile - Enhanced styling and consistent alignment */}
           {isLanguageCurrencyDropdownOpen && (
-            <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-gradient-to-br from-white via-emerald-50/30 to-teal-50/20 backdrop-blur-xl border border-emerald-200/40 overflow-hidden">
+            <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-white/20 backdrop-blur-xl border border-white/30 overflow-hidden">
               {/* Currency Section */}
               <div className="p-6 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-6">
@@ -289,9 +289,9 @@ const Navigation = () => {
                       setCurrency('EUR');
                       closeAllMenus();
                     }}
-                    className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-emerald-100 hover:to-teal-100 hover:shadow-md transform hover:scale-[1.02] ${
+                    className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
                       currency === 'EUR' 
-                        ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg" 
+                        ? "bg-white/30 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
                         : "text-gray-700 hover:text-emerald-700"
                     }`}
                   >
@@ -309,9 +309,9 @@ const Navigation = () => {
                       setCurrency('RON');
                       closeAllMenus();
                     }}
-                    className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-emerald-100 hover:to-teal-100 hover:shadow-md transform hover:scale-[1.02] ${
+                    className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
                       currency === 'RON' 
-                        ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg" 
+                        ? "bg-white/30 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
                         : "text-gray-700 hover:text-emerald-700"
                     }`}
                   >
@@ -327,7 +327,7 @@ const Navigation = () => {
               </div>
 
               {/* Language Section */}
-              <div className="px-6 pb-6 border-t border-emerald-200/30 ml-36 sm:ml-44 md:ml-52">
+              <div className="px-6 pb-6 border-t border-white/20 ml-36 sm:ml-44 md:ml-52">
                 <div className="pt-6">
                   <div className="text-center mb-6">
                     <h3 className="text-sm font-bold text-emerald-600 uppercase tracking-wider mb-2">Language</h3>
@@ -342,9 +342,9 @@ const Navigation = () => {
                           setLanguage(lang);
                           closeAllMenus();
                         }}
-                        className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-emerald-100 hover:to-teal-100 hover:shadow-md transform hover:scale-[1.02] ${
+                        className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
                           language === lang 
-                            ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg" 
+                            ? "bg-white/30 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
                             : "text-gray-700 hover:text-emerald-700"
                         }`}
                       >
@@ -365,7 +365,7 @@ const Navigation = () => {
 
           {/* User Dropdown for Mobile - Enhanced styling and consistent alignment */}
           {user && isUserDropdownOpen && (
-            <div ref={userDropdownRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-gradient-to-br from-white via-rose-50/30 to-pink-50/20 backdrop-blur-xl border border-rose-200/40 overflow-hidden">
+            <div ref={userDropdownRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-white/20 backdrop-blur-xl border border-white/30 overflow-hidden">
               {/* User Info Header */}
               <div className="p-6 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-6">
@@ -373,7 +373,7 @@ const Navigation = () => {
                   <div className="w-12 h-0.5 bg-gradient-to-r from-rose-400 to-pink-400 mx-auto rounded-full"></div>
                 </div>
                 
-                <div className="bg-gradient-to-r from-rose-100 to-pink-100 rounded-xl p-4 mb-6 text-center border border-rose-200/50">
+                <div className="bg-white/30 backdrop-blur-sm rounded-xl p-4 mb-6 text-center border border-white/20">
                   <div className="flex items-center justify-center mb-2">
                     <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
                       <User className="w-6 h-6 text-white" />
@@ -389,11 +389,11 @@ const Navigation = () => {
               </div>
               
               {/* User Actions */}
-              <div className="px-6 pb-6 border-t border-rose-200/30 ml-36 sm:ml-44 md:ml-52">
+              <div className="px-6 pb-6 border-t border-white/20 ml-36 sm:ml-44 md:ml-52">
                 <div className="pt-4 space-y-1">
                   <Link 
                     to="/settings" 
-                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-rose-100 hover:to-pink-100 hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
+                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
                     onClick={closeAllMenus}
                   >
                     <User className="w-5 h-5 mr-3" />
@@ -402,7 +402,7 @@ const Navigation = () => {
                   
                   <Link 
                     to="/history" 
-                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-rose-100 hover:to-pink-100 hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
+                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
                     onClick={closeAllMenus}
                   >
                     <History className="w-5 h-5 mr-3" />
@@ -411,7 +411,7 @@ const Navigation = () => {
                   
                   <button 
                     onClick={handleSignOut}
-                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-red-100 hover:to-rose-100 hover:shadow-md transform hover:scale-[1.02] text-red-600 hover:text-red-700"
+                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-red-600 hover:text-red-700"
                   >
                     <LogOut className="w-5 h-5 mr-3" />
                     <span className="font-medium text-base">{t('signOut')}</span>
