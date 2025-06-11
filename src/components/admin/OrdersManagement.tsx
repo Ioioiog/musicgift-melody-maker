@@ -663,17 +663,6 @@ const OrdersManagement = () => {
                 <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
               </SelectContent>
             </Select>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => refreshPaymentStatus(order.id)}
-              disabled={isRefreshing}
-              className="h-11 px-3"
-              title="Refresh payment status"
-            >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            </Button>
 
             {!hasProforma && (
               <Button
@@ -854,16 +843,6 @@ const OrdersManagement = () => {
                 <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
               </SelectContent>
             </Select>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => refreshPaymentStatus(order.id)}
-              disabled={isRefreshing}
-              title="Refresh payment status across all providers"
-            >
-              <CreditCard className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            </Button>
             
             {!hasProforma && (
               <Button
@@ -1108,3 +1087,5 @@ const OrdersManagement = () => {
 };
 
 export default OrdersManagement;
+
+}
