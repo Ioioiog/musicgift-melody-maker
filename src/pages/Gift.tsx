@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
+
 const Gift = () => {
   const {
     t
@@ -61,40 +62,28 @@ const Gift = () => {
     }}>
         <div className="absolute inset-0 bg-black/20 py-0"></div>
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <motion.div className="flex justify-center mb-6" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.2
-        }}>
+          <motion.div 
+            className="flex justify-center mb-6" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             
           </motion.div>
-          <motion.h2 className="text-2xl md:text-3xl font-bold mb-2" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.4
-        }}>
+          <motion.h2 
+            className="text-2xl md:text-3xl font-bold mb-2" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             {t('shareGiftOfMusic')}
           </motion.h2>
-          <motion.p className="text-base md:text-lg opacity-90 mb-4" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.5
-        }}>
+          <motion.p 
+            className="text-base md:text-lg opacity-90 mb-4" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
             {t('givePersonalizedSong')} {t('createDigitalGiftCard')}
           </motion.p>
         </div>
@@ -108,28 +97,41 @@ const Gift = () => {
       backgroundRepeat: 'no-repeat'
     }}>
         <div className="absolute inset-0 bg-black/30 py-[22px]"></div>
-        <motion.div initial={{
-        opacity: 0,
-        y: 30
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} transition={{
-        duration: 0.8,
-        delay: 0.6
-      }} className="w-full relative z-10 px-4 py-[10px]">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.8, delay: 0.6 }} 
+          className="w-full relative z-10 px-4 py-[10px]"
+        >
           <div className="max-w-4xl mx-auto">
-            {paymentStatus === 'success' ? <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-purple-200/30 backdrop-blur-sm p-6">
+            {paymentStatus === 'success' ? (
+              <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-2xl shadow-xl border border-purple-200/30 backdrop-blur-sm p-6">
                 <GiftPaymentSuccess />
-              </div> : <Tabs defaultValue="purchase" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/10 backdrop-blur-sm border border-white/20 py-[2px] my-[26px]">
-                  <TabsTrigger value="purchase" className="text-lg data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80 py-0 my-0">
-                    <GiftIcon className="w-5 h-5 mr-2" />
-                    {t('buyGiftCard')}
+              </div>
+            ) : (
+              <Tabs defaultValue="purchase" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/10 backdrop-blur-sm border border-white/20 py-1 my-[26px] h-auto">
+                  <TabsTrigger 
+                    value="purchase" 
+                    className="text-sm sm:text-base lg:text-lg data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80 py-2 sm:py-3 px-2 sm:px-4 h-auto min-h-[44px] leading-tight"
+                  >
+                    <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
+                      <GiftIcon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm lg:text-base font-medium leading-tight">
+                        {t('buyGiftCard')}
+                      </span>
+                    </div>
                   </TabsTrigger>
-                  <TabsTrigger value="redeem" className="text-lg py-3 data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80">
-                    <Heart className="w-5 h-5 mr-2" />
-                    {t('redeemGiftCard')}
+                  <TabsTrigger 
+                    value="redeem" 
+                    className="text-sm sm:text-base lg:text-lg data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80 py-2 sm:py-3 px-2 sm:px-4 h-auto min-h-[44px] leading-tight"
+                  >
+                    <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
+                      <Heart className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm lg:text-base font-medium leading-tight">
+                        {t('redeemGiftCard')}
+                      </span>
+                    </div>
                   </TabsTrigger>
                 </TabsList>
 
@@ -140,14 +142,18 @@ const Gift = () => {
                     <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-indigo-400/10 to-transparent rounded-full blur-md" />
                     
                     <div className="relative z-10 p-6">
-                      {user ? <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} /> : <div className="text-center py-12">
+                      {user ? (
+                        <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
+                      ) : (
+                        <div className="text-center py-12">
                           <p className="text-lg text-gray-600 mb-6">
                             {t('pleaseSignInToPurchase')}
                           </p>
                           <a href="/auth" className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                             {t('signIn')}
                           </a>
-                        </div>}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </TabsContent>
@@ -163,7 +169,8 @@ const Gift = () => {
                     </div>
                   </div>
                 </TabsContent>
-              </Tabs>}
+              </Tabs>
+            )}
           </div>
         </motion.div>
       </section>
