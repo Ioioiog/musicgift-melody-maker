@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Type, Image as ImageIcon, Palette, Move, RotateCcw, Trash2, Square, Circle as CircleIcon, Minus, RectangleHorizontal } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Type, Image as ImageIcon, Palette, Move, RotateCcw, Trash2, Square, Circle as CircleIcon, Minus, RectangleHorizontal, ChevronDown, ChevronRight, Plus } from 'lucide-react';
 
 interface CanvasElement {
   id: string;
@@ -65,14 +66,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [fabricCanvas, setFabricCanvas] = useState<FabricCanvas | null>(null);
   const [selectedObject, setSelectedObject] = useState<any>(null);
-  const [selectedFont, setSelectedFont] = useState('Arial');
-  const [selectedColor, setSelectedColor] = useState('#000000');
-  const [selectedStrokeColor, setSelectedStrokeColor] = useState('#000000');
-  const [selectedSize, setSelectedSize] = useState([24]);
-  const [selectedStrokeWidth, setSelectedStrokeWidth] = useState([2]);
-  const [selectedOpacity, setSelectedOpacity] = useState([100]);
+  const [toolsExpanded, setToolsExpanded] = useState(true);
 
-  // Sync selection from parent component
   useEffect(() => {
     if (!fabricCanvas) return;
 
@@ -313,9 +308,9 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     const text = new IText(placeholder.text, {
       left: 50,
       top: 50,
-      fontSize: selectedSize[0],
-      fontFamily: selectedFont,
-      fill: selectedColor
+      fontSize: 24,
+      fontFamily: 'Arial',
+      fill: '#000000'
     });
     
     const elementIndex = value.elements.length;
@@ -335,9 +330,9 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     const text = new IText('Your text here', {
       left: 50,
       top: 50,
-      fontSize: selectedSize[0],
-      fontFamily: selectedFont,
-      fill: selectedColor
+      fontSize: 24,
+      fontFamily: 'Arial',
+      fill: '#000000'
     });
     
     const elementIndex = value.elements.length;
@@ -358,10 +353,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       top: 50,
       width: 150,
       height: 80,
-      fill: selectedColor,
-      stroke: selectedStrokeColor,
-      strokeWidth: selectedStrokeWidth[0],
-      opacity: selectedOpacity[0] / 100
+      fill: '#000000',
+      stroke: '#000000',
+      strokeWidth: 0,
+      opacity: 1
     });
     
     const elementIndex = value.elements.length;
@@ -382,10 +377,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       top: 50,
       width: 150,
       height: 80,
-      fill: selectedColor,
-      stroke: selectedStrokeColor,
-      strokeWidth: selectedStrokeWidth[0],
-      opacity: selectedOpacity[0] / 100,
+      fill: '#000000',
+      stroke: '#000000',
+      strokeWidth: 0,
+      opacity: 1,
       rx: 10,
       ry: 10
     });
@@ -407,10 +402,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       left: 50,
       top: 50,
       radius: 50,
-      fill: selectedColor,
-      stroke: selectedStrokeColor,
-      strokeWidth: selectedStrokeWidth[0],
-      opacity: selectedOpacity[0] / 100
+      fill: '#000000',
+      stroke: '#000000',
+      strokeWidth: 0,
+      opacity: 1
     });
     
     const elementIndex = value.elements.length;
@@ -427,9 +422,9 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     if (!fabricCanvas) return;
 
     const line = new Line([50, 50, 200, 50], {
-      stroke: selectedColor,
-      strokeWidth: selectedStrokeWidth[0],
-      opacity: selectedOpacity[0] / 100
+      stroke: '#000000',
+      strokeWidth: 2,
+      opacity: 1
     });
     
     const elementIndex = value.elements.length;
@@ -439,22 +434,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     
     fabricCanvas.add(line);
     fabricCanvas.setActiveObject(line);
-    updateCanvasData(fabricCanvas);
-  };
-
-  const updateSelectedObject = (property: string, value: any) => {
-    if (!selectedObject || !fabricCanvas) return;
-
-    selectedObject.set(property, value);
-    fabricCanvas.renderAll();
-    updateCanvasData(fabricCanvas);
-  };
-
-  const deleteSelectedObject = () => {
-    if (!selectedObject || !fabricCanvas) return;
-
-    fabricCanvas.remove(selectedObject);
-    setSelectedObject(null);
     updateCanvasData(fabricCanvas);
   };
 
@@ -495,350 +474,107 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     updateCanvasData(fabricCanvas);
   };
 
-  const isTextElement = selectedObject?.type === 'i-text';
-  const isShapeElement = selectedObject && ['rect', 'circle', 'line'].includes(selectedObject.type);
-
   return (
-    <div className="space-y-6">
-      {/* Top Toolbar - Element Library and Default Settings */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Add Elements</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* Text Elements */}
-            <div className="mb-4">
-              <Label className="text-xs font-semibold text-gray-600 mb-2 block">Text Elements</Label>
-              <div className="flex flex-wrap gap-2 mb-3">
+    <div className="space-y-4">
+      {/* Integrated Tools Section - Moved to Sidebar in Parent Component */}
+      <Collapsible open={toolsExpanded} onOpenChange={setToolsExpanded}>
+        <CollapsibleTrigger asChild>
+          <Button variant="outline" className="w-full justify-between">
+            <span className="flex items-center gap-2">
+              <Plus className="w-4 h-4" />
+              Add Elements
+            </span>
+            {toolsExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="space-y-4 mt-4">
+          {/* Text Elements */}
+          <div>
+            <Label className="text-sm font-semibold text-gray-600 mb-2 block">Text Elements</Label>
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <Button
+                onClick={addText}
+                variant="outline"
+                size="sm"
+                className="flex items-center justify-center"
+              >
+                <Type className="w-4 h-4 mr-1" />
+                Text
+              </Button>
+              
+              {PLACEHOLDERS.map(placeholder => (
                 <Button
-                  onClick={addText}
-                  variant="outline"
+                  key={placeholder.id}
+                  onClick={() => addPlaceholder(placeholder)}
+                  variant="ghost"
                   size="sm"
-                  className="flex items-center"
+                  className="text-xs justify-start"
                 >
-                  <Type className="w-4 h-4 mr-2" />
-                  Add Text
+                  {placeholder.label}
                 </Button>
-                
-                {PLACEHOLDERS.map(placeholder => (
-                  <Button
-                    key={placeholder.id}
-                    onClick={() => addPlaceholder(placeholder)}
-                    variant="ghost"
-                    size="sm"
-                    className="text-xs"
-                  >
-                    {placeholder.label}
-                  </Button>
-                ))}
-              </div>
+              ))}
             </div>
+          </div>
 
-            {/* Shape Elements */}
-            <div>
-              <Label className="text-xs font-semibold text-gray-600 mb-2 block">Shape Elements</Label>
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  onClick={addRoundedRectangle}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center"
-                >
-                  <RectangleHorizontal className="w-4 h-4 mr-2" />
-                  Label
-                </Button>
-                <Button
-                  onClick={addRectangle}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center"
-                >
-                  <Square className="w-4 h-4 mr-2" />
-                  Rectangle
-                </Button>
-                <Button
-                  onClick={addCircle}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center"
-                >
-                  <CircleIcon className="w-4 h-4 mr-2" />
-                  Circle
-                </Button>
-                <Button
-                  onClick={addLine}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center"
-                >
-                  <Minus className="w-4 h-4 mr-2" />
-                  Line
-                </Button>
-              </div>
+          {/* Shape Elements */}
+          <div>
+            <Label className="text-sm font-semibold text-gray-600 mb-2 block">Shape Elements</Label>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                onClick={addRoundedRectangle}
+                variant="outline"
+                size="sm"
+                className="flex items-center justify-center"
+              >
+                <RectangleHorizontal className="w-4 h-4 mr-1" />
+                Label
+              </Button>
+              <Button
+                onClick={addRectangle}
+                variant="outline"
+                size="sm"
+                className="flex items-center justify-center"
+              >
+                <Square className="w-4 h-4 mr-1" />
+                Rectangle
+              </Button>
+              <Button
+                onClick={addCircle}
+                variant="outline"
+                size="sm"
+                className="flex items-center justify-center"
+              >
+                <CircleIcon className="w-4 h-4 mr-1" />
+                Circle
+              </Button>
+              <Button
+                onClick={addLine}
+                variant="outline"
+                size="sm"
+                className="flex items-center justify-center"
+              >
+                <Minus className="w-4 h-4 mr-1" />
+                Line
+              </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Default Settings</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="text-xs">Font</Label>
-                <Select value={selectedFont} onValueChange={setSelectedFont}>
-                  <SelectTrigger className="h-8">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {FONTS.map(font => (
-                      <SelectItem key={font} value={font}>{font}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Label className="text-xs">Fill Color</Label>
-                <Input
-                  type="color"
-                  value={selectedColor}
-                  onChange={(e) => setSelectedColor(e.target.value)}
-                  className="h-8"
-                />
-              </div>
-              
-              <div>
-                <Label className="text-xs">Stroke Color</Label>
-                <Input
-                  type="color"
-                  value={selectedStrokeColor}
-                  onChange={(e) => setSelectedStrokeColor(e.target.value)}
-                  className="h-8"
-                />
-              </div>
-              
-              <div>
-                <Label className="text-xs">Size: {selectedSize[0]}px</Label>
-                <Slider
-                  value={selectedSize}
-                  onValueChange={setSelectedSize}
-                  min={12}
-                  max={72}
-                  step={1}
-                  className="mt-1"
-                />
-              </div>
-              
-              <div>
-                <Label className="text-xs">Stroke: {selectedStrokeWidth[0]}px</Label>
-                <Slider
-                  value={selectedStrokeWidth}
-                  onValueChange={setSelectedStrokeWidth}
-                  min={0}
-                  max={10}
-                  step={1}
-                  className="mt-1"
-                />
-              </div>
-              
-              <div>
-                <Label className="text-xs">Opacity: {selectedOpacity[0]}%</Label>
-                <Slider
-                  value={selectedOpacity}
-                  onValueChange={setSelectedOpacity}
-                  min={0}
-                  max={100}
-                  step={5}
-                  className="mt-1"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          {/* Canvas Actions */}
+          <div className="pt-2 border-t">
+            <Button onClick={clearCanvas} variant="outline" size="sm" className="w-full">
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Clear Canvas
+            </Button>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
 
-      {/* Canvas and Properties Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Canvas Area - Takes 4/5 of the width */}
-        <div className="lg:col-span-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm flex items-center justify-between">
-                Design Canvas (1050 × 600px - Web/Digital 7:4)
-                <Button onClick={clearCanvas} variant="outline" size="sm">
-                  <RotateCcw className="w-4 h-4 mr-1" />
-                  Clear
-                </Button>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="border border-gray-200 rounded-lg bg-white p-4 flex justify-center items-center">
-                <canvas 
-                  ref={canvasRef} 
-                  className="border border-gray-300 rounded shadow-sm" 
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Properties Panel - Takes 1/5 of the width */}
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">
-                {selectedObject ? 'Element Properties' : 'Select an element'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {selectedObject ? (
-                <div className="space-y-3">
-                  {/* Text-specific properties */}
-                  {isTextElement && (
-                    <>
-                      <div>
-                        <Label className="text-xs">Font Family</Label>
-                        <Select
-                          value={selectedObject.fontFamily}
-                          onValueChange={(value) => updateSelectedObject('fontFamily', value)}
-                        >
-                          <SelectTrigger className="h-8">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {FONTS.map(font => (
-                              <SelectItem key={font} value={font}>{font}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <Label className="text-xs">Font Size</Label>
-                        <Input
-                          type="number"
-                          value={selectedObject.fontSize}
-                          onChange={(e) => updateSelectedObject('fontSize', parseInt(e.target.value))}
-                          className="h-8"
-                          min="8"
-                          max="100"
-                        />
-                      </div>
-                      
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={() => updateSelectedObject('fontWeight', 
-                            selectedObject.fontWeight === 'bold' ? 'normal' : 'bold'
-                          )}
-                          variant={selectedObject.fontWeight === 'bold' ? 'default' : 'outline'}
-                          size="sm"
-                          className="flex-1"
-                        >
-                          B
-                        </Button>
-                        <Button
-                          onClick={() => updateSelectedObject('fontStyle', 
-                            selectedObject.fontStyle === 'italic' ? 'normal' : 'italic'
-                          )}
-                          variant={selectedObject.fontStyle === 'italic' ? 'default' : 'outline'}
-                          size="sm"
-                          className="flex-1"
-                        >
-                          I
-                        </Button>
-                      </div>
-                    </>
-                  )}
-
-                  {/* Shape-specific properties */}
-                  {isShapeElement && (
-                    <>
-                      {selectedObject.type === 'rect' && selectedObject.get('elementType') === 'rounded-rectangle' && (
-                        <div>
-                          <Label className="text-xs">Corner Radius</Label>
-                          <Input
-                            type="number"
-                            value={selectedObject.rx || 0}
-                            onChange={(e) => {
-                              const radius = parseInt(e.target.value);
-                              updateSelectedObject('rx', radius);
-                              updateSelectedObject('ry', radius);
-                            }}
-                            className="h-8"
-                            min="0"
-                            max="50"
-                          />
-                        </div>
-                      )}
-                      
-                      <div>
-                        <Label className="text-xs">Stroke Width</Label>
-                        <Input
-                          type="number"
-                          value={selectedObject.strokeWidth || 0}
-                          onChange={(e) => updateSelectedObject('strokeWidth', parseInt(e.target.value))}
-                          className="h-8"
-                          min="0"
-                          max="20"
-                        />
-                      </div>
-
-                      {selectedObject.stroke && (
-                        <div>
-                          <Label className="text-xs">Stroke Color</Label>
-                          <Input
-                            type="color"
-                            value={selectedObject.stroke}
-                            onChange={(e) => updateSelectedObject('stroke', e.target.value)}
-                            className="h-8"
-                          />
-                        </div>
-                      )}
-
-                      <div>
-                        <Label className="text-xs">Opacity</Label>
-                        <Input
-                          type="number"
-                          value={Math.round((selectedObject.opacity || 1) * 100)}
-                          onChange={(e) => updateSelectedObject('opacity', parseInt(e.target.value) / 100)}
-                          className="h-8"
-                          min="0"
-                          max="100"
-                        />
-                      </div>
-                    </>
-                  )}
-
-                  {/* Common properties for all elements */}
-                  <div>
-                    <Label className="text-xs">Fill Color</Label>
-                    <Input
-                      type="color"
-                      value={isTextElement ? selectedObject.fill : selectedObject.fill}
-                      onChange={(e) => updateSelectedObject('fill', e.target.value)}
-                      className="h-8"
-                    />
-                  </div>
-                  
-                  <Button
-                    onClick={deleteSelectedObject}
-                    variant="destructive"
-                    size="sm"
-                    className="w-full"
-                  >
-                    <Trash2 className="w-4 h-4 mr-1" />
-                    Delete
-                  </Button>
-                </div>
-              ) : (
-                <p className="text-sm text-gray-500">Click on an element to edit its properties</p>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+      {/* Canvas Area - Clean and Spacious */}
+      <div className="border border-gray-200 rounded-lg bg-white p-4 flex justify-center items-center">
+        <canvas 
+          ref={canvasRef} 
+          className="border border-gray-300 rounded shadow-sm" 
+        />
       </div>
     </div>
   );

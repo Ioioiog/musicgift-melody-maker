@@ -7,6 +7,8 @@ import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateGiftCardDesign, useUpdateGiftCardDesign } from "@/hooks/useGiftCards";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import GiftCardCanvasEditor from "./GiftCardCanvasEditor";
 
 interface GiftCardDesignFormProps {
@@ -28,6 +30,11 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
   });
 
   const [selectedElementIndex, setSelectedElementIndex] = useState<number | null>(null);
+  const [collapsedSections, setCollapsedSections] = useState({
+    tools: false,
+    canvasInfo: true,
+    properties: false
+  });
 
   const { toast } = useToast();
   const createDesignMutation = useCreateGiftCardDesign();
@@ -97,8 +104,14 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
     }
   };
 
-  const selectedElement = selectedElementIndex !== null ? formData.template_data.elements[selectedElementIndex] : null;
+  const toggleSection = (section: keyof typeof collapsedSections) => {
+    setCollapsedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
+  const selectedElement = selectedElementIndex !== null ? formData.template_data.elements[selectedElementIndex] : null;
   const isSubmitting = createDesignMutation.isPending || updateDesignMutation.isPending;
 
   return (
@@ -127,212 +140,254 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
         </div>
       </div>
 
-      {/* Main Content - Two Column Layout */}
+      {/* Main Content - Two Column Layout with Expanded Sidebar */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Column - Settings Panel */}
-        <div className="w-80 bg-white border-r flex flex-col overflow-hidden">
-          {/* Design Settings */}
-          <div className="p-6 border-b">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Design Settings</h3>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-                  Design Name
-                </Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Enter design name"
-                  className="mt-1"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="theme" className="text-sm font-medium text-gray-700">
-                  Theme
-                </Label>
-                <Input
-                  id="theme"
-                  value={formData.theme}
-                  onChange={(e) => handleInputChange('theme', e.target.value)}
-                  placeholder="e.g., Birthday, Christmas"
-                  className="mt-1"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label className="text-sm font-medium text-gray-700">
-                  Background Image
-                </Label>
-                <ImageUpload
-                  label=""
-                  value={formData.preview_image_url}
-                  onChange={(url) => handleInputChange('preview_image_url', url)}
-                  bucketName="gift-card-designs"
-                  maxSizeBytes={5 * 1024 * 1024}
-                  acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
-                />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="is_active"
-                  checked={formData.is_active}
-                  onCheckedChange={(checked) => handleInputChange('is_active', checked)}
-                />
-                <Label htmlFor="is_active" className="text-sm font-medium text-gray-700">
-                  Active
-                </Label>
-              </div>
-            </div>
-          </div>
-
-          {/* Canvas Info */}
-          <div className="p-6 border-b">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Canvas Info</h3>
-            <div className="space-y-2 text-sm text-gray-600">
-              <div className="flex justify-between">
-                <span>Size:</span>
-                <span>{formData.template_data.canvasWidth} × {formData.template_data.canvasHeight}px</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Elements:</span>
-                <span>{formData.template_data.elements?.length || 0}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Element Properties */}
+        {/* Left Column - Expanded Settings Panel (450px) */}
+        <div className="w-[450px] bg-white border-r flex flex-col overflow-hidden">
           <div className="flex-1 overflow-auto">
-            {selectedElement ? (
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Element Properties
-                  </h3>
-                  <button
-                    onClick={() => setSelectedElementIndex(null)}
-                    className="text-gray-400 hover:text-gray-600"
-                  >
-                    ✕
-                  </button>
+            {/* Design Settings - Always Visible */}
+            <div className="p-6 border-b">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Design Settings</h3>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                    Design Name
+                  </Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    placeholder="Enter design name"
+                    className="mt-1"
+                    required
+                  />
                 </div>
-                
-                <div className="space-y-4">
-                  <div className="text-sm font-medium text-gray-700 mb-3">
-                    {selectedElement.type || 'Element'} {(selectedElementIndex || 0) + 1}
+
+                <div>
+                  <Label htmlFor="theme" className="text-sm font-medium text-gray-700">
+                    Theme
+                  </Label>
+                  <Input
+                    id="theme"
+                    value={formData.theme}
+                    onChange={(e) => handleInputChange('theme', e.target.value)}
+                    placeholder="e.g., Birthday, Christmas"
+                    className="mt-1"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">
+                    Background Image
+                  </Label>
+                  <ImageUpload
+                    label=""
+                    value={formData.preview_image_url}
+                    onChange={(url) => handleInputChange('preview_image_url', url)}
+                    bucketName="gift-card-designs"
+                    maxSizeBytes={5 * 1024 * 1024}
+                    acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id="is_active"
+                    checked={formData.is_active}
+                    onCheckedChange={(checked) => handleInputChange('is_active', checked)}
+                  />
+                  <Label htmlFor="is_active" className="text-sm font-medium text-gray-700">
+                    Active
+                  </Label>
+                </div>
+              </div>
+            </div>
+
+            {/* Canvas Info - Collapsible */}
+            <Collapsible 
+              open={!collapsedSections.canvasInfo} 
+              onOpenChange={() => toggleSection('canvasInfo')}
+            >
+              <CollapsibleTrigger className="w-full">
+                <div className="p-6 border-b flex items-center justify-between hover:bg-gray-50">
+                  <h3 className="text-lg font-semibold text-gray-900">Canvas Info</h3>
+                  {collapsedSections.canvasInfo ? 
+                    <ChevronRight className="w-5 h-5" /> : 
+                    <ChevronDown className="w-5 h-5" />
+                  }
+                </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="px-6 pb-6">
+                  <div className="space-y-3 text-sm text-gray-600">
+                    <div className="flex justify-between">
+                      <span>Canvas Size:</span>
+                      <span>{formData.template_data.canvasWidth} × {formData.template_data.canvasHeight}px</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Aspect Ratio:</span>
+                      <span>7:4 (Digital Format)</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Elements:</span>
+                      <span>{formData.template_data.elements?.length || 0}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Background:</span>
+                      <span>{formData.preview_image_url ? 'Custom Image' : 'None'}</span>
+                    </div>
                   </div>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
 
-                  {selectedElement.type === 'shape' && (
-                    <div className="space-y-4">
-                      <div>
-                        <Label className="text-sm">Fill Color</Label>
-                        <input
-                          type="color"
-                          value={selectedElement.fill || '#000000'}
-                          onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
-                          className="w-full h-10 rounded border cursor-pointer mt-1"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label className="text-sm">Border Color</Label>
-                        <input
-                          type="color"
-                          value={selectedElement.stroke || '#000000'}
-                          onChange={(e) => updateSelectedElementProperty('stroke', e.target.value)}
-                          className="w-full h-10 rounded border cursor-pointer mt-1"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label className="text-sm">Border Width</Label>
-                        <Input
-                          type="number"
-                          value={selectedElement.strokeWidth || 1}
-                          onChange={(e) => updateSelectedElementProperty('strokeWidth', parseInt(e.target.value))}
-                          className="mt-1"
-                          min="0"
-                          max="20"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label className="text-sm">Opacity</Label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="1"
-                          step="0.1"
-                          value={selectedElement.opacity || 1}
-                          onChange={(e) => updateSelectedElementProperty('opacity', parseFloat(e.target.value))}
-                          className="w-full mt-1"
-                        />
-                        <div className="text-xs text-gray-500 text-center mt-1">
-                          {Math.round((selectedElement.opacity || 1) * 100)}%
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedElement.type === 'text' && (
-                    <div className="space-y-4">
-                      <div>
-                        <Label className="text-sm">Text</Label>
-                        <Input
-                          value={selectedElement.text || ''}
-                          onChange={(e) => updateSelectedElementProperty('text', e.target.value)}
-                          className="mt-1"
-                          placeholder="Enter text"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label className="text-sm">Text Color</Label>
-                        <input
-                          type="color"
-                          value={selectedElement.fill || '#000000'}
-                          onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
-                          className="w-full h-10 rounded border cursor-pointer mt-1"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label className="text-sm">Font Size</Label>
-                        <Input
-                          type="number"
-                          value={selectedElement.fontSize || 16}
-                          onChange={(e) => updateSelectedElementProperty('fontSize', parseInt(e.target.value))}
-                          className="mt-1"
-                          min="8"
-                          max="72"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label className="text-sm">Font Weight</Label>
-                        <select
-                          value={selectedElement.fontWeight || 'normal'}
-                          onChange={(e) => updateSelectedElementProperty('fontWeight', e.target.value)}
-                          className="w-full h-10 px-3 border rounded mt-1"
-                        >
-                          <option value="normal">Normal</option>
-                          <option value="bold">Bold</option>
-                          <option value="lighter">Light</option>
-                        </select>
-                      </div>
-                    </div>
+            {/* Element Properties - Expands when element selected */}
+            <Collapsible 
+              open={selectedElement ? !collapsedSections.properties : false}
+              onOpenChange={() => selectedElement && toggleSection('properties')}
+            >
+              <CollapsibleTrigger className="w-full" disabled={!selectedElement}>
+                <div className={`p-6 border-b flex items-center justify-between ${selectedElement ? 'hover:bg-gray-50' : 'opacity-50'}`}>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {selectedElement ? 'Element Properties' : 'Select an Element'}
+                  </h3>
+                  {selectedElement && (
+                    collapsedSections.properties ? 
+                      <ChevronRight className="w-5 h-5" /> : 
+                      <ChevronDown className="w-5 h-5" />
                   )}
                 </div>
-              </div>
-            ) : (
-              <div className="p-6 text-center text-gray-500">
-                <p className="text-sm">Select an element on the canvas to edit its properties</p>
-              </div>
-            )}
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                {selectedElement && (
+                  <div className="p-6">
+                    <div className="space-y-4">
+                      <div className="text-sm font-medium text-gray-700 mb-3 p-2 bg-blue-50 rounded">
+                        Editing: {selectedElement.type || 'Element'} {(selectedElementIndex || 0) + 1}
+                      </div>
+
+                      {/* Text Element Properties */}
+                      {selectedElement.type === 'text' && (
+                        <div className="space-y-4">
+                          <div>
+                            <Label className="text-sm font-medium text-gray-700">Text Content</Label>
+                            <Input
+                              value={selectedElement.text || ''}
+                              onChange={(e) => updateSelectedElementProperty('text', e.target.value)}
+                              className="mt-1"
+                              placeholder="Enter text"
+                            />
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <Label className="text-sm font-medium text-gray-700">Text Color</Label>
+                              <input
+                                type="color"
+                                value={selectedElement.fill || '#000000'}
+                                onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
+                                className="w-full h-10 rounded border cursor-pointer mt-1"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label className="text-sm font-medium text-gray-700">Font Size</Label>
+                              <Input
+                                type="number"
+                                value={selectedElement.fontSize || 16}
+                                onChange={(e) => updateSelectedElementProperty('fontSize', parseInt(e.target.value))}
+                                className="mt-1"
+                                min="8"
+                                max="72"
+                              />
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <Label className="text-sm font-medium text-gray-700">Font Weight</Label>
+                            <select
+                              value={selectedElement.fontWeight || 'normal'}
+                              onChange={(e) => updateSelectedElementProperty('fontWeight', e.target.value)}
+                              className="w-full h-10 px-3 border rounded mt-1"
+                            >
+                              <option value="normal">Normal</option>
+                              <option value="bold">Bold</option>
+                              <option value="lighter">Light</option>
+                            </select>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Shape Element Properties */}
+                      {selectedElement.type === 'shape' && (
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <Label className="text-sm font-medium text-gray-700">Fill Color</Label>
+                              <input
+                                type="color"
+                                value={selectedElement.fill || '#000000'}
+                                onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
+                                className="w-full h-10 rounded border cursor-pointer mt-1"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label className="text-sm font-medium text-gray-700">Border Color</Label>
+                              <input
+                                type="color"
+                                value={selectedElement.stroke || '#000000'}
+                                onChange={(e) => updateSelectedElementProperty('stroke', e.target.value)}
+                                className="w-full h-10 rounded border cursor-pointer mt-1"
+                              />
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <Label className="text-sm font-medium text-gray-700">Border Width</Label>
+                              <Input
+                                type="number"
+                                value={selectedElement.strokeWidth || 1}
+                                onChange={(e) => updateSelectedElementProperty('strokeWidth', parseInt(e.target.value))}
+                                className="mt-1"
+                                min="0"
+                                max="20"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label className="text-sm font-medium text-gray-700">Opacity (%)</Label>
+                              <Input
+                                type="number"
+                                value={Math.round((selectedElement.opacity || 1) * 100)}
+                                onChange={(e) => updateSelectedElementProperty('opacity', parseInt(e.target.value) / 100)}
+                                className="mt-1"
+                                min="0"
+                                max="100"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Common Actions */}
+                      <div className="pt-4 border-t">
+                        <Button
+                          onClick={() => setSelectedElementIndex(null)}
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                        >
+                          Deselect Element
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CollapsibleContent>
+            </Collapsible>
           </div>
         </div>
 
