@@ -615,6 +615,58 @@ const OrdersManagement = () => {
     });
   };
 
+  const downloadProformaPDF = async (orderId: string) => {
+    try {
+      console.log(`Downloading proforma PDF for order: ${orderId}`);
+      
+      const { data, error } = await supabase.functions.invoke('smartbill-get-proforma-pdf', {
+        body: { orderId }
+      });
+
+      if (error) {
+        console.error('PDF download error:', error);
+        toast({ 
+          title: 'Error downloading proforma PDF', 
+          description: error.message || 'Failed to download PDF',
+          variant: 'destructive' 
+        });
+        return;
+      }
+
+      // The response should be a blob (PDF content)
+      if (data instanceof ArrayBuffer) {
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        
+        // Open PDF in new tab
+        window.open(url, '_blank');
+        
+        // Clean up the URL after a short delay
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        
+        toast({ 
+          title: 'Proforma PDF downloaded',
+          description: 'The PDF has been opened in a new tab'
+        });
+      } else {
+        console.error('Unexpected response format:', data);
+        toast({ 
+          title: 'Error opening PDF', 
+          description: 'Unexpected response format',
+          variant: 'destructive' 
+        });
+      }
+      
+    } catch (error) {
+      console.error('Error downloading proforma PDF:', error);
+      toast({ 
+        title: 'Error downloading proforma PDF', 
+        description: 'Failed to download PDF',
+        variant: 'destructive' 
+      });
+    }
+  };
+
   const renderMobileOrderCard = (order: any, index: number) => {
     const formData = order.form_data as OrderFormData;
     const hasPrompts = hasSavedPrompts(order.id);
@@ -723,13 +775,13 @@ const OrdersManagement = () => {
               </Button>
             )}
 
-            {order.smartbill_proforma_id && order.smartbill_payment_url && (
+            {order.smartbill_proforma_id && (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.open(order.smartbill_payment_url, '_blank')}
+                onClick={() => downloadProformaPDF(order.id)}
                 className="h-11 px-3"
-                title="View SmartBill Proforma"
+                title="Download SmartBill Proforma PDF"
               >
                 <ExternalLink className="w-4 h-4" />
               </Button>
@@ -884,7 +936,7 @@ const OrdersManagement = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="pending">{t('pending', 'Pending')}</SelectItem>
-                <SelectItem value="in_progress">{t('inProgress', 'In Progress')}</SelectItem>
+                <SelectItem value="inProgress">{t('inProgress', 'In Progress')}</SelectItem>
                 <SelectItem value="completed">{t('completed', 'Completed')}</SelectItem>
                 <SelectItem value="cancelled">{t('cancelled', 'Cancelled')}</SelectItem>
               </SelectContent>
@@ -912,12 +964,12 @@ const OrdersManagement = () => {
               </Button>
             )}
 
-            {order.smartbill_proforma_id && order.smartbill_payment_url && (
+            {order.smartbill_proforma_id && (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.open(order.smartbill_payment_url, '_blank')}
-                title="View SmartBill Proforma"
+                onClick={() => downloadProformaPDF(order.id)}
+                title="Download SmartBill Proforma PDF"
                 className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
               >
                 <ExternalLink className="w-4 h-4" />
