@@ -90,11 +90,13 @@ Deno.serve(async (req) => {
 
     console.log(`Fetching proforma PDF from SmartBill: ${smartbillUrl}`);
 
-    // Fetch PDF from SmartBill API
+    // Fetch PDF from SmartBill API with all required headers
     const smartbillResponse = await fetch(smartbillUrl, {
       method: 'GET',
       headers: {
+        'Content-Type': 'application/xml',
         'Accept': 'application/octet-stream',
+        'Accept': 'application/xml',
         'Authorization': `Basic ${authString}`,
       },
     });
@@ -109,7 +111,8 @@ Deno.serve(async (req) => {
           error: 'Failed to fetch proforma PDF from SmartBill',
           details: `Status: ${smartbillResponse.status}, ${smartbillResponse.statusText}`,
           proformaNumber: proformaNumber,
-          originalProformaId: order.smartbill_proforma_id
+          originalProformaId: order.smartbill_proforma_id,
+          smartbillError: errorText
         }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
