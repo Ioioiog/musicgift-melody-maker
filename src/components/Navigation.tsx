@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -184,13 +185,8 @@ const Navigation = () => {
               </Link>
             </div>
 
-            {/* Mobile Right Section: Order Button + Language/Currency + User Account + Menu */}
+            {/* Mobile Right Section: Language/Currency + User Account + Menu + Order Button */}
             <div className="lg:hidden flex items-center space-x-2 ml-auto">
-              {/* Mobile Order Button - Icon Only */}
-              <Link to="/order" className="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-md transition duration-300 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center">
-                <ShoppingCart className="h-5 w-5" />
-              </Link>
-
               {/* Mobile Language/Currency Button */}
               <div className="relative">
                 <button 
@@ -236,6 +232,11 @@ const Navigation = () => {
                   <div className={`w-5 h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? "-rotate-45 -translate-y-0.5" : ""}`} />
                 </div>
               </button>
+
+              {/* Mobile Order Button - Icon Only - After Menu */}
+              <Link to="/order" className="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-md transition duration-300 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center">
+                <ShoppingCart className="h-5 w-5" />
+              </Link>
             </div>
           </div>
 
