@@ -240,10 +240,14 @@ const VideoHero = () => {
       {!showPlayButton && !isLoading && (
         <button
           onClick={handleToggleAudio}
-          className="absolute top-16 sm:top-20 md:top-24 right-4 z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 p-3 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm"
+          className={`absolute z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm ${
+            isMobile 
+              ? 'bottom-16 left-4 p-2' 
+              : 'top-16 sm:top-20 md:top-24 right-4 p-3'
+          }`}
           aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
         >
-          <Volume2 className={`w-6 h-6 ${hasAudio ? 'opacity-100' : 'opacity-60'}`} />
+          <Volume2 className={`${isMobile ? 'w-4 h-4' : 'w-6 h-6'} ${hasAudio ? 'opacity-100' : 'opacity-60'}`} />
         </button>
       )}
 
