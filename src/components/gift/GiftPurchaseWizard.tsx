@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,10 +54,10 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
   const { mutate: processPayment, isPending: isProcessingPayment } = useGiftCardPayment();
 
   const steps = [
-    { number: 1, label: 'Amount', isCompleted: currentStep > 0, isCurrent: currentStep === 0 },
-    { number: 2, label: 'Details', isCompleted: currentStep > 1, isCurrent: currentStep === 1 },
-    { number: 3, label: 'Design', isCompleted: currentStep > 2, isCurrent: currentStep === 2 },
-    { number: 4, label: 'Review', isCompleted: currentStep > 3, isCurrent: currentStep === 3 }
+    { number: 1, label: t('stepAmount'), isCompleted: currentStep > 0, isCurrent: currentStep === 0 },
+    { number: 2, label: t('stepDetails'), isCompleted: currentStep > 1, isCurrent: currentStep === 1 },
+    { number: 3, label: t('stepDesign'), isCompleted: currentStep > 2, isCurrent: currentStep === 2 },
+    { number: 4, label: t('stepReview'), isCompleted: currentStep > 3, isCurrent: currentStep === 3 }
   ];
 
   const getAmountOptions = () => {
@@ -137,7 +138,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
       console.error('Error creating gift card:', error);
       toast({
         title: "Error",
-        description: "Failed to create gift card. Please try again.",
+        description: t('failedToCreateGiftCard'),
         variant: "destructive",
       });
     } finally {
@@ -178,8 +179,8 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
 
   const renderStep0 = () => (
     <div className="space-y-1">
-      <h3 className="text-base font-semibold text-purple-600 mb-1">Choose Gift Card Amount</h3>
-      <p className="text-xs text-purple-500 mb-4">Select the perfect value for your musical gift.</p>
+      <h3 className="text-base font-semibold text-purple-600 mb-1">{t('chooseGiftCardAmount')}</h3>
+      <p className="text-xs text-purple-500 mb-4">{t('selectPerfectValue')}</p>
       
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         {getAmountOptions().map((amount, index) => (
@@ -199,7 +200,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
               {index === 1 && (
                 <div className="flex items-center space-x-1">
                   <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                  <span className="text-xs">Popular</span>
+                  <span className="text-xs">{t('popular')}</span>
                 </div>
               )}
             </div>
@@ -220,7 +221,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
         >
           <div className="flex items-center space-x-2">
             <Sparkles className="w-4 h-4" />
-            <span>Enter Custom Amount</span>
+            <span>{t('enterCustomAmount')}</span>
           </div>
         </Button>
         
@@ -233,14 +234,14 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Label htmlFor="customAmount" className="text-xs font-medium text-purple-600">Custom Amount ({currency})</Label>
+              <Label htmlFor="customAmount" className="text-xs font-medium text-purple-600">{t('customAmountLabel')} ({currency})</Label>
               <div className="relative">
                 <Input
                   id="customAmount"
                   type="number"
                   value={customAmount}
                   onChange={(e) => handleCustomAmountChange(e.target.value)}
-                  placeholder={`Enter amount in ${currency}`}
+                  placeholder={`${t('enterAmountIn')} ${currency}`}
                   min={currency === 'EUR' ? 59 : 299}
                   max={currency === 'EUR' ? 1000 : 7999}
                   step={currency === 'EUR' ? 1 : 10}
@@ -252,7 +253,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
               </div>
               {customAmount && !validateCustomAmount(customAmount) && (
                 <p className="text-xs text-red-400 bg-red-500/10 p-2 rounded">
-                  Amount must be between {currency === 'EUR' ? '59-1000' : '299-7999'} {currency}
+                  {t('amountMustBeBetween')} {currency === 'EUR' ? '59-1000' : '299-7999'} {currency}
                 </p>
               )}
             </motion.div>
@@ -264,13 +265,13 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
 
   const renderStep1 = () => (
     <div className="space-y-1">
-      <h3 className="text-base font-semibold text-purple-600 mb-1">Gift Details</h3>
-      <p className="text-xs text-purple-500 mb-4">Tell us who this special gift is for.</p>
+      <h3 className="text-base font-semibold text-purple-600 mb-1">{t('enterGiftDetails')}</h3>
+      <p className="text-xs text-purple-500 mb-4">{t('tellUsWhoGiftFor')}</p>
 
       <div className="space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <Label htmlFor="sender_name" className="text-xs font-medium text-purple-600">Your Name</Label>
+            <Label htmlFor="sender_name" className="text-xs font-medium text-purple-600">{t('yourName')}</Label>
             <Input
               type="text"
               id="sender_name"
@@ -279,11 +280,11 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
               onChange={handleInputChange}
               required
               className="h-10 mt-1 bg-white/10 border-white/30 text-purple-600 placeholder:text-purple-400"
-              placeholder="Enter your full name"
+              placeholder={t('enterYourFullName')}
             />
           </div>
           <div>
-            <Label htmlFor="sender_email" className="text-xs font-medium text-purple-600">Your Email</Label>
+            <Label htmlFor="sender_email" className="text-xs font-medium text-purple-600">{t('yourEmail')}</Label>
             <Input
               type="email"
               id="sender_email"
@@ -296,7 +297,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
             />
           </div>
           <div>
-            <Label htmlFor="recipient_name" className="text-xs font-medium text-purple-600">Recipient Name</Label>
+            <Label htmlFor="recipient_name" className="text-xs font-medium text-purple-600">{t('recipientName')}</Label>
             <Input
               type="text"
               id="recipient_name"
@@ -305,11 +306,11 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
               onChange={handleInputChange}
               required
               className="h-10 mt-1 bg-white/10 border-white/30 text-purple-600 placeholder:text-purple-400"
-              placeholder="Enter recipient's name"
+              placeholder={t('enterRecipientName')}
             />
           </div>
           <div>
-            <Label htmlFor="recipient_email" className="text-xs font-medium text-purple-600">Recipient Email</Label>
+            <Label htmlFor="recipient_email" className="text-xs font-medium text-purple-600">{t('recipientEmail')}</Label>
             <Input
               type="email"
               id="recipient_email"
@@ -324,19 +325,19 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
         </div>
 
         <div>
-          <Label htmlFor="message_text" className="text-xs font-medium text-purple-600">Personal Message (Optional)</Label>
+          <Label htmlFor="message_text" className="text-xs font-medium text-purple-600">{t('personalMessage')}</Label>
           <Textarea
             id="message_text"
             name="message_text"
             value={formData.message_text}
             onChange={handleInputChange}
-            placeholder="Write a heartfelt message..."
+            placeholder={t('writeHeartfeltMessage')}
             className="mt-1 bg-white/10 border-white/30 text-purple-600 placeholder:text-purple-400 min-h-[80px]"
           />
         </div>
 
         <div>
-          <Label className="text-xs font-medium text-purple-600">Delivery Date (Optional)</Label>
+          <Label className="text-xs font-medium text-purple-600">{t('deliveryDate')}</Label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -350,7 +351,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
                 {formData.delivery_date ? (
                   format(formData.delivery_date, "PPP")
                 ) : (
-                  <span>Choose delivery date</span>
+                  <span>{t('chooseDeliveryDate')}</span>
                 )}
               </Button>
             </PopoverTrigger>
@@ -371,12 +372,12 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
 
   const renderStep2 = () => (
     <div className="space-y-1">
-      <h3 className="text-base font-semibold text-purple-600 mb-1">Select a Design</h3>
-      <p className="text-xs text-purple-500 mb-4">Choose a design and see how your gift card will look.</p>
+      <h3 className="text-base font-semibold text-purple-600 mb-1">{t('selectDesign')}</h3>
+      <p className="text-xs text-purple-500 mb-4">{t('chooseDesignPreview')}</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
-          <h4 className="text-sm font-medium text-purple-600 mb-3">Available Designs</h4>
+          <h4 className="text-sm font-medium text-purple-600 mb-3">{t('availableDesigns')}</h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {designs.map(design => (
               <Card
@@ -405,7 +406,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
         </div>
 
         <div>
-          <h4 className="text-sm font-medium text-purple-600 mb-3">Live Preview</h4>
+          <h4 className="text-sm font-medium text-purple-600 mb-3">{t('livePreview')}</h4>
           <GiftCardPreview
             design={designs.find(d => d.id === selectedDesign)}
             formData={formData}
@@ -422,36 +423,36 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
     
     return (
       <div className="space-y-1">
-        <h3 className="text-base font-semibold text-purple-600 mb-1">Review Your Gift Card</h3>
-        <p className="text-xs text-purple-500 mb-4">Confirm your details before proceeding to payment.</p>
+        <h3 className="text-base font-semibold text-purple-600 mb-1">{t('reviewGiftCard')}</h3>
+        <p className="text-xs text-purple-500 mb-4">{t('confirmDetailsBeforePayment')}</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card className="bg-white/10 border-white/30">
             <CardHeader className="p-3">
-              <CardTitle className="text-sm font-medium text-purple-600">Gift Card Summary</CardTitle>
+              <CardTitle className="text-sm font-medium text-purple-600">{t('giftCardSummary')}</CardTitle>
             </CardHeader>
             <CardContent className="p-3 pt-0 space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-purple-500">Amount:</span>
+                <span className="text-purple-500">{t('amount')}:</span>
                 <span className="font-medium text-purple-600">{actualAmount} {currency}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-purple-500">Design:</span>
-                <span className="text-purple-600">{designs.find(d => d.id === selectedDesign)?.name || 'Default'}</span>
+                <span className="text-purple-500">{t('design')}:</span>
+                <span className="text-purple-600">{designs.find(d => d.id === selectedDesign)?.name || t('default')}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-purple-500">Recipient:</span>
+                <span className="text-purple-500">{t('recipient')}:</span>
                 <span className="text-purple-600">{formData.recipient_name}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-purple-500">Delivery:</span>
-                <span className="text-purple-600">{formData.delivery_date ? format(formData.delivery_date, "PPP") : 'Immediate'}</span>
+                <span className="text-purple-500">{t('deliveryDateLabel')}:</span>
+                <span className="text-purple-600">{formData.delivery_date ? format(formData.delivery_date, "PPP") : t('immediate')}</span>
               </div>
             </CardContent>
           </Card>
 
           <div>
-            <h4 className="text-sm font-medium text-purple-600 mb-3">Final Preview</h4>
+            <h4 className="text-sm font-medium text-purple-600 mb-3">{t('finalPreview')}</h4>
             <GiftCardPreview
               design={designs.find(d => d.id === selectedDesign)}
               formData={formData}
@@ -469,7 +470,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
       <CardHeader className="px-2 sm:px-3">
         <CardTitle className="flex items-center gap-2 text-lg text-purple-600">
           <Gift className="w-5 h-5" />
-          Purchase Gift Card
+          {t('purchaseGiftCard')}
         </CardTitle>
         
         <StepIndicator steps={steps} />

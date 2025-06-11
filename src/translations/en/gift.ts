@@ -104,4 +104,22 @@ export const giftTranslations = {
   next: "Next",
   signIn: "Sign In",
   default: "Default",
+  
+  // New missing translations
+  stepAmount: "Amount",
+  stepDetails: "Details",
+  stepDesign: "Design",
+  stepReview: "Review",
+  selectPerfectValue: "Select the perfect value for your musical gift.",
+  popular: "Popular",
+  enterCustomAmount: "Enter Custom Amount",
+  tellUsWhoGiftFor: "Tell us who this special gift is for.",
+  enterYourFullName: "Enter your full name",
+  enterRecipientName: "Enter recipient's name",
+  writeHeartfeltMessage: "Write a heartfelt message...",
+  chooseDeliveryDate: "Choose delivery date",
+  confirmDetailsBeforePayment: "Confirm your details before proceeding to payment.",
+  stepXOfY: "Step {{current}} of {{total}}",
+  customAmountLabel: "Custom Amount",
+  validate: "Validate",
 };

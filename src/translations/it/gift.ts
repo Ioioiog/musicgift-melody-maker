@@ -104,4 +104,22 @@ export const giftTranslations = {
   next: "Avanti",
   signIn: "Accedi",
   default: "Predefinito",
+  
+  // New missing translations
+  stepAmount: "Importo",
+  stepDetails: "Dettagli",
+  stepDesign: "Design",
+  stepReview: "Revisione",
+  selectPerfectValue: "Seleziona il valore perfetto per il tuo regalo musicale.",
+  popular: "Popolare",
+  enterCustomAmount: "Inserisci Importo Personalizzato",
+  tellUsWhoGiftFor: "Dicci per chi è questo regalo speciale.",
+  enterYourFullName: "Inserisci il tuo nome completo",
+  enterRecipientName: "Inserisci il nome del destinatario",
+  writeHeartfeltMessage: "Scrivi un messaggio sincero...",
+  chooseDeliveryDate: "Scegli la data di consegna",
+  confirmDetailsBeforePayment: "Conferma i tuoi dettagli prima di procedere al pagamento.",
+  stepXOfY: "Passo {{current}} di {{total}}",
+  customAmountLabel: "Importo Personalizzato",
+  validate: "Convalida",
 };

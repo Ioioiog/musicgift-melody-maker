@@ -104,4 +104,22 @@ export const giftTranslations = {
   next: "Următorul",
   signIn: "Conectare",
   default: "Implicit",
+  
+  // New missing translations
+  stepAmount: "Sumă",
+  stepDetails: "Detalii",
+  stepDesign: "Design",
+  stepReview: "Revizuire",
+  selectPerfectValue: "Selectează valoarea perfectă pentru cadoul tău muzical.",
+  popular: "Popular",
+  enterCustomAmount: "Introdu Sumă Personalizată",
+  tellUsWhoGiftFor: "Spune-ne pentru cine este acest cadou special.",
+  enterYourFullName: "Introdu numele tău complet",
+  enterRecipientName: "Introdu numele destinatarului",
+  writeHeartfeltMessage: "Scrie un mesaj din suflet...",
+  chooseDeliveryDate: "Alege data livrării",
+  confirmDetailsBeforePayment: "Confirmă detaliile înainte de a proceda la plată.",
+  stepXOfY: "Pasul {{current}} din {{total}}",
+  customAmountLabel: "Sumă Personalizată",
+  validate: "Validează",
 };
