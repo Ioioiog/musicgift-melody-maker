@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -174,11 +175,11 @@ const SmartBillPaymentManager = () => {
     try {
       console.log('Fetching proforma PDF for order:', orderId);
       
-      // Call the edge function
-      const response = await fetch(`${supabase.supabaseUrl}/functions/v1/smartbill-view-proforma`, {
+      // Call the edge function using hardcoded values
+      const response = await fetch(`https://ehvzhnzqcbzuirovwjsr.supabase.co/functions/v1/smartbill-view-proforma`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${supabase.supabaseKey}`,
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVodnpobnpxY2J6dWlyb3Z3anNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MDA1NDAsImV4cCI6MjA2NDE3NjU0MH0.dCDXCQsIY2pmVfGBHnRGqi_dw3yTEfkYrOHKnKDLSqg`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ orderId })
