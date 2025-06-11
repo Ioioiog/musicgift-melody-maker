@@ -14,6 +14,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { ResponsiveTable } from '@/components/ui/responsive-table';
 import SunoPromptsDialog from './SunoPromptsDialog';
 import DeliveryCountdownBadge from './DeliveryCountdownBadge';
+import { formatCurrency } from '@/utils/currencyUtils';
 
 interface OrderFormData {
   email?: string;
@@ -535,27 +536,6 @@ const OrdersManagement = () => {
     return { status: order.payment_status || 'unknown', label: order.payment_status || 'Unknown' };
   };
 
-  const formatCurrency = (amount: number | string, currency: string = 'RON', order: any = null) => {
-    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-    
-    // Check if this is a Stripe payment (has stripe_session_id)
-    const isStripePayment = order?.stripe_session_id;
-    
-    if (isStripePayment) {
-      // Stripe always stores amounts in cents, so always divide by 100
-      const displayAmount = numAmount / 100;
-      return `${displayAmount.toFixed(2)} ${currency}`;
-    }
-    
-    if (currency === 'EUR') {
-      // For non-Stripe EUR payments, display amount as-is
-      return `${numAmount.toFixed(2)} EUR`;
-    } else {
-      // For RON or other currencies, display as-is
-      return `${numAmount} ${currency}`;
-    }
-  };
-
   const openSunoDialog = (order: any) => {
     setSelectedOrder(order);
     setSunoDialogOpen(true);
@@ -741,7 +721,7 @@ const OrdersManagement = () => {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">#{order.id.slice(0, 8)}</h3>
             <span className="text-lg font-bold text-purple-600">
-              {formatCurrency(order.total_price, order.currency, order)}
+              {formatCurrency(order.total_price, order.currency, order.payment_provider)}
             </span>
           </div>
           
@@ -953,7 +933,7 @@ const OrdersManagement = () => {
         </td>
         <td className="px-6 py-4">
           <div className="text-sm font-medium text-gray-900">
-            {formatCurrency(order.total_price, order.currency, order)}
+            {formatCurrency(order.total_price, order.currency, order.payment_provider)}
           </div>
           <div className="text-sm text-gray-500">{new Date(order.created_at).toLocaleDateString()}</div>
         </td>
@@ -1262,3 +1242,5 @@ const OrdersManagement = () => {
 };
 
 export default OrdersManagement;
+
+}

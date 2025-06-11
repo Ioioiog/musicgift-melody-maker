@@ -33,8 +33,19 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
 
-    const totalPrice = parseFloat(orderData.total_price) || 0
-    const currency = ['RON', 'EUR'].includes(orderData.currency) 
+    // Convert price based on payment provider
+    let convertedPrice = orderData.total_price
+    if (orderData.payment_provider === 'stripe' || orderData.payment_provider === 'revolut') {
+      convertedPrice = orderData.total_price / 100 // Convert from cents
+      console.log(`Converting ${orderData.payment_provider} amount from cents: ${orderData.total_price} -> ${convertedPrice}`)
+    } else {
+      console.log(`Using amount as-is for payment provider: ${orderData.payment_provider || 'none'}`)
+    }
+
+    const totalPrice = parseFloat(convertedPrice.toString()) || 0
+    const currency = ['RON', 'EUR'].includes(orderData.currency) ? orderData.currency : 'EUR'
+
+    console.log(`Final amount for SmartBill proforma: ${totalPrice} ${currency}`)
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <estimate>
@@ -55,9 +66,9 @@ serve(async (req) => {
     <name>${escapeXml(orderData.package_name || 'Produs MusicGift')}</name>
     <isDiscount>false</isDiscount>
     <measuringUnitName>buc</measuringUnitName>
-    <currency>EUR</currency>
+    <currency>${currency}</currency>
     <quantity>1</quantity>
-    <price>${totalPrice}</price>
+    <price>${totalPrice.toFixed(2)}</price>
     <isTaxIncluded>true</isTaxIncluded>
     <taxName>Normala</taxName>
     <taxPercentage>19</taxPercentage>
