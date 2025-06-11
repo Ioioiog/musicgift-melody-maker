@@ -5,164 +5,95 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon, Gift, CheckCircle, ArrowRight, ArrowLeft, Star, Sparkles } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { useCurrency } from "@/contexts/CurrencyContext";
-import { useCreateGiftCard, useGiftCardDesigns } from "@/hooks/useGiftCards";
-import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
-import GiftCardPreview from './GiftCardPreview';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { CalendarIcon, Gift, ArrowLeft, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import StepIndicator from '@/components/order/StepIndicator';
-import WizardNavigation from '@/components/order/WizardNavigation';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCreateGiftCard, useGiftCardDesigns } from '@/hooks/useGiftCards';
+import { useToast } from '@/hooks/use-toast';
+import GiftCardPreview from './GiftCardPreview';
 
 interface GiftPurchaseWizardProps {
   onComplete: (data: any) => void;
 }
 
-// Currency-specific amount options
-const AmountOptionsRON = [299, 500, 7999];
-const AmountOptionsEUR = [59, 99, 1599];
+const PRESET_AMOUNTS = {
+  RON: [100, 200, 300, 500, 1000],
+  EUR: [25, 50, 75, 100, 200]
+};
 
 const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) => {
+  const { t } = useLanguage();
+  const { currency } = useCurrency();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  
   const [currentStep, setCurrentStep] = useState(0);
-  const [selectedAmountType, setSelectedAmountType] = useState<'preset' | 'custom'>('preset');
-  const [selectedAmount, setSelectedAmount] = useState<number>(299);
-  const [customAmount, setCustomAmount] = useState<string>('');
-  const [selectedDesign, setSelectedDesign] = useState('');
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const [customAmount, setCustomAmount] = useState('');
+  const [isCustomAmount, setIsCustomAmount] = useState(false);
+  const [selectedDesignId, setSelectedDesignId] = useState<string>('');
+  const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
+  
   const [formData, setFormData] = useState({
-    sender_name: '',
-    sender_email: '',
+    sender_name: user?.user_metadata?.full_name || '',
+    sender_email: user?.email || '',
     recipient_name: '',
     recipient_email: '',
-    message_text: '',
-    delivery_date: undefined,
+    message_text: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const { toast } = useToast();
-  const { t } = useLanguage();
-  const { user } = useAuth();
-  const { currency } = useCurrency();
-  const { mutateAsync: createGiftCard } = useCreateGiftCard();
+
   const { data: designs = [] } = useGiftCardDesigns();
-  const { mutate: processPayment, isPending: isProcessingPayment } = useGiftCardPayment();
+  const createGiftCard = useCreateGiftCard();
+
+  // Check authentication status
+  if (!user) {
+    return (
+      <Card className="bg-transparent border-transparent shadow-none">
+        <CardContent className="p-6 text-center">
+          <Gift className="w-12 h-12 mx-auto mb-4 text-purple-400" />
+          <h3 className="text-lg font-semibold text-purple-600 mb-2">
+            {t('pleaseSignInToPurchase')}
+          </h3>
+          <p className="text-purple-500 mb-4">
+            You need to be signed in to purchase gift cards.
+          </p>
+          <Button 
+            onClick={() => window.location.href = '/auth'} 
+            className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700"
+          >
+            {t('signIn')}
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const steps = [
-    { number: 1, label: t('stepAmount'), isCompleted: currentStep > 0, isCurrent: currentStep === 0 },
-    { number: 2, label: t('stepDetails'), isCompleted: currentStep > 1, isCurrent: currentStep === 1 },
-    { number: 3, label: t('stepDesign'), isCompleted: currentStep > 2, isCurrent: currentStep === 2 },
-    { number: 4, label: t('stepReview'), isCompleted: currentStep > 3, isCurrent: currentStep === 3 }
+    { key: 'amount', title: t('stepAmount') },
+    { key: 'details', title: t('stepDetails') },
+    { key: 'design', title: t('stepDesign') },
+    { key: 'review', title: t('stepReview') }
   ];
 
-  const getAmountOptions = () => {
-    return currency === 'EUR' ? AmountOptionsEUR : AmountOptionsRON;
+  const getMinMaxAmount = () => {
+    return currency === 'EUR' ? { min: 10, max: 500 } : { min: 50, max: 2000 };
   };
 
-  const getActualAmount = () => {
-    if (selectedAmountType === 'custom') {
-      const parsed = parseFloat(customAmount);
-      return isNaN(parsed) ? 0 : parsed;
+  const getFinalAmount = () => {
+    if (isCustomAmount) {
+      return parseInt(customAmount) || 0;
     }
-    return selectedAmount;
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleDateChange = (date: Date | undefined) => {
-    setFormData(prevData => ({
-      ...prevData,
-      delivery_date: date,
-    }));
-  };
-
-  const handleAmountSelection = (amount: number) => {
-    setSelectedAmountType('preset');
-    setSelectedAmount(amount);
-    setCustomAmount('');
-  };
-
-  const handleCustomAmountChange = (value: string) => {
-    setSelectedAmountType('custom');
-    setCustomAmount(value);
-  };
-
-  const validateCustomAmount = (amount: string): boolean => {
-    const parsed = parseFloat(amount);
-    if (isNaN(parsed) || parsed <= 0) return false;
-    
-    const minAmount = currency === 'EUR' ? 59 : 299;
-    const maxAmount = currency === 'EUR' ? 1000 : 7999;
-    
-    return parsed >= minAmount && parsed <= maxAmount;
-  };
-
-  const handleFormSubmit = async (formData: any) => {
-    try {
-      setIsSubmitting(true);
-
-      const actualAmount = getActualAmount();
-      const amountInCents = actualAmount * 100;
-
-      const giftCardData = {
-        ...formData,
-        sender_user_id: user?.id || null,
-        payment_status: 'pending',
-        status: 'pending',
-        currency: currency,
-        gift_amount: amountInCents,
-        amount_ron: currency === 'RON' ? amountInCents : null,
-        amount_eur: currency === 'EUR' ? amountInCents : null,
-        design_id: selectedDesign
-      };
-
-      const createdGiftCard = await createGiftCard(giftCardData);
-      
-      processPayment({
-        giftCardId: createdGiftCard.id,
-        returnUrl: `${window.location.origin}/gift?payment=success`
-      });
-
-    } catch (error) {
-      console.error('Error creating gift card:', error);
-      toast({
-        title: "Error",
-        description: t('failedToCreateGiftCard'),
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const canProceed = (): boolean => {
-    switch (currentStep) {
-      case 0:
-        return selectedAmountType === 'preset' || (selectedAmountType === 'custom' && customAmount !== '' && validateCustomAmount(customAmount));
-      case 1:
-        return !!(formData.sender_name && formData.sender_email && formData.recipient_name && formData.recipient_email);
-      case 2:
-        return !!selectedDesign;
-      case 3:
-        return true;
-      default:
-        return false;
-    }
+    return selectedAmount || 0;
   };
 
   const handleNext = () => {
-    if (currentStep < 3) {
+    if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -173,310 +104,120 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
     }
   };
 
-  const handleSubmit = () => {
-    handleFormSubmit(formData);
+  const handleAmountSelect = (amount: number) => {
+    setSelectedAmount(amount);
+    setIsCustomAmount(false);
+    setCustomAmount('');
   };
 
-  const renderStep0 = () => (
-    <div className="space-y-1">
-      <h3 className="text-base font-semibold text-purple-600 mb-1">{t('chooseGiftCardAmount')}</h3>
-      <p className="text-xs text-purple-500 mb-4">{t('selectPerfectValue')}</p>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-        {getAmountOptions().map((amount, index) => (
-          <Button
-            key={amount}
-            variant={selectedAmountType === 'preset' && selectedAmount === amount ? "default" : "outline"}
-            onClick={() => handleAmountSelection(amount)}
-            className={cn(
-              "h-16 text-sm font-medium relative overflow-hidden group transition-all duration-200 w-full",
-              selectedAmountType === 'preset' && selectedAmount === amount 
-                ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white border-orange-500" 
-                : "bg-white/10 border-white/30 text-purple-600 hover:bg-white/20"
-            )}
-          >
-            <div className="flex flex-col items-center space-y-1">
-              <span className="text-lg font-bold">{amount} {currency}</span>
-              {index === 1 && (
-                <div className="flex items-center space-x-1">
-                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                  <span className="text-xs">{t('popular')}</span>
-                </div>
-              )}
-            </div>
-          </Button>
-        ))}
-      </div>
-
-      <div className="space-y-3">
-        <Button
-          variant={selectedAmountType === 'custom' ? "default" : "outline"}
-          onClick={() => setSelectedAmountType('custom')}
-          className={cn(
-            "w-full h-12 text-sm font-medium relative overflow-hidden group transition-all duration-200",
-            selectedAmountType === 'custom' 
-              ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white border-orange-500" 
-              : "bg-white/10 border-white/30 text-purple-600 hover:bg-white/20"
-          )}
-        >
-          <div className="flex items-center space-x-2">
-            <Sparkles className="w-4 h-4" />
-            <span>{t('enterCustomAmount')}</span>
-          </div>
-        </Button>
-        
-        <AnimatePresence>
-          {selectedAmountType === 'custom' && (
-            <motion.div 
-              className="space-y-2"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Label htmlFor="customAmount" className="text-xs font-medium text-purple-600">{t('customAmountLabel')} ({currency})</Label>
-              <div className="relative">
-                <Input
-                  id="customAmount"
-                  type="number"
-                  value={customAmount}
-                  onChange={(e) => handleCustomAmountChange(e.target.value)}
-                  placeholder={`${t('enterAmountIn')} ${currency}`}
-                  min={currency === 'EUR' ? 59 : 299}
-                  max={currency === 'EUR' ? 1000 : 7999}
-                  step={currency === 'EUR' ? 1 : 10}
-                  className="text-sm h-10 pr-12 bg-white/10 border-white/30 text-purple-600 placeholder:text-purple-400"
-                />
-                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-500 font-medium text-sm">
-                  {currency}
-                </span>
-              </div>
-              {customAmount && !validateCustomAmount(customAmount) && (
-                <p className="text-xs text-red-400 bg-red-500/10 p-2 rounded">
-                  {t('amountMustBeBetween')} {currency === 'EUR' ? '59-1000' : '299-7999'} {currency}
-                </p>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
-
-  const renderStep1 = () => (
-    <div className="space-y-1">
-      <h3 className="text-base font-semibold text-purple-600 mb-1">{t('enterGiftDetails')}</h3>
-      <p className="text-xs text-purple-500 mb-4">{t('tellUsWhoGiftFor')}</p>
-
-      <div className="space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <Label htmlFor="sender_name" className="text-xs font-medium text-purple-600">{t('yourName')}</Label>
-            <Input
-              type="text"
-              id="sender_name"
-              name="sender_name"
-              value={formData.sender_name}
-              onChange={handleInputChange}
-              required
-              className="h-10 mt-1 bg-white/10 border-white/30 text-purple-600 placeholder:text-purple-400"
-              placeholder={t('enterYourFullName')}
-            />
-          </div>
-          <div>
-            <Label htmlFor="sender_email" className="text-xs font-medium text-purple-600">{t('yourEmail')}</Label>
-            <Input
-              type="email"
-              id="sender_email"
-              name="sender_email"
-              value={formData.sender_email}
-              onChange={handleInputChange}
-              required
-              className="h-10 mt-1 bg-white/10 border-white/30 text-purple-600 placeholder:text-purple-400"
-              placeholder="your@email.com"
-            />
-          </div>
-          <div>
-            <Label htmlFor="recipient_name" className="text-xs font-medium text-purple-600">{t('recipientName')}</Label>
-            <Input
-              type="text"
-              id="recipient_name"
-              name="recipient_name"
-              value={formData.recipient_name}
-              onChange={handleInputChange}
-              required
-              className="h-10 mt-1 bg-white/10 border-white/30 text-purple-600 placeholder:text-purple-400"
-              placeholder={t('enterRecipientName')}
-            />
-          </div>
-          <div>
-            <Label htmlFor="recipient_email" className="text-xs font-medium text-purple-600">{t('recipientEmail')}</Label>
-            <Input
-              type="email"
-              id="recipient_email"
-              name="recipient_email"
-              value={formData.recipient_email}
-              onChange={handleInputChange}
-              required
-              className="h-10 mt-1 bg-white/10 border-white/30 text-purple-600 placeholder:text-purple-400"
-              placeholder="recipient@email.com"
-            />
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="message_text" className="text-xs font-medium text-purple-600">{t('personalMessage')}</Label>
-          <Textarea
-            id="message_text"
-            name="message_text"
-            value={formData.message_text}
-            onChange={handleInputChange}
-            placeholder={t('writeHeartfeltMessage')}
-            className="mt-1 bg-white/10 border-white/30 text-purple-600 placeholder:text-purple-400 min-h-[80px]"
-          />
-        </div>
-
-        <div>
-          <Label className="text-xs font-medium text-purple-600">{t('deliveryDate')}</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full h-10 mt-1 justify-start text-left font-normal bg-white/10 border-white/30 text-purple-600",
-                  !formData.delivery_date && "text-purple-400"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {formData.delivery_date ? (
-                  format(formData.delivery_date, "PPP")
-                ) : (
-                  <span>{t('chooseDeliveryDate')}</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={formData.delivery_date}
-                onSelect={handleDateChange}
-                disabled={(date) => date < new Date()}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderStep2 = () => (
-    <div className="space-y-1">
-      <h3 className="text-base font-semibold text-purple-600 mb-1">{t('selectDesign')}</h3>
-      <p className="text-xs text-purple-500 mb-4">{t('chooseDesignPreview')}</p>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div>
-          <h4 className="text-sm font-medium text-purple-600 mb-3">{t('availableDesigns')}</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {designs.map(design => (
-              <Card
-                key={design.id}
-                className={cn(
-                  "cursor-pointer transition-all bg-white/10 border-white/30",
-                  selectedDesign === design.id ? 'border-orange-500 bg-orange-500/20' : 'hover:bg-white/20'
-                )}
-                onClick={() => setSelectedDesign(design.id)}
-              >
-                <CardHeader className="p-2">
-                  <CardTitle className="text-xs font-medium text-purple-600">{design.name}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-2 pt-0">
-                  {design.preview_image_url ? (
-                    <img src={design.preview_image_url} alt={design.name} className="w-full h-20 object-cover rounded" />
-                  ) : (
-                    <div className="w-full h-20 bg-white/10 rounded flex items-center justify-center text-purple-400 text-xs">
-                      {design.theme}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-medium text-purple-600 mb-3">{t('livePreview')}</h4>
-          <GiftCardPreview
-            design={designs.find(d => d.id === selectedDesign)}
-            formData={formData}
-            amount={getActualAmount()}
-            currency={currency}
-          />
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderStep3 = () => {
-    const actualAmount = getActualAmount();
-    
-    return (
-      <div className="space-y-1">
-        <h3 className="text-base font-semibold text-purple-600 mb-1">{t('reviewGiftCard')}</h3>
-        <p className="text-xs text-purple-500 mb-4">{t('confirmDetailsBeforePayment')}</p>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <Card className="bg-white/10 border-white/30">
-            <CardHeader className="p-3">
-              <CardTitle className="text-sm font-medium text-purple-600">{t('giftCardSummary')}</CardTitle>
-            </CardHeader>
-            <CardContent className="p-3 pt-0 space-y-2">
-              <div className="flex justify-between text-xs">
-                <span className="text-purple-500">{t('amount')}:</span>
-                <span className="font-medium text-purple-600">{actualAmount} {currency}</span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-purple-500">{t('design')}:</span>
-                <span className="text-purple-600">{designs.find(d => d.id === selectedDesign)?.name || t('default')}</span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-purple-500">{t('recipient')}:</span>
-                <span className="text-purple-600">{formData.recipient_name}</span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-purple-500">{t('deliveryDateLabel')}:</span>
-                <span className="text-purple-600">{formData.delivery_date ? format(formData.delivery_date, "PPP") : t('immediate')}</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div>
-            <h4 className="text-sm font-medium text-purple-600 mb-3">{t('finalPreview')}</h4>
-            <GiftCardPreview
-              design={designs.find(d => d.id === selectedDesign)}
-              formData={formData}
-              amount={actualAmount}
-              currency={currency}
-            />
-          </div>
-        </div>
-      </div>
-    );
+  const handleCustomAmountChange = (value: string) => {
+    setCustomAmount(value);
+    setIsCustomAmount(true);
+    setSelectedAmount(null);
   };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const canProceed = () => {
+    switch (currentStep) {
+      case 0: // Amount step
+        const amount = getFinalAmount();
+        const { min, max } = getMinMaxAmount();
+        return amount >= min && amount <= max;
+      case 1: // Details step
+        return formData.sender_name && formData.sender_email && 
+               formData.recipient_name && formData.recipient_email;
+      case 2: // Design step
+        return selectedDesignId || designs.length === 0;
+      case 3: // Review step
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to create a gift card.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const giftCardData = {
+        sender_user_id: user.id,
+        sender_name: formData.sender_name,
+        sender_email: formData.sender_email,
+        recipient_name: formData.recipient_name,
+        recipient_email: formData.recipient_email,
+        message_text: formData.message_text || null,
+        currency,
+        gift_amount: getFinalAmount(),
+        amount_ron: currency === 'RON' ? getFinalAmount() : null,
+        amount_eur: currency === 'EUR' ? getFinalAmount() : null,
+        design_id: selectedDesignId || null,
+        delivery_date: deliveryDate || null,
+        status: 'active',
+        payment_status: 'pending'
+      };
+
+      const result = await createGiftCard.mutateAsync(giftCardData);
+      onComplete(result);
+    } catch (error) {
+      console.error('Error creating gift card:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create gift card. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const selectedDesign = designs.find(d => d.id === selectedDesignId);
 
   return (
     <Card className="bg-transparent border-transparent shadow-none">
-      <CardHeader className="px-2 sm:px-3">
-        <CardTitle className="flex items-center gap-2 text-lg text-purple-600">
-          <Gift className="w-5 h-5" />
-          {t('purchaseGiftCard')}
-        </CardTitle>
+      <CardHeader className="px-3 py-2">
+        <div className="flex items-center justify-between mb-4">
+          <CardTitle className="flex items-center gap-2 text-lg text-purple-600">
+            <Gift className="w-5 h-5" />
+            {t('purchaseGiftCard')}
+          </CardTitle>
+          <div className="text-sm text-purple-500">
+            {t('stepXOfY', { current: currentStep + 1, total: steps.length })}
+          </div>
+        </div>
         
-        <StepIndicator steps={steps} />
+        {/* Step Indicator */}
+        <div className="flex items-center space-x-2 mb-4">
+          {steps.map((step, index) => (
+            <div key={step.key} className="flex items-center">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                index <= currentStep 
+                  ? 'bg-purple-600 text-white' 
+                  : 'bg-purple-100 text-purple-400'
+              }`}>
+                {index + 1}
+              </div>
+              {index < steps.length - 1 && (
+                <div className={`w-8 h-0.5 mx-1 ${
+                  index < currentStep ? 'bg-purple-600' : 'bg-purple-200'
+                }`} />
+              )}
+            </div>
+          ))}
+        </div>
       </CardHeader>
 
-      <CardContent className="p-1.5">
+      <CardContent className="p-3">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -485,22 +226,313 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
           >
-            {currentStep === 0 && renderStep0()}
-            {currentStep === 1 && renderStep1()}
-            {currentStep === 2 && renderStep2()}
-            {currentStep === 3 && renderStep3()}
+            {/* Step 0: Amount Selection */}
+            {currentStep === 0 && (
+              <div className="space-y-4">
+                <div className="text-center mb-4">
+                  <h3 className="text-lg font-semibold text-purple-600 mb-2">
+                    {t('chooseGiftCardAmount')}
+                  </h3>
+                  <p className="text-sm text-purple-500">
+                    {t('selectPerfectValue')}
+                  </p>
+                </div>
+
+                {/* Preset Amounts */}
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  {PRESET_AMOUNTS[currency as keyof typeof PRESET_AMOUNTS]?.map((amount) => (
+                    <Button
+                      key={amount}
+                      variant={selectedAmount === amount && !isCustomAmount ? "default" : "outline"}
+                      onClick={() => handleAmountSelect(amount)}
+                      className={`h-16 text-lg font-semibold ${
+                        selectedAmount === amount && !isCustomAmount
+                          ? 'bg-purple-600 text-white border-purple-600'
+                          : 'border-purple-200 text-purple-600 hover:bg-purple-50'
+                      }`}
+                    >
+                      {amount} {currency}
+                    </Button>
+                  ))}
+                </div>
+
+                {/* Custom Amount */}
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-purple-600">
+                    {t('customAmountLabel')}
+                  </Label>
+                  <Input
+                    type="number"
+                    value={customAmount}
+                    onChange={(e) => handleCustomAmountChange(e.target.value)}
+                    placeholder={`${t('enterAmountIn')} ${currency}`}
+                    className={`${
+                      isCustomAmount 
+                        ? 'border-purple-600 bg-purple-50' 
+                        : 'border-purple-200'
+                    }`}
+                  />
+                  <div className="text-xs text-purple-500">
+                    {t('amountMustBeBetween')} {getMinMaxAmount().min}-{getMinMaxAmount().max} {currency}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 1: Details */}
+            {currentStep === 1 && (
+              <div className="space-y-4">
+                <div className="text-center mb-4">
+                  <h3 className="text-lg font-semibold text-purple-600 mb-2">
+                    {t('enterGiftDetails')}
+                  </h3>
+                  <p className="text-sm text-purple-500">
+                    {t('tellUsWhoGiftFor')}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium text-purple-600">
+                      {t('yourName')}
+                    </Label>
+                    <Input
+                      value={formData.sender_name}
+                      onChange={(e) => handleInputChange('sender_name', e.target.value)}
+                      placeholder={t('enterYourFullName')}
+                      className="border-purple-200"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium text-purple-600">
+                      {t('yourEmail')}
+                    </Label>
+                    <Input
+                      type="email"
+                      value={formData.sender_email}
+                      onChange={(e) => handleInputChange('sender_email', e.target.value)}
+                      placeholder="your@email.com"
+                      className="border-purple-200"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium text-purple-600">
+                      {t('recipientName')}
+                    </Label>
+                    <Input
+                      value={formData.recipient_name}
+                      onChange={(e) => handleInputChange('recipient_name', e.target.value)}
+                      placeholder={t('enterRecipientName')}
+                      className="border-purple-200"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium text-purple-600">
+                      {t('recipientEmail')}
+                    </Label>
+                    <Input
+                      type="email"
+                      value={formData.recipient_email}
+                      onChange={(e) => handleInputChange('recipient_email', e.target.value)}
+                      placeholder="recipient@email.com"
+                      className="border-purple-200"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-purple-600">
+                    {t('personalMessage')}
+                  </Label>
+                  <Textarea
+                    value={formData.message_text}
+                    onChange={(e) => handleInputChange('message_text', e.target.value)}
+                    placeholder={t('writeHeartfeltMessage')}
+                    className="border-purple-200 min-h-[80px]"
+                    rows={3}
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-purple-600">
+                    {t('deliveryDate')}
+                  </Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal border-purple-200"
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {deliveryDate ? format(deliveryDate, "PPP") : t('chooseDeliveryDate')}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={deliveryDate}
+                        onSelect={setDeliveryDate}
+                        initialFocus
+                        disabled={{ before: new Date() }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+            )}
+
+            {/* Step 2: Design Selection */}
+            {currentStep === 2 && (
+              <div className="space-y-4">
+                <div className="text-center mb-4">
+                  <h3 className="text-lg font-semibold text-purple-600 mb-2">
+                    {t('selectDesign')}
+                  </h3>
+                  <p className="text-sm text-purple-500">
+                    {t('chooseDesignPreview')}
+                  </p>
+                </div>
+
+                {designs.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {designs.filter(design => design.is_active).map((design) => (
+                      <div
+                        key={design.id}
+                        className={`cursor-pointer rounded-lg border-2 p-3 transition-colors ${
+                          selectedDesignId === design.id
+                            ? 'border-purple-600 bg-purple-50'
+                            : 'border-purple-200 hover:border-purple-300'
+                        }`}
+                        onClick={() => setSelectedDesignId(design.id)}
+                      >
+                        <div className="aspect-video bg-gradient-to-br from-purple-100 to-pink-100 rounded mb-2 flex items-center justify-center">
+                          {design.preview_image_url ? (
+                            <img 
+                              src={design.preview_image_url} 
+                              alt={design.name}
+                              className="w-full h-full object-cover rounded"
+                            />
+                          ) : (
+                            <Gift className="w-8 h-8 text-purple-400" />
+                          )}
+                        </div>
+                        <h4 className="font-medium text-purple-600">{design.name}</h4>
+                        <p className="text-sm text-purple-500">{design.theme}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Gift className="w-12 h-12 mx-auto mb-4 text-purple-400" />
+                    <p className="text-purple-500">No designs available. Using default design.</p>
+                  </div>
+                )}
+
+                {/* Live Preview */}
+                <div className="mt-6">
+                  <h4 className="font-medium text-purple-600 mb-3">{t('livePreview')}</h4>
+                  <div className="flex justify-center">
+                    <GiftCardPreview
+                      design={selectedDesign}
+                      formData={formData}
+                      amount={getFinalAmount()}
+                      currency={currency}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: Review */}
+            {currentStep === 3 && (
+              <div className="space-y-4">
+                <div className="text-center mb-4">
+                  <h3 className="text-lg font-semibold text-purple-600 mb-2">
+                    {t('reviewGiftCard')}
+                  </h3>
+                  <p className="text-sm text-purple-500">
+                    {t('confirmDetailsBeforePayment')}
+                  </p>
+                </div>
+
+                {/* Summary */}
+                <div className="bg-purple-50 rounded-lg p-4 space-y-3">
+                  <h4 className="font-medium text-purple-600">{t('giftCardSummary')}</h4>
+                  
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="text-purple-600">{t('amount')}:</div>
+                    <div className="font-medium">{getFinalAmount()} {currency}</div>
+                    
+                    <div className="text-purple-600">{t('recipient')}:</div>
+                    <div className="font-medium">{formData.recipient_name}</div>
+                    
+                    <div className="text-purple-600">{t('from')}:</div>
+                    <div className="font-medium">{formData.sender_name}</div>
+                    
+                    {selectedDesign && (
+                      <>
+                        <div className="text-purple-600">{t('design')}:</div>
+                        <div className="font-medium">{selectedDesign.name}</div>
+                      </>
+                    )}
+                    
+                    {deliveryDate && (
+                      <>
+                        <div className="text-purple-600">{t('deliveryDateLabel')}:</div>
+                        <div className="font-medium">{format(deliveryDate, "PPP")}</div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Final Preview */}
+                <div className="flex justify-center">
+                  <GiftCardPreview
+                    design={selectedDesign}
+                    formData={formData}
+                    amount={getFinalAmount()}
+                    currency={currency}
+                  />
+                </div>
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
 
-        <WizardNavigation
-          currentStep={currentStep}
-          totalSteps={4}
-          canProceed={canProceed()}
-          isSubmitting={isSubmitting || isProcessingPayment}
-          onPrev={handlePrev}
-          onNext={handleNext}
-          onSubmit={handleSubmit}
-        />
+        {/* Navigation */}
+        <div className="flex justify-between mt-6 pt-4 border-t border-purple-200">
+          <Button
+            onClick={handlePrev}
+            disabled={currentStep === 0}
+            variant="outline"
+            className="border-purple-200 text-purple-600"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            {t('back')}
+          </Button>
+
+          {currentStep < steps.length - 1 ? (
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700"
+            >
+              {t('next')}
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              disabled={!canProceed() || createGiftCard.isPending}
+              className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700"
+            >
+              {createGiftCard.isPending ? t('processing') : t('pay')} {getFinalAmount()} {currency}
+            </Button>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

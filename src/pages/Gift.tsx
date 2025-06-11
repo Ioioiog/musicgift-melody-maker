@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,19 +14,14 @@ import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const Gift = () => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    user
-  } = useAuth();
-  const {
-    toast
-  } = useToast();
+  const { t } = useLanguage();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [searchParams] = useSearchParams();
 
   // Check if returning from payment
   const paymentStatus = searchParams.get('payment');
+
   const handleGiftPurchaseComplete = (data: any) => {
     console.log("Gift purchase completed:", data);
     toast({
@@ -33,6 +29,7 @@ const Gift = () => {
       description: `${t('giftCardCode')} ${data.code} ${t('giftCardWillBeDelivered')} ${data.recipient_email}`
     });
   };
+
   const handleGiftRedemption = (giftCard: any, selectedPackage: string, upgradeAmount?: number) => {
     console.log("Gift redemption:", {
       giftCard,
@@ -50,16 +47,18 @@ const Gift = () => {
     // TODO: Redirect to order flow with gift card data
     // window.location.href = `/order?gift=${giftCard.code}&package=${selectedPackage}`;
   };
-  return <div className="min-h-screen flex flex-col">
+
+  return (
+    <div className="min-h-screen flex flex-col">
       <Navigation />
       
       {/* Compact Hero Section - Adjusted padding for seamless connection to navbar */}
       <section className="pt-16 md:pt-20 lg:pt-24 pb-6 text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/20 py-0"></div>
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <motion.div 
@@ -68,7 +67,6 @@ const Gift = () => {
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            
           </motion.div>
           <motion.h2 
             className="text-2xl md:text-3xl font-bold mb-2" 
@@ -91,11 +89,11 @@ const Gift = () => {
 
       {/* Main Content - Flexible to fill remaining space with background */}
       <section className="flex-1 flex items-center py-4 relative" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30 py-[22px]"></div>
         <motion.div 
           initial={{ opacity: 0, y: 30 }} 
@@ -142,18 +140,7 @@ const Gift = () => {
                     <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-indigo-400/10 to-transparent rounded-full blur-md" />
                     
                     <div className="relative z-10 p-6">
-                      {user ? (
-                        <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
-                      ) : (
-                        <div className="text-center py-12">
-                          <p className="text-lg text-gray-600 mb-6">
-                            {t('pleaseSignInToPurchase')}
-                          </p>
-                          <a href="/auth" className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-                            {t('signIn')}
-                          </a>
-                        </div>
-                      )}
+                      <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
                     </div>
                   </div>
                 </TabsContent>
@@ -177,6 +164,8 @@ const Gift = () => {
 
       {/* Footer */}
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Gift;
