@@ -50,9 +50,35 @@ serve(async (req) => {
       throw updateError
     }
 
-    // If payment successful, send the gift card email
+    console.log(`Gift card ${orderId} updated to status: ${paymentStatus}`)
+
+    // If payment successful, create proforma receipt and send email
     if (paymentStatus === 'completed' && giftCard) {
+      console.log('Payment completed - creating proforma receipt and sending email')
+      
       try {
+        // Create proforma receipt after successful payment
+        const proformaResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/create-gift-card-proforma`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
+          },
+          body: JSON.stringify({ giftCardId: giftCard.id })
+        })
+
+        if (!proformaResponse.ok) {
+          console.error('Failed to create proforma receipt:', await proformaResponse.text())
+        } else {
+          console.log('✅ Proforma receipt created successfully')
+        }
+      } catch (proformaError) {
+        console.error('Error creating proforma receipt:', proformaError)
+        // Don't fail the webhook if proforma creation fails
+      }
+
+      try {
+        // Send gift card email
         const emailResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-gift-card-email`, {
           method: 'POST',
           headers: {
@@ -63,10 +89,13 @@ serve(async (req) => {
         })
 
         if (!emailResponse.ok) {
-          console.error('Failed to send gift card email')
+          console.error('Failed to send gift card email:', await emailResponse.text())
+        } else {
+          console.log('✅ Gift card email sent successfully')
         }
       } catch (emailError) {
         console.error('Error sending gift card email:', emailError)
+        // Don't fail the webhook if email sending fails
       }
     }
 
