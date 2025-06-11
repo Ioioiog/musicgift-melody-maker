@@ -1,3 +1,4 @@
+
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Împărtășește Darul Muzicii",
@@ -13,14 +14,12 @@ export const giftTranslations = {
   chooseGiftCardAmount: "Alege Valoarea Cardului Cadou",
   selectGiftCardValue: "Selectează valoarea cardului cadou pe care vrei să îl trimiți.",
   enterCustomValue: "Introdu o Valoare Personalizată",
-  customAmount: "Sumă Personalizată",
   enterAmountIn: "Introdu suma în",
   amountMustBeBetween: "Suma trebuie să fie între",
   nextDetails: "Următorul: Detalii",
   
   // Gift details step
   enterGiftDetails: "Introdu Detaliile Cadoului",
-  tellUsWhoGiftFor: "Spune-ne pentru cine este acest cadou.",
   yourName: "Numele Tău",
   yourEmail: "Email-ul Tău",
   recipientName: "Numele Destinatarului",
@@ -104,13 +103,14 @@ export const giftTranslations = {
   signIn: "Conectare",
   default: "Implicit",
   
-  // New missing translations
+  // Step labels
   stepAmount: "Sumă",
   stepDetails: "Detalii",
   stepDesign: "Design",
   stepReview: "Revizuire",
   selectPerfectValue: "Selectează valoarea perfectă pentru cadoul tău muzical.",
   popular: "Popular",
+  customAmount: "Sumă Personalizată",
   enterCustomAmount: "Introdu Sumă Personalizată",
   tellUsWhoGiftFor: "Spune-ne pentru cine este acest cadou special.",
   enterYourFullName: "Introdu numele tău complet",

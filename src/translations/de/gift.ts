@@ -14,14 +14,12 @@ export const giftTranslations = {
   chooseGiftCardAmount: "Geschenkkartenbetrag Wählen",
   selectGiftCardValue: "Wähle den Wert der Geschenkkarte, die du senden möchtest.",
   enterCustomValue: "Benutzerdefinierten Wert Eingeben",
-  customAmount: "Benutzerdefinierter Betrag",
   enterAmountIn: "Betrag eingeben in",
   amountMustBeBetween: "Betrag muss zwischen",
   nextDetails: "Weiter: Details",
   
   // Gift details step
   enterGiftDetails: "Geschenkdetails Eingeben",
-  tellUsWhoGiftFor: "Sag uns, für wen dieses Geschenk ist.",
   yourName: "Dein Name",
   yourEmail: "Deine E-Mail",
   recipientName: "Name des Empfängers",
@@ -105,13 +103,14 @@ export const giftTranslations = {
   signIn: "Anmelden",
   default: "Standard",
   
-  // New missing translations
+  // Step labels
   stepAmount: "Betrag",
   stepDetails: "Details",
   stepDesign: "Design", 
   stepReview: "Überprüfung",
   selectPerfectValue: "Wähle den perfekten Wert für dein musikalisches Geschenk.",
   popular: "Beliebt",
+  customAmount: "Benutzerdefinierter Betrag",
   enterCustomAmount: "Benutzerdefinierten Betrag Eingeben",
   tellUsWhoGiftFor: "Sag uns, für wen dieses besondere Geschenk ist.",
   enterYourFullName: "Gib deinen vollständigen Namen ein",

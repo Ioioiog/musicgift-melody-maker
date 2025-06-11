@@ -1,3 +1,4 @@
+
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Share the Gift of Music",
@@ -13,14 +14,12 @@ export const giftTranslations = {
   chooseGiftCardAmount: "Choose Gift Card Amount",
   selectGiftCardValue: "Select the value of the gift card you want to send.",
   enterCustomValue: "Enter a Custom Value",
-  customAmount: "Custom Amount",
   enterAmountIn: "Enter amount in",
   amountMustBeBetween: "Amount must be between",
   nextDetails: "Next: Details",
   
   // Gift details step
   enterGiftDetails: "Enter Gift Details",
-  tellUsWhoGiftFor: "Tell us who this gift is for.",
   yourName: "Your Name",
   yourEmail: "Your Email",
   recipientName: "Recipient Name",
@@ -104,13 +103,14 @@ export const giftTranslations = {
   signIn: "Sign In",
   default: "Default",
   
-  // New missing translations
+  // Step labels
   stepAmount: "Amount",
   stepDetails: "Details", 
   stepDesign: "Design",
   stepReview: "Review",
   selectPerfectValue: "Select the perfect value for your musical gift.",
   popular: "Popular",
+  customAmount: "Custom Amount",
   enterCustomAmount: "Enter Custom Amount",
   tellUsWhoGiftFor: "Tell us who this special gift is for.",
   enterYourFullName: "Enter your full name",

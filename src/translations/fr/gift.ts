@@ -1,3 +1,4 @@
+
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Partagez le Cadeau de la Musique",
@@ -13,14 +14,12 @@ export const giftTranslations = {
   chooseGiftCardAmount: "Choisissez le Montant de la Carte Cadeau",
   selectGiftCardValue: "Sélectionnez la valeur de la carte cadeau que vous souhaitez envoyer.",
   enterCustomValue: "Entrez une Valeur Personnalisée",
-  customAmount: "Montant Personnalisé",
   enterAmountIn: "Entrez le montant en",
   amountMustBeBetween: "Le montant doit être entre",
   nextDetails: "Suivant : Détails",
   
   // Gift details step
   enterGiftDetails: "Entrez les Détails du Cadeau",
-  tellUsWhoGiftFor: "Dites-nous pour qui est ce cadeau.",
   yourName: "Votre Nom",
   yourEmail: "Votre Email",
   recipientName: "Nom du Destinataire",
@@ -104,13 +103,14 @@ export const giftTranslations = {
   signIn: "Se Connecter",
   default: "Par Défaut",
   
-  // New missing translations
+  // Step labels
   stepAmount: "Montant",
   stepDetails: "Détails",
   stepDesign: "Design",
   stepReview: "Révision",
   selectPerfectValue: "Sélectionnez la valeur parfaite pour votre cadeau musical.",
   popular: "Populaire",
+  customAmount: "Montant Personnalisé",
   enterCustomAmount: "Entrez un Montant Personnalisé",
   tellUsWhoGiftFor: "Dites-nous pour qui est ce cadeau spécial.",
   enterYourFullName: "Entrez votre nom complet",
