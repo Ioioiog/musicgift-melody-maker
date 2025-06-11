@@ -7,6 +7,48 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// Rate limiting for SmartBill API (max 3 calls per second)
+let lastApiCall = 0
+const API_RATE_LIMIT = 334 // ms between calls
+
+async function rateLimitedFetch(url: string, options: RequestInit) {
+  const now = Date.now()
+  const timeSinceLastCall = now - lastApiCall
+  
+  if (timeSinceLastCall < API_RATE_LIMIT) {
+    await new Promise(resolve => setTimeout(resolve, API_RATE_LIMIT - timeSinceLastCall))
+  }
+  
+  lastApiCall = Date.now()
+  return fetch(url, options)
+}
+
+function escapeXml(value: string): string {
+  if (!value) return '';
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+const validateSmartBillConfig = () => {
+  const username = Deno.env.get('SMARTBILL_USERNAME')
+  const token = Deno.env.get('SMARTBILL_TOKEN')
+  const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
+  const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
+  
+  console.log('SmartBill Config Check:', {
+    username: username ? `${username.substring(0, 3)}***` : 'MISSING',
+    token: token ? `***${token.length} chars***` : 'MISSING',
+    baseUrl,
+    companyVat: companyVat ? `${companyVat.substring(0, 4)}***` : 'MISSING'
+  })
+  
+  return { username, token, baseUrl, companyVat }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -26,22 +68,6 @@ serve(async (req) => {
 
     const { giftCardId, returnUrl } = await req.json()
     console.log('Processing SmartBill payment for gift card:', giftCardId)
-
-    // Check if NETOPIA_API_KEY is configured
-    const netopiaApiKey = Deno.env.get('NETOPIA_API_KEY');
-    if (!netopiaApiKey) {
-      console.error('NETOPIA_API_KEY is not configured');
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Payment configuration is incomplete. Please contact support.' 
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 500,
-        },
-      )
-    }
 
     // Get gift card details
     const { data: giftCard, error: giftError } = await supabaseClient
@@ -73,97 +99,16 @@ serve(async (req) => {
       paymentAmount
     });
 
-    // Prepare Netopia payment request
-    const paymentData = {
-      config: {
-        emailTemplate: ``,
-        notifyUrl: `${Deno.env.get('SITE_URL')}/api/gift-card-payment-webhook`,
-        redirectUrl: returnUrl || `${Deno.env.get('SITE_URL')}/gift?payment=success`,
-        language: 'en'
-      },
-      payment: {
-        options: {
-          installments: 1,
-          bonus: 0
-        },
-        instrument: {
-          type: 'card',
-          account: 'MG_DEMO',
-          data: {
-            billingDetails: {
-              firstName: giftCard.sender_name.split(' ')[0] || '',
-              lastName: giftCard.sender_name.split(' ').slice(1).join(' ') || '',
-              email: giftCard.sender_email,
-              phone: '',
-              city: '',
-              country: 'RO',
-              state: '',
-              postalCode: '',
-              details: ''
-            }
-          }
-        },
-        data: {
-          orderId: giftCard.id,
-          amount: paymentAmount,
-          currency: paymentCurrency,
-          orderDescription: `Gift Card - ${giftCard.code}`,
-          products: [{
-            name: 'Music Gift Card',
-            code: giftCard.code,
-            category: 'Gift Cards',
-            price: paymentAmount,
-            vat: 19
-          }]
-        }
-      }
-    }
+    // Validate SmartBill configuration
+    const { username, token, baseUrl, companyVat } = validateSmartBillConfig()
 
-    console.log('Sending payment request to Netopia...');
-
-    // Make request to Netopia
-    const netopiaResponse = await fetch('https://secure.mobilpay.ro/api/payment/v2/start', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': netopiaApiKey
-      },
-      body: JSON.stringify(paymentData)
-    })
-
-    console.log('Netopia response status:', netopiaResponse.status);
-    console.log('Netopia response headers:', Object.fromEntries(netopiaResponse.headers.entries()));
-    
-    // Get response text first to handle both JSON and HTML responses
-    const responseText = await netopiaResponse.text();
-    console.log('Netopia response text preview:', responseText.substring(0, 500));
-
-    // Check if response is HTML (error page)
-    if (responseText.includes('<!DOCTYPE') || responseText.includes('<html')) {
-      console.error('Received HTML error page from Netopia');
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Payment gateway configuration error. Please contact support.' 
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 500,
-        },
-      )
-    }
-
-    let paymentResult;
-    try {
-      paymentResult = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error('Failed to parse Netopia response as JSON:', parseError);
-      console.error('Response text:', responseText);
+    if (!username || !token || !companyVat) {
+      console.error('❌ SmartBill configuration incomplete')
       
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: 'Payment gateway returned invalid response. Please try again or contact support.' 
+          error: 'SmartBill payment system not configured properly' 
         }),
         {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -172,21 +117,160 @@ serve(async (req) => {
       )
     }
 
-    if (!netopiaResponse.ok) {
-      console.error('Netopia API error:', paymentResult);
+    // Calculate dates
+    const issueDate = new Date().toISOString().split('T')[0]
+    const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+
+    // Prepare client data for gift card
+    const clientName = giftCard.sender_name || 'Gift Card Sender'
+    const clientEmail = giftCard.sender_email || ''
+    const clientAddress = 'Gift Card Purchase'
+    const clientCity = 'Bucuresti'
+
+    console.log('👤 Gift card client data prepared:', {
+      name: clientName,
+      email: clientEmail,
+      address: clientAddress,
+      city: clientCity
+    })
+
+    // Format price with two decimal places for SmartBill/Netopia compatibility
+    const formattedPrice = paymentAmount.toFixed(2)
+
+    console.log('💰 Final price formatting for SmartBill XML:', {
+      originalAmount: giftCard.gift_amount,
+      paymentAmount: paymentAmount,
+      formattedPrice: formattedPrice,
+      currency: paymentCurrency
+    })
+    
+    // Create proforma with payment link using STRP series - following order pattern
+    const proformaXml = `<?xml version="1.0" encoding="UTF-8"?>
+<estimate>
+  <companyVatCode>${escapeXml(companyVat)}</companyVatCode>
+  <client>
+    <name>${escapeXml(clientName)}</name>
+    <vatCode></vatCode>
+    <isTaxPayer>false</isTaxPayer>
+    <address>${escapeXml(clientAddress)}</address>
+    <city>${escapeXml(clientCity)}</city>
+    <country>Romania</country>
+    <email>${escapeXml(clientEmail)}</email>
+  </client>
+  <issueDate>${issueDate}</issueDate>
+  <seriesName>STRP</seriesName>
+  <dueDate>${dueDate}</dueDate>
+  <paymentUrl>Generate URL</paymentUrl>
+  <product>
+    <name>${escapeXml(`Gift Card - ${giftCard.code}`)}</name>
+    <isDiscount>false</isDiscount>
+    <measuringUnitName>buc</measuringUnitName>
+    <currency>${paymentCurrency}</currency>
+    <quantity>1</quantity>
+    <price>${formattedPrice}</price>
+    <isTaxIncluded>true</isTaxIncluded>
+    <taxName>Normala</taxName>
+    <taxPercentage>19</taxPercentage>
+    <saveToDb>false</saveToDb>
+    <isService>true</isService>
+  </product>
+  <observations>${escapeXml(`Gift Card ${giftCard.code} pentru ${giftCard.recipient_name}. Cumparat de: ${giftCard.sender_name}`)}</observations>
+</estimate>`
+
+    console.log('📄 Creating SmartBill proforma for gift card with STRP series')
+
+    // Create proforma via SmartBill API using XML format
+    let proformaResponse: Response
+    let responseText: string
+    
+    try {
+      const apiUrl = `${baseUrl}/SBORO/api/estimate`
+      console.log('🌐 Sending request to SmartBill API:', apiUrl)
+      
+      proformaResponse = await rateLimitedFetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${btoa(`${username}:${token}`)}`,
+          'Content-Type': 'application/xml',
+          'Accept': 'application/xml'
+        },
+        body: proformaXml
+      })
+      
+      responseText = await proformaResponse.text()
+      console.log('📥 SmartBill API Response Status:', proformaResponse.status)
+      console.log('📥 SmartBill API Response:', responseText.substring(0, 500) + '...')
+      
+    } catch (fetchError) {
+      console.error('🌐 Network Error calling SmartBill API:', fetchError)
+      
       return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: `Payment gateway error: ${paymentResult.message || 'Please try again or contact support'}` 
+        JSON.stringify({
+          success: false,
+          error: `Network error contacting SmartBill: ${fetchError.message}`
         }),
-        {
+        { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 500,
-        },
+          status: 500 
+        }
       )
     }
 
-    // Update gift card with payment details
+    // Check if SmartBill returned an error
+    if (!proformaResponse.ok) {
+      console.error('❌ SmartBill API Error Response:', {
+        status: proformaResponse.status,
+        statusText: proformaResponse.statusText,
+        body: responseText
+      })
+      
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `SmartBill API error (${proformaResponse.status}): ${responseText}`
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500 
+        }
+      )
+    }
+
+    // Parse XML response to extract payment URL and document number
+    const urlMatch = responseText.match(/<url>(.*?)<\/url>/)
+    const numberMatch = responseText.match(/<number>(.*?)<\/number>/)
+    const seriesMatch = responseText.match(/<series>(.*?)<\/series>/)
+    
+    const smartBillPaymentUrl = urlMatch?.[1] || null
+    const documentNumber = numberMatch?.[1] || null
+    const documentSeries = seriesMatch?.[1] || 'STRP'
+    
+    console.log('📄 SmartBill document details extracted:', {
+      number: documentNumber,
+      series: documentSeries,
+      paymentUrl: smartBillPaymentUrl ? 'URL Generated' : 'NO URL'
+    })
+    
+    // Check if we got a valid payment URL
+    if (!smartBillPaymentUrl) {
+      console.error('❌ SmartBill did not return a payment URL')
+      console.error('📄 Full response for debugging:', responseText)
+      
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'SmartBill document created but no payment URL generated - Netopia integration may not be configured'
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500 
+        }
+      )
+    }
+
+    console.log('✅ SmartBill proforma created successfully for gift card')
+
+    // Update gift card with SmartBill details
     const { error: updateError } = await supabaseClient
       .from('gift_cards')
       .update({
@@ -199,13 +283,13 @@ serve(async (req) => {
       throw updateError
     }
 
-    console.log('Payment session created successfully:', paymentResult.paymentUrl || paymentResult.url);
+    console.log('🎉 SmartBill integration completed successfully for gift card')
 
     return new Response(
       JSON.stringify({
         success: true,
-        paymentUrl: paymentResult.paymentUrl || paymentResult.url,
-        orderId: paymentResult.orderId,
+        paymentUrl: smartBillPaymentUrl,
+        orderId: documentNumber ? `${documentSeries}${documentNumber}` : null,
         paymentCurrency,
         paymentAmount
       }),
