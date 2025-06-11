@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -130,6 +129,19 @@ export const useDeleteGiftCardDesign = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
+      // First check if the design is being used by any gift cards
+      const { data: giftCards, error: checkError } = await supabase
+        .from('gift_cards')
+        .select('id, code')
+        .eq('design_id', id)
+        .limit(1);
+
+      if (checkError) throw checkError;
+
+      if (giftCards && giftCards.length > 0) {
+        throw new Error('DESIGN_IN_USE');
+      }
+
       const { error } = await supabase
         .from('gift_card_designs')
         .delete()
@@ -144,13 +156,28 @@ export const useDeleteGiftCardDesign = () => {
         description: "Gift card design has been permanently deleted!",
       });
     },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to delete gift card design. Please try again.",
-        variant: "destructive",
-      });
+    onError: (error: any) => {
       console.error("Gift card design deletion error:", error);
+      
+      if (error.message === 'DESIGN_IN_USE') {
+        toast({
+          title: "Cannot Delete Design",
+          description: "This design is currently being used by existing gift cards. Please deactivate it instead or remove the gift cards first.",
+          variant: "destructive",
+        });
+      } else if (error.code === '23503') {
+        toast({
+          title: "Cannot Delete Design",
+          description: "This design is referenced by existing gift cards. Please deactivate it instead.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to delete gift card design. Please try again.",
+          variant: "destructive",
+        });
+      }
     },
   });
 };

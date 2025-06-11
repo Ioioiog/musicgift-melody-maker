@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -115,7 +116,10 @@ const GiftCardDesignsSection = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Design</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to permanently delete "{design.name}"? This action cannot be undone.
+                  Are you sure you want to permanently delete "{design.name}"? 
+                  <br /><br />
+                  <strong>Note:</strong> If this design is being used by existing gift cards, deletion will fail. 
+                  Consider deactivating the design instead if you want to prevent it from being used for new gift cards.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -123,8 +127,9 @@ const GiftCardDesignsSection = () => {
                 <AlertDialogAction 
                   onClick={() => handleDelete(design.id)}
                   className="bg-red-600 hover:bg-red-700"
+                  disabled={deleteDesignMutation.isPending}
                 >
-                  Delete Permanently
+                  {deleteDesignMutation.isPending ? "Deleting..." : "Delete Permanently"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -182,7 +187,10 @@ const GiftCardDesignsSection = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Design</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to permanently delete "{design.name}"? This action cannot be undone.
+                  Are you sure you want to permanently delete "{design.name}"? 
+                  <br /><br />
+                  <strong>Note:</strong> If this design is being used by existing gift cards, deletion will fail. 
+                  Consider deactivating the design instead if you want to prevent it from being used for new gift cards.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -190,8 +198,9 @@ const GiftCardDesignsSection = () => {
                 <AlertDialogAction 
                   onClick={() => handleDelete(design.id)}
                   className="bg-red-600 hover:bg-red-700"
+                  disabled={deleteDesignMutation.isPending}
                 >
-                  Delete Permanently
+                  {deleteDesignMutation.isPending ? "Deleting..." : "Delete Permanently"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
