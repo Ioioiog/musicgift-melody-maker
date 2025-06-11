@@ -8,8 +8,6 @@ import { Play, ExternalLink, Quote, Star, Volume2, VolumeX, X, ChevronLeft, Chev
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import type { CarouselApi } from "@/components/ui/carousel";
-import { convertToYouTubeEmbed, isValidYouTubeUrl } from "@/utils/youtubeUtils";
-
 export default function TestimonialSlider() {
   const {
     t
@@ -88,25 +86,6 @@ export default function TestimonialSlider() {
     return 'text-only';
   };
 
-  // Process YouTube URL to ensure it's in proper embed format
-  const getProcessedYouTubeUrl = (url: string) => {
-    if (!url) return '';
-    
-    // If it's already a valid YouTube URL, convert it to embed format
-    if (isValidYouTubeUrl(url)) {
-      return convertToYouTubeEmbed(url);
-    }
-    
-    // If it's already an embed URL, return as is
-    if (url.includes('/embed/')) {
-      return url;
-    }
-    
-    // If we can't process it, return empty to avoid broken videos
-    console.warn('Invalid YouTube URL found:', url);
-    return '';
-  };
-
   // Modern video component with enhanced play overlay and autoplay for uploads only
   const VideoWithOverlay = ({
     src,
@@ -118,7 +97,6 @@ export default function TestimonialSlider() {
     title: string;
   }) => {
     const [isMuted, setIsMuted] = useState(true);
-    const [hasError, setHasError] = useState(false);
     const handleVideoClick = () => {
       setMaximizedVideo({
         src,
@@ -127,20 +105,8 @@ export default function TestimonialSlider() {
       });
     };
     if (type === 'youtube') {
-      const processedUrl = getProcessedYouTubeUrl(src);
-      
-      // Don't render if URL is invalid or empty
-      if (!processedUrl) {
-        return (
-          <div className="relative group overflow-hidden rounded-xl bg-gray-100 h-full flex items-center justify-center">
-            <p className="text-gray-500 text-sm">Video unavailable</p>
-          </div>
-        );
-      }
-
-      return (
-        <div className="relative group overflow-hidden rounded-xl bg-gray-50 cursor-pointer" onClick={handleVideoClick}>
-          <iframe className="w-full h-full pointer-events-none" src={processedUrl} allowFullScreen loading="lazy" title={title} onError={() => setHasError(true)} />
+      return <div className="relative group overflow-hidden rounded-xl bg-gray-50 cursor-pointer" onClick={handleVideoClick}>
+          <iframe className="w-full h-full pointer-events-none" src={src} allowFullScreen loading="lazy" title={title} />
           <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
             <ExternalLink className="w-4 h-4 text-red-600" />
           </div>
@@ -149,13 +115,7 @@ export default function TestimonialSlider() {
               <Play className="w-6 h-6 text-gray-800" />
             </div>
           </div>
-          {hasError && (
-            <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-              <p className="text-gray-500 text-sm">Video unavailable</p>
-            </div>
-          )}
-        </div>
-      );
+        </div>;
     }
     return <div className="relative group overflow-hidden rounded-xl bg-gray-50 cursor-pointer" onClick={handleVideoClick}>
         <video className="w-full h-full object-cover pointer-events-none" autoPlay muted={isMuted} loop playsInline preload="metadata">
@@ -180,14 +140,6 @@ export default function TestimonialSlider() {
   // Maximized video modal
   const MaximizedVideoModal = () => {
     if (!maximizedVideo) return null;
-    const processedSrc = maximizedVideo.type === 'youtube' 
-      ? getProcessedYouTubeUrl(maximizedVideo.src)
-      : maximizedVideo.src;
-
-    if (maximizedVideo.type === 'youtube' && !processedSrc) {
-      return null; // Don't show modal for invalid YouTube URLs
-    }
-
     return <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div className="relative w-full max-w-4xl bg-white rounded-2xl overflow-hidden">
           <button onClick={() => setMaximizedVideo(null)} className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm rounded-full p-2 hover:bg-white transition-colors">
@@ -195,7 +147,7 @@ export default function TestimonialSlider() {
           </button>
           
           <div className="aspect-video">
-            {maximizedVideo.type === 'youtube' ? <iframe className="w-full h-full" src={processedSrc} allowFullScreen title={maximizedVideo.title} /> : <video className="w-full h-full object-cover" controls autoPlay preload="metadata">
+            {maximizedVideo.type === 'youtube' ? <iframe className="w-full h-full" src={maximizedVideo.src} allowFullScreen title={maximizedVideo.title} /> : <video className="w-full h-full object-cover" controls autoPlay preload="metadata">
                 <source src={maximizedVideo.src} type="video/mp4" />
               </video>}
           </div>

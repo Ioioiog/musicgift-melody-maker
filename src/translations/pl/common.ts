@@ -7,22 +7,22 @@ export const commonTranslations = {
   signInBtn: "Zaloguj się",
   signUpBtn: "Zarejestruj się",
   signInSuccess: "Logowanie pomyślne",
-  signUpSuccess: "Konto utworzone pomyślnie",
+  signUpSuccess: "Konto zostało utworzone pomyślnie",
   signingIn: "Logowanie...",
   signingUp: "Rejestracja...",
   
   // Account management
   accountSettings: "Ustawienia Konta",
   accountSettingsTitle: "Ustawienia Konta",
-  manageAccount: "Zarządzaj ustawieniami i preferencjami konta",
+  manageAccount: "Zarządzaj ustawieniami i preferencjami swojego konta",
   profile: "Profil",
   account: "Konto",
   profileInfo: "Informacje Profilu",
-  updateProfile: "Zaktualizuj informacje profilu",
+  updateProfile: "Zaktualizuj informacje swojego profilu",
   profileUpdated: "Profil zaktualizowany pomyślnie",
-  profileError: "Nie udało się zaktualizować profilu",
+  profileError: "Aktualizacja profilu nie powiodła się",
   accountInfo: "Informacje o Koncie",
-  accountDetails: "Zobacz szczegóły i informacje o koncie",
+  accountDetails: "Zobacz szczegóły i informacje swojego konta",
   
   // User profile fields
   fullName: "Pełne Imię i Nazwisko",
@@ -33,15 +33,15 @@ export const commonTranslations = {
   
   // Authentication states
   user: "Użytkownik",
-  welcomeBack: "Witamy ponownie!",
-  connectToContinue: "Zaloguj się do swojego konta, aby kontynuować",
+  welcomeBack: "Witaj ponownie!",
+  connectToContinue: "Zaloguj się na swoje konto, aby kontynuować",
   createAccount: "Utwórz nowe konto, aby rozpocząć",
   noAccount: "Nie masz konta? Zarejestruj się",
   haveAccount: "Masz już konto? Zaloguj się",
   accountExists: "Konto już istnieje",
-  accountExistsMessage: "Konto z tym adresem email już istnieje. Zaloguj się.",
+  accountExistsMessage: "Konto z tym adresem email już istnieje. Proszę się zalogować.",
   accountCreated: "Konto utworzone pomyślnie",
-  canSignIn: "Możesz teraz zalogować się do swojego konta",
+  canSignIn: "Teraz możesz zalogować się na swoje konto",
   
   // Error messages
   authError: "Błąd Uwierzytelniania",
@@ -58,7 +58,7 @@ export const commonTranslations = {
   cancel: "Anuluj",
   delete: "Usuń",
   edit: "Edytuj",
-  update: "Aktualizuj",
+  update: "Zaktualizuj",
   create: "Utwórz",
   
   // Account info fields
@@ -74,31 +74,23 @@ export const commonTranslations = {
   
   // Music Gift specific
   musicGift: "Music Gift",
-  signInSubtitle: "Zaloguj się do swojego konta",
+  signInSubtitle: "Zaloguj się na swoje konto",
   signUpSubtitle: "Utwórz swoje konto",
-  
-  // Additional auth page translations
-  emailPlaceholder: "email@przyklad.pl",
-  or: "lub",
-  createPersonalizedExperiences: "Twórz spersonalizowane doświadczenia muzyczne",
-  shareGiftOfMusic: "Dziel się darem muzyki z bliskimi",
-  professionalQualityCompositions: "Kompozycje w jakości profesjonalnej",
   
   // Testimonials page
   testimonialsTitle: "Opinie Klientów",
-  testimonialsSubtitle: "Odkryj piękne historie tych, którzy wybrali przekształcenie swoich wspomnień w spersonalizowaną muzykę",
-  shareYourExperience: "Podziel się Swoim Doświadczeniem",
+  testimonialsSubtitle: "Odkryj piękne historie tych, którzy zdecydowali się przekształcić swoje wspomnienia w spersonalizowaną muzykę",
 
   // Package Details Page - Missing translations
   backToPackages: "Powrót do Pakietów",
   whatsIncluded: "Co jest zawarte:",
   availableAddOns: "Dostępne Dodatki",
   enhanceYourPackage: "Ulepsz swój pakiet dodatkowymi opcjami",
-  didYouKnow: "Czy wiedziałeś?",
-  frequentlyAsked: "Najczęściej Zadawane Pytania",
-  readyToStart: "Gotowy na Start?",
+  didYouKnow: "Czy wiesz?",
+  frequentlyAsked: "Często Zadawane Pytania",
+  readyToStart: "Gotowy do Rozpoczęcia?",
   packageDetailsCta: "Stwórz swoją spersonalizowaną piosenkę już dziś",
-  professionalQuality: "Gwarantowana jakość profesjonalna",
+  professionalQuality: "Profesjonalna jakość gwarantowana",
   guarantees: "Nasze Gwarancje",
   onTime: "Dostawa na czas",
   securePayments: "Bezpieczne płatności",

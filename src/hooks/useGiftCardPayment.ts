@@ -7,21 +7,8 @@ export const useGiftCardPayment = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async ({ 
-      giftCardId, 
-      returnUrl, 
-      paymentProvider = 'smartbill' 
-    }: { 
-      giftCardId: string; 
-      returnUrl?: string; 
-      paymentProvider?: string;
-    }) => {
-      console.log(`Initiating ${paymentProvider} payment for gift card:`, giftCardId);
-      
-      // Route to the appropriate payment provider edge function
-      const functionName = `gift-card-${paymentProvider}-payment`;
-      
-      const { data, error } = await supabase.functions.invoke(functionName, {
+    mutationFn: async ({ giftCardId, returnUrl }: { giftCardId: string; returnUrl?: string }) => {
+      const { data, error } = await supabase.functions.invoke('gift-card-payment', {
         body: { giftCardId, returnUrl }
       });
 
@@ -29,15 +16,12 @@ export const useGiftCardPayment = () => {
       return data;
     },
     onSuccess: (data) => {
-      console.log('Payment response:', data);
       // Redirect to payment page
-      if (data.paymentUrl || data.url) {
-        const paymentUrl = data.paymentUrl || data.url;
-        window.open(paymentUrl, '_blank');
+      if (data.paymentUrl) {
+        window.location.href = data.paymentUrl;
       }
     },
     onError: (error) => {
-      console.error('Gift card payment error:', error);
       toast({
         title: "Payment Error",
         description: error.message || "Failed to process payment. Please try again.",

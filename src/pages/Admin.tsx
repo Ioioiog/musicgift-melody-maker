@@ -13,7 +13,6 @@ import DiscountCodesManagement from "@/components/admin/DiscountCodesManagement"
 import PaymentProvidersManagement from "@/components/admin/PaymentProvidersManagement";
 import EmailManagement from "@/components/admin/EmailManagement";
 import TestimonialsManagement from "@/components/admin/TestimonialsManagement";
-import SmartBillPaymentManager from "@/components/admin/SmartBillPaymentManager";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 
@@ -40,9 +39,6 @@ const Admin = () => {
                   </TabsTrigger>
                   <TabsTrigger value="orders" className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50">
                     📋 Orders
-                  </TabsTrigger>
-                  <TabsTrigger value="smartbill" className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50">
-                    💳 SmartBill
                   </TabsTrigger>
                   <TabsTrigger value="testimonials" className="text-xs sm:text-sm py-2.5 px-3 sm:px-4 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200 hover:bg-white/50">
                     💬 Testimonials
@@ -77,10 +73,6 @@ const Admin = () => {
 
               <TabsContent value="orders" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
                 <OrdersManagement />
-              </TabsContent>
-
-              <TabsContent value="smartbill" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
-                <SmartBillPaymentManager />
               </TabsContent>
 
               <TabsContent value="testimonials" className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">

@@ -201,19 +201,23 @@ serve(async (req) => {
     // Handle post-payment actions
     if (newPaymentStatus === 'completed') {
       console.log('🎉 Payment completed - order confirmed')
-      console.log('ℹ️ Invoice conversion disabled - use admin panel to manually convert proforma to invoice')
+      
+      // TODO: Add email notification or other post-payment actions here
+      // Example: Send confirmation email, trigger order fulfillment, etc.
       
     } else if (newPaymentStatus === 'failed' || newPaymentStatus === 'cancelled') {
       console.log('❌ Payment failed or cancelled')
+      
+      // TODO: Add failure handling here
+      // Example: Send notification email, release inventory, etc.
     }
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         orderId: order.id,
-        message: `Webhook processed successfully - order status updated to ${newOrderStatus}. Use admin panel to manually convert proforma to invoice if needed.`,
-        paymentStatus: newPaymentStatus,
-        manualConversionRequired: newPaymentStatus === 'completed' && order.smartbill_proforma_id && !order.smartbill_invoice_id
+        message: `Webhook processed successfully - order status updated to ${newOrderStatus}`,
+        paymentStatus: newPaymentStatus
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

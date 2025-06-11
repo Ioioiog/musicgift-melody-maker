@@ -58,28 +58,10 @@ serve(async (req) => {
       throw new Error(`Order not found: ${orderError?.message}`)
     }
 
-    console.log('📋 Order details for conversion:', {
-      id: order.id,
-      payment_status: order.payment_status,
-      smartbill_payment_status: order.smartbill_payment_status,
-      total_price: order.total_price,
-      smartbill_proforma_id: order.smartbill_proforma_id
-    })
-
     // Check if order is eligible for invoice conversion
-    // Allow conversion if either payment_status is completed OR smartbill_payment_status is paid
-    // OR if it's manual admin conversion (bypass payment check)
-    const isPaid = order.payment_status === 'completed' || 
-                   order.smartbill_payment_status === 'paid' ||
-                   conversionSource === 'admin_manual'
-    
+    const isPaid = order.payment_status === 'completed' || order.smartbill_payment_status === 'paid'
     if (!isPaid) {
-      console.log('❌ Order not paid:', {
-        payment_status: order.payment_status,
-        smartbill_payment_status: order.smartbill_payment_status,
-        conversionSource
-      })
-      throw new Error('Order must be paid before converting to invoice (unless manual admin conversion)')
+      throw new Error('Order must be paid before converting to invoice')
     }
 
     // Check if invoice already exists
@@ -111,26 +93,15 @@ serve(async (req) => {
     const token = Deno.env.get('SMARTBILL_TOKEN')
     const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
     const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
-    const invoiceSeries = Deno.env.get('SMARTBILL_INVOICE_SERIES') || 'MNG'
 
     if (!username || !token || !companyVat) {
       throw new Error('SmartBill configuration incomplete')
     }
 
-    console.log('📄 Using invoice series:', invoiceSeries)
-
-    // Convert price based on payment provider - but check if it's already correct
+    // Convert price based on payment provider
     let convertedPrice = order.total_price
-    
-    // Only convert from cents if the price seems to be in cents format
     if (order.payment_provider === 'stripe' || order.payment_provider === 'revolut') {
-      // If price is very large (likely in cents), convert it
-      if (convertedPrice > 1000) {
-        convertedPrice = order.total_price / 100
-        console.log('💰 Converting price from cents:', order.total_price, '→', convertedPrice)
-      } else {
-        console.log('💰 Price already in correct format:', convertedPrice)
-      }
+      convertedPrice = order.total_price / 100 // Convert from cents
     }
 
     // Prepare customer data
@@ -154,15 +125,6 @@ serve(async (req) => {
     const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     const formattedPrice = convertedPrice.toFixed(2)
 
-    console.log('💰 Invoice details:', {
-      originalPrice: order.total_price,
-      convertedPrice,
-      formattedPrice,
-      clientName,
-      packageName: order.package_name,
-      invoiceSeries
-    })
-
     // Create invoice XML
     const invoiceXml = `<?xml version="1.0" encoding="UTF-8"?>
 <invoice>
@@ -177,7 +139,7 @@ serve(async (req) => {
     <email>${escapeXml(clientEmail)}</email>
   </client>
   <issueDate>${issueDate}</issueDate>
-  <seriesName>${escapeXml(invoiceSeries)}</seriesName>
+  <seriesName>FACT</seriesName>
   <dueDate>${dueDate}</dueDate>
   <product>
     <name>${escapeXml(`${order.package_name} - Cadou Musical Personalizat`)}</name>
@@ -195,7 +157,7 @@ serve(async (req) => {
   <observations>${escapeXml(`Comandă cadou musical personalizat pentru ${formData.recipientName || 'destinatar'}. ID comandă: ${order.id}`)}</observations>
 </invoice>`
 
-    console.log('📄 Creating SmartBill invoice with XML:', invoiceXml.substring(0, 300))
+    console.log('📄 Creating SmartBill invoice...')
 
     // Create invoice via SmartBill API
     const apiUrl = `${baseUrl}/SBORO/api/invoice`
@@ -221,8 +183,8 @@ serve(async (req) => {
     const seriesMatch = responseText.match(/<series>(.*?)<\/series>/)
     
     const invoiceNumber = numberMatch?.[1] || null
-    const invoiceSeriesFromResponse = seriesMatch?.[1] || invoiceSeries
-    const invoiceId = invoiceNumber ? `${invoiceSeriesFromResponse}${invoiceNumber}` : null
+    const invoiceSeries = seriesMatch?.[1] || 'FACT'
+    const invoiceId = invoiceNumber ? `${invoiceSeries}${invoiceNumber}` : null
     
     if (!invoiceId) {
       throw new Error('SmartBill did not return a valid invoice ID')

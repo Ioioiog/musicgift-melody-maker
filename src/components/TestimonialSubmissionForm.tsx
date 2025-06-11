@@ -12,7 +12,6 @@ import { Plus, Star, CheckCircle, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { VideoUpload } from "@/components/ui/video-upload";
 import { convertToYouTubeEmbed, isValidYouTubeUrl } from "@/utils/youtubeUtils";
-
 const TestimonialSubmissionForm = () => {
   const {
     user
@@ -130,7 +129,7 @@ const TestimonialSubmissionForm = () => {
       <DialogTrigger asChild>
         <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" onClick={resetForm}>
           <Plus className="w-4 h-4 mr-2" />
-          {t('shareYourExperience')}
+          Share Your Experience
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">

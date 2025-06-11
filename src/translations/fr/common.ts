@@ -1,10 +1,10 @@
 
 export const commonTranslations = {
   // User authentication
-  signIn: "Se connecter",
-  signOut: "Se déconnecter",
+  signIn: "Se Connecter",
+  signOut: "Se Déconnecter",
   signUp: "S'inscrire",
-  signInBtn: "Se connecter",
+  signInBtn: "Se Connecter",
   signUpBtn: "S'inscrire",
   signInSuccess: "Connexion réussie",
   signUpSuccess: "Compte créé avec succès",
@@ -28,7 +28,7 @@ export const commonTranslations = {
   fullName: "Nom Complet",
   email: "Adresse Email",
   emailCannotChange: "L'adresse email ne peut pas être modifiée",
-  password: "Mot de passe",
+  password: "Mot de Passe",
   passwordMinLength: "Le mot de passe doit contenir au moins 6 caractères",
   
   // Authentication states
@@ -39,7 +39,7 @@ export const commonTranslations = {
   noAccount: "Pas de compte ? Inscrivez-vous",
   haveAccount: "Déjà un compte ? Connectez-vous",
   accountExists: "Le compte existe déjà",
-  accountExistsMessage: "Un compte avec cet email existe déjà. Veuillez vous connecter.",
+  accountExistsMessage: "Un compte avec cette adresse email existe déjà. Veuillez vous connecter.",
   accountCreated: "Compte créé avec succès",
   canSignIn: "Vous pouvez maintenant vous connecter à votre compte",
   
@@ -58,7 +58,7 @@ export const commonTranslations = {
   cancel: "Annuler",
   delete: "Supprimer",
   edit: "Modifier",
-  update: "Mettre à jour",
+  update: "Mettre à Jour",
   create: "Créer",
   
   // Account info fields
@@ -87,14 +87,13 @@ export const commonTranslations = {
   // Testimonials page
   testimonialsTitle: "Témoignages Clients",
   testimonialsSubtitle: "Découvrez les belles histoires de ceux qui ont choisi de transformer leurs souvenirs en musique personnalisée",
-  shareYourExperience: "Partagez Votre Expérience",
 
   // Package Details Page - Missing translations
   backToPackages: "Retour aux Forfaits",
   whatsIncluded: "Ce qui est inclus :",
-  availableAddOns: "Options Disponibles",
+  availableAddOns: "Options Supplémentaires Disponibles",
   enhanceYourPackage: "Améliorez votre forfait avec des options supplémentaires",
-  didYouKnow: "Le Saviez-vous ?",
+  didYouKnow: "Le saviez-vous ?",
   frequentlyAsked: "Questions Fréquemment Posées",
   readyToStart: "Prêt à Commencer ?",
   packageDetailsCta: "Créez votre chanson personnalisée aujourd'hui",

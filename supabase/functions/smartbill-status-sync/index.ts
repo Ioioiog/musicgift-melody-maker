@@ -1,138 +1,31 @@
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Content-Type': 'application/json'
 }
 
-// Rate limiting for SmartBill API (max 3 calls per second)
-let lastApiCall = 0
-const API_RATE_LIMIT = 334 // ms between calls
-
-async function rateLimitedFetch(url: string, options: RequestInit) {
-  const now = Date.now()
-  const timeSinceLastCall = now - lastApiCall
-  
-  if (timeSinceLastCall < API_RATE_LIMIT) {
-    await new Promise(resolve => setTimeout(resolve, API_RATE_LIMIT - timeSinceLastCall))
-  }
-  
-  lastApiCall = Date.now()
-  return fetch(url, options)
+interface SmartBillPaymentStatusResponse {
+  errorText: string;
+  message: string;
+  number: string;
+  series: string;
+  invoiceTotalAmount: number;
+  paidAmount: number;
+  unpaidAmount: number;
+  paid?: boolean;
 }
 
-function extractDocumentDetails(order: any): { series: string, number: string, documentId: string, documentType: string } {
-  console.log('📋 Extracting document details from order:', {
-    smartbill_proforma_id: order.smartbill_proforma_id,
-    smartbill_invoice_id: order.smartbill_invoice_id
-  })
-
-  let documentId = null
-  let documentType = 'unknown'
-  
-  // Check if we have an invoice first (invoices can be checked for payment status)
-  if (order.smartbill_invoice_id) {
-    documentId = order.smartbill_invoice_id
-    documentType = 'invoice'
-  } else if (order.smartbill_proforma_id) {
-    documentId = order.smartbill_proforma_id
-    documentType = 'proforma'
-  }
-
-  if (!documentId) {
-    throw new Error('No SmartBill document ID found in order')
-  }
-
-  console.log('📄 Working with document:', { documentId, documentType })
-
-  // Extract series and number using regex
-  const seriesMatch = documentId.match(/^([a-zA-Z]+)/)
-  const numberMatch = documentId.match(/(\d+)$/)
-  
-  if (!seriesMatch || !numberMatch) {
-    console.error('❌ Failed to parse document ID:', documentId)
-    throw new Error(`Invalid document ID format: ${documentId}`)
-  }
-
-  const series = seriesMatch[1]
-  const number = numberMatch[1]
-
-  console.log('✅ Extracted details:', { series, number, documentId, documentType })
-
-  return { series, number, documentId, documentType }
+interface SmartBillInvoiceData {
+  url?: string;
+  number?: string;
+  series?: string;
+  message?: string;
+  errorText?: string;
 }
 
-async function checkPaymentStatus(auth: string, companyVat: string, series: string, number: string) {
-  const paymentStatusUrl = `https://ws.smartbill.ro/SBORO/api/invoice/paymentstatus?cif=${encodeURIComponent(companyVat)}&seriesname=${encodeURIComponent(series)}&number=${encodeURIComponent(number)}`
-  
-  console.log('🔍 Checking payment status:', {
-    series,
-    number,
-    cif: companyVat,
-    url: paymentStatusUrl
-  })
-  
-  try {
-    const response = await rateLimitedFetch(paymentStatusUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-    })
-
-    console.log('📊 Payment status API response:', response.status, response.statusText)
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.log('❌ Payment status API error:', response.status, errorText.substring(0, 500))
-      
-      // Handle specific SmartBill errors
-      if (response.status === 400 && errorText.includes('Factura nu a fost gasita')) {
-        return { 
-          found: false,
-          paid: false,
-          errorText: 'Document not found or not yet processed',
-          paymentData: null
-        }
-      }
-      
-      throw new Error(`SmartBill payment status API error: ${response.status} - ${errorText.substring(0, 200)}`)
-    }
-
-    const paymentData = await response.json()
-    console.log('💰 Payment status data:', paymentData)
-    
-    // Analyze payment status
-    const invoiceTotalAmount = paymentData?.invoiceTotalAmount || 0
-    const paidAmount = paymentData?.paidAmount || 0
-    const unpaidAmount = paymentData?.unpaidAmount || 0
-    
-    const isPaid = (paidAmount > 0 && unpaidAmount === 0) || (paidAmount >= invoiceTotalAmount && invoiceTotalAmount > 0)
-    
-    console.log(`💰 Payment analysis: Total=${invoiceTotalAmount}, Paid=${paidAmount}, Unpaid=${unpaidAmount}, IsPaid=${isPaid}`)
-    
-    return {
-      found: true,
-      paid: isPaid,
-      paymentData: {
-        total: invoiceTotalAmount,
-        paid: paidAmount,
-        unpaid: unpaidAmount
-      }
-    }
-    
-  } catch (error) {
-    console.error('❌ Error checking payment status:', error)
-    throw error
-  }
-}
-
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -144,151 +37,157 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    console.log('🚀 SmartBill Status Sync - Starting...')
-
     const { orderId } = await req.json();
     
     if (!orderId) {
       return new Response(
         JSON.stringify({ error: 'Order ID is required' }),
-        { status: 400, headers: corsHeaders }
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log(`🔍 Syncing status for order: ${orderId}`);
+    console.log(`Syncing SmartBill status for order: ${orderId}`);
 
+    // Get the order including SmartBill invoice data
     const { data: order, error: orderError } = await supabase
       .from('orders')
-      .select('*')
+      .select('smartbill_invoice_id, smartbill_invoice_data, smartbill_payment_status, payment_status')
       .eq('id', orderId)
       .single();
 
     if (orderError || !order) {
-      console.error('❌ Order not found:', orderError);
+      console.error('Order not found:', orderError);
       return new Response(
         JSON.stringify({ error: 'Order not found' }),
-        { status: 404, headers: corsHeaders }
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('📋 Order details:', {
-      id: order.id,
-      payment_status: order.payment_status,
-      smartbill_payment_status: order.smartbill_payment_status,
-      smartbill_proforma_id: order.smartbill_proforma_id,
-      smartbill_invoice_id: order.smartbill_invoice_id,
-      total_price: order.total_price
-    })
+    // Extract series and number from smartbill_invoice_data
+    let invoiceSeries = '';
+    let invoiceNumber = '';
 
-    if (!order.smartbill_proforma_id && !order.smartbill_invoice_id) {
-      console.log('❌ No SmartBill document found');
-      return new Response(
-        JSON.stringify({ error: 'No SmartBill document found for this order' }),
-        { status: 400, headers: corsHeaders }
-      );
+    if (order.smartbill_invoice_data) {
+      const invoiceData = order.smartbill_invoice_data as SmartBillInvoiceData;
+      invoiceSeries = invoiceData.series || '';
+      invoiceNumber = invoiceData.number || '';
+      console.log(`Extracted from invoice data - Series: "${invoiceSeries}", Number: "${invoiceNumber}"`);
     }
 
-    const smartbillUsername = Deno.env.get('SMARTBILL_USERNAME') || Deno.env.get('SMARTBILL_EMAIL');
+    // Fallback to smartbill_invoice_id if invoice data doesn't have the required fields
+    if (!invoiceSeries || !invoiceNumber) {
+      if (order.smartbill_invoice_id) {
+        invoiceNumber = order.smartbill_invoice_id;
+        console.log(`Using fallback - Invoice ID: "${invoiceNumber}", Series: empty`);
+      } else {
+        console.log('Order has no SmartBill invoice data');
+        return new Response(
+          JSON.stringify({ 
+            error: 'Order has no SmartBill invoice data',
+            currentStatus: order.smartbill_payment_status 
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // Call SmartBill API to get invoice payment status
+    const smartbillUsername = Deno.env.get('SMARTBILL_USERNAME');
     const smartbillToken = Deno.env.get('SMARTBILL_TOKEN');
     const smartbillCompanyVat = Deno.env.get('SMARTBILL_COMPANY_VAT');
     
     if (!smartbillUsername || !smartbillToken || !smartbillCompanyVat) {
-      console.error('❌ SmartBill credentials not configured');
+      console.error('SmartBill credentials not configured');
       return new Response(
         JSON.stringify({ error: 'SmartBill credentials not configured' }),
-        { status: 500, headers: corsHeaders }
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     const smartbillAuth = btoa(`${smartbillUsername}:${smartbillToken}`);
-    console.log('🔐 SmartBill auth created');
     
-    let documentDetails;
-    try {
-      documentDetails = extractDocumentDetails(order);
-    } catch (error) {
-      console.error('❌ Failed to extract document details:', error);
-      return new Response(
-        JSON.stringify({ 
-          error: 'Failed to extract document details from order',
-          details: error.message 
-        }),
-        { status: 400, headers: corsHeaders }
-      );
-    }
+    // Construct the URL with proper series and number parameters
+    const paymentStatusUrl = `https://ws.smartbill.ro/SBORO/api/invoice/paymentstatus?cif=${smartbillCompanyVat}&seriesname=${encodeURIComponent(invoiceSeries)}&number=${encodeURIComponent(invoiceNumber)}`;
+    
+    console.log(`Checking SmartBill payment status with URL: ${paymentStatusUrl}`);
+    console.log(`Using series: "${invoiceSeries}", number: "${invoiceNumber}"`);
+    
+    // Get invoice payment status from SmartBill using the correct endpoint
+    const smartbillResponse = await fetch(paymentStatusUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Basic ${smartbillAuth}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
 
-    const { series, number, documentId, documentType } = documentDetails;
-    
-    // Check if this is a proforma - SmartBill doesn't support payment status checking for proformas
-    if (documentType === 'proforma') {
-      console.log('📄 Document is a proforma - payment status checking not supported by SmartBill');
+    if (!smartbillResponse.ok) {
+      console.error('SmartBill API error:', smartbillResponse.status, smartbillResponse.statusText);
+      const errorText = await smartbillResponse.text();
+      console.error('SmartBill error response:', errorText);
       
       return new Response(
-        JSON.stringify({
-          success: true,
-          orderId,
-          statusChanged: false,
-          documentFound: true,
-          paymentConfirmed: false,
-          documentType: 'proforma',
-          currentSmartbillStatus: order.smartbill_payment_status,
-          currentPaymentStatus: order.payment_status,
-          currentOrderStatus: order.status,
-          paymentData: null,
-          message: 'Payment status checking not available for proformas. Convert to invoice or use Netopia webhooks for payment detection.',
-          limitation: 'SmartBill API does not support payment status checking for proformas, only invoices',
-          suggestion: 'Use "Convert to Invoice" after payment is confirmed, or ensure Netopia webhook is configured',
-          debugInfo: {
-            documentId,
-            series,
-            number,
-            documentType
-          }
+        JSON.stringify({ 
+          error: 'Failed to check SmartBill payment status',
+          details: `HTTP ${smartbillResponse.status}: ${smartbillResponse.statusText}`,
+          smartbillError: errorText,
+          usedSeries: invoiceSeries,
+          usedNumber: invoiceNumber
         }),
-        { status: 200, headers: corsHeaders }
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // If we have an invoice, proceed with payment status check
-    console.log('📄 Checking invoice payment status:', { series, number, documentId });
+    const responseData: SmartBillPaymentStatusResponse = await smartbillResponse.json();
+    console.log('SmartBill payment status response:', responseData);
 
-    let paymentResult;
-    try {
-      paymentResult = await checkPaymentStatus(smartbillAuth, smartbillCompanyVat, series, number);
-    } catch (error) {
-      console.error('❌ Failed to check payment status:', error);
+    // The response is direct, not wrapped in sbcInvoicePaymentStatusResponse
+    const paymentData = responseData;
+    
+    // Check for SmartBill errors
+    if (paymentData.errorText) {
+      console.error('SmartBill API returned error:', paymentData.errorText);
       return new Response(
         JSON.stringify({ 
-          error: 'Failed to check payment status with SmartBill',
-          details: error.message
+          error: 'SmartBill API error',
+          details: paymentData.errorText,
+          usedSeries: invoiceSeries,
+          usedNumber: invoiceNumber
         }),
-        { status: 500, headers: corsHeaders }
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('📊 Payment result:', paymentResult)
-
+    // Determine payment status based on SmartBill response
     let newSmartbillStatus = order.smartbill_payment_status;
     let newPaymentStatus = order.payment_status;
-    let newOrderStatus = order.status;
 
-    if (paymentResult.found && paymentResult.paid) {
-      newSmartbillStatus = 'confirmed';
+    const { invoiceTotalAmount, paidAmount, unpaidAmount } = paymentData;
+    
+    console.log(`Payment details - Total: ${invoiceTotalAmount}, Paid: ${paidAmount}, Unpaid: ${unpaidAmount}`);
+
+    // Update status based on payment amounts
+    if (unpaidAmount === 0 && paidAmount === invoiceTotalAmount) {
+      // Fully paid
+      newSmartbillStatus = 'paid';
       newPaymentStatus = 'completed';
-      newOrderStatus = 'completed';
-      console.log(`✅ Payment confirmed for order ${orderId}`);
-    } else if (paymentResult.found && !paymentResult.paid) {
+    } else if (paidAmount > 0 && unpaidAmount > 0) {
+      // Partially paid
+      newSmartbillStatus = 'partially_paid';
+      newPaymentStatus = 'pending';
+    } else if (paidAmount === 0) {
+      // Not paid yet
       newSmartbillStatus = 'pending';
-      console.log('ℹ️ Payment still pending');
-    } else if (!paymentResult.found) {
-      console.log('⚠️ Invoice not found in SmartBill - might be too new');
+      newPaymentStatus = 'pending';
     }
 
+    // Update the order with new status information
     const updateData: any = {
       updated_at: new Date().toISOString(),
-      webhook_processed_at: new Date().toISOString()
     };
 
+    // Only update if status actually changed
     let statusChanged = false;
     if (newSmartbillStatus !== order.smartbill_payment_status) {
       updateData.smartbill_payment_status = newSmartbillStatus;
@@ -296,10 +195,6 @@ serve(async (req) => {
     }
     if (newPaymentStatus !== order.payment_status) {
       updateData.payment_status = newPaymentStatus;
-      statusChanged = true;
-    }
-    if (newOrderStatus !== order.status) {
-      updateData.status = newOrderStatus;
       statusChanged = true;
     }
 
@@ -310,16 +205,14 @@ serve(async (req) => {
         .eq('id', orderId);
 
       if (updateError) {
-        console.error('❌ Error updating order:', updateError);
+        console.error('Error updating order:', updateError);
         return new Response(
           JSON.stringify({ error: 'Failed to update order status' }),
-          { status: 500, headers: corsHeaders }
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
 
-      console.log(`✅ Order ${orderId} status updated - SmartBill: ${newSmartbillStatus}, Payment: ${newPaymentStatus}`);
-    } else {
-      console.log(`ℹ️ Order ${orderId} status unchanged`);
+      console.log(`Order ${orderId} status updated - SmartBill: ${newSmartbillStatus}, Payment: ${newPaymentStatus}`);
     }
 
     return new Response(
@@ -327,33 +220,31 @@ serve(async (req) => {
         success: true,
         orderId,
         statusChanged,
-        documentFound: paymentResult.found,
-        paymentConfirmed: paymentResult.paid,
-        documentType,
         currentSmartbillStatus: newSmartbillStatus,
         currentPaymentStatus: newPaymentStatus,
-        currentOrderStatus: newOrderStatus,
-        paymentData: paymentResult.paymentData,
-        message: statusChanged ? 'Status updated successfully' : 'Status checked - no changes needed',
-        debugInfo: {
-          documentId,
-          series,
-          number,
-          documentType,
-          paymentResult
-        }
+        paymentDetails: {
+          invoiceTotalAmount,
+          paidAmount,
+          unpaidAmount
+        },
+        usedSeries: invoiceSeries,
+        usedNumber: invoiceNumber,
+        message: statusChanged ? 'Status updated successfully' : 'Status checked - no changes needed'
       }),
-      { status: 200, headers: corsHeaders }
+      { 
+        status: 200, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
     );
 
   } catch (error) {
-    console.error('💥 Error in SmartBill status sync:', error);
+    console.error('Error in SmartBill status sync:', error);
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
-        details: error.message
+        details: error.message 
       }),
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });
