@@ -211,17 +211,49 @@ serve(async (req) => {
       // Continue without customer ID - not critical for payment
     }
 
-    // Create order in database first (convert to cents for Stripe)
+    // ✅ FIX: Convert all monetary values to cents (integers) before database insertion
+    const convertToCents = (value) => {
+      if (typeof value === 'number') {
+        return Math.round(value * 100);
+      }
+      if (typeof value === 'string') {
+        const parsed = parseFloat(value);
+        return isNaN(parsed) ? 0 : Math.round(parsed * 100);
+      }
+      return 0;
+    };
+
+    // Ensure all prices are converted to cents for database storage
+    const totalPriceCents = convertToCents(orderData.total_price);
+    const packagePriceCents = convertToCents(orderData.package_price || 0);
+    const giftCreditAppliedCents = convertToCents((orderData.gift_credit_applied || 0) / 100); // Already in cents, convert back to base then to cents
+    const discountAmountCents = convertToCents((orderData.discount_amount || 0) / 100); // Already in cents, convert back to base then to cents
+
+    console.log('💰 Price conversions:', {
+      original_total_price: orderData.total_price,
+      total_price_cents: totalPriceCents,
+      original_package_price: orderData.package_price,
+      package_price_cents: packagePriceCents,
+      original_gift_credit: orderData.gift_credit_applied,
+      gift_credit_cents: giftCreditAppliedCents,
+      original_discount: orderData.discount_amount,
+      discount_cents: discountAmountCents
+    });
+
+    // Create order in database first (all prices now in cents)
     const orderInsertData = {
       ...orderData,
-      total_price: orderData.total_price * 100, // Convert to cents for Stripe
+      total_price: totalPriceCents,
+      package_price: packagePriceCents,
+      gift_credit_applied: orderData.gift_credit_applied || 0, // Keep original value if already in cents
+      discount_amount: orderData.discount_amount || 0, // Keep original value if already in cents
       payment_provider: 'stripe',
       status: 'pending',
       payment_status: 'pending',
       stripe_customer_id: stripeCustomerId
     };
 
-    console.log('🟣 Stripe: Creating order with data (price converted to cents):', {
+    console.log('🟣 Stripe: Creating order with data (all prices in cents):', {
       ...orderInsertData,
       form_data: { email: orderInsertData.form_data.email?.substring(0, 5) + '***' }
     });

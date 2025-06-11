@@ -117,9 +117,28 @@ export const prepareOrderData = (
   }
 
   const package_name = selectedPackageData?.label_key;
-  const package_price = selectedPackageData ? selectedPackageData.price_eur || selectedPackageData.price_ron || 0 : 0;
+  
+  // ✅ FIX: Ensure package_price is a valid number and convert to proper format
+  let package_price = 0;
+  if (selectedPackageData.price_eur && currency === 'EUR') {
+    package_price = Number(selectedPackageData.price_eur) || 0;
+  } else if (selectedPackageData.price_ron && currency === 'RON') {
+    package_price = Number(selectedPackageData.price_ron) || 0;
+  } else {
+    // Fallback to any available price
+    package_price = Number(selectedPackageData.price_eur || selectedPackageData.price_ron) || 0;
+  }
+  
   const package_delivery_time = selectedPackageData?.delivery_time_key;
   const package_includes = selectedPackageData?.includes;
+
+  console.log('💰 Package price processing:', {
+    selectedPackage,
+    currency,
+    price_eur: selectedPackageData.price_eur,
+    price_ron: selectedPackageData.price_ron,
+    final_package_price: package_price
+  });
 
   // Keep all prices in base monetary units (no multiplication)
   const orderData = {
@@ -129,7 +148,7 @@ export const prepareOrderData = (
     total_price: totalPrice, // Keep in base monetary units
     package_value: selectedPackage,
     package_name: package_name,
-    package_price: package_price,
+    package_price: package_price, // Now properly validated as number
     package_delivery_time: package_delivery_time,
     package_includes: package_includes ? JSON.parse(JSON.stringify(package_includes)) : [],
     status: 'pending',
