@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -234,11 +235,11 @@ const Navigation = () => {
             </div>
           </div>
 
-          {/* Enhanced Mobile Menu - Now simplified with only website pages */}
-          {isMenuOpen && <div ref={mainMenuRef} className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
+          {/* Enhanced Mobile Menu - Now with proper spacing to avoid logo overlap */}
+          {isMenuOpen && <div ref={mainMenuRef} className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto mt-2">
               
               {/* Website Pages Section */}
-              <div className="mb-6">
+              <div className="mb-6 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
                 <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
                   Website Pages
                 </div>
@@ -250,7 +251,7 @@ const Navigation = () => {
               </div>
 
               {/* Order Button Section */}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-200 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
                 <Link to="/order" className="block mx-4 mb-2" onClick={closeAllMenus}>
                   <div className="flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full h-12 min-h-[48px] touch-manipulation">
                     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center mr-3">
@@ -264,11 +265,11 @@ const Navigation = () => {
               </div>
             </div>}
 
-          {/* Language/Currency Dropdown for Mobile - Full width and centered like main menu */}
+          {/* Language/Currency Dropdown for Mobile - With proper spacing to avoid logo overlap */}
           {isLanguageCurrencyDropdownOpen && (
-            <div ref={languageCurrencyDropdownRef} className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
+            <div ref={languageCurrencyDropdownRef} className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto mt-2">
               {/* Currency Section */}
-              <div className="mb-6">
+              <div className="mb-6 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
                 <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
                   Currency
                 </div>
@@ -307,7 +308,7 @@ const Navigation = () => {
               </div>
 
               {/* Language Section */}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-200 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
                 <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
                   Language
                 </div>
@@ -335,11 +336,11 @@ const Navigation = () => {
             </div>
           )}
 
-          {/* User Dropdown for Mobile - Full width and centered like main menu */}
+          {/* User Dropdown for Mobile - With proper spacing to avoid logo overlap */}
           {user && isUserDropdownOpen && (
-            <div ref={userDropdownRef} className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
+            <div ref={userDropdownRef} className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto mt-2">
               {/* User Info Header */}
-              <div className="mb-6">
+              <div className="mb-6 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
                 <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
                   User Account
                 </div>
@@ -350,7 +351,7 @@ const Navigation = () => {
               </div>
               
               {/* User Actions */}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-200 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
                 <div className="flex flex-col space-y-1">
                   <Link 
                     to="/settings" 
