@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -108,11 +107,15 @@ const SmartBillPaymentManager = () => {
       }
 
       if (data?.success) {
+        const statusMessage = data.invoiceCreated 
+          ? `Invoice found: ${data.invoiceId}` 
+          : data.statusChanged 
+            ? `Status updated: ${data.currentPaymentStatus}` 
+            : "Status checked - no changes needed";
+            
         toast({
           title: "Status Synced Successfully",
-          description: data.statusChanged ? 
-            `Status updated: ${data.currentPaymentStatus}` : 
-            "Status checked - no changes needed"
+          description: statusMessage
         });
         await fetchProformas();
       } else {
@@ -167,13 +170,44 @@ const SmartBillPaymentManager = () => {
     }
   };
 
-  const handleShowProforma = (proformaId: string) => {
-    // Open SmartBill proforma in new tab (if URL structure is known)
-    // For now, show the proforma ID
-    toast({
-      title: "Proforma Information",
-      description: `Proforma ID: ${proformaId}`,
-    });
+  const handleShowProforma = async (orderId: string, proformaId: string) => {
+    try {
+      console.log('Fetching proforma PDF for order:', orderId);
+      
+      const { data, error } = await supabase.functions.invoke('smartbill-view-proforma', {
+        body: { orderId }
+      });
+
+      if (error) {
+        console.error('PDF fetch error:', error);
+        throw error;
+      }
+
+      // The PDF data should be returned as a blob
+      if (data) {
+        // Create a blob URL and open in new tab
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        
+        // Clean up the URL after a delay
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        
+        toast({
+          title: "Proforma PDF",
+          description: "PDF opened in new tab"
+        });
+      } else {
+        throw new Error('No PDF data received');
+      }
+    } catch (error) {
+      console.error('Error fetching proforma PDF:', error);
+      toast({
+        title: "PDF Fetch Failed",
+        description: error.message || "Failed to fetch proforma PDF",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleShowInvoice = (invoiceId: string) => {
@@ -188,7 +222,7 @@ const SmartBillPaymentManager = () => {
     
     toast({
       title: "Invoice Information",
-      description: `Invoice ID: ${invoiceId}`,
+      description: `Invoice ID: ${invoiceId}. PDF viewing for invoices will be implemented separately.`,
     });
   };
 
@@ -314,7 +348,7 @@ const SmartBillPaymentManager = () => {
               onClick={() => handleSyncPaymentStatus(order.id)}
               disabled={!!isActionLoading}
               className="h-8 px-2"
-              title="Sync payment status with SmartBill"
+              title="Check if proforma has been converted to invoice in SmartBill"
             >
               <RefreshCw className={`w-3 h-3 ${isActionLoading === 'syncing' ? 'animate-spin' : ''}`} />
             </Button>
@@ -333,9 +367,9 @@ const SmartBillPaymentManager = () => {
             <Button
               size="sm"
               variant="outline"
-              onClick={() => handleShowProforma(order.smartbill_proforma_id)}
+              onClick={() => handleShowProforma(order.id, order.smartbill_proforma_id)}
               className="h-8 px-2"
-              title="View proforma details"
+              title="View proforma PDF"
             >
               <Eye className="w-3 h-3" />
             </Button>
@@ -424,11 +458,11 @@ const SmartBillPaymentManager = () => {
           <Button
             size="sm"
             variant="outline"
-            onClick={() => handleShowProforma(order.smartbill_proforma_id)}
+            onClick={() => handleShowProforma(order.id, order.smartbill_proforma_id)}
             className="flex items-center gap-1"
           >
             <Eye className="w-3 h-3" />
-            Proforma
+            PDF
           </Button>
           
           <Button
@@ -500,9 +534,9 @@ const SmartBillPaymentManager = () => {
         <div className="bg-gray-50 p-4 rounded-lg">
           <h4 className="font-medium mb-2">Action Buttons Guide:</h4>
           <ul className="text-sm space-y-1 text-gray-600">
-            <li><Badge variant="outline" className="mr-2">🔄</Badge> Sync - Check payment status in SmartBill</li>
+            <li><Badge variant="outline" className="mr-2">🔄</Badge> Sync - Check if proforma has been converted to invoice in SmartBill</li>
             <li><Badge variant="outline" className="mr-2">📄</Badge> Convert - Convert proforma to invoice (when paid)</li>
-            <li><Badge variant="outline" className="mr-2">👁</Badge> Proforma - View proforma details</li>
+            <li><Badge variant="outline" className="mr-2">👁</Badge> PDF - View proforma PDF document</li>
             <li><Badge variant="outline" className="mr-2">🔗</Badge> Invoice - View invoice (when available)</li>
           </ul>
           <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm">
