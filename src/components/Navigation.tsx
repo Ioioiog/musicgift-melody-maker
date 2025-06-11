@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ const Navigation = () => {
   const handleSignOut = async () => {
     await signOut();
     setIsMenuOpen(false);
+    setIsUserDropdownOpen(false);
   };
 
   const navItems = [{
@@ -109,14 +111,76 @@ const Navigation = () => {
               </Link>
             </div>
 
-            {/* Mobile Menu Toggle - Enhanced touch target */}
-            <button className="lg:hidden ml-auto p-3 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              <div className="w-6 h-6 flex flex-col justify-center items-center">
-                <div className={`w-5 h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-0.5" : ""}`} />
-                <div className={`w-5 h-0.5 my-0.5 transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""}`} />
-                <div className={`w-5 h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? "-rotate-45 -translate-y-0.5" : ""}`} />
+            {/* Mobile Right Section: User Account + Menu */}
+            <div className="lg:hidden flex items-center space-x-2 ml-auto">
+              {/* Mobile User Account Button */}
+              <div className="relative">
+                {user ? (
+                  <button 
+                    onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                    className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center relative"
+                  >
+                    <User className="w-5 h-5 text-gray-700" />
+                    {/* Online indicator */}
+                    <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                  </button>
+                ) : (
+                  <Link 
+                    to="/auth" 
+                    className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center"
+                  >
+                    <UserCircle className="w-5 h-5 text-gray-700" />
+                  </Link>
+                )}
+
+                {/* User Dropdown for Mobile */}
+                {user && isUserDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-white/98 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200/50 z-50 animate-in slide-in-from-top-2 duration-200">
+                    {/* User Info Header */}
+                    <div className="px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-t-xl border-b border-gray-100">
+                      <div className="font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
+                      <div className="text-xs text-gray-500 truncate">{user.email}</div>
+                    </div>
+                    
+                    {/* User Actions */}
+                    <div className="py-2">
+                      <Link 
+                        to="/settings" 
+                        className="flex items-center px-4 py-3 text-gray-700 hover:text-blue-700 hover:bg-blue-50 transition-all duration-200 touch-manipulation"
+                        onClick={() => setIsUserDropdownOpen(false)}
+                      >
+                        <User className="w-4 h-4 mr-3" />
+                        <span className="font-medium">{t('accountSettings')}</span>
+                      </Link>
+                      <Link 
+                        to="/history" 
+                        className="flex items-center px-4 py-3 text-gray-700 hover:text-green-700 hover:bg-green-50 transition-all duration-200 touch-manipulation"
+                        onClick={() => setIsUserDropdownOpen(false)}
+                      >
+                        <History className="w-4 h-4 mr-3" />
+                        <span className="font-medium">{t('history')}</span>
+                      </Link>
+                      <button 
+                        onClick={handleSignOut}
+                        className="flex items-center w-full px-4 py-3 text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-200 touch-manipulation"
+                      >
+                        <LogOut className="w-4 h-4 mr-3" />
+                        <span className="font-medium">{t('signOut')}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            </button>
+
+              {/* Mobile Menu Toggle */}
+              <button className="p-3 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                <div className="w-6 h-6 flex flex-col justify-center items-center">
+                  <div className={`w-5 h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-0.5" : ""}`} />
+                  <div className={`w-5 h-0.5 my-0.5 transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""}`} />
+                  <div className={`w-5 h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? "-rotate-45 -translate-y-0.5" : ""}`} />
+                </div>
+              </button>
+            </div>
           </div>
 
           {/* Enhanced Mobile Menu */}
@@ -132,70 +196,6 @@ const Navigation = () => {
                       {item.label}
                     </Link>)}
                 </nav>
-              </div>
-
-              {/* User Account Section */}
-              <div className="mb-6">
-                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
-                  Account
-                </div>
-                {user ? (
-                  <div>
-                    {/* User Info Header */}
-                    <div className="px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-lg mx-4 mb-3 border border-gray-100">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
-                          <div className="text-xs text-gray-500 truncate">{user.email}</div>
-                        </div>
-                        <button 
-                          onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                          className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-                        >
-                          {isUserDropdownOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                        </button>
-                      </div>
-                    </div>
-                    
-                    {/* User Dropdown Content */}
-                    {isUserDropdownOpen && (
-                      <div className="space-y-1 mb-3">
-                        <Link 
-                          to="/settings" 
-                          className="flex items-center px-4 py-3 text-gray-700 hover:text-blue-700 hover:bg-blue-50 rounded-lg mx-4 transition-all duration-200 min-h-[44px] touch-manipulation"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <User className="w-4 h-4 mr-3" />
-                          <span className="font-medium">{t('accountSettings')}</span>
-                        </Link>
-                        <Link 
-                          to="/history" 
-                          className="flex items-center px-4 py-3 text-gray-700 hover:text-green-700 hover:bg-green-50 rounded-lg mx-4 transition-all duration-200 min-h-[44px] touch-manipulation"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <History className="w-4 h-4 mr-3" />
-                          <span className="font-medium">{t('history')}</span>
-                        </Link>
-                        <button 
-                          onClick={handleSignOut}
-                          className="flex items-center w-full px-4 py-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg mx-4 transition-all duration-200 min-h-[44px] touch-manipulation"
-                        >
-                          <LogOut className="w-4 h-4 mr-3" />
-                          <span className="font-medium">{t('signOut')}</span>
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <Link 
-                    to="/auth" 
-                    className="flex items-center px-4 py-3 text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg mx-4 transition-all duration-200 min-h-[44px] touch-manipulation"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <UserCircle className="w-4 h-4 mr-3" />
-                    <span className="font-medium">{t('signIn')}</span>
-                  </Link>
-                )}
               </div>
 
               {/* Currency Section */}
