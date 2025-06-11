@@ -7,17 +7,7 @@ const corsHeaders = {
   'Content-Type': 'application/json'
 }
 
-interface SmartBillEstimateInvoicesResponse {
-  errorText?: string;
-  message?: string;
-  areInvoicesCreated: boolean;
-  invoices?: Array<{
-    series: string;
-    number: string;
-  }>;
-}
-
-// Rate limiting for SmartBill API
+// Rate limiting for SmartBill API (max 3 calls per second)
 let lastApiCall = 0
 const API_RATE_LIMIT = 334 // ms between calls
 
@@ -33,155 +23,109 @@ async function rateLimitedFetch(url: string, options: RequestInit) {
   return fetch(url, options)
 }
 
-function parseXmlResponse(xmlText: string): SmartBillEstimateInvoicesResponse {
-  console.log('📄 Parsing XML response:', xmlText.substring(0, 500))
-  
-  try {
-    // Check for error messages first
-    const errorMatch = xmlText.match(/<errorText>(.*?)<\/errorText>/s)
-    if (errorMatch) {
-      console.log('⚠️ SmartBill API returned error:', errorMatch[1])
-      // If proforma not invoiced yet, this is not an error - just means pending
-      if (errorMatch[1].includes('nu a fost facturata') || errorMatch[1].includes('not invoiced')) {
-        return { areInvoicesCreated: false, invoices: [], errorText: errorMatch[1] }
-      }
-      return { areInvoicesCreated: false, invoices: [], errorText: errorMatch[1] }
-    }
-
-    // Check for areInvoicesCreated
-    const areInvoicesCreatedMatch = xmlText.match(/<areInvoicesCreated>(.*?)<\/areInvoicesCreated>/s)
-    const areInvoicesCreated = areInvoicesCreatedMatch?.[1] === 'true' || areInvoicesCreatedMatch?.[1] === '1'
-
-    // Parse invoices if they exist
-    const invoices: Array<{series: string, number: string}> = []
-    
-    // Find all invoice blocks
-    const invoiceMatches = xmlText.matchAll(/<invoice>(.*?)<\/invoice>/gs)
-    for (const match of invoiceMatches) {
-      const invoiceXml = match[1]
-      const seriesMatch = invoiceXml.match(/<series>(.*?)<\/series>/)
-      const numberMatch = invoiceXml.match(/<number>(.*?)<\/number>/)
-      
-      if (seriesMatch && numberMatch) {
-        invoices.push({
-          series: seriesMatch[1],
-          number: numberMatch[1]
-        })
-      }
-    }
-
-    return {
-      areInvoicesCreated,
-      invoices
-    }
-  } catch (error) {
-    console.error('❌ Error parsing XML response:', error)
-    return {
-      areInvoicesCreated: false,
-      invoices: [],
-      errorText: `XML parsing error: ${error.message}`
-    }
-  }
-}
-
-function extractProformaDetails(order: any): { series: string, number: string } {
-  console.log('📋 Extracting proforma details from order:', {
+function extractDocumentDetails(order: any): { series: string, number: string, documentId: string } {
+  console.log('📋 Extracting document details from order:', {
     smartbill_proforma_id: order.smartbill_proforma_id,
     smartbill_invoice_id: order.smartbill_invoice_id
   })
 
-  // Try to extract from smartbill_proforma_id first
-  let proformaId = order.smartbill_proforma_id
+  // Try to extract from smartbill_proforma_id first (since we create proformas with payment links)
+  let documentId = order.smartbill_proforma_id
   
-  // If no proforma ID, check if we have invoice ID (in case it was stored there)
-  if (!proformaId && order.smartbill_invoice_id) {
-    proformaId = order.smartbill_invoice_id
+  // If no proforma ID, check if we have invoice ID
+  if (!documentId && order.smartbill_invoice_id) {
+    documentId = order.smartbill_invoice_id
   }
 
-  if (!proformaId) {
-    throw new Error('No proforma or invoice ID found in order')
+  if (!documentId) {
+    throw new Error('No SmartBill document ID found in order')
   }
 
-  console.log('📄 Working with document ID:', proformaId)
+  console.log('📄 Working with document ID:', documentId)
 
   // Extract series and number using regex
   // Expected formats: "STRP123", "Prof456", "mng789", etc.
-  const seriesMatch = proformaId.match(/^([a-zA-Z]+)/)
-  const numberMatch = proformaId.match(/(\d+)$/)
+  const seriesMatch = documentId.match(/^([a-zA-Z]+)/)
+  const numberMatch = documentId.match(/(\d+)$/)
   
   if (!seriesMatch || !numberMatch) {
-    console.error('❌ Failed to parse document ID:', proformaId)
-    throw new Error(`Invalid document ID format: ${proformaId}`)
+    console.error('❌ Failed to parse document ID:', documentId)
+    throw new Error(`Invalid document ID format: ${documentId}`)
   }
 
   const series = seriesMatch[1]
   const number = numberMatch[1]
 
-  console.log('✅ Extracted details:', { series, number, original: proformaId })
+  console.log('✅ Extracted details:', { series, number, documentId })
 
-  return { series, number }
+  return { series, number, documentId }
 }
 
-async function checkProformaInvoiceStatus(auth: string, companyVat: string, proformaSeries: string, proformaNumber: string) {
-  // Properly encode URL parameters to handle special characters
-  const encodedSeries = encodeURIComponent(proformaSeries)
-  const encodedNumber = encodeURIComponent(proformaNumber)
-  const encodedCif = encodeURIComponent(companyVat)
+async function checkPaymentStatus(auth: string, companyVat: string, series: string, number: string) {
+  const paymentStatusUrl = `https://ws.smartbill.ro/SBORO/api/invoice/paymentstatus?cif=${encodeURIComponent(companyVat)}&seriesname=${encodeURIComponent(series)}&number=${encodeURIComponent(number)}`
   
-  const estimateInvoicesUrl = `https://ws.smartbill.ro/SBORO/api/estimate/invoices?cif=${encodedCif}&seriesName=${encodedSeries}&number=${encodedNumber}`
-  
-  console.log('🔍 Checking proforma invoice status:', {
-    series: proformaSeries,
-    number: proformaNumber,
+  console.log('🔍 Checking payment status:', {
+    series,
+    number,
     cif: companyVat,
-    url: estimateInvoicesUrl
+    url: paymentStatusUrl
   })
   
   try {
-    // Use PUT method as shown in SmartBill documentation
-    const response = await rateLimitedFetch(estimateInvoicesUrl, {
-      method: 'PUT', // SmartBill uses PUT for this endpoint
+    const response = await rateLimitedFetch(paymentStatusUrl, {
+      method: 'GET',
       headers: {
         'Authorization': `Basic ${auth}`,
-        'Accept': 'application/xml',
-        'Content-Type': 'application/xml',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       },
     })
 
-    console.log('📊 SmartBill API response status:', response.status, response.statusText)
+    console.log('📊 Payment status API response:', response.status, response.statusText)
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.log('❌ Estimate invoices API error:', response.status, response.statusText, errorText.substring(0, 500))
+      console.log('❌ Payment status API error:', response.status, errorText.substring(0, 500))
       
-      // Handle specific SmartBill errors more gracefully
-      if (response.status === 400) {
-        if (errorText.includes('seria proformei trebuie specificata') || errorText.includes('seriesName')) {
-          throw new Error(`SmartBill API error: Series name parameter issue. Series: "${proformaSeries}", Number: "${proformaNumber}"`)
-        }
-        if (errorText.includes('nu a fost facturata') || errorText.includes('not invoiced')) {
-          // This is expected when proforma hasn't been invoiced yet
-          return { areInvoicesCreated: false, invoices: [], errorText: 'Proforma not yet invoiced' }
+      // Handle specific SmartBill errors
+      if (response.status === 400 && errorText.includes('Factura nu a fost gasita')) {
+        // Document not found - this is normal for very new documents
+        return { 
+          found: false,
+          paid: false,
+          errorText: 'Document not found or not yet processed',
+          paymentData: null
         }
       }
       
-      throw new Error(`SmartBill API error: ${response.status} ${response.statusText} - ${errorText.substring(0, 200)}`)
+      throw new Error(`SmartBill payment status API error: ${response.status} - ${errorText.substring(0, 200)}`)
     }
 
-    const xmlText = await response.text()
-    console.log('📊 Raw XML response:', xmlText.substring(0, 500))
+    const paymentData = await response.json()
+    console.log('💰 Payment status data:', paymentData)
     
-    return parseXmlResponse(xmlText)
+    // Analyze payment status
+    const invoiceTotalAmount = paymentData?.invoiceTotalAmount || 0
+    const paidAmount = paymentData?.paidAmount || 0
+    const unpaidAmount = paymentData?.unpaidAmount || 0
+    
+    const isPaid = (paidAmount > 0 && unpaidAmount === 0) || (paidAmount >= invoiceTotalAmount && invoiceTotalAmount > 0)
+    
+    console.log(`💰 Payment analysis: Total=${invoiceTotalAmount}, Paid=${paidAmount}, Unpaid=${unpaidAmount}, IsPaid=${isPaid}`)
+    
+    return {
+      found: true,
+      paid: isPaid,
+      paymentData: {
+        total: invoiceTotalAmount,
+        paid: paidAmount,
+        unpaid: unpaidAmount
+      }
+    }
     
   } catch (error) {
-    console.error('❌ Error in checkProformaInvoiceStatus:', error)
-    
-    // Re-throw with more context
-    if (error.message.includes('SmartBill API error')) {
-      throw error
-    } else {
-      throw new Error(`Network or parsing error: ${error.message}`)
-    }
+    console.error('❌ Error checking payment status:', error)
+    throw error
   }
 }
 
@@ -197,6 +141,9 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
+    console.log('🚀 SmartBill Status Sync - Starting...')
+
+    // Parse request body
     const { orderId } = await req.json();
     
     if (!orderId) {
@@ -206,9 +153,9 @@ serve(async (req) => {
       );
     }
 
-    console.log(`🔄 Syncing SmartBill status for order: ${orderId}`);
+    console.log(`🔍 Syncing status for order: ${orderId}`);
 
-    // Get the order including SmartBill data
+    // Get the order from database
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .select('*')
@@ -232,154 +179,106 @@ serve(async (req) => {
       total_price: order.total_price
     })
 
-    // Check if we have proforma data
+    // Check if we have SmartBill document
     if (!order.smartbill_proforma_id && !order.smartbill_invoice_id) {
-      console.log('❌ No SmartBill document ID found for order');
+      console.log('❌ No SmartBill document found');
       return new Response(
-        JSON.stringify({ error: 'No SmartBill proforma or invoice ID found for this order' }),
+        JSON.stringify({ error: 'No SmartBill document found for this order' }),
         { status: 400, headers: corsHeaders }
       );
     }
 
-    // Get SmartBill credentials with validation
+    // Get SmartBill credentials
     const smartbillUsername = Deno.env.get('SMARTBILL_USERNAME') || Deno.env.get('SMARTBILL_EMAIL');
     const smartbillToken = Deno.env.get('SMARTBILL_TOKEN');
     const smartbillCompanyVat = Deno.env.get('SMARTBILL_COMPANY_VAT');
     
     if (!smartbillUsername || !smartbillToken || !smartbillCompanyVat) {
-      console.error('❌ SmartBill credentials not configured properly:', {
-        hasUsername: !!smartbillUsername,
-        hasToken: !!smartbillToken,
-        hasVat: !!smartbillCompanyVat
-      });
+      console.error('❌ SmartBill credentials not configured');
       return new Response(
         JSON.stringify({ error: 'SmartBill credentials not configured' }),
         { status: 500, headers: corsHeaders }
       );
     }
 
-    // Create auth token with proper base64 encoding
+    // Create auth token
     const smartbillAuth = btoa(`${smartbillUsername}:${smartbillToken}`);
-    console.log('🔐 SmartBill auth created, username length:', smartbillUsername.length);
+    console.log('🔐 SmartBill auth created');
     
-    // Extract proforma series and number
-    let proformaSeries: string;
-    let proformaNumber: string;
-    
+    // Extract document details
+    let documentDetails;
     try {
-      const details = extractProformaDetails(order);
-      proformaSeries = details.series;
-      proformaNumber = details.number;
+      documentDetails = extractDocumentDetails(order);
     } catch (error) {
-      console.error('❌ Failed to extract proforma details:', error);
+      console.error('❌ Failed to extract document details:', error);
       return new Response(
         JSON.stringify({ 
-          error: 'Failed to extract proforma details from order data',
+          error: 'Failed to extract document details from order',
           details: error.message 
         }),
         { status: 400, headers: corsHeaders }
       );
     }
 
-    console.log('📄 Checking proforma:', { series: proformaSeries, number: proformaNumber });
+    const { series, number, documentId } = documentDetails;
+    console.log('📄 Checking document:', { series, number, documentId });
 
-    // Check if proforma has been invoiced
-    let invoiceData: SmartBillEstimateInvoicesResponse;
+    // Check payment status
+    let paymentResult;
     try {
-      invoiceData = await checkProformaInvoiceStatus(smartbillAuth, smartbillCompanyVat, proformaSeries, proformaNumber);
+      paymentResult = await checkPaymentStatus(smartbillAuth, smartbillCompanyVat, series, number);
     } catch (error) {
-      console.error('❌ Failed to check proforma status:', error);
+      console.error('❌ Failed to check payment status:', error);
       return new Response(
         JSON.stringify({ 
-          error: 'Failed to check proforma status with SmartBill',
-          details: error.message,
-          debugInfo: {
-            proformaSeries,
-            proformaNumber,
-            companyVat: smartbillCompanyVat
-          }
+          error: 'Failed to check payment status with SmartBill',
+          details: error.message
         }),
         { status: 500, headers: corsHeaders }
       );
     }
 
-    console.log('📊 Invoice data from SmartBill:', invoiceData)
+    console.log('📊 Payment result:', paymentResult)
 
-    // Update order status based on invoice creation
+    // Determine new status based on payment result
     let newSmartbillStatus = order.smartbill_payment_status;
     let newPaymentStatus = order.payment_status;
-    let newInvoiceId = order.smartbill_invoice_id;
+    let newOrderStatus = order.status;
 
-    if (invoiceData.areInvoicesCreated && invoiceData.invoices && invoiceData.invoices.length > 0) {
-      // Proforma has been converted to invoice(s)
-      const firstInvoice = invoiceData.invoices[0];
-      newInvoiceId = `${firstInvoice.series}${firstInvoice.number}`;
-      newSmartbillStatus = 'confirmed'; // Updated status name
+    if (paymentResult.found && paymentResult.paid) {
+      // Payment confirmed
+      newSmartbillStatus = 'confirmed';
       newPaymentStatus = 'completed';
+      newOrderStatus = 'completed';
       
-      console.log(`✅ Proforma has been invoiced: ${newInvoiceId}`);
-    } else {
-      // Proforma not yet invoiced - check payment status directly
-      try {
-        // Use the payment status API to check if proforma is paid
-        const paymentStatusUrl = `https://ws.smartbill.ro/SBORO/api/invoice/paymentstatus?cif=${encodeURIComponent(smartbillCompanyVat)}&seriesname=${encodeURIComponent(proformaSeries)}&number=${encodeURIComponent(proformaNumber)}`;
-        
-        const paymentResponse = await rateLimitedFetch(paymentStatusUrl, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Basic ${smartbillAuth}`,
-            'Accept': 'application/json',
-          },
-        });
-
-        if (paymentResponse.ok) {
-          const paymentResult = await paymentResponse.json();
-          console.log('💰 Payment status result:', paymentResult);
-          
-          const invoiceTotalAmount = paymentResult?.invoiceTotalAmount || 0;
-          const paidAmount = paymentResult?.paidAmount || 0;
-          const unpaidAmount = paymentResult?.unpaidAmount || 0;
-          
-          const isPaid = (paidAmount > 0 && unpaidAmount === 0) || (paidAmount >= invoiceTotalAmount && invoiceTotalAmount > 0);
-          
-          if (isPaid) {
-            newSmartbillStatus = 'confirmed';
-            newPaymentStatus = 'completed';
-            console.log('✅ Proforma is paid but not yet converted to invoice');
-          } else {
-            newSmartbillStatus = 'pending';
-            console.log('ℹ️ Proforma is not yet paid');
-          }
-        } else {
-          console.log('⚠️ Could not check payment status, keeping current status');
-        }
-      } catch (paymentError) {
-        console.log('⚠️ Payment status check failed:', paymentError.message);
-        // Keep current status if payment check fails
-      }
-      
-      console.log('ℹ️ Proforma not yet invoiced, error:', invoiceData.errorText);
+      console.log(`✅ Payment confirmed for order ${orderId}`);
+    } else if (paymentResult.found && !paymentResult.paid) {
+      // Document found but not paid
+      newSmartbillStatus = 'pending';
+      console.log('ℹ️ Payment still pending');
+    } else if (!paymentResult.found) {
+      // Document not found (might be too new)
+      console.log('⚠️ Document not found in SmartBill - might be too new');
+      // Keep current status
     }
 
-    // Update the order with new status information
+    // Update order if status changed
     const updateData: any = {
       updated_at: new Date().toISOString(),
-      webhook_processed_at: new Date().toISOString(), // Use existing column
+      webhook_processed_at: new Date().toISOString()
     };
 
-    // Only update if status actually changed
     let statusChanged = false;
     if (newSmartbillStatus !== order.smartbill_payment_status) {
       updateData.smartbill_payment_status = newSmartbillStatus;
       statusChanged = true;
     }
-    if (newPaymentStatus !== order.payment_status && newPaymentStatus === 'completed') {
+    if (newPaymentStatus !== order.payment_status) {
       updateData.payment_status = newPaymentStatus;
-      updateData.status = 'completed'; // Also update main order status
       statusChanged = true;
     }
-    if (newInvoiceId && newInvoiceId !== order.smartbill_invoice_id) {
-      updateData.smartbill_invoice_id = newInvoiceId;
+    if (newOrderStatus !== order.status) {
+      updateData.status = newOrderStatus;
       statusChanged = true;
     }
 
@@ -399,7 +298,7 @@ serve(async (req) => {
 
       console.log(`✅ Order ${orderId} status updated - SmartBill: ${newSmartbillStatus}, Payment: ${newPaymentStatus}`);
     } else {
-      console.log(`ℹ️ Order ${orderId} status unchanged - already up to date`);
+      console.log(`ℹ️ Order ${orderId} status unchanged`);
     }
 
     return new Response(
@@ -407,16 +306,18 @@ serve(async (req) => {
         success: true,
         orderId,
         statusChanged,
+        documentFound: paymentResult.found,
+        paymentConfirmed: paymentResult.paid,
         currentSmartbillStatus: newSmartbillStatus,
         currentPaymentStatus: newPaymentStatus,
-        invoiceCreated: invoiceData.areInvoicesCreated,
-        invoiceId: newInvoiceId,
-        invoices: invoiceData.invoices || [],
+        currentOrderStatus: newOrderStatus,
+        paymentData: paymentResult.paymentData,
         message: statusChanged ? 'Status updated successfully' : 'Status checked - no changes needed',
         debugInfo: {
-          proformaSeries,
-          proformaNumber,
-          smartbillResponse: invoiceData
+          documentId,
+          series,
+          number,
+          paymentResult
         }
       }),
       { status: 200, headers: corsHeaders }
@@ -427,7 +328,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
-        details: error.message 
+        details: error.message
       }),
       { status: 500, headers: corsHeaders }
     );
