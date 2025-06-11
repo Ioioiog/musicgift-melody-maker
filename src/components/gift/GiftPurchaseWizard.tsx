@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,8 +24,8 @@ interface GiftPurchaseWizardProps {
 }
 
 const PRESET_AMOUNTS = {
-  RON: [100, 200, 300, 500, 1000],
-  EUR: [25, 50, 75, 100, 200]
+  RON: [299, 500, 750, 1000, 1500],
+  EUR: [49, 100, 150, 250, 500]
 };
 
 const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
@@ -88,7 +87,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
   ];
 
   const getMinMaxAmount = () => {
-    return currency === 'EUR' ? { min: 10, max: 500 } : { min: 50, max: 2000 };
+    return currency === 'EUR' ? { min: 49, max: 1499 } : { min: 299, max: 7999 };
   };
 
   const getFinalAmount = () => {
@@ -591,3 +590,5 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
 };
 
 export default GiftPurchaseWizard;
+
+</edits_to_apply>
