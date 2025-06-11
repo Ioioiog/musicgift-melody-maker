@@ -1042,10 +1042,6 @@ const OrdersManagement = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
             <CardTitle className="text-xl sm:text-2xl">{t('ordersManagement', 'Orders Management')}</CardTitle>
             <div className="flex gap-2">
-              <Button onClick={() => refetch()} variant="outline" size="sm" disabled={isLoading}>
-                <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-                Refresh
-              </Button>
               <Button onClick={exportOrders} variant="outline" size="sm" className="w-full sm:w-auto">
                 <Download className="w-4 h-4 mr-2" />
                 {t('exportCSV', 'Export CSV')}
@@ -1112,3 +1108,5 @@ const OrdersManagement = () => {
 };
 
 export default OrdersManagement;
+
+}
