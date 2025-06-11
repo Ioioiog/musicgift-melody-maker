@@ -7,14 +7,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-interface SmartBillInvoiceData {
-  url?: string;
-  number?: string;
-  series?: string;
-  message?: string;
-  errorText?: string;
-}
-
 // Rate limiting for SmartBill API
 let lastApiCall = 0
 const API_RATE_LIMIT = 334 // ms between calls
@@ -34,6 +26,11 @@ async function rateLimitedFetch(url: string, options: RequestInit) {
 function extractProformaDetails(order: any): { series: string, number: string } {
   let proformaSeries = 'STRP' // Default series
   let proformaNumber = order.smartbill_proforma_id || ''
+
+  console.log('🔍 Extracting proforma details from order:', {
+    smartbill_proforma_id: order.smartbill_proforma_id,
+    smartbill_proforma_data: typeof order.smartbill_proforma_data
+  })
 
   // Try to extract from smartbill_proforma_data if available
   if (order.smartbill_proforma_data) {
@@ -58,6 +55,7 @@ function extractProformaDetails(order: any): { series: string, number: string } 
     }
   }
 
+  console.log('📋 Extracted proforma details:', { series: proformaSeries, number: proformaNumber })
   return { series: proformaSeries, number: proformaNumber }
 }
 
@@ -79,10 +77,12 @@ async function fetchProformaPDF(auth: string, companyVat: string, proformaSeries
     },
   })
 
+  console.log('📄 PDF response status:', response.status, response.statusText)
+
   if (!response.ok) {
     const errorText = await response.text()
     console.log('❌ PDF fetch error:', response.status, response.statusText, errorText.substring(0, 200))
-    throw new Error(`SmartBill PDF API error: ${response.status} ${response.statusText}`)
+    throw new Error(`SmartBill PDF API error: ${response.status} ${response.statusText} - ${errorText.substring(0, 100)}`)
   }
 
   return response
@@ -129,6 +129,12 @@ serve(async (req) => {
           { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
+
+      console.log('📋 Order details:', {
+        id: order.id,
+        smartbill_proforma_id: order.smartbill_proforma_id,
+        total_price: order.total_price
+      })
 
       if (!order.smartbill_proforma_id) {
         console.log('❌ No SmartBill proforma ID found for order');

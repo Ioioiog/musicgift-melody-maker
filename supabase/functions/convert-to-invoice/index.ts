@@ -58,10 +58,28 @@ serve(async (req) => {
       throw new Error(`Order not found: ${orderError?.message}`)
     }
 
+    console.log('📋 Order details for conversion:', {
+      id: order.id,
+      payment_status: order.payment_status,
+      smartbill_payment_status: order.smartbill_payment_status,
+      total_price: order.total_price,
+      smartbill_proforma_id: order.smartbill_proforma_id
+    })
+
     // Check if order is eligible for invoice conversion
-    const isPaid = order.payment_status === 'completed' || order.smartbill_payment_status === 'paid'
+    // Allow conversion if either payment_status is completed OR smartbill_payment_status is paid
+    // OR if it's manual admin conversion (bypass payment check)
+    const isPaid = order.payment_status === 'completed' || 
+                   order.smartbill_payment_status === 'paid' ||
+                   conversionSource === 'admin_manual'
+    
     if (!isPaid) {
-      throw new Error('Order must be paid before converting to invoice')
+      console.log('❌ Order not paid:', {
+        payment_status: order.payment_status,
+        smartbill_payment_status: order.smartbill_payment_status,
+        conversionSource
+      })
+      throw new Error('Order must be paid before converting to invoice (unless manual admin conversion)')
     }
 
     // Check if invoice already exists
@@ -98,10 +116,18 @@ serve(async (req) => {
       throw new Error('SmartBill configuration incomplete')
     }
 
-    // Convert price based on payment provider
+    // Convert price based on payment provider - but check if it's already correct
     let convertedPrice = order.total_price
+    
+    // Only convert from cents if the price seems to be in cents format
     if (order.payment_provider === 'stripe' || order.payment_provider === 'revolut') {
-      convertedPrice = order.total_price / 100 // Convert from cents
+      // If price is very large (likely in cents), convert it
+      if (convertedPrice > 1000) {
+        convertedPrice = order.total_price / 100
+        console.log('💰 Converting price from cents:', order.total_price, '→', convertedPrice)
+      } else {
+        console.log('💰 Price already in correct format:', convertedPrice)
+      }
     }
 
     // Prepare customer data
@@ -124,6 +150,14 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     const formattedPrice = convertedPrice.toFixed(2)
+
+    console.log('💰 Invoice details:', {
+      originalPrice: order.total_price,
+      convertedPrice,
+      formattedPrice,
+      clientName,
+      packageName: order.package_name
+    })
 
     // Create invoice XML
     const invoiceXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -157,7 +191,7 @@ serve(async (req) => {
   <observations>${escapeXml(`Comandă cadou musical personalizat pentru ${formData.recipientName || 'destinatar'}. ID comandă: ${order.id}`)}</observations>
 </invoice>`
 
-    console.log('📄 Creating SmartBill invoice...')
+    console.log('📄 Creating SmartBill invoice with XML:', invoiceXml.substring(0, 300))
 
     // Create invoice via SmartBill API
     const apiUrl = `${baseUrl}/SBORO/api/invoice`

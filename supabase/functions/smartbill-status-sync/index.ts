@@ -1,4 +1,5 @@
 
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -14,14 +15,6 @@ interface SmartBillEstimateInvoicesResponse {
     series: string;
     number: string;
   }>;
-}
-
-interface SmartBillInvoiceData {
-  url?: string;
-  number?: string;
-  series?: string;
-  message?: string;
-  errorText?: string;
 }
 
 // Rate limiting for SmartBill API
@@ -43,48 +36,62 @@ async function rateLimitedFetch(url: string, options: RequestInit) {
 function parseXmlResponse(xmlText: string): SmartBillEstimateInvoicesResponse {
   console.log('📄 Parsing XML response:', xmlText.substring(0, 500))
   
-  // Check for error messages first
-  const errorMatch = xmlText.match(/<errorText>(.*?)<\/errorText>/s)
-  if (errorMatch) {
-    console.log('⚠️ SmartBill API returned error:', errorMatch[1])
-    // If proforma not invoiced yet, this is not an error - just means pending
-    if (errorMatch[1].includes('nu a fost facturata')) {
+  try {
+    // Check for error messages first
+    const errorMatch = xmlText.match(/<errorText>(.*?)<\/errorText>/s)
+    if (errorMatch) {
+      console.log('⚠️ SmartBill API returned error:', errorMatch[1])
+      // If proforma not invoiced yet, this is not an error - just means pending
+      if (errorMatch[1].includes('nu a fost facturata') || errorMatch[1].includes('not invoiced')) {
+        return { areInvoicesCreated: false, invoices: [], errorText: errorMatch[1] }
+      }
       return { areInvoicesCreated: false, invoices: [], errorText: errorMatch[1] }
     }
-    return { areInvoicesCreated: false, invoices: [], errorText: errorMatch[1] }
-  }
 
-  // Check for areInvoicesCreated
-  const areInvoicesCreatedMatch = xmlText.match(/<areInvoicesCreated>(.*?)<\/areInvoicesCreated>/s)
-  const areInvoicesCreated = areInvoicesCreatedMatch?.[1] === 'true' || areInvoicesCreatedMatch?.[1] === '1'
+    // Check for areInvoicesCreated
+    const areInvoicesCreatedMatch = xmlText.match(/<areInvoicesCreated>(.*?)<\/areInvoicesCreated>/s)
+    const areInvoicesCreated = areInvoicesCreatedMatch?.[1] === 'true' || areInvoicesCreatedMatch?.[1] === '1'
 
-  // Parse invoices if they exist
-  const invoices: Array<{series: string, number: string}> = []
-  
-  // Find all invoice blocks
-  const invoiceMatches = xmlText.matchAll(/<invoice>(.*?)<\/invoice>/gs)
-  for (const match of invoiceMatches) {
-    const invoiceXml = match[1]
-    const seriesMatch = invoiceXml.match(/<series>(.*?)<\/series>/)
-    const numberMatch = invoiceXml.match(/<number>(.*?)<\/number>/)
+    // Parse invoices if they exist
+    const invoices: Array<{series: string, number: string}> = []
     
-    if (seriesMatch && numberMatch) {
-      invoices.push({
-        series: seriesMatch[1],
-        number: numberMatch[1]
-      })
+    // Find all invoice blocks
+    const invoiceMatches = xmlText.matchAll(/<invoice>(.*?)<\/invoice>/gs)
+    for (const match of invoiceMatches) {
+      const invoiceXml = match[1]
+      const seriesMatch = invoiceXml.match(/<series>(.*?)<\/series>/)
+      const numberMatch = invoiceXml.match(/<number>(.*?)<\/number>/)
+      
+      if (seriesMatch && numberMatch) {
+        invoices.push({
+          series: seriesMatch[1],
+          number: numberMatch[1]
+        })
+      }
     }
-  }
 
-  return {
-    areInvoicesCreated,
-    invoices
+    return {
+      areInvoicesCreated,
+      invoices
+    }
+  } catch (error) {
+    console.error('❌ Error parsing XML response:', error)
+    return {
+      areInvoicesCreated: false,
+      invoices: [],
+      errorText: `XML parsing error: ${error.message}`
+    }
   }
 }
 
 function extractProformaDetails(order: any): { series: string, number: string } {
   let proformaSeries = 'STRP' // Default series
   let proformaNumber = order.smartbill_proforma_id || ''
+
+  console.log('🔍 Extracting proforma details from order:', {
+    smartbill_proforma_id: order.smartbill_proforma_id,
+    smartbill_proforma_data: typeof order.smartbill_proforma_data
+  })
 
   // Try to extract from smartbill_proforma_data if available
   if (order.smartbill_proforma_data) {
@@ -109,6 +116,7 @@ function extractProformaDetails(order: any): { series: string, number: string } 
     }
   }
 
+  console.log('📋 Extracted proforma details:', { series: proformaSeries, number: proformaNumber })
   return { series: proformaSeries, number: proformaNumber }
 }
 
@@ -130,9 +138,12 @@ async function checkProformaInvoiceStatus(auth: string, companyVat: string, prof
     },
   })
 
+  console.log('📊 SmartBill API response status:', response.status, response.statusText)
+
   if (!response.ok) {
-    console.log('❌ Estimate invoices API error:', response.status, response.statusText)
-    throw new Error(`SmartBill API error: ${response.status} ${response.statusText}`)
+    const errorText = await response.text()
+    console.log('❌ Estimate invoices API error:', response.status, response.statusText, errorText.substring(0, 200))
+    throw new Error(`SmartBill API error: ${response.status} ${response.statusText} - ${errorText.substring(0, 100)}`)
   }
 
   const xmlText = await response.text()
@@ -141,7 +152,7 @@ async function checkProformaInvoiceStatus(auth: string, companyVat: string, prof
   return parseXmlResponse(xmlText)
 }
 
-Deno.serve(async (req) => {
+serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -179,6 +190,14 @@ Deno.serve(async (req) => {
       );
     }
 
+    console.log('📋 Order details:', {
+      id: order.id,
+      payment_status: order.payment_status,
+      smartbill_payment_status: order.smartbill_payment_status,
+      smartbill_proforma_id: order.smartbill_proforma_id,
+      total_price: order.total_price
+    })
+
     // Check if we have proforma data
     if (!order.smartbill_proforma_id) {
       console.log('❌ No SmartBill proforma ID found for order');
@@ -211,6 +230,8 @@ Deno.serve(async (req) => {
     // Check if proforma has been invoiced
     const invoiceData = await checkProformaInvoiceStatus(smartbillAuth, smartbillCompanyVat, proformaSeries, proformaNumber);
 
+    console.log('📊 Invoice data from SmartBill:', invoiceData)
+
     // Update order status based on invoice creation
     let newSmartbillStatus = order.smartbill_payment_status;
     let newPaymentStatus = order.payment_status;
@@ -227,9 +248,8 @@ Deno.serve(async (req) => {
     } else {
       // Proforma not yet invoiced
       newSmartbillStatus = 'pending';
-      newPaymentStatus = 'pending';
       
-      console.log('ℹ️ Proforma not yet invoiced');
+      console.log('ℹ️ Proforma not yet invoiced, error:', invoiceData.errorText);
     }
 
     // Update the order with new status information
@@ -244,7 +264,7 @@ Deno.serve(async (req) => {
       updateData.smartbill_payment_status = newSmartbillStatus;
       statusChanged = true;
     }
-    if (newPaymentStatus !== order.payment_status) {
+    if (newPaymentStatus !== order.payment_status && newPaymentStatus === 'completed') {
       updateData.payment_status = newPaymentStatus;
       statusChanged = true;
     }
@@ -282,7 +302,12 @@ Deno.serve(async (req) => {
         invoiceCreated: invoiceData.areInvoicesCreated,
         invoiceId: newInvoiceId,
         invoices: invoiceData.invoices || [],
-        message: statusChanged ? 'Status updated successfully' : 'Status checked - no changes needed'
+        message: statusChanged ? 'Status updated successfully' : 'Status checked - no changes needed',
+        debugInfo: {
+          proformaSeries,
+          proformaNumber,
+          smartbillResponse: invoiceData
+        }
       }),
       { 
         status: 200, 

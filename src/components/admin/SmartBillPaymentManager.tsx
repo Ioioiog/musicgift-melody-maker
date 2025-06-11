@@ -174,61 +174,76 @@ const SmartBillPaymentManager = () => {
     try {
       console.log('Fetching proforma PDF for order:', orderId);
       
-      const { data, error } = await supabase.functions.invoke('smartbill-view-proforma', {
+      const response = await supabase.functions.invoke('smartbill-view-proforma', {
         body: { orderId }
       });
 
-      if (error) {
-        console.error('PDF fetch error:', error);
-        throw error;
+      if (response.error) {
+        console.error('PDF fetch error:', response.error);
+        throw response.error;
       }
 
-      // The response should be a PDF blob
-      if (data && data instanceof ArrayBuffer) {
-        // Create a blob URL and open in new tab
-        const blob = new Blob([data], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
+      // Check if we got PDF data
+      if (response.data) {
+        let pdfBlob: Blob;
+        
+        // Handle different response types
+        if (response.data instanceof ArrayBuffer) {
+          pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+        } else if (response.data instanceof Uint8Array) {
+          pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+        } else if (typeof response.data === 'string') {
+          // Try to decode base64 if it's a string
+          try {
+            const binaryString = atob(response.data);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+            }
+            pdfBlob = new Blob([bytes], { type: 'application/pdf' });
+          } catch (e) {
+            throw new Error('Invalid PDF data format');
+          }
+        } else {
+          // Assume it's already a blob or can be converted
+          pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+        }
+        
+        // Create URL and open in new tab
+        const url = URL.createObjectURL(pdfBlob);
+        const newTab = window.open(url, '_blank');
+        
+        if (!newTab) {
+          // Fallback: trigger download if popup blocked
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `proforma_${proformaId}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          toast({
+            title: "PDF Downloaded",
+            description: "PDF was downloaded to your device (popup blocked)"
+          });
+        } else {
+          toast({
+            title: "PDF Opened",
+            description: "PDF opened in new tab"
+          });
+        }
         
         // Clean up the URL after a delay
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
         
-        toast({
-          title: "Proforma PDF",
-          description: "PDF opened in new tab"
-        });
-      } else if (data && typeof data === 'object' && data.error) {
-        throw new Error(data.error);
       } else {
-        // Try to handle the response as a blob
-        try {
-          const response = await supabase.functions.invoke('smartbill-view-proforma', {
-            body: { orderId }
-          });
-          
-          if (response.data) {
-            // Create blob URL from the response
-            const url = URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-            window.open(url, '_blank');
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
-            
-            toast({
-              title: "Proforma PDF",
-              description: "PDF opened in new tab"
-            });
-          } else {
-            throw new Error('No PDF data received');
-          }
-        } catch (blobError) {
-          console.error('Error creating blob:', blobError);
-          throw new Error('Failed to process PDF data');
-        }
+        throw new Error('No PDF data received from server');
       }
     } catch (error) {
       console.error('Error fetching proforma PDF:', error);
       toast({
         title: "PDF Fetch Failed",
-        description: error.message || "Failed to fetch proforma PDF",
+        description: error.message || "Failed to fetch proforma PDF. Check logs for details.",
         variant: "destructive"
       });
     }
