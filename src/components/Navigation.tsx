@@ -7,13 +7,14 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { ShoppingCart, Check, Globe, LogOut, UserCircle, User, History, ChevronDown, ChevronUp, Settings } from "lucide-react";
 import CurrencyIcon from "@/components/CurrencyIcon";
-import UnifiedSettingsMenu from "@/components/UnifiedSettingsMenu";
 
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isLanguageCurrencyDropdownOpen, setIsLanguageCurrencyDropdownOpen] = useState(false);
+  const [isDesktopUserDropdownOpen, setIsDesktopUserDropdownOpen] = useState(false);
+  const [isDesktopSettingsDropdownOpen, setIsDesktopSettingsDropdownOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const { currency, setCurrency } = useCurrency();
   const { user, signOut } = useAuth();
@@ -22,15 +23,21 @@ const Navigation = () => {
   const mainMenuRef = useRef<HTMLDivElement>(null);
   const userDropdownRef = useRef<HTMLDivElement>(null);
   const languageCurrencyDropdownRef = useRef<HTMLDivElement>(null);
+  const desktopUserDropdownRef = useRef<HTMLDivElement>(null);
+  const desktopSettingsDropdownRef = useRef<HTMLDivElement>(null);
   const mainMenuButtonRef = useRef<HTMLButtonElement>(null);
   const userDropdownButtonRef = useRef<HTMLButtonElement>(null);
   const languageCurrencyButtonRef = useRef<HTMLButtonElement>(null);
+  const desktopUserDropdownButtonRef = useRef<HTMLButtonElement>(null);
+  const desktopSettingsDropdownButtonRef = useRef<HTMLButtonElement>(null);
 
   // Helper function to close all menus
   const closeAllMenus = () => {
     setIsMenuOpen(false);
     setIsUserDropdownOpen(false);
     setIsLanguageCurrencyDropdownOpen(false);
+    setIsDesktopUserDropdownOpen(false);
+    setIsDesktopSettingsDropdownOpen(false);
   };
 
   // Click outside detection
@@ -39,7 +46,7 @@ const Navigation = () => {
       const target = event.target as Node;
       
       // Check if any menu is open first
-      if (!isMenuOpen && !isUserDropdownOpen && !isLanguageCurrencyDropdownOpen) {
+      if (!isMenuOpen && !isUserDropdownOpen && !isLanguageCurrencyDropdownOpen && !isDesktopUserDropdownOpen && !isDesktopSettingsDropdownOpen) {
         return;
       }
 
@@ -50,9 +57,13 @@ const Navigation = () => {
                                   (userDropdownButtonRef.current && userDropdownButtonRef.current.contains(target));
       const isInsideLanguageCurrency = (languageCurrencyDropdownRef.current && languageCurrencyDropdownRef.current.contains(target)) || 
                                       (languageCurrencyButtonRef.current && languageCurrencyButtonRef.current.contains(target));
+      const isInsideDesktopUserDropdown = (desktopUserDropdownRef.current && desktopUserDropdownRef.current.contains(target)) || 
+                                         (desktopUserDropdownButtonRef.current && desktopUserDropdownButtonRef.current.contains(target));
+      const isInsideDesktopSettingsDropdown = (desktopSettingsDropdownRef.current && desktopSettingsDropdownRef.current.contains(target)) || 
+                                             (desktopSettingsDropdownButtonRef.current && desktopSettingsDropdownButtonRef.current.contains(target));
 
       // If click is outside all menu areas, close all menus
-      if (!isInsideMainMenu && !isInsideUserDropdown && !isInsideLanguageCurrency) {
+      if (!isInsideMainMenu && !isInsideUserDropdown && !isInsideLanguageCurrency && !isInsideDesktopUserDropdown && !isInsideDesktopSettingsDropdown) {
         closeAllMenus();
       }
     };
@@ -72,7 +83,7 @@ const Navigation = () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscapeKey);
     };
-  }, [isMenuOpen, isUserDropdownOpen, isLanguageCurrencyDropdownOpen]);
+  }, [isMenuOpen, isUserDropdownOpen, isLanguageCurrencyDropdownOpen, isDesktopUserDropdownOpen, isDesktopSettingsDropdownOpen]);
 
   const getOrderText = () => {
     switch (language) {
@@ -92,19 +103,41 @@ const Navigation = () => {
   const handleMainMenuToggle = () => {
     setIsUserDropdownOpen(false);
     setIsLanguageCurrencyDropdownOpen(false);
+    setIsDesktopUserDropdownOpen(false);
+    setIsDesktopSettingsDropdownOpen(false);
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleUserDropdownToggle = () => {
     setIsMenuOpen(false);
     setIsLanguageCurrencyDropdownOpen(false);
+    setIsDesktopUserDropdownOpen(false);
+    setIsDesktopSettingsDropdownOpen(false);
     setIsUserDropdownOpen(!isUserDropdownOpen);
   };
 
   const handleLanguageCurrencyToggle = () => {
     setIsMenuOpen(false);
     setIsUserDropdownOpen(false);
+    setIsDesktopUserDropdownOpen(false);
+    setIsDesktopSettingsDropdownOpen(false);
     setIsLanguageCurrencyDropdownOpen(!isLanguageCurrencyDropdownOpen);
+  };
+
+  const handleDesktopUserDropdownToggle = () => {
+    setIsMenuOpen(false);
+    setIsUserDropdownOpen(false);
+    setIsLanguageCurrencyDropdownOpen(false);
+    setIsDesktopSettingsDropdownOpen(false);
+    setIsDesktopUserDropdownOpen(!isDesktopUserDropdownOpen);
+  };
+
+  const handleDesktopSettingsDropdownToggle = () => {
+    setIsMenuOpen(false);
+    setIsUserDropdownOpen(false);
+    setIsLanguageCurrencyDropdownOpen(false);
+    setIsDesktopUserDropdownOpen(false);
+    setIsDesktopSettingsDropdownOpen(!isDesktopSettingsDropdownOpen);
   };
 
   const navItems = [{
@@ -167,10 +200,127 @@ const Navigation = () => {
               </div>
             </nav>
 
-            {/* Right Side: Desktop - Unified Settings + Order Button */}
+            {/* Right Side: Desktop - Settings + User Menu + Order Button */}
             <div className="hidden lg:flex items-center space-x-3 ml-auto">
-              {/* Unified Settings Menu */}
-              <UnifiedSettingsMenu />
+              {/* Settings Dropdown */}
+              <div className="relative">
+                <button 
+                  ref={desktopSettingsDropdownButtonRef}
+                  onClick={handleDesktopSettingsDropdownToggle}
+                  className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-gray-200/50 hover:border-gray-300 text-gray-700 hover:text-gray-800 transition-all duration-300 rounded-xl px-3 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-1 min-h-[40px] touch-manipulation"
+                >
+                  <Settings className="w-4 h-4" />
+                </button>
+
+                {/* Settings Dropdown Menu */}
+                {isDesktopSettingsDropdownOpen && (
+                  <div ref={desktopSettingsDropdownRef} className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md border-2 border-gray-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
+                    {/* Currency Section */}
+                    <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Currency
+                    </div>
+                    <button 
+                      onClick={() => {
+                        setCurrency('EUR');
+                        closeAllMenus();
+                      }}
+                      className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <CurrencyIcon currency="EUR" className="w-4 h-4" />
+                        <span>EUR</span>
+                      </div>
+                      {currency === 'EUR' && <Check className="w-4 h-4" />}
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setCurrency('RON');
+                        closeAllMenus();
+                      }}
+                      className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <CurrencyIcon currency="RON" className="w-4 h-4" />
+                        <span>RON</span>
+                      </div>
+                      {currency === 'RON' && <Check className="w-4 h-4" />}
+                    </button>
+
+                    <div className="bg-gray-200 my-2 h-px" />
+
+                    {/* Language Section */}
+                    <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Language
+                    </div>
+                    {languages.map(lang => (
+                      <button 
+                        key={lang}
+                        onClick={() => {
+                          setLanguage(lang);
+                          closeAllMenus();
+                        }}
+                        className={`w-full hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold shadow-sm" : "text-gray-700"}`}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <Globe className="w-4 h-4" />
+                          <span>{languageNames[lang]}</span>
+                        </div>
+                        {language === lang && <Check className="w-4 h-4" />}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* User Menu */}
+              <div className="relative">
+                {user ? (
+                  <button 
+                    ref={desktopUserDropdownButtonRef}
+                    onClick={handleDesktopUserDropdownToggle}
+                    className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-rose-200/50 hover:border-rose-300 text-gray-700 hover:text-rose-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2"
+                  >
+                    <User className="w-4 h-4" />
+                    <span className="hidden md:inline text-sm font-medium">
+                      {user.user_metadata?.full_name || user.email?.split('@')[0] || t('user')}
+                    </span>
+                  </button>
+                ) : (
+                  <Link to="/auth">
+                    <button className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-emerald-200/50 hover:border-emerald-300 text-gray-700 hover:text-emerald-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2">
+                      <UserCircle className="w-4 h-4" />
+                      <span className="text-sm font-medium">{t('signIn')}</span>
+                    </button>
+                  </Link>
+                )}
+
+                {/* User Dropdown Menu */}
+                {user && isDesktopUserDropdownOpen && (
+                  <div ref={desktopUserDropdownRef} className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md shadow-2xl border-2 border-pink-200 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
+                    <div className="px-3 py-2 text-sm text-gray-600 bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg mx-1 mb-2 border border-pink-100">
+                      <div className="font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
+                      <div className="text-xs text-gray-500 truncate">{user.email}</div>
+                    </div>
+                    <div className="bg-pink-200 my-2 h-px" />
+                    <Link 
+                      to="/settings" 
+                      className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105"
+                      onClick={closeAllMenus}
+                    >
+                      <Settings className="w-4 h-4 mr-3" />
+                      <span className="font-medium">{t('accountSettings')}</span>
+                    </Link>
+                    <div className="bg-pink-200 my-2 h-px" />
+                    <button 
+                      onClick={handleSignOut} 
+                      className="w-full text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer font-medium transform hover:scale-105 flex items-center"
+                    >
+                      <LogOut className="w-4 h-4 mr-3" />
+                      {t('signOut')}
+                    </button>
+                  </div>
+                )}
+              </div>
               
               {/* Orange Shopping Cart Button */}
               <Link to="/order" className="relative group">
