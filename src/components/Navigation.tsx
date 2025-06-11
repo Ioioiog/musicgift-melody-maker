@@ -235,152 +235,197 @@ const Navigation = () => {
             </div>
           </div>
 
-          {/* Enhanced Mobile Menu - Now with proper spacing to avoid logo overlap */}
-          {isMenuOpen && <div ref={mainMenuRef} className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto mt-2">
-              
+          {/* Enhanced Mobile Menu - With improved styling and consistent alignment */}
+          {isMenuOpen && (
+            <div ref={mainMenuRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-gradient-to-br from-white via-violet-50/30 to-purple-50/20 backdrop-blur-xl border border-violet-200/40 overflow-hidden">
               {/* Website Pages Section */}
-              <div className="mb-6 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
-                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
-                  Website Pages
+              <div className="p-6">
+                <div className="text-center mb-6">
+                  <h3 className="text-sm font-bold text-violet-600 uppercase tracking-wider mb-2">Website Pages</h3>
+                  <div className="w-12 h-0.5 bg-gradient-to-r from-violet-400 to-purple-400 mx-auto rounded-full"></div>
                 </div>
-                <nav className="flex flex-col space-y-1">
-                  {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center text-right ${location.pathname === item.path ? "text-violet-600 bg-violet-50" : "text-gray-700"}`} onClick={closeAllMenus}>
-                      {item.label}
-                    </Link>)}
+                
+                <nav className="space-y-1">
+                  {navItems.map(item => (
+                    <Link 
+                      key={item.path + item.label} 
+                      to={item.path} 
+                      className={`group flex items-center justify-center text-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-violet-100 hover:to-purple-100 hover:shadow-md transform hover:scale-[1.02] ${
+                        location.pathname === item.path 
+                          ? "bg-gradient-to-r from-violet-500 to-purple-500 text-white shadow-lg" 
+                          : "text-gray-700 hover:text-violet-700"
+                      }`} 
+                      onClick={closeAllMenus}
+                    >
+                      <span className="font-medium text-base">{item.label}</span>
+                      {location.pathname === item.path && (
+                        <div className="ml-2 w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                      )}
+                    </Link>
+                  ))}
                 </nav>
               </div>
 
               {/* Order Button Section */}
-              <div className="pt-4 border-t border-gray-200 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
-                <Link to="/order" className="block mx-4 mb-2" onClick={closeAllMenus}>
-                  <div className="flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full h-12 min-h-[48px] touch-manipulation">
-                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center mr-3">
-                      <ShoppingCart className="w-4 h-4 text-orange-500" />
-                    </div>
-                    <span className="text-base font-bold">
-                      {getOrderText()}
-                    </span>
-                  </div>
-                </Link>
-              </div>
-            </div>}
-
-          {/* Language/Currency Dropdown for Mobile - With proper spacing to avoid logo overlap */}
-          {isLanguageCurrencyDropdownOpen && (
-            <div ref={languageCurrencyDropdownRef} className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto mt-2">
-              {/* Currency Section */}
-              <div className="mb-6 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
-                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
-                  Currency
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <button 
-                    onClick={() => {
-                      setCurrency('EUR');
-                      closeAllMenus();
-                    }}
-                    className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center ${currency === 'EUR' ? "text-violet-600 bg-violet-50" : "text-gray-700"}`}
-                  >
-                    <div className="flex items-center space-x-2 w-full justify-between">
-                      <div className="flex items-center space-x-2">
-                        <CurrencyIcon currency="EUR" className="w-3 h-3" />
-                        <span className="text-sm">EUR</span>
+              <div className="px-6 pb-6 border-t border-violet-200/30">
+                <div className="pt-4">
+                  <Link to="/order" className="block" onClick={closeAllMenus}>
+                    <div className="flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl rounded-2xl py-4 px-6 group">
+                      <div className="w-7 h-7 bg-white rounded-full flex items-center justify-center mr-3 group-hover:rotate-12 transition-transform duration-300">
+                        <ShoppingCart className="w-4 h-4 text-orange-500" />
                       </div>
-                      {currency === 'EUR' && <Check className="w-3 h-3" />}
+                      <span className="text-lg font-bold tracking-wide">
+                        {getOrderText()}
+                      </span>
                     </div>
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setCurrency('RON');
-                      closeAllMenus();
-                    }}
-                    className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center ${currency === 'RON' ? "text-violet-600 bg-violet-50" : "text-gray-700"}`}
-                  >
-                    <div className="flex items-center space-x-2 w-full justify-between">
-                      <div className="flex items-center space-x-2">
-                        <CurrencyIcon currency="RON" className="w-3 h-3" />
-                        <span className="text-sm">RON</span>
-                      </div>
-                      {currency === 'RON' && <Check className="w-3 h-3" />}
-                    </div>
-                  </button>
-                </div>
-              </div>
-
-              {/* Language Section */}
-              <div className="pt-4 border-t border-gray-200 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
-                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
-                  Language
-                </div>
-                <div className="flex flex-col space-y-1">
-                  {languages.map(lang => (
-                    <button 
-                      key={lang}
-                      onClick={() => {
-                        setLanguage(lang);
-                        closeAllMenus();
-                      }}
-                      className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center ${language === lang ? "text-violet-600 bg-violet-50" : "text-gray-700"}`}
-                    >
-                      <div className="flex items-center space-x-2 w-full justify-between">
-                        <div className="flex items-center space-x-2">
-                          <Globe className="w-3 h-3" />
-                          <span className="text-sm">{languageNames[lang]}</span>
-                        </div>
-                        {language === lang && <Check className="w-3 h-3" />}
-                      </div>
-                    </button>
-                  ))}
+                  </Link>
                 </div>
               </div>
             </div>
           )}
 
-          {/* User Dropdown for Mobile - With proper spacing to avoid logo overlap */}
-          {user && isUserDropdownOpen && (
-            <div ref={userDropdownRef} className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto mt-2">
-              {/* User Info Header */}
-              <div className="mb-6 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
-                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
-                  User Account
+          {/* Language/Currency Dropdown for Mobile - Enhanced styling and consistent alignment */}
+          {isLanguageCurrencyDropdownOpen && (
+            <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-gradient-to-br from-white via-emerald-50/30 to-teal-50/20 backdrop-blur-xl border border-emerald-200/40 overflow-hidden">
+              {/* Currency Section */}
+              <div className="p-6">
+                <div className="text-center mb-6">
+                  <h3 className="text-sm font-bold text-emerald-600 uppercase tracking-wider mb-2">Currency</h3>
+                  <div className="w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 mx-auto rounded-full"></div>
                 </div>
-                <div className="px-4 py-2">
-                  <div className="text-sm font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
-                  <div className="text-xs text-gray-500 truncate">{user.email}</div>
+                
+                <div className="space-y-1">
+                  <button 
+                    onClick={() => {
+                      setCurrency('EUR');
+                      closeAllMenus();
+                    }}
+                    className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-emerald-100 hover:to-teal-100 hover:shadow-md transform hover:scale-[1.02] ${
+                      currency === 'EUR' 
+                        ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg" 
+                        : "text-gray-700 hover:text-emerald-700"
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <CurrencyIcon currency="EUR" className="w-5 h-5" />
+                      <span className="font-medium text-base">EUR</span>
+                    </div>
+                    {currency === 'EUR' && (
+                      <Check className="w-5 h-5 animate-pulse" />
+                    )}
+                  </button>
+                  
+                  <button 
+                    onClick={() => {
+                      setCurrency('RON');
+                      closeAllMenus();
+                    }}
+                    className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-emerald-100 hover:to-teal-100 hover:shadow-md transform hover:scale-[1.02] ${
+                      currency === 'RON' 
+                        ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg" 
+                        : "text-gray-700 hover:text-emerald-700"
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <CurrencyIcon currency="RON" className="w-5 h-5" />
+                      <span className="font-medium text-base">RON</span>
+                    </div>
+                    {currency === 'RON' && (
+                      <Check className="w-5 h-5 animate-pulse" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Language Section */}
+              <div className="px-6 pb-6 border-t border-emerald-200/30">
+                <div className="pt-6">
+                  <div className="text-center mb-6">
+                    <h3 className="text-sm font-bold text-emerald-600 uppercase tracking-wider mb-2">Language</h3>
+                    <div className="w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 mx-auto rounded-full"></div>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    {languages.map(lang => (
+                      <button 
+                        key={lang}
+                        onClick={() => {
+                          setLanguage(lang);
+                          closeAllMenus();
+                        }}
+                        className={`group w-full flex items-center justify-between py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-emerald-100 hover:to-teal-100 hover:shadow-md transform hover:scale-[1.02] ${
+                          language === lang 
+                            ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg" 
+                            : "text-gray-700 hover:text-emerald-700"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <Globe className="w-5 h-5" />
+                          <span className="font-medium text-base">{languageNames[lang]}</span>
+                        </div>
+                        {language === lang && (
+                          <Check className="w-5 h-5 animate-pulse" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* User Dropdown for Mobile - Enhanced styling and consistent alignment */}
+          {user && isUserDropdownOpen && (
+            <div ref={userDropdownRef} className="lg:hidden mt-3 rounded-2xl shadow-2xl animate-in slide-in-from-top-2 duration-300 bg-gradient-to-br from-white via-rose-50/30 to-pink-50/20 backdrop-blur-xl border border-rose-200/40 overflow-hidden">
+              {/* User Info Header */}
+              <div className="p-6">
+                <div className="text-center mb-6">
+                  <h3 className="text-sm font-bold text-rose-600 uppercase tracking-wider mb-2">User Account</h3>
+                  <div className="w-12 h-0.5 bg-gradient-to-r from-rose-400 to-pink-400 mx-auto rounded-full"></div>
+                </div>
+                
+                <div className="bg-gradient-to-r from-rose-100 to-pink-100 rounded-xl p-4 mb-6 text-center border border-rose-200/50">
+                  <div className="flex items-center justify-center mb-2">
+                    <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                      <User className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  <div className="text-base font-semibold text-gray-800 mb-1">
+                    {user.user_metadata?.full_name || 'User'}
+                  </div>
+                  <div className="text-sm text-gray-600 truncate">
+                    {user.email}
+                  </div>
                 </div>
               </div>
               
               {/* User Actions */}
-              <div className="pt-4 border-t border-gray-200 ml-36 sm:ml-44 md:ml-52 lg:ml-48">
-                <div className="flex flex-col space-y-1">
+              <div className="px-6 pb-6 border-t border-rose-200/30">
+                <div className="pt-4 space-y-1">
                   <Link 
                     to="/settings" 
-                    className="text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center"
+                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-rose-100 hover:to-pink-100 hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
                     onClick={closeAllMenus}
                   >
-                    <div className="flex items-center space-x-2">
-                      <User className="w-3 h-3" />
-                      <span className="text-sm">{t('accountSettings')}</span>
-                    </div>
+                    <User className="w-5 h-5 mr-3" />
+                    <span className="font-medium text-base">{t('accountSettings')}</span>
                   </Link>
+                  
                   <Link 
                     to="/history" 
-                    className="text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center"
+                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-rose-100 hover:to-pink-100 hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
                     onClick={closeAllMenus}
                   >
-                    <div className="flex items-center space-x-2">
-                      <History className="w-3 h-3" />
-                      <span className="text-sm">{t('history')}</span>
-                    </div>
+                    <History className="w-5 h-5 mr-3" />
+                    <span className="font-medium text-base">{t('history')}</span>
                   </Link>
+                  
                   <button 
                     onClick={handleSignOut}
-                    className="text-base font-medium transition-colors duration-200 hover:text-red-600 px-4 py-3 rounded-lg hover:bg-red-50 touch-manipulation min-h-[44px] flex items-center w-full"
+                    className="group w-full flex items-center py-4 px-6 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-red-100 hover:to-rose-100 hover:shadow-md transform hover:scale-[1.02] text-red-600 hover:text-red-700"
                   >
-                    <div className="flex items-center space-x-2">
-                      <LogOut className="w-3 h-3" />
-                      <span className="text-sm">{t('signOut')}</span>
-                    </div>
+                    <LogOut className="w-5 h-5 mr-3" />
+                    <span className="font-medium text-base">{t('signOut')}</span>
                   </button>
                 </div>
               </div>
