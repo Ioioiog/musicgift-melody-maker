@@ -590,5 +590,3 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
 };
 
 export default GiftPurchaseWizard;
-
-</edits_to_apply>
