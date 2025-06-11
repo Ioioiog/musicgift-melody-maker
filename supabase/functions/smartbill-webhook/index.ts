@@ -106,35 +106,6 @@ async function findOrderByDocumentId(supabaseClient: any, documentId: string) {
   throw new Error(`Order not found for document ID: ${documentId}`)
 }
 
-async function triggerInvoiceConversion(supabaseClient: any, orderId: string) {
-  console.log('🔄 Triggering invoice conversion for order:', orderId)
-  
-  try {
-    const { data, error } = await supabaseClient.functions.invoke('convert-to-invoice', {
-      body: { 
-        orderId,
-        conversionSource: 'webhook_auto'
-      }
-    })
-    
-    if (error) {
-      console.error('❌ Invoice conversion failed:', error)
-      return false
-    }
-    
-    if (data?.success) {
-      console.log('✅ Invoice conversion successful:', data.invoiceId)
-      return true
-    }
-    
-    console.warn('⚠️ Invoice conversion returned false success')
-    return false
-  } catch (error) {
-    console.error('💥 Error during invoice conversion:', error)
-    return false
-  }
-}
-
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -230,12 +201,7 @@ serve(async (req) => {
     // Handle post-payment actions
     if (newPaymentStatus === 'completed') {
       console.log('🎉 Payment completed - order confirmed')
-      
-      // If this was a proforma payment and we don't have an invoice yet, trigger conversion
-      if (order.smartbill_proforma_id && !order.smartbill_invoice_id && !webhookData.invoiceId) {
-        console.log('🔄 Payment completed for proforma - triggering invoice conversion')
-        await triggerInvoiceConversion(supabaseClient, order.id)
-      }
+      console.log('ℹ️ Invoice conversion disabled - use admin panel to manually convert proforma to invoice')
       
     } else if (newPaymentStatus === 'failed' || newPaymentStatus === 'cancelled') {
       console.log('❌ Payment failed or cancelled')
@@ -245,9 +211,9 @@ serve(async (req) => {
       JSON.stringify({ 
         success: true, 
         orderId: order.id,
-        message: `Webhook processed successfully - order status updated to ${newOrderStatus}`,
+        message: `Webhook processed successfully - order status updated to ${newOrderStatus}. Use admin panel to manually convert proforma to invoice if needed.`,
         paymentStatus: newPaymentStatus,
-        invoiceConversionTriggered: newPaymentStatus === 'completed' && order.smartbill_proforma_id && !order.smartbill_invoice_id
+        manualConversionRequired: newPaymentStatus === 'completed' && order.smartbill_proforma_id && !order.smartbill_invoice_id
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
