@@ -24,6 +24,8 @@ const Gift = () => {
 
   const handleGiftPurchaseComplete = (data: any) => {
     console.log("Gift purchase completed:", data);
+    // This will now be called only after successful payment
+    // The payment flow will handle the redirection automatically
     toast({
       title: t('giftCardCreated'),
       description: `${t('giftCardCode')} ${data.code} ${t('giftCardWillBeDelivered')} ${data.recipient_email}`
