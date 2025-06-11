@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,6 @@ const Navigation = () => {
   const { currency, setCurrency } = useCurrency();
   const { user, signOut } = useAuth();
 
-  // Get order text based on language
   const getOrderText = () => {
     switch (language) {
       case "ro":
@@ -307,6 +305,128 @@ const Navigation = () => {
                 </Link>
               </div>
             </div>}
+
+          {/* Language/Currency Dropdown for Mobile - Full width and centered like main menu */}
+          {isLanguageCurrencyDropdownOpen && (
+            <div className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
+              {/* Currency Section */}
+              <div className="mb-6">
+                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
+                  Currency
+                </div>
+                <div className="flex flex-col space-y-1">
+                  <button 
+                    onClick={() => {
+                      setCurrency('EUR');
+                      setIsLanguageCurrencyDropdownOpen(false);
+                    }}
+                    className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center ${currency === 'EUR' ? "text-violet-600 bg-violet-50" : "text-gray-700"}`}
+                  >
+                    <div className="flex items-center space-x-2 w-full justify-between">
+                      <div className="flex items-center space-x-2">
+                        <CurrencyIcon currency="EUR" className="w-3 h-3" />
+                        <span className="text-sm">EUR</span>
+                      </div>
+                      {currency === 'EUR' && <Check className="w-3 h-3" />}
+                    </div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setCurrency('RON');
+                      setIsLanguageCurrencyDropdownOpen(false);
+                    }}
+                    className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center ${currency === 'RON' ? "text-violet-600 bg-violet-50" : "text-gray-700"}`}
+                  >
+                    <div className="flex items-center space-x-2 w-full justify-between">
+                      <div className="flex items-center space-x-2">
+                        <CurrencyIcon currency="RON" className="w-3 h-3" />
+                        <span className="text-sm">RON</span>
+                      </div>
+                      {currency === 'RON' && <Check className="w-3 h-3" />}
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Language Section */}
+              <div className="pt-4 border-t border-gray-200">
+                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
+                  Language
+                </div>
+                <div className="flex flex-col space-y-1">
+                  {languages.map(lang => (
+                    <button 
+                      key={lang}
+                      onClick={() => {
+                        setLanguage(lang);
+                        setIsLanguageCurrencyDropdownOpen(false);
+                      }}
+                      className={`text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center ${language === lang ? "text-violet-600 bg-violet-50" : "text-gray-700"}`}
+                    >
+                      <div className="flex items-center space-x-2 w-full justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Globe className="w-3 h-3" />
+                          <span className="text-sm">{languageNames[lang]}</span>
+                        </div>
+                        {language === lang && <Check className="w-3 h-3" />}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* User Dropdown for Mobile - Full width and centered like main menu */}
+          {user && isUserDropdownOpen && (
+            <div className="lg:hidden py-4 sm:py-6 border-t border-gray-200/50 bg-white/98 backdrop-blur-md rounded-b-xl shadow-xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
+              {/* User Info Header */}
+              <div className="mb-6">
+                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 mb-3">
+                  User Account
+                </div>
+                <div className="px-4 py-2">
+                  <div className="text-sm font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
+                  <div className="text-xs text-gray-500 truncate">{user.email}</div>
+                </div>
+              </div>
+              
+              {/* User Actions */}
+              <div className="pt-4 border-t border-gray-200">
+                <div className="flex flex-col space-y-1">
+                  <Link 
+                    to="/settings" 
+                    className="text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center"
+                    onClick={() => setIsUserDropdownOpen(false)}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <User className="w-3 h-3" />
+                      <span className="text-sm">{t('accountSettings')}</span>
+                    </div>
+                  </Link>
+                  <Link 
+                    to="/history" 
+                    className="text-base font-medium transition-colors duration-200 hover:text-violet-600 px-4 py-3 rounded-lg hover:bg-violet-50 touch-manipulation min-h-[44px] flex items-center"
+                    onClick={() => setIsUserDropdownOpen(false)}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <History className="w-3 h-3" />
+                      <span className="text-sm">{t('history')}</span>
+                    </div>
+                  </Link>
+                  <button 
+                    onClick={handleSignOut}
+                    className="text-base font-medium transition-colors duration-200 hover:text-red-600 px-4 py-3 rounded-lg hover:bg-red-50 touch-manipulation min-h-[44px] flex items-center w-full"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <LogOut className="w-3 h-3" />
+                      <span className="text-sm">{t('signOut')}</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </header>
     </>;
