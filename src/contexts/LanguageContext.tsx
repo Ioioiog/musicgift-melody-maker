@@ -14,10 +14,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   useEffect(() => {
     try {
-      console.log('LanguageProvider: Initializing...');
       const saved = localStorage.getItem('language');
       const initialLang = saved && Object.keys(translations).includes(saved) ? saved : 'ro';
-      console.log('LanguageProvider: Setting language to:', initialLang);
       setLanguage(initialLang);
       setIsInitialized(true);
     } catch (error) {
@@ -32,7 +30,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (isInitialized) {
       try {
         localStorage.setItem('language', language);
-        console.log('LanguageProvider: Language saved to localStorage:', language);
       } catch (error) {
         console.error('LanguageProvider: Error saving language to localStorage:', error);
       }
@@ -41,8 +38,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const t = (key: string, fallback?: string): string => {
     try {
-      console.log('Translation requested for key:', key, 'language:', language);
-      
       // Get the current language translations
       const currentLangTranslations = translations[language as keyof typeof translations];
       
@@ -51,7 +46,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // Fallback to English if current language translations are missing
         const englishTranslations = translations['en'];
         if (englishTranslations && englishTranslations[key]) {
-          console.log('LanguageProvider: Using English fallback for key:', key);
           return englishTranslations[key];
         }
       }
@@ -60,7 +54,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const translation = currentLangTranslations?.[key];
       
       if (translation) {
-        console.log('Translation found:', translation);
         return translation;
       }
       
@@ -88,8 +81,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     t
   };
 
-  console.log('LanguageProvider: Rendering with context value:', contextValue);
-
   return (
     <LanguageContext.Provider value={contextValue}>
       {children}
@@ -111,7 +102,6 @@ export const useLanguage = (): LanguageContextType => {
           console.warn('useLanguage: Fallback setLanguage called with:', lang);
         },
         t: (key: string, fallback?: string) => {
-          console.warn('useLanguage: Fallback translation for key:', key);
           // Try to get translation directly from translations object
           try {
             const roTranslations = translations['ro'];
@@ -125,7 +115,6 @@ export const useLanguage = (): LanguageContextType => {
       };
     }
     
-    console.log('useLanguage: Context found:', context);
     return context;
   } catch (error) {
     console.error('useLanguage: Error accessing context:', error);
