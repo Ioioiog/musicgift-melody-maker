@@ -63,8 +63,27 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Parse the proforma number - extract numeric part if it includes series prefix
+    let proformaNumber = order.smartbill_proforma_id;
+    
+    // If the proforma ID starts with the series name, extract just the numeric part
+    if (proformaNumber.startsWith(smartbillSeries)) {
+      proformaNumber = proformaNumber.substring(smartbillSeries.length);
+      console.log(`Extracted numeric part from ${order.smartbill_proforma_id}: ${proformaNumber}`);
+    } else {
+      console.log(`Using proforma number as-is: ${proformaNumber}`);
+    }
+
+    // Log the parameters we're sending to SmartBill
+    console.log(`SmartBill API parameters:`, {
+      cif: smartbillCompanyVat,
+      seriesname: smartbillSeries,
+      number: proformaNumber,
+      originalProformaId: order.smartbill_proforma_id
+    });
+
     // Construct SmartBill API URL for proforma PDF
-    const smartbillUrl = `https://ws.smartbill.ro/SBORO/api/estimate/pdf?cif=${smartbillCompanyVat}&seriesname=${smartbillSeries}&number=${order.smartbill_proforma_id}`;
+    const smartbillUrl = `https://ws.smartbill.ro/SBORO/api/estimate/pdf?cif=${smartbillCompanyVat}&seriesname=${smartbillSeries}&number=${proformaNumber}`;
 
     // Create Basic Auth header
     const authString = btoa(`${smartbillUsername}:${smartbillToken}`);
@@ -88,7 +107,9 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: 'Failed to fetch proforma PDF from SmartBill',
-          details: `Status: ${smartbillResponse.status}, ${smartbillResponse.statusText}`
+          details: `Status: ${smartbillResponse.status}, ${smartbillResponse.statusText}`,
+          proformaNumber: proformaNumber,
+          originalProformaId: order.smartbill_proforma_id
         }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -97,13 +118,15 @@ Deno.serve(async (req) => {
     // Get the PDF content
     const pdfContent = await smartbillResponse.arrayBuffer();
 
+    console.log(`Successfully fetched PDF for proforma ${proformaNumber} (original: ${order.smartbill_proforma_id})`);
+
     // Return the PDF with proper headers
     return new Response(pdfContent, {
       status: 200,
       headers: {
         ...corsHeaders,
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="proforma-${order.smartbill_proforma_id}.pdf"`,
+        'Content-Disposition': `attachment; filename="proforma-${proformaNumber}.pdf"`,
       },
     });
 
