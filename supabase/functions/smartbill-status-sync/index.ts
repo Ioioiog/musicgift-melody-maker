@@ -85,39 +85,70 @@ function parseXmlResponse(xmlText: string): SmartBillEstimateInvoicesResponse {
 }
 
 function extractProformaDetails(order: any): { series: string, number: string } {
-  let proformaSeries = 'STRP' // Default series
-  let proformaNumber = order.smartbill_proforma_id || ''
-
   console.log('🔍 Extracting proforma details from order:', {
     smartbill_proforma_id: order.smartbill_proforma_id,
     smartbill_proforma_data: typeof order.smartbill_proforma_data
   })
 
-  // Try to extract from smartbill_proforma_data if available
-  if (order.smartbill_proforma_data) {
+  // First try to extract from smartbill_proforma_data XML
+  if (order.smartbill_proforma_data && typeof order.smartbill_proforma_data === 'string') {
     try {
-      // Handle if it's a string (XML) or object
-      let proformaData = order.smartbill_proforma_data
+      const seriesMatch = order.smartbill_proforma_data.match(/<series>(.*?)<\/series>/)
+      const numberMatch = order.smartbill_proforma_data.match(/<number>(.*?)<\/number>/)
       
-      if (typeof proformaData === 'string') {
-        // Parse XML to extract series and number
-        const seriesMatch = proformaData.match(/<series>(.*?)<\/series>/)
-        const numberMatch = proformaData.match(/<number>(.*?)<\/number>/)
-        
-        if (seriesMatch) proformaSeries = seriesMatch[1]
-        if (numberMatch) proformaNumber = numberMatch[1]
-      } else if (typeof proformaData === 'object') {
-        // Handle as JSON object
-        proformaSeries = proformaData.series || 'STRP'
-        proformaNumber = proformaData.number || order.smartbill_proforma_id
+      if (seriesMatch && numberMatch) {
+        const series = seriesMatch[1].trim()
+        const number = numberMatch[1].trim()
+        console.log('📋 Extracted from XML data:', { series, number })
+        return { series, number }
       }
     } catch (error) {
-      console.log('⚠️ Error parsing proforma data:', error)
+      console.log('⚠️ Error parsing proforma XML data:', error)
     }
   }
 
-  console.log('📋 Extracted proforma details:', { series: proformaSeries, number: proformaNumber })
-  return { series: proformaSeries, number: proformaNumber }
+  // Fallback: parse smartbill_proforma_id
+  if (order.smartbill_proforma_id) {
+    const proformaId = order.smartbill_proforma_id.toString()
+    console.log('📄 Parsing smartbill_proforma_id:', proformaId)
+    
+    // Try different patterns for series/number extraction
+    
+    // Pattern 1: STRP0017 -> series: STRP, number: 0017
+    const pattern1 = proformaId.match(/^([A-Z]+)(\d+)$/)
+    if (pattern1) {
+      const series = pattern1[1]
+      const number = pattern1[2]
+      console.log('📋 Pattern 1 match:', { series, number })
+      return { series, number }
+    }
+    
+    // Pattern 2: STRP-0017 -> series: STRP, number: 0017
+    const pattern2 = proformaId.match(/^([A-Z]+)-(\d+)$/)
+    if (pattern2) {
+      const series = pattern2[1]
+      const number = pattern2[2]
+      console.log('📋 Pattern 2 match:', { series, number })
+      return { series, number }
+    }
+    
+    // Pattern 3: Just a number -> assume STRP series
+    const pattern3 = proformaId.match(/^(\d+)$/)
+    if (pattern3) {
+      const series = 'STRP'
+      const number = pattern3[1]
+      console.log('📋 Pattern 3 match (number only):', { series, number })
+      return { series, number }
+    }
+    
+    console.log('⚠️ No pattern matched, using defaults')
+  }
+
+  // Default fallback
+  const series = 'STRP'
+  const number = order.smartbill_proforma_id || '0000'
+  console.log('📋 Using fallback values:', { series, number })
+  return { series, number }
 }
 
 async function checkProformaInvoiceStatus(auth: string, companyVat: string, proformaSeries: string, proformaNumber: string) {
