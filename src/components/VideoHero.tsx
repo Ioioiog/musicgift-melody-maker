@@ -242,7 +242,7 @@ const VideoHero = () => {
           onClick={handleToggleAudio}
           className={`absolute z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm ${
             isMobile 
-              ? 'bottom-16 left-4 p-2' 
+              ? 'bottom-16 right-4 p-2' 
               : 'top-16 sm:top-20 md:top-24 right-4 p-3'
           }`}
           aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
