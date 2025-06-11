@@ -1086,6 +1086,4 @@ const OrdersManagement = () => {
   );
 };
 
-export default OrdersManagement;
-
-}
+export default OrdersManagement
