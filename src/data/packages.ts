@@ -1371,7 +1371,8 @@ export const packages: Package[] = [
             field_order: 4,
             options: [
               { value: "female", label_key: "voiceFemale" },
-              { value: "male", label_key: "voiceMale" }
+              { value: "male", label_key: "voiceMale" },   
+              { value: "duet", label_key: "voiceDuet" }
             ]
           }
         ]
@@ -1515,8 +1516,9 @@ export const packages: Package[] = [
             required: true,
             field_order: 3,
             options: [
-              { value: "female", label_key: "voiceFemale" },
-              { value: "male", label_key: "voiceMale" }
+               { value: "female", label_key: "voiceFemale" },
+              { value: "male", label_key: "voiceMale" },   
+              { value: "duet", label_key: "voiceDuet" }
             ]
           },
           {
@@ -1737,6 +1739,19 @@ export const packages: Package[] = [
               { value: "independence", label_key: "lyricalThemesIndependence" },
               { value: "success", label_key: "lyricalThemesSuccess" },
               { value: "adventure", label_key: "lyricalThemesAdventure" }
+            ]
+          },
+           {
+            id: "voicePreference",
+            field_name: "voicePreference",
+            field_type: "select",
+            placeholder_key: "selectVoicePreference",
+            required: true,
+            field_order: 3,
+            options: [
+               { value: "female", label_key: "voiceFemale" },
+              { value: "male", label_key: "voiceMale" },   
+              { value: "duet", label_key: "voiceDuet" }
             ]
           },
           {
