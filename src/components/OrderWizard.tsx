@@ -183,7 +183,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         throw new Error('Please select a payment method before proceeding');
       }
 
-      const orderData = prepareOrderData(
+      const baseOrderData = prepareOrderData(
         formData, 
         selectedAddons, 
         addonFieldValues, 
@@ -194,15 +194,15 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         currency
       );
 
-      // Add discount information to order data
-      if (appliedGiftCard) {
-        orderData.gift_card_code = appliedGiftCard.code;
-      }
-      
-      if (appliedDiscount) {
-        orderData.discount_code = appliedDiscount.code;
-        orderData.discount_amount = Math.round(appliedDiscount.amount * 100); // Convert to cents
-      }
+      // Add discount information to order data with proper typing
+      const orderData = {
+        ...baseOrderData,
+        ...(appliedGiftCard && { gift_card_code: appliedGiftCard.code }),
+        ...(appliedDiscount && { 
+          discount_code: appliedDiscount.code,
+          discount_amount: Math.round(appliedDiscount.amount * 100) // Convert to cents
+        })
+      };
 
       // Handle quote-only packages differently
       if (isQuoteOnly) {
