@@ -267,8 +267,8 @@ const Footer = () => {
 
           {/* Bottom Copyright */}
           <div className="border-t border-gray-400 py-8">
-            <div className="text-center px-8 md:px-4">
-              <p className="text-gray-600 text-xs md:text-sm">
+            <div className="text-center px-12 md:px-4">
+              <p className="text-gray-600 text-[10px] md:text-sm leading-tight">
                 © 2025 MusicGift.ro. All rights reserved. Made by RED DOMAIN with ❤️ for music lovers
               </p>
             </div>
