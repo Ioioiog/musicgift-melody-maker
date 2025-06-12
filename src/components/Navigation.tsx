@@ -348,9 +348,9 @@ const Navigation = () => {
             </div>}
 
           {/* Language/Currency Dropdown for Mobile - Compact styling */}
-          {isLanguageCurrencyDropdownOpen && <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-black/30 backdrop-blur-xl border border-white/20 overflow-hidden">
+          {isLanguageCurrencyDropdownOpen && <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 backdrop-blur-xl border border-white/20 overflow-hidden bg-zinc-50 py-0">
               {/* Currency Section */}
-              <div className="p-3 ml-36 sm:ml-44 md:ml-52">
+              <div className="p-3 ml-36 sm:ml-44 md:ml-52 py-[10px]">
                 <div className="text-center mb-3">
                   <h3 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">Currency</h3>
                   <div className="w-8 h-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 mx-auto rounded-full"></div>
