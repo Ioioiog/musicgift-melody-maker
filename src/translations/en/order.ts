@@ -70,7 +70,8 @@ export const orderTranslations = {
   giftCardFrom: "From:",
   giftCardBalance: "Balance:",
   giftCardRemaining: "Remaining after order:",
-
+  quoteOnlyDescription: "This is a quote-only package. After submitting your request, our team will contact you with a personalized quote and timeline.",
+  
   // Form Field Renderer
   noAddonsAvailable: "No add-ons available for this package",
   fieldConfigurationError: "Field configuration error: No options available",

@@ -3,13 +3,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
+import { getPackagePrice, getAddonPrice, formatPrice } from '@/utils/pricing';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
-import { formatPrice } from '@/utils/pricing';
-import GiftCardSection from './GiftCardSection';
-import DiscountSection from './DiscountSection';
 
 interface OrderSidebarSummaryProps {
   orderData?: {
@@ -64,9 +61,9 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
 
   const subtotal = packagePrice + addonsPrice;
   
-  // Calculate gift card discount
+  // Calculate gift card discount (simplified version)
   let giftCardDiscount = 0;
-  if (giftCard) {
+  if (giftCard && !isQuoteOnly) {
     const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
     giftCardDiscount = Math.min(giftBalance, subtotal);
   }
@@ -131,25 +128,6 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
           </>
         )}
 
-        {/* Gift Card Section */}
-        {!isQuoteOnly && onGiftCardChange && (
-          <>
-            <Separator className="bg-white/20" />
-            <GiftCardSection 
-              onGiftCardChange={onGiftCardChange}
-              appliedGiftCard={giftCard}
-            />
-          </>
-        )}
-
-        {/* Discount Section */}
-        {!isQuoteOnly && onDiscountChange && (
-          <>
-            <Separator className="bg-white/20" />
-            <DiscountSection onDiscountChange={onDiscountChange} />
-          </>
-        )}
-
         {/* Totals */}
         <Separator className="bg-white/20" />
         <div className="space-y-2">
@@ -192,7 +170,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
         {isQuoteOnly && (
           <div className="bg-orange-500/10 border border-orange-400/30 rounded-lg p-3">
             <p className="text-orange-300 text-sm">
-              This is a quote-only package. After submitting your request, our team will contact you with a personalized quote and timeline.
+              {t('quoteOnlyDescription')}
             </p>
           </div>
         )}
