@@ -19,7 +19,9 @@ export const useGiftCardPayment = () => {
       console.log(`Initiating ${paymentProvider} payment for gift card:`, giftCardId);
       
       // Route to the appropriate payment provider edge function
-      const functionName = `gift-card-${paymentProvider}-payment`;
+      const functionName = paymentProvider === 'stripe' 
+        ? 'gift-card-stripe-payment'
+        : 'gift-card-smartbill-payment';
       
       const { data, error } = await supabase.functions.invoke(functionName, {
         body: { giftCardId, returnUrl }
