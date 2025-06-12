@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { Plus, Star, CheckCircle, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { VideoUpload } from "@/components/ui/video-upload";
 import { convertToYouTubeEmbed, isValidYouTubeUrl } from "@/utils/youtubeUtils";
+import { supabase } from "@/integrations/supabase/client";
 
 const TestimonialSubmissionForm = () => {
   const { user } = useAuth();
@@ -80,25 +82,24 @@ const TestimonialSubmissionForm = () => {
       // Convert YouTube link to embed format if provided
       const convertedYouTubeLink = formData.youtube_link ? convertToYouTubeEmbed(formData.youtube_link) : "";
       
-      const response = await fetch('/api/send-testimonial', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          location: formData.location || undefined,
-          stars: formData.stars,
-          text: formData.text,
-          youtube_link: convertedYouTubeLink || undefined,
-          video_url: formData.video_url || undefined
-        })
-      });
+      // Insert testimonial data directly into Supabase
+      const testimonialData = {
+        name: formData.name,
+        location: formData.location || null,
+        stars: formData.stars,
+        text: formData.text,
+        youtube_link: convertedYouTubeLink || null,
+        video_url: formData.video_url || null,
+        approved: false, // Set to false by default for admin review
+        display_order: 0
+      };
 
-      const data = await response.json();
+      const { error } = await supabase
+        .from('testimonials')
+        .insert([testimonialData]);
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit testimonial');
+      if (error) {
+        throw error;
       }
 
       toast({
