@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,15 +15,9 @@ import { VideoUpload } from "@/components/ui/video-upload";
 import { convertToYouTubeEmbed, isValidYouTubeUrl } from "@/utils/youtubeUtils";
 
 const TestimonialSubmissionForm = () => {
-  const {
-    user
-  } = useAuth();
-  const {
-    toast
-  } = useToast();
-  const {
-    t
-  } = useLanguage();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const { t } = useLanguage();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,6 +28,7 @@ const TestimonialSubmissionForm = () => {
     youtube_link: "",
     video_url: ""
   });
+
   const resetForm = () => {
     setFormData({
       name: "",
@@ -43,36 +39,34 @@ const TestimonialSubmissionForm = () => {
       video_url: ""
     });
   };
+
   const handleVideoUploaded = (url: string) => {
-    setFormData({
-      ...formData,
-      video_url: url
-    });
+    setFormData({ ...formData, video_url: url });
   };
+
   const handleRemoveVideo = () => {
-    setFormData({
-      ...formData,
-      video_url: ""
-    });
+    setFormData({ ...formData, video_url: "" });
   };
+
   const handleYouTubeLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setFormData({
-      ...formData,
-      youtube_link: value
-    });
+    setFormData({ ...formData, youtube_link: value });
   };
-  const isYouTubeLinkValid = isValidYouTubeUrl(formData.youtube_link);
+
+  const isYouTubeLinkValid = formData.youtube_link === "" || isValidYouTubeUrl(formData.youtube_link);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) {
+    
+    if (!formData.name || !formData.text) {
       toast({
-        title: "Authentication Required",
-        description: "Please log in to submit a testimonial",
+        title: "Missing Information",
+        description: "Please enter your name and testimonial message",
         variant: "destructive"
       });
       return;
     }
+
     if (!isYouTubeLinkValid) {
       toast({
         title: "Invalid YouTube Link",
@@ -81,23 +75,33 @@ const TestimonialSubmissionForm = () => {
       });
       return;
     }
+
     setIsSubmitting(true);
+
     try {
       // Convert YouTube link to embed format if provided
       const convertedYouTubeLink = formData.youtube_link ? convertToYouTubeEmbed(formData.youtube_link) : "";
-      const {
-        error
-      } = await supabase.from('testimonials').insert([{
-        ...formData,
-        youtube_link: convertedYouTubeLink,
-        approved: false,
-        display_order: 0
-      }]);
-      if (error) throw error;
+      
+      const { data, error } = await supabase.functions.invoke('send-testimonial-email', {
+        body: {
+          name: formData.name,
+          location: formData.location || undefined,
+          stars: formData.stars,
+          text: formData.text,
+          youtube_link: convertedYouTubeLink || undefined,
+          video_url: formData.video_url || undefined
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
       toast({
         title: "Success!",
         description: "Your testimonial has been submitted for review. Thank you for your feedback!"
       });
+      
       setIsDialogOpen(false);
       resetForm();
     } catch (error) {
@@ -111,26 +115,40 @@ const TestimonialSubmissionForm = () => {
       setIsSubmitting(false);
     }
   };
+
   const renderStars = (rating: number, onStarClick: (stars: number) => void) => {
-    return <div className="flex gap-1">
-        {[1, 2, 3, 4, 5].map(star => <button key={star} type="button" onClick={() => onStarClick(star)} className="focus:outline-none">
-            <Star className={`w-5 h-5 ${star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'} hover:text-yellow-400 transition-colors`} />
-          </button>)}
-      </div>;
+    return (
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map(star => (
+          <button 
+            key={star} 
+            type="button" 
+            onClick={() => onStarClick(star)}
+            className="focus:outline-none"
+          >
+            <Star 
+              className={`w-5 h-5 ${
+                star <= rating 
+                  ? 'fill-yellow-400 text-yellow-400' 
+                  : 'text-gray-300'
+              } hover:text-yellow-400 transition-colors`} 
+            />
+          </button>
+        ))}
+      </div>
+    );
   };
-  if (!user) {
-    return <div className="text-center my-0 py-0 px-0">
-        <p className="text-white/80 mb-4">Please log in to share your testimonial</p>
-        <Button onClick={() => window.location.href = '/auth'} variant="outline">
-          Log In
-        </Button>
-      </div>;
-  }
-  return <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+
+  return (
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" onClick={resetForm}>
+        <Button 
+          variant="outline" 
+          className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+          onClick={resetForm}
+        >
           <Plus className="w-4 h-4 mr-2" />
-          {t('shareYourExperience')}
+          {t('shareYourExperience') || 'Share Your Experience'}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -141,60 +159,95 @@ const TestimonialSubmissionForm = () => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="name">Your Name *</Label>
-              <Input id="name" value={formData.name} onChange={e => setFormData({
-              ...formData,
-              name: e.target.value
-            })} required placeholder="Enter your full name" />
+              <Input 
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                required
+                placeholder="Enter your full name"
+              />
             </div>
             <div>
               <Label htmlFor="location">Location</Label>
-              <Input id="location" value={formData.location} onChange={e => setFormData({
-              ...formData,
-              location: e.target.value
-            })} placeholder="City, Country (optional)" />
+              <Input 
+                id="location"
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                placeholder="City, Country (optional)"
+              />
             </div>
           </div>
           
           <div>
             <Label>Rating *</Label>
             <div className="mt-2">
-              {renderStars(formData.stars, stars => setFormData({
-              ...formData,
-              stars
-            }))}
+              {renderStars(formData.stars, (stars) => setFormData({ ...formData, stars }))}
             </div>
           </div>
 
           <div>
             <Label htmlFor="text">Your Testimonial *</Label>
-            <Textarea id="text" value={formData.text} onChange={e => setFormData({
-            ...formData,
-            text: e.target.value
-          })} rows={4} required placeholder="Share your experience with our service..." />
+            <Textarea 
+              id="text"
+              value={formData.text}
+              onChange={(e) => setFormData({ ...formData, text: e.target.value })}
+              rows={4}
+              required
+              placeholder="Share your experience with our service..."
+            />
           </div>
 
           <div>
             <Label htmlFor="youtube_link">Your MusicGift song link (Optional)</Label>
             <div className="relative">
-              <Input id="youtube_link" value={formData.youtube_link} onChange={handleYouTubeLinkChange} placeholder="Paste any YouTube URL (youtube.com/watch?v=..., youtu.be/..., etc.)" className={`${formData.youtube_link && !isYouTubeLinkValid ? 'border-red-500 focus:border-red-500' : formData.youtube_link && isYouTubeLinkValid ? 'border-green-500 focus:border-green-500' : ''}`} />
-              {formData.youtube_link && <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  {isYouTubeLinkValid ? <CheckCircle className="w-4 h-4 text-green-500" /> : <AlertCircle className="w-4 h-4 text-red-500" />}
-                </div>}
+              <Input 
+                id="youtube_link"
+                value={formData.youtube_link}
+                onChange={handleYouTubeLinkChange}
+                placeholder="Paste any YouTube URL (youtube.com/watch?v=..., youtu.be/..., etc.)"
+                className={`${
+                  formData.youtube_link && !isYouTubeLinkValid 
+                    ? 'border-red-500 focus:border-red-500' 
+                    : formData.youtube_link && isYouTubeLinkValid 
+                    ? 'border-green-500 focus:border-green-500' 
+                    : ''
+                }`}
+              />
+              {formData.youtube_link && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  {isYouTubeLinkValid ? (
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4 text-red-500" />
+                  )}
+                </div>
+              )}
             </div>
             <p className="text-sm text-gray-500 mt-1">
               If you have your MusicGift song on YouTube, paste any YouTube URL here. We support all formats: youtube.com, youtu.be, mobile links, etc.
             </p>
-            {formData.youtube_link && !isYouTubeLinkValid && <p className="text-sm text-red-500 mt-1">
+            {formData.youtube_link && !isYouTubeLinkValid && (
+              <p className="text-sm text-red-500 mt-1">
                 Please enter a valid YouTube URL
-              </p>}
+              </p>
+            )}
           </div>
 
           <div className="border-t pt-4">
-            <VideoUpload onVideoUploaded={handleVideoUploaded} currentVideoUrl={formData.video_url} onRemoveVideo={handleRemoveVideo} />
+            <VideoUpload 
+              onVideoUploaded={handleVideoUploaded}
+              currentVideoUrl={formData.video_url}
+              onRemoveVideo={handleRemoveVideo}
+            />
           </div>
 
           <div className="flex justify-end space-x-2 pt-4">
-            <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} disabled={isSubmitting}>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => setIsDialogOpen(false)}
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
@@ -203,6 +256,8 @@ const TestimonialSubmissionForm = () => {
           </div>
         </form>
       </DialogContent>
-    </Dialog>;
+    </Dialog>
+  );
 };
+
 export default TestimonialSubmissionForm;
