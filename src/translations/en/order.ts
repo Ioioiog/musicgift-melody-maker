@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -25,7 +24,10 @@ export const orderTranslations = {
   continue: "Continue",
   next: "Next",
   submitting: "Submitting...",
+  submittingRequest: "Submitting request...",
+  processing: "Processing...",
   completeOrder: "Complete order",
+  submitQuoteRequest: "Submit Quote Request",
   choosePackage: "Choose package",
   pickDate: "Pick date",
   orderDetails: "Order details",
@@ -40,6 +42,9 @@ export const orderTranslations = {
   orderSuccessMessage: "Your order has been created successfully. This uses demo data.",
   orderError: "Error",
   orderErrorMessage: "An error occurred",
+  quoteRequestError: "Quote Request Error",
+  quoteRequestSuccess: "Quote Request Submitted",
+  quoteRequestSuccessMessage: "Your quote request has been submitted successfully. We'll get back to you soon.",
   
   // Help section
   needHelp: "Need help?",
@@ -50,18 +55,22 @@ export const orderTranslations = {
   premium: "Premium",
   new: "New",
   gift: "Gift",
+  quoteOnly: "Quote Only",
   
   // Order Summary
   orderSummary: "Order Summary",
+  quoteSummary: "Quote Request Summary",
   addons: "Add-ons",
   subtotal: "Subtotal",
   total: "Total",
+  estimatedPrice: "Estimated Price",
+  finalPriceOnQuote: "Final price will be provided in your custom quote",
   giftCardDiscount: "Gift Card Discount",
   fullyCoveredByGiftCard: "Fully covered by gift card",
   giftCardFrom: "From:",
   giftCardBalance: "Balance:",
   giftCardRemaining: "Remaining after order:",
-  
+
   // Form Field Renderer
   noAddonsAvailable: "No add-ons available for this package",
   fieldConfigurationError: "Field configuration error: No options available",

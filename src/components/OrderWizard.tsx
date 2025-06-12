@@ -48,27 +48,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   } = useOrderWizardState({
     preselectedPackage
   });
-  const {
-    t
-  } = useLanguage();
-  const {
-    currency
-  } = useCurrency();
-  const {
-    toast
-  } = useToast();
+  const { t } = useLanguage();
+  const { currency } = useCurrency();
+  const { toast } = useToast();
   const navigate = useNavigate();
-  const {
-    data: packages = []
-  } = usePackages();
-  const {
-    data: addons = []
-  } = useAddons();
+  const { data: packages = [] } = usePackages();
+  const { data: addons = [] } = useAddons();
   const selectedPackage = formData.package as string;
-  const {
-    data: allPackageSteps = [],
-    isLoading: isStepsLoading
-  } = usePackageSteps(selectedPackage);
+  const { data: allPackageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
 
   // Notify parent component of order data changes
   useEffect(() => {
@@ -92,27 +79,36 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
   // Only get regular package steps (exclude contact/legal as it's now universal)
   const regularSteps = allPackageSteps.filter(step => step.title_key !== 'contactDetailsStep').sort((a, b) => a.step_number - b.step_number);
+  const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+  const isQuoteOnly = selectedPackageData?.is_quote_only || false;
 
-  // Build the complete step flow - Contact & Legal is now ALWAYS present
+  // Build the complete step flow - Contact & Legal is now ALWAYS present, Payment is conditional
   const totalRegularSteps = regularSteps.length;
   const addonStepIndex = 1 + totalRegularSteps; // After package selection + regular steps
   const contactLegalStepIndex = addonStepIndex + 1; // Always after addons
-  const paymentStepIndex = contactLegalStepIndex + 1; // Always after contact/legal
-  const totalSteps = paymentStepIndex + 1;
-  const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+  const paymentStepIndex = contactLegalStepIndex + 1; // After contact/legal (only if not quote-only)
+  const totalSteps = isQuoteOnly ? paymentStepIndex : paymentStepIndex + 1; // Skip payment step for quote-only
+
   const handleNext = () => {
     if (currentStep === 0) {
       if (!formData.package) return;
       setCurrentStep(1); // Go to first form step
     } else if (currentStep < totalSteps - 1) {
+      // Skip payment step for quote-only packages
+      if (isQuoteOnly && currentStep === contactLegalStepIndex) {
+        // For quote-only, contact/legal is the last step before submission
+        return;
+      }
       setCurrentStep(currentStep + 1);
     }
   };
+
   const handlePrev = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
+
   const calculateTotalPrice = () => {
     const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
     const addonsPrice = selectedAddons.reduce((total, addonKey) => {
@@ -121,47 +117,92 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     }, 0);
     return packagePrice + addonsPrice;
   };
+
   const totalPrice = calculateTotalPrice();
+
   const handleSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
+    
     try {
-      console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
+      console.log(`🔄 Starting ${isQuoteOnly ? 'quote request' : 'payment'} process`);
       console.log('📦 Order data being submitted:', {
         package: selectedPackage,
         addons: selectedAddons.length,
         totalPrice,
+        isQuoteOnly,
         paymentProvider: selectedPaymentProvider,
         customerEmail: formData.email?.substring(0, 5) + '***'
       });
+
       validateFormData(formData, selectedPackage, totalPrice);
+
       if (onComplete) {
         await onComplete({
           ...formData,
           addons: selectedAddons,
           addonFieldValues,
           package: selectedPackage,
-          paymentProvider: selectedPaymentProvider,
-          totalPrice
+          paymentProvider: isQuoteOnly ? null : selectedPaymentProvider,
+          totalPrice,
+          isQuoteOnly
         });
         return;
       }
-      if (!selectedPaymentProvider) {
+
+      if (!isQuoteOnly && !selectedPaymentProvider) {
         throw new Error('Please select a payment method before proceeding');
       }
-      const orderData = prepareOrderData(formData, selectedAddons, addonFieldValues, selectedPackage, selectedPaymentProvider, totalPrice, packages, currency);
 
-      // Handle SmartBill payment with enhanced error handling and logging
+      const orderData = prepareOrderData(
+        formData, 
+        selectedAddons, 
+        addonFieldValues, 
+        selectedPackage, 
+        isQuoteOnly ? null : selectedPaymentProvider, 
+        totalPrice, 
+        packages, 
+        currency
+      );
+
+      // Handle quote-only packages differently
+      if (isQuoteOnly) {
+        console.log('📝 Processing quote request');
+        
+        // Create order with quote_requested status
+        const quoteOrderData = {
+          ...orderData,
+          status: 'quote_requested',
+          payment_status: 'not_required',
+          payment_provider: null
+        };
+
+        const { data: quoteResponse, error: quoteError } = await supabase.functions.invoke('create-quote-request', {
+          body: { orderData: quoteOrderData }
+        });
+
+        if (quoteError) {
+          console.error('❌ Quote Request Error:', quoteError);
+          throw new Error(`Quote request failed: ${quoteError.message}`);
+        }
+
+        if (!quoteResponse?.success) {
+          console.error('❌ Quote Request Response Error:', quoteResponse);
+          throw new Error(quoteResponse?.message || 'Quote request failed');
+        }
+
+        console.log('✅ Quote request submitted successfully');
+        navigate('/payment/success?orderId=' + quoteResponse.orderId + '&type=quote');
+        return;
+      }
+
+      // Handle regular payment processing for non-quote packages
       if (selectedPaymentProvider === 'smartbill') {
         console.log('🔵 Processing payment with SmartBill');
-        const {
-          data: paymentResponse,
-          error: paymentError
-        } = await supabase.functions.invoke('smartbill-create-invoice', {
-          body: {
-            orderData
-          }
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('smartbill-create-invoice', {
+          body: { orderData }
         });
+
         console.log('🔵 SmartBill Edge Function Response:', {
           success: paymentResponse?.success,
           orderId: paymentResponse?.orderId,
@@ -169,10 +210,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
           hasPaymentUrl: !!paymentResponse?.paymentUrl,
           message: paymentResponse?.message
         });
+
         if (paymentError) {
           console.error('❌ SmartBill Edge Function Error:', paymentError);
           throw new Error(`SmartBill payment failed: ${paymentError.message}`);
         }
+
         if (!paymentResponse?.success) {
           console.error('❌ SmartBill Payment Response Error:', paymentResponse);
           const errorCode = paymentResponse?.errorCode || 'paymentFailed';
@@ -183,10 +226,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             errorMessage: errorMessage.substring(0, 100) + '...'
           });
 
-          // Navigate to error page with specific error details
           navigate(`/payment/error?orderId=${paymentResponse?.orderId || 'unknown'}&errorCode=${errorCode}&errorMessage=${encodeURIComponent(errorMessage)}`);
           return;
         }
+
         if (paymentResponse.paymentUrl) {
           console.log('✅ SmartBill payment URL generated successfully');
           console.log('🔗 Redirecting to SmartBill payment page');
@@ -197,20 +240,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         }
       } else if (selectedPaymentProvider === 'stripe') {
         console.log('🟣 Processing payment with Stripe');
-        const {
-          data: paymentResponse,
-          error: paymentError
-        } = await supabase.functions.invoke('stripe-create-payment', {
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('stripe-create-payment', {
           body: {
             orderData: orderData,
             returnUrl: `${window.location.origin}/payment/success`
           }
         });
+
         console.log('🟣 Stripe response:', paymentResponse);
         if (paymentError || !paymentResponse?.success) {
           const errorMessage = paymentError?.message || paymentResponse?.error || 'Stripe payment failed';
           throw new Error(errorMessage);
         }
+
         if (paymentResponse.paymentUrl) {
           window.location.href = paymentResponse.paymentUrl;
         } else {
@@ -218,20 +260,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         }
       } else if (selectedPaymentProvider === 'revolut') {
         console.log('🟠 Processing payment with Revolut');
-        const {
-          data: paymentResponse,
-          error: paymentError
-        } = await supabase.functions.invoke('revolut-create-payment', {
+        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('revolut-create-payment', {
           body: {
             orderData: orderData,
             returnUrl: `${window.location.origin}/payment/success`
           }
         });
+
         console.log('🟠 Revolut response:', paymentResponse);
         if (paymentError || !paymentResponse?.success) {
           const errorMessage = paymentError?.message || paymentResponse?.error || 'Revolut payment failed';
           throw new Error(errorMessage);
         }
+
         if (paymentResponse.paymentUrl) {
           window.location.href = paymentResponse.paymentUrl;
         } else {
@@ -241,17 +282,19 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         throw new Error(`Unsupported payment provider: ${selectedPaymentProvider}`);
       }
     } catch (error) {
-      console.error(`💥 ${selectedPaymentProvider?.toUpperCase()} Payment Error:`, error);
+      console.error(`💥 ${isQuoteOnly ? 'Quote Request' : selectedPaymentProvider?.toUpperCase()} Error:`, error);
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       console.error('💥 Full error details:', {
         message: errorMessage,
         provider: selectedPaymentProvider,
         package: selectedPackage,
-        totalPrice
+        totalPrice,
+        isQuoteOnly
       });
+
       toast({
-        title: t('orderError', 'Payment Error'),
-        description: `Payment failed: ${errorMessage}`,
+        title: t(isQuoteOnly ? 'quoteRequestError' : 'orderError', isQuoteOnly ? 'Quote Request Error' : 'Payment Error'),
+        description: `${isQuoteOnly ? 'Quote request' : 'Payment'} failed: ${errorMessage}`,
         variant: "destructive"
       });
     } finally {
@@ -300,23 +343,27 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       isCurrent: currentStep === contactLegalStepIndex
     });
 
-    // Payment Step
-    const paymentStepNumber = contactStepNumber + 1;
-    steps.push({
-      number: paymentStepNumber,
-      label: t('payment', 'Payment'),
-      isCompleted: false,
-      isCurrent: currentStep === paymentStepIndex
-    });
+    // Payment Step - Only for non-quote packages
+    if (!isQuoteOnly) {
+      const paymentStepNumber = contactStepNumber + 1;
+      steps.push({
+        number: paymentStepNumber,
+        label: t('payment', 'Payment'),
+        isCompleted: false,
+        isCurrent: currentStep === paymentStepIndex
+      });
+    }
+
     return steps;
   };
 
   // Determine which step we're on
   const isAddonStep = currentStep === addonStepIndex;
   const isContactLegalStep = currentStep === contactLegalStepIndex;
-  const isPaymentStep = currentStep === paymentStepIndex;
+  const isPaymentStep = !isQuoteOnly && currentStep === paymentStepIndex;
   const currentPackageStepIndex = currentStep - 1;
   const currentStepData = currentStep > 0 && currentStep <= totalRegularSteps ? regularSteps?.[currentPackageStepIndex] : null;
+
   const canProceed = () => {
     if (currentStep === 0) {
       return !!formData.package;
@@ -422,6 +469,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             totalSteps={totalSteps} 
             canProceed={canProceed()} 
             isSubmitting={isSubmitting} 
+            isQuoteOnly={isQuoteOnly}
             onPrev={handlePrev} 
             onNext={handleNext} 
             onSubmit={handleSubmit} 
