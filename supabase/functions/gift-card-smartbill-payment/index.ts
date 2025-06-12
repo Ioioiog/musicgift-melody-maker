@@ -99,7 +99,7 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0] // 7 days from now
 
-    // Create SmartBill proforma XML for gift card
+    // Create SmartBill proforma XML for gift card - matching the working orders function structure
     const proformaXml = `<?xml version="1.0" encoding="UTF-8"?>
 <estimate>
   <companyVatCode>${escapeXml(companyVat)}</companyVatCode>
@@ -115,6 +115,7 @@ serve(async (req) => {
   <issueDate>${issueDate}</issueDate>
   <seriesName>STRP</seriesName>
   <dueDate>${dueDate}</dueDate>
+  <paymentUrl>Generate URL</paymentUrl>
   <product>
     <name>${escapeXml(`Gift Card - ${giftCard.code}`)}</name>
     <isDiscount>false</isDiscount>
@@ -131,24 +132,43 @@ serve(async (req) => {
   <observations>${escapeXml(`Gift Card ${giftCard.code} pentru ${giftCard.recipient_name}. Cumparat de: ${giftCard.sender_name}`)}</observations>
 </estimate>`
 
-    console.log('📄 Creating SmartBill proforma for gift card')
+    console.log('📄 Creating SmartBill proforma for gift card with STRP series')
+    console.log('🔗 XML payload prepared for SmartBill API with payment URL generation')
 
     const apiUrl = `${baseUrl}/SBORO/api/estimate`
-    const proformaResponse = await rateLimitedFetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${btoa(`${username}:${token}`)}`,
-        'Content-Type': 'application/xml',
-        'Accept': 'application/xml'
-      },
-      body: proformaXml
-    })
     
-    const responseText = await proformaResponse.text()
+    let proformaResponse: Response
+    let responseText: string
+    
+    try {
+      console.log('🌐 Sending request to SmartBill API:', apiUrl)
+      
+      proformaResponse = await rateLimitedFetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${btoa(`${username}:${token}`)}`,
+          'Content-Type': 'application/xml',
+          'Accept': 'application/xml'
+        },
+        body: proformaXml
+      })
+      
+      responseText = await proformaResponse.text()
+      console.log('📥 SmartBill API Response Status:', proformaResponse.status)
+      console.log('📥 SmartBill API Response:', responseText.substring(0, 500) + '...')
+      
+    } catch (fetchError) {
+      console.error('🌐 Network Error calling SmartBill API:', fetchError)
+      throw new Error(`Network error contacting SmartBill: ${fetchError.message}`)
+    }
     
     if (!proformaResponse.ok) {
-      console.error('❌ SmartBill API Error:', responseText)
-      throw new Error(`SmartBill API error: ${responseText}`)
+      console.error('❌ SmartBill API Error:', {
+        status: proformaResponse.status,
+        statusText: proformaResponse.statusText,
+        body: responseText
+      })
+      throw new Error(`SmartBill API error (${proformaResponse.status}): ${responseText}`)
     }
 
     // Parse XML response
@@ -160,17 +180,21 @@ serve(async (req) => {
     const documentNumber = numberMatch?.[1] || null
     const documentSeries = seriesMatch?.[1] || 'STRP'
     
-    if (!paymentUrl) {
-      throw new Error('No payment URL received from SmartBill')
-    }
-
-    console.log('📄 SmartBill proforma created:', {
+    console.log('📄 SmartBill document details extracted:', {
       number: documentNumber,
       series: documentSeries,
-      paymentUrl
+      paymentUrl: paymentUrl ? 'URL Generated' : 'NO URL'
     })
+    
+    if (!paymentUrl) {
+      console.error('❌ SmartBill did not return a payment URL')
+      console.error('📄 Full response for debugging:', responseText)
+      throw new Error('SmartBill document created but no payment URL generated - Netopia integration may not be configured')
+    }
 
-    // Update gift card with SmartBill proforma details
+    console.log('✅ SmartBill proforma created successfully')
+
+    // Update gift card with SmartBill details
     const { error: updateError } = await supabaseClient
       .from('gift_cards')
       .update({
