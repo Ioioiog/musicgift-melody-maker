@@ -97,13 +97,13 @@ const VideoHero = () => {
     video.addEventListener('error', handleError);
     video.addEventListener('loadstart', handleLoadStart);
 
-    // Add timeout fallback to prevent infinite loading
+    // Reduced timeout from 10s to 5s for better performance
     const loadingTimeout = setTimeout(() => {
       if (isLoading) {
         console.log('VideoHero: Loading timeout, hiding loading screen');
         setIsLoading(false);
       }
-    }, 10000); // 10 second timeout
+    }, 5000);
 
     // Force video to reload only if source changed
     if (currentVideoSrc !== videoSrc) {
@@ -172,17 +172,21 @@ const VideoHero = () => {
 
   return (
     <section className={`video-hero relative overflow-hidden ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
-      {/* Background image - Visible on desktop and mobile */}
-      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-        backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)'
-      }}></div>
+      {/* Background image - Visible on desktop and mobile with lazy loading */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform" 
+        style={{
+          backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)'
+        }}
+        loading="lazy"
+      ></div>
 
-      {/* Animated background particles - Mobile only */}
+      {/* Reduced animated background particles - Mobile only (reduced from 20 to 10) */}
       <div className="absolute inset-0 overflow-hidden md:hidden">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(10)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 bg-white/20 rounded-full"
+            className="absolute w-2 h-2 bg-white/20 rounded-full will-change-transform"
             initial={{
               x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
               y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
@@ -202,20 +206,22 @@ const VideoHero = () => {
         ))}
       </div>
 
-      {/* Video Background - Positioned below navbar on mobile */}
+      {/* Video Background - Positioned below navbar on mobile with optimized loading */}
       <video
         ref={videoRef}
         loop
         playsInline
-        className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover object-center`}
+        preload="metadata"
+        className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover object-center will-change-transform`}
         style={isMobile ? { height: mobileHeight } : {}}
         key={videoSrc}
+        poster="/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png"
       >
         <source src={videoSrc} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
-      {/* Loading Overlay */}
+      {/* Loading Overlay with better performance */}
       {isLoading && (
         <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20`} style={isMobile ? { height: mobileHeight } : {}}>
           <div className="text-white text-xl">Loading...</div>

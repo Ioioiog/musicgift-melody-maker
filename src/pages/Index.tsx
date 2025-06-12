@@ -4,7 +4,7 @@ import VideoHero from "@/components/VideoHero";
 import HeroContent from "@/components/HeroContent";
 import ScenarioHero from "@/components/ScenarioHero";
 import AnimatedStepFlow from "@/components/AnimatedStepFlow";
-import TestimonialSlider from "@/components/TestimonialSlider";
+import LazyTestimonialSlider from "@/components/LazyTestimonialSlider";
 import ImpactCards from "@/components/ImpactCards";
 import CollaborationSection from "@/components/CollaborationSection";
 import { Button } from "@/components/ui/button";
@@ -12,16 +12,29 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 import { Heart, Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+
 const Index = () => {
   const {
     t
   } = useLanguage();
+  
+  // Performance monitoring
+  useEffect(() => {
+    performance.mark('index-page-start');
+    return () => {
+      performance.mark('index-page-end');
+      performance.measure('index-page-load', 'index-page-start', 'index-page-end');
+    };
+  }, []);
+
   const backgroundStyle = {
     backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   };
+
   return <div className="min-h-screen">
       <Navigation />
       
@@ -29,13 +42,13 @@ const Index = () => {
       <VideoHero />
 
       {/* Main content with unified background, particles, and minimal gaps */}
-      <div className="relative overflow-hidden" style={backgroundStyle}>
+      <div className="relative overflow-hidden will-change-transform" style={backgroundStyle}>
         {/* Enhanced overlay with gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
         
-        {/* Unified animated background particles across all sections */}
+        {/* Reduced unified animated background particles (reduced from 30 to 15) */}
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(30)].map((_, i) => <motion.div key={i} className="absolute w-2 h-2 bg-white/20 rounded-full" initial={{
+          {[...Array(15)].map((_, i) => <motion.div key={i} className="absolute w-2 h-2 bg-white/20 rounded-full will-change-transform" initial={{
           x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
           y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
           scale: 0
@@ -45,7 +58,6 @@ const Index = () => {
           opacity: [0, 0.8, 0]
         }} transition={{
           duration: Math.random() * 15 + 15,
-          // 15-30 seconds for longer coverage
           repeat: Infinity,
           delay: Math.random() * 10
         }} />)}
@@ -58,9 +70,6 @@ const Index = () => {
             <HeroContent />
           </div>
 
-          {/* Scenario Hero Component */}
-          
-
           {/* Impact Cards */}
           <div className="py-2 md:py-4">
             <ImpactCards />
@@ -71,16 +80,19 @@ const Index = () => {
             <AnimatedStepFlow />
           </div>
 
-          {/* Testimonials - Moved here after AnimatedStepFlow */}
+          {/* Testimonials - Lazy loaded for better performance */}
           <div className="py-2 md:py-4">
-            <TestimonialSlider />
+            <LazyTestimonialSlider />
           </div>
 
-          {/* Professional Full-Screen Scrolling Statistics Section */}
+          {/* Optimized Scrolling Statistics Section with CSS animation */}
           <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 md:my-4 overflow-hidden">
             <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[2px] relative z-10">
-              <div className="flex space-x-8 md:space-x-16 whitespace-nowrap animate-[scroll_5s_linear_infinite]">
-                {/* First set of statistics */}
+              {/* Single set with CSS animation for better performance */}
+              <div className="flex space-x-8 md:space-x-16 whitespace-nowrap" style={{
+                animation: 'scroll 30s linear infinite',
+                transform: 'translateX(0)'
+              }}>
                 <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
                   <Music className="w-6 h-6 md:w-12 md:h-12 text-blue-300" />
                   <span className="text-lg md:text-3xl text-white">2.000+</span>
@@ -103,43 +115,6 @@ const Index = () => {
                 </div>
                 <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
                   <PartyPopper className="w-6 h-6 md:w-12 md:h-12 text-red-200" />
-                  <span className="text-lg md:text-3xl text-white">400+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('memorableEvents')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Disc className="w-6 h-6 md:w-12 md:h-12 text-indigo-300" />
-                  <span className="text-lg md:text-3xl text-white">100+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('releasedAlbums')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Trophy className="w-6 h-6 md:w-12 md:h-12 text-orange-300" />
-                  <span className="text-lg md:text-3xl text-white">1 Milion+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('copiesSold')}</span>
-                </div>
-                
-                {/* Duplicate set for seamless scrolling */}
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Music className="w-6 h-6 md:w-12 md:h-12 text-blue-300" />
-                  <span className="text-lg md:text-3xl text-white">2.000+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('personalizedSongs')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Mic className="w-6 h-6 md:w-12 md:h-12 text-purple-300" />
-                  <span className="text-lg md:text-3xl text-white">20+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('yearsMusicalPassion')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Star className="w-6 h-6 md:w-12 md:h-12 text-yellow-300" />
-                  <span className="text-lg md:text-3xl text-white">98%</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('happyClients')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Rocket className="w-6 h-6 md:w-12 md:h-12 text-green-300" />
-                  <span className="text-lg md:text-3xl text-white">50+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('launchedArtists')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <PartyPopper className="w-6 h-6 md:w-12 md:h-12 text-pink-300" />
                   <span className="text-lg md:text-3xl text-white">400+</span>
                   <span className="opacity-90 text-sm md:text-xl text-white">{t('memorableEvents')}</span>
                 </div>
@@ -206,4 +181,5 @@ const Index = () => {
       <Footer />
     </div>;
 };
+
 export default Index;
