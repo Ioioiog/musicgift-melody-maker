@@ -113,7 +113,7 @@ serve(async (req) => {
     <email>${escapeXml(giftCard.sender_email)}</email>
   </client>
   <issueDate>${issueDate}</issueDate>
-  <seriesName>GIFT</seriesName>
+  <seriesName>STRP</seriesName>
   <dueDate>${dueDate}</dueDate>
   <product>
     <name>${escapeXml(`Gift Card - ${giftCard.code}`)}</name>
@@ -158,7 +158,7 @@ serve(async (req) => {
     
     const paymentUrl = urlMatch?.[1] || null
     const documentNumber = numberMatch?.[1] || null
-    const documentSeries = seriesMatch?.[1] || 'GIFT'
+    const documentSeries = seriesMatch?.[1] || 'STRP'
     
     if (!paymentUrl) {
       throw new Error('No payment URL received from SmartBill')
