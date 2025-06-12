@@ -1,29 +1,14 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { usePageMeta } from "@/hooks/usePageMeta";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Music, MessageSquare, Headphones, CheckCircle, Play, Users, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import AnimatedStepFlow from "@/components/AnimatedStepFlow";
-
 const HowItWorks = () => {
   const {
     t
   } = useLanguage();
-  
-  // SEO Meta Tags
-  usePageMeta({
-    title_en: t('howItWorksTitle'),
-    title_ro: t('howItWorksTitle'),
-    description_en: t('howItWorksDescription'),
-    description_ro: t('howItWorksDescription'),
-    keywords_en: t('howItWorksKeywords'),
-    keywords_ro: t('howItWorksKeywords')
-  });
-
   return <div className="min-h-screen flex flex-col">
       <Navigation />
       
@@ -89,5 +74,4 @@ const HowItWorks = () => {
       <Footer />
     </div>;
 };
-
 export default HowItWorks;

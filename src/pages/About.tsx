@@ -1,30 +1,16 @@
 
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Heart, Music, Users, Award, Star, ChevronDown, Mic, Trophy, Globe, Shield, Clock, Headphones, Target, Zap, CheckCircle, Rocket, PartyPopper, Disc } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion } from "framer-motion";
+import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy, Heart, Shield, Clock, Award, Users, Globe, Headphones, Zap, CheckCircle, Target, ThumbsUp } from "lucide-react";
 
 const About = () => {
-  const { t } = useLanguage();
-  
-  // SEO Meta Tags
-  usePageMeta({
-    title_en: t('aboutTitle'),
-    title_ro: t('aboutTitle'),
-    description_en: t('aboutDescription'),
-    description_ro: t('aboutDescription'),
-    keywords_en: t('aboutKeywords'),
-    keywords_ro: t('aboutKeywords')
-  });
-
-  return <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
-    backgroundImage: "url('/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
-  }}>
+  const {
+    t
+  } = useLanguage();
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Enhanced Hero Section with Purple Musical Background, Our Story Content and MusicGift Details */}
@@ -528,5 +514,4 @@ const About = () => {
       <Footer />
     </div>;
 };
-
 export default About;

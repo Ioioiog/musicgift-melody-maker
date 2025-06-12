@@ -10,26 +10,18 @@ import { Link } from 'react-router-dom';
 import { usePackages } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
-import { getPackagePrice } from '@/utils/pricing';
-import CurrencyIcon from '@/components/CurrencyIcon';
-import { usePageMeta } from '@/hooks/usePageMeta';
-
 const Packages = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-  const { t } = useLanguage();
-  const { currency } = useCurrency();
-  const { data: packages, isLoading } = usePackages();
-  
-  // SEO Meta Tags
-  usePageMeta({
-    title_en: t('packagesTitle'),
-    title_ro: t('packagesTitle'),
-    description_en: t('packagesDescription'),
-    description_ro: t('packagesDescription'),
-    keywords_en: t('packagesKeywords'),
-    keywords_ro: t('packagesKeywords')
-  });
-
+  const {
+    t
+  } = useLanguage();
+  const {
+    currency
+  } = useCurrency();
+  const {
+    data: packages,
+    isLoading
+  } = usePackages();
   if (isLoading) {
     return <div className="min-h-screen">
         <Navigation />
@@ -39,7 +31,9 @@ const Packages = () => {
         <Footer />
       </div>;
   }
-
+  const getPackagePrice = (pkg: any) => {
+    return currency === 'EUR' ? pkg.price_eur : pkg.price_ron;
+  };
   const renderPackagePrice = (pkg: any) => {
     if (pkg.value === 'gift') {
       return <div className="relative group">
@@ -63,7 +57,7 @@ const Packages = () => {
           <div className="text-center">
             <div className="text-sm font-medium text-orange-600 mb-2">Price</div>
             <div className="text-3xl font-bold text-orange-800 tracking-tight">
-              {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg, currency)}
+              {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}
             </div>
           </div>
         </div>

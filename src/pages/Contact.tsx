@@ -1,173 +1,304 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { usePageMeta } from "@/hooks/usePageMeta";
+import NewsletterForm from "@/components/NewsletterForm";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Contact = () => {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // SEO Meta Tags
-  usePageMeta({
-    title_en: t('contactTitle'),
-    title_ro: t('contactTitle'),
-    description_en: t('contactDescription'),
-    description_ro: t('contactDescription'),
-    keywords_en: t('contactKeywords'),
-    keywords_ro: t('contactKeywords')
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    subject: '',
+    message: ''
   });
 
+  const getInputTextColor = (fieldName: string) => {
+    return focusedField === fieldName ? 'text-black' : 'text-white';
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.subject || !formData.message) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: formData
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Success!",
+        description: "Your message has been sent successfully. We'll get back to you soon!",
+      });
+
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+
+    } catch (error: any) {
+      console.error('Error sending contact form:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
-      backgroundImage: "url('/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
-    }}>
-      {/* Enhanced background overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
-      
-      {/* Animated background dots */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-pulse" />
-        <div className="absolute top-3/4 right-1/3 w-3 h-3 bg-purple-300/30 rounded-full animate-pulse delay-1000" />
-        <div className="absolute bottom-1/4 left-1/2 w-1 h-1 bg-pink-300/40 rounded-full animate-pulse delay-2000" />
-        <div className="absolute top-1/2 right-1/4 w-2 h-2 bg-blue-300/25 rounded-full animate-pulse delay-3000" />
-      </div>
-      
+    <div className="min-h-screen">
       <Navigation />
       
-      <section className="py-16 px-4 relative z-10">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto">
-            {/* Decorative gradient separator */}
-            <div className="w-32 h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full opacity-80" />
-            
-            <motion.div initial={{
-            opacity: 0,
-            y: 30,
-            scale: 0.95
-          }} animate={{
-            opacity: 1,
-            y: 0,
-            scale: 1
-          }} transition={{
-            duration: 0.8,
-            delay: 0.2
-          }}>
-              <Card className="border-0 shadow-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:shadow-purple-500/10 transition-all duration-500">
-                <CardContent className="p-8 md:p-12 relative overflow-hidden">
-                  {/* Card decorative elements */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/5 to-transparent rounded-full -translate-y-16 translate-x-16" />
-                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-blue-500/10 to-transparent rounded-full translate-y-12 -translate-x-12" />
-                  
-                  <div className="relative z-10">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      {/* Contact Form */}
+      {/* Contact Form and Info Section */}
+      <section className="py-20 text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/20 py-0"></div>
+
+        {/* Contact Form and Info */}
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 py-[80px]">
+            {/* Contact Form */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl h-full">
+                <CardContent className="p-8">
+                  <h2 className="text-2xl font-bold text-white mb-6">{t('sendMessage')}</h2>
+                  <form className="space-y-6" onSubmit={handleSubmit}>
+                    <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <h2 className="text-2xl font-bold text-white mb-6 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
-                          {t('sendMessage')}
-                        </h2>
-                        <form className="space-y-4">
-                          <div>
-                            <Input type="text" placeholder={t('firstName')} className="bg-white/5 backdrop-blur-sm border border-white/10 text-white placeholder:text-white/60" />
-                          </div>
-                          <div>
-                            <Input type="text" placeholder={t('lastName')} className="bg-white/5 backdrop-blur-sm border border-white/10 text-white placeholder:text-white/60" />
-                          </div>
-                          <div>
-                            <Input type="email" placeholder={t('email')} className="bg-white/5 backdrop-blur-sm border border-white/10 text-white placeholder:text-white/60" />
-                          </div>
-                          <div>
-                            <Input type="text" placeholder={t('subject')} className="bg-white/5 backdrop-blur-sm border border-white/10 text-white placeholder:text-white/60" />
-                          </div>
-                          <div>
-                            <Textarea placeholder={t('message')} className="bg-white/5 backdrop-blur-sm border border-white/10 text-white placeholder:text-white/60 min-h-[120px]" />
-                          </div>
-                          <motion.div whileHover={{
-                          scale: 1.05
-                        }} whileTap={{
-                          scale: 0.98
-                        }}>
-                            <Button className="w-full bg-orange-500 hover:bg-orange-600 shadow-xl hover:shadow-2xl transition-all duration-300">
-                              <Send className="w-5 h-5 mr-2" />
-                              {t('sendMessage')}
-                            </Button>
-                          </motion.div>
-                        </form>
+                        <Label htmlFor="firstName" className="text-white/90">{t('firstName')}</Label>
+                        <Input
+                          id="firstName"
+                          value={formData.firstName}
+                          onChange={(e) => handleInputChange('firstName', e.target.value)}
+                          onFocus={() => setFocusedField('firstName')}
+                          onBlur={() => setFocusedField(null)}
+                          className={`bg-white/10 border-white/20 ${getInputTextColor('firstName')} placeholder:text-white/60 focus:border-white/40`}
+                          required
+                        />
                       </div>
-
-                      {/* Contact Info */}
                       <div>
-                        <h2 className="text-2xl font-bold text-white mb-6 bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
-                          {t('getInTouch')}
-                        </h2>
-                        <p className="text-white/80 leading-relaxed mb-6">
-                          {t('getInTouchContent')}
-                        </p>
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-3 text-white/80">
-                            <Phone className="w-5 h-5 text-purple-300" />
-                            <span>+40 721 234 567</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-white/80">
-                            <Mail className="w-5 h-5 text-purple-300" />
-                            <span>info@musicgift.ro</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-white/80">
-                            <MapPin className="w-5 h-5 text-purple-300" />
-                            <span>Str. Exemplu, Nr. 123, București, România</span>
-                          </div>
-                        </div>
-
-                        {/* Business Hours */}
-                        <div className="mt-8">
-                          <h3 className="text-xl font-semibold text-white mb-3">
-                            {t('businessHours')}
-                          </h3>
-                          <div className="space-y-2 text-white/70">
-                            <div className="flex justify-between">
-                              <span>{t('monday')}</span>
-                              <span>9:00 - 18:00</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>{t('tuesday')}</span>
-                              <span>9:00 - 18:00</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>{t('wednesday')}</span>
-                              <span>9:00 - 18:00</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>{t('thursday')}</span>
-                              <span>9:00 - 18:00</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>{t('friday')}</span>
-                              <span>9:00 - 17:00</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>{t('saturday')}</span>
-                              <span>{t('closed')}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>{t('sunday')}</span>
-                              <span>{t('closed')}</span>
-                            </div>
-                          </div>
-                        </div>
+                        <Label htmlFor="lastName" className="text-white/90">{t('lastName')}</Label>
+                        <Input
+                          id="lastName"
+                          value={formData.lastName}
+                          onChange={(e) => handleInputChange('lastName', e.target.value)}
+                          onFocus={() => setFocusedField('lastName')}
+                          onBlur={() => setFocusedField(null)}
+                          className={`bg-white/10 border-white/20 ${getInputTextColor('lastName')} placeholder:text-white/60 focus:border-white/40`}
+                          required
+                        />
                       </div>
                     </div>
-                  </div>
+                    <div>
+                      <Label htmlFor="email" className="text-white/90">{t('email')}</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        onFocus={() => setFocusedField('email')}
+                        onBlur={() => setFocusedField(null)}
+                        className={`bg-white/10 border-white/20 ${getInputTextColor('email')} placeholder:text-white/60 focus:border-white/40`}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="subject" className="text-white/90">{t('subject')}</Label>
+                      <Input
+                        id="subject"
+                        value={formData.subject}
+                        onChange={(e) => handleInputChange('subject', e.target.value)}
+                        onFocus={() => setFocusedField('subject')}
+                        onBlur={() => setFocusedField(null)}
+                        className={`bg-white/10 border-white/20 ${getInputTextColor('subject')} placeholder:text-white/60 focus:border-white/40`}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="message" className="text-white/90">{t('message')}</Label>
+                      <Textarea
+                        id="message"
+                        rows={6}
+                        value={formData.message}
+                        onChange={(e) => handleInputChange('message', e.target.value)}
+                        onFocus={() => setFocusedField('message')}
+                        onBlur={() => setFocusedField(null)}
+                        className={`bg-white/10 border-white/20 ${getInputTextColor('message')} placeholder:text-white/60 focus:border-white/40`}
+                        required
+                      />
+                    </div>
+                    <Button 
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-gradient-purple hover:bg-white/30 transition-all duration-300"
+                    >
+                      {isSubmitting ? 'Sending...' : t('sendMessage')}
+                    </Button>
+                  </form>
                 </CardContent>
               </Card>
             </motion.div>
-            
-            {/* Bottom decorative gradient separator */}
-            <div className="w-32 h-1 bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 mx-auto mt-8 rounded-full opacity-60" />
+
+            {/* Contact Info */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-2xl font-bold mb-6">{t('getInTouch')}</h2>
+                  <p className="opacity-90 mb-8">{t('getInTouchContent')}</p>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                      <Mail className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{t('email')}</h3>
+                      <p className="opacity-90">info@musicgift.ro</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                      <Phone className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{t('phone')}</h3>
+                      <p className="opacity-90">+40 723 141 501</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                      <MapPin className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{t('location')}</h3>
+                      <p className="opacity-90">Romania</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-white mb-4">{t('businessHours')}</h3>
+                    <div className="space-y-2 text-sm text-white/80">
+                      <div className="flex justify-between">
+                        <span>{t('monday')} - {t('friday')}</span>
+                        <span>9:00 - 18:00</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>{t('saturday')}</span>
+                        <span>{t('closed')}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>{t('sunday')}</span>
+                        <span>{t('closed')}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-12 sm:py-16 md:py-20 text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/50 py-0"></div>
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }} className="mb-8 sm:mb-10">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
+              {t('stayUpdated') || 'Stay Updated'}
+            </h2>
+            <p className="text-lg sm:text-xl text-white/90 leading-relaxed">
+              {t('subscribeNewsletter') || 'Subscribe to our newsletter for the latest updates and exclusive offers'}
+            </p>
+          </motion.div>
+
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.2
+        }} className="max-w-md mx-auto">
+            <NewsletterForm />
+          </motion.div>
         </div>
       </section>
 

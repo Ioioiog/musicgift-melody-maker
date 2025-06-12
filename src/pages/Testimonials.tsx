@@ -1,31 +1,17 @@
 
-import { useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { usePageMeta } from "@/hooks/usePageMeta";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import TestimonialSubmissionForm from "@/components/TestimonialSubmissionForm";
-import { Button } from "@/components/ui/button";
-import { Star, Quote, Heart, Music } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { Star, Users, Award, Shield } from "lucide-react";
 
 const Testimonials = () => {
   const {
     t
   } = useLanguage();
-  
-  // SEO Meta Tags
-  usePageMeta({
-    title_en: t('testimonialsTitle'),
-    title_ro: t('testimonialsTitle'),
-    description_en: t('testimonialsDescription'),
-    description_ro: t('testimonialsDescription'),
-    keywords_en: t('testimonialsKeywords'),
-    keywords_ro: t('testimonialsKeywords')
-  });
-
   useEffect(() => {
     // Load Trustpilot widget script
     const script = document.createElement('script');

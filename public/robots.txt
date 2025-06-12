@@ -1,23 +1,8 @@
-
 User-agent: Googlebot
 Allow: /
-Disallow: /admin/
-Disallow: /auth/
-Disallow: /settings/
-Disallow: /history/
-Disallow: /payment/error/
-Disallow: /payment/success/
-Disallow: /unsubscribe/
 
 User-agent: Bingbot
 Allow: /
-Disallow: /admin/
-Disallow: /auth/
-Disallow: /settings/
-Disallow: /history/
-Disallow: /payment/error/
-Disallow: /payment/success/
-Disallow: /unsubscribe/
 
 User-agent: Twitterbot
 Allow: /
@@ -27,17 +12,3 @@ Allow: /
 
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /auth/
-Disallow: /settings/
-Disallow: /history/
-Disallow: /payment/error/
-Disallow: /payment/success/
-Disallow: /unsubscribe/
-
-# Sitemaps
-Sitemap: https://www.musicgift.ro/sitemap.xml
-Sitemap: https://www.musicgift.eu/sitemap.xml
-
-# Crawl-delay for general bots
-Crawl-delay: 1
