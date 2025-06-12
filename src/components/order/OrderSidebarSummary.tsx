@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,13 +19,15 @@ interface OrderSidebarSummaryProps {
   giftCard?: any;
   onGiftCardChange?: (giftCard: any) => void;
   onDiscountChange?: (discount: { code: string; amount: number; type: string } | null) => void;
+  isQuoteOnly?: boolean;
 }
 
 const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   orderData,
   giftCard,
   onGiftCardChange,
-  onDiscountChange
+  onDiscountChange,
+  isQuoteOnly = false
 }) => {
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
@@ -71,21 +72,24 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
 
   if (!selectedPackageData) return null;
 
+  // Check if this is a quote-only package
+  const packageIsQuoteOnly = selectedPackageData?.is_quote_only === true || isQuoteOnly;
+
   const packagePrice = getPackagePrice(selectedPackageData, currency);
   const addonsPrice = selectedAddonsData.reduce((total, addon) => 
     total + (addon ? getAddonPrice(addon, currency) : 0), 0
   );
   const subtotal = packagePrice + addonsPrice;
 
-  // Calculate gift card credit
+  // Calculate gift card credit (only for non-quote packages)
   let giftCreditApplied = 0;
-  if (appliedGiftCard) {
+  if (!packageIsQuoteOnly && appliedGiftCard) {
     const giftBalance = (appliedGiftCard.gift_amount || 0) / 100; // Convert from cents
     giftCreditApplied = Math.min(giftBalance, subtotal);
   }
 
-  // Apply discount
-  const discountAmount = appliedDiscount?.amount || 0;
+  // Apply discount (only for non-quote packages)
+  const discountAmount = !packageIsQuoteOnly && appliedDiscount ? appliedDiscount.amount : 0;
   const totalAfterGift = Math.max(0, subtotal - giftCreditApplied);
   const finalDiscount = Math.min(discountAmount, totalAfterGift);
   const finalTotal = Math.max(0, totalAfterGift - finalDiscount);
@@ -185,8 +189,8 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
               </span>
             </div>
 
-            {/* Gift Card Credit */}
-            {appliedGiftCard && giftCreditApplied > 0 && (
+            {/* Gift Card Credit - Only show for non-quote packages */}
+            {!packageIsQuoteOnly && appliedGiftCard && giftCreditApplied > 0 && (
               <div className="flex justify-between items-center text-green-400 text-xs sm:text-sm gap-2">
                 <span className="flex items-center gap-1 sm:gap-2 truncate">
                   <Gift className="w-3 h-3 sm:w-4 h-4 shrink-0" />
@@ -196,8 +200,8 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
               </div>
             )}
 
-            {/* Discount */}
-            {appliedDiscount && finalDiscount > 0 && (
+            {/* Discount - Only show for non-quote packages */}
+            {!packageIsQuoteOnly && appliedDiscount && finalDiscount > 0 && (
               <div className="flex justify-between items-center text-blue-400 text-xs sm:text-sm gap-2">
                 <span className="flex items-center gap-1 sm:gap-2 truncate">
                   <Tag className="w-3 h-3 sm:w-4 h-4 shrink-0" />
@@ -207,26 +211,39 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
               </div>
             )}
 
-            {/* Code Input Section */}
-            <CodeInputSection
-              onGiftCardApplied={handleGiftCardApplied}
-              onDiscountApplied={handleDiscountApplied}
-              onGiftCardRemoved={handleGiftCardRemoved}
-              onDiscountRemoved={handleDiscountRemoved}
-              appliedGiftCard={appliedGiftCard}
-              appliedDiscount={appliedDiscount}
-              orderTotal={subtotal}
-            />
+            {/* Code Input Section - Only show for non-quote packages */}
+            {!packageIsQuoteOnly && (
+              <CodeInputSection
+                onGiftCardApplied={handleGiftCardApplied}
+                onDiscountApplied={handleDiscountApplied}
+                onGiftCardRemoved={handleGiftCardRemoved}
+                onDiscountRemoved={handleDiscountRemoved}
+                appliedGiftCard={appliedGiftCard}
+                appliedDiscount={appliedDiscount}
+                orderTotal={subtotal}
+              />
+            )}
 
             <Separator className="bg-white/20" />
 
             {/* Total */}
             <div className="flex justify-between items-center text-sm sm:text-lg font-bold bg-gradient-to-r from-orange-500/20 to-yellow-500/20 p-2 sm:p-3 rounded-lg border border-orange-400/30">
-              <span className="text-white">{t('total', 'Total')}</span>
-              <span className="text-white">{currency} {finalTotal.toFixed(2)}</span>
+              <span className="text-white">
+                {packageIsQuoteOnly ? t('estimatedPrice', 'Estimated Price') : t('total', 'Total')}
+              </span>
+              <span className="text-white">{currency} {packageIsQuoteOnly ? subtotal.toFixed(2) : finalTotal.toFixed(2)}</span>
             </div>
 
-            {finalTotal === 0 && (
+            {/* Quote-only messaging */}
+            {packageIsQuoteOnly && (
+              <div className="bg-blue-50/10 border border-blue-400/30 rounded-lg p-3 text-center">
+                <p className="text-blue-300 text-xs">
+                  {t('quoteOnlyMessage', 'This is an estimated price. Final pricing will be provided after quote review.')}
+                </p>
+              </div>
+            )}
+
+            {!packageIsQuoteOnly && finalTotal === 0 && (
               <Badge variant="secondary" className="w-full justify-center bg-green-500/20 text-green-300 border-green-400/30 text-xs">
                 {giftCreditApplied > 0 && finalDiscount > 0 
                   ? t('fullyPaidWithCredits', 'Plătit complet cu credite')
