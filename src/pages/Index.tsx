@@ -83,6 +83,11 @@ const Index = () => {
             <AnimatedStepFlow />
           </div>
 
+          {/* Testimonials - Moved here after AnimatedStepFlow */}
+          <div className="py-2 md:py-4">
+            <TestimonialSlider />
+          </div>
+
           {/* Professional Full-Screen Scrolling Statistics Section */}
           <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 md:my-4 overflow-hidden">
             <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[2px] relative z-10">
@@ -166,11 +171,6 @@ const Index = () => {
 
           {/* Decorative separator element */}
           <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[1px]"></div>
-
-          {/* Testimonials */}
-          <div className="py-2 md:py-4">
-            <TestimonialSlider />
-          </div>
 
           {/* CTA Section */}
           <section className="px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8">
