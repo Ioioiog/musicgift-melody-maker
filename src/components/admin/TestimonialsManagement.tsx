@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Play, Check, X } from "lucide-react";
+import { ExternalLink, Play, Check, X, Download } from "lucide-react";
 import { testimonials as staticTestimonials } from "@/data/testimonials";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const TestimonialsManagement = () => {
   const [selectedTestimonial, setSelectedTestimonial] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
   const { toast } = useToast();
 
   // Fetch testimonials from Supabase
@@ -73,6 +74,62 @@ const TestimonialsManagement = () => {
       description: "Testimonial deleted successfully"
     });
     refetch();
+  };
+
+  const handleExportToStatic = async () => {
+    setIsExporting(true);
+    try {
+      // Get all approved testimonials from Supabase
+      const approvedSupabaseTestimonials = supabaseTestimonials.filter(t => t.approved);
+      
+      // Combine static and Supabase testimonials
+      const allTestimonials = [
+        ...staticTestimonials,
+        ...approvedSupabaseTestimonials.map(t => ({
+          id: t.id,
+          name: t.name,
+          location: t.location,
+          stars: t.stars,
+          message: t.text,
+          context: t.context,
+          youtube_link: t.youtube_link,
+          video_url: t.video_url,
+          display_order: t.display_order,
+          approved: t.approved
+        }))
+      ];
+
+      // Sort by display_order
+      allTestimonials.sort((a, b) => a.display_order - b.display_order);
+
+      // Generate the TypeScript file content
+      const fileContent = `export const testimonials = ${JSON.stringify(allTestimonials, null, 2)};`;
+
+      // Create and download the file
+      const blob = new Blob([fileContent], { type: 'text/typescript' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'testimonials.ts';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "Export Successful",
+        description: `Exported ${allTestimonials.length} testimonials to testimonials.ts file. Replace the existing file in src/data/testimonials.ts with this file.`,
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: "Export Failed",
+        description: "Failed to export testimonials",
+        variant: "destructive"
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const handleViewVideo = (testimonial: any) => {
@@ -184,9 +241,19 @@ const TestimonialsManagement = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Testimonials Management</h2>
-        <div className="text-sm text-gray-600 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2">
-          <p className="font-medium">Mixed Source Management</p>
-          <p>Static testimonials from code + Dynamic testimonials from database</p>
+        <div className="flex items-center gap-4">
+          <Button
+            onClick={handleExportToStatic}
+            disabled={isExporting}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            {isExporting ? "Exporting..." : "Export to Static File"}
+          </Button>
+          <div className="text-sm text-gray-600 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2">
+            <p className="font-medium">Mixed Source Management</p>
+            <p>Static testimonials from code + Dynamic testimonials from database</p>
+          </div>
         </div>
       </div>
 
