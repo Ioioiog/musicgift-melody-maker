@@ -1008,6 +1008,72 @@ export type Database = {
         }
         Relationships: []
       }
+      quote_requests: {
+        Row: {
+          addon_field_values: Json | null
+          admin_notes: string | null
+          created_at: string
+          currency: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          estimated_price: number | null
+          form_data: Json
+          id: string
+          package_name: string
+          package_value: string
+          quote_response: string | null
+          quote_valid_until: string | null
+          quoted_price: number | null
+          selected_addons: string[] | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          addon_field_values?: Json | null
+          admin_notes?: string | null
+          created_at?: string
+          currency?: string
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          estimated_price?: number | null
+          form_data: Json
+          id?: string
+          package_name: string
+          package_value: string
+          quote_response?: string | null
+          quote_valid_until?: string | null
+          quoted_price?: number | null
+          selected_addons?: string[] | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          addon_field_values?: Json | null
+          admin_notes?: string | null
+          created_at?: string
+          currency?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          estimated_price?: number | null
+          form_data?: Json
+          id?: string
+          package_name?: string
+          package_value?: string
+          quote_response?: string | null
+          quote_valid_until?: string | null
+          quoted_price?: number | null
+          selected_addons?: string[] | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       sent_emails: {
         Row: {
           account_id: string
