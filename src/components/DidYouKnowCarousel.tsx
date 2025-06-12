@@ -41,7 +41,7 @@ const DidYouKnowCarousel = ({ facts }: DidYouKnowCarouselProps) => {
       <CardContent>
         <div className="px-12">
           <Carousel
-            plugins={[plugin.current]}
+            plugins={[plugin.current as any]}
             className="w-full"
             opts={{
               align: "start",

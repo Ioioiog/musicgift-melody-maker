@@ -217,7 +217,7 @@ export default function TestimonialSlider() {
   return (
     <div className="py-[10px]">
       <div className="max-w-full mx-auto px-4">
-        <Carousel setApi={setApi} opts={{ align: "start", loop: true, slidesToScroll: 1 }} plugins={[autoplay]} className="w-full py-[44px]">
+        <Carousel setApi={setApi} opts={{ align: "start", loop: true, slidesToScroll: 1 }} plugins={[autoplay as any]} className="w-full py-[44px]">
           <CarouselContent className="-ml-2 md:-ml-4">
             {testimonials.map(testimonial => (
               <CarouselItem key={testimonial.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
