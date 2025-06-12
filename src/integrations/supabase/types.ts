@@ -583,7 +583,9 @@ export type Database = {
           message_text: string | null
           netopia_order_id: string | null
           package_type: string | null
+          payment_provider: string | null
           payment_status: string | null
+          payment_url: string | null
           recipient_email: string
           recipient_name: string
           sender_email: string
@@ -611,7 +613,9 @@ export type Database = {
           message_text?: string | null
           netopia_order_id?: string | null
           package_type?: string | null
+          payment_provider?: string | null
           payment_status?: string | null
+          payment_url?: string | null
           recipient_email: string
           recipient_name: string
           sender_email: string
@@ -639,7 +643,9 @@ export type Database = {
           message_text?: string | null
           netopia_order_id?: string | null
           package_type?: string | null
+          payment_provider?: string | null
           payment_status?: string | null
+          payment_url?: string | null
           recipient_email?: string
           recipient_name?: string
           sender_email?: string
