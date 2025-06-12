@@ -1,6 +1,6 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
+import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -48,23 +48,12 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Create Supabase client
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
-
-    // Get the email account for ilincagruia@musicgift.ro
-    const { data: emailAccount, error: accountError } = await supabase
-      .from('email_accounts')
-      .select('id')
-      .eq('email_address', 'ilincagruia@musicgift.ro')
-      .single();
-
-    if (accountError || !emailAccount) {
-      console.error('Email account not found:', accountError);
+    // Get SMTP credentials from environment
+    const smtpPassword = Deno.env.get('SMTP_PASSWORD');
+    if (!smtpPassword) {
+      console.error('SMTP_PASSWORD environment variable not set');
       return new Response(
-        JSON.stringify({ error: 'Email account configuration not found' }),
+        JSON.stringify({ error: 'SMTP configuration not found' }),
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -132,33 +121,55 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    // Send email via SMTP using the smtp-send-email function
-    const { data: emailResult, error: emailError } = await supabase.functions.invoke('smtp-send-email', {
-      body: {
-        accountId: emailAccount.id,
-        to: ['ilincagruia@musicgift.ro'],
-        subject: subject,
-        bodyHtml: htmlContent
-      }
+    // Configure SMTP client
+    const client = new SMTPClient({
+      connection: {
+        hostname: "mail.musicgift.ro", // Your mail server hostname
+        port: 587, // SMTP port with STARTTLS
+        tls: true,
+        auth: {
+          username: "ilincagruia@musicgift.ro",
+          password: smtpPassword,
+        },
+      },
     });
 
-    if (emailError) {
-      console.error('SMTP send error:', emailError);
-      throw new Error('Failed to send testimonial email via SMTP');
+    try {
+      // Send email directly via SMTP
+      await client.send({
+        from: "ilincagruia@musicgift.ro",
+        to: "ilincagruia@musicgift.ro",
+        subject: subject,
+        content: htmlContent,
+        html: htmlContent,
+      });
+
+      await client.close();
+
+      console.log('Testimonial email sent successfully via direct SMTP');
+
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: 'Testimonial submitted successfully'
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+
+    } catch (smtpError: any) {
+      console.error('SMTP send error:', smtpError);
+      await client.close();
+      
+      return new Response(
+        JSON.stringify({ error: 'Failed to send testimonial email: ' + smtpError.message }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
-
-    console.log('Testimonial email sent successfully via SMTP:', emailResult);
-
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: 'Testimonial submitted successfully',
-        messageId: emailResult?.messageId 
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
 
   } catch (error: any) {
     console.error('Error in send-testimonial-email function:', error);
