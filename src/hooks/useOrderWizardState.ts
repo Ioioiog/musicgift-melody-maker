@@ -36,10 +36,6 @@ export const useOrderWizardState = ({ preselectedPackage }: UseOrderWizardStateP
   const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('smartbill');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Add discount state
-  const [appliedGiftCard, setAppliedGiftCard] = useState<any>(null);
-  const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; amount: number; type: string } | null>(null);
-  
   const navigate = useNavigate();
   const { data: packages = [] } = usePackages();
 
@@ -69,9 +65,6 @@ export const useOrderWizardState = ({ preselectedPackage }: UseOrderWizardStateP
     setFormData(newFormData);
     setSelectedAddons([]);
     setAddonFieldValues({});
-    // Reset discounts when package changes
-    setAppliedGiftCard(null);
-    setAppliedDiscount(null);
   };
 
   const handleAddonChange = (addonId: string, checked: boolean) => {
@@ -88,22 +81,6 @@ export const useOrderWizardState = ({ preselectedPackage }: UseOrderWizardStateP
     setAddonFieldValues(prev => ({ ...prev, [addonKey]: fieldValue }));
   };
 
-  const handleGiftCardApplied = (giftCard: any) => {
-    setAppliedGiftCard(giftCard);
-  };
-
-  const handleDiscountApplied = (discount: { code: string; amount: number; type: string }) => {
-    setAppliedDiscount(discount);
-  };
-
-  const handleGiftCardRemoved = () => {
-    setAppliedGiftCard(null);
-  };
-
-  const handleDiscountRemoved = () => {
-    setAppliedDiscount(null);
-  };
-
   return {
     currentStep,
     setCurrentStep,
@@ -114,15 +91,9 @@ export const useOrderWizardState = ({ preselectedPackage }: UseOrderWizardStateP
     setSelectedPaymentProvider,
     isSubmitting,
     setIsSubmitting,
-    appliedGiftCard,
-    appliedDiscount,
     handleInputChange,
     handlePackageSelect,
     handleAddonChange,
-    handleAddonFieldChange,
-    handleGiftCardApplied,
-    handleDiscountApplied,
-    handleGiftCardRemoved,
-    handleDiscountRemoved
+    handleAddonFieldChange
   };
 };
