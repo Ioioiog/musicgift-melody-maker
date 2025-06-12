@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -63,7 +62,7 @@ serve(async (req) => {
 
     if (brevoApiKey) {
       try {
-        // First, fetch available lists to find "MusicGift #2"
+        // First, fetch available lists to find "MusicGift"
         const listsResponse = await fetch('https://api.brevo.com/v3/contacts/lists', {
           method: 'GET',
           headers: {
@@ -76,16 +75,16 @@ serve(async (req) => {
           const listsData = await listsResponse.json()
           console.log('Available Brevo lists:', JSON.stringify(listsData.lists, null, 2))
           
-          // Find the list with name "MusicGift #2"
+          // Find the list with name "MusicGift"
           const targetList = listsData.lists?.find((list: any) => 
-            list.name === 'MusicGift #2' || list.name.includes('MusicGift #2')
+            list.name === 'MusicGift'
           )
           
           if (targetList) {
             brevoListId = targetList.id
-            console.log('Found MusicGift #2 list with ID:', brevoListId)
+            console.log('Found MusicGift list with ID:', brevoListId)
           } else {
-            console.log('MusicGift #2 list not found, using default list ID 1')
+            console.log('MusicGift list not found, using default list ID 1')
             brevoListId = 1
           }
         } else {
