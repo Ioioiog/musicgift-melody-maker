@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -169,30 +170,34 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       if (isQuoteOnly) {
         console.log('📝 Processing quote request');
         
-        // Create order with quote_requested status
-        const quoteOrderData = {
-          ...orderData,
-          status: 'quote_requested',
-          payment_status: 'not_required',
-          payment_provider: null
-        };
+        // Create order directly in database with quote_requested status
+        const { data: order, error: orderError } = await supabase
+          .from('orders')
+          .insert({
+            customer_email: formData.email,
+            customer_name: formData.fullName,
+            customer_phone: formData.phone || null,
+            package_name: selectedPackage,
+            addons: selectedAddons,
+            form_data: formData,
+            addon_field_values: addonFieldValues,
+            total_amount: Math.round(totalPrice * 100), // Convert to cents
+            currency: currency,
+            status: 'quote_requested',
+            payment_status: 'not_required',
+            payment_provider: null,
+            order_number: `QR-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`
+          })
+          .select()
+          .single();
 
-        const { data: quoteResponse, error: quoteError } = await supabase.functions.invoke('create-quote-request', {
-          body: { orderData: quoteOrderData }
-        });
-
-        if (quoteError) {
-          console.error('❌ Quote Request Error:', quoteError);
-          throw new Error(`Quote request failed: ${quoteError.message}`);
-        }
-
-        if (!quoteResponse?.success) {
-          console.error('❌ Quote Request Response Error:', quoteResponse);
-          throw new Error(quoteResponse?.message || 'Quote request failed');
+        if (orderError) {
+          console.error('❌ Quote Request Error:', orderError);
+          throw new Error(`Quote request failed: ${orderError.message}`);
         }
 
         console.log('✅ Quote request submitted successfully');
-        navigate('/payment/success?orderId=' + quoteResponse.orderId + '&type=quote');
+        navigate(`/payment/success?orderId=${order.id}&type=quote`);
         return;
       }
 

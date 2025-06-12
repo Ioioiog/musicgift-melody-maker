@@ -1,29 +1,26 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Home, Package, Clock, AlertCircle } from 'lucide-react';
+import { CheckCircle, FileText, CreditCard, ArrowLeft, Mail, Phone } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { formatCurrency } from '@/utils/currencyUtils';
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
-  const [orderDetails, setOrderDetails] = useState<any>(null);
+  const orderId = searchParams.get('orderId');
+  const orderType = searchParams.get('type'); // 'quote' for quote requests
+  const { t } = useLanguage();
+  const [orderData, setOrderData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [paymentVerified, setPaymentVerified] = useState(false);
-  const { toast } = useToast();
 
-  // Handle multiple query parameters for different payment providers
-  const orderId = searchParams.get('orderId') || searchParams.get('order') || searchParams.get('order_id');
-  const sessionId = searchParams.get('session_id');
-  const revolutOrderId = searchParams.get('revolut_order_id');
+  const isQuoteRequest = orderType === 'quote';
 
   useEffect(() => {
-    const fetchOrderDetails = async () => {
+    const fetchOrderData = async () => {
       if (!orderId) {
         setLoading(false);
         return;
@@ -38,14 +35,8 @@ const PaymentSuccess = () => {
 
         if (error) {
           console.error('Error fetching order:', error);
-          toast({
-            title: 'Eroare la încărcarea detaliilor comenzii',
-            description: 'Nu am putut prelua informațiile comenzii dumneavoastră.',
-            variant: 'destructive'
-          });
         } else {
-          setOrderDetails(data);
-          setPaymentVerified(data.payment_status === 'completed');
+          setOrderData(data);
         }
       } catch (error) {
         console.error('Error:', error);
@@ -54,42 +45,17 @@ const PaymentSuccess = () => {
       }
     };
 
-    fetchOrderDetails();
-
-    // Poll for payment status updates in case webhook is delayed
-    const pollInterval = setInterval(() => {
-      if (orderId && !paymentVerified) {
-        fetchOrderDetails();
-      }
-    }, 5000);
-
-    // Clear interval after 2 minutes
-    setTimeout(() => clearInterval(pollInterval), 120000);
-
-    return () => clearInterval(pollInterval);
-  }, [orderId, toast, paymentVerified]);
-
-  const getProviderName = (provider: string) => {
-    switch (provider) {
-      case 'stripe':
-        return 'Stripe';
-      case 'revolut':
-        return 'Revolut Business';
-      case 'smartbill':
-        return 'SmartBill';
-      default:
-        return provider;
-    }
-  };
+    fetchOrderData();
+  }, [orderId]);
 
   if (loading) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-gray-50">
         <Navigation />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Se încarcă detaliile comenzii...</p>
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading...</p>
           </div>
         </div>
         <Footer />
@@ -98,113 +64,110 @@ const PaymentSuccess = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gray-50">
       <Navigation />
       
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto">
-            <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
-              <CardContent className="p-8 text-center">
-                <div className="mb-6">
-                  {paymentVerified ? (
-                    <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-4" />
-                  ) : (
-                    <Clock className="w-20 h-20 text-orange-500 mx-auto mb-4" />
-                  )}
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    {paymentVerified ? 'Plata a fost finalizată cu succes!' : 'Plata este în procesare'}
-                  </h1>
-                  <p className="text-gray-600 text-lg">
-                    {paymentVerified 
-                      ? 'Vă mulțumim pentru plată. Comanda dumneavoastră a fost confirmată.'
-                      : 'Plata dumneavoastră este în curs de procesare. Vă vom informa când va fi confirmată.'
-                    }
-                  </p>
-                </div>
-
-                {!paymentVerified && (
-                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
-                    <div className="flex items-center gap-2 text-orange-800 mb-2">
-                      <AlertCircle className="w-5 h-5" />
-                      <span className="font-semibold">Plata în procesare</span>
-                    </div>
-                    <p className="text-sm text-orange-700">
-                      Plata dumneavoastră este în curs de verificare. Acest proces poate dura câteva minute. 
-                      Veți primi un email de confirmare când plata va fi finalizată.
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-2xl mx-auto">
+          <Card className="mb-6">
+            <CardHeader className="text-center">
+              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                {isQuoteRequest ? (
+                  <FileText className="w-8 h-8 text-green-600" />
+                ) : (
+                  <CheckCircle className="w-8 h-8 text-green-600" />
+                )}
+              </div>
+              <CardTitle className="text-2xl font-bold text-gray-900">
+                {isQuoteRequest ? t('quoteRequestSuccess', 'Quote Request Submitted!') : t('orderSuccess', 'Order Completed!')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {isQuoteRequest ? (
+                <>
+                  <div className="text-center space-y-4">
+                    <p className="text-gray-600">
+                      {t('quoteRequestSuccessMessage', 'Your quote request has been submitted successfully. We\'ll get back to you soon.')}
                     </p>
-                  </div>
-                )}
-
-                {orderDetails && (
-                  <div className="bg-gray-50 rounded-lg p-6 mb-6 text-left">
-                    <h3 className="font-semibold text-gray-900 mb-4">Detalii comandă</h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">ID Comandă:</span>
-                        <span className="font-mono">#{orderDetails.id.slice(0, 8)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Pachet:</span>
-                        <span>{orderDetails.package_name || 'N/A'}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Provider plată:</span>
-                        <span>{getProviderName(orderDetails.payment_provider || 'smartbill')}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Sumă:</span>
-                        <span className="font-semibold">
-                          {formatCurrency(
-                            orderDetails.total_price, 
-                            orderDetails.currency || 'RON',
-                            orderDetails.payment_provider
-                          )}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Status plată:</span>
-                        <span className={`capitalize font-semibold ${
-                          paymentVerified ? 'text-green-600' : 'text-orange-600'
-                        }`}>
-                          {orderDetails.payment_status === 'completed' ? 'Finalizată' : 
-                           orderDetails.payment_status === 'pending' ? 'În procesare' : 
-                           orderDetails.payment_status}
-                        </span>
-                      </div>
+                    
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                      <h3 className="font-semibold text-orange-800 mb-2">What happens next?</h3>
+                      <ul className="text-sm text-orange-700 space-y-1 text-left">
+                        <li>• Our team will review your requirements</li>
+                        <li>• We'll prepare a personalized quote within 24-48 hours</li>
+                        <li>• You'll receive an email with pricing and timeline details</li>
+                        <li>• No payment is required until you approve the quote</li>
+                      </ul>
                     </div>
                   </div>
-                )}
-
-                <div className="space-y-4">
-                  <p className="text-gray-600">
-                    {paymentVerified 
-                      ? 'Am primit plata dumneavoastră și comanda este acum în curs de procesare. Veți primi în scurt timp un email de confirmare cu toate detaliile.'
-                      : 'Vă vom informa prin email când plata va fi confirmată și comanda va intra în procesare.'
-                    }
-                  </p>
-                  
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button asChild className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-                      <Link to="/">
-                        <Home className="w-4 h-4 mr-2" />
-                        Înapoi la pagina principală
-                      </Link>
-                    </Button>
+                </>
+              ) : (
+                <>
+                  <div className="text-center space-y-4">
+                    <p className="text-gray-600">
+                      {t('orderSuccessMessage', 'Your order has been created successfully. This uses demo data.')}
+                    </p>
                     
-                    <Button asChild variant="outline">
-                      <Link to="/packages">
-                        <Package className="w-4 h-4 mr-2" />
-                        Vezi pachete
-                      </Link>
-                    </Button>
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <h3 className="font-semibold text-green-800 mb-2">What happens next?</h3>
+                      <ul className="text-sm text-green-700 space-y-1 text-left">
+                        <li>• You'll receive a confirmation email shortly</li>
+                        <li>• Our team will start working on your personalized song</li>
+                        <li>• Delivery within 3-5 business days</li>
+                        <li>• High-quality MP3 and WAV files included</li>
+                      </ul>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {orderData && (
+                <div className="border-t pt-4">
+                  <h4 className="font-semibold text-gray-900 mb-2">Order Details</h4>
+                  <div className="text-sm text-gray-600 space-y-1">
+                    <p><strong>Order ID:</strong> {orderData.order_number || orderData.id}</p>
+                    <p><strong>Package:</strong> {orderData.package_name}</p>
+                    <p><strong>Customer:</strong> {orderData.customer_name}</p>
+                    <p><strong>Email:</strong> {orderData.customer_email}</p>
+                    {orderData.total_amount && (
+                      <p><strong>Amount:</strong> {(orderData.total_amount / 100).toFixed(2)} {orderData.currency}</p>
+                    )}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              )}
+
+              <div className="space-y-3">
+                <Button asChild className="w-full">
+                  <Link to="/">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back to Home
+                  </Link>
+                </Button>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <Button asChild variant="outline" className="w-full">
+                    <Link to="/contact">
+                      <Mail className="w-4 h-4 mr-2" />
+                      Contact Us
+                    </Link>
+                  </Button>
+                  
+                  <Button asChild variant="outline" className="w-full">
+                    <Link to="/history">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Order History
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="text-center text-sm text-gray-500 border-t pt-4">
+                <p>Questions? Contact us at support@musicgift.ro or call +40 123 456 789</p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </section>
+      </div>
 
       <Footer />
     </div>
