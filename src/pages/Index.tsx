@@ -163,7 +163,7 @@ const Index = () => {
       <section style={backgroundStyle} className="px-2 md:px-4 text-white text-center relative overflow-hidden my-0 py-[24px] md:py-[44px]">
         <div className="absolute inset-0 bg-black/20 py-0 my-0"></div>
         <div className="max-w-4xl mx-auto relative z-10">
-          <h2 className="text-xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
+          <h2 className="text-lg md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3">
             {t('heroCtaTitle')}
           </h2>
           <p className="text-base md:text-xl mb-6 md:mb-8 opacity-90">
