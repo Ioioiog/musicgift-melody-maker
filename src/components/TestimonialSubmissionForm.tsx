@@ -1,7 +1,5 @@
-
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -82,19 +80,25 @@ const TestimonialSubmissionForm = () => {
       // Convert YouTube link to embed format if provided
       const convertedYouTubeLink = formData.youtube_link ? convertToYouTubeEmbed(formData.youtube_link) : "";
       
-      const { data, error } = await supabase.functions.invoke('send-testimonial-email', {
-        body: {
+      const response = await fetch('/api/send-testimonial', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           name: formData.name,
           location: formData.location || undefined,
           stars: formData.stars,
           text: formData.text,
           youtube_link: convertedYouTubeLink || undefined,
           video_url: formData.video_url || undefined
-        }
+        })
       });
 
-      if (error) {
-        throw error;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit testimonial');
       }
 
       toast({
@@ -108,7 +112,7 @@ const TestimonialSubmissionForm = () => {
       console.error('Error submitting testimonial:', error);
       toast({
         title: "Error",
-        description: "Failed to submit testimonial. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to submit testimonial. Please try again.",
         variant: "destructive"
       });
     } finally {
