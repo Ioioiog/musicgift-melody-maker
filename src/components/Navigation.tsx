@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,6 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { ShoppingCart, Check, Globe, LogOut, UserCircle, User, History, ChevronDown, ChevronUp, Settings } from "lucide-react";
 import CurrencyIcon from "@/components/CurrencyIcon";
-
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,9 +13,19 @@ const Navigation = () => {
   const [isLanguageCurrencyDropdownOpen, setIsLanguageCurrencyDropdownOpen] = useState(false);
   const [isDesktopUserDropdownOpen, setIsDesktopUserDropdownOpen] = useState(false);
   const [isDesktopSettingsDropdownOpen, setIsDesktopSettingsDropdownOpen] = useState(false);
-  const { language, setLanguage, t } = useLanguage();
-  const { currency, setCurrency } = useCurrency();
-  const { user, signOut } = useAuth();
+  const {
+    language,
+    setLanguage,
+    t
+  } = useLanguage();
+  const {
+    currency,
+    setCurrency
+  } = useCurrency();
+  const {
+    user,
+    signOut
+  } = useAuth();
 
   // Refs for click outside detection
   const mainMenuRef = useRef<HTMLDivElement>(null);
@@ -44,30 +52,24 @@ const Navigation = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      
+
       // Check if any menu is open first
       if (!isMenuOpen && !isUserDropdownOpen && !isLanguageCurrencyDropdownOpen && !isDesktopUserDropdownOpen && !isDesktopSettingsDropdownOpen) {
         return;
       }
 
       // Check if click is inside any menu area or button
-      const isInsideMainMenu = (mainMenuRef.current && mainMenuRef.current.contains(target)) || 
-                              (mainMenuButtonRef.current && mainMenuButtonRef.current.contains(target));
-      const isInsideUserDropdown = (userDropdownRef.current && userDropdownRef.current.contains(target)) || 
-                                  (userDropdownButtonRef.current && userDropdownButtonRef.current.contains(target));
-      const isInsideLanguageCurrency = (languageCurrencyDropdownRef.current && languageCurrencyDropdownRef.current.contains(target)) || 
-                                      (languageCurrencyButtonRef.current && languageCurrencyButtonRef.current.contains(target));
-      const isInsideDesktopUserDropdown = (desktopUserDropdownRef.current && desktopUserDropdownRef.current.contains(target)) || 
-                                         (desktopUserDropdownButtonRef.current && desktopUserDropdownButtonRef.current.contains(target));
-      const isInsideDesktopSettingsDropdown = (desktopSettingsDropdownRef.current && desktopSettingsDropdownRef.current.contains(target)) || 
-                                             (desktopSettingsDropdownButtonRef.current && desktopSettingsDropdownButtonRef.current.contains(target));
+      const isInsideMainMenu = mainMenuRef.current && mainMenuRef.current.contains(target) || mainMenuButtonRef.current && mainMenuButtonRef.current.contains(target);
+      const isInsideUserDropdown = userDropdownRef.current && userDropdownRef.current.contains(target) || userDropdownButtonRef.current && userDropdownButtonRef.current.contains(target);
+      const isInsideLanguageCurrency = languageCurrencyDropdownRef.current && languageCurrencyDropdownRef.current.contains(target) || languageCurrencyButtonRef.current && languageCurrencyButtonRef.current.contains(target);
+      const isInsideDesktopUserDropdown = desktopUserDropdownRef.current && desktopUserDropdownRef.current.contains(target) || desktopUserDropdownButtonRef.current && desktopUserDropdownButtonRef.current.contains(target);
+      const isInsideDesktopSettingsDropdown = desktopSettingsDropdownRef.current && desktopSettingsDropdownRef.current.contains(target) || desktopSettingsDropdownButtonRef.current && desktopSettingsDropdownButtonRef.current.contains(target);
 
       // If click is outside all menu areas, close all menus
       if (!isInsideMainMenu && !isInsideUserDropdown && !isInsideLanguageCurrency && !isInsideDesktopUserDropdown && !isInsideDesktopSettingsDropdown) {
         closeAllMenus();
       }
     };
-
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         closeAllMenus();
@@ -84,7 +86,6 @@ const Navigation = () => {
       document.removeEventListener('keydown', handleEscapeKey);
     };
   }, [isMenuOpen, isUserDropdownOpen, isLanguageCurrencyDropdownOpen, isDesktopUserDropdownOpen, isDesktopSettingsDropdownOpen]);
-
   const getOrderText = () => {
     switch (language) {
       case "ro":
@@ -93,7 +94,6 @@ const Navigation = () => {
         return "ORDER";
     }
   };
-
   const handleSignOut = async () => {
     await signOut();
     closeAllMenus();
@@ -107,7 +107,6 @@ const Navigation = () => {
     setIsDesktopSettingsDropdownOpen(false);
     setIsMenuOpen(!isMenuOpen);
   };
-
   const handleUserDropdownToggle = () => {
     setIsMenuOpen(false);
     setIsLanguageCurrencyDropdownOpen(false);
@@ -115,7 +114,6 @@ const Navigation = () => {
     setIsDesktopSettingsDropdownOpen(false);
     setIsUserDropdownOpen(!isUserDropdownOpen);
   };
-
   const handleLanguageCurrencyToggle = () => {
     setIsMenuOpen(false);
     setIsUserDropdownOpen(false);
@@ -123,7 +121,6 @@ const Navigation = () => {
     setIsDesktopSettingsDropdownOpen(false);
     setIsLanguageCurrencyDropdownOpen(!isLanguageCurrencyDropdownOpen);
   };
-
   const handleDesktopUserDropdownToggle = () => {
     setIsMenuOpen(false);
     setIsUserDropdownOpen(false);
@@ -131,7 +128,6 @@ const Navigation = () => {
     setIsDesktopSettingsDropdownOpen(false);
     setIsDesktopUserDropdownOpen(!isDesktopUserDropdownOpen);
   };
-
   const handleDesktopSettingsDropdownToggle = () => {
     setIsMenuOpen(false);
     setIsUserDropdownOpen(false);
@@ -139,7 +135,6 @@ const Navigation = () => {
     setIsDesktopUserDropdownOpen(false);
     setIsDesktopSettingsDropdownOpen(!isDesktopSettingsDropdownOpen);
   };
-
   const navItems = [{
     path: "/",
     label: t("home") || "Home"
@@ -162,9 +157,7 @@ const Navigation = () => {
     path: "/contact",
     label: t("contact") || "Contact"
   }];
-
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
-
   return <>
       {/* Background behind navbar */}
       <div style={{
@@ -204,41 +197,30 @@ const Navigation = () => {
             <div className="hidden lg:flex items-center space-x-3 ml-auto">
               {/* Settings Dropdown */}
               <div className="relative">
-                <button 
-                  ref={desktopSettingsDropdownButtonRef}
-                  onClick={handleDesktopSettingsDropdownToggle}
-                  className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-gray-200/50 hover:border-gray-300 text-gray-700 hover:text-gray-800 transition-all duration-300 rounded-xl px-3 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-1 min-h-[40px] touch-manipulation"
-                >
+                <button ref={desktopSettingsDropdownButtonRef} onClick={handleDesktopSettingsDropdownToggle} className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-gray-200/50 hover:border-gray-300 text-gray-700 hover:text-gray-800 transition-all duration-300 rounded-xl px-3 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-1 min-h-[40px] touch-manipulation">
                   <Settings className="w-4 h-4" />
                 </button>
 
                 {/* Settings Dropdown Menu */}
-                {isDesktopSettingsDropdownOpen && (
-                  <div ref={desktopSettingsDropdownRef} className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md border-2 border-gray-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
+                {isDesktopSettingsDropdownOpen && <div ref={desktopSettingsDropdownRef} className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md border-2 border-gray-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
                     {/* Currency Section */}
                     <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Currency
                     </div>
-                    <button 
-                      onClick={() => {
-                        setCurrency('EUR');
-                        closeAllMenus();
-                      }}
-                      className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}
-                    >
+                    <button onClick={() => {
+                  setCurrency('EUR');
+                  closeAllMenus();
+                }} className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}>
                       <div className="flex items-center space-x-2">
                         <CurrencyIcon currency="EUR" className="w-4 h-4" />
                         <span>EUR</span>
                       </div>
                       {currency === 'EUR' && <Check className="w-4 h-4" />}
                     </button>
-                    <button 
-                      onClick={() => {
-                        setCurrency('RON');
-                        closeAllMenus();
-                      }}
-                      className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}
-                    >
+                    <button onClick={() => {
+                  setCurrency('RON');
+                  closeAllMenus();
+                }} className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}>
                       <div className="flex items-center space-x-2">
                         <CurrencyIcon currency="RON" className="w-4 h-4" />
                         <span>RON</span>
@@ -252,74 +234,50 @@ const Navigation = () => {
                     <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Language
                     </div>
-                    {languages.map(lang => (
-                      <button 
-                        key={lang}
-                        onClick={() => {
-                          setLanguage(lang);
-                          closeAllMenus();
-                        }}
-                        className={`w-full hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold shadow-sm" : "text-gray-700"}`}
-                      >
+                    {languages.map(lang => <button key={lang} onClick={() => {
+                  setLanguage(lang);
+                  closeAllMenus();
+                }} className={`w-full hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold shadow-sm" : "text-gray-700"}`}>
                         <div className="flex items-center space-x-2">
                           <Globe className="w-4 h-4" />
                           <span>{languageNames[lang]}</span>
                         </div>
                         {language === lang && <Check className="w-4 h-4" />}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                      </button>)}
+                  </div>}
               </div>
 
               {/* User Menu */}
               <div className="relative">
-                {user ? (
-                  <button 
-                    ref={desktopUserDropdownButtonRef}
-                    onClick={handleDesktopUserDropdownToggle}
-                    className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-rose-200/50 hover:border-rose-300 text-gray-700 hover:text-rose-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2"
-                  >
+                {user ? <button ref={desktopUserDropdownButtonRef} onClick={handleDesktopUserDropdownToggle} className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-rose-200/50 hover:border-rose-300 text-gray-700 hover:text-rose-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2">
                     <User className="w-4 h-4" />
                     <span className="hidden md:inline text-sm font-medium">
                       {user.user_metadata?.full_name || user.email?.split('@')[0] || t('user')}
                     </span>
-                  </button>
-                ) : (
-                  <Link to="/auth">
+                  </button> : <Link to="/auth">
                     <button className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-emerald-200/50 hover:border-emerald-300 text-gray-700 hover:text-emerald-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2">
                       <UserCircle className="w-4 h-4" />
                       <span className="text-sm font-medium">{t('signIn')}</span>
                     </button>
-                  </Link>
-                )}
+                  </Link>}
 
                 {/* User Dropdown Menu */}
-                {user && isDesktopUserDropdownOpen && (
-                  <div ref={desktopUserDropdownRef} className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md shadow-2xl border-2 border-pink-200 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
+                {user && isDesktopUserDropdownOpen && <div ref={desktopUserDropdownRef} className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md shadow-2xl border-2 border-pink-200 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
                     <div className="px-3 py-2 text-sm text-gray-600 bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg mx-1 mb-2 border border-pink-100">
                       <div className="font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
                       <div className="text-xs text-gray-500 truncate">{user.email}</div>
                     </div>
                     <div className="bg-pink-200 my-2 h-px" />
-                    <Link 
-                      to="/settings" 
-                      className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105"
-                      onClick={closeAllMenus}
-                    >
+                    <Link to="/settings" className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105" onClick={closeAllMenus}>
                       <Settings className="w-4 h-4 mr-3" />
                       <span className="font-medium">{t('accountSettings')}</span>
                     </Link>
                     <div className="bg-pink-200 my-2 h-px" />
-                    <button 
-                      onClick={handleSignOut} 
-                      className="w-full text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer font-medium transform hover:scale-105 flex items-center"
-                    >
+                    <button onClick={handleSignOut} className="w-full text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer font-medium transform hover:scale-105 flex items-center">
                       <LogOut className="w-4 h-4 mr-3" />
                       {t('signOut')}
                     </button>
-                  </div>
-                )}
+                  </div>}
               </div>
               
               {/* Orange Shopping Cart Button */}
@@ -339,43 +297,24 @@ const Navigation = () => {
             <div className="lg:hidden flex items-center space-x-2 ml-auto">
               {/* Mobile Language/Currency Button */}
               <div className="relative">
-                <button 
-                  ref={languageCurrencyButtonRef}
-                  onClick={handleLanguageCurrencyToggle}
-                  className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center"
-                >
+                <button ref={languageCurrencyButtonRef} onClick={handleLanguageCurrencyToggle} className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center">
                   <Settings className="w-5 h-5 text-gray-700" />
                 </button>
               </div>
 
               {/* Mobile User Account Button */}
               <div className="relative">
-                {user ? (
-                  <button 
-                    ref={userDropdownButtonRef}
-                    onClick={handleUserDropdownToggle}
-                    className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center relative"
-                  >
+                {user ? <button ref={userDropdownButtonRef} onClick={handleUserDropdownToggle} className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center relative">
                     <User className="w-5 h-5 text-gray-700" />
                     {/* Online indicator */}
                     <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                  </button>
-                ) : (
-                  <Link 
-                    to="/auth" 
-                    className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center"
-                  >
+                  </button> : <Link to="/auth" className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center">
                     <UserCircle className="w-5 h-5 text-gray-700" />
-                  </Link>
-                )}
+                  </Link>}
               </div>
 
               {/* Mobile Menu Toggle */}
-              <button 
-                ref={mainMenuButtonRef}
-                className="p-3 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" 
-                onClick={handleMainMenuToggle}
-              >
+              <button ref={mainMenuButtonRef} className="p-3 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" onClick={handleMainMenuToggle}>
                 <div className="w-6 h-6 flex flex-col justify-center items-center">
                   <div className={`w-5 h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-0.5" : ""}`} />
                   <div className={`w-5 h-0.5 my-0.5 transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""}`} />
@@ -391,8 +330,7 @@ const Navigation = () => {
           </div>
 
           {/* Enhanced Mobile Menu - Compact styling */}
-          {isMenuOpen && (
-            <div ref={mainMenuRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-black/30 backdrop-blur-xl border border-white/20 overflow-hidden">
+          {isMenuOpen && <div ref={mainMenuRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-black/30 backdrop-blur-xl border border-white/20 overflow-hidden">
               {/* Website Pages Section */}
               <div className="p-3 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-3">
@@ -401,31 +339,16 @@ const Navigation = () => {
                 </div>
                 
                 <nav className="space-y-0.5">
-                  {navItems.map(item => (
-                    <Link 
-                      key={item.path + item.label} 
-                      to={item.path} 
-                      className={`group flex items-center justify-center text-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
-                        location.pathname === item.path 
-                          ? "bg-white/20 backdrop-blur-sm text-violet-700 shadow-lg font-semibold" 
-                          : "text-gray-700 hover:text-violet-700"
-                      }`} 
-                      onClick={closeAllMenus}
-                    >
+                  {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`group flex items-center justify-center text-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${location.pathname === item.path ? "bg-white/20 backdrop-blur-sm text-violet-700 shadow-lg font-semibold" : "text-gray-700 hover:text-violet-700"}`} onClick={closeAllMenus}>
                       <span className="font-medium text-sm">{item.label}</span>
-                      {location.pathname === item.path && (
-                        <div className="ml-2 w-1.5 h-1.5 bg-violet-600 rounded-full animate-pulse"></div>
-                      )}
-                    </Link>
-                  ))}
+                      {location.pathname === item.path && <div className="ml-2 w-1.5 h-1.5 bg-violet-600 rounded-full animate-pulse"></div>}
+                    </Link>)}
                 </nav>
               </div>
-            </div>
-          )}
+            </div>}
 
           {/* Language/Currency Dropdown for Mobile - Compact styling */}
-          {isLanguageCurrencyDropdownOpen && (
-            <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-black/30 backdrop-blur-xl border border-white/20 overflow-hidden">
+          {isLanguageCurrencyDropdownOpen && <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-black/30 backdrop-blur-xl border border-white/20 overflow-hidden">
               {/* Currency Section */}
               <div className="p-3 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-3">
@@ -434,44 +357,26 @@ const Navigation = () => {
                 </div>
                 
                 <div className="space-y-0.5">
-                  <button 
-                    onClick={() => {
-                      setCurrency('EUR');
-                      closeAllMenus();
-                    }}
-                    className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
-                      currency === 'EUR' 
-                        ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
-                        : "text-gray-700 hover:text-emerald-700"
-                    }`}
-                  >
+                  <button onClick={() => {
+                setCurrency('EUR');
+                closeAllMenus();
+              }} className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${currency === 'EUR' ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" : "text-gray-700 hover:text-emerald-700"}`}>
                     <div className="flex items-center space-x-2">
                       <CurrencyIcon currency="EUR" className="w-4 h-4" />
                       <span className="font-medium text-sm">EUR</span>
                     </div>
-                    {currency === 'EUR' && (
-                      <Check className="w-4 h-4 animate-pulse" />
-                    )}
+                    {currency === 'EUR' && <Check className="w-4 h-4 animate-pulse" />}
                   </button>
                   
-                  <button 
-                    onClick={() => {
-                      setCurrency('RON');
-                      closeAllMenus();
-                    }}
-                    className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
-                      currency === 'RON' 
-                        ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
-                        : "text-gray-700 hover:text-emerald-700"
-                    }`}
-                  >
+                  <button onClick={() => {
+                setCurrency('RON');
+                closeAllMenus();
+              }} className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${currency === 'RON' ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" : "text-gray-700 hover:text-emerald-700"}`}>
                     <div className="flex items-center space-x-2">
                       <CurrencyIcon currency="RON" className="w-4 h-4" />
                       <span className="font-medium text-sm">RON</span>
                     </div>
-                    {currency === 'RON' && (
-                      <Check className="w-4 h-4 animate-pulse" />
-                    )}
+                    {currency === 'RON' && <Check className="w-4 h-4 animate-pulse" />}
                   </button>
                 </div>
               </div>
@@ -485,37 +390,23 @@ const Navigation = () => {
                   </div>
                   
                   <div className="space-y-0.5">
-                    {languages.map(lang => (
-                      <button 
-                        key={lang}
-                        onClick={() => {
-                          setLanguage(lang);
-                          closeAllMenus();
-                        }}
-                        className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${
-                          language === lang 
-                            ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" 
-                            : "text-gray-700 hover:text-emerald-700"
-                        }`}
-                      >
+                    {languages.map(lang => <button key={lang} onClick={() => {
+                  setLanguage(lang);
+                  closeAllMenus();
+                }} className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${language === lang ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" : "text-gray-700 hover:text-emerald-700"}`}>
                         <div className="flex items-center space-x-2">
                           <Globe className="w-4 h-4" />
                           <span className="font-medium text-sm">{languageNames[lang]}</span>
                         </div>
-                        {language === lang && (
-                          <Check className="w-4 h-4 animate-pulse" />
-                        )}
-                      </button>
-                    ))}
+                        {language === lang && <Check className="w-4 h-4 animate-pulse" />}
+                      </button>)}
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            </div>}
 
           {/* User Dropdown for Mobile - Compact styling */}
-          {user && isUserDropdownOpen && (
-            <div ref={userDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-black/30 backdrop-blur-xl border border-white/20 overflow-hidden">
+          {user && isUserDropdownOpen && <div ref={userDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 backdrop-blur-xl border border-white/20 overflow-hidden bg-zinc-100 px-0 my-0 py-[41px]">
               {/* User Info Header */}
               <div className="p-3 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-3">
@@ -541,38 +432,25 @@ const Navigation = () => {
               {/* User Actions */}
               <div className="px-3 pb-3 border-t border-white/20 ml-36 sm:ml-44 md:ml-52">
                 <div className="pt-2 space-y-0.5">
-                  <Link 
-                    to="/settings" 
-                    className="group w-full flex items-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
-                    onClick={closeAllMenus}
-                  >
+                  <Link to="/settings" className="group w-full flex items-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700" onClick={closeAllMenus}>
                     <User className="w-4 h-4 mr-2" />
                     <span className="font-medium text-sm">{t('accountSettings')}</span>
                   </Link>
                   
-                  <Link 
-                    to="/history" 
-                    className="group w-full flex items-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700"
-                    onClick={closeAllMenus}
-                  >
+                  <Link to="/history" className="group w-full flex items-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-gray-700 hover:text-rose-700" onClick={closeAllMenus}>
                     <History className="w-4 h-4 mr-2" />
                     <span className="font-medium text-sm">{t('history')}</span>
                   </Link>
                   
-                  <button 
-                    onClick={handleSignOut}
-                    className="group w-full flex items-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-red-600 hover:text-red-700"
-                  >
+                  <button onClick={handleSignOut} className="group w-full flex items-center py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] text-red-600 hover:text-red-700">
                     <LogOut className="w-4 h-4 mr-2" />
                     <span className="font-medium text-sm">{t('signOut')}</span>
                   </button>
                 </div>
               </div>
-            </div>
-          )}
+            </div>}
         </div>
       </header>
     </>;
 };
-
 export default Navigation;
