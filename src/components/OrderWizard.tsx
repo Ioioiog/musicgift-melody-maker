@@ -93,26 +93,37 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   // Only get regular package steps (exclude contact/legal as it's now universal)
   const regularSteps = allPackageSteps.filter(step => step.title_key !== 'contactDetailsStep').sort((a, b) => a.step_number - b.step_number);
 
+  const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+  
+  // Check if this is a quote-only package
+  const isQuoteOnly = selectedPackageData?.is_quote_only === true;
+
   // Build the complete step flow - Contact & Legal is now ALWAYS present
   const totalRegularSteps = regularSteps.length;
   const addonStepIndex = 1 + totalRegularSteps; // After package selection + regular steps
   const contactLegalStepIndex = addonStepIndex + 1; // Always after addons
-  const paymentStepIndex = contactLegalStepIndex + 1; // Always after contact/legal
-  const totalSteps = paymentStepIndex + 1;
-  const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+  const paymentStepIndex = isQuoteOnly ? -1 : contactLegalStepIndex + 1; // Skip payment for quotes
+  const totalSteps = isQuoteOnly ? contactLegalStepIndex + 1 : paymentStepIndex + 1;
+
   const handleNext = () => {
     if (currentStep === 0) {
       if (!formData.package) return;
       setCurrentStep(1); // Go to first form step
     } else if (currentStep < totalSteps - 1) {
+      // Skip payment step for quote-only packages
+      if (isQuoteOnly && currentStep === contactLegalStepIndex) {
+        return; // Don't proceed past contact/legal for quotes
+      }
       setCurrentStep(currentStep + 1);
     }
   };
+
   const handlePrev = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
+
   const calculateTotalPrice = () => {
     const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
     const addonsPrice = selectedAddons.reduce((total, addonKey) => {
@@ -121,11 +132,80 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     }, 0);
     return packagePrice + addonsPrice;
   };
+
   const totalPrice = calculateTotalPrice();
+
   const handleSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
+    
     try {
+      // For quote-only packages, create quote request instead of payment
+      if (isQuoteOnly) {
+        console.log("🔄 Creating quote request for quote-only package");
+        
+        validateFormData(formData, selectedPackage, totalPrice);
+        
+        if (onComplete) {
+          await onComplete({
+            ...formData,
+            addons: selectedAddons,
+            addonFieldValues,
+            package: selectedPackage,
+            paymentProvider: null, // No payment for quotes
+            totalPrice,
+            isQuoteRequest: true
+          });
+          return;
+        }
+        
+        // Create quote request directly in database
+        const orderData = prepareOrderData(
+          formData, 
+          selectedAddons, 
+          addonFieldValues, 
+          selectedPackage, 
+          null, // No payment provider for quotes
+          totalPrice, 
+          packages, 
+          currency
+        );
+
+        const { data, error } = await supabase
+          .from('orders')
+          .insert({
+            form_data: formData,
+            selected_addons: selectedAddons,
+            addon_field_values: addonFieldValues,
+            total_price: totalPrice,
+            status: 'quote_requested',
+            payment_status: 'not_required',
+            package_value: selectedPackage,
+            package_name: selectedPackageData.label_key,
+            currency: currency,
+            payment_provider: null
+          })
+          .select()
+          .single();
+          
+        if (error) {
+          console.error('❌ Quote request creation error:', error);
+          throw error;
+        }
+        
+        console.log('✅ Quote request created successfully:', data.id);
+        
+        toast({
+          title: t('quoteRequestSubmitted', 'Quote Request Submitted'),
+          description: t('quoteRequestMessage', 'Your quote request has been submitted successfully. We will contact you soon with a personalized quote.'),
+          variant: "default"
+        });
+        
+        navigate('/payment/success?orderId=' + data.id + '&type=quote');
+        return;
+      }
+
+      // Continue with existing payment logic for non-quote packages
       console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
       console.log('📦 Order data being submitted:', {
         package: selectedPackage,
@@ -134,7 +214,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         paymentProvider: selectedPaymentProvider,
         customerEmail: formData.email?.substring(0, 5) + '***'
       });
+      
       validateFormData(formData, selectedPackage, totalPrice);
+      
       if (onComplete) {
         await onComplete({
           ...formData,
@@ -146,9 +228,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         });
         return;
       }
+      
       if (!selectedPaymentProvider) {
         throw new Error('Please select a payment method before proceeding');
       }
+      
       const orderData = prepareOrderData(formData, selectedAddons, addonFieldValues, selectedPackage, selectedPaymentProvider, totalPrice, packages, currency);
 
       // Handle SmartBill payment with enhanced error handling and logging
@@ -241,17 +325,18 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         throw new Error(`Unsupported payment provider: ${selectedPaymentProvider}`);
       }
     } catch (error) {
-      console.error(`💥 ${selectedPaymentProvider?.toUpperCase()} Payment Error:`, error);
+      console.error(`💥 ${isQuoteOnly ? 'QUOTE REQUEST' : selectedPaymentProvider?.toUpperCase()} Error:`, error);
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       console.error('💥 Full error details:', {
         message: errorMessage,
         provider: selectedPaymentProvider,
         package: selectedPackage,
-        totalPrice
+        totalPrice,
+        isQuoteOnly
       });
       toast({
-        title: t('orderError', 'Payment Error'),
-        description: `Payment failed: ${errorMessage}`,
+        title: t(isQuoteOnly ? 'quoteRequestError' : 'orderError', isQuoteOnly ? 'Quote Request Error' : 'Payment Error'),
+        description: `${isQuoteOnly ? 'Quote request' : 'Payment'} failed: ${errorMessage}`,
         variant: "destructive"
       });
     } finally {
@@ -300,23 +385,27 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       isCurrent: currentStep === contactLegalStepIndex
     });
 
-    // Payment Step
-    const paymentStepNumber = contactStepNumber + 1;
-    steps.push({
-      number: paymentStepNumber,
-      label: t('payment', 'Payment'),
-      isCompleted: false,
-      isCurrent: currentStep === paymentStepIndex
-    });
+    // Only add Payment Step for non-quote packages
+    if (!isQuoteOnly) {
+      const paymentStepNumber = contactStepNumber + 1;
+      steps.push({
+        number: paymentStepNumber,
+        label: t('payment', 'Payment'),
+        isCompleted: false,
+        isCurrent: currentStep === paymentStepIndex
+      });
+    }
+    
     return steps;
   };
 
   // Determine which step we're on
   const isAddonStep = currentStep === addonStepIndex;
   const isContactLegalStep = currentStep === contactLegalStepIndex;
-  const isPaymentStep = currentStep === paymentStepIndex;
+  const isPaymentStep = !isQuoteOnly && currentStep === paymentStepIndex;
   const currentPackageStepIndex = currentStep - 1;
   const currentStepData = currentStep > 0 && currentStep <= totalRegularSteps ? regularSteps?.[currentPackageStepIndex] : null;
+  
   const canProceed = () => {
     if (currentStep === 0) {
       return !!formData.package;
@@ -424,7 +513,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             isSubmitting={isSubmitting} 
             onPrev={handlePrev} 
             onNext={handleNext} 
-            onSubmit={handleSubmit} 
+            onSubmit={handleSubmit}
+            isQuoteOnly={isQuoteOnly}
+            isContactLegalStep={isContactLegalStep}
           />
         </CardContent>
       </Card>
