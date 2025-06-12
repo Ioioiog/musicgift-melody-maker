@@ -100,6 +100,61 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     contactLegalStepIndex
   });
 
+  const buildStepsData = () => {
+    const steps = [];
+
+    // Step 1: Package Selection
+    steps.push({
+      number: 1,
+      label: t('choosePackage'),
+      isCompleted: currentStep > 0,
+      isCurrent: currentStep === 0
+    });
+
+    // Steps 2-N: Regular Package Steps
+    regularSteps.forEach((step, index) => {
+      const stepNumber = index + 2;
+      const stepIndex = index + 1;
+      steps.push({
+        number: stepNumber,
+        label: t(step.title_key) || step.title_key,
+        isCompleted: currentStep > stepIndex,
+        isCurrent: currentStep === stepIndex
+      });
+    });
+
+    // Addons Step
+    const addonStepNumber = regularSteps.length + 2;
+    steps.push({
+      number: addonStepNumber,
+      label: t('selectAddons', 'Select Add-ons'),
+      isCompleted: currentStep > addonStepIndex,
+      isCurrent: currentStep === addonStepIndex
+    });
+
+    // Contact & Legal Step - ALWAYS present
+    const contactStepNumber = addonStepNumber + 1;
+    steps.push({
+      number: contactStepNumber,
+      label: t('contactDetailsStep', 'Contact & Legal'),
+      isCompleted: currentStep > contactLegalStepIndex,
+      isCurrent: currentStep === contactLegalStepIndex
+    });
+
+    // Only add Payment Step for non-quote packages
+    if (!isQuoteOnly) {
+      const paymentStepNumber = contactStepNumber + 1;
+      steps.push({
+        number: paymentStepNumber,
+        label: t('payment', 'Payment'),
+        isCompleted: false,
+        isCurrent: currentStep === paymentStepIndex
+      });
+    }
+    
+    return steps;
+  };
+
   const handleNext = () => {
     if (currentStep === 0) {
       if (!formData.package) return;
