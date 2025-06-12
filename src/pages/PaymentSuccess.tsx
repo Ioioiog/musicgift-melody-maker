@@ -1,4 +1,5 @@
 
+
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -284,7 +285,7 @@ const PaymentSuccess = () => {
                           </motion.div>
                           
                           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                            <Button asChild variant="outline" className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm">
+                            <Button asChild variant="outline" className="border-white/30 text-black hover:bg-white/10 backdrop-blur-sm">
                               <Link to="/packages">
                                 <Package className="w-5 h-5 mr-2" />
                                 Vezi pachete
@@ -456,7 +457,7 @@ const PaymentSuccess = () => {
                         </motion.div>
                         
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                          <Button asChild variant="outline" className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm">
+                          <Button asChild variant="outline" className="border-white/30 text-black hover:bg-white/10 backdrop-blur-sm">
                             <Link to="/packages">
                               <Package className="w-5 h-5 mr-2" />
                               Vezi pachete
@@ -482,3 +483,4 @@ const PaymentSuccess = () => {
 };
 
 export default PaymentSuccess;
+
