@@ -408,7 +408,7 @@ const Navigation = () => {
           {/* User Dropdown for Mobile - Compact styling */}
           {user && isUserDropdownOpen && <div ref={userDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 backdrop-blur-xl border border-white/20 overflow-hidden bg-zinc-100 px-0 my-0 py-[41px]">
               {/* User Info Header */}
-              <div className="p-3 ml-36 sm:ml-44 md:ml-52">
+              <div className="p-3 ml-36 sm:ml-44 md:ml-52 px-0 mx-[39px]">
                 <div className="text-center mb-3">
                   <h3 className="text-xs font-bold text-rose-600 uppercase tracking-wider mb-1">User Account</h3>
                   <div className="w-8 h-0.5 bg-gradient-to-r from-rose-400 to-pink-400 mx-auto rounded-full"></div>
