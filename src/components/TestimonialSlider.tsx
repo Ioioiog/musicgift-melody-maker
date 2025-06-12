@@ -220,32 +220,32 @@ export default function TestimonialSlider() {
       duration: 0.4
     }} className="h-full">
         {/* Text-only testimonial - glassmorphism design */}
-        {type === 'text-only' && <div className="bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 hover:border-white/40 transition-all duration-300 p-6 h-full flex flex-col group hover:shadow-xl shadow-lg">
+        {type === 'text-only' && <div className="bg-white/20 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/30 hover:border-white/40 transition-all duration-300 p-3 md:p-6 h-full flex flex-col group hover:shadow-xl shadow-lg">
             {/* Quote icon */}
-            <div className="mb-4">
-              <Quote className="w-6 h-6 text-white opacity-60" />
+            <div className="mb-2 md:mb-4">
+              <Quote className="w-4 h-4 md:w-6 md:h-6 text-white opacity-60" />
             </div>
             
             {/* Testimonial text */}
-            <blockquote className="text-white text-base leading-relaxed mb-6 flex-grow">
+            <blockquote className="text-white text-sm md:text-base leading-relaxed mb-4 md:mb-6 flex-grow">
               "{testimonial.text}"
             </blockquote>
             
             {/* Star rating */}
-            <div className="flex items-center justify-center mb-4">
+            <div className="flex items-center justify-center mb-2 md:mb-4">
               <div className="flex gap-1">
-                {[...Array(testimonial.stars)].map((_, i) => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
+                {[...Array(testimonial.stars)].map((_, i) => <Star key={i} className="w-3 h-3 md:w-4 md:h-4 fill-yellow-400 text-yellow-400" />)}
               </div>
             </div>
             
             {/* Author info */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-semibold text-base border border-white/30">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-semibold text-sm md:text-base border border-white/30">
                 {testimonial.name.charAt(0)}
               </div>
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <h4 className="font-semibold text-white text-sm">{testimonial.name}</h4>
+                <div className="flex items-center gap-1 md:gap-2 mb-1">
+                  <h4 className="font-semibold text-white text-xs md:text-sm">{testimonial.name}</h4>
                   <FaCheckCircle className="text-green-400 text-xs" />
                 </div>
                 {testimonial.location && <p className="text-xs text-white/70">{testimonial.location}</p>}
@@ -254,54 +254,54 @@ export default function TestimonialSlider() {
           </div>}
 
         {/* Video testimonials - glassmorphism design */}
-        {type !== 'text-only' && <div className="bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 hover:border-white/40 transition-all duration-300 p-6 h-full flex flex-col group hover:shadow-xl shadow-lg px-[25px] py-[7px]">
+        {type !== 'text-only' && <div className="bg-white/20 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/30 hover:border-white/40 transition-all duration-300 p-2 md:p-6 h-full flex flex-col group hover:shadow-xl shadow-lg px-3 py-2 md:px-[25px] md:py-[7px]">
             {/* Quote icon for consistency */}
-            <div className="mb-4">
-              <Quote className="w-6 h-6 text-white opacity-60" />
+            <div className="mb-2 md:mb-4">
+              <Quote className="w-4 h-4 md:w-6 md:h-6 text-white opacity-60" />
             </div>
 
             {/* Testimonial text FIRST */}
-            {testimonial.text && <blockquote className="text-white text-base leading-relaxed mb-6 flex-grow">
+            {testimonial.text && <blockquote className="text-white text-sm md:text-base leading-relaxed mb-3 md:mb-6 flex-grow">
                 "{testimonial.text}"
               </blockquote>}
 
             {/* Video section AFTER text */}
-            <div className="mb-4 rounded-xl overflow-hidden">
-              {type === 'uploaded-video' && <div className="h-48 flex items-center justify-center">
+            <div className="mb-2 md:mb-4 rounded-lg md:rounded-xl overflow-hidden">
+              {type === 'uploaded-video' && <div className="h-32 md:h-48 flex items-center justify-center">
                   <div className="w-full max-w-sm">
                     <VideoWithOverlay src={testimonial.video_url} type="upload" title={`Video testimonial from ${testimonial.name}`} />
                   </div>
                 </div>}
               
-              {type === 'youtube' && <div className="h-40">
+              {type === 'youtube' && <div className="h-28 md:h-40">
                   <VideoWithOverlay src={testimonial.youtube_link} type="youtube" title={`Video testimonial from ${testimonial.name}`} />
                 </div>}
 
-              {type === 'both-videos' && <div className="space-y-3">
-                  <div className="h-32">
+              {type === 'both-videos' && <div className="space-y-2 md:space-y-3">
+                  <div className="h-24 md:h-32">
                     <VideoWithOverlay src={testimonial.video_url} type="upload" title={`Video testimonial from ${testimonial.name}`} />
                   </div>
-                  <div className="h-32">
+                  <div className="h-24 md:h-32">
                     <VideoWithOverlay src={testimonial.youtube_link} type="youtube" title={`YouTube testimonial from ${testimonial.name}`} />
                   </div>
                 </div>}
             </div>
             
             {/* Star rating */}
-            <div className="flex items-center justify-center mb-4">
+            <div className="flex items-center justify-center mb-2 md:mb-4">
               <div className="flex gap-1">
-                {[...Array(testimonial.stars)].map((_, i) => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
+                {[...Array(testimonial.stars)].map((_, i) => <Star key={i} className="w-3 h-3 md:w-4 md:h-4 fill-yellow-400 text-yellow-400" />)}
               </div>
             </div>
             
             {/* Author info */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-semibold text-base border border-white/30">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-semibold text-sm md:text-base border border-white/30">
                 {testimonial.name.charAt(0)}
               </div>
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <h4 className="font-semibold text-white text-sm">{testimonial.name}</h4>
+                <div className="flex items-center gap-1 md:gap-2 mb-1">
+                  <h4 className="font-semibold text-white text-xs md:text-sm">{testimonial.name}</h4>
                   <FaCheckCircle className="text-green-400 text-xs" />
                 </div>
                 {testimonial.location && <p className="text-xs text-white/70">{testimonial.location}</p>}
