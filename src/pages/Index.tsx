@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -30,9 +31,36 @@ const Index = () => {
       {/* Video Hero Section */}
       <VideoHero />
 
-      {/* Main content with unified background and minimal gaps */}
+      {/* Main content with unified background, particles, and minimal gaps */}
       <div className="relative overflow-hidden" style={backgroundStyle}>
-        <div className="absolute inset-0 bg-black/20"></div>
+        {/* Enhanced overlay with gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
+        
+        {/* Unified animated background particles across all sections */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(30)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-white/20 rounded-full"
+              initial={{
+                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
+                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+                scale: 0
+              }}
+              animate={{
+                y: [null, -100, (typeof window !== 'undefined' ? window.innerHeight : 800) + 100],
+                scale: [0, 1, 0],
+                opacity: [0, 0.8, 0]
+              }}
+              transition={{
+                duration: Math.random() * 15 + 15, // 15-30 seconds for longer coverage
+                repeat: Infinity,
+                delay: Math.random() * 10
+              }}
+            />
+          ))}
+        </div>
+
         <div className="relative z-10">
           
           {/* Hero Content Section */}
