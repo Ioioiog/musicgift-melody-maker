@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
@@ -172,13 +171,12 @@ const VideoHero = () => {
 
   return (
     <section className={`video-hero relative overflow-hidden ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
-      {/* Background image - Visible on desktop and mobile with lazy loading */}
+      {/* Background image - Visible on desktop and mobile */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform" 
         style={{
           backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)'
         }}
-        loading="lazy"
       ></div>
 
       {/* Reduced animated background particles - Mobile only (reduced from 20 to 10) */}
