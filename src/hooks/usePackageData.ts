@@ -1,7 +1,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { packages } from '@/data/packages';
+import { packages, addOns } from '@/data/packages';
+import { Package, Addon } from '@/types';
 
 export interface StepData {
   id: string;
@@ -18,26 +19,6 @@ export interface StepData {
   }>;
 }
 
-// Create a simple Package type that matches our actual data structure
-export interface PackageData {
-  id: string;
-  type: string;
-  name: string;
-  basePrice: {
-    EUR: number;
-    RON: number;
-  };
-  description: string;
-  features: string[];
-  isPopular?: boolean;
-  steps: Array<{
-    id: string;
-    title: string;
-    description: string;
-    fields: any[];
-  }>;
-}
-
 export const usePackages = () => {
   const { t } = useLanguage();
   
@@ -46,48 +27,14 @@ export const usePackages = () => {
     queryFn: async () => {
       console.log('Using consolidated packages data...');
       
-      // Return packages as they are, with the correct type
+      // Sort includes by include_order for each package
       const transformedPackages = packages.map(pkg => ({
         ...pkg,
-        // Map the properties to match what components expect
-        value: pkg.id,
-        label_key: pkg.name,
-        tagline_key: pkg.description,
-        description_key: pkg.description,
-        price_ron: pkg.basePrice.RON,
-        price_eur: pkg.basePrice.EUR,
-        delivery_time_key: '5-7 working days', // Default value
-        tag: pkg.isPopular ? 'popular' : undefined,
-        is_active: true,
-        is_popular: pkg.isPopular || false,
-        includes: pkg.features?.map((feature, index) => ({
-          id: `${pkg.id}_feature_${index}`,
-          include_key: feature,
-          include_order: index
-        })) || [],
-        available_addons: [], // Default empty array
-        steps: pkg.steps.map((step, stepIndex) => ({
-          ...step,
-          step_number: stepIndex + 1,
-          title_key: step.title,
-          fields: step.fields.map((field, fieldIndex) => ({
-            id: field.id,
-            field_name: field.label || field.id,
-            field_type: field.type,
-            label_key: field.label,
-            placeholder_key: field.placeholder,
-            required: field.required || false,
-            field_order: fieldIndex,
-            options: field.options?.map(opt => ({
-              value: opt.value,
-              label_key: opt.label
-            })) || undefined
-          }))
-        }))
+        includes: pkg.includes?.sort((a: any, b: any) => a.include_order - b.include_order) || []
       }));
       
       console.log('Transformed packages:', transformedPackages);
-      return transformedPackages;
+      return transformedPackages as Package[];
     }
   });
 };
@@ -104,8 +51,8 @@ export const usePackageSteps = (packageValue: string) => {
       console.log('Getting steps for package from consolidated data:', packageValue);
 
       try {
-        // Find the package in consolidated data using either id or name
-        const packageData = packages.find(pkg => pkg.id === packageValue || pkg.name === packageValue);
+        // Find the package in consolidated data
+        const packageData = packages.find(pkg => pkg.value === packageValue);
 
         if (!packageData) {
           console.error('Package not found in consolidated data:', packageValue);
@@ -119,27 +66,9 @@ export const usePackageSteps = (packageValue: string) => {
           return [];
         }
 
-        // Transform steps to match the expected StepData format
-        const transformedSteps: StepData[] = packageData.steps.map((step, stepIndex) => ({
-          id: step.id,
-          step_number: stepIndex + 1,
-          title_key: step.title,
-          fields: step.fields.map((field, fieldIndex) => ({
-            id: field.id,
-            field_name: field.label || field.id,
-            field_type: field.type,
-            placeholder_key: field.placeholder,
-            required: field.required || false,
-            field_order: fieldIndex,
-            options: field.options?.map(opt => ({
-              value: opt.value,
-              label_key: opt.label
-            })) || undefined
-          }))
-        }));
-
-        console.log('Steps ready for component:', transformedSteps);
-        return transformedSteps;
+        // The steps are already in the correct format since we updated the data structure
+        console.log('Steps ready for component:', packageData.steps);
+        return packageData.steps as StepData[];
 
       } catch (error) {
         console.error('Error in usePackageSteps:', error);
@@ -158,12 +87,13 @@ export const useAddons = () => {
   return useQuery({
     queryKey: ['addons'],
     queryFn: async () => {
-      console.log('No addons data available, returning empty array');
+      console.log('Using consolidated addons data...');
       
-      // Return empty array since addOns is not defined in packages.ts
-      return [];
+      // The addons are already in the correct format, just return them
+      console.log('Addons ready for components:', addOns);
+      return addOns;
     }
   });
 };
 
-export type { PackageData as Package };
+export type { Package };
