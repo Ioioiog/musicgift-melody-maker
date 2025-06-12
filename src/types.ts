@@ -46,6 +46,7 @@ export interface Package {
   tag?: string;
   is_active?: boolean;
   is_popular?: boolean;
+  is_quote_only?: boolean;  
   includes?: PackageInclude[];
   available_addons: string[];
   steps: Step[];
