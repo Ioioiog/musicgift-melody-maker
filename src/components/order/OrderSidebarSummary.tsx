@@ -1,23 +1,25 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { getPackagePrice, getAddonPrice, formatPrice } from '@/utils/pricing';
-import { useCurrency } from '@/contexts/CurrencyContext';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Button } from '@/components/ui/button';
+import { Gift, Package, Plus, ChevronDown, ChevronUp, CheckCircle, Tag } from 'lucide-react';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
+import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
+import { useIsMobile } from '@/hooks/use-mobile';
+import CodeInputSection from './CodeInputSection';
 
 interface OrderSidebarSummaryProps {
   orderData?: {
     selectedPackage?: string;
     selectedAddons?: string[];
-    formData?: any;
-    addonFieldValues?: Record<string, any>;
   };
   giftCard?: any;
   onGiftCardChange?: (giftCard: any) => void;
-  onDiscountChange?: (discount: any) => void;
+  onDiscountChange?: (discount: { code: string; amount: number; type: string } | null) => void;
 }
 
 const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
@@ -26,156 +28,218 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   onGiftCardChange,
   onDiscountChange
 }) => {
-  const { currency } = useCurrency();
-  const { t } = useLanguage();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
+  const { t } = useLanguage();
+  const { currency } = useCurrency();
+  const isMobile = useIsMobile();
+
+  // Local state for applied codes
+  const [appliedGiftCard, setAppliedGiftCard] = useState(giftCard);
+  const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; amount: number; type: string } | null>(null);
+
+  // Explicitly set to collapsed by default on mobile
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   if (!orderData?.selectedPackage) {
     return (
-      <Card className="bg-white/10 backdrop-blur-sm border border-white/30 sticky top-4">
-        <CardHeader>
-          <CardTitle className="text-white">{t('orderSummary')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-white/70 text-sm">{t('selectYourPackage')}</p>
-        </CardContent>
-      </Card>
+      <div className={isMobile ? "mb-2" : ""}>
+        <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
+          <CardHeader className="pb-3 px-3 sm:px-6 py-2 sm:py-4">
+            <CardTitle className="flex items-center gap-2 text-white text-sm sm:text-lg">
+              <Package className="w-4 h-4 sm:w-5 sm:h-5" />
+              {t('orderSummary', 'Rezumatul comenzii')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="px-3 sm:px-6">
+            <div className="text-center py-4 sm:py-8">
+              <Package className="w-8 h-8 sm:w-12 sm:h-12 text-white/40 mx-auto mb-2" />
+              <p className="text-white/70 text-xs sm:text-sm">
+                {t('selectPackageToSeePrice', 'Alege un pachet pentru a vedea prețul')}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   const selectedPackageData = packages.find(pkg => pkg.value === orderData.selectedPackage);
-  const isQuoteOnly = selectedPackageData?.is_quote_only || false;
-  
-  if (!selectedPackageData) {
-    return null;
-  }
+  const selectedAddonsData = (orderData.selectedAddons || [])
+    .map(addonKey => addons.find(addon => addon.addon_key === addonKey))
+    .filter(Boolean);
+
+  if (!selectedPackageData) return null;
 
   const packagePrice = getPackagePrice(selectedPackageData, currency);
-  const selectedAddonsList = orderData.selectedAddons || [];
-  
-  const addonsPrice = selectedAddonsList.reduce((total, addonKey) => {
-    const addon = addons.find(a => a.addon_key === addonKey);
-    return total + (addon ? getAddonPrice(addon, currency) : 0);
-  }, 0);
-
+  const addonsPrice = selectedAddonsData.reduce((total, addon) => 
+    total + (addon ? getAddonPrice(addon, currency) : 0), 0
+  );
   const subtotal = packagePrice + addonsPrice;
-  
-  // Calculate gift card discount (simplified version)
-  let giftCardDiscount = 0;
-  if (giftCard && !isQuoteOnly) {
-    const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
-    giftCardDiscount = Math.min(giftBalance, subtotal);
+
+  // Calculate gift card credit
+  let giftCreditApplied = 0;
+  if (appliedGiftCard) {
+    const giftBalance = (appliedGiftCard.gift_amount || 0) / 100; // Convert from cents
+    giftCreditApplied = Math.min(giftBalance, subtotal);
   }
 
-  const total = Math.max(0, subtotal - giftCardDiscount);
+  // Apply discount
+  const discountAmount = appliedDiscount?.amount || 0;
+  const totalAfterGift = Math.max(0, subtotal - giftCreditApplied);
+  const finalDiscount = Math.min(discountAmount, totalAfterGift);
+  const finalTotal = Math.max(0, totalAfterGift - finalDiscount);
+
+  const handleGiftCardApplied = (newGiftCard: any) => {
+    setAppliedGiftCard(newGiftCard);
+    onGiftCardChange?.(newGiftCard);
+  };
+
+  const handleGiftCardRemoved = () => {
+    setAppliedGiftCard(null);
+    onGiftCardChange?.(null);
+  };
+
+  const handleDiscountApplied = (discount: { code: string; amount: number; type: string }) => {
+    setAppliedDiscount(discount);
+    onDiscountChange?.(discount);
+  };
+
+  const handleDiscountRemoved = () => {
+    setAppliedDiscount(null);
+    onDiscountChange?.(null);
+  };
 
   return (
-    <Card className="bg-white/10 backdrop-blur-sm border border-white/30 sticky top-4">
-      <CardHeader>
-        <CardTitle className="text-white flex items-center justify-between">
-          {t(isQuoteOnly ? 'quoteSummary' : 'orderSummary')}
-          {isQuoteOnly && (
-            <Badge variant="outline" className="bg-orange-500/20 text-orange-300 border-orange-400/30">
-              {t('quoteOnly')}
-            </Badge>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Package */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <h4 className="font-medium text-white">
-                {t(selectedPackageData.label_key) || selectedPackageData.label_key}
-              </h4>
-              <p className="text-sm text-white/70">
-                {t(selectedPackageData.tagline_key) || selectedPackageData.tagline_key}
-              </p>
-            </div>
-            <div className="text-right">
-              <span className="font-semibold text-white">
-                {formatPrice(packagePrice, currency)}
-              </span>
-            </div>
+    <div className={isMobile ? "mb-2" : ""}>
+      <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl py-[16px] my-[32px]">
+        <CardHeader className="pb-1 sm:pb-3 px-3 sm:px-6 py-1 sm:py-[15px] my-[1px]">
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-white text-sm sm:text-lg">
+              <Package className="w-4 h-4 sm:w-5 sm:h-5" />
+              {t('orderSummary', 'Rezumatul comenzii')}
+            </CardTitle>
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="text-white hover:bg-white/10 p-1 h-6 w-6"
+              >
+                {isCollapsed ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
+              </Button>
+            )}
           </div>
-        </div>
-
-        {/* Add-ons */}
-        {selectedAddonsList.length > 0 && (
-          <>
-            <Separator className="bg-white/20" />
-            <div className="space-y-2">
-              <h4 className="font-medium text-white">{t('addons')}</h4>
-              {selectedAddonsList.map(addonKey => {
-                const addon = addons.find(a => a.addon_key === addonKey);
-                if (!addon) return null;
-                
-                const addonPrice = getAddonPrice(addon, currency);
-                return (
-                  <div key={addonKey} className="flex justify-between items-center text-sm">
-                    <span className="text-white/80">
-                      {t(addon.label_key) || addon.label_key}
-                    </span>
-                    <span className="text-white">
-                      {formatPrice(addonPrice, currency)}
-                    </span>
-                  </div>
-                );
-              })}
+        </CardHeader>
+        
+        {(!isMobile || !isCollapsed) && (
+          <CardContent className="space-y-2 sm:space-y-4 px-3 sm:px-6 pb-2 sm:pb-6 my-[4px] py-0">
+            {/* Package Section */}
+            <div className="space-y-1 sm:space-y-3">
+              <div className="flex justify-between items-start gap-2">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-white text-xs sm:text-sm truncate">
+                    {t(selectedPackageData.label_key)}
+                  </h3>
+                </div>
+                <span className="font-medium text-white text-xs sm:text-sm shrink-0">
+                  {currency} {packagePrice.toFixed(2)}
+                </span>
+              </div>
             </div>
-          </>
-        )}
 
-        {/* Totals */}
-        <Separator className="bg-white/20" />
-        <div className="space-y-2">
-          <div className="flex justify-between text-white/80">
-            <span>{t('subtotal')}</span>
-            <span>{formatPrice(subtotal, currency)}</span>
-          </div>
-          
-          {!isQuoteOnly && giftCard && giftCardDiscount > 0 && (
-            <div className="flex justify-between text-green-400">
-              <span>{t('giftCardDiscount')}</span>
-              <span>-{formatPrice(giftCardDiscount, currency)}</span>
-            </div>
-          )}
-          
-          <div className="flex justify-between items-center text-lg font-bold text-white border-t border-white/20 pt-2">
-            <span>{t(isQuoteOnly ? 'estimatedPrice' : 'total')}</span>
-            <span>
-              {isQuoteOnly ? (
-                <div className="text-right">
-                  <div>{formatPrice(total, currency)}</div>
-                  <div className="text-xs text-orange-300 font-normal">
-                    {t('finalPriceOnQuote')}
+            {/* Add-ons Section */}
+            {selectedAddonsData.length > 0 && (
+              <>
+                <Separator className="bg-white/20" />
+                <div>
+                  <h4 className="font-medium mb-1 sm:mb-2 text-white flex items-center gap-2 text-xs sm:text-sm">
+                    <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+                    {t('addOns', 'Suplimente')}
+                  </h4>
+                  <div className="space-y-1 sm:space-y-2">
+                    {selectedAddonsData.map(addon => addon && (
+                      <div key={addon.addon_key} className="flex justify-between items-center text-xs gap-2">
+                        <span className="text-white/80 truncate flex-1">
+                          {t(addon.label_key)}
+                        </span>
+                        <span className="text-white shrink-0">
+                          {currency} {getAddonPrice(addon, currency).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ) : (
-                formatPrice(total, currency)
-              )}
-            </span>
-          </div>
+              </>
+            )}
 
-          {!isQuoteOnly && giftCard && total === 0 && (
-            <div className="text-center text-green-400 text-sm font-medium">
-              {t('fullyCoveredByGiftCard')}
+            <Separator className="bg-white/20" />
+
+            {/* Subtotal */}
+            <div className="flex justify-between items-center">
+              <span className="font-medium text-white text-xs sm:text-sm">
+                {t('subtotal', 'Subtotal')}
+              </span>
+              <span className="font-medium text-white text-xs sm:text-sm">
+                {currency} {subtotal.toFixed(2)}
+              </span>
             </div>
-          )}
-        </div>
 
-        {/* Quote Only Info */}
-        {isQuoteOnly && (
-          <div className="bg-orange-500/10 border border-orange-400/30 rounded-lg p-3">
-            <p className="text-orange-300 text-sm">
-              {t('quoteOnlyDescription')}
-            </p>
-          </div>
+            {/* Gift Card Credit */}
+            {appliedGiftCard && giftCreditApplied > 0 && (
+              <div className="flex justify-between items-center text-green-400 text-xs sm:text-sm gap-2">
+                <span className="flex items-center gap-1 sm:gap-2 truncate">
+                  <Gift className="w-3 h-3 sm:w-4 h-4 shrink-0" />
+                  <span className="truncate">{t('giftCardCredit', 'Credit card cadou')}</span>
+                </span>
+                <span className="shrink-0">-{currency} {giftCreditApplied.toFixed(2)}</span>
+              </div>
+            )}
+
+            {/* Discount */}
+            {appliedDiscount && finalDiscount > 0 && (
+              <div className="flex justify-between items-center text-blue-400 text-xs sm:text-sm gap-2">
+                <span className="flex items-center gap-1 sm:gap-2 truncate">
+                  <Tag className="w-3 h-3 sm:w-4 h-4 shrink-0" />
+                  <span className="truncate">{t('discount', 'Reducere')} ({appliedDiscount.code})</span>
+                </span>
+                <span className="shrink-0">-{currency} {finalDiscount.toFixed(2)}</span>
+              </div>
+            )}
+
+            {/* Code Input Section */}
+            <CodeInputSection
+              onGiftCardApplied={handleGiftCardApplied}
+              onDiscountApplied={handleDiscountApplied}
+              onGiftCardRemoved={handleGiftCardRemoved}
+              onDiscountRemoved={handleDiscountRemoved}
+              appliedGiftCard={appliedGiftCard}
+              appliedDiscount={appliedDiscount}
+              orderTotal={subtotal}
+            />
+
+            <Separator className="bg-white/20" />
+
+            {/* Total */}
+            <div className="flex justify-between items-center text-sm sm:text-lg font-bold bg-gradient-to-r from-orange-500/20 to-yellow-500/20 p-2 sm:p-3 rounded-lg border border-orange-400/30">
+              <span className="text-white">{t('total', 'Total')}</span>
+              <span className="text-white">{currency} {finalTotal.toFixed(2)}</span>
+            </div>
+
+            {finalTotal === 0 && (
+              <Badge variant="secondary" className="w-full justify-center bg-green-500/20 text-green-300 border-green-400/30 text-xs">
+                {giftCreditApplied > 0 && finalDiscount > 0 
+                  ? t('fullyPaidWithCredits', 'Plătit complet cu credite')
+                  : giftCreditApplied > 0 
+                    ? t('fullyPaidWithGiftCard', 'Plătit complet cu cardul cadou')
+                    : t('fullyPaidWithDiscount', 'Plătit complet cu reducerea')
+                }
+              </Badge>
+            )}
+          </CardContent>
         )}
-      </CardContent>
-    </Card>
+      </Card>
+    </div>
   );
 };
 
