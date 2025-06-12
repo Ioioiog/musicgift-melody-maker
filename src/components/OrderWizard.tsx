@@ -105,13 +105,36 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const paymentStepIndex = isQuoteOnly ? -1 : contactLegalStepIndex + 1; // Skip payment for quotes
   const totalSteps = isQuoteOnly ? contactLegalStepIndex + 1 : paymentStepIndex + 1;
 
+  // Debug logging
+  console.log('🔍 STEP CALCULATION DEBUG:', {
+    selectedPackage,
+    isQuoteOnly,
+    regularStepsCount: regularSteps.length,
+    totalRegularSteps,
+    addonStepIndex,
+    contactLegalStepIndex,
+    paymentStepIndex,
+    totalSteps,
+    currentStep,
+    isLastStep: currentStep === totalSteps - 1
+  });
+
   const handleNext = () => {
+    console.log('🔄 HANDLE NEXT DEBUG:', {
+      currentStep,
+      totalSteps,
+      isQuoteOnly,
+      contactLegalStepIndex,
+      isAtContactLegal: currentStep === contactLegalStepIndex
+    });
+
     if (currentStep === 0) {
       if (!formData.package) return;
       setCurrentStep(1); // Go to first form step
     } else if (currentStep < totalSteps - 1) {
       // Skip payment step for quote-only packages
       if (isQuoteOnly && currentStep === contactLegalStepIndex) {
+        console.log('⚠️ Should not proceed past contact/legal for quotes');
         return; // Don't proceed past contact/legal for quotes
       }
       setCurrentStep(currentStep + 1);
@@ -406,6 +429,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const currentPackageStepIndex = currentStep - 1;
   const currentStepData = currentStep > 0 && currentStep <= totalRegularSteps ? regularSteps?.[currentPackageStepIndex] : null;
   
+  console.log('🎯 STEP IDENTIFICATION DEBUG:', {
+    currentStep,
+    isAddonStep,
+    isContactLegalStep,
+    isPaymentStep,
+    addonStepIndex,
+    contactLegalStepIndex,
+    paymentStepIndex
+  });
+
   const canProceed = () => {
     if (currentStep === 0) {
       return !!formData.package;
