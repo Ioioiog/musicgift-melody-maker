@@ -172,47 +172,48 @@ const Index = () => {
           {/* Decorative separator element */}
           <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[1px]"></div>
 
-          {/* CTA Section */}
-          <section className="px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8">
-            <div className="max-w-4xl mx-auto relative z-10">
-              <h2 className="text-base md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3">
-                {t('heroCtaTitle')}
-              </h2>
-              <p className="text-sm md:text-xl mb-4 md:mb-6 opacity-90">
-                {t('heroCtaSubtitle')}
-              </p>
-              
-              {/* Three Call-to-Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
-                <Link to="/order">
-                  <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white border-0 min-w-[140px] md:min-w-[180px] text-sm md:text-base">
-                    <ShoppingCart className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                    {t('orderNow')}
-                  </Button>
-                </Link>
-                
-                <Link to="/gift">
-                  <Button size="sm" className="border-red-200 min-w-[140px] md:min-w-[180px] bg-fuchsia-600 hover:bg-fuchsia-500 text-sm md:text-base">
-                    <Gift className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                    {t('buyGiftCard', 'Buy a Gift Card')}
-                  </Button>
-                </Link>
-                
-                <Link to="/packages">
-                  <Button size="sm" className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm min-w-[140px] md:min-w-[180px] text-sm md:text-base">
-                    <Music className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                    {t('seePackages')}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </section>
-
         </div>
       </div>
 
       {/* Collaboration Section - Keep separate background */}
       <CollaborationSection />
+
+      {/* CTA Section - Moved here after CollaborationSection */}
+      <section className="px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8" style={backgroundStyle}>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
+        <div className="max-w-4xl mx-auto relative z-10">
+          <h2 className="text-base md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3">
+            {t('heroCtaTitle')}
+          </h2>
+          <p className="text-sm md:text-xl mb-4 md:mb-6 opacity-90">
+            {t('heroCtaSubtitle')}
+          </p>
+          
+          {/* Three Call-to-Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
+            <Link to="/order">
+              <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white border-0 min-w-[140px] md:min-w-[180px] text-sm md:text-base">
+                <ShoppingCart className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+                {t('orderNow')}
+              </Button>
+            </Link>
+            
+            <Link to="/gift">
+              <Button size="sm" className="border-red-200 min-w-[140px] md:min-w-[180px] bg-fuchsia-600 hover:bg-fuchsia-500 text-sm md:text-base">
+                <Gift className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+                {t('buyGiftCard', 'Buy a Gift Card')}
+              </Button>
+            </Link>
+            
+            <Link to="/packages">
+              <Button size="sm" className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm min-w-[140px] md:min-w-[180px] text-sm md:text-base">
+                <Music className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+                {t('seePackages')}
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>
