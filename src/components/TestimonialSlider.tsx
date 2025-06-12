@@ -120,9 +120,92 @@ export default function TestimonialSlider() {
 
   const TestimonialCard = ({ testimonial }) => {
     const type = getTestimonialType(testimonial);
+    
+    const renderStars = (rating) => {
+      return Array.from({ length: 5 }, (_, index) => (
+        <Star
+          key={index}
+          className={`w-4 h-4 ${
+            index < rating 
+              ? 'fill-yellow-400 text-yellow-400' 
+              : 'fill-gray-300 text-gray-300'
+          }`}
+        />
+      ));
+    };
+
     return (
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="h-full">
-        {/* Implementation of the card remains unchanged */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} 
+        whileInView={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.4 }} 
+        className="h-full"
+      >
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 h-full flex flex-col shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/15">
+          {/* Video Section */}
+          {type !== 'text-only' && (
+            <div className="aspect-video mb-4 rounded-xl overflow-hidden">
+              {testimonial.youtube_link && (
+                <VideoWithOverlay 
+                  src={testimonial.youtube_link} 
+                  type="youtube" 
+                  title={`${testimonial.name} testimonial`}
+                />
+              )}
+              {testimonial.video_url && !testimonial.youtube_link && (
+                <VideoWithOverlay 
+                  src={testimonial.video_url} 
+                  type="uploaded" 
+                  title={`${testimonial.name} testimonial`}
+                />
+              )}
+            </div>
+          )}
+
+          {/* Content Section */}
+          <div className="flex-1 flex flex-col">
+            {/* Stars Rating */}
+            <div className="flex items-center gap-1 mb-3">
+              {renderStars(testimonial.stars)}
+            </div>
+
+            {/* Quote Icon */}
+            <div className="mb-3">
+              <Quote className="w-6 h-6 text-white/60" />
+            </div>
+
+            {/* Testimonial Message */}
+            <blockquote className="text-white/90 text-sm leading-relaxed mb-4 flex-1">
+              "{testimonial.message}"
+            </blockquote>
+
+            {/* Context (if available) */}
+            {testimonial.context && (
+              <p className="text-white/70 text-xs italic mb-3 bg-white/5 rounded-lg px-3 py-2 border border-white/10">
+                {testimonial.context}
+              </p>
+            )}
+
+            {/* Author Info */}
+            <div className="mt-auto">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-white font-medium text-sm">
+                    {testimonial.name}
+                  </h4>
+                  {testimonial.location && (
+                    <p className="text-white/60 text-xs">
+                      {testimonial.location}
+                    </p>
+                  )}
+                </div>
+                <div className="text-white/40">
+                  <FaCheckCircle className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </motion.div>
     );
   };

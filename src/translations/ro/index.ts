@@ -13,6 +13,7 @@ import { unsubscribeTranslations } from './unsubscribe';
 import { faqTranslations } from './faq';
 import { didYouKnowTranslations } from './didYouKnow';
 import { collaborationTranslations } from './collaboration';
+import { testimonialsTranslations } from './testimonials';
 
 export const roTranslations = {
   ...navigationTranslations,
@@ -29,4 +30,5 @@ export const roTranslations = {
   ...faqTranslations,
   ...didYouKnowTranslations,
   ...collaborationTranslations,
+  ...testimonialsTranslations,
 };
