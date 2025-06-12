@@ -1,15 +1,11 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { motion } from 'framer-motion';
 
 const VideoHero = () => {
-  const {
-    t,
-    language
-  } = useLanguage();
+  const { t, language } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showPlayButton, setShowPlayButton] = useState(false);
   const [hasAudio, setHasAudio] = useState(false);
@@ -26,7 +22,7 @@ const VideoHero = () => {
   console.log('VideoHero: Current language:', language, 'Video source:', videoSrc);
   
   // Cleanup function to stop video and reset states
-  const cleanupVideo = () => {
+  const cleanupVideo = useCallback(() => {
     const video = videoRef.current;
     if (video) {
       console.log('VideoHero: Cleaning up video');
@@ -36,7 +32,7 @@ const VideoHero = () => {
       setHasAudio(false);
       setShowPlayButton(false);
     }
-  };
+  }, []);
 
   // Effect for language changes and initial setup
   useEffect(() => {
@@ -115,7 +111,7 @@ const VideoHero = () => {
       video.removeEventListener('loadstart', handleLoadStart);
       clearTimeout(loadingTimeout);
     };
-  }, [videoSrc, language, currentVideoSrc, isLoading]);
+  }, [videoSrc, language, currentVideoSrc, isLoading, cleanupVideo]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -123,9 +119,9 @@ const VideoHero = () => {
       console.log('VideoHero: Component unmounting, cleaning up');
       cleanupVideo();
     };
-  }, []);
+  }, [cleanupVideo]);
   
-  const handlePlayWithAudio = () => {
+  const handlePlayWithAudio = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
     console.log('VideoHero: User clicked play with audio');
@@ -137,9 +133,9 @@ const VideoHero = () => {
       console.log('VideoHero: Failed to play with audio:', error);
       // Keep the play button if it still fails
     });
-  };
+  }, []);
   
-  const handleToggleAudio = () => {
+  const handleToggleAudio = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
     console.log('VideoHero: Toggling audio, current hasAudio:', hasAudio);
@@ -150,7 +146,7 @@ const VideoHero = () => {
       video.muted = false;
       setHasAudio(true);
     }
-  };
+  }, [hasAudio]);
 
   // Calculate mobile height for 16:9 aspect ratio
   const getMobileHeight = () => {
@@ -175,30 +171,23 @@ const VideoHero = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform" 
         style={{
-          backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)'
+          backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)',
+          transform: 'translate3d(0,0,0)' // Hardware acceleration
         }}
       ></div>
 
       {/* Reduced animated background particles - Mobile only (reduced from 20 to 10) */}
       <div className="absolute inset-0 overflow-hidden md:hidden">
-        {[...Array(10)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-white/20 rounded-full will-change-transform"
-            initial={{
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
-              scale: 0
-            }}
-            animate={{
-              y: [null, -100, (typeof window !== 'undefined' ? window.innerHeight : 800) + 100],
-              scale: [0, 1, 0],
-              opacity: [0, 0.8, 0]
-            }}
-            transition={{
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              delay: Math.random() * 5
+        {[...Array(3)].map((_, i) => (
+          <div 
+            key={i} 
+            className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse" 
+            style={{
+              top: `${20 + i * 30}%`,
+              left: `${10 + i * 30}%`,
+              animationDelay: `${i}s`,
+              animationDuration: `${3 + i}s`,
+              willChange: 'opacity, transform'
             }}
           />
         ))}
@@ -211,7 +200,10 @@ const VideoHero = () => {
         playsInline
         preload="metadata"
         className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover object-center will-change-transform`}
-        style={isMobile ? { height: mobileHeight } : {}}
+        style={{
+          height: isMobile ? mobileHeight : '100%',
+          transform: 'translate3d(0,0,0)' // Hardware acceleration
+        }}
         key={videoSrc}
         poster="/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png"
       >
@@ -260,7 +252,8 @@ const VideoHero = () => {
 
       {/* Title at Bottom */}
       <div className={`absolute ${isMobile ? 'bottom-4' : 'bottom-12 sm:bottom-16 md:bottom-20'} left-0 right-0 z-10 text-center text-white px-4`}>
-        <h1 className={`${isMobile ? 'text-lg' : 'text-2xl sm:text-3xl md:text-4xl lg:text-6xl'} font-bold animate-float bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent`}>
+        <h1 className={`${isMobile ? 'text-lg' : 'text-2xl sm:text-3xl md:text-4xl lg:text-6xl'} font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent`}
+            style={{ transform: 'translate3d(0,0,0)' }}>
           {t('heroTitle')}
         </h1>
       </div>

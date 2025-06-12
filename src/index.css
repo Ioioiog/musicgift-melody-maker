@@ -71,43 +71,88 @@
   }
 }
 
-/* Performance optimized scroll animation */
+/* Optimized scroll animation with hardware acceleration */
 @keyframes scroll {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
-/* Float animation */
+/* Optimized float animation with hardware acceleration */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { 
+    transform: translate3d(0, 0px, 0); 
+  }
+  50% { 
+    transform: translate3d(0, -10px, 0); 
+  }
 }
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
-}
-
-/* Performance optimizations */
-.will-change-transform {
   will-change: transform;
 }
 
-/* Optimized animations */
+/* Performance optimizations with hardware acceleration */
+.will-change-transform {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Optimized fade animation */
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
+  will-change: opacity, transform;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translate3d(0, 10px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
+}
+
+/* Optimized pulse animation with hardware acceleration */
+@keyframes optimizedPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale3d(1.05, 1.05, 1);
+  }
+}
+
+.animate-pulse {
+  animation: optimizedPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  will-change: opacity, transform;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-fade-in,
+  .animate-pulse {
+    animation: none;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Critical resource hints */
+.critical-resource {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
 }

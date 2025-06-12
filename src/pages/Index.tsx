@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 import { Heart, Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
-import { motion } from "framer-motion";
 import { useEffect } from "react";
 
 const Index = () => {
@@ -35,32 +34,38 @@ const Index = () => {
     backgroundRepeat: 'no-repeat'
   };
 
-  return <div className="min-h-screen">
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Video Hero Section */}
       <VideoHero />
 
-      {/* Main content with unified background, particles, and minimal gaps */}
-      <div className="relative overflow-hidden will-change-transform" style={backgroundStyle}>
+      {/* Main content with unified background and minimal animations */}
+      <div className="relative overflow-hidden" style={backgroundStyle}>
         {/* Enhanced overlay with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
         
-        {/* Reduced unified animated background particles (reduced from 30 to 15) */}
+        {/* Minimal CSS-only background animation - Only 3 elements for performance */}
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(15)].map((_, i) => <motion.div key={i} className="absolute w-2 h-2 bg-white/20 rounded-full will-change-transform" initial={{
-          x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
-          y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
-          scale: 0
-        }} animate={{
-          y: [null, -100, (typeof window !== 'undefined' ? window.innerHeight : 800) + 100],
-          scale: [0, 1, 0],
-          opacity: [0, 0.8, 0]
-        }} transition={{
-          duration: Math.random() * 15 + 15,
-          repeat: Infinity,
-          delay: Math.random() * 10
-        }} />)}
+          <div className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse" style={{
+            top: '10%',
+            left: '20%',
+            animationDelay: '0s',
+            animationDuration: '4s'
+          }} />
+          <div className="absolute w-1 h-1 bg-white/15 rounded-full animate-pulse" style={{
+            top: '70%',
+            right: '25%',
+            animationDelay: '2s',
+            animationDuration: '6s'
+          }} />
+          <div className="absolute w-1 h-1 bg-white/10 rounded-full animate-pulse" style={{
+            bottom: '20%',
+            left: '60%',
+            animationDelay: '4s',
+            animationDuration: '5s'
+          }} />
         </div>
 
         <div className="relative z-10">
@@ -91,7 +96,7 @@ const Index = () => {
               {/* Single set with CSS animation for better performance */}
               <div className="flex space-x-8 md:space-x-16 whitespace-nowrap" style={{
                 animation: 'scroll 30s linear infinite',
-                transform: 'translateX(0)'
+                transform: 'translate3d(0,0,0)' // Hardware acceleration
               }}>
                 <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
                   <Music className="w-6 h-6 md:w-12 md:h-12 text-blue-300" />
@@ -133,8 +138,7 @@ const Index = () => {
           </div>
 
           {/* Decorative separator element */}
-          <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[1px]"></div>
-
+          <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[1px]" />
         </div>
       </div>
 
@@ -143,7 +147,7 @@ const Index = () => {
 
       {/* CTA Section - Moved here after CollaborationSection */}
       <section className="px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8" style={backgroundStyle}>
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 py-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 py-0" />
         <div className="max-w-4xl mx-auto relative z-10">
           <h2 className="text-base md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3">
             {t('heroCtaTitle')}
@@ -179,7 +183,8 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
 
 export default Index;
