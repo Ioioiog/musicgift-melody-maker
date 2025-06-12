@@ -34,6 +34,10 @@ const Order = () => {
   const [giftCardDetails, setGiftCardDetails] = useState<any>(null);
   const [showCodeInput, setShowCodeInput] = useState(!!giftCode);
 
+  // State for code input section
+  const [appliedGiftCard, setAppliedGiftCard] = useState<any>(null);
+  const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; amount: number; type: string } | null>(null);
+
   useEffect(() => {
     if (giftCode) {
       // Validate gift card code
@@ -52,6 +56,7 @@ const Order = () => {
           } else {
             setIsGiftCardValid(true);
             setGiftCardDetails(data);
+            setAppliedGiftCard(data);
           }
         } catch (error) {
           console.error('Error:', error);
@@ -79,6 +84,7 @@ const Order = () => {
       } else {
         setIsGiftCardValid(true);
         setGiftCardDetails(data);
+        setAppliedGiftCard(data);
         setShowCodeInput(false);
       }
     } catch (error) {
@@ -87,6 +93,28 @@ const Order = () => {
       setGiftCardDetails(null);
     }
   };
+
+  // Handlers for code input section
+  const handleGiftCardApplied = (giftCard: any) => {
+    setAppliedGiftCard(giftCard);
+    setGiftCardDetails(giftCard);
+  };
+
+  const handleDiscountApplied = (discount: { code: string; amount: number; type: string }) => {
+    setAppliedDiscount(discount);
+  };
+
+  const handleGiftCardRemoved = () => {
+    setAppliedGiftCard(null);
+    setGiftCardDetails(null);
+  };
+
+  const handleDiscountRemoved = () => {
+    setAppliedDiscount(null);
+  };
+
+  // Calculate order total (simplified for now)
+  const orderTotal = 299; // This should be calculated based on selected package and addons
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
@@ -153,7 +181,15 @@ const Order = () => {
                 duration: 0.5,
                 delay: 0.6
               }}>
-                <CodeInputSection />
+                <CodeInputSection
+                  onGiftCardApplied={handleGiftCardApplied}
+                  onDiscountApplied={handleDiscountApplied}
+                  onGiftCardRemoved={handleGiftCardRemoved}
+                  onDiscountRemoved={handleDiscountRemoved}
+                  appliedGiftCard={appliedGiftCard}
+                  appliedDiscount={appliedDiscount}
+                  orderTotal={orderTotal}
+                />
               </motion.div>}
             </div>
           </div>

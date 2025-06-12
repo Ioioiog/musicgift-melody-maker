@@ -26,11 +26,20 @@ const Index = () => {
     keywords_ro: t('homeKeywords')
   });
 
-  // Sample facts for the carousel
+  // Sample facts for the carousel - updated to match DidYouKnowFact interface
   const didYouKnowFacts = [
-    { id: 1, text: t('didYouKnowFact1', 'Music can trigger powerful emotional memories') },
-    { id: 2, text: t('didYouKnowFact2', 'Personalized songs create stronger emotional connections') },
-    { id: 3, text: t('didYouKnowFact3', 'Music is processed in multiple areas of the brain') }
+    { 
+      title: t('didYouKnowTitle1', 'Music & Memory'), 
+      description: t('didYouKnowFact1', 'Music can trigger powerful emotional memories and create lasting connections') 
+    },
+    { 
+      title: t('didYouKnowTitle2', 'Personalized Impact'), 
+      description: t('didYouKnowFact2', 'Personalized songs create stronger emotional connections than generic music') 
+    },
+    { 
+      title: t('didYouKnowTitle3', 'Brain Processing'), 
+      description: t('didYouKnowFact3', 'Music is processed in multiple areas of the brain simultaneously') 
+    }
   ];
 
   return (
