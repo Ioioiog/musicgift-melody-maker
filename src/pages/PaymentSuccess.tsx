@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -274,7 +275,7 @@ const PaymentSuccess = () => {
                         
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                            <Button asChild className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-xl hover:shadow-2xl transition-all duration-300">
+                            <Button asChild className="bg-orange-500 hover:bg-orange-600 shadow-xl hover:shadow-2xl transition-all duration-300">
                               <Link to="/">
                                 <Home className="w-5 h-5 mr-2" />
                                 Înapoi la pagina principală
@@ -446,7 +447,7 @@ const PaymentSuccess = () => {
                       
                       <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                          <Button asChild className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-xl hover:shadow-2xl transition-all duration-300">
+                          <Button asChild className="bg-orange-500 hover:bg-orange-600 shadow-xl hover:shadow-2xl transition-all duration-300">
                             <Link to="/">
                               <Home className="w-5 h-5 mr-2" />
                               Înapoi la pagina principală
