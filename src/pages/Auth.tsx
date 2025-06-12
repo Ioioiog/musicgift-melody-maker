@@ -142,7 +142,7 @@ const Auth = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[80vh] py-8">
           
           {/* Left side - Brand presentation */}
-          <div className="text-center lg:text-left space-y-6 order-2 lg:order-1">
+          <div className="text-center lg:text-left space-y-6 order-1 lg:order-1">
             {/* MusicGift Logo */}
             <div className="flex justify-center lg:justify-start mb-8">
               <div className="relative group">
@@ -181,7 +181,7 @@ const Auth = () => {
           </div>
 
           {/* Right side - Auth form with Glassmorphism */}
-          <div className="w-full max-w-md mx-auto order-1 lg:order-2">
+          <div className="w-full max-w-md mx-auto order-2 lg:order-2">
             <Card className="bg-white/20 backdrop-blur-md border border-white/30 hover:border-white/40 shadow-2xl hover:shadow-3xl transition-all duration-300 group hover:bg-white/25 rounded-2xl overflow-hidden relative">
               {/* Enhanced glow effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
