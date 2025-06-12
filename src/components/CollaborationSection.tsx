@@ -20,6 +20,7 @@ const CollaborationSection = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -48,6 +49,10 @@ const CollaborationSection = () => {
       message: ''
     });
     setIsSubmitting(false);
+  };
+
+  const getInputTextColor = (fieldName: string) => {
+    return focusedField === fieldName ? 'text-black' : 'text-white';
   };
 
   return (
@@ -105,9 +110,11 @@ const CollaborationSection = () => {
                       type="text"
                       value={formData.name}
                       onChange={handleInputChange}
+                      onFocus={() => setFocusedField('name')}
+                      onBlur={() => setFocusedField(null)}
                       placeholder={t('enterFullName')}
                       required
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 h-10"
+                      className={`bg-white/10 border-white/20 ${getInputTextColor('name')} placeholder:text-white/60 focus:border-white/40 h-10`}
                     />
                   </div>
                   
@@ -122,9 +129,11 @@ const CollaborationSection = () => {
                       type="email"
                       value={formData.email}
                       onChange={handleInputChange}
+                      onFocus={() => setFocusedField('email')}
+                      onBlur={() => setFocusedField(null)}
                       placeholder={t('emailPlaceholder')}
                       required
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 h-10"
+                      className={`bg-white/10 border-white/20 ${getInputTextColor('email')} placeholder:text-white/60 focus:border-white/40 h-10`}
                     />
                   </div>
                 </div>
@@ -140,8 +149,10 @@ const CollaborationSection = () => {
                     type="url"
                     value={formData.portfolioLink}
                     onChange={handleInputChange}
+                    onFocus={() => setFocusedField('portfolioLink')}
+                    onBlur={() => setFocusedField(null)}
                     placeholder={t('portfolioPlaceholder')}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 h-10"
+                    className={`bg-white/10 border-white/20 ${getInputTextColor('portfolioLink')} placeholder:text-white/60 focus:border-white/40 h-10`}
                   />
                   <p className="text-xs text-white/70">
                     {t('portfolioHelper')}
@@ -158,10 +169,12 @@ const CollaborationSection = () => {
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
+                    onFocus={() => setFocusedField('message')}
+                    onBlur={() => setFocusedField(null)}
                     placeholder={t('bioPlaceholder')}
                     rows={3}
                     required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 resize-none min-h-[80px]"
+                    className={`bg-white/10 border-white/20 ${getInputTextColor('message')} placeholder:text-white/60 focus:border-white/40 resize-none min-h-[80px]`}
                   />
                   <p className="text-xs text-white/70">
                     {t('bioHelper')}
