@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import NewsletterForm from "@/components/NewsletterForm";
@@ -9,35 +10,38 @@ import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { useState } from "react";
+
 const Contact = () => {
-  const {
-    t
-  } = useLanguage();
-  return <div className="min-h-screen">
+  const { t } = useLanguage();
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  const getInputTextColor = (fieldName: string) => {
+    return focusedField === fieldName ? 'text-black' : 'text-white';
+  };
+
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Contact Form and Info Section */}
       <section className="py-20 text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/20 py-0"></div>
 
         {/* Contact Form and Info */}
         <div className="max-w-6xl mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 py-[80px]">
             {/* Contact Form */}
-            <motion.div initial={{
-            opacity: 0,
-            x: -20
-          }} animate={{
-            opacity: 1,
-            x: 0
-          }} transition={{
-            duration: 0.6
-          }}>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            >
               <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl h-full">
                 <CardContent className="p-8">
                   <h2 className="text-2xl font-bold text-white mb-6">{t('sendMessage')}</h2>
@@ -45,24 +49,51 @@ const Contact = () => {
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="firstName" className="text-white/90">{t('firstName')}</Label>
-                        <Input id="firstName" className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40" />
+                        <Input 
+                          id="firstName" 
+                          onFocus={() => setFocusedField('firstName')}
+                          onBlur={() => setFocusedField(null)}
+                          className={`bg-white/10 border-white/20 ${getInputTextColor('firstName')} placeholder:text-white/60 focus:border-white/40`} 
+                        />
                       </div>
                       <div>
                         <Label htmlFor="lastName" className="text-white/90">{t('lastName')}</Label>
-                        <Input id="lastName" className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40" />
+                        <Input 
+                          id="lastName" 
+                          onFocus={() => setFocusedField('lastName')}
+                          onBlur={() => setFocusedField(null)}
+                          className={`bg-white/10 border-white/20 ${getInputTextColor('lastName')} placeholder:text-white/60 focus:border-white/40`} 
+                        />
                       </div>
                     </div>
                     <div>
                       <Label htmlFor="email" className="text-white/90">{t('email')}</Label>
-                      <Input id="email" type="email" className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40" />
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        onFocus={() => setFocusedField('email')}
+                        onBlur={() => setFocusedField(null)}
+                        className={`bg-white/10 border-white/20 ${getInputTextColor('email')} placeholder:text-white/60 focus:border-white/40`} 
+                      />
                     </div>
                     <div>
                       <Label htmlFor="subject" className="text-white/90">{t('subject')}</Label>
-                      <Input id="subject" className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40" />
+                      <Input 
+                        id="subject" 
+                        onFocus={() => setFocusedField('subject')}
+                        onBlur={() => setFocusedField(null)}
+                        className={`bg-white/10 border-white/20 ${getInputTextColor('subject')} placeholder:text-white/60 focus:border-white/40`} 
+                      />
                     </div>
                     <div>
                       <Label htmlFor="message" className="text-white/90">{t('message')}</Label>
-                      <Textarea id="message" rows={6} className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40" />
+                      <Textarea 
+                        id="message" 
+                        rows={6} 
+                        onFocus={() => setFocusedField('message')}
+                        onBlur={() => setFocusedField(null)}
+                        className={`bg-white/10 border-white/20 ${getInputTextColor('message')} placeholder:text-white/60 focus:border-white/40`} 
+                      />
                     </div>
                     <Button className="w-full bg-gradient-purple hover:bg-white/30 transition-all duration-300">{t('sendMessage')}</Button>
                   </form>
@@ -187,6 +218,8 @@ const Contact = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Contact;
