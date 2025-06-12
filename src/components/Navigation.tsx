@@ -330,7 +330,7 @@ const Navigation = () => {
           </div>
 
           {/* Enhanced Mobile Menu - Compact styling */}
-          {isMenuOpen && <div ref={mainMenuRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-black/30 backdrop-blur-xl border border-white/20 overflow-hidden">
+          {isMenuOpen && <div ref={mainMenuRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 backdrop-blur-xl border border-white/20 overflow-hidden bg-zinc-100">
               {/* Website Pages Section */}
               <div className="p-3 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-3">
