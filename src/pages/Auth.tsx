@@ -17,6 +17,7 @@ const Auth = () => {
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -106,6 +107,10 @@ const Auth = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getInputTextColor = (fieldName: string) => {
+    return focusedField === fieldName ? 'text-black' : 'text-white';
   };
 
   return (
@@ -205,8 +210,10 @@ const Auth = () => {
                         placeholder={t('fullName')}
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
+                        onFocus={() => setFocusedField('fullName')}
+                        onBlur={() => setFocusedField(null)}
                         required={!isLogin}
-                        className="h-12 border-2 border-white/30 bg-white/10 backdrop-blur-sm focus:border-white/50 focus:bg-white/20 transition-all duration-300 rounded-lg text-base text-white placeholder:text-white/60 shadow-inner"
+                        className={`h-12 border-2 border-white/30 bg-white/10 backdrop-blur-sm focus:border-white/50 focus:bg-white/20 transition-all duration-300 rounded-lg text-base ${getInputTextColor('fullName')} placeholder:text-white/60 shadow-inner`}
                       />
                     </div>
                   )}
@@ -221,8 +228,10 @@ const Auth = () => {
                       placeholder={t('emailPlaceholder', 'email@example.com')}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      onFocus={() => setFocusedField('email')}
+                      onBlur={() => setFocusedField(null)}
                       required
-                      className="h-12 border-2 border-white/30 bg-white/10 backdrop-blur-sm focus:border-white/50 focus:bg-white/20 transition-all duration-300 rounded-lg text-base text-white placeholder:text-white/60 shadow-inner"
+                      className={`h-12 border-2 border-white/30 bg-white/10 backdrop-blur-sm focus:border-white/50 focus:bg-white/20 transition-all duration-300 rounded-lg text-base ${getInputTextColor('email')} placeholder:text-white/60 shadow-inner`}
                     />
                   </div>
                   
@@ -237,8 +246,10 @@ const Auth = () => {
                         placeholder={t('password')}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        onFocus={() => setFocusedField('password')}
+                        onBlur={() => setFocusedField(null)}
                         required
-                        className="h-12 pr-12 border-2 border-white/30 bg-white/10 backdrop-blur-sm focus:border-white/50 focus:bg-white/20 transition-all duration-300 rounded-lg text-base text-white placeholder:text-white/60 shadow-inner"
+                        className={`h-12 pr-12 border-2 border-white/30 bg-white/10 backdrop-blur-sm focus:border-white/50 focus:bg-white/20 transition-all duration-300 rounded-lg text-base ${getInputTextColor('password')} placeholder:text-white/60 shadow-inner`}
                         minLength={6}
                       />
                       <button
