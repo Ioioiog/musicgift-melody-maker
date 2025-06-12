@@ -1,5 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import OrderHeroSection from '@/components/order/OrderHeroSection';
@@ -151,7 +153,7 @@ const Order = () => {
                 duration: 0.5,
                 delay: 0.6
               }}>
-                <CodeInputSection onSubmit={handleGiftCardSubmit} />
+                <CodeInputSection />
               </motion.div>}
             </div>
           </div>

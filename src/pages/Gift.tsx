@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
@@ -17,6 +18,11 @@ const Gift = () => {
     keywords_en: t('giftKeywords'),
     keywords_ro: t('giftKeywords')
   });
+
+  const handleGiftComplete = () => {
+    // Handle gift card completion
+    console.log('Gift card completed');
+  };
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
@@ -53,7 +59,7 @@ const Gift = () => {
               duration: 0.8,
               delay: 0.2
             }}>
-              <GiftPurchaseWizard />
+              <GiftPurchaseWizard onComplete={handleGiftComplete} />
             </motion.div>
             
             {/* Bottom decorative gradient separator */}

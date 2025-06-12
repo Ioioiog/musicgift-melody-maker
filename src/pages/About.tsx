@@ -1,7 +1,9 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Heart, Music, Users, Award, Star, ChevronDown } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Heart, Music, Users, Award, Star, ChevronDown, Mic, Trophy, Globe, Shield, Clock, Headphones, Target, Zap, CheckCircle, Rocket, PartyPopper, Disc } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePageMeta } from "@/hooks/usePageMeta";

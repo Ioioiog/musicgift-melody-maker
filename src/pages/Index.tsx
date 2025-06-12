@@ -26,6 +26,13 @@ const Index = () => {
     keywords_ro: t('homeKeywords')
   });
 
+  // Sample facts for the carousel
+  const didYouKnowFacts = [
+    { id: 1, text: t('didYouKnowFact1', 'Music can trigger powerful emotional memories') },
+    { id: 2, text: t('didYouKnowFact2', 'Personalized songs create stronger emotional connections') },
+    { id: 3, text: t('didYouKnowFact3', 'Music is processed in multiple areas of the brain') }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       <Navigation />
@@ -35,7 +42,7 @@ const Index = () => {
       <Suspense fallback={<div className="h-96 bg-gray-100 animate-pulse" />}>
         <LazyTestimonialSlider />
       </Suspense>
-      <DidYouKnowCarousel />
+      <DidYouKnowCarousel facts={didYouKnowFacts} />
       <CollaborationSection />
       <Footer />
     </div>
