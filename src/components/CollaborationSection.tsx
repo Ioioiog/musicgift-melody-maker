@@ -1,18 +1,20 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Music, Mail, User, Link, MessageSquare, Send } from 'lucide-react';
+import { Music, Mail, User, Link, MessageSquare, Send, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const CollaborationSection = () => {
   const { toast } = useToast();
   const { t } = useLanguage();
+  const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -51,148 +53,167 @@ const CollaborationSection = () => {
   };
 
   return (
-    <section className="py-8 relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
-      <div className="absolute inset-0 bg-black/30"></div>
-      
-      <div className="max-w-3xl mx-auto px-4 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-6"
-        >
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-orange-500">
-            {t('joinOurJourney')}
-          </h2>
-          
-          <p className="text-base text-white/90 max-w-xl mx-auto leading-relaxed">
-            {t('collaborationDescription')}
-          </p>
-        </motion.div>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <section className="py-4 relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/30"></div>
+        
+        <div className="max-w-3xl mx-auto px-4 relative z-10">
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="ghost"
+              className="w-full bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl text-white hover:bg-white/20 p-4 mb-4"
+            >
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 text-purple-400" />
+                  <span className="text-lg font-bold">{t('joinOurJourney')}</span>
+                </div>
+                {isOpen ? (
+                  <ChevronUp className="w-5 h-5" />
+                ) : (
+                  <ChevronDown className="w-5 h-5" />
+                )}
+              </div>
+            </Button>
+          </CollapsibleTrigger>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-xl font-bold text-white flex items-center justify-center gap-2">
-                <MessageSquare className="w-5 h-5 text-purple-400" />
-                {t('applyToCollaborate')}
-              </CardTitle>
-              <p className="text-white/80 text-sm">
-                {t('shareYourTalent')}
+          <CollapsibleContent className="animate-accordion-down">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-6"
+            >
+              <p className="text-base text-white/90 max-w-xl mx-auto leading-relaxed">
+                {t('collaborationDescription')}
               </p>
-            </CardHeader>
-            
-            <CardContent className="pt-0">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="name" className="flex items-center gap-2 text-white/90 font-medium text-sm">
-                      <User className="w-3.5 h-3.5" />
-                      {t('fullName')}
-                    </Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      type="text"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder={t('enterFullName')}
-                      required
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 h-10"
-                    />
-                  </div>
-                  
-                  <div className="space-y-1.5">
-                    <Label htmlFor="email" className="flex items-center gap-2 text-white/90 font-medium text-sm">
-                      <Mail className="w-3.5 h-3.5" />
-                      {t('emailAddress')}
-                    </Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder={t('emailPlaceholder')}
-                      required
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 h-10"
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-1.5">
-                  <Label htmlFor="portfolioLink" className="flex items-center gap-2 text-white/90 font-medium text-sm">
-                    <Link className="w-3.5 h-3.5" />
-                    {t('portfolioLink')}
-                  </Label>
-                  <Input
-                    id="portfolioLink"
-                    name="portfolioLink"
-                    type="url"
-                    value={formData.portfolioLink}
-                    onChange={handleInputChange}
-                    placeholder={t('portfolioPlaceholder')}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 h-10"
-                  />
-                  <p className="text-xs text-white/70">
-                    {t('portfolioHelper')}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
+                <CardHeader className="text-center pb-4">
+                  <CardTitle className="text-xl font-bold text-white flex items-center justify-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-purple-400" />
+                    {t('applyToCollaborate')}
+                  </CardTitle>
+                  <p className="text-white/80 text-sm">
+                    {t('shareYourTalent')}
                   </p>
-                </div>
+                </CardHeader>
                 
-                <div className="space-y-1.5">
-                  <Label htmlFor="message" className="flex items-center gap-2 text-white/90 font-medium text-sm">
-                    <MessageSquare className="w-3.5 h-3.5" />
-                    {t('shortBioMessage')}
-                  </Label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    placeholder={t('bioPlaceholder')}
-                    rows={3}
-                    required
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 resize-none min-h-[80px]"
-                  />
-                  <p className="text-xs text-white/70">
-                    {t('bioHelper')}
-                  </p>
-                </div>
-                
-                <div className="flex justify-center pt-2">
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-orange-500 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 h-10"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        {t('submitting')}
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        {t('submitApplication')}
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    </section>
+                <CardContent className="pt-0">
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="name" className="flex items-center gap-2 text-white/90 font-medium text-sm">
+                          <User className="w-3.5 h-3.5" />
+                          {t('fullName')}
+                        </Label>
+                        <Input
+                          id="name"
+                          name="name"
+                          type="text"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          placeholder={t('enterFullName')}
+                          required
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 h-10"
+                        />
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        <Label htmlFor="email" className="flex items-center gap-2 text-white/90 font-medium text-sm">
+                          <Mail className="w-3.5 h-3.5" />
+                          {t('emailAddress')}
+                        </Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          placeholder={t('emailPlaceholder')}
+                          required
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 h-10"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-1.5">
+                      <Label htmlFor="portfolioLink" className="flex items-center gap-2 text-white/90 font-medium text-sm">
+                        <Link className="w-3.5 h-3.5" />
+                        {t('portfolioLink')}
+                      </Label>
+                      <Input
+                        id="portfolioLink"
+                        name="portfolioLink"
+                        type="url"
+                        value={formData.portfolioLink}
+                        onChange={handleInputChange}
+                        placeholder={t('portfolioPlaceholder')}
+                        className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 h-10"
+                      />
+                      <p className="text-xs text-white/70">
+                        {t('portfolioHelper')}
+                      </p>
+                    </div>
+                    
+                    <div className="space-y-1.5">
+                      <Label htmlFor="message" className="flex items-center gap-2 text-white/90 font-medium text-sm">
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        {t('shortBioMessage')}
+                      </Label>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        placeholder={t('bioPlaceholder')}
+                        rows={3}
+                        required
+                        className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 resize-none min-h-[80px]"
+                      />
+                      <p className="text-xs text-white/70">
+                        {t('bioHelper')}
+                      </p>
+                    </div>
+                    
+                    <div className="flex justify-center pt-2">
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="bg-orange-500 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 h-10"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            {t('submitting')}
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-4 h-4" />
+                            {t('submitApplication')}
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </CollapsibleContent>
+        </div>
+      </section>
+    </Collapsible>
   );
 };
 
