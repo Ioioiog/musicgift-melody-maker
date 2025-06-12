@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -13,19 +12,17 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 import { Heart, Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
-
 const Index = () => {
-  const { t } = useLanguage();
-  
+  const {
+    t
+  } = useLanguage();
   const backgroundStyle = {
     backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   };
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Video Hero Section */}
@@ -38,40 +35,31 @@ const Index = () => {
         
         {/* Unified animated background particles across all sections */}
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(30)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 bg-white/20 rounded-full"
-              initial={{
-                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
-                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
-                scale: 0
-              }}
-              animate={{
-                y: [null, -100, (typeof window !== 'undefined' ? window.innerHeight : 800) + 100],
-                scale: [0, 1, 0],
-                opacity: [0, 0.8, 0]
-              }}
-              transition={{
-                duration: Math.random() * 15 + 15, // 15-30 seconds for longer coverage
-                repeat: Infinity,
-                delay: Math.random() * 10
-              }}
-            />
-          ))}
+          {[...Array(30)].map((_, i) => <motion.div key={i} className="absolute w-2 h-2 bg-white/20 rounded-full" initial={{
+          x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
+          y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+          scale: 0
+        }} animate={{
+          y: [null, -100, (typeof window !== 'undefined' ? window.innerHeight : 800) + 100],
+          scale: [0, 1, 0],
+          opacity: [0, 0.8, 0]
+        }} transition={{
+          duration: Math.random() * 15 + 15,
+          // 15-30 seconds for longer coverage
+          repeat: Infinity,
+          delay: Math.random() * 10
+        }} />)}
         </div>
 
         <div className="relative z-10">
           
           {/* Hero Content Section */}
-          <div className="py-4 md:py-8">
+          <div className="py-4 md:py-0">
             <HeroContent />
           </div>
 
           {/* Scenario Hero Component */}
-          <div className="py-2 md:py-4">
-            <ScenarioHero />
-          </div>
+          
 
           {/* Impact Cards */}
           <div className="py-2 md:py-4">
@@ -180,7 +168,7 @@ const Index = () => {
 
       {/* CTA Section - Moved here after CollaborationSection */}
       <section className="px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8" style={backgroundStyle}>
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 py-0"></div>
         <div className="max-w-4xl mx-auto relative z-10">
           <h2 className="text-base md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3">
             {t('heroCtaTitle')}
@@ -216,8 +204,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
