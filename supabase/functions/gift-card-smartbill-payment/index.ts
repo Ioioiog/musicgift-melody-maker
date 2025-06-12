@@ -71,7 +71,7 @@ serve(async (req) => {
     const baseUrl = Deno.env.get('SMARTBILL_BASE_URL') || 'https://ws.smartbill.ro'
     const companyVat = Deno.env.get('SMARTBILL_COMPANY_VAT')
 
-    if (!username || token || !companyVat) {
+    if (!username || !token || !companyVat) {
       throw new Error('SmartBill configuration incomplete')
     }
 
