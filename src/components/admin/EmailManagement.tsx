@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Mail, Plus, RefreshCw, Settings, Trash2, Eye, Paperclip, Archive, RotateCcw } from "lucide-react";
+import { Mail, Plus, RefreshCw, Settings, Trash2, Eye, Paperclip, Archive, RotateCcw, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
   useEmailAccounts, 
   useEmailMessages, 
@@ -28,8 +29,8 @@ const EmailManagement = () => {
   const [showEmailDetails, setShowEmailDetails] = useState(false);
   const [showEmailComposer, setShowEmailComposer] = useState(false);
 
-  const { data: accounts = [], isLoading: accountsLoading } = useEmailAccounts();
-  const { data: messages = [], isLoading: messagesLoading, refetch: refetchMessages } = useEmailMessages(selectedAccountId, selectedFolder);
+  const { data: accounts = [], isLoading: accountsLoading, error: accountsError } = useEmailAccounts();
+  const { data: messages = [], isLoading: messagesLoading, error: messagesError, refetch: refetchMessages } = useEmailMessages(selectedAccountId, selectedFolder);
   const fetchEmails = useFetchEmails();
   const deleteAccount = useDeleteEmailAccount();
   const moveEmail = useMoveEmail();
@@ -93,6 +94,9 @@ const EmailManagement = () => {
     return preview.length > 100 ? `${preview.substring(0, 100)}...` : preview;
   };
 
+  // Show service error alert if there are connectivity issues
+  const showServiceError = accountsError || messagesError;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -102,6 +106,16 @@ const EmailManagement = () => {
           <p className="text-gray-600">Manage IMAP email accounts and view messages</p>
         </div>
       </div>
+
+      {showServiceError && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            There seems to be a connectivity issue with the email service. Some features may be temporarily unavailable. 
+            Please try refreshing the page or check back in a few minutes.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <Tabs defaultValue="inbox" className="space-y-4">
         <TabsList className="grid w-full grid-cols-2">
@@ -134,13 +148,14 @@ const EmailManagement = () => {
                         onClick={handleComposeEmail}
                         size="sm"
                         className="bg-green-600 hover:bg-green-700"
+                        disabled={showServiceError}
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Compose
                       </Button>
                       <Button
                         onClick={handleRefreshEmails}
-                        disabled={fetchEmails.isPending}
+                        disabled={fetchEmails.isPending || showServiceError}
                         size="sm"
                         variant="outline"
                       >
@@ -177,7 +192,7 @@ const EmailManagement = () => {
                   <Mail className="w-16 h-16 mx-auto text-gray-400 mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No email accounts</h3>
                   <p className="text-gray-600 mb-4">Add an email account to start viewing messages</p>
-                  <Button onClick={() => setShowAccountForm(true)}>
+                  <Button onClick={() => setShowAccountForm(true)} disabled={showServiceError}>
                     <Plus className="w-4 h-4 mr-2" />
                     Add Email Account
                   </Button>
@@ -201,13 +216,25 @@ const EmailManagement = () => {
                         <div className="w-8 h-8 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
                         <p className="text-gray-600 ml-3">Loading messages...</p>
                       </div>
+                    ) : messagesError ? (
+                      <div className="flex-1 flex items-center justify-center">
+                        <div className="text-center">
+                          <AlertCircle className="w-16 h-16 mx-auto text-red-400 mb-4" />
+                          <h3 className="text-lg font-medium text-gray-900 mb-2">Service Temporarily Unavailable</h3>
+                          <p className="text-gray-600 mb-4">Unable to load messages. Please try again later.</p>
+                          <Button onClick={() => refetchMessages()} variant="outline">
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Try Again
+                          </Button>
+                        </div>
+                      </div>
                     ) : messages.length === 0 ? (
                       <div className="flex-1 flex items-center justify-center">
                         <div className="text-center">
                           <span className="text-6xl mb-4 block">{currentFolder?.icon}</span>
                           <h3 className="text-lg font-medium text-gray-900 mb-2">No messages</h3>
                           <p className="text-gray-600 mb-4">No emails found in {currentFolder?.name}</p>
-                          <Button onClick={handleRefreshEmails} disabled={fetchEmails.isPending}>
+                          <Button onClick={handleRefreshEmails} disabled={fetchEmails.isPending || showServiceError}>
                             <RefreshCw className={`w-4 h-4 mr-2 ${fetchEmails.isPending ? 'animate-spin' : ''}`} />
                             Refresh
                           </Button>

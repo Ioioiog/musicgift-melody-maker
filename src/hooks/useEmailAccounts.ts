@@ -69,7 +69,11 @@ export const useEmailAccounts = () => {
       if (error) throw error;
       return data as EmailAccount[];
     },
-    enabled: !!user?.id
+    enabled: !!user?.id,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 30000, // 30 seconds
+    refetchOnWindowFocus: false
   });
 };
 
@@ -93,7 +97,11 @@ export const useEmailMessages = (accountId: string | null, folder: string = 'INB
       if (error) throw error;
       return data as EmailMessage[];
     },
-    enabled: !!accountId
+    enabled: !!accountId,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 30000,
+    refetchOnWindowFocus: false
   });
 };
 
@@ -105,29 +113,51 @@ export const useEmailFolderCounts = (accountId: string | null) => {
       
       const folderCounts: Record<string, { total: number; unread: number }> = {};
       
-      for (const folder of EMAIL_FOLDERS) {
-        const { count: totalCount } = await supabase
-          .from('email_messages')
-          .select('*', { count: 'exact', head: true })
-          .eq('account_id', accountId)
-          .eq('folder', folder.id);
+      try {
+        for (const folder of EMAIL_FOLDERS) {
+          // Add timeout and better error handling
+          const totalPromise = supabase
+            .from('email_messages')
+            .select('*', { count: 'exact', head: true })
+            .eq('account_id', accountId)
+            .eq('folder', folder.id)
+            .abortSignal(AbortSignal.timeout(10000)); // 10 second timeout
+            
+          const unreadPromise = supabase
+            .from('email_messages')
+            .select('*', { count: 'exact', head: true })
+            .eq('account_id', accountId)
+            .eq('folder', folder.id)
+            .eq('is_read', false)
+            .abortSignal(AbortSignal.timeout(10000)); // 10 second timeout
+
+          const [totalResult, unreadResult] = await Promise.all([totalPromise, unreadPromise]);
           
-        const { count: unreadCount } = await supabase
-          .from('email_messages')
-          .select('*', { count: 'exact', head: true })
-          .eq('account_id', accountId)
-          .eq('folder', folder.id)
-          .eq('is_read', false);
-          
-        folderCounts[folder.id] = {
-          total: totalCount || 0,
-          unread: unreadCount || 0
-        };
+          folderCounts[folder.id] = {
+            total: totalResult.count || 0,
+            unread: unreadResult.count || 0
+          };
+        }
+        
+        return folderCounts;
+      } catch (error) {
+        console.error('Error fetching folder counts:', error);
+        // Return empty counts instead of throwing
+        return EMAIL_FOLDERS.reduce((acc, folder) => {
+          acc[folder.id] = { total: 0, unread: 0 };
+          return acc;
+        }, {} as Record<string, { total: number; unread: number }>);
       }
-      
-      return folderCounts;
     },
-    enabled: !!accountId
+    enabled: !!accountId,
+    retry: 2, // Reduce retries for count queries
+    retryDelay: 2000,
+    staleTime: 60000, // 1 minute
+    refetchOnWindowFocus: false,
+    // Gracefully handle errors
+    onError: (error) => {
+      console.warn('Failed to fetch folder counts, using defaults:', error);
+    }
   });
 };
 
