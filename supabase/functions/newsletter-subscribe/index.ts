@@ -59,9 +59,41 @@ serve(async (req) => {
     // Add to Brevo
     const brevoApiKey = Deno.env.get('BREVO_API_KEY')
     let brevoContactId = null
+    let brevoListId = null
 
     if (brevoApiKey) {
       try {
+        // First, fetch available lists to find "MusicGift #2"
+        const listsResponse = await fetch('https://api.brevo.com/v3/contacts/lists', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'api-key': brevoApiKey
+          }
+        })
+
+        if (listsResponse.ok) {
+          const listsData = await listsResponse.json()
+          console.log('Available Brevo lists:', JSON.stringify(listsData.lists, null, 2))
+          
+          // Find the list with name "MusicGift #2"
+          const targetList = listsData.lists?.find((list: any) => 
+            list.name === 'MusicGift #2' || list.name.includes('MusicGift #2')
+          )
+          
+          if (targetList) {
+            brevoListId = targetList.id
+            console.log('Found MusicGift #2 list with ID:', brevoListId)
+          } else {
+            console.log('MusicGift #2 list not found, using default list ID 1')
+            brevoListId = 1
+          }
+        } else {
+          console.log('Failed to fetch Brevo lists, using default list ID 1')
+          brevoListId = 1
+        }
+
+        // Add contact to Brevo with the correct list ID
         const brevoResponse = await fetch('https://api.brevo.com/v3/contacts', {
           method: 'POST',
           headers: {
@@ -75,7 +107,7 @@ serve(async (req) => {
               FIRSTNAME: name || '',
               SOURCE: source
             },
-            listIds: [1], // Default list ID - adjust as needed
+            listIds: [brevoListId],
             updateEnabled: true
           })
         })
@@ -83,7 +115,7 @@ serve(async (req) => {
         if (brevoResponse.ok) {
           const brevoData = await brevoResponse.json()
           brevoContactId = brevoData.id?.toString()
-          console.log('Successfully added to Brevo:', brevoContactId)
+          console.log('Successfully added to Brevo list', brevoListId, 'with contact ID:', brevoContactId)
         } else {
           const errorText = await brevoResponse.text()
           console.log('Brevo API error:', errorText)
@@ -113,7 +145,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         message: 'Successfully subscribed to newsletter',
-        id: data.id
+        id: data.id,
+        brevo_list_id: brevoListId
       }),
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
