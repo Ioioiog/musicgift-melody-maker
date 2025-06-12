@@ -1,360 +1,164 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import OrderWizard from "@/components/OrderWizard";
-import OrderHeroSection from "@/components/order/OrderHeroSection";
-import OrderSidebarSummary from "@/components/order/OrderSidebarSummary";
-import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
-import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import { usePackages, useAddons } from "@/hooks/usePackageData";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useGiftCardByCode } from "@/hooks/useGiftCards";
-import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
-import { useCurrency } from "@/contexts/CurrencyContext";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { FileMetadata } from "@/types/order";
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import OrderHeroSection from '@/components/order/OrderHeroSection';
+import OrderWizard from '@/components/OrderWizard';
+import CodeInputSection from '@/components/order/CodeInputSection';
+import OrderSidebarSummary from '@/components/order/OrderSidebarSummary';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { usePageMeta } from '@/hooks/usePageMeta';
+import { motion } from 'framer-motion';
 
 const Order = () => {
-  const { toast } = useToast();
   const { t } = useLanguage();
-  const { user } = useAuth();
-  const { currency } = useCurrency();
-  const navigate = useNavigate();
-  const { data: packages = [] } = usePackages();
-  const { data: addons = [] } = useAddons();
   const [searchParams] = useSearchParams();
   const [orderData, setOrderData] = useState<any>(null);
-  const [appliedGiftCard, setAppliedGiftCard] = useState<any>(null);
-  const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; amount: number; type: string } | null>(null);
-  const isMobile = useIsMobile();
+  
+  // SEO Meta Tags
+  usePageMeta({
+    title_en: t('orderTitle'),
+    title_ro: t('orderTitle'),
+    description_en: t('orderDescription'),
+    description_ro: t('orderDescription'),
+    keywords_en: t('orderKeywords'),
+    keywords_ro: t('orderKeywords')
+  });
 
-  // Extract gift card parameters from URL
-  const giftCardCode = searchParams.get('gift');
   const preselectedPackage = searchParams.get('package');
+  const giftCode = searchParams.get('code');
 
-  // Fetch gift card data if code is provided
-  const { data: urlGiftCard, isLoading: isLoadingGift } = useGiftCardByCode(giftCardCode || '');
-
-  // Check if the preselected package is the gift package
-  const isGiftPackage = preselectedPackage === 'gift';
+  const [isGiftCardValid, setIsGiftCardValid] = useState(false);
+  const [giftCardDetails, setGiftCardDetails] = useState<any>(null);
+  const [showCodeInput, setShowCodeInput] = useState(!!giftCode);
 
   useEffect(() => {
-    if (giftCardCode && urlGiftCard) {
-      setAppliedGiftCard(urlGiftCard);
-      toast({
-        title: t('giftCardApplied'),
-        description: t('giftCardAppliedDesc', `Gift card ${giftCardCode} is ready to be used for your order.`)
-      });
-    }
-  }, [giftCardCode, urlGiftCard, toast, t]);
+    if (giftCode) {
+      // Validate gift card code
+      const validateGiftCard = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('gift_cards')
+            .select('*')
+            .eq('code', giftCode)
+            .single();
 
-  const calculateTotalPrice = (packageValue: string, selectedAddons: string[]) => {
-    const packageData = packages.find(pkg => pkg.value === packageValue);
-    const packagePrice = packageData ? getPackagePrice(packageData, currency) : 0;
-    const addonsPrice = selectedAddons.reduce((total, addonKey) => {
-      const addon = addons.find(a => a.addon_key === addonKey);
-      return total + (addon ? getAddonPrice(addon, currency) : 0);
-    }, 0);
-    return packagePrice + addonsPrice;
-  };
-
-  // Extract file metadata from addonFieldValues
-  const extractFileData = (addonFieldValues: Record<string, any>) => {
-    const fileData: Record<string, any> = {};
-    
-    // Go through all addon field values
-    Object.entries(addonFieldValues).forEach(([key, value]) => {
-      // Check if the value has a url property (single file/audio)
-      if (value && typeof value === 'object' && 'url' in value) {
-        fileData[key] = value;
-      } 
-      // Check if it's an array of file objects
-      else if (Array.isArray(value) && value.length > 0 && 'url' in value[0]) {
-        fileData[key] = value;
-      }
-    });
-    
-    return fileData;
-  };
-
-  // Associate uploaded files with the order after creation
-  const associateFilesWithOrder = async (orderId: string, addonFieldValues: Record<string, any>) => {
-    const fileData = extractFileData(addonFieldValues);
-    
-    // Skip if no files to associate
-    if (Object.keys(fileData).length === 0) {
-      return;
-    }
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('associate-files-with-order', {
-        body: { orderId, fileData }
-      });
-      
-      if (error) {
-        console.error('Error associating files with order:', error);
-      } else {
-        console.log(`✅ Files associated with order:`, data);
-      }
-    } catch (error) {
-      console.error('Error invoking associate-files function:', error);
-    }
-  };
-
-  const handleOrderComplete = async (orderData: any) => {
-    try {
-      console.log("🔄 Processing order with selected payment provider:", orderData.paymentProvider);
-      console.log("📦 Full order data:", orderData);
-
-      // Find the selected package details
-      const selectedPackage = packages.find(pkg => pkg.value === orderData.package);
-      if (!selectedPackage) {
-        throw new Error(`Package not found: ${orderData.package}`);
-      }
-
-      // Calculate total price
-      const totalPrice = calculateTotalPrice(orderData.package, orderData.addons || []);
-
-      // Calculate gift card application (keep in base monetary units)
-      let giftCreditApplied = 0;
-      let finalPrice = totalPrice;
-      
-      if (appliedGiftCard) {
-        const giftBalance = (appliedGiftCard.gift_amount || 0) / 100; // Convert from cents to base units
-        giftCreditApplied = Math.min(giftBalance, totalPrice);
-        finalPrice = Math.max(0, totalPrice - giftCreditApplied);
-      }
-
-      // Apply discount
-      let discountApplied = 0;
-      if (appliedDiscount) {
-        discountApplied = Math.min(appliedDiscount.amount, finalPrice);
-        finalPrice = Math.max(0, finalPrice - discountApplied);
-      }
-
-      // Get the selected payment provider
-      const paymentProvider = orderData.paymentProvider || 'smartbill';
-      console.log(`💳 Selected payment provider: ${paymentProvider}`);
-
-      // Prepare base order payload (all prices in base monetary units)
-      const baseOrderPayload = {
-        form_data: {
-          ...orderData,
-          addons: orderData.addons || [],
-          addonFieldValues: orderData.addonFieldValues || {}
-        },
-        selected_addons: orderData.addons || [],
-        total_price: finalPrice,
-        status: 'pending',
-        payment_status: finalPrice > 0 ? 'pending' : 'completed',
-        // Gift card fields (keep gift_credit_applied in cents for database consistency)
-        gift_card_id: appliedGiftCard?.id || null,
-        is_gift_redemption: !!appliedGiftCard,
-        gift_credit_applied: giftCreditApplied * 100, // Convert to cents for database
-        // Discount fields
-        discount_code: appliedDiscount?.code || null,
-        discount_amount: discountApplied * 100, // Convert to cents for database
-        // Package detail columns
-        package_value: selectedPackage.value,
-        package_name: selectedPackage.label_key,
-        package_price: getPackagePrice(selectedPackage, currency),
-        package_delivery_time: selectedPackage.delivery_time_key,
-        package_includes: selectedPackage.includes ? JSON.parse(JSON.stringify(selectedPackage.includes)) : [],
-        currency: currency,
-        user_id: user?.id || null,
-        payment_provider: paymentProvider
+          if (error) {
+            console.error('Error validating gift card:', error);
+            setIsGiftCardValid(false);
+            setGiftCardDetails(null);
+          } else {
+            setIsGiftCardValid(true);
+            setGiftCardDetails(data);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          setIsGiftCardValid(false);
+          setGiftCardDetails(null);
+        }
       };
 
-      let paymentResponse;
-      let paymentError;
+      validateGiftCard();
+    }
+  }, [giftCode]);
 
-      // Route to the correct payment provider (no price conversion in frontend)
-      if (paymentProvider === 'stripe') {
-        console.log('🟣 Processing with Stripe');
-        const { data, error } = await supabase.functions.invoke('stripe-create-payment', {
-          body: {
-            orderData: baseOrderPayload,
-            returnUrl: `${window.location.origin}/payment/success`
-          }
-        });
-        paymentResponse = data;
-        paymentError = error;
-      } else if (paymentProvider === 'revolut') {
-        console.log('🟠 Processing with Revolut');
-        const { data, error } = await supabase.functions.invoke('revolut-create-payment', {
-          body: {
-            orderData: baseOrderPayload,
-            returnUrl: `${window.location.origin}/payment/success`
-          }
-        });
-        paymentResponse = data;
-        paymentError = error;
-      } else if (paymentProvider === 'smartbill') {
-        console.log('🔵 Processing with SmartBill');
-        const { data, error } = await supabase.functions.invoke('smartbill-create-invoice', {
-          body: {
-            orderData: baseOrderPayload
-          }
-        });
-        paymentResponse = data;
-        paymentError = error;
+  const handleGiftCardSubmit = async (code: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('gift_cards')
+        .select('*')
+        .eq('code', code)
+        .single();
+
+      if (error) {
+        console.error('Error validating gift card:', error);
+        setIsGiftCardValid(false);
+        setGiftCardDetails(null);
       } else {
-        throw new Error(`Unsupported payment provider: ${paymentProvider}`);
-      }
-
-      // Handle payment provider errors
-      if (paymentError) {
-        console.error(`❌ ${paymentProvider.toUpperCase()} integration error:`, paymentError);
-        throw new Error(`Failed to process order with ${paymentProvider.toUpperCase()}`);
-      }
-
-      console.log(`✅ ${paymentProvider.toUpperCase()} integration response:`, paymentResponse);
-
-      // Check if payment provider operation failed
-      if (!paymentResponse?.success) {
-        const errorCode = paymentResponse?.errorCode || 'unknown';
-        const errorMessage = paymentResponse?.message || paymentResponse?.error || 'Payment processing failed';
-        console.error(`❌ ${paymentProvider.toUpperCase()} operation failed:`, errorCode, errorMessage);
-        toast({
-          title: t('orderError', 'Payment Error'),
-          description: `${paymentProvider.toUpperCase()} payment failed: ${errorMessage}`,
-          variant: "destructive"
-        });
-
-        navigate('/payment/error?orderId=' + paymentResponse?.orderId + '&error=' + errorCode);
-        return;
-      }
-
-      // Associate files with the created order
-      await associateFilesWithOrder(paymentResponse.orderId, orderData.addonFieldValues || {});
-
-      // If gift card was used, create redemption record
-      if (appliedGiftCard && giftCreditApplied > 0) {
-        const { error: redemptionError } = await supabase
-          .from('gift_redemptions')
-          .insert({
-            gift_card_id: appliedGiftCard.id,
-            order_id: paymentResponse.orderId,
-            redeemed_amount: giftCreditApplied * 100, // Convert to cents for database
-            remaining_balance: Math.max(0, (appliedGiftCard.gift_amount || 0) - giftCreditApplied * 100)
-          });
-
-        if (redemptionError) {
-          console.error("Error creating gift redemption:", redemptionError);
-        } else {
-          console.log("Gift card redemption created successfully");
-        }
-      }
-
-      // Show success message
-      toast({
-        title: t('orderSuccess'),
-        description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${paymentResponse.orderId?.slice(0, 8)}...`),
-        variant: "default"
-      });
-
-      // Handle payment redirection based on provider
-      if (paymentResponse?.paymentUrl && finalPrice > 0) {
-        console.log(`🔗 Redirecting to ${paymentProvider.toUpperCase()} payment:`, paymentResponse.paymentUrl);
-        window.location.href = paymentResponse.paymentUrl;
-      } else {
-        console.log("✅ Order completed successfully - no payment required or direct completion");
-        navigate('/payment/success?orderId=' + paymentResponse.orderId);
+        setIsGiftCardValid(true);
+        setGiftCardDetails(data);
+        setShowCodeInput(false);
       }
     } catch (error) {
-      console.error("💥 Error processing order:", error);
-      toast({
-        title: t('orderError'),
-        description: error.message || t('orderErrorMessage'),
-        variant: "destructive"
-      });
+      console.error('Error:', error);
+      setIsGiftCardValid(false);
+      setGiftCardDetails(null);
     }
   };
 
-  const handleGiftCardComplete = (data: any) => {
-    console.log("Gift card purchase completed:", data);
-  };
-
-  if (isLoadingGift && giftCardCode) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="text-center relative z-10">
-          <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white">{t('loadingGiftCard')}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
+      backgroundImage: "url('/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
     }}>
-      <div className="absolute inset-0 bg-black/20"></div>
-
-      <div className="relative z-10">
-        <Navigation />
-        
-        <OrderHeroSection />
-        
-        <section className="py-2 sm:py-4 md:py-6 lg:py-8">
-          <div className="container mx-auto px-2 sm:px-4 lg:px-6">
-            {isGiftPackage ? (
-              <div className="max-w-4xl mx-auto">
-                <GiftPurchaseWizard onComplete={handleGiftCardComplete} />
-              </div>
-            ) : (
-              <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6 lg:items-end">
-                {/* Main content - Order Wizard */}
-                <div className="flex-1 order-2 lg:order-1 my-0">
-                  <OrderWizard 
-                    onComplete={handleOrderComplete} 
-                    giftCard={appliedGiftCard} 
-                    preselectedPackage={preselectedPackage} 
-                    onOrderDataChange={setOrderData} 
-                  />
-                </div>
-                
-                {/* Mobile Order Summary - Above wizard on mobile */}
-                {isMobile && orderData?.selectedPackage && (
-                  <div className="order-1 lg:hidden">
-                    <OrderSidebarSummary 
-                      orderData={orderData} 
-                      giftCard={appliedGiftCard}
-                      onGiftCardChange={setAppliedGiftCard}
-                      onDiscountChange={setAppliedDiscount}
-                    />
-                  </div>
-                )}
-                
-                {/* Desktop Sidebar - Order Summary */}
-                <div className="hidden lg:block lg:w-80 xl:w-96 order-3 lg:order-2">
-                  <OrderSidebarSummary 
-                    orderData={orderData} 
-                    giftCard={appliedGiftCard}
-                    onGiftCardChange={setAppliedGiftCard}
-                    onDiscountChange={setAppliedDiscount}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-
-        <Footer />
+      {/* Enhanced background overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
+      
+      {/* Animated background dots */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-pulse" />
+        <div className="absolute top-3/4 right-1/3 w-3 h-3 bg-purple-300/30 rounded-full animate-pulse delay-1000" />
+        <div className="absolute bottom-1/4 left-1/2 w-1 h-1 bg-pink-300/40 rounded-full animate-pulse delay-2000" />
+        <div className="absolute top-1/2 right-1/4 w-2 h-2 bg-blue-300/25 rounded-full animate-pulse delay-3000" />
       </div>
+      
+      <Navigation />
+
+      <OrderHeroSection />
+
+      <section className="py-12 px-4 relative z-10">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <motion.div initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.5,
+                delay: 0.2
+              }}>
+                <OrderWizard
+                  giftCard={giftCardDetails}
+                  preselectedPackage={preselectedPackage}
+                  onOrderDataChange={setOrderData}
+                />
+              </motion.div>
+            </div>
+
+            <div className="lg:col-span-1">
+              <motion.div initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.5,
+                delay: 0.4
+              }}>
+                <OrderSidebarSummary orderData={orderData} giftCard={giftCardDetails} />
+              </motion.div>
+
+              {!giftCode && <motion.div initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.5,
+                delay: 0.6
+              }}>
+                <CodeInputSection onSubmit={handleGiftCardSubmit} />
+              </motion.div>}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 };

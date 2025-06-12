@@ -10,6 +10,9 @@ import { Link } from 'react-router-dom';
 import { usePackages } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { getPackagePrice } from '@/utils/pricing';
+import CurrencyIcon from '@/components/CurrencyIcon';
+
 const Packages = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const {
@@ -31,9 +34,6 @@ const Packages = () => {
         <Footer />
       </div>;
   }
-  const getPackagePrice = (pkg: any) => {
-    return currency === 'EUR' ? pkg.price_eur : pkg.price_ron;
-  };
   const renderPackagePrice = (pkg: any) => {
     if (pkg.value === 'gift') {
       return <div className="relative group">

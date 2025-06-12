@@ -13,6 +13,7 @@ import { unsubscribeTranslations } from './unsubscribe';
 import { faqTranslations } from './faq';
 import { didYouKnowTranslations } from './didYouKnow';
 import { collaborationTranslations } from './collaboration';
+import { seoTranslations } from './seo';
 
 export const enTranslations = {
   ...navigationTranslations,
@@ -29,4 +30,5 @@ export const enTranslations = {
   ...faqTranslations,
   ...didYouKnowTranslations,
   ...collaborationTranslations,
+  ...seoTranslations,
 };

@@ -2,12 +2,23 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const NotFound = () => {
   const location = useLocation();
   const { t } = useLanguage();
+  
+  // SEO Meta Tags for 404 page
+  usePageMeta({
+    title_en: "Page Not Found | MusicGift",
+    title_ro: "Pagina Nu Există | MusicGift",
+    description_en: "The page you're looking for doesn't exist. Return to MusicGift homepage to explore our personalized music services.",
+    description_ro: "Pagina pe care o cauți nu există. Întoarce-te la pagina principală MusicGift pentru a explora serviciile noastre de muzică personalizată.",
+    keywords_en: "404, page not found, musicgift",
+    keywords_ro: "404, pagina nu există, musicgift"
+  });
 
   useEffect(() => {
     console.error(

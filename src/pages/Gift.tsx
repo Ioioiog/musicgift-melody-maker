@@ -1,170 +1,67 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Gift as GiftIcon, Heart, Users } from "lucide-react";
 import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
-import GiftRedemption from "@/components/gift/GiftRedemption";
-import GiftPaymentSuccess from "@/components/gift/GiftPaymentSuccess";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
-import { useSearchParams } from "react-router-dom";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion } from "framer-motion";
 
 const Gift = () => {
   const { t } = useLanguage();
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [searchParams] = useSearchParams();
-
-  // Check if returning from payment
-  const paymentStatus = searchParams.get('payment');
-
-  const handleGiftPurchaseComplete = (data: any) => {
-    console.log("Gift purchase completed:", data);
-    // This will now be called only after successful payment
-    // The payment flow will handle the redirection automatically
-    toast({
-      title: t('giftCardCreated'),
-      description: `${t('giftCardCode')} ${data.code} ${t('giftCardWillBeDelivered')} ${data.recipient_email}`
-    });
-  };
-
-  const handleGiftRedemption = (giftCard: any, selectedPackage: string, upgradeAmount?: number) => {
-    console.log("Gift redemption:", {
-      giftCard,
-      selectedPackage,
-      upgradeAmount
-    });
-
-    // Here we would redirect to the order flow with the gift card applied
-    // For now, we'll show a success message
-    toast({
-      title: t('giftCardApplied'),
-      description: `${t('proceedingToComplete')} ${selectedPackage} ${t('packageOrder')}`
-    });
-
-    // TODO: Redirect to order flow with gift card data
-    // window.location.href = `/order?gift=${giftCard.code}&package=${selectedPackage}`;
-  };
+  
+  // SEO Meta Tags
+  usePageMeta({
+    title_en: t('giftTitle'),
+    title_ro: t('giftTitle'),
+    description_en: t('giftDescription'),
+    description_ro: t('giftDescription'),
+    keywords_en: t('giftKeywords'),
+    keywords_ro: t('giftKeywords')
+  });
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
+      backgroundImage: "url('/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
+    }}>
+      {/* Enhanced background overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
+      
+      {/* Animated background dots */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-pulse" />
+        <div className="absolute top-3/4 right-1/3 w-3 h-3 bg-purple-300/30 rounded-full animate-pulse delay-1000" />
+        <div className="absolute bottom-1/4 left-1/2 w-1 h-1 bg-pink-300/40 rounded-full animate-pulse delay-2000" />
+        <div className="absolute top-1/2 right-1/4 w-2 h-2 bg-yellow-300/25 rounded-full animate-pulse delay-3000" />
+      </div>
+      
       <Navigation />
       
-      {/* Compact Hero Section - Adjusted padding for seamless connection to navbar */}
-      <section className="pt-16 md:pt-20 lg:pt-24 pb-6 text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
-        <div className="absolute inset-0 bg-black/20 py-0"></div>
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <motion.div 
-            className="flex justify-center mb-6" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-          </motion.div>
-          <motion.h2 
-            className="text-2xl md:text-3xl font-bold mb-2" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            {t('shareGiftOfMusic')}
-          </motion.h2>
-          <motion.p 
-            className="text-base md:text-lg opacity-90 mb-4" 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            {t('givePersonalizedSong')} {t('createDigitalGiftCard')}
-          </motion.p>
+      <section className="py-16 px-4 relative z-10">
+        <div className="container mx-auto">
+          <div className="max-w-3xl mx-auto">
+            {/* Decorative gradient separator */}
+            <div className="w-32 h-1 bg-gradient-to-r from-yellow-400 via-purple-500 to-pink-500 mx-auto mb-8 rounded-full opacity-80" />
+            
+            <motion.div initial={{
+              opacity: 0,
+              y: 30,
+              scale: 0.95
+            }} animate={{
+              opacity: 1,
+              y: 0,
+              scale: 1
+            }} transition={{
+              duration: 0.8,
+              delay: 0.2
+            }}>
+              <GiftPurchaseWizard />
+            </motion.div>
+            
+            {/* Bottom decorative gradient separator */}
+            <div className="w-32 h-1 bg-gradient-to-r from-pink-400 via-purple-500 to-yellow-500 mx-auto mt-8 rounded-full opacity-60" />
+          </div>
         </div>
       </section>
 
-      {/* Main Content - Flexible to fill remaining space with background */}
-      <section className="flex-1 flex items-center py-4 relative" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
-        <div className="absolute inset-0 bg-black/30 py-[22px]"></div>
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.8, delay: 0.6 }} 
-          className="w-full relative z-10 px-4 py-[10px]"
-        >
-          <div className="max-w-4xl mx-auto">
-            {paymentStatus === 'success' ? (
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
-                <GiftPaymentSuccess />
-              </div>
-            ) : (
-              <Tabs defaultValue="purchase" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/10 backdrop-blur-sm border border-white/20 py-1 my-[26px] h-auto">
-                  <TabsTrigger 
-                    value="purchase" 
-                    className="text-sm sm:text-base lg:text-lg data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80 py-2 sm:py-3 px-2 sm:px-4 h-auto min-h-[44px] leading-tight"
-                  >
-                    <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
-                      <GiftIcon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                      <span className="text-xs sm:text-sm lg:text-base font-medium leading-tight">
-                        {t('buyGiftCard')}
-                      </span>
-                    </div>
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="redeem" 
-                    className="text-sm sm:text-base lg:text-lg data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80 py-2 sm:py-3 px-2 sm:px-4 h-auto min-h-[44px] leading-tight"
-                  >
-                    <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
-                      <Heart className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                      <span className="text-xs sm:text-sm lg:text-base font-medium leading-tight">
-                        {t('redeemGiftCard')}
-                      </span>
-                    </div>
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="purchase">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
-                    {/* Decorative elements */}
-                    <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-orange-500/15 to-transparent rounded-full blur-lg" />
-                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-orange-500/10 to-transparent rounded-full blur-md" />
-                    
-                    <div className="relative z-10 p-6">
-                      <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="redeem">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
-                    {/* Decorative elements */}
-                    <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-orange-500/15 to-transparent rounded-full blur-lg" />
-                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-orange-500/10 to-transparent rounded-full blur-md" />
-                    
-                    <div className="relative z-10 p-6">
-                      <GiftRedemption onRedemption={handleGiftRedemption} />
-                    </div>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            )}
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Footer */}
       <Footer />
     </div>
   );
