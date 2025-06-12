@@ -392,7 +392,7 @@ const Navigation = () => {
 
           {/* Enhanced Mobile Menu - Compact styling */}
           {isMenuOpen && (
-            <div ref={mainMenuRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-white/10 backdrop-blur-xl border border-white/20 overflow-hidden">
+            <div ref={mainMenuRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-black/30 backdrop-blur-xl border border-white/20 overflow-hidden">
               {/* Website Pages Section */}
               <div className="p-3 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-3">
@@ -425,7 +425,7 @@ const Navigation = () => {
 
           {/* Language/Currency Dropdown for Mobile - Compact styling */}
           {isLanguageCurrencyDropdownOpen && (
-            <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-white/10 backdrop-blur-xl border border-white/20 overflow-hidden">
+            <div ref={languageCurrencyDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-black/30 backdrop-blur-xl border border-white/20 overflow-hidden">
               {/* Currency Section */}
               <div className="p-3 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-3">
@@ -515,7 +515,7 @@ const Navigation = () => {
 
           {/* User Dropdown for Mobile - Compact styling */}
           {user && isUserDropdownOpen && (
-            <div ref={userDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-white/10 backdrop-blur-xl border border-white/20 overflow-hidden">
+            <div ref={userDropdownRef} className="lg:hidden mt-2 rounded-lg shadow-xl animate-in slide-in-from-top-2 duration-300 bg-black/30 backdrop-blur-xl border border-white/20 overflow-hidden">
               {/* User Info Header */}
               <div className="p-3 ml-36 sm:ml-44 md:ml-52">
                 <div className="text-center mb-3">
