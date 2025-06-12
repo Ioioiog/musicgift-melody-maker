@@ -723,6 +723,7 @@ export const packages: Package[] = [
     delivery_time_key: "artistDelivery",
     price_ron: 7999,
     price_eur: 1499,
+    is_quote_only: true,
     available_addons: [],
     includes: [
       { id: "a1", include_key: "artistInclude1", include_order: 1 },
