@@ -97,7 +97,7 @@ const Packages = () => {
           y: 0
         }} transition={{
           duration: 0.6
-        }}>
+        }} className="my-[42px]">
             <h1 className="text-2xl md:text-3xl font-bold mb-2">
               {t('chooseYourPackage', 'Choose Your Package')}
             </h1>
@@ -115,7 +115,7 @@ const Packages = () => {
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }}>
-        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-black/20 py-[9px] my-0"></div>
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sortedPackages?.map((pkg, index) => <motion.div key={pkg.value} initial={{
