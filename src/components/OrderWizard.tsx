@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -145,19 +144,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         if (!formData.fullName || !formData.email) {
           throw new Error('Please fill in all required contact information');
         }
-
-        if (onComplete) {
-          await onComplete({
-            ...formData,
-            addons: selectedAddons,
-            addonFieldValues,
-            package: selectedPackage,
-            paymentProvider: null, // No payment for quotes
-            totalPrice,
-            isQuoteRequest: true
-          });
-          return;
-        }
         
         // Create quote request in the dedicated table
         const quoteData = {
@@ -203,12 +189,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
           variant: "default"
         });
         
-        // Navigate to success page with quote type
+        // Navigate to success page with quote type - DO NOT call onComplete for quotes
         navigate(`/payment/success?quoteId=${quoteRequest.id}&type=quote`);
         return;
       }
 
-      // Continue with existing payment logic for non-quote packages
+      // Continue with existing payment logic for non-quote packages ONLY
       console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
       console.log('📦 Order data being submitted:', {
         package: selectedPackage,
@@ -220,6 +206,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       
       validateFormData(formData, selectedPackage, totalPrice);
       
+      // Only call onComplete for non-quote packages
       if (onComplete) {
         await onComplete({
           ...formData,
@@ -334,61 +321,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const buildStepsData = () => {
-    const steps = [];
-
-    // Step 1: Package Selection
-    steps.push({
-      number: 1,
-      label: t('choosePackage'),
-      isCompleted: currentStep > 0,
-      isCurrent: currentStep === 0
-    });
-
-    // Steps 2-N: Regular Package Steps
-    regularSteps.forEach((step, index) => {
-      const stepNumber = index + 2;
-      const stepIndex = index + 1;
-      steps.push({
-        number: stepNumber,
-        label: t(step.title_key) || step.title_key,
-        isCompleted: currentStep > stepIndex,
-        isCurrent: currentStep === stepIndex
-      });
-    });
-
-    // Addons Step
-    const addonStepNumber = regularSteps.length + 2;
-    steps.push({
-      number: addonStepNumber,
-      label: t('selectAddons', 'Select Add-ons'),
-      isCompleted: currentStep > addonStepIndex,
-      isCurrent: currentStep === addonStepIndex
-    });
-
-    // Contact & Legal Step - ALWAYS present
-    const contactStepNumber = addonStepNumber + 1;
-    steps.push({
-      number: contactStepNumber,
-      label: t('contactDetailsStep', 'Contact & Legal'),
-      isCompleted: currentStep > contactLegalStepIndex,
-      isCurrent: currentStep === contactLegalStepIndex
-    });
-
-    // Only add Payment Step for non-quote packages
-    if (!isQuoteOnly) {
-      const paymentStepNumber = contactStepNumber + 1;
-      steps.push({
-        number: paymentStepNumber,
-        label: t('payment', 'Payment'),
-        isCompleted: false,
-        isCurrent: currentStep === paymentStepIndex
-      });
-    }
-    
-    return steps;
   };
 
   // Determine which step we're on
