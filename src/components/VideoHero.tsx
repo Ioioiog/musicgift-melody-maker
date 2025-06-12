@@ -20,11 +20,28 @@ const VideoHero = () => {
     width: 0,
     height: 0
   });
+  const [loadError, setLoadError] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
   // Select video based on language with fallback
   const videoSrc = language === 'ro' ? '/lovable-uploads/Jingle Musicgift master.mp4' : '/lovable-uploads/MusicGiftvideoENG.mp4';
   console.log('VideoHero: Current language:', language, 'Video source:', videoSrc);
+  
+  // Check if video file exists
+  const checkVideoFile = async (src: string) => {
+    try {
+      const response = await fetch(src, { method: 'HEAD' });
+      console.log('VideoHero: Video file check response:', response.status, response.statusText);
+      if (!response.ok) {
+        throw new Error(`Video file not accessible: ${response.status} ${response.statusText}`);
+      }
+      return true;
+    } catch (error) {
+      console.error('VideoHero: Video file check failed:', error);
+      setLoadError(`Video file not found: ${src}`);
+      return false;
+    }
+  };
   
   // Cleanup function to stop video and reset states
   const cleanupVideo = () => {
@@ -36,6 +53,7 @@ const VideoHero = () => {
       video.muted = true;
       setHasAudio(false);
       setShowPlayButton(false);
+      setLoadError(null);
     }
   };
 
@@ -50,18 +68,31 @@ const VideoHero = () => {
       cleanupVideo();
       setIsLoading(true);
     }
+    
     console.log('VideoHero: Setting up video for language:', language);
     setCurrentVideoSrc(videoSrc);
+    
+    // Check if video file exists before trying to load
+    checkVideoFile(videoSrc).then(exists => {
+      if (!exists) {
+        setIsLoading(false);
+        return;
+      }
+    });
+    
     const handleLoadedMetadata = () => {
-      console.log('VideoHero: Video metadata loaded');
+      console.log('VideoHero: Video metadata loaded, dimensions:', video.videoWidth, 'x', video.videoHeight);
       setVideoDimensions({
         width: video.videoWidth,
         height: video.videoHeight
       });
     };
+    
     const handleCanPlay = () => {
       console.log('VideoHero: Video can play, attempting autoplay');
       setIsLoading(false);
+      setLoadError(null);
+      
       // Try to play with audio first
       video.muted = false;
       const playPromise = video.play();
@@ -79,44 +110,73 @@ const VideoHero = () => {
             setHasAudio(false);
           }).catch(muteError => {
             console.log('VideoHero: Even muted autoplay failed:', muteError);
+            setLoadError('Video playback failed');
             setIsLoading(false);
           });
         });
       }
     };
-    const handleError = () => {
-      console.log('VideoHero: Video failed to load');
+    
+    const handleError = (e: Event) => {
+      const errorMsg = video.error ? `Video error: ${video.error.code} - ${video.error.message}` : 'Unknown video error';
+      console.error('VideoHero: Video failed to load:', errorMsg);
+      setLoadError(errorMsg);
       setIsLoading(false);
     };
+    
     const handleLoadStart = () => {
       console.log('VideoHero: Video load started');
       setIsLoading(true);
+      setLoadError(null);
     };
+    
+    const handleProgress = () => {
+      if (video.buffered.length > 0) {
+        const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+        const duration = video.duration;
+        if (duration > 0) {
+          const bufferedPercent = (bufferedEnd / duration) * 100;
+          console.log('VideoHero: Video buffered:', bufferedPercent.toFixed(1) + '%');
+        }
+      }
+    };
+    
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
     video.addEventListener('canplay', handleCanPlay);
     video.addEventListener('error', handleError);
     video.addEventListener('loadstart', handleLoadStart);
+    video.addEventListener('progress', handleProgress);
 
     // Add timeout fallback to prevent infinite loading
     const loadingTimeout = setTimeout(() => {
-      if (isLoading) {
-        console.log('VideoHero: Loading timeout, hiding loading screen');
-        setIsLoading(false);
+      if (isLoading && !loadError) {
+        console.log('VideoHero: Loading timeout, checking video state');
+        if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+          console.log('VideoHero: Video has some data, proceeding anyway');
+          setIsLoading(false);
+        } else {
+          console.log('VideoHero: Loading timeout with no data, showing error');
+          setLoadError('Video loading timeout - file may be too large or corrupted');
+          setIsLoading(false);
+        }
       }
-    }, 10000); // 10 second timeout
+    }, 15000); // Increased to 15 seconds
 
     // Force video to reload only if source changed
     if (currentVideoSrc !== videoSrc) {
+      console.log('VideoHero: Reloading video with new source');
       video.load();
     }
+    
     return () => {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata);
       video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('error', handleError);
       video.removeEventListener('loadstart', handleLoadStart);
+      video.removeEventListener('progress', handleProgress);
       clearTimeout(loadingTimeout);
     };
-  }, [videoSrc, language, currentVideoSrc, isLoading]);
+  }, [videoSrc, language, currentVideoSrc, isLoading, loadError]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -207,6 +267,7 @@ const VideoHero = () => {
         ref={videoRef}
         loop
         playsInline
+        preload="metadata"
         className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover object-center`}
         style={isMobile ? { height: mobileHeight } : {}}
         key={videoSrc}
@@ -216,14 +277,24 @@ const VideoHero = () => {
       </video>
 
       {/* Loading Overlay */}
-      {isLoading && (
+      {isLoading && !loadError && (
         <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20`} style={isMobile ? { height: mobileHeight } : {}}>
-          <div className="text-white text-xl">Loading...</div>
+          <div className="text-white text-xl">Loading video...</div>
+        </div>
+      )}
+
+      {/* Error Overlay */}
+      {loadError && (
+        <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-gradient-to-br from-red-600 via-red-700 to-red-800 flex items-center justify-center z-20`} style={isMobile ? { height: mobileHeight } : {}}>
+          <div className="text-white text-center p-4">
+            <div className="text-lg font-semibold mb-2">Video Error</div>
+            <div className="text-sm">{loadError}</div>
+          </div>
         </div>
       )}
 
       {/* Play Button Overlay */}
-      {showPlayButton && !isLoading && (
+      {showPlayButton && !isLoading && !loadError && (
         <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-black/30 flex items-center justify-center z-20`} style={isMobile ? { height: mobileHeight } : {}}>
           <Button
             onClick={handlePlayWithAudio}
@@ -237,7 +308,7 @@ const VideoHero = () => {
       )}
 
       {/* Audio Control Button */}
-      {!showPlayButton && !isLoading && (
+      {!showPlayButton && !isLoading && !loadError && (
         <button
           onClick={handleToggleAudio}
           className={`absolute z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm ${
