@@ -172,11 +172,11 @@ const ImpactCards = () => {
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   };
-  return <section style={backgroundStyle} className="relative overflow-hidden py-[26px] my-0">
+  return <section style={backgroundStyle} className="relative overflow-hidden py-[16px] md:py-[26px] my-0">
       
       <div className="max-w-full mx-auto px-0 relative z-10">
         <div className="overflow-hidden">
-          <div className="flex gap-4 animate-scroll" style={{
+          <div className="flex gap-2 md:gap-4 animate-scroll" style={{
           minWidth: 'max-content',
           animation: 'scroll 30s linear infinite'
         }}>
@@ -194,10 +194,10 @@ const ImpactCards = () => {
             }} transition={{
               duration: 0.4,
               delay: idx * 0.1
-            }} className="bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg text-center hover:scale-105 transition-transform flex-shrink-0 w-48">
-                  <div className="text-3xl mb-2">{item.icon}</div>
-                  <h3 className="text-2xl font-extrabold text-purple-600 mb-1">{title}</h3>
-                  <p className="text-sm font-semibold text-gray-900 mb-1">{subtitle}</p>
+            }} className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-xl shadow-lg text-center hover:scale-105 transition-transform flex-shrink-0 w-36 md:w-48">
+                  <div className="text-2xl md:text-3xl mb-1 md:mb-2">{item.icon}</div>
+                  <h3 className="text-lg md:text-2xl font-extrabold text-purple-600 mb-1">{title}</h3>
+                  <p className="text-xs md:text-sm font-semibold text-gray-900 mb-1">{subtitle}</p>
                   <p className="text-xs text-gray-600">{desc}</p>
                 </motion.div>;
           })}
@@ -215,10 +215,10 @@ const ImpactCards = () => {
             }} transition={{
               duration: 0.4,
               delay: idx * 0.1
-            }} className="bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg text-center hover:scale-105 transition-transform flex-shrink-0 w-48">
-                  <div className="text-3xl mb-2">{item.icon}</div>
-                  <h3 className="text-2xl font-extrabold text-purple-600 mb-1">{title}</h3>
-                  <p className="text-sm font-semibold text-gray-900 mb-1">{subtitle}</p>
+            }} className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-xl shadow-lg text-center hover:scale-105 transition-transform flex-shrink-0 w-36 md:w-48">
+                  <div className="text-2xl md:text-3xl mb-1 md:mb-2">{item.icon}</div>
+                  <h3 className="text-lg md:text-2xl font-extrabold text-purple-600 mb-1">{title}</h3>
+                  <p className="text-xs md:text-sm font-semibold text-gray-900 mb-1">{subtitle}</p>
                   <p className="text-xs text-gray-600">{desc}</p>
                 </motion.div>;
           })}
