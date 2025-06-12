@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Mail, Plus, RefreshCw, Settings, Trash2, Eye, Paperclip, Archive, RotateCcw, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -95,7 +96,7 @@ const EmailManagement = () => {
   };
 
   // Show service error alert if there are connectivity issues
-  const showServiceError = accountsError || messagesError;
+  const showServiceError = !!accountsError || !!messagesError;
 
   return (
     <div className="space-y-6">

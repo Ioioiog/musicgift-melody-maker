@@ -153,11 +153,7 @@ export const useEmailFolderCounts = (accountId: string | null) => {
     retry: 2, // Reduce retries for count queries
     retryDelay: 2000,
     staleTime: 60000, // 1 minute
-    refetchOnWindowFocus: false,
-    // Gracefully handle errors
-    onError: (error) => {
-      console.warn('Failed to fetch folder counts, using defaults:', error);
-    }
+    refetchOnWindowFocus: false
   });
 };
 
