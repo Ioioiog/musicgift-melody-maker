@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,6 +17,7 @@ import AddonSelectionStep from './order/AddonSelectionStep';
 import PaymentProviderSelection from './order/PaymentProviderSelection';
 import ContactLegalStep from './order/ContactLegalStep';
 import WizardNavigation from './order/WizardNavigation';
+import CodeInputSection from './order/CodeInputSection';
 
 interface OrderWizardProps {
   giftCard?: any;
@@ -42,10 +42,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     setSelectedPaymentProvider,
     isSubmitting,
     setIsSubmitting,
+    appliedGiftCard,
+    appliedDiscount,
     handleInputChange,
     handlePackageSelect,
     handleAddonChange,
-    handleAddonFieldChange
+    handleAddonFieldChange,
+    handleGiftCardApplied,
+    handleDiscountApplied,
+    handleGiftCardRemoved,
+    handleDiscountRemoved
   } = useOrderWizardState({
     preselectedPackage
   });
@@ -65,10 +71,12 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         selectedPackage,
         selectedAddons,
         formData,
-        addonFieldValues
+        addonFieldValues,
+        appliedGiftCard,
+        appliedDiscount
       });
     }
-  }, [selectedPackage, selectedAddons, formData, addonFieldValues, onOrderDataChange]);
+  }, [selectedPackage, selectedAddons, formData, addonFieldValues, appliedGiftCard, appliedDiscount, onOrderDataChange]);
 
   // Auto-scroll to top when step changes to show step indicator
   useEffect(() => {
@@ -116,7 +124,23 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       const addon = addons.find(addon => addon.addon_key === addonKey);
       return total + (addon ? getAddonPrice(addon, currency) : 0);
     }, 0);
-    return packagePrice + addonsPrice;
+    
+    const subtotal = packagePrice + addonsPrice;
+    
+    // Apply gift card discount
+    let giftCardDiscount = 0;
+    if (appliedGiftCard && !isQuoteOnly) {
+      const giftBalance = (appliedGiftCard.gift_amount || 0) / 100; // Convert from cents
+      giftCardDiscount = Math.min(giftBalance, subtotal);
+    }
+    
+    // Apply discount code
+    let discountAmount = 0;
+    if (appliedDiscount && !isQuoteOnly) {
+      discountAmount = appliedDiscount.amount;
+    }
+    
+    return Math.max(0, subtotal - giftCardDiscount - discountAmount);
   };
 
   const totalPrice = calculateTotalPrice();
@@ -133,7 +157,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         totalPrice,
         isQuoteOnly,
         paymentProvider: selectedPaymentProvider,
-        customerEmail: formData.email?.substring(0, 5) + '***'
+        customerEmail: formData.email?.substring(0, 5) + '***',
+        appliedGiftCard: appliedGiftCard?.code,
+        appliedDiscount: appliedDiscount?.code
       });
 
       validateFormData(formData, selectedPackage, totalPrice);
@@ -146,7 +172,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
           package: selectedPackage,
           paymentProvider: isQuoteOnly ? null : selectedPaymentProvider,
           totalPrice,
-          isQuoteOnly
+          isQuoteOnly,
+          appliedGiftCard,
+          appliedDiscount
         });
         return;
       }
@@ -165,6 +193,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         packages, 
         currency
       );
+
+      // Add discount information to order data
+      if (appliedGiftCard) {
+        orderData.gift_card_code = appliedGiftCard.code;
+      }
+      
+      if (appliedDiscount) {
+        orderData.discount_code = appliedDiscount.code;
+        orderData.discount_amount = Math.round(appliedDiscount.amount * 100); // Convert to cents
+      }
 
       // Handle quote-only packages differently
       if (isQuoteOnly) {
@@ -186,7 +224,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             status: 'quote_requested',
             payment_status: 'not_required',
             payment_provider: null,
-            order_number: `QR-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`
+            order_number: `QR-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
+            gift_card_code: appliedGiftCard?.code || null,
+            discount_code: appliedDiscount?.code || null,
+            discount_amount: appliedDiscount ? Math.round(appliedDiscount.amount * 100) : null
           })
           .select()
           .single();
@@ -444,17 +485,31 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                     onAddonFieldChange={handleAddonFieldChange} 
                   />
                 ) : isContactLegalStep ? (
-                  <ContactLegalStep 
-                    formData={formData} 
-                    onInputChange={handleInputChange} 
-                    selectedAddons={selectedAddons} 
-                    onAddonChange={handleAddonChange} 
-                    availableAddons={addons} 
-                    addonFieldValues={addonFieldValues} 
-                    onAddonFieldChange={handleAddonFieldChange} 
-                    selectedPackage={selectedPackage} 
-                    selectedPackageData={selectedPackageData} 
-                  />
+                  <div className="space-y-4">
+                    <ContactLegalStep 
+                      formData={formData} 
+                      onInputChange={handleInputChange} 
+                      selectedAddons={selectedAddons} 
+                      onAddonChange={handleAddonChange} 
+                      availableAddons={addons} 
+                      addonFieldValues={addonFieldValues} 
+                      onAddonFieldChange={handleAddonFieldChange} 
+                      selectedPackage={selectedPackage} 
+                      selectedPackageData={selectedPackageData} 
+                    />
+                    
+                    {/* Add discount code section to contact/legal step */}
+                    <CodeInputSection
+                      onGiftCardApplied={handleGiftCardApplied}
+                      onDiscountApplied={handleDiscountApplied}
+                      onGiftCardRemoved={handleGiftCardRemoved}
+                      onDiscountRemoved={handleDiscountRemoved}
+                      appliedGiftCard={appliedGiftCard}
+                      appliedDiscount={appliedDiscount}
+                      orderTotal={calculateTotalPrice() + (appliedGiftCard ? Math.min((appliedGiftCard.gift_amount || 0) / 100, calculateTotalPrice()) : 0) + (appliedDiscount ? appliedDiscount.amount : 0)}
+                      disabled={isSubmitting}
+                    />
+                  </div>
                 ) : isPaymentStep ? (
                   <PaymentProviderSelection 
                     selectedProvider={selectedPaymentProvider} 

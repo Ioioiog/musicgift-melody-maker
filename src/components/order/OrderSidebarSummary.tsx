@@ -14,6 +14,8 @@ interface OrderSidebarSummaryProps {
     selectedAddons?: string[];
     formData?: any;
     addonFieldValues?: Record<string, any>;
+    appliedGiftCard?: any;
+    appliedDiscount?: { code: string; amount: number; type: string };
   };
   giftCard?: any;
   onGiftCardChange?: (giftCard: any) => void;
@@ -61,14 +63,21 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
 
   const subtotal = packagePrice + addonsPrice;
   
-  // Calculate gift card discount (simplified version)
+  // Calculate gift card discount
   let giftCardDiscount = 0;
-  if (giftCard && !isQuoteOnly) {
-    const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
+  const appliedGiftCard = orderData.appliedGiftCard || giftCard;
+  if (appliedGiftCard && !isQuoteOnly) {
+    const giftBalance = (appliedGiftCard.gift_amount || 0) / 100; // Convert from cents
     giftCardDiscount = Math.min(giftBalance, subtotal);
   }
 
-  const total = Math.max(0, subtotal - giftCardDiscount);
+  // Calculate discount code discount
+  let discountAmount = 0;
+  if (orderData.appliedDiscount && !isQuoteOnly) {
+    discountAmount = orderData.appliedDiscount.amount;
+  }
+
+  const total = Math.max(0, subtotal - giftCardDiscount - discountAmount);
 
   return (
     <Card className="bg-white/10 backdrop-blur-sm border border-white/30 sticky top-4">
@@ -136,10 +145,17 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
             <span>{formatPrice(subtotal, currency)}</span>
           </div>
           
-          {!isQuoteOnly && giftCard && giftCardDiscount > 0 && (
+          {!isQuoteOnly && appliedGiftCard && giftCardDiscount > 0 && (
             <div className="flex justify-between text-green-400">
               <span>{t('giftCardDiscount')}</span>
               <span>-{formatPrice(giftCardDiscount, currency)}</span>
+            </div>
+          )}
+
+          {!isQuoteOnly && orderData.appliedDiscount && discountAmount > 0 && (
+            <div className="flex justify-between text-blue-400">
+              <span>{t('discountCode')} ({orderData.appliedDiscount.code})</span>
+              <span>-{formatPrice(discountAmount, currency)}</span>
             </div>
           )}
           
@@ -159,9 +175,9 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
             </span>
           </div>
 
-          {!isQuoteOnly && giftCard && total === 0 && (
+          {!isQuoteOnly && (appliedGiftCard || orderData.appliedDiscount) && total === 0 && (
             <div className="text-center text-green-400 text-sm font-medium">
-              {t('fullyCoveredByGiftCard')}
+              {t('fullyCoveredByDiscounts')}
             </div>
           )}
         </div>
