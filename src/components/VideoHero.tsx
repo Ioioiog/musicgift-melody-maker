@@ -23,7 +23,7 @@ const VideoHero = () => {
   const isMobile = useIsMobile();
 
   // Select video based on language with fallback
-  const videoSrc = language === 'ro' ? '/lovable-uploads/Jingle Musicgift master.mp4' : '/lovable-uploads/MusicGiftvideoENG.mp4';
+  const videoSrc = language === 'ro' ? '/lovable-uploads/musicgift_ro.mp4' : '/lovable-uploads/musicgift_eng.mp4';
   console.log('VideoHero: Current language:', language, 'Video source:', videoSrc);
   
   // Cleanup function to stop video and reset states
