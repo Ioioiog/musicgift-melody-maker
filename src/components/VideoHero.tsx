@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
@@ -18,7 +19,7 @@ const VideoHero = () => {
   const isMobile = useIsMobile();
 
   // Select video based on language with fallback
-  const videoSrc = language === 'ro' ? '/lovable-uploads/musicgift_ro.mp4' : '/lovable-uploads/musicgift_eng.mp4';
+  const videoSrc = language === 'ro' ? '/uploads/musicgift_ro.mp4' : '/uploads/musicgift_eng.mp4';
   console.log('VideoHero: Current language:', language, 'Video source:', videoSrc);
   
   // Cleanup function to stop video and reset states
@@ -171,7 +172,7 @@ const VideoHero = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform" 
         style={{
-          backgroundImage: 'url(/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)',
+          backgroundImage: 'url(/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)',
           transform: 'translate3d(0,0,0)' // Hardware acceleration
         }}
       ></div>
@@ -205,7 +206,7 @@ const VideoHero = () => {
           transform: 'translate3d(0,0,0)' // Hardware acceleration
         }}
         key={videoSrc}
-        poster="/lovable-uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png"
+        poster="/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png"
       >
         <source src={videoSrc} type="video/mp4" />
         Your browser does not support the video tag.

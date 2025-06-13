@@ -14,7 +14,7 @@ interface SEOHeadProps {
 const SEOHead = ({ 
   title, 
   description, 
-  image = "/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
+  image = "/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
   url = "https://www.musicgift.ro",
   type = "website",
   structuredData

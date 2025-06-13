@@ -28,7 +28,7 @@ export const StructuredDataLoader = () => {
             "@type": "Organization",
             "name": "MusicGift.ro",
             "url": "https://www.musicgift.ro",
-            "logo": "https://www.musicgift.ro/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
+            "logo": "https://www.musicgift.ro/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
             "description": "Creăm melodii personalizate și cadouri muzicale unice pentru momente speciale",
             "foundingDate": "2004",
             "contactPoint": {
