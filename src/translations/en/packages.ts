@@ -245,15 +245,14 @@ export const packagesTranslations = {
   djPackage: "DJ Package",
   djTagline: "Professional electronic music production for DJs and artists",
   djDescription: "Complete electronic music production package for DJs and electronic music artists. From concept to release, we create professional tracks ready for clubs, festivals, and streaming platforms.",
-  djDelivery: "7–14 working days",
+  djDelivery: "7–10 working days",
   
   // DJ Package includes
   djInclude1: "Original electronic track composition in your chosen style",
   djInclude2: "Professional mixing and mastering for club/festival quality",
-  djInclude3: "High-quality audio files (MP3, WAV, stems available)",
+  djInclude3: "High-quality audio files (MP3, additional at request WAV HQ file)",
   djInclude4: "Professional cover art design",
   djInclude5: "Distribution to major streaming platforms and Beatport",
-  djInclude6: "Co-ownership rights and publishing support",
   
   // DJ Form Steps
   djStepIdentity: "DJ Identity & Branding",
