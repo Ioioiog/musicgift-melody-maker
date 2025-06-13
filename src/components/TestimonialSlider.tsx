@@ -3,13 +3,12 @@ import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-import { Play, Quote, Star, Volume2, VolumeX } from "lucide-react";
+import { Play, ExternalLink, Quote, Star, Volume2, VolumeX, X } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import type { CarouselApi } from "@/components/ui/carousel";
-import { isValidYouTubeUrl } from "@/utils/youtubeUtils";
+import { convertToYouTubeEmbed, isValidYouTubeUrl } from "@/utils/youtubeUtils";
 import { testimonials as staticTestimonials } from "@/data/testimonials";
-import YouTubeThumbnail from "@/components/YouTubeThumbnail";
 
 export default function TestimonialSlider() {
   const { t } = useLanguage();
@@ -17,6 +16,7 @@ export default function TestimonialSlider() {
     .filter(t => t.approved)
     .sort((a, b) => a.display_order - b.display_order);
 
+  const [maximizedVideo, setMaximizedVideo] = useState(null);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -45,9 +45,26 @@ export default function TestimonialSlider() {
     return 'text-only';
   };
 
+  const getProcessedYouTubeUrl = (url) => {
+    if (!url) return '';
+    if (isValidYouTubeUrl(url)) return convertToYouTubeEmbed(url);
+    if (url.includes('/embed/')) return url;
+    console.warn('Invalid YouTube URL found:', url);
+    return '';
+  };
+
+  const getYouTubeThumbnail = (url) => {
+    const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
+  };
+
   const handleVideoPlay = async (testimonialId, type) => {
     if (type === 'youtube') {
-      // YouTube videos now open in new tab - no action needed here
+      setMaximizedVideo({ 
+        src: testimonials.find(t => t.id === testimonialId)?.youtube_link, 
+        type: 'youtube', 
+        title: `${testimonials.find(t => t.id === testimonialId)?.name} testimonial` 
+      });
       return;
     }
 
@@ -90,13 +107,30 @@ export default function TestimonialSlider() {
     const isLoaded = loadedVideos.has(testimonialId);
 
     if (type === 'youtube') {
+      const thumbnailUrl = getYouTubeThumbnail(src);
+      
       return (
-        <YouTubeThumbnail 
-          url={src} 
-          title={title}
-          className="h-full"
-          openInNewTab={true}
-        />
+        <div 
+          className="relative group overflow-hidden rounded-xl bg-gray-50 cursor-pointer h-full" 
+          onClick={() => handleVideoPlay(testimonialId, 'youtube')}
+        >
+          {thumbnailUrl && (
+            <img 
+              src={thumbnailUrl} 
+              alt={title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          )}
+          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
+            <ExternalLink className="w-4 h-4 text-red-600" />
+          </div>
+          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center">
+            <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 group-hover:scale-110 transition-transform duration-200">
+              <Play className="w-6 h-6 text-gray-800" />
+            </div>
+          </div>
+        </div>
       );
     }
 
@@ -151,6 +185,60 @@ export default function TestimonialSlider() {
             </button>
           </div>
         )}
+
+        {/* Maximize button */}
+        {isLoaded && (
+          <div 
+            className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMaximizedVideo({ src, type: 'uploaded', title });
+            }}
+          >
+            <ExternalLink className="w-4 h-4 text-gray-600" />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const MaximizedVideoModal = () => {
+    if (!maximizedVideo) return null;
+    const processedSrc = maximizedVideo.type === 'youtube'
+      ? getProcessedYouTubeUrl(maximizedVideo.src)
+      : maximizedVideo.src;
+
+    if (maximizedVideo.type === 'youtube' && !processedSrc) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="relative w-full max-w-4xl bg-white rounded-2xl overflow-hidden">
+          <button 
+            onClick={() => setMaximizedVideo(null)} 
+            className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm rounded-full p-2 hover:bg-white transition-colors"
+          >
+            <X className="w-6 h-6 text-gray-800" />
+          </button>
+          <div className="aspect-video">
+            {maximizedVideo.type === 'youtube'
+              ? <iframe 
+                  className="w-full h-full" 
+                  src={processedSrc} 
+                  allowFullScreen 
+                  title={maximizedVideo.title}
+                  loading="lazy"
+                />
+              : <video 
+                  className="w-full h-full object-cover" 
+                  controls 
+                  autoPlay 
+                  preload="metadata"
+                >
+                  <source src={maximizedVideo.src} type="video/mp4" />
+                </video>
+            }
+          </div>
+        </div>
       </div>
     );
   };
@@ -275,6 +363,7 @@ export default function TestimonialSlider() {
           </div>
         </Carousel>
       </div>
+      <MaximizedVideoModal />
     </div>
   );
 }
