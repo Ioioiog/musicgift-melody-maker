@@ -1,3 +1,4 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
@@ -15,6 +16,57 @@ function utf8ToBase64(str: string): string {
 // UTF-8 safe base64 decoding function
 function base64ToUtf8(str: string): string {
   return new TextDecoder().decode(new Uint8Array([...atob(str)].map(char => char.charCodeAt(0))));
+}
+
+// Deduplicate testimonials by ID, prioritizing database testimonials
+function deduplicateTestimonials(staticTestimonials: any[], databaseTestimonials: any[]): any[] {
+  console.log(`Starting deduplication: ${staticTestimonials.length} static + ${databaseTestimonials.length} database testimonials`);
+  
+  // Create a Map to track unique testimonials by ID
+  const uniqueTestimonials = new Map();
+  
+  // First, add all static testimonials
+  let staticCount = 0;
+  for (const testimonial of staticTestimonials) {
+    if (testimonial.id && !uniqueTestimonials.has(testimonial.id)) {
+      uniqueTestimonials.set(testimonial.id, { ...testimonial, source: 'static' });
+      staticCount++;
+    }
+  }
+  
+  // Then add database testimonials, overriding any conflicts (database wins)
+  let databaseCount = 0;
+  let overriddenCount = 0;
+  for (const dbTestimonial of databaseTestimonials) {
+    const testimonial = {
+      id: dbTestimonial.id,
+      name: dbTestimonial.name,
+      location: dbTestimonial.location,
+      stars: dbTestimonial.stars,
+      message: dbTestimonial.text,
+      context: dbTestimonial.context,
+      youtube_link: dbTestimonial.youtube_link,
+      video_url: dbTestimonial.video_url,
+      display_order: dbTestimonial.display_order,
+      approved: dbTestimonial.approved,
+      source: 'database'
+    };
+    
+    if (uniqueTestimonials.has(testimonial.id)) {
+      overriddenCount++;
+      console.log(`Overriding static testimonial with database version for ID: ${testimonial.id}`);
+    }
+    
+    uniqueTestimonials.set(testimonial.id, testimonial);
+    databaseCount++;
+  }
+  
+  // Convert back to array and remove the source property
+  const result = Array.from(uniqueTestimonials.values()).map(({ source, ...testimonial }) => testimonial);
+  
+  console.log(`Deduplication complete: ${result.length} unique testimonials (${staticCount} static-only, ${databaseCount} database, ${overriddenCount} conflicts resolved)`);
+  
+  return result;
 }
 
 serve(async (req) => {
@@ -156,6 +208,7 @@ serve(async (req) => {
         const testimonialsMatch = currentContent.match(/export const testimonials = (\[[\s\S]*?\]);/);
         if (testimonialsMatch) {
           staticTestimonials = JSON.parse(testimonialsMatch[1]);
+          console.log(`Found ${staticTestimonials.length} testimonials in existing file (may contain duplicates)`);
         }
       } catch (parseError) {
         console.warn('Could not parse existing testimonials, starting fresh:', parseError);
@@ -170,27 +223,16 @@ serve(async (req) => {
       throw new Error(`Failed to fetch file from GitHub: ${fileResponse.status} ${fileResponse.statusText}. Error: ${errorText}`);
     }
 
-    // Combine static testimonials with approved Supabase testimonials
-    const allTestimonials = [
-      ...staticTestimonials.filter(t => t.approved),
-      ...(supabaseTestimonials || []).map(t => ({
-        id: t.id,
-        name: t.name,
-        location: t.location,
-        stars: t.stars,
-        message: t.text,
-        context: t.context,
-        youtube_link: t.youtube_link,
-        video_url: t.video_url,
-        display_order: t.display_order,
-        approved: t.approved
-      }))
-    ];
+    // Deduplicate and merge testimonials
+    const allTestimonials = deduplicateTestimonials(
+      staticTestimonials.filter(t => t.approved),
+      supabaseTestimonials || []
+    );
 
     // Sort by display_order
     allTestimonials.sort((a, b) => a.display_order - b.display_order);
 
-    console.log(`Combining ${staticTestimonials.length} static + ${supabaseTestimonials?.length || 0} database testimonials`);
+    console.log(`Final result: ${allTestimonials.length} unique testimonials`);
 
     // Generate new file content
     const newFileContent = `export const testimonials = ${JSON.stringify(allTestimonials, null, 2)};`;
@@ -199,9 +241,9 @@ serve(async (req) => {
     console.log(fileSha ? 'Updating existing file in GitHub repository...' : 'Creating new file in GitHub repository...');
     
     const requestBody: any = {
-      message: `Auto-sync testimonials: ${allTestimonials.length} total (${supabaseTestimonials?.length || 0} from database)`,
+      message: `Auto-sync testimonials: ${allTestimonials.length} unique testimonials (deduplicated from ${staticTestimonials.length} static + ${supabaseTestimonials?.length || 0} database)`,
       content: utf8ToBase64(newFileContent),
-      branch: repoData.default_branch || 'main'
+      branch: 'main'
     };
 
     // Only include SHA if file exists (for updates)
@@ -247,29 +289,28 @@ serve(async (req) => {
       
       // Provide more specific error messages
       if (updateResponse.status === 404) {
-        throw new Error(`Repository or file path not found. Verified repo exists but cannot update file. This might be due to insufficient permissions. Token user: ${tokenData.login}`);
+        throw new Error(`Repository or file path not found. This might be due to insufficient permissions.`);
       } else if (updateResponse.status === 403) {
-        throw new Error(`Permission denied. The GitHub token does not have write access to ${repoOwner}/${repoName}. Please ensure the token has 'Contents' write permission.`);
+        throw new Error(`Permission denied. The GitHub token does not have write access to ${repoOwner}/${repoName}.`);
       } else if (updateResponse.status === 422) {
-        throw new Error(`Invalid request: ${parsedError.message || 'Unknown validation error'}. This might be due to branch protection rules.`);
+        throw new Error(`Invalid request: ${parsedError.message || 'Unknown validation error'}.`);
       } else {
         throw new Error(`Failed to update file: ${updateResponse.status} ${updateResponse.statusText}. Error: ${parsedError.message || errorData}`);
       }
     }
 
     const updateData = await updateResponse.json();
-    console.log(`Successfully ${fileSha ? 'updated' : 'created'} testimonials file in GitHub`);
+    console.log(`Successfully ${fileSha ? 'updated' : 'created'} testimonials file in GitHub with deduplicated content`);
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: `Successfully synced ${allTestimonials.length} testimonials to GitHub`,
+      message: `Successfully synced ${allTestimonials.length} unique testimonials to GitHub (deduplicated)`,
       commit_url: updateData.commit?.html_url,
       testimonials_count: allTestimonials.length,
       database_count: supabaseTestimonials?.length || 0,
       static_count: staticTestimonials.length,
-      action: fileSha ? 'updated' : 'created',
-      github_user: tokenData.login,
-      target_branch: requestBody.branch
+      duplicates_removed: (staticTestimonials.length + (supabaseTestimonials?.length || 0)) - allTestimonials.length,
+      action: fileSha ? 'updated' : 'created'
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
