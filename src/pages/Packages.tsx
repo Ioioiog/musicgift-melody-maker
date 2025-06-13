@@ -10,10 +10,13 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { useStructuredData } from "@/components/StructuredData";
 import OptimizedImage from "@/components/OptimizedImage";
-import { packages } from "@/data/packages";
+import { usePackages } from "@/hooks/usePackageData";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 const Packages = () => {
   const { t } = useLanguage();
+  const { currency } = useCurrency();
+  const { data: packages = [], isLoading } = usePackages();
   const { serviceSchema } = useStructuredData();
 
   const packagesSchema = {
@@ -25,15 +28,23 @@ const Packages = () => {
     "itemListElement": packages.map((pkg, index) => ({
       "@type": "Product",
       "position": index + 1,
-      "name": pkg.name,
-      "description": pkg.description,
+      "name": t(pkg.label_key || '', ''),
+      "description": t(pkg.description_key || '', ''),
       "offers": {
         "@type": "Offer",
-        "price": pkg.price,
-        "priceCurrency": "RON"
+        "price": currency === 'EUR' ? pkg.price_eur : pkg.price_ron,
+        "priceCurrency": currency
       }
     }))
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading packages...</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -76,12 +87,12 @@ const Packages = () => {
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {packages.map((pkg, index) => (
                   <Card 
-                    key={pkg.id} 
+                    key={pkg.value} 
                     className={`relative bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/15 transition-all duration-300 hover:scale-105 ${
-                      pkg.popular ? 'ring-2 ring-orange-400' : ''
+                      pkg.is_popular ? 'ring-2 ring-orange-400' : ''
                     }`}
                   >
-                    {pkg.popular && (
+                    {pkg.is_popular && (
                       <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1">
                         <Star className="w-4 h-4 mr-1" aria-hidden="true" />
                         {t('mostPopular', 'Most Popular')}
@@ -90,44 +101,50 @@ const Packages = () => {
                     
                     <CardHeader className="text-center pb-4">
                       <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center bg-gradient-to-br from-purple-500 to-blue-500 rounded-full">
-                        {pkg.id === 'basic' && <Music className="w-8 h-8 text-white" aria-hidden="true" />}
-                        {pkg.id === 'standard' && <Heart className="w-8 h-8 text-white" aria-hidden="true" />}
-                        {pkg.id === 'premium' && <Crown className="w-8 h-8 text-white" aria-hidden="true" />}
-                        {pkg.id === 'deluxe' && <Gift className="w-8 h-8 text-white" aria-hidden="true" />}
+                        {pkg.value === 'basic' && <Music className="w-8 h-8 text-white" aria-hidden="true" />}
+                        {pkg.value === 'standard' && <Heart className="w-8 h-8 text-white" aria-hidden="true" />}
+                        {pkg.value === 'premium' && <Crown className="w-8 h-8 text-white" aria-hidden="true" />}
+                        {pkg.value === 'deluxe' && <Gift className="w-8 h-8 text-white" aria-hidden="true" />}
                       </div>
-                      <CardTitle className="text-2xl font-bold mb-2">{pkg.name}</CardTitle>
+                      <CardTitle className="text-2xl font-bold mb-2">
+                        {t(pkg.label_key || '', pkg.value)}
+                      </CardTitle>
                       <CardDescription className="text-white/80 text-lg">
-                        {pkg.description}
+                        {t(pkg.description_key || '', '')}
                       </CardDescription>
                     </CardHeader>
                     
                     <CardContent className="space-y-4">
                       <div className="text-center">
                         <div className="text-4xl font-bold text-orange-400 mb-2">
-                          {pkg.price} RON
+                          {currency === 'EUR' ? pkg.price_eur : pkg.price_ron} {currency}
                         </div>
-                        <div className="text-white/60">{pkg.deliveryTime}</div>
+                        <div className="text-white/60">
+                          {t(pkg.delivery_time_key || '', '')}
+                        </div>
                       </div>
                       
                       <ul className="space-y-3" role="list">
-                        {pkg.features.map((feature, featureIndex) => (
+                        {pkg.includes?.map((include, featureIndex) => (
                           <li key={featureIndex} className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                            <span className="text-white/90">{feature}</span>
+                            <span className="text-white/90">
+                              {t(include.include_key, include.include_key)}
+                            </span>
                           </li>
                         ))}
                       </ul>
                     </CardContent>
                     
                     <CardFooter className="pt-6">
-                      <Link to={`/packages/${pkg.id}`} className="w-full">
+                      <Link to={`/packages/${pkg.value}`} className="w-full">
                         <Button 
                           className={`w-full py-3 text-lg font-medium transition-all duration-300 focus:ring-2 ${
-                            pkg.popular 
+                            pkg.is_popular 
                               ? 'bg-orange-500 hover:bg-orange-600 text-white focus:ring-orange-300' 
                               : 'bg-white/20 hover:bg-white/30 text-white border border-white/30 focus:ring-white/50'
                           }`}
-                          aria-label={`Select ${pkg.name} package - ${pkg.price} RON`}
+                          aria-label={`Select ${t(pkg.label_key || '', pkg.value)} package - ${currency === 'EUR' ? pkg.price_eur : pkg.price_ron} ${currency}`}
                         >
                           {t('selectPackage', 'Select Package')}
                         </Button>
