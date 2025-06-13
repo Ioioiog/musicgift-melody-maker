@@ -1,3 +1,4 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
@@ -6,6 +7,16 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// UTF-8 safe base64 encoding function
+function utf8ToBase64(str: string): string {
+  return btoa(new TextEncoder().encode(str).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+}
+
+// UTF-8 safe base64 decoding function
+function base64ToUtf8(str: string): string {
+  return new TextDecoder().decode(new Uint8Array([...atob(str)].map(char => char.charCodeAt(0))));
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -90,7 +101,7 @@ serve(async (req) => {
     if (fileResponse.ok) {
       // File exists, get current content
       const fileData = await fileResponse.json();
-      currentContent = atob(fileData.content);
+      currentContent = base64ToUtf8(fileData.content);
       fileSha = fileData.sha;
       
       console.log('Parsing current static testimonials...');
@@ -144,7 +155,7 @@ serve(async (req) => {
     
     const requestBody: any = {
       message: `Auto-sync testimonials: ${allTestimonials.length} total (${supabaseTestimonials?.length || 0} from database)`,
-      content: btoa(newFileContent),
+      content: utf8ToBase64(newFileContent),
       branch: 'main'
     };
 
