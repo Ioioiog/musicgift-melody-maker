@@ -1,122 +1,140 @@
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+};
 
-serve(async (req) => {
+const handler = async (req: Request): Promise<Response> => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const supabaseClient = createClient(
+    const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-    )
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
 
-    const paymentData = await req.json()
-    console.log('Gift card payment webhook received:', paymentData)
+    const { 
+      giftCardId, 
+      paymentStatus, 
+      paymentProvider,
+      transactionDetails 
+    } = await req.json();
 
-    const { orderId, status, amount } = paymentData
+    console.log('Processing gift card payment webhook:', {
+      giftCardId,
+      paymentStatus,
+      paymentProvider
+    });
 
     // Update gift card payment status
-    let paymentStatus = 'pending'
-    let giftStatus = 'pending'
-
-    if (status === 'confirmed' || status === 'completed') {
-      paymentStatus = 'completed'
-      giftStatus = 'active'
-    } else if (status === 'failed' || status === 'cancelled') {
-      paymentStatus = 'failed'
-      giftStatus = 'cancelled'
-    }
-
-    const { data: giftCard, error: updateError } = await supabaseClient
+    const { data: giftCard, error: updateError } = await supabase
       .from('gift_cards')
-      .update({
+      .update({ 
         payment_status: paymentStatus,
-        status: giftStatus,
         updated_at: new Date().toISOString()
       })
-      .eq('id', orderId)
-      .select()
-      .single()
+      .eq('id', giftCardId)
+      .select('*')
+      .single();
 
     if (updateError) {
-      throw updateError
+      console.error('Error updating gift card:', updateError);
+      throw new Error(`Failed to update gift card: ${updateError.message}`);
     }
 
-    console.log(`Gift card ${orderId} updated to status: ${paymentStatus}`)
+    console.log('Gift card updated successfully:', giftCard.id);
 
-    // If payment successful, create proforma receipt and send email
-    if (paymentStatus === 'completed' && giftCard) {
-      console.log('Payment completed - creating proforma receipt and sending email')
+    // If payment was successful, send the gift card email to recipient
+    if (paymentStatus === 'completed' || paymentStatus === 'paid') {
+      console.log('Payment successful, sending gift card email to recipient');
       
       try {
-        // Create proforma receipt after successful payment
-        const proformaResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/create-gift-card-proforma`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
-          },
-          body: JSON.stringify({ giftCardId: giftCard.id })
-        })
+        // Send gift card email to recipient
+        const { error: giftEmailError } = await supabase.functions.invoke('send-gift-card-email', {
+          body: {
+            giftCardId: giftCard.id,
+            recipientEmail: giftCard.recipient_email,
+            recipientName: giftCard.recipient_name,
+            senderName: giftCard.sender_name,
+            amount: giftCard.gift_amount || giftCard.amount_ron || giftCard.amount_eur,
+            currency: giftCard.currency || 'RON',
+            personalMessage: giftCard.message_text,
+            giftCardCode: giftCard.code
+          }
+        });
 
-        if (!proformaResponse.ok) {
-          console.error('Failed to create proforma receipt:', await proformaResponse.text())
+        if (giftEmailError) {
+          console.error('Error sending gift card email:', giftEmailError);
         } else {
-          console.log('✅ Proforma receipt created successfully')
+          console.log('Gift card email sent successfully to recipient');
         }
-      } catch (proformaError) {
-        console.error('Error creating proforma receipt:', proformaError)
-        // Don't fail the webhook if proforma creation fails
-      }
 
-      try {
-        // Send gift card email
-        const emailResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-gift-card-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`
-          },
-          body: JSON.stringify({ giftCardId: giftCard.id })
-        })
+        // Send final confirmation email to purchaser
+        const { error: confirmationError } = await supabase.functions.invoke('send-gift-card-purchase-confirmation', {
+          body: {
+            giftCardId: giftCard.id,
+            purchaserEmail: giftCard.sender_email,
+            purchaserName: giftCard.sender_name,
+            recipientName: giftCard.recipient_name,
+            recipientEmail: giftCard.recipient_email,
+            amount: giftCard.gift_amount || giftCard.amount_ron || giftCard.amount_eur,
+            currency: giftCard.currency || 'RON',
+            deliveryDate: giftCard.delivery_date,
+            personalMessage: giftCard.message_text,
+            designName: null // We can enhance this later to fetch design name
+          }
+        });
 
-        if (!emailResponse.ok) {
-          console.error('Failed to send gift card email:', await emailResponse.text())
+        if (confirmationError) {
+          console.error('Error sending purchase confirmation email:', confirmationError);
         } else {
-          console.log('✅ Gift card email sent successfully')
+          console.log('Purchase confirmation email sent successfully to buyer');
         }
+
       } catch (emailError) {
-        console.error('Error sending gift card email:', emailError)
-        // Don't fail the webhook if email sending fails
+        console.error('Error sending emails after successful payment:', emailError);
+        // Don't throw - the payment was successful, email failures shouldn't block the webhook
       }
     }
 
     return new Response(
-      JSON.stringify({ success: true }),
+      JSON.stringify({ 
+        success: true, 
+        message: 'Gift card payment webhook processed successfully',
+        giftCardId: giftCard.id,
+        paymentStatus 
+      }),
       {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
-      },
-    )
-  } catch (error) {
-    console.error('Gift card webhook error:', error)
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders,
+        },
+      }
+    );
+
+  } catch (error: any) {
+    console.error('Error in gift card payment webhook:', error);
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error.message 
+        error: error.message || 'Failed to process gift card payment webhook'
       }),
       {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500,
-      },
-    )
+        headers: { 
+          'Content-Type': 'application/json', 
+          ...corsHeaders 
+        },
+      }
+    );
   }
-})
+};
+
+serve(handler);

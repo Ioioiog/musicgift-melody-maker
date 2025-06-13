@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,7 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCreateGiftCard, useGiftCardDesigns } from '@/hooks/useGiftCards';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import GiftCardPreview from './GiftCardPreview';
 import PaymentProviderSelection from '@/components/order/PaymentProviderSelection';
 import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
@@ -166,6 +166,101 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
     }
   };
 
+  // Function to send admin notification email
+  const sendAdminNotificationEmail = async (giftCard: any, selectedDesign: any) => {
+    try {
+      const finalAmount = getFinalAmount();
+      const deliveryText = deliveryDate 
+        ? deliveryDate.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          })
+        : 'Immediately';
+
+      const emailSubject = `New Gift Card Purchase - ${giftCard.id.slice(0, 8)}`;
+      const emailMessage = `
+New Gift Card Purchase Notification:
+
+Gift Card ID: ${giftCard.id}
+Gift Card Code: ${giftCard.code}
+Purchase Date: ${new Date().toLocaleDateString('en-US', { 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric' 
+})}
+
+Purchase Details:
+Amount: ${finalAmount} ${currency}
+Payment Provider: ${selectedPaymentProvider}
+${selectedDesign ? `Design: ${selectedDesign.name}` : 'Design: Default'}
+
+Purchaser Information:
+Name: ${formData.sender_name}
+Email: ${formData.sender_email}
+
+Recipient Information:
+Name: ${formData.recipient_name}
+Email: ${formData.recipient_email}
+Delivery Date: ${deliveryText}
+
+${formData.message_text ? `Personal Message:
+"${formData.message_text}"` : 'No personal message'}
+
+Payment Status: Pending
+Gift Card Status: ${giftCard.status}
+
+---
+This gift card purchase was submitted through the MusicGift website.
+Gift Card Management: View full details in the admin panel.
+      `.trim();
+
+      await supabase.functions.invoke('send-contact-email', {
+        body: {
+          firstName: 'Gift Card',
+          lastName: 'Purchase',
+          email: 'system@musicgift.ro',
+          subject: emailSubject,
+          message: emailMessage
+        }
+      });
+
+      console.log('Admin notification email sent successfully');
+    } catch (error) {
+      console.error('Failed to send admin notification email:', error);
+      // Don't throw - this shouldn't block the purchase process
+    }
+  };
+
+  // Function to send purchase confirmation email to buyer
+  const sendPurchaseConfirmationEmail = async (giftCard: any, selectedDesign: any) => {
+    try {
+      const finalAmount = getFinalAmount();
+      
+      const confirmationData = {
+        giftCardId: giftCard.id,
+        purchaserEmail: formData.sender_email,
+        purchaserName: formData.sender_name,
+        recipientName: formData.recipient_name,
+        recipientEmail: formData.recipient_email,
+        amount: finalAmount,
+        currency: currency,
+        deliveryDate: deliveryDate?.toISOString(),
+        personalMessage: formData.message_text,
+        designName: selectedDesign?.name
+      };
+
+      await supabase.functions.invoke('send-gift-card-purchase-confirmation', {
+        body: confirmationData
+      });
+
+      console.log('Purchase confirmation email sent successfully');
+    } catch (error) {
+      console.error('Failed to send purchase confirmation email:', error);
+      // Don't throw - this shouldn't block the purchase process
+    }
+  };
+
   const canProceed = () => {
     switch (currentStep) {
       case 0:
@@ -241,7 +336,16 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       const giftCard = await createGiftCard.mutateAsync(giftCardData);
       console.log('Gift card created:', giftCard);
 
-      // Step 2: Initiate payment with selected provider
+      // Get selected design for email notifications
+      const selectedDesign = designs.find(d => d.id === selectedDesignId);
+
+      // Step 2: Send admin notification email
+      await sendAdminNotificationEmail(giftCard, selectedDesign);
+
+      // Step 3: Send purchase confirmation email to buyer
+      await sendPurchaseConfirmationEmail(giftCard, selectedDesign);
+
+      // Step 4: Initiate payment with selected provider
       console.log('Initiating payment for gift card:', giftCard.id, 'with provider:', selectedPaymentProvider);
       const returnUrl = `${window.location.origin}/gift?payment=success`;
       await giftCardPayment.mutateAsync({
