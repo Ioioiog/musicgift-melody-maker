@@ -1781,8 +1781,7 @@ export const packages: Package[] = [
       "rushDelivery",
       "customVideo",
       "socialMediaRights",
-      "audioMessageFromSender",
-      "extendedSong"
+      "mangoRecordsDistribution"
     ],
     includes: [
       { id: "dj1", include_key: "djInclude1", include_order: 1 },
