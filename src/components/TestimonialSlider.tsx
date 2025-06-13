@@ -2,7 +2,7 @@
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Play, ExternalLink, Quote, Star, Volume2, VolumeX, X } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
@@ -20,6 +20,11 @@ export default function TestimonialSlider() {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+  const [loadedVideos, setLoadedVideos] = useState(new Set());
+  const [playingVideos, setPlayingVideos] = useState(new Set());
+  const [loadingVideos, setLoadingVideos] = useState(new Set());
+  const videoRefs = useRef(new Map());
+  
   const autoplay = Autoplay({
     delay: 4000,
     stopOnInteraction: true,
@@ -48,26 +53,80 @@ export default function TestimonialSlider() {
     return '';
   };
 
-  const VideoWithOverlay = ({ src, type, title }) => {
+  const getYouTubeThumbnail = (url) => {
+    const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
+    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
+  };
+
+  const handleVideoPlay = async (testimonialId, type) => {
+    if (type === 'youtube') {
+      setMaximizedVideo({ 
+        src: testimonials.find(t => t.id === testimonialId)?.youtube_link, 
+        type: 'youtube', 
+        title: `${testimonials.find(t => t.id === testimonialId)?.name} testimonial` 
+      });
+      return;
+    }
+
+    setLoadingVideos(prev => new Set([...prev, testimonialId]));
+    
+    const video = videoRefs.current.get(testimonialId);
+    if (video && !loadedVideos.has(testimonialId)) {
+      try {
+        await video.load();
+        setLoadedVideos(prev => new Set([...prev, testimonialId]));
+      } catch (error) {
+        console.error('Error loading video:', error);
+      }
+    }
+    
+    setLoadingVideos(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(testimonialId);
+      return newSet;
+    });
+    
+    if (video) {
+      await video.play();
+      setPlayingVideos(prev => new Set([...prev, testimonialId]));
+    }
+  };
+
+  const handleVideoPause = (testimonialId) => {
+    setPlayingVideos(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(testimonialId);
+      return newSet;
+    });
+  };
+
+  const VideoWithOverlay = ({ src, type, title, testimonialId }) => {
     const [isMuted, setIsMuted] = useState(true);
-    const [hasError, setHasError] = useState(false);
-    const handleVideoClick = () => setMaximizedVideo({ src, type, title });
+    const isLoading = loadingVideos.has(testimonialId);
+    const isPlaying = playingVideos.has(testimonialId);
+    const isLoaded = loadedVideos.has(testimonialId);
 
     if (type === 'youtube') {
-      const processedUrl = getProcessedYouTubeUrl(src);
-      if (!processedUrl) {
-        return <div className="relative group overflow-hidden rounded-xl bg-gray-100 h-full flex items-center justify-center">
-          <p className="text-gray-500 text-sm">Video unavailable</p>
-        </div>;
-      }
+      const thumbnailUrl = getYouTubeThumbnail(src);
+      
       return (
-        <div className="relative group overflow-hidden rounded-xl bg-gray-50 cursor-pointer" onClick={handleVideoClick}>
-          <iframe className="w-full h-full pointer-events-none" src={processedUrl} allowFullScreen loading="lazy" title={title} onError={() => setHasError(true)} />
+        <div 
+          className="relative group overflow-hidden rounded-xl bg-gray-50 cursor-pointer h-full" 
+          onClick={() => handleVideoPlay(testimonialId, 'youtube')}
+        >
+          {thumbnailUrl && (
+            <img 
+              src={thumbnailUrl} 
+              alt={title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          )}
           <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
             <ExternalLink className="w-4 h-4 text-red-600" />
           </div>
-          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-            <div className="bg-white/90 backdrop-blur-sm rounded-full p-3">
+          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center">
+            <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 group-hover:scale-110 transition-transform duration-200">
               <Play className="w-6 h-6 text-gray-800" />
             </div>
           </div>
@@ -76,20 +135,69 @@ export default function TestimonialSlider() {
     }
 
     return (
-      <div className="relative group overflow-hidden rounded-xl bg-gray-50 cursor-pointer" onClick={handleVideoClick}>
-        <video className="w-full h-full object-cover pointer-events-none" autoPlay muted={isMuted} loop playsInline preload="metadata">
+      <div className="relative group overflow-hidden rounded-xl bg-gray-50 h-full">
+        <video 
+          ref={(el) => {
+            if (el) videoRefs.current.set(testimonialId, el);
+          }}
+          className="w-full h-full object-cover"
+          muted={isMuted}
+          loop
+          playsInline
+          preload="none"
+          onPlay={() => setPlayingVideos(prev => new Set([...prev, testimonialId]))}
+          onPause={() => handleVideoPause(testimonialId)}
+          onEnded={() => handleVideoPause(testimonialId)}
+        >
           <source src={src} type="video/mp4" />
         </video>
-        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <button onClick={e => { e.stopPropagation(); setIsMuted(!isMuted); }} className="text-gray-600 hover:text-gray-800 transition-colors">
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </button>
-        </div>
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-          <div className="bg-white/90 backdrop-blur-sm rounded-full p-3">
-            <Play className="w-6 h-6 text-gray-800" />
+        
+        {/* Loading overlay */}
+        {isLoading && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
           </div>
-        </div>
+        )}
+        
+        {/* Play button overlay - shown when not playing */}
+        {!isPlaying && !isLoading && (
+          <div 
+            className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center cursor-pointer"
+            onClick={() => handleVideoPlay(testimonialId, 'uploaded')}
+          >
+            <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 group-hover:scale-110 transition-transform duration-200">
+              <Play className="w-6 h-6 text-gray-800" />
+            </div>
+          </div>
+        )}
+
+        {/* Controls overlay - shown when playing and loaded */}
+        {isPlaying && isLoaded && (
+          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <button 
+              onClick={(e) => { 
+                e.stopPropagation(); 
+                setIsMuted(!isMuted); 
+              }} 
+              className="text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            </button>
+          </div>
+        )}
+
+        {/* Maximize button */}
+        {isLoaded && (
+          <div 
+            className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMaximizedVideo({ src, type: 'uploaded', title });
+            }}
+          >
+            <ExternalLink className="w-4 h-4 text-gray-600" />
+          </div>
+        )}
       </div>
     );
   };
@@ -105,13 +213,30 @@ export default function TestimonialSlider() {
     return (
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div className="relative w-full max-w-4xl bg-white rounded-2xl overflow-hidden">
-          <button onClick={() => setMaximizedVideo(null)} className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm rounded-full p-2 hover:bg-white transition-colors">
+          <button 
+            onClick={() => setMaximizedVideo(null)} 
+            className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm rounded-full p-2 hover:bg-white transition-colors"
+          >
             <X className="w-6 h-6 text-gray-800" />
           </button>
           <div className="aspect-video">
             {maximizedVideo.type === 'youtube'
-              ? <iframe className="w-full h-full" src={processedSrc} allowFullScreen title={maximizedVideo.title} />
-              : <video className="w-full h-full object-cover" controls autoPlay preload="metadata"><source src={maximizedVideo.src} type="video/mp4" /></video>}
+              ? <iframe 
+                  className="w-full h-full" 
+                  src={processedSrc} 
+                  allowFullScreen 
+                  title={maximizedVideo.title}
+                  loading="lazy"
+                />
+              : <video 
+                  className="w-full h-full object-cover" 
+                  controls 
+                  autoPlay 
+                  preload="metadata"
+                >
+                  <source src={maximizedVideo.src} type="video/mp4" />
+                </video>
+            }
           </div>
         </div>
       </div>
@@ -150,6 +275,7 @@ export default function TestimonialSlider() {
                   src={testimonial.youtube_link} 
                   type="youtube" 
                   title={`${testimonial.name} testimonial`}
+                  testimonialId={testimonial.id}
                 />
               )}
               {testimonial.video_url && !testimonial.youtube_link && (
@@ -157,6 +283,7 @@ export default function TestimonialSlider() {
                   src={testimonial.video_url} 
                   type="uploaded" 
                   title={`${testimonial.name} testimonial`}
+                  testimonialId={testimonial.id}
                 />
               )}
             </div>

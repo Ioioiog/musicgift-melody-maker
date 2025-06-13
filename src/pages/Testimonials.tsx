@@ -5,33 +5,43 @@ import TestimonialSlider from "@/components/TestimonialSlider";
 import TestimonialSubmissionForm from "@/components/TestimonialSubmissionForm";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Star, Users, Award, Shield } from "lucide-react";
 
 const Testimonials = () => {
-  const {
-    t
-  } = useLanguage();
+  const { t } = useLanguage();
+  const trustpilotLoaded = useRef(false);
+
   useEffect(() => {
-    // Load Trustpilot widget script
-    const script = document.createElement('script');
-    script.src = '//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js';
-    script.async = true;
-    document.head.appendChild(script);
+    // Lazy load Trustpilot widget script only when component is mounted
+    const loadTrustpilot = () => {
+      if (trustpilotLoaded.current) return;
+      
+      const script = document.createElement('script');
+      script.src = '//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+      trustpilotLoaded.current = true;
+    };
+
+    // Load script after a short delay to prioritize critical content
+    const timer = setTimeout(loadTrustpilot, 1000);
+
     return () => {
-      // Cleanup script on unmount
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
+      clearTimeout(timer);
     };
   }, []);
+
   const backgroundStyle = {
     backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
   };
-  return <div className="min-h-screen">
+
+  return (
+    <div className="min-h-screen">
       <Navigation />
       
       {/* Enhanced Hero Section with Purple Musical Background - No top padding for seamless connection to navbar */}
@@ -41,39 +51,32 @@ const Testimonials = () => {
         {/* Floating Musical Notes */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-10 left-10 text-4xl opacity-30" style={{
-          transform: "translateX(35.2px) translateY(-17.6px) rotate(296.64deg)"
-        }}>
+            transform: "translateX(35.2px) translateY(-17.6px) rotate(296.64deg)"
+          }}>
             ♪
           </div>
           <div className="absolute bottom-10 right-10 text-6xl opacity-20" style={{
-          transform: "translateX(-69.12px) translateY(34.56px) rotate(-77.76deg)"
-        }}>
+            transform: "translateX(-69.12px) translateY(34.56px) rotate(-77.76deg)"
+          }}>
             🎵
           </div>
         </div>
         
         <div className="max-w-4xl mx-auto text-center px-[14px] py-0 my-[24px] relative z-10">
-          <motion.h1 className="text-2xl md:text-3xl font-bold text-white mb-2" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6
-        }}>
+          <motion.h1 
+            className="text-2xl md:text-3xl font-bold text-white mb-2" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6 }}
+          >
             {t('testimonialsTitle')}
           </motion.h1>
-          <motion.p className="text-base md:text-lg text-white/90 mb-4 max-w-2xl mx-auto" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.2
-        }}>
+          <motion.p 
+            className="text-base md:text-lg text-white/90 mb-4 max-w-2xl mx-auto" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             {t('testimonialsSubtitle')}
           </motion.p>
         </div>
@@ -85,16 +88,12 @@ const Testimonials = () => {
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4">
             {/* Buttons Section - Moved here from hero */}
-            <motion.div className="flex flex-col sm:flex-row gap-2 justify-center items-center mb-8 pt-6" initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6,
-            delay: 0.4
-          }}>
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-2 justify-center items-center mb-8 pt-6" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
               {/* Trustpilot Button */}
               <a href="https://www.trustpilot.com/review/musicgift.ro" target="_blank" rel="noopener noreferrer" className="inline-block">
                 <div className="bg-white border-2 border-green-500 rounded-lg hover:bg-green-50 transition-colors duration-200 shadow-sm py-[2px] px-[10px] flex items-center">
@@ -105,6 +104,7 @@ const Testimonials = () => {
                     src="/lovable-uploads/47cbf05f-3839-40b6-abc6-584208546eb2.png" 
                     alt="Trustpilot" 
                     className="ml-1 h-4 w-auto"
+                    loading="lazy"
                   />
                 </div>
               </a>
@@ -119,6 +119,8 @@ const Testimonials = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Testimonials;
