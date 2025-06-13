@@ -51,7 +51,7 @@ export const convertToYouTubeEmbed = (url: string): string => {
 /**
  * Gets YouTube thumbnail URL for different sizes
  */
-export const getYouTubeThumbnail = (url: string, size: 'default' | 'medium' | 'high' | 'maxres' = 'maxresdefault'): string => {
+export const getYouTubeThumbnail = (url: string, size: 'default' | 'medium' | 'high' | 'maxres' = 'maxres'): string => {
   const videoId = extractYouTubeVideoId(url);
   if (!videoId) return '';
   
