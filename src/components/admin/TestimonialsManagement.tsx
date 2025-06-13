@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Play, Check, X, GitBranch, Download } from "lucide-react";
+import { ExternalLink, Play, Check, X, GitBranch, Download, Trash2 } from "lucide-react";
 import { testimonials as staticTestimonials } from "@/data/testimonials";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -74,6 +74,14 @@ const TestimonialsManagement = () => {
       description: "Testimonial deleted successfully"
     });
     refetch();
+  };
+
+  const handleDeleteStaticTestimonial = (testimonialId: string) => {
+    toast({
+      title: "Static Testimonial Deletion",
+      description: "To delete static testimonials, remove them from src/data/testimonials.ts and then use the Auto-Sync feature to update the repository.",
+      variant: "default"
+    });
   };
 
   const handleAutoSync = async () => {
@@ -227,6 +235,28 @@ const TestimonialsManagement = () => {
                   <X className="w-4 h-4" />
                 </Button>
               </>
+            )}
+            {isFromSupabase && testimonial.approved && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-red-600 hover:text-red-700"
+                onClick={() => handleRejectTestimonial(testimonial.id)}
+                title="Delete testimonial"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            )}
+            {!isFromSupabase && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-red-600 hover:text-red-700"
+                onClick={() => handleDeleteStaticTestimonial(testimonial.id)}
+                title="Delete static testimonial"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
             )}
           </div>
         </div>
