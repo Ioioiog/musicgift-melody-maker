@@ -1764,6 +1764,7 @@ export const packages: Package[] = [
       }
     ],
      {
+    id: "10",
     value: "dj",
     label_key: "djPackage",
     tagline_key: "djTagline",
