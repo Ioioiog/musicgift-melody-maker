@@ -1,12 +1,13 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Volume2 } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-
 const VideoHero = () => {
-  const { t, language } = useLanguage();
+  const {
+    t,
+    language
+  } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showPlayButton, setShowPlayButton] = useState(false);
   const [hasAudio, setHasAudio] = useState(false);
@@ -21,7 +22,7 @@ const VideoHero = () => {
   // Select video based on language with fallback
   const videoSrc = language === 'ro' ? '/uploads/musicgift_ro.mp4' : '/uploads/musicgift_eng.mp4';
   console.log('VideoHero: Current language:', language, 'Video source:', videoSrc);
-  
+
   // Cleanup function to stop video and reset states
   const cleanupVideo = useCallback(() => {
     const video = videoRef.current;
@@ -121,7 +122,6 @@ const VideoHero = () => {
       cleanupVideo();
     };
   }, [cleanupVideo]);
-  
   const handlePlayWithAudio = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -135,7 +135,6 @@ const VideoHero = () => {
       // Keep the play button if it still fails
     });
   }, []);
-  
   const handleToggleAudio = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -156,110 +155,72 @@ const VideoHero = () => {
     }
     const screenWidth = window.innerWidth;
     // Force 16:9 aspect ratio on mobile
-    const calculatedHeight = (screenWidth * 9) / 16;
+    const calculatedHeight = screenWidth * 9 / 16;
     return `${calculatedHeight}px`;
   };
-
   const mobileHeight = getMobileHeight();
   const sectionStyle = isMobile && mobileHeight ? {
     height: mobileHeight,
     minHeight: 'auto'
   } : {};
-
-  return (
-    <section className={`video-hero relative overflow-hidden ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
+  return <section className={`video-hero relative overflow-hidden ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`} style={sectionStyle}>
       {/* Background image - Visible on desktop and mobile */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform" 
-        style={{
-          backgroundImage: 'url(/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)',
-          transform: 'translate3d(0,0,0)' // Hardware acceleration
-        }}
-      ></div>
+      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform" style={{
+      backgroundImage: 'url(/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png)',
+      transform: 'translate3d(0,0,0)' // Hardware acceleration
+    }}></div>
 
       {/* Reduced animated background particles - Mobile only (reduced from 20 to 10) */}
       <div className="absolute inset-0 overflow-hidden md:hidden">
-        {[...Array(3)].map((_, i) => (
-          <div 
-            key={i} 
-            className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse" 
-            style={{
-              top: `${20 + i * 30}%`,
-              left: `${10 + i * 30}%`,
-              animationDelay: `${i}s`,
-              animationDuration: `${3 + i}s`,
-              willChange: 'opacity, transform'
-            }}
-          />
-        ))}
+        {[...Array(3)].map((_, i) => <div key={i} className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse" style={{
+        top: `${20 + i * 30}%`,
+        left: `${10 + i * 30}%`,
+        animationDelay: `${i}s`,
+        animationDuration: `${3 + i}s`,
+        willChange: 'opacity, transform'
+      }} />)}
       </div>
 
       {/* Video Background - Positioned below navbar on mobile with optimized loading */}
-      <video
-        ref={videoRef}
-        loop
-        playsInline
-        preload="metadata"
-        className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover object-center will-change-transform`}
-        style={{
-          height: isMobile ? mobileHeight : '100%',
-          transform: 'translate3d(0,0,0)' // Hardware acceleration
-        }}
-        key={videoSrc}
-        poster="/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png"
-      >
+      <video ref={videoRef} loop playsInline preload="metadata" className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover object-center will-change-transform`} style={{
+      height: isMobile ? mobileHeight : '100%',
+      transform: 'translate3d(0,0,0)' // Hardware acceleration
+    }} key={videoSrc} poster="/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png">
         <source src={videoSrc} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
       {/* Loading Overlay with better performance */}
-      {isLoading && (
-        <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 flex items-center justify-center z-20`} style={isMobile ? { height: mobileHeight } : {}}>
-          <div className="text-white text-xl">Loading...</div>
-        </div>
-      )}
+      {isLoading}
 
       {/* Play Button Overlay */}
-      {showPlayButton && !isLoading && (
-        <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-black/30 flex items-center justify-center z-20`} style={isMobile ? { height: mobileHeight } : {}}>
-          <Button
-            onClick={handlePlayWithAudio}
-            size="lg"
-            className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
-          >
+      {showPlayButton && !isLoading && <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-black/30 flex items-center justify-center z-20`} style={isMobile ? {
+      height: mobileHeight
+    } : {}}>
+          <Button onClick={handlePlayWithAudio} size="lg" className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm">
             <Play className="w-8 h-8 mr-2" />
             {t('playWithSound', 'Play with Sound')}
           </Button>
-        </div>
-      )}
+        </div>}
 
       {/* Audio Control Button */}
-      {!showPlayButton && !isLoading && (
-        <button
-          onClick={handleToggleAudio}
-          className={`absolute z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm ${
-            isMobile 
-              ? 'bottom-16 right-4 p-2' 
-              : 'top-16 sm:top-20 md:top-24 right-4 p-3'
-          }`}
-          aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
-        >
+      {!showPlayButton && !isLoading && <button onClick={handleToggleAudio} className={`absolute z-40 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full transition-all duration-200 shadow-2xl border-2 border-gray-200 backdrop-blur-sm ${isMobile ? 'bottom-16 right-4 p-2' : 'top-16 sm:top-20 md:top-24 right-4 p-3'}`} aria-label={hasAudio ? 'Mute video' : 'Unmute video'}>
           <Volume2 className={`${isMobile ? 'w-4 h-4' : 'w-6 h-6'} ${hasAudio ? 'opacity-100' : 'opacity-60'}`} />
-        </button>
-      )}
+        </button>}
 
       {/* Dark Overlay */}
-      <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50`} style={isMobile ? { height: mobileHeight } : {}}></div>
+      <div className={`absolute ${isMobile ? 'top-16' : 'inset-0'} ${isMobile ? 'left-0 right-0' : ''} bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50`} style={isMobile ? {
+      height: mobileHeight
+    } : {}}></div>
 
       {/* Title at Bottom */}
       <div className={`absolute ${isMobile ? 'bottom-4' : 'bottom-12 sm:bottom-16 md:bottom-20'} left-0 right-0 z-10 text-center text-white px-4`}>
-        <h1 className={`${isMobile ? 'text-lg' : 'text-2xl sm:text-3xl md:text-4xl lg:text-6xl'} font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent`}
-            style={{ transform: 'translate3d(0,0,0)' }}>
+        <h1 className={`${isMobile ? 'text-lg' : 'text-2xl sm:text-3xl md:text-4xl lg:text-6xl'} font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent`} style={{
+        transform: 'translate3d(0,0,0)'
+      }}>
           {t('heroTitle')}
         </h1>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default VideoHero;
