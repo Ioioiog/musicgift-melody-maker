@@ -17,7 +17,8 @@ const OptimizedLogo: React.FC<OptimizedLogoProps> = ({
   priority = false,
   alt = "MusicGift.ro - Cadouri Muzicale Personalizate"
 }) => {
-  const logoSrc = "/uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png";
+  // Use an existing logo file from the uploads directory
+  const logoSrc = "/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png";
   
   return (
     <picture className={cn("block", className)}>
@@ -39,7 +40,17 @@ const OptimizedLogo: React.FC<OptimizedLogoProps> = ({
           aspectRatio: `${width}/${height}`
         }}
         onError={(e) => {
-          console.warn('Logo failed to load:', e);
+          console.warn('Logo failed to load:', logoSrc);
+          // Fallback to a simple text logo if image fails
+          const target = e.target as HTMLImageElement;
+          target.style.display = 'none';
+          const parent = target.parentElement;
+          if (parent && !parent.querySelector('.logo-fallback')) {
+            const fallback = document.createElement('div');
+            fallback.className = 'logo-fallback text-2xl font-bold text-purple-600';
+            fallback.textContent = 'MusicGift.ro';
+            parent.appendChild(fallback);
+          }
         }}
       />
     </picture>

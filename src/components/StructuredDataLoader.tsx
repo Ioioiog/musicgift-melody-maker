@@ -14,13 +14,13 @@ const StructuredDataLoader = () => {
       "url": "https://musicgift.ro",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://musicgift.ro/uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png",
+        "url": "https://musicgift.ro/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png",
         "width": 180,
         "height": 60,
-        "contentUrl": "https://musicgift.ro/uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png",
+        "contentUrl": "https://musicgift.ro/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png",
         "caption": "MusicGift.ro - Cadouri Muzicale Personalizate"
       },
-      "image": "https://musicgift.ro/uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png",
+      "image": "https://musicgift.ro/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png",
       "description": "Crearea de cadouri muzicale personalizate. Transformă momentele tale speciale în melodii frumoase și personalizate",
       "foundingDate": "2020",
       "founder": {
