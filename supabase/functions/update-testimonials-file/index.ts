@@ -1,5 +1,3 @@
-
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
@@ -81,9 +79,32 @@ serve(async (req) => {
       throw new Error('GitHub token not configured');
     }
 
-    console.log('Checking if repository exists...');
+    console.log('Testing GitHub token authentication...');
 
-    // First, verify the repository exists
+    // First, test token authentication by getting user info
+    const tokenTestResponse = await fetch(
+      'https://api.github.com/user',
+      {
+        headers: {
+          'Authorization': `Bearer ${githubToken}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'User-Agent': 'Supabase-Edge-Function'
+        }
+      }
+    );
+
+    if (!tokenTestResponse.ok) {
+      const tokenError = await tokenTestResponse.text();
+      console.error('GitHub token test failed:', tokenError);
+      throw new Error(`GitHub token authentication failed: ${tokenTestResponse.status} ${tokenTestResponse.statusText}`);
+    }
+
+    const tokenData = await tokenTestResponse.json();
+    console.log(`GitHub token authenticated for user: ${tokenData.login}`);
+
+    console.log('Checking repository access...');
+
+    // Check repository access
     const repoCheckResponse = await fetch(
       `https://api.github.com/repos/${repoOwner}/${repoName}`,
       {
@@ -97,13 +118,16 @@ serve(async (req) => {
 
     if (!repoCheckResponse.ok) {
       const repoError = await repoCheckResponse.text();
-      console.error('Repository check failed:', repoError);
-      throw new Error(`Repository ${repoOwner}/${repoName} not found or not accessible. Please check if the repository exists and the GitHub token has the correct permissions.`);
+      console.error('Repository access failed:', repoError);
+      throw new Error(`Cannot access repository ${repoOwner}/${repoName}. Status: ${repoCheckResponse.status}. Please ensure the GitHub token has access to this repository.`);
     }
 
-    console.log('Repository verified. Fetching current file from GitHub...');
+    const repoData = await repoCheckResponse.json();
+    console.log(`Repository access confirmed. Default branch: ${repoData.default_branch}`);
 
-    // Get current file content and SHA (handle if file doesn't exist)
+    console.log('Fetching current file from GitHub...');
+
+    // Get current file content and SHA
     const fileResponse = await fetch(
       `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`,
       {
@@ -143,7 +167,7 @@ serve(async (req) => {
       // Other error
       const errorText = await fileResponse.text();
       console.error('GitHub API Error:', errorText);
-      throw new Error(`Failed to fetch file from GitHub: ${fileResponse.status} ${fileResponse.statusText}`);
+      throw new Error(`Failed to fetch file from GitHub: ${fileResponse.status} ${fileResponse.statusText}. Error: ${errorText}`);
     }
 
     // Combine static testimonials with approved Supabase testimonials
@@ -171,35 +195,13 @@ serve(async (req) => {
     // Generate new file content
     const newFileContent = `export const testimonials = ${JSON.stringify(allTestimonials, null, 2)};`;
 
-    // Check if we need to create directories first
-    if (!fileSha) {
-      console.log('Checking if src/data directory structure exists...');
-      
-      // Try to get the src directory
-      const srcDirResponse = await fetch(
-        `https://api.github.com/repos/${repoOwner}/${repoName}/contents/src`,
-        {
-          headers: {
-            'Authorization': `Bearer ${githubToken}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'Supabase-Edge-Function'
-          }
-        }
-      );
-
-      if (!srcDirResponse.ok && srcDirResponse.status === 404) {
-        console.log('src directory does not exist. Creating directory structure may be needed.');
-        throw new Error('The src/data directory structure does not exist in the repository. Please create the src/data directories manually in your GitHub repository first.');
-      }
-    }
-
     // Update or create file in GitHub
     console.log(fileSha ? 'Updating existing file in GitHub repository...' : 'Creating new file in GitHub repository...');
     
     const requestBody: any = {
       message: `Auto-sync testimonials: ${allTestimonials.length} total (${supabaseTestimonials?.length || 0} from database)`,
       content: utf8ToBase64(newFileContent),
-      branch: 'main'
+      branch: repoData.default_branch || 'main'
     };
 
     // Only include SHA if file exists (for updates)
@@ -207,11 +209,13 @@ serve(async (req) => {
       requestBody.sha = fileSha;
     }
 
-    console.log('Making GitHub API request with:', {
+    console.log('Making GitHub API request:', {
       url: `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`,
       method: 'PUT',
+      branch: requestBody.branch,
       hasAuth: !!githubToken,
-      hasSha: !!fileSha
+      hasSha: !!fileSha,
+      operation: fileSha ? 'update' : 'create'
     });
 
     const updateResponse = await fetch(
@@ -233,15 +237,23 @@ serve(async (req) => {
       console.error('GitHub update failed:', updateResponse.status, updateResponse.statusText);
       console.error('GitHub error response:', errorData);
       
+      // Parse error response if it's JSON
+      let parsedError;
+      try {
+        parsedError = JSON.parse(errorData);
+      } catch {
+        parsedError = { message: errorData };
+      }
+      
       // Provide more specific error messages
       if (updateResponse.status === 404) {
-        throw new Error(`Repository or file path not found. Please verify that the repository '${repoOwner}/${repoName}' exists and the GitHub token has write access to it.`);
+        throw new Error(`Repository or file path not found. Verified repo exists but cannot update file. This might be due to insufficient permissions. Token user: ${tokenData.login}`);
       } else if (updateResponse.status === 403) {
-        throw new Error('Permission denied. Please check that your GitHub token has write access to the repository.');
+        throw new Error(`Permission denied. The GitHub token does not have write access to ${repoOwner}/${repoName}. Please ensure the token has 'Contents' write permission.`);
       } else if (updateResponse.status === 422) {
-        throw new Error('Invalid request. This might be due to branch protection rules or invalid file content.');
+        throw new Error(`Invalid request: ${parsedError.message || 'Unknown validation error'}. This might be due to branch protection rules.`);
       } else {
-        throw new Error(`Failed to update file in GitHub: ${updateResponse.status} ${updateResponse.statusText}. Error: ${errorData}`);
+        throw new Error(`Failed to update file: ${updateResponse.status} ${updateResponse.statusText}. Error: ${parsedError.message || errorData}`);
       }
     }
 
@@ -255,7 +267,9 @@ serve(async (req) => {
       testimonials_count: allTestimonials.length,
       database_count: supabaseTestimonials?.length || 0,
       static_count: staticTestimonials.length,
-      action: fileSha ? 'updated' : 'created'
+      action: fileSha ? 'updated' : 'created',
+      github_user: tokenData.login,
+      target_branch: requestBody.branch
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
@@ -271,4 +285,3 @@ serve(async (req) => {
     });
   }
 });
-
