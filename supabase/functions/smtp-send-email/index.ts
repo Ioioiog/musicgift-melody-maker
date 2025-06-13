@@ -18,6 +18,90 @@ interface SendEmailRequest {
   draftId?: string;
 }
 
+// Simple SMTP client implementation
+class SMTPClient {
+  private conn: Deno.TcpConn | null = null;
+  private hostname: string;
+  private port: number;
+  private username: string;
+  private password: string;
+
+  constructor(hostname: string, port: number, username: string, password: string) {
+    this.hostname = hostname;
+    this.port = port;
+    this.username = username;
+    this.password = password;
+  }
+
+  async connect(): Promise<void> {
+    this.conn = await Deno.connectTls({
+      hostname: this.hostname,
+      port: this.port,
+    });
+    await this.readResponse(); // Read welcome message
+  }
+
+  async sendCommand(command: string): Promise<string> {
+    if (!this.conn) throw new Error('Not connected');
+    
+    const encoder = new TextEncoder();
+    await this.conn.write(encoder.encode(command + '\r\n'));
+    return await this.readResponse();
+  }
+
+  async readResponse(): Promise<string> {
+    if (!this.conn) throw new Error('Not connected');
+    
+    const buffer = new Uint8Array(1024);
+    const n = await this.conn.read(buffer);
+    const decoder = new TextDecoder();
+    return decoder.decode(buffer.subarray(0, n || 0));
+  }
+
+  async authenticate(): Promise<void> {
+    await this.sendCommand('EHLO ' + this.hostname);
+    await this.sendCommand('AUTH LOGIN');
+    
+    // Send base64 encoded username and password
+    const encoder = new TextEncoder();
+    const usernameB64 = btoa(this.username);
+    const passwordB64 = btoa(this.password);
+    
+    await this.sendCommand(usernameB64);
+    await this.sendCommand(passwordB64);
+  }
+
+  async sendEmail(from: string, to: string[], subject: string, body: string): Promise<void> {
+    await this.sendCommand(`MAIL FROM:<${from}>`);
+    
+    for (const recipient of to) {
+      await this.sendCommand(`RCPT TO:<${recipient}>`);
+    }
+    
+    await this.sendCommand('DATA');
+    
+    const emailContent = [
+      `From: ${from}`,
+      `To: ${to.join(', ')}`,
+      `Subject: ${subject}`,
+      'Content-Type: text/html; charset=utf-8',
+      '',
+      body,
+      '.'
+    ].join('\r\n');
+    
+    await this.sendCommand(emailContent);
+  }
+
+  async quit(): Promise<void> {
+    if (this.conn) {
+      await this.sendCommand('QUIT');
+      this.conn.close();
+      this.conn = null;
+    }
+  }
+}
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -66,21 +150,44 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Email account not found');
     }
 
-    // For demo purposes, simulate sending email
-    console.log(`Simulating email send from: ${account.email_address}`);
+    // Get SMTP password from environment
+    const smtpPassword = Deno.env.get('SMTP_PASSWORD');
+    if (!smtpPassword) {
+      throw new Error('SMTP password not configured');
+    }
+
+    console.log(`Sending email from: ${account.email_address}`);
     console.log(`SMTP Server: ${account.smtp_server}:${account.smtp_port} (${account.smtp_security})`);
     console.log(`To: ${to.join(', ')}`);
     console.log(`Subject: ${subject}`);
 
+    // Create SMTP client and send email
+    const smtpClient = new SMTPClient(
+      account.smtp_server,
+      account.smtp_port,
+      account.email_address,
+      smtpPassword
+    );
+
+    try {
+      await smtpClient.connect();
+      await smtpClient.authenticate();
+      await smtpClient.sendEmail(
+        account.email_address,
+        [...to, ...cc, ...bcc],
+        subject,
+        bodyHtml || bodyPlain || ''
+      );
+      await smtpClient.quit();
+    } catch (smtpError) {
+      console.error('SMTP Error:', smtpError);
+      throw new Error(`Failed to send email: ${smtpError.message}`);
+    }
+
     // Generate a unique message ID
     const messageId = `${Date.now()}.${Math.random().toString(36).substr(2, 9)}@${account.smtp_server}`;
 
-    // In a real implementation, you would:
-    // 1. Connect to SMTP server using account credentials
-    // 2. Send the actual email
-    // 3. Handle SMTP responses and errors
-    
-    // For now, we'll simulate successful sending and store the sent email
+    // Store the sent email
     const { data: sentEmail, error: insertError } = await supabase
       .from('sent_emails')
       .insert({

@@ -1,5 +1,6 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,6 +13,89 @@ interface ContactFormData {
   email: string;
   subject: string;
   message: string;
+}
+
+// Simple SMTP client implementation (same as in smtp-send-email)
+class SMTPClient {
+  private conn: Deno.TcpConn | null = null;
+  private hostname: string;
+  private port: number;
+  private username: string;
+  private password: string;
+
+  constructor(hostname: string, port: number, username: string, password: string) {
+    this.hostname = hostname;
+    this.port = port;
+    this.username = username;
+    this.password = password;
+  }
+
+  async connect(): Promise<void> {
+    this.conn = await Deno.connectTls({
+      hostname: this.hostname,
+      port: this.port,
+    });
+    await this.readResponse(); // Read welcome message
+  }
+
+  async sendCommand(command: string): Promise<string> {
+    if (!this.conn) throw new Error('Not connected');
+    
+    const encoder = new TextEncoder();
+    await this.conn.write(encoder.encode(command + '\r\n'));
+    return await this.readResponse();
+  }
+
+  async readResponse(): Promise<string> {
+    if (!this.conn) throw new Error('Not connected');
+    
+    const buffer = new Uint8Array(1024);
+    const n = await this.conn.read(buffer);
+    const decoder = new TextDecoder();
+    return decoder.decode(buffer.subarray(0, n || 0));
+  }
+
+  async authenticate(): Promise<void> {
+    await this.sendCommand('EHLO ' + this.hostname);
+    await this.sendCommand('AUTH LOGIN');
+    
+    // Send base64 encoded username and password
+    const usernameB64 = btoa(this.username);
+    const passwordB64 = btoa(this.password);
+    
+    await this.sendCommand(usernameB64);
+    await this.sendCommand(passwordB64);
+  }
+
+  async sendEmail(from: string, to: string[], subject: string, body: string): Promise<void> {
+    await this.sendCommand(`MAIL FROM:<${from}>`);
+    
+    for (const recipient of to) {
+      await this.sendCommand(`RCPT TO:<${recipient}>`);
+    }
+    
+    await this.sendCommand('DATA');
+    
+    const emailContent = [
+      `From: ${from}`,
+      `To: ${to.join(', ')}`,
+      `Subject: ${subject}`,
+      'Content-Type: text/html; charset=utf-8',
+      '',
+      body,
+      '.'
+    ].join('\r\n');
+    
+    await this.sendCommand(emailContent);
+  }
+
+  async quit(): Promise<void> {
+    if (this.conn) {
+      await this.sendCommand('QUIT');
+      this.conn.close();
+      this.conn = null;
+    }
+  }
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -47,11 +131,10 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // For now, we'll use Brevo API to send the email
-    const brevoApiKey = Deno.env.get('BREVO_API_KEY');
-    
-    if (!brevoApiKey) {
-      console.error('BREVO_API_KEY not configured');
+    // Get SMTP password from environment
+    const smtpPassword = Deno.env.get('SMTP_PASSWORD');
+    if (!smtpPassword) {
+      console.error('SMTP_PASSWORD not configured');
       return new Response(
         JSON.stringify({ error: 'Email service not configured' }),
         {
@@ -62,75 +145,78 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Prepare email content
-    const emailContent = {
-      sender: {
-        name: "MusicGift Contact Form",
-        email: "noreply@musicgift.ro"
-      },
-      to: [
-        {
-          email: "info@musicgift.ro",
-          name: "MusicGift Support"
-        }
-      ],
-      subject: `Contact Form: ${subject}`,
-      htmlContent: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333; border-bottom: 2px solid #f97316; padding-bottom: 10px;">
-            New Contact Form Submission
-          </h2>
-          
-          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #f97316; margin-top: 0;">Contact Information</h3>
-            <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Subject:</strong> ${subject}</p>
-          </div>
-          
-          <div style="background-color: #fff; padding: 20px; border-left: 4px solid #f97316; margin: 20px 0;">
-            <h3 style="color: #333; margin-top: 0;">Message</h3>
-            <p style="line-height: 1.6; white-space: pre-wrap;">${message}</p>
-          </div>
-          
-          <div style="background-color: #f0f0f0; padding: 15px; border-radius: 5px; margin-top: 20px;">
-            <p style="margin: 0; font-size: 12px; color: #666;">
-              This email was sent from the MusicGift contact form. 
-              Please reply directly to ${email} to respond to the customer.
-            </p>
-          </div>
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333; border-bottom: 2px solid #f97316; padding-bottom: 10px;">
+          New Contact Form Submission
+        </h2>
+        
+        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #f97316; margin-top: 0;">Contact Information</h3>
+          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
         </div>
-      `,
-      replyTo: {
-        email: email,
-        name: `${firstName} ${lastName}`
-      }
+        
+        <div style="background-color: #fff; padding: 20px; border-left: 4px solid #f97316; margin: 20px 0;">
+          <h3 style="color: #333; margin-top: 0;">Message</h3>
+          <p style="line-height: 1.6; white-space: pre-wrap;">${message}</p>
+        </div>
+        
+        <div style="background-color: #f0f0f0; padding: 15px; border-radius: 5px; margin-top: 20px;">
+          <p style="margin: 0; font-size: 12px; color: #666;">
+            This email was sent from the MusicGift contact form. 
+            Please reply directly to ${email} to respond to the customer.
+          </p>
+        </div>
+      </div>
+    `;
+
+    // SMTP configuration
+    const smtpConfig = {
+      hostname: 'mail.musicgift.ro',
+      port: 465,
+      username: 'info@musicgift.ro',
+      password: smtpPassword
     };
 
-    // Send email via Brevo
-    const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'api-key': brevoApiKey
-      },
-      body: JSON.stringify(emailContent)
-    });
+    console.log(`Sending contact email via SMTP: ${smtpConfig.hostname}:${smtpConfig.port}`);
 
-    if (!brevoResponse.ok) {
-      const errorText = await brevoResponse.text();
-      console.error('Brevo API error:', errorText);
-      throw new Error('Failed to send email via Brevo');
+    // Create SMTP client and send email
+    const smtpClient = new SMTPClient(
+      smtpConfig.hostname,
+      smtpConfig.port,
+      smtpConfig.username,
+      smtpConfig.password
+    );
+
+    let messageId: string;
+
+    try {
+      await smtpClient.connect();
+      await smtpClient.authenticate();
+      await smtpClient.sendEmail(
+        smtpConfig.username,
+        [smtpConfig.username], // Send to info@musicgift.ro
+        `Contact Form: ${subject}`,
+        emailHtml
+      );
+      await smtpClient.quit();
+
+      // Generate message ID for tracking
+      messageId = `${Date.now()}.${Math.random().toString(36).substr(2, 9)}@${smtpConfig.hostname}`;
+      
+      console.log(`Contact email sent successfully with message ID: ${messageId}`);
+    } catch (smtpError) {
+      console.error('SMTP Error:', smtpError);
+      throw new Error(`Failed to send email: ${smtpError.message}`);
     }
-
-    const result = await brevoResponse.json();
-    console.log('Email sent successfully via Brevo:', result);
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: 'Contact form submitted successfully',
-        messageId: result.messageId 
+        messageId 
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
