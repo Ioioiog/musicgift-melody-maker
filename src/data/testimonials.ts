@@ -144,18 +144,6 @@ export const testimonials = [
     "approved": true
   },
   {
-    "id": "09225373-67af-4115-853c-e1ccb693806d",
-    "name": "Ilinca Obadescu",
-    "location": null,
-    "stars": 5,
-    "message": "t",
-    "context": null,
-    "youtube_link": null,
-    "video_url": null,
-    "display_order": 0,
-    "approved": true
-  },
-  {
     "id": "1a6d6fbf-311e-4260-b638-1b646e1fe9a6",
     "name": "Coceag Daniel",
     "location": "Galați",
