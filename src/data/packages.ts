@@ -1780,8 +1780,7 @@ export const packages: Package[] = [
     available_addons: [
       "rushDelivery",
       "customVideo",
-      "socialMediaRights",
-      "mangoRecordsDistribution"
+      "socialMediaRights"
     ],
     includes: [
       { id: "dj1", include_key: "djInclude1", include_order: 1 },
@@ -1872,14 +1871,6 @@ export const packages: Package[] = [
             placeholder_key: "enterSoundReference",
             required: false,
             field_order: 3
-          },
-          {
-            id: "tempoPreference",
-            field_name: "tempoPreference",
-            field_type: "text",
-            placeholder_key: "enterTempoPreference",
-            required: false,
-            field_order: 4
           },
           {
             id: "whatToAvoid",
