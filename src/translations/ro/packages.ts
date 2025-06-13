@@ -249,10 +249,9 @@ export const packagesTranslations = {
   // DJ Package includes
   djInclude1: "Compoziție originală de muzică electronică în stilul ales",
   djInclude2: "Mixaj și mastering profesional pentru calitate de club/festival",
-  djInclude3: "Fișiere audio de înaltă calitate ( MP3, suplimentar la cerere WAV HQ )",
+  djInclude3: "Fișiere audio de înaltă calitate (MP3, suplimentar la cerere WAV HQ)",
   djInclude4: "Design profesional de cover art",
-  djInclude5: "Distribuție pe platformele majore de streaming și Beatport",
-  djInclude6: "Drepturi de co-proprietate și suport pentru publishing",
+  djInclude5: "Distribuție pe platformele majore de streaming"
   
   // DJ Form Steps
   djStepIdentity: "Identitate DJ & Branding",
