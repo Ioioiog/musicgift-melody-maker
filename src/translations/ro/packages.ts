@@ -244,12 +244,12 @@ export const packagesTranslations = {
   djPackage: "Pachet DJ",
   djTagline: "Producție muzicală electronică profesională pentru DJ-i și artiști",
   djDescription: "Pachet complet de producție muzicală electronică pentru DJ-i și artiști de muzică electronică. De la concept la lansare, creăm piese profesionale gata pentru cluburi, festivaluri și platforme de streaming.",
-  djDelivery: "7–14 zile lucrătoare",
+  djDelivery: "7–10 zile lucrătoare",
   
   // DJ Package includes
   djInclude1: "Compoziție originală de muzică electronică în stilul ales",
   djInclude2: "Mixaj și mastering profesional pentru calitate de club/festival",
-  djInclude3: "Fișiere audio de înaltă calitate (MP3, WAV, stems disponibile)",
+  djInclude3: "Fișiere audio de înaltă calitate ( MP3, suplimentar la cerere WAV HQ )",
   djInclude4: "Design profesional de cover art",
   djInclude5: "Distribuție pe platformele majore de streaming și Beatport",
   djInclude6: "Drepturi de co-proprietate și suport pentru publishing",
