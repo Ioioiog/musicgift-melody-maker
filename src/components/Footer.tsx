@@ -7,8 +7,6 @@ import NewsletterForm from "@/components/NewsletterForm";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import OptimizedLogo from "@/components/OptimizedLogo";
-
 const Footer = () => {
   const {
     t
@@ -53,7 +51,7 @@ const Footer = () => {
         </motion.div>}
 
       <footer className="relative text-gray-900 bg-cover bg-center bg-no-repeat" style={{
-      backgroundImage: `url('/uploads/c8247b19-53ef-4926-888f-4d4fd609e783.png')`
+      backgroundImage: `url('/lovable-uploads/c8247b19-53ef-4926-888f-4d4fd609e783.png')`
     }}>
         {/* Semi-transparent overlay for better text readability */}
         <div className="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
@@ -63,16 +61,11 @@ const Footer = () => {
           <div className="py-16">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
               
-              {/* Brand Column with Optimized Logo */}
+              {/* Brand Column */}
               <div className="lg:col-span-1 space-y-6">
                 <Link to="/" className="inline-block">
                   <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 hover:bg-white/30 transition-all duration-300">
-                    <OptimizedLogo 
-                      className="h-16" 
-                      width={180} 
-                      height={60}
-                      alt="MusicGift by Mango Records - Logo Footer"
-                    />
+                    <img src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" alt="MusicGift by Mango Records" className="h-16 w-auto object-contain" />
                   </div>
                 </Link>
                 
