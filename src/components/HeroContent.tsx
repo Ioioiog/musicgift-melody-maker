@@ -5,15 +5,17 @@ import { Link } from 'react-router-dom';
 import { Heart, Sparkles, ArrowDown, Music } from 'lucide-react';
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import OptimizedImage from '@/components/OptimizedImage';
 
 const HeroContent = () => {
   const { t } = useLanguage();
 
   useEffect(() => {
-    // Load Trustpilot widget script
+    // Load Trustpilot widget script with performance optimization
     const script = document.createElement('script');
     script.src = '//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js';
     script.async = true;
+    script.defer = true;
     document.head.appendChild(script);
 
     return () => {
@@ -26,6 +28,18 @@ const HeroContent = () => {
 
   return (
     <section className="py-8 px-4 text-white relative overflow-hidden">
+      {/* Background with optimized image */}
+      <div className="absolute inset-0 z-0">
+        <OptimizedImage
+          src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png"
+          alt="Musical background"
+          className="w-full h-full object-cover opacity-30"
+          priority={true}
+          width={1920}
+          height={1080}
+        />
+      </div>
+      
       <div className="max-w-6xl mx-auto relative z-10 w-full">
         <motion.div 
           className="text-center bg-gradient-to-r from-white/10 via-white/15 to-white/10 backdrop-blur-lg rounded-3xl border border-white/20 p-3 sm:p-4 md:p-8 shadow-2xl"

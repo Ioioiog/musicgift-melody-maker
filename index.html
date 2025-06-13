@@ -7,6 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MusicGift.ro</title>
     
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png" as="image" type="image/png">
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- DNS prefetch for external domains -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//conversations-widget.brevo.com">
+    
+    <!-- Security headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- Performance hint -->
+    <meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+    
     <!-- Brevo Conversations Widget -->
     <script>
         (function(d, w, c) {
@@ -16,6 +33,7 @@
             };
             var s = d.createElement('script');
             s.async = true;
+            s.defer = true;
             s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
             if (d.head) d.head.appendChild(s);
         })(document, window, 'BrevoConversations');
@@ -24,7 +42,7 @@
   </head>
   <body>
     <div id="root"></div>
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module" defer></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
