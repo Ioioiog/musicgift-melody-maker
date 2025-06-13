@@ -32,11 +32,9 @@ const VideoHero = () => {
     const sessionHasPlayed = sessionStorage.getItem(playedLangKey) === 'true';
 
     if (!sessionHasPlayed) {
-      // If it's a new session, allow autoplay
       setShouldAutoplay(true);
       sessionStorage.setItem(playedLangKey, 'true');
     } else {
-      // If already played in this session, disable autoplay
       setShouldAutoplay(false);
     }
 
@@ -54,6 +52,30 @@ const VideoHero = () => {
     }
   }, [location.pathname]);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (shouldAutoplay && video) {
+      video.muted = false;
+      const playPromise = video.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setHasAudio(true);
+            setIsPlaying(true);
+          })
+          .catch((err) => {
+            console.warn('Autoplay with sound failed, falling back to muted:', err);
+            video.muted = true;
+            video.play().then(() => {
+              setHasAudio(false);
+              setIsPlaying(true);
+            });
+          });
+      }
+    }
+  }, [shouldAutoplay, language]);
+
   const handleVideoEnd = () => {
     setIsPlaying(false);
     setVideoPlayedOnce(true);
@@ -67,7 +89,7 @@ const VideoHero = () => {
       setIsPlaying(false);
     } else {
       video.currentTime = 0;
-      video.muted = false;
+      video.muted = !hasAudio;
       video.play();
       setIsPlaying(true);
     }
@@ -105,7 +127,6 @@ const VideoHero = () => {
         playsInline
         preload="metadata"
         muted={!hasAudio}
-        autoPlay={shouldAutoplay}
         onEnded={handleVideoEnd}
         className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover`}
         poster={posterSrc}
