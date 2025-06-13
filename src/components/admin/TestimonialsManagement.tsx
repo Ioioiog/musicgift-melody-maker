@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Play, Check, X, GitBranch, Download, Trash2 } from "lucide-react";
+import { ExternalLink, Play, Check, GitBranch, Download } from "lucide-react";
 import { testimonials as staticTestimonials } from "@/data/testimonials";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,7 +13,6 @@ const TestimonialsManagement = () => {
   const [selectedTestimonial, setSelectedTestimonial] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [isDeletingAndSyncing, setIsDeletingAndSyncing] = useState<string | null>(null);
   const { toast } = useToast();
 
   // Fetch testimonials from Supabase
@@ -53,74 +53,6 @@ const TestimonialsManagement = () => {
       description: "Testimonial approved successfully"
     });
     refetch();
-  };
-
-  const handleDeleteAndSync = async (id: string, isFromDatabase = true) => {
-    setIsDeletingAndSyncing(id);
-    
-    try {
-      if (isFromDatabase) {
-        // First delete from database
-        const { error } = await supabase
-          .from('testimonials')
-          .delete()
-          .eq('id', id);
-
-        if (error) {
-          toast({
-            title: "Error",
-            description: "Failed to delete testimonial",
-            variant: "destructive"
-          });
-          return;
-        }
-
-        // Refresh the data
-        refetch();
-      }
-
-      // Then trigger auto-sync to update GitHub
-      const { data, error: syncError } = await supabase.functions.invoke('update-testimonials-file');
-
-      if (syncError) {
-        throw syncError;
-      }
-
-      if (data.success) {
-        toast({
-          title: "Delete & Sync Successful! 🎉",
-          description: `Testimonial deleted and GitHub repository updated. ${data.testimonials_count} testimonials now synced.`
-        });
-      } else {
-        throw new Error(data.error || 'Auto-sync failed after deletion');
-      }
-    } catch (error) {
-      console.error('Delete and sync error:', error);
-      toast({
-        title: "Delete & Sync Failed",
-        description: error instanceof Error ? error.message : "Failed to sync testimonials to GitHub after deletion.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsDeletingAndSyncing(null);
-    }
-  };
-
-  const handleRejectTestimonial = async (id: string) => {
-    await handleDeleteAndSync(id, true);
-  };
-
-  const handleDeleteStaticTestimonial = async (testimonialId: string) => {
-    // For static testimonials, we trigger sync which will exclude any that are marked as deleted
-    // Since we can't modify the static file directly, we inform the user
-    toast({
-      title: "Static Testimonial Sync",
-      description: "Triggering GitHub sync. Note: To permanently remove static testimonials, edit src/data/testimonials.ts manually.",
-      variant: "default"
-    });
-    
-    // Still trigger sync to ensure everything else is up to date
-    await handleDeleteAndSync(testimonialId, false);
   };
 
   const handleAutoSync = async () => {
@@ -256,60 +188,13 @@ const TestimonialsManagement = () => {
               </Button>
             )}
             {isFromSupabase && !testimonial.approved && (
-              <>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="text-green-600 hover:text-green-700"
-                  onClick={() => handleApproveTestimonial(testimonial.id)}
-                >
-                  <Check className="w-4 h-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="text-red-600 hover:text-red-700"
-                  onClick={() => handleRejectTestimonial(testimonial.id)}
-                  disabled={isDeletingAndSyncing === testimonial.id}
-                >
-                  {isDeletingAndSyncing === testimonial.id ? (
-                    <div className="w-4 h-4 animate-spin border-2 border-red-600 border-t-transparent rounded-full" />
-                  ) : (
-                    <X className="w-4 h-4" />
-                  )}
-                </Button>
-              </>
-            )}
-            {isFromSupabase && testimonial.approved && (
               <Button
                 size="sm"
                 variant="outline"
-                className="text-red-600 hover:text-red-700"
-                onClick={() => handleDeleteAndSync(testimonial.id, true)}
-                disabled={isDeletingAndSyncing === testimonial.id}
-                title="Delete & sync to GitHub"
+                className="text-green-600 hover:text-green-700"
+                onClick={() => handleApproveTestimonial(testimonial.id)}
               >
-                {isDeletingAndSyncing === testimonial.id ? (
-                  <div className="w-4 h-4 animate-spin border-2 border-red-600 border-t-transparent rounded-full" />
-                ) : (
-                  <Trash2 className="w-4 h-4" />
-                )}
-              </Button>
-            )}
-            {!isFromSupabase && (
-              <Button
-                size="sm"
-                variant="outline"
-                className="text-red-600 hover:text-red-700"
-                onClick={() => handleDeleteStaticTestimonial(testimonial.id)}
-                disabled={isDeletingAndSyncing === testimonial.id}
-                title="Sync to GitHub (manual file edit required)"
-              >
-                {isDeletingAndSyncing === testimonial.id ? (
-                  <div className="w-4 h-4 animate-spin border-2 border-red-600 border-t-transparent rounded-full" />
-                ) : (
-                  <Trash2 className="w-4 h-4" />
-                )}
+                <Check className="w-4 h-4" />
               </Button>
             )}
           </div>
@@ -372,10 +257,6 @@ const TestimonialsManagement = () => {
             <Download className="w-4 h-4 mr-2" />
             {isExporting ? "Exporting..." : "Manual Export (Fallback)"}
           </Button>
-          <div className="text-sm text-gray-600 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2">
-            <p className="font-medium">Automated GitHub Sync</p>
-            <p>Delete actions automatically sync to GitHub</p>
-          </div>
         </div>
       </div>
 
