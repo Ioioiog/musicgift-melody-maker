@@ -62,8 +62,8 @@ serve(async (req) => {
 
     // Get the current static testimonials from GitHub
     const githubToken = Deno.env.get('GITHUB_TOKEN');
-    const repoOwner = 'your-github-username'; // Replace with your GitHub username
-    const repoName = 'your-repo-name'; // Replace with your repository name
+    const repoOwner = 'Ioioiog';
+    const repoName = 'musicgift-melody-maker';
     const filePath = 'src/data/testimonials.ts';
 
     if (!githubToken) {
