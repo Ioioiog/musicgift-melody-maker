@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -250,9 +251,9 @@ export const packagesTranslations = {
   // DJ Package includes
   djInclude1: "Original electronic track composition in your chosen style",
   djInclude2: "Professional mixing and mastering for club/festival quality",
-  djInclude3: "High-quality audio files (MP3, additional at request WAV HQ file)",
+  djInclude3: "High-quality audio files (MP3, additional at request WAV HQ)",
   djInclude4: "Professional cover art design",
-  djInclude5: "Distribution to major streaming platforms and Beatport",
+  djInclude5: "Distribution to major streaming platforms",
   
   // DJ Form Steps
   djStepIdentity: "DJ Identity & Branding",

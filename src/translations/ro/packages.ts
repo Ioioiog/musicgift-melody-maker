@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -251,7 +252,7 @@ export const packagesTranslations = {
   djInclude2: "Mixaj și mastering profesional pentru calitate de club/festival",
   djInclude3: "Fișiere audio de înaltă calitate (MP3, suplimentar la cerere WAV HQ)",
   djInclude4: "Design profesional de cover art",
-  djInclude5: "Distribuție pe platformele majore de streaming"
+  djInclude5: "Distribuție pe platformele majore de streaming",
   
   // DJ Form Steps
   djStepIdentity: "Identitate DJ & Branding",
