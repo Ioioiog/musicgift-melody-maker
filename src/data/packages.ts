@@ -1787,8 +1787,7 @@ export const packages: Package[] = [
       { id: "dj2", include_key: "djInclude2", include_order: 2 },
       { id: "dj3", include_key: "djInclude3", include_order: 3 },
       { id: "dj4", include_key: "djInclude4", include_order: 4 },
-      { id: "dj5", include_key: "djInclude5", include_order: 5 },
-      { id: "dj6", include_key: "djInclude6", include_order: 6 }
+      { id: "dj6", include_key: "djInclude6", include_order: 5 }
     ],
     steps: [
       {
