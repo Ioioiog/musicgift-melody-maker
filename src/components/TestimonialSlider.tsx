@@ -125,7 +125,7 @@ export default function TestimonialSlider() {
         >
           {/* Preview Image */}
           <img 
-            src="/lovable-uploads/e223223c-82fe-4ae6-98ed-19ab4cf12d26.png"
+            src="/lovable-uploads/088716fb-5d48-41b9-9f26-6f26a4194bbf.png"
             alt={title}
             className="w-full h-full object-cover"
             loading="lazy"
