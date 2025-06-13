@@ -4,6 +4,11 @@ import { Play, Volume2 } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
+const supportsWebM = (): boolean => {
+  const video = document.createElement('video');
+  return video.canPlayType('video/webm') !== '';
+};
+
 const VideoHero = () => {
   const { t, language } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -12,18 +17,23 @@ const VideoHero = () => {
   const [showReplayButton, setShowReplayButton] = useState(false);
   const [videoPlayed, setVideoPlayed] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [useWebM, setUseWebM] = useState(true);
 
-  const videoSrc = language === 'ro' ? '/uploads/musicgift_ro.mp4' : '/uploads/musicgift_eng.mp4';
-  const posterSrc = '/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png';
+  const videoKey = `videoPlayed-${language}`;
+  const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
+  const videoSrc = `/uploads/${baseName}.mp4`;
+  const videoWebM = `/uploads/${baseName}.webm`;
+  const posterSrc = '/uploads/video_placeholder.png';
 
   useEffect(() => {
-    const alreadyPlayed = sessionStorage.getItem('videoPlayed') === 'true';
+    const alreadyPlayed = sessionStorage.getItem(videoKey) === 'true';
     setVideoPlayed(alreadyPlayed);
+    setUseWebM(supportsWebM());
     setIsMounted(true);
-  }, []);
+  }, [language]);
 
   const handleVideoEnd = () => {
-    sessionStorage.setItem('videoPlayed', 'true');
+    sessionStorage.setItem(videoKey, 'true');
     setShowReplayButton(true);
   };
 
@@ -68,6 +78,7 @@ const VideoHero = () => {
 
       {!videoPlayed && (
         <video
+          key={language}
           ref={videoRef}
           playsInline
           preload="metadata"
@@ -77,7 +88,7 @@ const VideoHero = () => {
           className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover`}
           poster={posterSrc}
         >
-          <source src={videoSrc.replace('.mp4', '.webm')} type="video/webm" />
+          {useWebM && <source src={videoWebM} type="video/webm" />}
           <source src={videoSrc} type="video/mp4" />
         </video>
       )}
