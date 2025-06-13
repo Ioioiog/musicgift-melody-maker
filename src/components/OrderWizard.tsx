@@ -186,6 +186,60 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
   const totalPrice = calculateTotalPrice();
 
+  // Function to send quote request notification email
+  const sendQuoteNotificationEmail = async (quoteData: any, quoteId: string) => {
+    try {
+      const selectedAddonsList = selectedAddons.map((addonKey: string) => {
+        const addon = addons.find(a => a.addon_key === addonKey);
+        return addon ? addon.addon_key : addonKey;
+      });
+
+      const emailSubject = `New Quote Request - ${quoteId.slice(0, 8)}`;
+      const emailMessage = `
+New Quote Request Notification:
+
+Quote ID: ${quoteId}
+Customer: ${quoteData.customer_name}
+Email: ${quoteData.customer_email}
+Phone: ${quoteData.customer_phone || 'Not provided'}
+
+Package: ${quoteData.package_name}
+Selected Add-ons: ${selectedAddonsList.length > 0 ? selectedAddonsList.join(', ') : 'None'}
+Estimated Price: ${quoteData.estimated_price} ${quoteData.currency}
+
+Form Data Summary:
+${Object.entries(quoteData.form_data)
+  .filter(([key, value]) => value && key !== 'package')
+  .map(([key, value]) => `${key}: ${value}`)
+  .join('\n')}
+
+Add-on Field Values:
+${Object.entries(quoteData.addon_field_values || {})
+  .map(([key, value]) => `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`)
+  .join('\n')}
+
+---
+This quote request was submitted through the MusicGift website.
+Quote Management: Please review and respond to the customer with a personalized quote.
+      `.trim();
+
+      await supabase.functions.invoke('send-contact-email', {
+        body: {
+          firstName: 'Quote',
+          lastName: 'Request',
+          email: 'system@musicgift.ro',
+          subject: emailSubject,
+          message: emailMessage
+        }
+      });
+
+      console.log('Quote request notification email sent successfully');
+    } catch (error) {
+      console.error('Failed to send quote request notification email:', error);
+      // Don't throw - this shouldn't block the quote request process
+    }
+  };
+
   const handleSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
@@ -237,6 +291,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         }
         
         console.log('✅ Quote request created successfully:', quoteRequest.id);
+
+        // Send quote notification email to info@musicgift.ro
+        await sendQuoteNotificationEmail(quoteData, quoteRequest.id);
         
         toast({
           title: t('quoteRequestSubmitted', 'Quote Request Submitted'),

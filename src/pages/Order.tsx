@@ -104,6 +104,59 @@ const Order = () => {
     }
   };
 
+  // Function to send order notification email
+  const sendOrderNotificationEmail = async (orderData: any, orderId: string, totalPrice: number) => {
+    try {
+      const selectedPackage = packages.find(pkg => pkg.value === orderData.package);
+      const selectedAddonsList = orderData.addons?.map((addonKey: string) => {
+        const addon = addons.find(a => a.addon_key === addonKey);
+        return addon ? addon.addon_key : addonKey;
+      }) || [];
+
+      const emailSubject = `New Order Received - ${orderId.slice(0, 8)}`;
+      const emailMessage = `
+New Order Notification:
+
+Order ID: ${orderId}
+Customer: ${orderData.fullName || 'N/A'}
+Email: ${orderData.email || 'N/A'}
+Phone: ${orderData.phone || 'Not provided'}
+
+Package: ${selectedPackage?.label_key || orderData.package}
+Selected Add-ons: ${selectedAddonsList.length > 0 ? selectedAddonsList.join(', ') : 'None'}
+Total Price: ${totalPrice} ${currency}
+Payment Provider: ${orderData.paymentProvider || 'N/A'}
+
+${appliedGiftCard ? `Gift Card Applied: ${appliedGiftCard.code} (${(appliedGiftCard.gift_amount || 0) / 100} ${currency})` : ''}
+${appliedDiscount ? `Discount Applied: ${appliedDiscount.code} (${appliedDiscount.amount} ${currency})` : ''}
+
+Customer Details:
+${orderData.invoiceType === 'company' ? `Company: ${orderData.companyName || 'N/A'}` : 'Individual'}
+${orderData.address ? `Address: ${orderData.address}` : ''}
+${orderData.city ? `City: ${orderData.city}` : ''}
+
+---
+This order was submitted through the MusicGift website.
+Order Management: View full details in the admin panel.
+      `.trim();
+
+      await supabase.functions.invoke('send-contact-email', {
+        body: {
+          firstName: 'Order',
+          lastName: 'Notification',
+          email: 'system@musicgift.ro',
+          subject: emailSubject,
+          message: emailMessage
+        }
+      });
+
+      console.log('Order notification email sent successfully');
+    } catch (error) {
+      console.error('Failed to send order notification email:', error);
+      // Don't throw - this shouldn't block the order process
+    }
+  };
+
   const handleOrderComplete = async (orderData: any) => {
     try {
       console.log("🔄 Processing order with selected payment provider:", orderData.paymentProvider);
@@ -230,6 +283,9 @@ const Order = () => {
 
       // Associate files with the created order
       await associateFilesWithOrder(paymentResponse.orderId, orderData.addonFieldValues || {});
+
+      // Send order notification email to info@musicgift.ro
+      await sendOrderNotificationEmail(orderData, paymentResponse.orderId, finalPrice);
 
       // If gift card was used, create redemption record
       if (appliedGiftCard && giftCreditApplied > 0) {
