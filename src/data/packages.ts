@@ -1764,7 +1764,6 @@ export const packages: Package[] = [
       }
     ],
      {
-    id: "10",
     value: "dj",
     label_key: "djPackage",
     tagline_key: "djTagline",
@@ -1778,7 +1777,9 @@ export const packages: Package[] = [
     available_addons: [
       "rushDelivery",
       "customVideo",
-      "socialMediaRights"
+      "socialMediaRights",
+      "audioMessageFromSender",
+      "extendedSong"
     ],
     includes: [
       { id: "dj1", include_key: "djInclude1", include_order: 1 },
@@ -1798,7 +1799,7 @@ export const packages: Package[] = [
             id: "djName",
             field_name: "djName",
             field_type: "text",
-            placeholder_key: "Numele tău de DJ (ex: DJ Nova)",
+            placeholder_key: "enterDjName",
             required: true,
             field_order: 1
           },
@@ -1806,7 +1807,7 @@ export const packages: Package[] = [
             id: "identityKeywords",
             field_name: "identityKeywords",
             field_type: "textarea",
-            placeholder_key: "Descrie în câteva cuvinte vibe-ul tău ca DJ (ex: energic, misterios, exotic)",
+            placeholder_key: "enterIdentityKeywords",
             required: true,
             field_order: 2
           },
@@ -1814,7 +1815,7 @@ export const packages: Package[] = [
             id: "publicPersona",
             field_name: "publicPersona",
             field_type: "textarea",
-            placeholder_key: "Cum vrei să fii perceput ca artist? (ex: DJ carismatic, dark și misterios)",
+            placeholder_key: "describePublicPersona",
             required: false,
             field_order: 3
           },
@@ -1822,7 +1823,7 @@ export const packages: Package[] = [
             id: "targetAudience",
             field_name: "targetAudience",
             field_type: "textarea",
-            placeholder_key: "Cine este publicul tău țintă? (ex: fani EDM, festivaluri, underground)",
+            placeholder_key: "describeTargetAudience",
             required: false,
             field_order: 4
           }
@@ -1837,7 +1838,7 @@ export const packages: Package[] = [
             id: "musicStyle",
             field_name: "musicStyle",
             field_type: "select",
-            placeholder_key: "Alege stilul muzical preferat",
+            placeholder_key: "selectMusicStyle",
             required: true,
             field_order: 1,
             options: [
@@ -1852,7 +1853,7 @@ export const packages: Package[] = [
             id: "vocalChoice",
             field_name: "vocalChoice",
             field_type: "select",
-            placeholder_key: "Ce tip de voce vrei în piesă?",
+            placeholder_key: "selectVocalChoice",
             required: true,
             field_order: 2,
             options: [
@@ -1866,7 +1867,7 @@ export const packages: Package[] = [
             id: "soundReferenceLink",
             field_name: "soundReferenceLink",
             field_type: "url",
-            placeholder_key: "Link YouTube / SoundCloud cu o piesă de referință (opțional)",
+            placeholder_key: "enterSoundReference",
             required: false,
             field_order: 3
           },
@@ -1874,7 +1875,7 @@ export const packages: Package[] = [
             id: "tempoPreference",
             field_name: "tempoPreference",
             field_type: "text",
-            placeholder_key: "Ritm dorit (ex: 125 BPM, lent, rapid)",
+            placeholder_key: "enterTempoPreference",
             required: false,
             field_order: 4
           },
@@ -1882,7 +1883,7 @@ export const packages: Package[] = [
             id: "whatToAvoid",
             field_name: "whatToAvoid",
             field_type: "textarea",
-            placeholder_key: "Ce NU dorești în piesă? (ex: sunete metalice, tempo rapid)",
+            placeholder_key: "enterWhatToAvoid",
             required: false,
             field_order: 5
           }
@@ -1897,7 +1898,7 @@ export const packages: Package[] = [
             id: "coverPreferences",
             field_name: "coverPreferences",
             field_type: "textarea",
-            placeholder_key: "Ai idei pentru copertă? Culori, teme, fonturi...",
+            placeholder_key: "describeCoverPreferences",
             required: false,
             field_order: 1
           },
@@ -1905,7 +1906,7 @@ export const packages: Package[] = [
             id: "platformPreferences",
             field_name: "platformPreferences",
             field_type: "multiselect",
-            placeholder_key: "Unde vrei să lansezi piesa ta?",
+            placeholder_key: "selectPlatforms",
             required: false,
             field_order: 2,
             options: [
@@ -1920,7 +1921,7 @@ export const packages: Package[] = [
             id: "releasePlan",
             field_name: "releasePlan",
             field_type: "textarea",
-            placeholder_key: "Ai o dată sau eveniment special pentru lansare? (ex: ziua ta, festival)",
+            placeholder_key: "describeReleasePlan",
             required: false,
             field_order: 3
           },
@@ -1928,7 +1929,7 @@ export const packages: Package[] = [
             id: "socialLinks",
             field_name: "socialLinks",
             field_type: "text",
-            placeholder_key: "Linkuri social media (ex: @yourdjname, Instagram, TikTok)",
+            placeholder_key: "enterSocialLinks",
             required: false,
             field_order: 4
           }
@@ -1943,24 +1944,24 @@ export const packages: Package[] = [
             id: "goalsWithSong",
             field_name: "goalsWithSong",
             field_type: "textarea",
-            placeholder_key: "Care este scopul piesei? (ex: demo pentru festival, carieră, cadou)",
-            required: False,
+            placeholder_key: "describeGoalsWithSong",
+            required: false,
             field_order: 1
           },
           {
             id: "messageToProducer",
             field_name: "messageToProducer",
             field_type: "textarea",
-            placeholder_key: "Vrei să transmiți ceva direct producătorului?",
-            required: False,
+            placeholder_key: "enterMessageToProducer",
+            required: false,
             field_order: 2
           },
           {
             id: "heardAboutUs",
             field_name: "heardAboutUs",
             field_type: "select",
-            placeholder_key: "Cum ai aflat de MusicGift?",
-            required: False,
+            placeholder_key: "selectHeardAboutUs",
+            required: false,
             field_order: 3,
             options: [
               { value: "tiktok", label_key: "TikTok" },
