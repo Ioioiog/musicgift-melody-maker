@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const CollaborationSection = () => {
   const { toast } = useToast();
@@ -32,23 +33,71 @@ const CollaborationSection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.message) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      // Prepare the collaboration application email
+      const emailSubject = `Collaboration Application from ${formData.name}`;
+      const emailMessage = `
+Collaboration Application Details:
 
-    toast({
-      title: t('applicationSubmitted'),
-      description: t('applicationSubmittedDescription')
-    });
+Name: ${formData.name}
+Email: ${formData.email}
+Portfolio Link: ${formData.portfolioLink || 'Not provided'}
 
-    setFormData({
-      name: '',
-      email: '',
-      portfolioLink: '',
-      message: ''
-    });
-    setIsSubmitting(false);
+Message:
+${formData.message}
+
+---
+This is a collaboration application submitted through the MusicGift website.
+      `.trim();
+
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          firstName: formData.name.split(' ')[0] || formData.name,
+          lastName: formData.name.split(' ').slice(1).join(' ') || '',
+          email: formData.email,
+          subject: emailSubject,
+          message: emailMessage
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: t('applicationSubmitted'),
+        description: t('applicationSubmittedDescription')
+      });
+
+      setFormData({
+        name: '',
+        email: '',
+        portfolioLink: '',
+        message: ''
+      });
+
+    } catch (error: any) {
+      console.error('Error sending collaboration application:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send application. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getInputTextColor = (fieldName: string) => {
@@ -102,7 +151,7 @@ const CollaborationSection = () => {
                   <div className="space-y-1.5">
                     <Label htmlFor="name" className="flex items-center gap-2 text-white/90 font-medium text-sm">
                       <User className="w-3.5 h-3.5" />
-                      {t('fullName')}
+                      {t('fullName')} *
                     </Label>
                     <Input
                       id="name"
@@ -121,7 +170,7 @@ const CollaborationSection = () => {
                   <div className="space-y-1.5">
                     <Label htmlFor="email" className="flex items-center gap-2 text-white/90 font-medium text-sm">
                       <Mail className="w-3.5 h-3.5" />
-                      {t('emailAddress')}
+                      {t('emailAddress')} *
                     </Label>
                     <Input
                       id="email"
@@ -162,7 +211,7 @@ const CollaborationSection = () => {
                 <div className="space-y-1.5">
                   <Label htmlFor="message" className="flex items-center gap-2 text-white/90 font-medium text-sm">
                     <MessageSquare className="w-3.5 h-3.5" />
-                    {t('shortBioMessage')}
+                    {t('shortBioMessage')} *
                   </Label>
                   <Textarea
                     id="message"
