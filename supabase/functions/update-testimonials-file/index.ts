@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
@@ -72,7 +71,7 @@ serve(async (req) => {
 
     console.log('Fetching current file from GitHub...');
 
-    // Get current file content and SHA
+    // Get current file content and SHA (handle if file doesn't exist)
     const fileResponse = await fetch(
       `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`,
       {
@@ -84,26 +83,35 @@ serve(async (req) => {
       }
     );
 
-    if (!fileResponse.ok) {
+    let currentContent = '';
+    let fileSha = null;
+    let staticTestimonials = [];
+
+    if (fileResponse.ok) {
+      // File exists, get current content
+      const fileData = await fileResponse.json();
+      currentContent = atob(fileData.content);
+      fileSha = fileData.sha;
+      
+      console.log('Parsing current static testimonials...');
+
+      // Extract static testimonials from current file
+      try {
+        const testimonialsMatch = currentContent.match(/export const testimonials = (\[[\s\S]*?\]);/);
+        if (testimonialsMatch) {
+          staticTestimonials = JSON.parse(testimonialsMatch[1]);
+        }
+      } catch (parseError) {
+        console.warn('Could not parse existing testimonials, starting fresh:', parseError);
+      }
+    } else if (fileResponse.status === 404) {
+      // File doesn't exist, we'll create it
+      console.log('File does not exist, will create new file');
+    } else {
+      // Other error
       const errorText = await fileResponse.text();
       console.error('GitHub API Error:', errorText);
       throw new Error(`Failed to fetch file from GitHub: ${fileResponse.status} ${fileResponse.statusText}`);
-    }
-
-    const fileData = await fileResponse.json();
-    const currentContent = atob(fileData.content);
-    
-    console.log('Parsing current static testimonials...');
-
-    // Extract static testimonials from current file
-    let staticTestimonials = [];
-    try {
-      const testimonialsMatch = currentContent.match(/export const testimonials = (\[[\s\S]*?\]);/);
-      if (testimonialsMatch) {
-        staticTestimonials = JSON.parse(testimonialsMatch[1]);
-      }
-    } catch (parseError) {
-      console.warn('Could not parse existing testimonials, starting fresh:', parseError);
     }
 
     // Combine static testimonials with approved Supabase testimonials
@@ -131,9 +139,20 @@ serve(async (req) => {
     // Generate new file content
     const newFileContent = `export const testimonials = ${JSON.stringify(allTestimonials, null, 2)};`;
 
-    // Update file in GitHub
-    console.log('Updating file in GitHub repository...');
+    // Update or create file in GitHub
+    console.log(fileSha ? 'Updating existing file in GitHub repository...' : 'Creating new file in GitHub repository...');
     
+    const requestBody: any = {
+      message: `Auto-sync testimonials: ${allTestimonials.length} total (${supabaseTestimonials?.length || 0} from database)`,
+      content: btoa(newFileContent),
+      branch: 'main'
+    };
+
+    // Only include SHA if file exists (for updates)
+    if (fileSha) {
+      requestBody.sha = fileSha;
+    }
+
     const updateResponse = await fetch(
       `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`,
       {
@@ -144,12 +163,7 @@ serve(async (req) => {
           'Content-Type': 'application/json',
           'User-Agent': 'Supabase-Edge-Function'
         },
-        body: JSON.stringify({
-          message: `Auto-sync testimonials: ${allTestimonials.length} total (${supabaseTestimonials?.length || 0} from database)`,
-          content: btoa(newFileContent),
-          sha: fileData.sha,
-          branch: 'main'
-        })
+        body: JSON.stringify(requestBody)
       }
     );
 
@@ -160,7 +174,7 @@ serve(async (req) => {
     }
 
     const updateData = await updateResponse.json();
-    console.log('Successfully updated testimonials file in GitHub');
+    console.log(`Successfully ${fileSha ? 'updated' : 'created'} testimonials file in GitHub`);
 
     return new Response(JSON.stringify({ 
       success: true, 
@@ -168,7 +182,8 @@ serve(async (req) => {
       commit_url: updateData.commit?.html_url,
       testimonials_count: allTestimonials.length,
       database_count: supabaseTestimonials?.length || 0,
-      static_count: staticTestimonials.length
+      static_count: staticTestimonials.length,
+      action: fileSha ? 'updated' : 'created'
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
