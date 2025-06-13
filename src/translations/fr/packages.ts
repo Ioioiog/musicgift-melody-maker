@@ -252,7 +252,6 @@ export const packagesTranslations = {
   djInclude3: "Fichiers audio haute qualité (MP3, WAV, stems disponibles)",
   djInclude4: "Design professionnel de pochette d'album",
   djInclude5: "Distribution sur les plateformes de streaming majeures et Beatport",
-  djInclude6: "Droits de copropriété et support publishing",
   
   // DJ Form Steps
   djStepIdentity: "Identité DJ & Image de Marque",
