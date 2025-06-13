@@ -244,7 +244,7 @@ export const packagesTranslations = {
   djPackage: "Forfait DJ",
   djTagline: "Production musicale électronique professionnelle pour DJs et artistes",
   djDescription: "Forfait complet de production musicale électronique pour DJs et artistes de musique électronique. Du concept à la sortie, nous créons des morceaux professionnels prêts pour les clubs, festivals et plateformes de streaming.",
-  djDelivery: "7–10 jours ouvrables",
+  djDelivery: "7–14 jours ouvrables",
   
   // DJ Package includes
   djInclude1: "Composition originale de morceau électronique dans votre style choisi",
@@ -252,6 +252,7 @@ export const packagesTranslations = {
   djInclude3: "Fichiers audio haute qualité (MP3, WAV, stems disponibles)",
   djInclude4: "Design professionnel de pochette d'album",
   djInclude5: "Distribution sur les plateformes de streaming majeures et Beatport",
+  djInclude6: "Droits de copropriété et support publishing",
   
   // DJ Form Steps
   djStepIdentity: "Identité DJ & Image de Marque",
