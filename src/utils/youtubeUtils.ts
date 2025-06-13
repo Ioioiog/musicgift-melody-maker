@@ -49,6 +49,33 @@ export const convertToYouTubeEmbed = (url: string): string => {
 };
 
 /**
+ * Gets YouTube thumbnail URL for different sizes
+ */
+export const getYouTubeThumbnail = (url: string, size: 'default' | 'medium' | 'high' | 'maxres' = 'maxresdefault'): string => {
+  const videoId = extractYouTubeVideoId(url);
+  if (!videoId) return '';
+  
+  const sizeMap = {
+    'default': 'default',
+    'medium': 'mqdefault', 
+    'high': 'hqdefault',
+    'maxres': 'maxresdefault'
+  };
+  
+  return `https://img.youtube.com/vi/${videoId}/${sizeMap[size]}.jpg`;
+};
+
+/**
+ * Creates YouTube watch URL from video ID or any YouTube URL
+ */
+export const getYouTubeWatchUrl = (url: string): string => {
+  const videoId = extractYouTubeVideoId(url);
+  if (!videoId) return url;
+  
+  return `https://www.youtube.com/watch?v=${videoId}`;
+};
+
+/**
  * Validates if a URL is a valid YouTube URL
  */
 export const isValidYouTubeUrl = (url: string): boolean => {
