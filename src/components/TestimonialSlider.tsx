@@ -1,4 +1,3 @@
-
 import { FaStar, FaCheckCircle } from "react-icons/fa";
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from "framer-motion";
@@ -23,6 +22,7 @@ export default function TestimonialSlider() {
   const [loadedVideos, setLoadedVideos] = useState(new Set());
   const [playingVideos, setPlayingVideos] = useState(new Set());
   const [loadingVideos, setLoadingVideos] = useState(new Set());
+  const [clickedVideos, setClickedVideos] = useState(new Set());
   const videoRefs = useRef(new Map());
   
   const autoplay = Autoplay({
@@ -53,17 +53,26 @@ export default function TestimonialSlider() {
     return '';
   };
 
-  const getYouTubeThumbnail = (url) => {
-    const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
-    return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
+  const handleVideoClick = (testimonialId, type) => {
+    setClickedVideos(prev => new Set([...prev, testimonialId]));
+    
+    if (type === 'youtube') {
+      const testimonial = testimonials.find(t => t.id === testimonialId);
+      setMaximizedVideo({ 
+        src: testimonial?.youtube_link, 
+        type: 'youtube', 
+        title: `${testimonial?.name} testimonial` 
+      });
+    }
   };
 
   const handleVideoPlay = async (testimonialId, type) => {
     if (type === 'youtube') {
+      const testimonial = testimonials.find(t => t.id === testimonialId);
       setMaximizedVideo({ 
-        src: testimonials.find(t => t.id === testimonialId)?.youtube_link, 
+        src: testimonial?.youtube_link, 
         type: 'youtube', 
-        title: `${testimonials.find(t => t.id === testimonialId)?.name} testimonial` 
+        title: `${testimonial?.name} testimonial` 
       });
       return;
     }
@@ -105,31 +114,55 @@ export default function TestimonialSlider() {
     const isLoading = loadingVideos.has(testimonialId);
     const isPlaying = playingVideos.has(testimonialId);
     const isLoaded = loadedVideos.has(testimonialId);
+    const isClicked = clickedVideos.has(testimonialId);
 
-    if (type === 'youtube') {
-      const thumbnailUrl = getYouTubeThumbnail(src);
-      
+    // Show preview image until user clicks
+    if (!isClicked) {
       return (
         <div 
           className="relative group overflow-hidden rounded-xl bg-gray-50 cursor-pointer h-full" 
-          onClick={() => handleVideoPlay(testimonialId, 'youtube')}
+          onClick={() => handleVideoClick(testimonialId, type)}
         >
-          {thumbnailUrl && (
-            <img 
-              src={thumbnailUrl} 
-              alt={title}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          )}
-          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
-            <ExternalLink className="w-4 h-4 text-red-600" />
-          </div>
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center">
-            <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 group-hover:scale-110 transition-transform duration-200">
-              <Play className="w-6 h-6 text-gray-800" />
+          {/* Preview Image */}
+          <img 
+            src="/lovable-uploads/e223223c-82fe-4ae6-98ed-19ab4cf12d26.png"
+            alt={title}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          
+          {/* Play Button Overlay */}
+          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-all duration-200 flex items-center justify-center">
+            <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform duration-200 shadow-lg">
+              <Play className="w-8 h-8 text-gray-800" fill="currentColor" />
             </div>
           </div>
+
+          {/* Type Indicator */}
+          <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-sm">
+            {type === 'youtube' ? (
+              <ExternalLink className="w-4 h-4 text-red-600" />
+            ) : (
+              <Play className="w-4 h-4 text-purple-600" />
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Show actual video after click
+    if (type === 'youtube') {
+      const processedSrc = getProcessedYouTubeUrl(src);
+      
+      return (
+        <div className="relative group overflow-hidden rounded-xl bg-gray-50 h-full">
+          <iframe 
+            src={processedSrc}
+            className="w-full h-full"
+            allowFullScreen
+            title={title}
+            loading="lazy"
+          />
         </div>
       );
     }
@@ -148,6 +181,7 @@ export default function TestimonialSlider() {
           onPlay={() => setPlayingVideos(prev => new Set([...prev, testimonialId]))}
           onPause={() => handleVideoPause(testimonialId)}
           onEnded={() => handleVideoPause(testimonialId)}
+          autoPlay
         >
           <source src={src} type="video/mp4" />
         </video>
@@ -156,18 +190,6 @@ export default function TestimonialSlider() {
         {isLoading && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-          </div>
-        )}
-        
-        {/* Play button overlay - shown when not playing */}
-        {!isPlaying && !isLoading && (
-          <div 
-            className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center cursor-pointer"
-            onClick={() => handleVideoPlay(testimonialId, 'uploaded')}
-          >
-            <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 group-hover:scale-110 transition-transform duration-200">
-              <Play className="w-6 h-6 text-gray-800" />
-            </div>
           </div>
         )}
 
