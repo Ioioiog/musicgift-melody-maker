@@ -26,63 +26,69 @@ import PaymentError from "./pages/PaymentError";
 import PaymentCancel from "./pages/PaymentCancel";
 import Unsubscribe from "./pages/Unsubscribe";
 
+const AppContent = () => (
+  <ErrorBoundary>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/packages" element={<Packages />} />
+      <Route path="/packages/:packageId" element={<PackageDetails />} />
+      <Route path="/how-it-works" element={<HowItWorks />} />
+      <Route path="/testimonials" element={<Testimonials />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/order" element={<Order />} />
+      <Route path="/gift" element={<Gift />} />
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/unsubscribe" element={<Unsubscribe />} />
+      
+      {/* Standardized payment routes */}
+      <Route path="/payment/success" element={<PaymentSuccess />} />
+      <Route path="/payment/error" element={<PaymentError />} />
+      <Route path="/payment/cancel" element={<PaymentCancel />} />
+      
+      {/* Legacy redirect for old payment-success route */}
+      <Route path="/payment-success" element={<Navigate to="/payment/success" replace />} />
+      
+      <Route path="/access-denied" element={<AccessDenied />} />
+      <Route 
+        path="/settings" 
+        element={
+          <AuthGuard>
+            <Settings />
+          </AuthGuard>
+        } 
+      />
+      <Route 
+        path="/history" 
+        element={
+          <AuthGuard>
+            <History />
+          </AuthGuard>
+        } 
+      />
+      <Route 
+        path="/admin" 
+        element={
+          <AuthGuard>
+            <RoleGuard allowedRoles={['admin', 'super_admin']}>
+              <Admin />
+            </RoleGuard>
+          </AuthGuard>
+        } 
+      />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </ErrorBoundary>
+);
+
 const App = () => (
-  <TooltipProvider>
+  <>
+    <TooltipProvider>
+      <AppContent />
+    </TooltipProvider>
     <Toaster />
     <Sonner />
-    <ErrorBoundary>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/packages" element={<Packages />} />
-        <Route path="/packages/:packageId" element={<PackageDetails />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/testimonials" element={<Testimonials />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/order" element={<Order />} />
-        <Route path="/gift" element={<Gift />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/unsubscribe" element={<Unsubscribe />} />
-        
-        {/* Standardized payment routes */}
-        <Route path="/payment/success" element={<PaymentSuccess />} />
-        <Route path="/payment/error" element={<PaymentError />} />
-        <Route path="/payment/cancel" element={<PaymentCancel />} />
-        
-        {/* Legacy redirect for old payment-success route */}
-        <Route path="/payment-success" element={<Navigate to="/payment/success" replace />} />
-        
-        <Route path="/access-denied" element={<AccessDenied />} />
-        <Route 
-          path="/settings" 
-          element={
-            <AuthGuard>
-              <Settings />
-            </AuthGuard>
-          } 
-        />
-        <Route 
-          path="/history" 
-          element={
-            <AuthGuard>
-              <History />
-            </AuthGuard>
-          } 
-        />
-        <Route 
-          path="/admin" 
-          element={
-            <AuthGuard>
-              <RoleGuard allowedRoles={['admin', 'super_admin']}>
-                <Admin />
-              </RoleGuard>
-            </AuthGuard>
-          } 
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </ErrorBoundary>
-  </TooltipProvider>
+  </>
 );
 
 export default App;
