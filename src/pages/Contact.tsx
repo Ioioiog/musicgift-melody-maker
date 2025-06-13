@@ -1,263 +1,309 @@
-
-import { useLanguage } from "@/contexts/LanguageContext";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Phone, MapPin, Clock, MessageCircle } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import SEOHead from "@/components/SEOHead";
-import { useStructuredData } from "@/components/StructuredData";
-import OptimizedImage from "@/components/OptimizedImage";
+import NewsletterForm from "@/components/NewsletterForm";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { motion } from "framer-motion";
+import { Mail, Phone, MapPin } from "lucide-react";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Contact = () => {
   const { t } = useLanguage();
-  const { organizationSchema } = useStructuredData();
+  const { toast } = useToast();
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Form state
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     subject: '',
     message: ''
   });
 
-  const contactPageSchema = {
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    "name": "Contact MusicGift.ro",
-    "description": "Get in touch with MusicGift.ro for personalized song creation services",
-    "mainEntity": organizationSchema
+  const getInputTextColor = (fieldName: string) => {
+    return focusedField === fieldName ? 'text-black' : 'text-white';
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [field]: value
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Contact form submitted:', formData);
+    
+    // Basic validation
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.subject || !formData.message) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: formData
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Success!",
+        description: "Your message has been sent successfully. We'll get back to you soon!",
+      });
+
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+
+    } catch (error: any) {
+      console.error('Error sending contact form:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <>
-      <SEOHead
-        title={t('contactUs', 'Contact Us') + ' - MusicGift.ro'}
-        description={t('contactDescription', 'Get in touch with MusicGift.ro for personalized song creation services. Professional support and custom music solutions.')}
-        structuredData={contactPageSchema}
-      />
+    <div className="min-h-screen">
+      <Navigation />
       
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-        <Navigation />
-        
-        <main className="pt-16">
-          {/* Hero Section */}
-          <section className="relative py-20 px-4 overflow-hidden">
-            <div className="absolute inset-0 z-0">
-              <OptimizedImage
-                src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png"
-                alt="Contact us background with musical elements"
-                className="w-full h-full object-cover opacity-20"
-                priority={true}
-                width={1920}
-                height={1080}
-              />
-            </div>
-            
-            <div className="max-w-4xl mx-auto text-center relative z-10">
-              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                {t('contactUs', 'Contact Us')}
-              </h1>
-              <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-                {t('contactSubtitle', 'Ready to create your personalized song? Let\'s discuss your musical vision!')}
-              </p>
-            </div>
-          </section>
+      {/* Contact Form and Info Section */}
+      <section className="py-20 text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/20 py-0"></div>
 
-          {/* Contact Content */}
-          <section className="py-16 px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid lg:grid-cols-2 gap-12">
-                {/* Contact Form */}
-                <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white">
-                  <CardHeader>
-                    <CardTitle className="text-2xl flex items-center gap-3">
-                      <MessageCircle className="w-8 h-8 text-purple-400" aria-hidden="true" />
-                      {t('sendMessage', 'Send us a message')}
-                    </CardTitle>
-                    <CardDescription className="text-white/80">
-                      {t('formDescription', 'Fill out the form below and we\'ll get back to you as soon as possible')}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="name" className="text-white">
-                            {t('fullName', 'Full Name')} *
-                          </Label>
-                          <Input
-                            id="name"
-                            name="name"
-                            type="text"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            required
-                            className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-purple-400 focus:ring-purple-400"
-                            placeholder={t('enterFullName', 'Enter your full name')}
-                            aria-describedby="name-error"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="email" className="text-white">
-                            {t('emailAddress', 'Email Address')} *
-                          </Label>
-                          <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            required
-                            className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-purple-400 focus:ring-purple-400"
-                            placeholder={t('enterEmail', 'Enter your email address')}
-                            aria-describedby="email-error"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="subject" className="text-white">
-                          {t('subject', 'Subject')} *
-                        </Label>
+        {/* Contact Form and Info */}
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 py-[80px]">
+            {/* Contact Form */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl h-full">
+                <CardContent className="p-8">
+                  <h2 className="text-2xl font-bold text-white mb-6">{t('sendMessage')}</h2>
+                  <form className="space-y-6" onSubmit={handleSubmit}>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="firstName" className="text-white/90">{t('firstName')}</Label>
                         <Input
-                          id="subject"
-                          name="subject"
-                          type="text"
-                          value={formData.subject}
-                          onChange={handleInputChange}
+                          id="firstName"
+                          value={formData.firstName}
+                          onChange={(e) => handleInputChange('firstName', e.target.value)}
+                          onFocus={() => setFocusedField('firstName')}
+                          onBlur={() => setFocusedField(null)}
+                          className={`bg-white/10 border-white/20 ${getInputTextColor('firstName')} placeholder:text-white/60 focus:border-white/40`}
                           required
-                          className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-purple-400 focus:ring-purple-400"
-                          placeholder={t('enterSubject', 'What can we help you with?')}
-                          aria-describedby="subject-error"
                         />
                       </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="message" className="text-white">
-                          {t('message', 'Message')} *
-                        </Label>
-                        <Textarea
-                          id="message"
-                          name="message"
-                          value={formData.message}
-                          onChange={handleInputChange}
+                      <div>
+                        <Label htmlFor="lastName" className="text-white/90">{t('lastName')}</Label>
+                        <Input
+                          id="lastName"
+                          value={formData.lastName}
+                          onChange={(e) => handleInputChange('lastName', e.target.value)}
+                          onFocus={() => setFocusedField('lastName')}
+                          onBlur={() => setFocusedField(null)}
+                          className={`bg-white/10 border-white/20 ${getInputTextColor('lastName')} placeholder:text-white/60 focus:border-white/40`}
                           required
-                          rows={5}
-                          className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-purple-400 focus:ring-purple-400 resize-none"
-                          placeholder={t('enterMessage', 'Tell us about your project or question...')}
-                          aria-describedby="message-error"
                         />
                       </div>
-                      
-                      <Button 
-                        type="submit" 
-                        className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 text-lg font-medium focus:ring-2 focus:ring-orange-300"
-                        aria-label={t('sendMessage', 'Send Message')}
-                      >
-                        {t('sendMessage', 'Send Message')}
-                      </Button>
-                    </form>
+                    </div>
+                    <div>
+                      <Label htmlFor="email" className="text-white/90">{t('email')}</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        onFocus={() => setFocusedField('email')}
+                        onBlur={() => setFocusedField(null)}
+                        className={`bg-white/10 border-white/20 ${getInputTextColor('email')} placeholder:text-white/60 focus:border-white/40`}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="subject" className="text-white/90">{t('subject')}</Label>
+                      <Input
+                        id="subject"
+                        value={formData.subject}
+                        onChange={(e) => handleInputChange('subject', e.target.value)}
+                        onFocus={() => setFocusedField('subject')}
+                        onBlur={() => setFocusedField(null)}
+                        className={`bg-white/10 border-white/20 ${getInputTextColor('subject')} placeholder:text-white/60 focus:border-white/40`}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="message" className="text-white/90">{t('message')}</Label>
+                      <Textarea
+                        id="message"
+                        rows={6}
+                        value={formData.message}
+                        onChange={(e) => handleInputChange('message', e.target.value)}
+                        onFocus={() => setFocusedField('message')}
+                        onBlur={() => setFocusedField(null)}
+                        className={`bg-white/10 border-white/20 ${getInputTextColor('message')} placeholder:text-white/60 focus:border-white/40`}
+                        required
+                      />
+                    </div>
+                    <Button 
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-gradient-purple hover:bg-white/30 transition-all duration-300"
+                    >
+                      {isSubmitting ? 'Sending...' : t('sendMessage')}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Contact Info */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-2xl font-bold mb-6">{t('getInTouch')}</h2>
+                  <p className="opacity-90 mb-8">{t('getInTouchContent')}</p>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                      <Mail className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{t('email')}</h3>
+                      <p className="opacity-90">info@musicgift.ro</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                      <Phone className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{t('phone')}</h3>
+                      <p className="opacity-90">+40 723 141 501</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                      <MapPin className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{t('location')}</h3>
+                      <p className="opacity-90">Romania</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Card className="bg-white/10 backdrop-blur-md border border-white/20 hover:border-white/30 transition-all duration-300 shadow-xl">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-white mb-4">{t('businessHours')}</h3>
+                    <div className="space-y-2 text-sm text-white/80">
+                      <div className="flex justify-between">
+                        <span>{t('monday')} - {t('friday')}</span>
+                        <span>9:00 - 18:00</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>{t('saturday')}</span>
+                        <span>{t('closed')}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>{t('sunday')}</span>
+                        <span>{t('closed')}</span>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
-
-                {/* Contact Information */}
-                <div className="space-y-8">
-                  <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white">
-                    <CardHeader>
-                      <CardTitle className="text-2xl flex items-center gap-3">
-                        <Mail className="w-8 h-8 text-blue-400" aria-hidden="true" />
-                        {t('getInTouch', 'Get in Touch')}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="flex items-center gap-4">
-                        <Mail className="w-6 h-6 text-purple-400 flex-shrink-0" aria-hidden="true" />
-                        <div>
-                          <div className="font-medium">{t('email', 'Email')}</div>
-                          <a 
-                            href="mailto:contact@musicgift.ro" 
-                            className="text-white/80 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-purple-300 rounded"
-                          >
-                            contact@musicgift.ro
-                          </a>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-4">
-                        <Phone className="w-6 h-6 text-green-400 flex-shrink-0" aria-hidden="true" />
-                        <div>
-                          <div className="font-medium">{t('phone', 'Phone')}</div>
-                          <a 
-                            href="tel:+40123456789" 
-                            className="text-white/80 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-green-300 rounded"
-                          >
-                            +40 123 456 789
-                          </a>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-4">
-                        <Clock className="w-6 h-6 text-yellow-400 flex-shrink-0" aria-hidden="true" />
-                        <div>
-                          <div className="font-medium">{t('businessHours', 'Business Hours')}</div>
-                          <div className="text-white/80">
-                            {t('mondayFriday', 'Monday - Friday')}: 9:00 - 18:00<br />
-                            {t('weekends', 'Weekends')}: 10:00 - 16:00
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-4">
-                        <MapPin className="w-6 h-6 text-red-400 flex-shrink-0 mt-1" aria-hidden="true" />
-                        <div>
-                          <div className="font-medium">{t('location', 'Location')}</div>
-                          <div className="text-white/80">
-                            Bucharest, Romania<br />
-                            {t('onlineServices', 'Online services available worldwide')}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white">
-                    <CardHeader>
-                      <CardTitle className="text-xl">
-                        {t('responseTime', 'Response Time')}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-white/80">
-                        {t('responseDescription', 'We typically respond to all inquiries within 24 hours during business days. For urgent requests, please call us directly.')}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
               </div>
-            </div>
-          </section>
-        </main>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-        <Footer />
-      </div>
-    </>
+      {/* Newsletter Section */}
+      <section className="py-12 sm:py-16 md:py-20 text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/50 py-0"></div>
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }} className="mb-8 sm:mb-10">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
+              {t('stayUpdated') || 'Stay Updated'}
+            </h2>
+            <p className="text-lg sm:text-xl text-white/90 leading-relaxed">
+              {t('subscribeNewsletter') || 'Subscribe to our newsletter for the latest updates and exclusive offers'}
+            </p>
+          </motion.div>
+
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.2
+        }} className="max-w-md mx-auto">
+            <NewsletterForm />
+          </motion.div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
   );
 };
 

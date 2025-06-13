@@ -1,151 +1,172 @@
 
-import React, { Suspense, lazy } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { motion } from 'framer-motion';
-import { Heart, Gift as GiftIcon, Sparkles } from 'lucide-react';
-import SEOHead from '@/components/SEOHead';
-import { useStructuredData } from '@/components/StructuredData';
-import OptimizedImage from '@/components/OptimizedImage';
-
-// Lazy load components for better performance
-const GiftPurchaseWizard = lazy(() => import('@/components/gift/GiftPurchaseWizard'));
-const GiftRedemption = lazy(() => import('@/components/gift/GiftRedemption'));
-const Navigation = lazy(() => import('@/components/Navigation'));
-const Footer = lazy(() => import('@/components/Footer'));
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Gift as GiftIcon, Heart, Users } from "lucide-react";
+import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
+import GiftRedemption from "@/components/gift/GiftRedemption";
+import GiftPaymentSuccess from "@/components/gift/GiftPaymentSuccess";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Gift = () => {
   const { t } = useLanguage();
-  const { serviceSchema } = useStructuredData();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [searchParams] = useSearchParams();
 
-  const giftPageSchema = {
-    ...serviceSchema,
-    "@type": "Product",
-    "name": t('shareGiftOfMusic'),
-    "description": t('givePersonalizedSong'),
-    "image": "https://www.musicgift.ro/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png",
-    "offers": {
-      "@type": "AggregateOffer",
-      "lowPrice": "49",
-      "highPrice": "299",
-      "priceCurrency": "RON"
-    }
-  };
+  // Check if returning from payment
+  const paymentStatus = searchParams.get('payment');
 
   const handleGiftPurchaseComplete = (data: any) => {
-    console.log('Gift purchase completed:', data);
+    console.log("Gift purchase completed:", data);
+    // This will now be called only after successful payment
+    // The payment flow will handle the redirection automatically
+    toast({
+      title: t('giftCardCreated'),
+      description: `${t('giftCardCode')} ${data.code} ${t('giftCardWillBeDelivered')} ${data.recipient_email}`
+    });
   };
 
   const handleGiftRedemption = (giftCard: any, selectedPackage: string, upgradeAmount?: number) => {
-    console.log('Gift redemption:', { giftCard, selectedPackage, upgradeAmount });
+    console.log("Gift redemption:", {
+      giftCard,
+      selectedPackage,
+      upgradeAmount
+    });
+
+    // Here we would redirect to the order flow with the gift card applied
+    // For now, we'll show a success message
+    toast({
+      title: t('giftCardApplied'),
+      description: `${t('proceedingToComplete')} ${selectedPackage} ${t('packageOrder')}`
+    });
+
+    // TODO: Redirect to order flow with gift card data
+    // window.location.href = `/order?gift=${giftCard.code}&package=${selectedPackage}`;
   };
 
   return (
-    <>
-      <SEOHead
-        title={t('shareGiftOfMusic') + ' - MusicGift.ro'}
-        description={t('givePersonalizedSong') + ' ' + t('createDigitalGiftCard')}
-        structuredData={giftPageSchema}
-      />
+    <div className="min-h-screen flex flex-col">
+      <Navigation />
       
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-        <Suspense fallback={<div className="h-16 bg-black/20" />}>
-          <Navigation />
-        </Suspense>
-        
-        {/* Hero Section with optimized background */}
-        <section className="relative py-16 px-4 overflow-hidden">
-          {/* Optimized background image */}
-          <div className="absolute inset-0 z-0">
-            <OptimizedImage
-              src="/lovable-uploads/9d0d10ef-2340-4632-8df0-f5058547a0c9.png"
-              alt="Musical gift background"
-              className="w-full h-full object-cover opacity-20"
-              priority={true}
-              width={1920}
-              height={1080}
-            />
-          </div>
-          
-          {/* Floating elements for visual appeal */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <motion.div
-              className="absolute top-20 left-10"
-              animate={{ y: [-10, 10, -10], rotate: [0, 5, 0] }}
-              transition={{ duration: 6, repeat: Infinity }}
-            >
-              <Heart className="w-8 h-8 text-pink-300 opacity-60" />
-            </motion.div>
-            <motion.div
-              className="absolute top-32 right-20"
-              animate={{ y: [10, -10, 10], rotate: [0, -5, 0] }}
-              transition={{ duration: 8, repeat: Infinity }}
-            >
-              <GiftIcon className="w-10 h-10 text-yellow-300 opacity-50" />
-            </motion.div>
-            <motion.div
-              className="absolute bottom-32 left-20"
-              animate={{ y: [-15, 15, -15], rotate: [0, 10, 0] }}
-              transition={{ duration: 7, repeat: Infinity }}
-            >
-              <Sparkles className="w-6 h-6 text-blue-300 opacity-70" />
-            </motion.div>
-          </div>
-          
-          <div className="max-w-4xl mx-auto text-center relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                {t('shareGiftOfMusic')}
-              </h1>
-              <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-                {t('givePersonalizedSong')}
-              </p>
-              <p className="text-lg text-white/80 mb-12 max-w-2xl mx-auto">
-                {t('createDigitalGiftCard')}
-              </p>
-            </motion.div>
-          </div>
-        </section>
+      {/* Compact Hero Section - Adjusted padding for seamless connection to navbar */}
+      <section className="pt-16 md:pt-20 lg:pt-24 pb-6 text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/20 py-0"></div>
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+          <motion.div 
+            className="flex justify-center mb-6" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+          </motion.div>
+          <motion.h2 
+            className="text-2xl md:text-3xl font-bold mb-2" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            {t('shareGiftOfMusic')}
+          </motion.h2>
+          <motion.p 
+            className="text-base md:text-lg opacity-90 mb-4" 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            {t('givePersonalizedSong')} {t('createDigitalGiftCard')}
+          </motion.p>
+        </div>
+      </section>
 
-        {/* Main Content */}
-        <section className="py-16 px-4 relative z-10">
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-8">
-              <Suspense fallback={
-                <div className="flex justify-center items-center h-64">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-                </div>
-              }>
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-6">
-                    <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-                      <GiftIcon className="w-8 h-8 text-purple-600" />
-                      {t('buyGiftCard')}
-                    </h2>
-                    <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
-                  </div>
-                  
-                  <div className="space-y-6">
-                    <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-                      <Sparkles className="w-8 h-8 text-blue-600" />
-                      {t('redeemGiftCard')}
-                    </h2>
-                    <GiftRedemption onRedemption={handleGiftRedemption} />
-                  </div>
-                </div>
-              </Suspense>
-            </div>
-          </div>
-        </section>
+      {/* Main Content - Flexible to fill remaining space with background */}
+      <section className="flex-1 flex items-center py-4 relative" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/30 py-[22px]"></div>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.8, delay: 0.6 }} 
+          className="w-full relative z-10 px-4 py-[10px]"
+        >
+          <div className="max-w-4xl mx-auto">
+            {paymentStatus === 'success' ? (
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
+                <GiftPaymentSuccess />
+              </div>
+            ) : (
+              <Tabs defaultValue="purchase" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/10 backdrop-blur-sm border border-white/20 py-1 my-[26px] h-auto">
+                  <TabsTrigger 
+                    value="purchase" 
+                    className="text-sm sm:text-base lg:text-lg data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80 py-2 sm:py-3 px-2 sm:px-4 h-auto min-h-[44px] leading-tight"
+                  >
+                    <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
+                      <GiftIcon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm lg:text-base font-medium leading-tight">
+                        {t('buyGiftCard')}
+                      </span>
+                    </div>
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="redeem" 
+                    className="text-sm sm:text-base lg:text-lg data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80 py-2 sm:py-3 px-2 sm:px-4 h-auto min-h-[44px] leading-tight"
+                  >
+                    <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
+                      <Heart className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm lg:text-base font-medium leading-tight">
+                        {t('redeemGiftCard')}
+                      </span>
+                    </div>
+                  </TabsTrigger>
+                </TabsList>
 
-        <Suspense fallback={<div className="h-64 bg-gray-900" />}>
-          <Footer />
-        </Suspense>
-      </div>
-    </>
+                <TabsContent value="purchase">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+                    {/* Decorative elements */}
+                    <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-orange-500/15 to-transparent rounded-full blur-lg" />
+                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-orange-500/10 to-transparent rounded-full blur-md" />
+                    
+                    <div className="relative z-10 p-6">
+                      <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="redeem">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+                    {/* Decorative elements */}
+                    <div className="absolute -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-orange-500/15 to-transparent rounded-full blur-lg" />
+                    <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-orange-500/10 to-transparent rounded-full blur-md" />
+                    
+                    <div className="relative z-10 p-6">
+                      <GiftRedemption onRedemption={handleGiftRedemption} />
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            )}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Footer */}
+      <Footer />
+    </div>
   );
 };
 
