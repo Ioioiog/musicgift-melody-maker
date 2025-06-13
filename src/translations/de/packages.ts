@@ -238,5 +238,69 @@ export const packagesTranslations = {
   
   // Common voice options
   voiceFemale: "Weibliche Stimme",
-  voiceMale: "Männliche Stimme"
+  voiceMale: "Männliche Stimme",
+  
+  // DJ Package
+  djPackage: "DJ Paket",
+  djTagline: "Professionelle elektronische Musikproduktion für DJs und Künstler",
+  djDescription: "Komplettes elektronisches Musikproduktionspaket für DJs und elektronische Musikkünstler. Vom Konzept bis zur Veröffentlichung erstellen wir professionelle Tracks bereit für Clubs, Festivals und Streaming-Plattformen.",
+  djDelivery: "7–14 Werktage",
+  
+  // DJ Package includes
+  djInclude1: "Original elektronische Track-Komposition in Ihrem gewählten Stil",
+  djInclude2: "Professionelles Mixing und Mastering für Club-/Festival-Qualität",
+  djInclude3: "Hochwertige Audiodateien (MP3, WAV, Stems verfügbar)",
+  djInclude4: "Professionelles Cover-Art-Design",
+  djInclude5: "Verteilung an große Streaming-Plattformen und Beatport",
+  djInclude6: "Miteigentumsrechte und Publishing-Unterstützung",
+  
+  // DJ Form Steps
+  djStepIdentity: "DJ Identität & Branding",
+  djStepSound: "Sound & Stil Präferenzen",
+  djStepRelease: "Veröffentlichung & Vertrieb",
+  djStepFinalNotes: "Ziele & Zusätzliche Notizen",
+  
+  // DJ Form Fields
+  enterDjName: "Geben Sie Ihren DJ-Namen oder Künstlernamen ein",
+  enterIdentityKeywords: "Beschreiben Sie Ihre Identität, Ihren Stil und was Sie als Künstler einzigartig macht",
+  describePublicPersona: "Beschreiben Sie Ihre öffentliche Persona und künstlerisches Image (optional)",
+  describeTargetAudience: "Beschreiben Sie Ihre Zielgruppe und Fanbase (optional)",
+  
+  selectMusicStyle: "Wählen Sie Ihren bevorzugten elektronischen Musikstil",
+  afroHouse: "Afro House",
+  edm: "EDM / Big Room",
+  dance: "Dance / Commercial",
+  futureRave: "Future Rave",
+  techno: "Techno",
+  
+  selectVocalChoice: "Wählen Sie Gesangspräferenz",
+  duet: "Duett",
+  instrumental: "Instrumental (ohne Gesang)",
+  
+  enterSoundReference: "Geben Sie eine Referenz-Track-URL ein (Spotify, YouTube, SoundCloud)",
+  enterTempoPreference: "Geben Sie bevorzugte BPM oder Tempo ein (z.B. 128 BPM)",
+  enterWhatToAvoid: "Welche Klänge oder Elemente sollten wir vermeiden?",
+  
+  describeCoverPreferences: "Beschreiben Sie Ihre Cover-Art-Präferenzen und visuellen Stil",
+  selectPlatforms: "Wählen Sie bevorzugte Vertriebsplattformen",
+  spotify: "Spotify",
+  appleMusic: "Apple Music",
+  beatport: "Beatport",
+  youtube: "YouTube",
+  soundcloud: "SoundCloud",
+  
+  describeReleasePlan: "Beschreiben Sie Ihren Veröffentlichungsplan und Zeitplan",
+  enterSocialLinks: "Geben Sie Ihre Social-Media-Links ein (Instagram, TikTok, etc.)",
+  
+  describeGoalsWithSong: "Was sind Ihre Ziele mit diesem Song? (Clubs, Festivals, Radio, etc.)",
+  enterMessageToProducer: "Irgendeine spezifische Nachricht oder Anforderungen für den Produzenten?",
+  selectHeardAboutUs: "Wie haben Sie von uns erfahren?",
+  tiktok: "TikTok",
+  instagram: "Instagram",
+  friendRecommendation: "Freundesempfehlung",
+  googleSearch: "Google-Suche",
+  otherSource: "Andere Quelle",
+  
+  // Tags
+  exclusive: "Exklusiv"
 };

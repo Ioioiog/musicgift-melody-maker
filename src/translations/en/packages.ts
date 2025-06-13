@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
@@ -240,5 +239,69 @@ export const packagesTranslations = {
   
   // Common voice options
   voiceFemale: "Female Voice",
-  voiceMale: "Male Voice"
+  voiceMale: "Male Voice",
+  
+  // DJ Package
+  djPackage: "DJ Package",
+  djTagline: "Professional electronic music production for DJs and artists",
+  djDescription: "Complete electronic music production package for DJs and electronic music artists. From concept to release, we create professional tracks ready for clubs, festivals, and streaming platforms.",
+  djDelivery: "7–14 working days",
+  
+  // DJ Package includes
+  djInclude1: "Original electronic track composition in your chosen style",
+  djInclude2: "Professional mixing and mastering for club/festival quality",
+  djInclude3: "High-quality audio files (MP3, WAV, stems available)",
+  djInclude4: "Professional cover art design",
+  djInclude5: "Distribution to major streaming platforms and Beatport",
+  djInclude6: "Co-ownership rights and publishing support",
+  
+  // DJ Form Steps
+  djStepIdentity: "DJ Identity & Branding",
+  djStepSound: "Sound & Style Preferences",
+  djStepRelease: "Release & Distribution",
+  djStepFinalNotes: "Goals & Additional Notes",
+  
+  // DJ Form Fields
+  enterDjName: "Enter your DJ name or artist name",
+  enterIdentityKeywords: "Describe your identity, style, and what makes you unique as an artist",
+  describePublicPersona: "Describe your public persona and artistic image (optional)",
+  describeTargetAudience: "Describe your target audience and fanbase (optional)",
+  
+  selectMusicStyle: "Select your preferred electronic music style",
+  afroHouse: "Afro House",
+  edm: "EDM / Big Room",
+  dance: "Dance / Commercial",
+  futureRave: "Future Rave",
+  techno: "Techno",
+  
+  selectVocalChoice: "Select vocal preference",
+  duet: "Duet",
+  instrumental: "Instrumental (no vocals)",
+  
+  enterSoundReference: "Enter a reference track URL (Spotify, YouTube, SoundCloud)",
+  enterTempoPreference: "Enter preferred BPM or tempo (e.g., 128 BPM)",
+  enterWhatToAvoid: "What sounds or elements should we avoid?",
+  
+  describeCoverPreferences: "Describe your cover art preferences and visual style",
+  selectPlatforms: "Select preferred distribution platforms",
+  spotify: "Spotify",
+  appleMusic: "Apple Music",
+  beatport: "Beatport",
+  youtube: "YouTube",
+  soundcloud: "SoundCloud",
+  
+  describeReleasePlan: "Describe your release plan and timeline",
+  enterSocialLinks: "Enter your social media links (Instagram, TikTok, etc.)",
+  
+  describeGoalsWithSong: "What are your goals with this song? (clubs, festivals, radio, etc.)",
+  enterMessageToProducer: "Any specific message or requirements for the producer?",
+  selectHeardAboutUs: "How did you hear about us?",
+  tiktok: "TikTok",
+  instagram: "Instagram",
+  friendRecommendation: "Friend recommendation",
+  googleSearch: "Google search",
+  otherSource: "Other source",
+  
+  // Tags
+  exclusive: "Exclusive"
 };

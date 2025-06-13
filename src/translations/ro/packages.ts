@@ -59,7 +59,7 @@ export const packagesTranslations = {
   
   businessInclude1: "Sesiune de brainstorming cu echipa MusicGift pentru a ințelege viziunea si valorile brandului",
   businessInclude2: "Melodie personalizată pentru business-ul tău",
-  businessInclude3: "Producție completǎ, cu voce adaptatǎ brandului tǎu",
+  businessInclude3: "Producție completǎ, cu voce adaptatǎ brandului tău",
   businessInclude4: "Mix & Master de calitate superioară",
   businessInclude5: "Licență comercială ( În funcție de direcția si dorința clientului )",
   
@@ -238,5 +238,69 @@ export const packagesTranslations = {
   
   // Common voice options
   voiceFemale: "Voce feminină",
-  voiceMale: "Voce masculină"
+  voiceMale: "Voce masculină",
+  
+  // DJ Package
+  djPackage: "Pachet DJ",
+  djTagline: "Producție muzicală electronică profesională pentru DJ-i și artiști",
+  djDescription: "Pachet complet de producție muzicală electronică pentru DJ-i și artiști de muzică electronică. De la concept la lansare, creăm piese profesionale gata pentru cluburi, festivaluri și platforme de streaming.",
+  djDelivery: "7–14 zile lucrătoare",
+  
+  // DJ Package includes
+  djInclude1: "Compoziție originală de muzică electronică în stilul ales",
+  djInclude2: "Mixaj și mastering profesional pentru calitate de club/festival",
+  djInclude3: "Fișiere audio de înaltă calitate (MP3, WAV, stems disponibile)",
+  djInclude4: "Design profesional de cover art",
+  djInclude5: "Distribuție pe platformele majore de streaming și Beatport",
+  djInclude6: "Drepturi de co-proprietate și suport pentru publishing",
+  
+  // DJ Form Steps
+  djStepIdentity: "Identitate DJ & Branding",
+  djStepSound: "Preferințe de Sunet & Stil",
+  djStepRelease: "Lansare & Distribuție",
+  djStepFinalNotes: "Obiective & Note Adiționale",
+  
+  // DJ Form Fields
+  enterDjName: "Introdu numele tău de DJ sau numele de artist",
+  enterIdentityKeywords: "Descrie identitatea ta, stilul și ce te face unic ca artist",
+  describePublicPersona: "Descrie persona ta publică și imaginea artistică (opțional)",
+  describeTargetAudience: "Descrie publicul țintă și fanbase-ul tău (opțional)",
+  
+  selectMusicStyle: "Selectează stilul preferat de muzică electronică",
+  afroHouse: "Afro House",
+  edm: "EDM / Big Room",
+  dance: "Dance / Commercial",
+  futureRave: "Future Rave",
+  techno: "Techno",
+  
+  selectVocalChoice: "Selectează preferința vocală",
+  duet: "Duet",
+  instrumental: "Instrumental (fără voce)",
+  
+  enterSoundReference: "Introdu URL-ul unei piese de referință (Spotify, YouTube, SoundCloud)",
+  enterTempoPreference: "Introdu BPM-ul preferat sau tempo-ul (ex: 128 BPM)",
+  enterWhatToAvoid: "Ce sunete sau elemente ar trebui să evităm?",
+  
+  describeCoverPreferences: "Descrie preferințele pentru cover art și stilul vizual",
+  selectPlatforms: "Selectează platformele preferate de distribuție",
+  spotify: "Spotify",
+  appleMusic: "Apple Music",
+  beatport: "Beatport",
+  youtube: "YouTube",
+  soundcloud: "SoundCloud",
+  
+  describeReleasePlan: "Descrie planul de lansare și cronologia",
+  enterSocialLinks: "Introdu linkurile de social media (Instagram, TikTok, etc.)",
+  
+  describeGoalsWithSong: "Care sunt obiectivele tale cu această piesă? (cluburi, festivaluri, radio, etc.)",
+  enterMessageToProducer: "Vreun mesaj specific sau cerințe pentru producător?",
+  selectHeardAboutUs: "Cum ai aflat despre noi?",
+  tiktok: "TikTok",
+  instagram: "Instagram",
+  friendRecommendation: "Recomandare de la prieten",
+  googleSearch: "Căutare Google",
+  otherSource: "Altă sursă",
+  
+  // Tags
+  exclusive: "Exclusiv"
 };

@@ -232,6 +232,7 @@ export const packages: Package[] = [
     price_ron: 499,
     price_eur: 99,
     tag: "premium",
+    is_active: true,
     available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "audioMessageFromSender", "extendedSong"],
     includes: [
       { id: "pr1", include_key: "premiumInclude1", include_order: 1 },
@@ -1758,6 +1759,219 @@ export const packages: Package[] = [
               { value: "featuredGuest", label_key: "collaborationFeatured" },
               { value: "groupChoir", label_key: "collaborationGroup" },
               { value: "spokenWord", label_key: "collaborationSpokenWord" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "7",
+    value: "dj",
+    label_key: "djPackage",
+    tagline_key: "djTagline",
+    description_key: "djDescription",
+    delivery_time_key: "djDelivery",
+    price_ron: 499,
+    price_eur: 99,
+    tag: "exclusive",
+    is_active: true,
+    is_popular: false,
+    available_addons: [
+      "rushDelivery",
+      "customVideo",
+      "socialMediaRights",
+      "audioMessageFromSender",
+      "extendedSong"
+    ],
+    includes: [
+      { id: "dj1", include_key: "djInclude1", include_order: 1 },
+      { id: "dj2", include_key: "djInclude2", include_order: 2 },
+      { id: "dj3", include_key: "djInclude3", include_order: 3 },
+      { id: "dj4", include_key: "djInclude4", include_order: 4 },
+      { id: "dj5", include_key: "djInclude5", include_order: 5 },
+      { id: "dj6", include_key: "djInclude6", include_order: 6 }
+    ],
+    steps: [
+      {
+        id: "dj_step1",
+        step_number: 1,
+        title_key: "djStepIdentity",
+        fields: [
+          {
+            id: "djName",
+            field_name: "djName",
+            field_type: "text",
+            placeholder_key: "enterDjName",
+            required: true,
+            field_order: 1
+          },
+          {
+            id: "identityKeywords",
+            field_name: "identityKeywords",
+            field_type: "textarea",
+            placeholder_key: "enterIdentityKeywords",
+            required: true,
+            field_order: 2
+          },
+          {
+            id: "publicPersona",
+            field_name: "publicPersona",
+            field_type: "textarea",
+            placeholder_key: "describePublicPersona",
+            required: false,
+            field_order: 3
+          },
+          {
+            id: "targetAudience",
+            field_name: "targetAudience",
+            field_type: "textarea",
+            placeholder_key: "describeTargetAudience",
+            required: false,
+            field_order: 4
+          }
+        ]
+      },
+      {
+        id: "dj_step2",
+        step_number: 2,
+        title_key: "djStepSound",
+        fields: [
+          {
+            id: "musicStyle",
+            field_name: "musicStyle",
+            field_type: "select",
+            placeholder_key: "selectMusicStyle",
+            required: true,
+            field_order: 1,
+            options: [
+              { value: "afroHouse", label_key: "afroHouse" },
+              { value: "edm", label_key: "edm" },
+              { value: "dance", label_key: "dance" },
+              { value: "futureRave", label_key: "futureRave" },
+              { value: "techno", label_key: "techno" }
+            ]
+          },
+          {
+            id: "vocalChoice",
+            field_name: "vocalChoice",
+            field_type: "select",
+            placeholder_key: "selectVocalChoice",
+            required: true,
+            field_order: 2,
+            options: [
+              { value: "female", label_key: "voiceFemale" },
+              { value: "male", label_key: "voiceMale" },
+              { value: "duet", label_key: "duet" },
+              { value: "instrumental", label_key: "instrumental" }
+            ]
+          },
+          {
+            id: "soundReferenceLink",
+            field_name: "soundReferenceLink",
+            field_type: "url",
+            placeholder_key: "enterSoundReference",
+            required: false,
+            field_order: 3
+          },
+          {
+            id: "tempoPreference",
+            field_name: "tempoPreference",
+            field_type: "text",
+            placeholder_key: "enterTempoPreference",
+            required: false,
+            field_order: 4
+          },
+          {
+            id: "whatToAvoid",
+            field_name: "whatToAvoid",
+            field_type: "textarea",
+            placeholder_key: "enterWhatToAvoid",
+            required: false,
+            field_order: 5
+          }
+        ]
+      },
+      {
+        id: "dj_step3",
+        step_number: 3,
+        title_key: "djStepRelease",
+        fields: [
+          {
+            id: "coverPreferences",
+            field_name: "coverPreferences",
+            field_type: "textarea",
+            placeholder_key: "describeCoverPreferences",
+            required: false,
+            field_order: 1
+          },
+          {
+            id: "platformPreferences",
+            field_name: "platformPreferences",
+            field_type: "multiselect",
+            placeholder_key: "selectPlatforms",
+            required: false,
+            field_order: 2,
+            options: [
+              { value: "spotify", label_key: "spotify" },
+              { value: "appleMusic", label_key: "appleMusic" },
+              { value: "beatport", label_key: "beatport" },
+              { value: "youtube", label_key: "youtube" },
+              { value: "soundcloud", label_key: "soundcloud" }
+            ]
+          },
+          {
+            id: "releasePlan",
+            field_name: "releasePlan",
+            field_type: "textarea",
+            placeholder_key: "describeReleasePlan",
+            required: false,
+            field_order: 3
+          },
+          {
+            id: "socialLinks",
+            field_name: "socialLinks",
+            field_type: "text",
+            placeholder_key: "enterSocialLinks",
+            required: false,
+            field_order: 4
+          }
+        ]
+      },
+      {
+        id: "dj_step4",
+        step_number: 4,
+        title_key: "djStepFinalNotes",
+        fields: [
+          {
+            id: "goalsWithSong",
+            field_name: "goalsWithSong",
+            field_type: "textarea",
+            placeholder_key: "describeGoalsWithSong",
+            required: false,
+            field_order: 1
+          },
+          {
+            id: "messageToProducer",
+            field_name: "messageToProducer",
+            field_type: "textarea",
+            placeholder_key: "enterMessageToProducer",
+            required: false,
+            field_order: 2
+          },
+          {
+            id: "heardAboutUs",
+            field_name: "heardAboutUs",
+            field_type: "select",
+            placeholder_key: "selectHeardAboutUs",
+            required: false,
+            field_order: 3,
+            options: [
+              { value: "tiktok", label_key: "tiktok" },
+              { value: "instagram", label_key: "instagram" },
+              { value: "friend", label_key: "friendRecommendation" },
+              { value: "google", label_key: "googleSearch" },
+              { value: "other", label_key: "otherSource" }
             ]
           }
         ]
