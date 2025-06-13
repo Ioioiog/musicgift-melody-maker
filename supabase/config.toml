@@ -12,3 +12,6 @@ verify_jwt = true
 
 [functions.smtp-send-email]
 verify_jwt = true
+
+[functions.update-testimonials-file]
+verify_jwt = true

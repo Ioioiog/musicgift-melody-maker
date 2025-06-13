@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Play, Check, X, Download } from "lucide-react";
+import { ExternalLink, Play, Check, X, GitBranch, Download } from "lucide-react";
 import { testimonials as staticTestimonials } from "@/data/testimonials";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 const TestimonialsManagement = () => {
   const [selectedTestimonial, setSelectedTestimonial] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const { toast } = useToast();
 
   // Fetch testimonials from Supabase
@@ -74,6 +74,35 @@ const TestimonialsManagement = () => {
       description: "Testimonial deleted successfully"
     });
     refetch();
+  };
+
+  const handleAutoSync = async () => {
+    setIsSyncing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('update-testimonials-file');
+
+      if (error) {
+        throw error;
+      }
+
+      if (data.success) {
+        toast({
+          title: "Auto-Sync Successful! 🎉",
+          description: `Successfully synced ${data.testimonials_count} testimonials to GitHub repository. ${data.database_count} from database + ${data.static_count} static testimonials.`
+        });
+      } else {
+        throw new Error(data.error || 'Auto-sync failed');
+      }
+    } catch (error) {
+      console.error('Auto-sync error:', error);
+      toast({
+        title: "Auto-Sync Failed",
+        description: error instanceof Error ? error.message : "Failed to sync testimonials to GitHub. Please try manual export as fallback.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   const handleExportToStatic = async () => {
@@ -243,16 +272,25 @@ const TestimonialsManagement = () => {
         <h2 className="text-2xl font-bold">Testimonials Management</h2>
         <div className="flex items-center gap-4">
           <Button
+            onClick={handleAutoSync}
+            disabled={isSyncing}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <GitBranch className="w-4 h-4 mr-2" />
+            {isSyncing ? "Syncing to GitHub..." : "Auto-Sync to GitHub"}
+          </Button>
+          <Button
             onClick={handleExportToStatic}
             disabled={isExporting}
-            className="bg-blue-600 hover:bg-blue-700"
+            variant="outline"
+            className="bg-blue-50 hover:bg-blue-100"
           >
             <Download className="w-4 h-4 mr-2" />
-            {isExporting ? "Exporting..." : "Export to Static File"}
+            {isExporting ? "Exporting..." : "Manual Export (Fallback)"}
           </Button>
           <div className="text-sm text-gray-600 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2">
-            <p className="font-medium">Mixed Source Management</p>
-            <p>Static testimonials from code + Dynamic testimonials from database</p>
+            <p className="font-medium">Automated GitHub Sync</p>
+            <p>Auto-sync testimonials directly to your repository</p>
           </div>
         </div>
       </div>
