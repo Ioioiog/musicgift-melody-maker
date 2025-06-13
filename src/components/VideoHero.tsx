@@ -34,7 +34,6 @@ const VideoHero = () => {
     setIsMounted(true);
   }, [language]);
 
-  // Stop video when navigating away
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
@@ -104,19 +103,14 @@ const VideoHero = () => {
         <source src={videoSrc} type="video/mp4" />
       </video>
 
-      <div className="absolute inset-0 flex items-center justify-center z-20">
-        <Button onClick={handleTogglePlay} size="lg" className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-          {isPlaying ? <Pause className="w-6 h-6 mr-2" /> : <Play className="w-6 h-6 mr-2" />}
-          {isPlaying ? t('pause', 'Pause') : t('play', 'Play')}
+      <div className="absolute top-24 right-4 z-30 flex gap-2">
+        <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow">
+          {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+        </Button>
+        <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow">
+          <Volume2 className="w-5 h-5" />
         </Button>
       </div>
-
-      <button
-        onClick={handleToggleAudio}
-        className="absolute z-40 top-4 right-4 bg-white text-black p-2 rounded-full shadow"
-      >
-        <Volume2 className="w-5 h-5" />
-      </button>
 
       <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
 
