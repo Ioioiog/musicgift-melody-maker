@@ -125,7 +125,7 @@ export default function TestimonialSlider() {
         >
           {/* Preview Image */}
           <img 
-            src="/uploads/youtube.jpg"
+            src="/uploads/youtube_placeholder.webp"
             alt={title}
             className="w-full h-full object-cover"
             loading="lazy"
