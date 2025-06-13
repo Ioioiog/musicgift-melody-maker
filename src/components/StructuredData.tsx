@@ -24,7 +24,7 @@ export const useStructuredData = () => {
     "@type": "Organization",
     "name": "MusicGift.ro",
     "url": "https://www.musicgift.ro",
-    "logo": "https://www.musicgift.ro/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
+    "logo": "https://www.musicgift.ro/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
     "description": "Creăm melodii personalizate și cadouri muzicale unice pentru momente speciale",
     "foundingDate": "2004",
     "contactPoint": {
@@ -49,7 +49,7 @@ export const useStructuredData = () => {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "MusicGift.ro",
-    "image": "https://www.musicgift.ro/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
+    "image": "https://www.musicgift.ro/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
     "description": "Servicii profesionale de compoziții muzicale personalizate, înregistrări și producție muzicală",
     "url": "https://www.musicgift.ro",
     "telephone": "+40-XXX-XXX-XXX",
