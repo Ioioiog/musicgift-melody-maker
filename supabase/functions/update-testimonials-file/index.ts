@@ -62,8 +62,8 @@ serve(async (req) => {
 
     // Get the current static testimonials from GitHub
     const githubToken = Deno.env.get('GITHUB_TOKEN');
-    const repoOwner = 'YOUR_GITHUB_USERNAME'; // You'll need to update this
-    const repoName = 'YOUR_REPO_NAME'; // You'll need to update this
+    const repoOwner = 'your-github-username'; // Replace with your GitHub username
+    const repoName = 'your-repo-name'; // Replace with your repository name
     const filePath = 'src/data/testimonials.ts';
 
     if (!githubToken) {
@@ -85,7 +85,9 @@ serve(async (req) => {
     );
 
     if (!fileResponse.ok) {
-      throw new Error(`Failed to fetch file from GitHub: ${fileResponse.statusText}`);
+      const errorText = await fileResponse.text();
+      console.error('GitHub API Error:', errorText);
+      throw new Error(`Failed to fetch file from GitHub: ${fileResponse.status} ${fileResponse.statusText}`);
     }
 
     const fileData = await fileResponse.json();
@@ -154,7 +156,7 @@ serve(async (req) => {
     if (!updateResponse.ok) {
       const errorData = await updateResponse.text();
       console.error('GitHub update failed:', errorData);
-      throw new Error(`Failed to update file in GitHub: ${updateResponse.statusText}`);
+      throw new Error(`Failed to update file in GitHub: ${updateResponse.status} ${updateResponse.statusText}`);
     }
 
     const updateData = await updateResponse.json();
