@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Wählen Sie Ihr Paket",
   selectPerfectPackage: "Wählen Sie das perfekte Paket, das zu Ihren Bedürfnissen und Ihrem Budget passt",
@@ -244,7 +245,7 @@ export const packagesTranslations = {
   djPackage: "DJ Paket",
   djTagline: "Professionelle elektronische Musikproduktion für DJs und Künstler",
   djDescription: "Komplettes elektronisches Musikproduktionspaket für DJs und elektronische Musikkünstler. Vom Konzept bis zur Veröffentlichung erstellen wir professionelle Tracks bereit für Clubs, Festivals und Streaming-Plattformen.",
-  djDelivery: "7–14 Werktage",
+  djDelivery: "7–10 Werktage",
   
   // DJ Package includes
   djInclude1: "Original elektronische Track-Komposition in Ihrem gewählten Stil",
@@ -252,7 +253,6 @@ export const packagesTranslations = {
   djInclude3: "Hochwertige Audiodateien (MP3, WAV, Stems verfügbar)",
   djInclude4: "Professionelles Cover-Art-Design",
   djInclude5: "Verteilung an große Streaming-Plattformen und Beatport",
-  djInclude6: "Miteigentumsrechte und Publishing-Unterstützung",
   
   // DJ Form Steps
   djStepIdentity: "DJ Identität & Branding",
