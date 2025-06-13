@@ -16,22 +16,34 @@ const VideoHero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMobile = useIsMobile();
   const [hasAudio, setHasAudio] = useState(false);
-  const [videoPlayed, setVideoPlayed] = useState(false);
+  const [videoPlayedOnce, setVideoPlayedOnce] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [useWebM, setUseWebM] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [shouldAutoplay, setShouldAutoplay] = useState(true);
 
-  const videoKey = `videoPlayed-${language}`;
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
   const videoWebM = `/uploads/${baseName}.webm`;
   const posterSrc = '/uploads/video_placeholder.png';
 
   useEffect(() => {
-    const alreadyPlayed = sessionStorage.getItem(videoKey) === 'true';
-    setVideoPlayed(alreadyPlayed);
+    const playedLangKey = `played-${language}`;
+    const sessionHasPlayed = sessionStorage.getItem(playedLangKey) === 'true';
+
+    if (!sessionHasPlayed) {
+      // If it's a new session, allow autoplay
+      setShouldAutoplay(true);
+      sessionStorage.setItem(playedLangKey, 'true');
+    } else {
+      // If already played in this session, disable autoplay
+      setShouldAutoplay(false);
+    }
+
     setUseWebM(supportsWebM());
     setIsMounted(true);
+    setVideoPlayedOnce(false);
+    setIsPlaying(false);
   }, [language]);
 
   useEffect(() => {
@@ -43,9 +55,8 @@ const VideoHero = () => {
   }, [location.pathname]);
 
   const handleVideoEnd = () => {
-    sessionStorage.setItem(videoKey, 'true');
     setIsPlaying(false);
-    setVideoPlayed(true);
+    setVideoPlayedOnce(true);
   };
 
   const handleTogglePlay = () => {
@@ -59,7 +70,6 @@ const VideoHero = () => {
       video.muted = false;
       video.play();
       setIsPlaying(true);
-      setVideoPlayed(false);
     }
   };
 
@@ -95,6 +105,7 @@ const VideoHero = () => {
         playsInline
         preload="metadata"
         muted={!hasAudio}
+        autoPlay={shouldAutoplay}
         onEnded={handleVideoEnd}
         className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover`}
         poster={posterSrc}
@@ -103,14 +114,16 @@ const VideoHero = () => {
         <source src={videoSrc} type="video/mp4" />
       </video>
 
-      <div className="absolute top-24 right-4 z-30 flex gap-2">
-        <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow">
-          {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-        </Button>
-        <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow">
-          <Volume2 className="w-5 h-5" />
-        </Button>
-      </div>
+      {!shouldAutoplay && (
+        <div className="absolute top-24 right-4 z-30 flex gap-2">
+          <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow">
+            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+          </Button>
+          <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow">
+            <Volume2 className="w-5 h-5" />
+          </Button>
+        </div>
+      )}
 
       <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
 
