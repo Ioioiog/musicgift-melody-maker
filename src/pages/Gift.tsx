@@ -31,6 +31,14 @@ const Gift = () => {
     }
   };
 
+  const handleGiftPurchaseComplete = (data: any) => {
+    console.log('Gift purchase completed:', data);
+  };
+
+  const handleGiftRedemption = (giftCard: any, selectedPackage: string, upgradeAmount?: number) => {
+    console.log('Gift redemption:', { giftCard, selectedPackage, upgradeAmount });
+  };
+
   return (
     <>
       <SEOHead
@@ -117,7 +125,7 @@ const Gift = () => {
                       <GiftIcon className="w-8 h-8 text-purple-600" />
                       {t('buyGiftCard')}
                     </h2>
-                    <GiftPurchaseWizard />
+                    <GiftPurchaseWizard onComplete={handleGiftPurchaseComplete} />
                   </div>
                   
                   <div className="space-y-6">
@@ -125,7 +133,7 @@ const Gift = () => {
                       <Sparkles className="w-8 h-8 text-blue-600" />
                       {t('redeemGiftCard')}
                     </h2>
-                    <GiftRedemption />
+                    <GiftRedemption onRedemption={handleGiftRedemption} />
                   </div>
                 </div>
               </Suspense>
