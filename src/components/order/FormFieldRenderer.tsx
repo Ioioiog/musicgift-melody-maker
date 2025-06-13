@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { CalendarIcon, Upload, AlertCircle, Plus, Check } from 'lucide-react';
+import { CalendarIcon, Upload, AlertCircle, Plus, Check, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -286,6 +286,15 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
     }
   };
 
+  // Handle multiselect value changes
+  const handleMultiselectToggle = (optionValue: string) => {
+    const currentValues = Array.isArray(value) ? value : [];
+    const newValues = currentValues.includes(optionValue)
+      ? currentValues.filter(v => v !== optionValue)
+      : [...currentValues, optionValue];
+    onChange(newValues);
+  };
+
   // Check if current field is a company field and if invoice type is company
   const isCompanyField = ['companyName', 'vatCode', 'registrationNumber', 'companyAddress', 'representativeName'].includes(field.field_name);
   const isCompanyInvoice = formData?.invoiceType === 'company';
@@ -346,6 +355,85 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
               color: 'white !important'
             }}
           />
+        );
+
+      case 'multiselect':
+        if (!field.options || !Array.isArray(field.options)) {
+          console.warn('Multiselect field missing valid options:', field);
+          return (
+            <div className="flex items-center space-x-2 text-amber-300 bg-amber-500/20 p-2 rounded-md border border-amber-400/30">
+              <AlertCircle className="w-3 h-3" />
+              <span className="text-xs">{t('fieldConfigurationError')}</span>
+            </div>
+          );
+        }
+        
+        const selectedValues = Array.isArray(value) ? value : [];
+        
+        return (
+          <div className="space-y-2">
+            {/* Selected values display */}
+            {selectedValues.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {selectedValues.map((selectedValue) => {
+                  const option = field.options?.find(opt => opt.value === selectedValue);
+                  const optionLabel = option ? (t(option.label_key) || option.label_key) : selectedValue;
+                  return (
+                    <Badge 
+                      key={selectedValue}
+                      variant="secondary" 
+                      className="bg-orange-500/80 text-white text-xs px-2 py-1 flex items-center space-x-1 cursor-pointer hover:bg-orange-600/80"
+                      onClick={() => handleMultiselectToggle(selectedValue)}
+                    >
+                      <span>{optionLabel}</span>
+                      <X className="w-3 h-3" />
+                    </Badge>
+                  );
+                })}
+              </div>
+            )}
+            
+            {/* Options list */}
+            <div className="space-y-1">
+              {field.options.map((option, index) => {
+                const optionValue = typeof option === 'string' ? option : option.value;
+                const optionLabel = typeof option === 'string' ? option : option.label_key;
+                const isSelected = selectedValues.includes(optionValue);
+                
+                return (
+                  <div
+                    key={`${optionValue}-${index}`}
+                    className={cn(
+                      "flex items-center space-x-2 p-2 rounded-lg border-2 cursor-pointer transition-all duration-200",
+                      isSelected 
+                        ? "border-orange-500 bg-orange-500/20 text-white" 
+                        : "border-white/30 bg-white/10 text-white/80 hover:border-white/40 hover:bg-white/15"
+                    )}
+                    onClick={() => handleMultiselectToggle(optionValue)}
+                  >
+                    <div className={cn(
+                      "w-4 h-4 rounded border-2 flex items-center justify-center transition-all duration-200",
+                      isSelected 
+                        ? "border-orange-300 bg-orange-500" 
+                        : "border-white/40 bg-transparent"
+                    )}>
+                      {isSelected && <Check className="w-2.5 h-2.5 text-white" />}
+                    </div>
+                    <span className="text-sm flex-1">
+                      {t(optionLabel) || optionLabel}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Placeholder text when no selections */}
+            {selectedValues.length === 0 && field.placeholder_key && (
+              <p className="text-xs text-white/60 italic">
+                {t(field.placeholder_key)}
+              </p>
+            )}
+          </div>
         );
 
       case 'audio':
