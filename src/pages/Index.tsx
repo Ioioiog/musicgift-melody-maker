@@ -8,16 +8,15 @@ import LazyTestimonialSlider from "@/components/LazyTestimonialSlider";
 import ImpactCards from "@/components/ImpactCards";
 import CollaborationSection from "@/components/CollaborationSection";
 import SEOHead from "@/components/SEOHead";
-import { useStructuredData } from "@/components/StructuredData";
+import StructuredDataLoader from "@/components/StructuredDataLoader";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
-import { Heart, Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
+import { Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
 import { useEffect } from "react";
 
 const Index = () => {
   const { t } = useLanguage();
-  const { combined: structuredData } = useStructuredData();
   
   // Performance monitoring
   useEffect(() => {
@@ -40,7 +39,6 @@ const Index = () => {
       <SEOHead 
         title="MusicGift.ro - Cadouri Muzicale Personalizate | Melodii Unice pentru Persoanele Dragi"
         description="Creează melodii personalizate și cadouri muzicale unice pentru persoanele dragi. Servicii profesionale de compoziție muzicală, înregistrare și producție. Peste 2000 de melodii create cu dragoste în România."
-        structuredData={structuredData}
       />
       
       {/* Skip Navigation for Accessibility */}
@@ -58,27 +56,23 @@ const Index = () => {
         {/* Enhanced overlay with gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
         
-        {/* Minimal CSS-only background animation - Only 3 elements for performance */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse" style={{
-            top: '10%',
-            left: '20%',
-            animationDelay: '0s',
-            animationDuration: '4s'
-          }} />
-          <div className="absolute w-1 h-1 bg-white/15 rounded-full animate-pulse" style={{
-            top: '70%',
-            right: '25%',
-            animationDelay: '2s',
-            animationDuration: '6s'
-          }} />
-          <div className="absolute w-1 h-1 bg-white/10 rounded-full animate-pulse" style={{
-            bottom: '20%',
-            left: '60%',
-            animationDelay: '4s',
-            animationDuration: '5s'
-          }} />
-        </div>
+        {/* Minimal CSS-only background animation - Only for desktop */}
+        {!window.matchMedia('(max-width: 768px)').matches && (
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse" style={{
+              top: '10%',
+              left: '20%',
+              animationDelay: '0s',
+              animationDuration: '4s'
+            }} />
+            <div className="absolute w-1 h-1 bg-white/15 rounded-full animate-pulse" style={{
+              top: '70%',
+              right: '25%',
+              animationDelay: '2s',
+              animationDuration: '6s'
+            }} />
+          </div>
+        )}
 
         <div className="relative z-10">
           
@@ -206,6 +200,9 @@ const Index = () => {
       </section>
 
       <Footer />
+      
+      {/* Load structured data at the end for better performance */}
+      <StructuredDataLoader />
     </div>
   );
 };

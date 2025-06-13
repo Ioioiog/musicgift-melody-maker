@@ -26,31 +26,22 @@ const SEOHead = ({
 
   const finalTitle = title || defaultTitle;
   const finalDescription = description || defaultDescription;
-  const finalUrl = url;
 
   return (
     <Helmet>
-      {/* Basic Meta Tags */}
+      {/* Primary Meta Tags */}
       <title>{finalTitle}</title>
       <meta name="description" content={finalDescription} />
       <meta name="keywords" content="cadouri muzicale, melodii personalizate, compoziții muzicale, cadouri unice, muzică personalizată, înregistrări profesionale, producție muzicală, România" />
       <meta name="author" content="MusicGift.ro" />
       <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-      <meta name="googlebot" content="index, follow" />
       
       {/* Canonical URL */}
-      <link rel="canonical" href={finalUrl} />
+      <link rel="canonical" href={url} />
       
       {/* Language and Locale */}
       <meta httpEquiv="content-language" content={language} />
       <meta name="language" content={language} />
-      
-      {/* Mobile Optimization */}
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-      <meta name="format-detection" content="telephone=yes" />
-      <meta name="mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       
       {/* Open Graph Tags */}
       <meta property="og:title" content={finalTitle} />
@@ -59,7 +50,7 @@ const SEOHead = ({
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="MusicGift.ro - Cadouri Muzicale Personalizate" />
-      <meta property="og:url" content={finalUrl} />
+      <meta property="og:url" content={url} />
       <meta property="og:type" content={type} />
       <meta property="og:site_name" content="MusicGift.ro" />
       <meta property="og:locale" content={language === 'ro' ? 'ro_RO' : 'en_US'} />
@@ -70,24 +61,13 @@ const SEOHead = ({
       <meta name="twitter:description" content={finalDescription} />
       <meta name="twitter:image" content={`${url}${image}`} />
       <meta name="twitter:image:alt" content="MusicGift.ro - Cadouri Muzicale Personalizate" />
-      <meta name="twitter:site" content="@musicgiftro" />
-      <meta name="twitter:creator" content="@musicgiftro" />
       
       {/* Performance Hints */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+      <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       
       {/* Sitemap Reference */}
       <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-      
-      {/* Structured Data */}
-      {structuredData && (
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-      )}
     </Helmet>
   );
 };

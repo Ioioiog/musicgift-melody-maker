@@ -156,3 +156,14 @@
   content-visibility: auto;
   contain-intrinsic-size: 0 500px;
 }
+
+/* Performance optimizations for video and images */
+video, img {
+  will-change: auto;
+}
+
+/* Optimized background images */
+.bg-cover {
+  background-size: cover;
+  will-change: auto;
+}
