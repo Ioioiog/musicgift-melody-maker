@@ -36,7 +36,6 @@ Disallow: /unsubscribe/
 
 # Sitemaps
 Sitemap: https://www.musicgift.ro/sitemap.xml
-Sitemap: https://www.musicgift.eu/sitemap.xml
 
 # Crawl-delay for general bots
 Crawl-delay: 1
