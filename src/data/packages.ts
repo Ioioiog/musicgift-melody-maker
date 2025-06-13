@@ -1762,7 +1762,216 @@ export const packages: Package[] = [
           }
         ]
       }
-    ]
+    ],
+     {
+    id: "10",
+    value: "dj",
+    label_key: "djPackage",
+    tagline_key: "djTagline",
+    description_key: "djDescription",
+    delivery_time_key: "djDelivery",
+    price_ron: 499,
+    price_eur: 99,
+    tag: "exclusive",
+    is_active: true,
+    is_popular: false,
+    available_addons: [
+      "rushDelivery",
+      "customVideo",
+      "socialMediaRights"
+    ],
+    includes: [
+      { id: "dj1", include_key: "djInclude1", include_order: 1 },
+      { id: "dj2", include_key: "djInclude2", include_order: 2 },
+      { id: "dj3", include_key: "djInclude3", include_order: 3 },
+      { id: "dj4", include_key: "djInclude4", include_order: 4 },
+      { id: "dj5", include_key: "djInclude5", include_order: 5 },
+      { id: "dj6", include_key: "djInclude6", include_order: 6 }
+    ],
+    steps: [
+      {
+        id: "dj_step1",
+        step_number: 1,
+        title_key: "djStepIdentity",
+        fields: [
+          {
+            id: "djName",
+            field_name: "djName",
+            field_type: "text",
+            placeholder_key: "Numele tău de DJ (ex: DJ Nova)",
+            required: true,
+            field_order: 1
+          },
+          {
+            id: "identityKeywords",
+            field_name: "identityKeywords",
+            field_type: "textarea",
+            placeholder_key: "Descrie în câteva cuvinte vibe-ul tău ca DJ (ex: energic, misterios, exotic)",
+            required: true,
+            field_order: 2
+          },
+          {
+            id: "publicPersona",
+            field_name: "publicPersona",
+            field_type: "textarea",
+            placeholder_key: "Cum vrei să fii perceput ca artist? (ex: DJ carismatic, dark și misterios)",
+            required: false,
+            field_order: 3
+          },
+          {
+            id: "targetAudience",
+            field_name: "targetAudience",
+            field_type: "textarea",
+            placeholder_key: "Cine este publicul tău țintă? (ex: fani EDM, festivaluri, underground)",
+            required: false,
+            field_order: 4
+          }
+        ]
+      },
+      {
+        id: "dj_step2",
+        step_number: 2,
+        title_key: "djStepSound",
+        fields: [
+          {
+            id: "musicStyle",
+            field_name: "musicStyle",
+            field_type: "select",
+            placeholder_key: "Alege stilul muzical preferat",
+            required: true,
+            field_order: 1,
+            options: [
+              { value: "afroHouse", label_key: "Afro House" },
+              { value: "edm", label_key: "EDM / Big Room" },
+              { value: "dance", label_key: "Dance / Commercial" },
+              { value: "futureRave", label_key: "Future Rave" },
+              { value: "techno", label_key: "Techno" }
+            ]
+          },
+          {
+            id: "vocalChoice",
+            field_name: "vocalChoice",
+            field_type: "select",
+            placeholder_key: "Ce tip de voce vrei în piesă?",
+            required: true,
+            field_order: 2,
+            options: [
+              { value: "female", label_key: "Voce feminină" },
+              { value: "male", label_key: "Voce masculină" },
+              { value: "duet", label_key: "Duet" },
+              { value: "instrumental", label_key: "Instrumental (fără voce)" }
+            ]
+          },
+          {
+            id: "soundReferenceLink",
+            field_name: "soundReferenceLink",
+            field_type: "url",
+            placeholder_key: "Link YouTube / SoundCloud cu o piesă de referință (opțional)",
+            required: false,
+            field_order: 3
+          },
+          {
+            id: "tempoPreference",
+            field_name: "tempoPreference",
+            field_type: "text",
+            placeholder_key: "Ritm dorit (ex: 125 BPM, lent, rapid)",
+            required: false,
+            field_order: 4
+          },
+          {
+            id: "whatToAvoid",
+            field_name: "whatToAvoid",
+            field_type: "textarea",
+            placeholder_key: "Ce NU dorești în piesă? (ex: sunete metalice, tempo rapid)",
+            required: false,
+            field_order: 5
+          }
+        ]
+      },
+      {
+        id: "dj_step3",
+        step_number: 3,
+        title_key: "djStepRelease",
+        fields: [
+          {
+            id: "coverPreferences",
+            field_name: "coverPreferences",
+            field_type: "textarea",
+            placeholder_key: "Ai idei pentru copertă? Culori, teme, fonturi...",
+            required: false,
+            field_order: 1
+          },
+          {
+            id: "platformPreferences",
+            field_name: "platformPreferences",
+            field_type: "multiselect",
+            placeholder_key: "Unde vrei să lansezi piesa ta?",
+            required: false,
+            field_order: 2,
+            options: [
+              { value: "spotify", label_key: "Spotify" },
+              { value: "appleMusic", label_key: "Apple Music" },
+              { value: "beatport", label_key: "Beatport" },
+              { value: "youtube", label_key: "YouTube" },
+              { value: "soundcloud", label_key: "SoundCloud" }
+            ]
+          },
+          {
+            id: "releasePlan",
+            field_name: "releasePlan",
+            field_type: "textarea",
+            placeholder_key: "Ai o dată sau eveniment special pentru lansare? (ex: ziua ta, festival)",
+            required: false,
+            field_order: 3
+          },
+          {
+            id: "socialLinks",
+            field_name: "socialLinks",
+            field_type: "text",
+            placeholder_key: "Linkuri social media (ex: @yourdjname, Instagram, TikTok)",
+            required: false,
+            field_order: 4
+          }
+        ]
+      },
+      {
+        id: "dj_step4",
+        step_number: 4,
+        title_key: "djStepFinalNotes",
+        fields: [
+          {
+            id: "goalsWithSong",
+            field_name: "goalsWithSong",
+            field_type: "textarea",
+            placeholder_key: "Care este scopul piesei? (ex: demo pentru festival, carieră, cadou)",
+            required: False,
+            field_order: 1
+          },
+          {
+            id: "messageToProducer",
+            field_name: "messageToProducer",
+            field_type: "textarea",
+            placeholder_key: "Vrei să transmiți ceva direct producătorului?",
+            required: False,
+            field_order: 2
+          },
+          {
+            id: "heardAboutUs",
+            field_name: "heardAboutUs",
+            field_type: "select",
+            placeholder_key: "Cum ai aflat de MusicGift?",
+            required: False,
+            field_order: 3,
+            options: [
+              { value: "tiktok", label_key: "TikTok" },
+              { value: "instagram", label_key: "Instagram" },
+              { value: "friend", label_key: "Recomandare de la prieten" },
+              { value: "google", label_key: "Căutare Google" },
+              { value: "other", label_key: "Altă sursă" }
+            ]
+          }
+        ]
+      }
   }
 ];
 
