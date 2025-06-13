@@ -7,6 +7,7 @@ import NewsletterForm from "@/components/NewsletterForm";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+
 const Footer = () => {
   const {
     t
@@ -18,6 +19,7 @@ const Footer = () => {
     openCookie
   } = useLegalModals();
   const [showBackToTop, setShowBackToTop] = useState(false);
+  
   useEffect(() => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 200);
@@ -25,12 +27,14 @@ const Footer = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
   };
+  
   return <>
       {/* Back to Top Button */}
       {showBackToTop && <motion.div initial={{
@@ -65,7 +69,7 @@ const Footer = () => {
               <div className="lg:col-span-1 space-y-6">
                 <Link to="/" className="inline-block">
                   <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 hover:bg-white/30 transition-all duration-300">
-                    <img src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" alt="MusicGift by Mango Records" className="h-16 w-auto object-contain" />
+                    <img src="/uploads/logo_musicgift.webp" alt="MusicGift by Mango Records" className="h-16 w-auto object-contain" />
                   </div>
                 </Link>
                 
@@ -259,4 +263,5 @@ const Footer = () => {
       </footer>
     </>;
 };
+
 export default Footer;

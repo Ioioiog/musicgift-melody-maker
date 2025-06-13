@@ -6,6 +6,7 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { ShoppingCart, Check, Globe, LogOut, UserCircle, User, History, ChevronDown, ChevronUp, Settings } from "lucide-react";
 import CurrencyIcon from "@/components/CurrencyIcon";
+
 const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -170,7 +171,7 @@ const Navigation = () => {
       {/* Floating Logo - Mobile responsive positioning and sizing */}
       <div className="fixed top-2 left-1 sm:top-3 sm:left-5 md:top-4 md:left-6 z-50">
         <Link to="/" className="block group">
-          <img alt="MusicGift Logo" className="w-32 sm:w-40 md:w-48 lg:w-60 h-auto transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" src="/lovable-uploads/407b475e-cd49-4ba1-918b-57bd3fc6c955.png" />
+          <img alt="MusicGift Logo" className="w-32 sm:w-40 md:w-48 lg:w-60 h-auto transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" src="/uploads/logo_musicgift.webp" />
         </Link>
       </div>
 
@@ -453,4 +454,5 @@ const Navigation = () => {
       </header>
     </>;
 };
+
 export default Navigation;
