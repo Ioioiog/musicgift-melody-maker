@@ -17,8 +17,8 @@ const OptimizedLogo: React.FC<OptimizedLogoProps> = ({
   priority = false,
   alt = "MusicGift.ro - Cadouri Muzicale Personalizate"
 }) => {
-  // Use an existing logo file from the uploads directory
-  const logoSrc = "/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png";
+  // Use the new colorful MusicGift logo
+  const logoSrc = "/lovable-uploads/980af2e4-e2b9-40ac-9432-710c55cd00a8.png";
   
   return (
     <picture className={cn("block", className)}>
