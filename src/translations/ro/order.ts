@@ -36,7 +36,7 @@ export const orderTranslations = {
   
   // Toast messages
   orderSuccess: "Comanda a fost creată",
-  orderSuccessMessage: "Comanda ta a fost creată cu succes. Aceasta folosește date demo.",
+  orderSuccessMessage: "Comanda ta a fost creată cu succes.",
   orderError: "Eroare",
   orderErrorMessage: "A apărut o eroare",
   
