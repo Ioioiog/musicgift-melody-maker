@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, AlertCircle } from 'lucide-react';
@@ -8,6 +9,10 @@ import { useLocation } from 'react-router-dom';
 const supportsWebM = (): boolean => {
   const video = document.createElement('video');
   return video.canPlayType('video/webm') !== '';
+};
+
+const isSafari = (): boolean => {
+  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 };
 
 const VideoHero = () => {
@@ -23,6 +28,7 @@ const VideoHero = () => {
   const [shouldAutoplay, setShouldAutoplay] = useState(true);
   const [videoError, setVideoError] = useState<string | null>(null);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
+  const [showControls, setShowControls] = useState(false);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
@@ -38,9 +44,12 @@ const VideoHero = () => {
       sessionStorage.setItem(playedLangKey, 'true');
     } else {
       setShouldAutoplay(false);
+      setShowControls(true);
     }
 
-    setUseWebM(supportsWebM());
+    // Safari specific: disable WebM for Safari as it has poor support
+    const safariDetected = isSafari();
+    setUseWebM(supportsWebM() && !safariDetected);
     setIsMounted(true);
     setVideoPlayedOnce(false);
     setIsPlaying(false);
@@ -61,11 +70,20 @@ const VideoHero = () => {
     setVideoError('Video cannot be loaded');
     setIsVideoLoading(false);
     setIsPlaying(false);
+    setShowControls(true);
   }, []);
 
   const handleVideoLoad = useCallback(() => {
     setIsVideoLoading(false);
     setVideoError(null);
+    console.log('Video loaded successfully');
+  }, []);
+
+  const handleCanPlay = useCallback(() => {
+    setIsVideoLoading(false);
+    setVideoError(null);
+    setShowControls(true);
+    console.log('Video can play');
   }, []);
 
   useEffect(() => {
@@ -74,10 +92,19 @@ const VideoHero = () => {
 
     const attemptPlay = async () => {
       try {
+        // Safari specific: ensure video is loaded before attempting play
+        if (video.readyState < 3) {
+          video.load();
+          await new Promise(resolve => {
+            video.addEventListener('canplay', resolve, { once: true });
+          });
+        }
+
         video.muted = false;
         await video.play();
         setHasAudio(true);
         setIsPlaying(true);
+        setShowControls(true);
       } catch (err) {
         console.warn('Autoplay with sound failed, falling back to muted:', err);
         try {
@@ -85,8 +112,10 @@ const VideoHero = () => {
           await video.play();
           setHasAudio(false);
           setIsPlaying(true);
+          setShowControls(true);
         } catch (mutedErr) {
           console.warn('Muted autoplay also failed:', mutedErr);
+          setShowControls(true);
           handleVideoError(mutedErr);
         }
       }
@@ -100,6 +129,7 @@ const VideoHero = () => {
   const handleVideoEnd = () => {
     setIsPlaying(false);
     setVideoPlayedOnce(true);
+    setShowControls(true);
   };
 
   const handleTogglePlay = () => {
@@ -148,11 +178,18 @@ const VideoHero = () => {
       ></div>
 
       {videoError ? (
-        <div className="absolute inset-0 video-error-fallback" role="alert">
-          <div className="text-center">
+        <div className="absolute inset-0 video-error-fallback flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-black/70" role="alert">
+          <div className="text-center text-white">
             <AlertCircle className="w-12 h-12 mx-auto mb-4 text-white/80" aria-hidden="true" />
             <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
-            <p className="text-sm opacity-90">The video content is temporarily unavailable</p>
+            <p className="text-sm opacity-90 mb-4">The video content is temporarily unavailable</p>
+            <Button 
+              onClick={() => window.location.reload()} 
+              className="bg-orange-500 hover:bg-orange-600 text-white"
+              aria-label="Reload page to try loading video again"
+            >
+              Try Again
+            </Button>
           </div>
         </div>
       ) : (
@@ -165,7 +202,8 @@ const VideoHero = () => {
           onEnded={handleVideoEnd}
           onError={handleVideoError}
           onLoadedData={handleVideoLoad}
-          onCanPlay={handleVideoLoad}
+          onCanPlay={handleCanPlay}
+          onLoadStart={() => setIsVideoLoading(true)}
           className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover hw-accelerated ${isVideoLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
           poster={posterSrc}
           aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
@@ -182,12 +220,12 @@ const VideoHero = () => {
         </video>
       )}
 
-      {!shouldAutoplay && !videoError && (
-        <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
+      {(showControls || !shouldAutoplay) && !videoError && (
+        <div className="absolute top-4 right-4 z-50 flex gap-2 defer-load">
           <Button 
             onClick={handleTogglePlay} 
             size="icon" 
-            className="bg-white/80 text-black rounded-full shadow hw-accelerated"
+            className="bg-white/90 hover:bg-white text-black rounded-full shadow-lg border border-white/20 backdrop-blur-sm"
             aria-label={isPlaying ? 'Pause video' : 'Play video'}
           >
             {isPlaying ? <Pause className="w-5 h-5" aria-hidden="true" /> : <Play className="w-5 h-5" aria-hidden="true" />}
@@ -195,7 +233,7 @@ const VideoHero = () => {
           <Button 
             onClick={handleToggleAudio} 
             size="icon" 
-            className="bg-white/80 text-black rounded-full shadow hw-accelerated"
+            className={`rounded-full shadow-lg border backdrop-blur-sm ${hasAudio ? 'bg-white/90 hover:bg-white text-black border-white/20' : 'bg-red-500/90 hover:bg-red-600 text-white border-red-300/20'}`}
             aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
           >
             <Volume2 className="w-5 h-5" aria-hidden="true" />
