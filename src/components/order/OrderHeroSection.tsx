@@ -46,7 +46,7 @@ const OrderHeroSection: React.FC = () => {
             duration: 0.6
           }}
         >
-          Detalii Comandă
+          {t('orderDetails')}
         </motion.h1>
         <motion.p 
           className="text-base md:text-lg text-white/90 mb-4 max-w-2xl mx-auto" 
@@ -63,7 +63,7 @@ const OrderHeroSection: React.FC = () => {
             delay: 0.2
           }}
         >
-          Completează toți pașii pentru a finaliza comanda.
+          {t('completeAllSteps')}
         </motion.p>
       </div>
     </section>

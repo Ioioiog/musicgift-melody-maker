@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -28,12 +27,8 @@ export const orderTranslations = {
   completeOrder: "Complete order",
   choosePackage: "Choose package",
   pickDate: "Pick date",
-  orderDetails: "Order details",
+  orderDetails: "Order Details",
   completeAllSteps: "Complete all steps to finalize your order.",
-  submitOrder: "Submit order",
-  loadingGiftCard: "Loading gift card...",
-  giftCardApplied: "Gift card applied",
-  giftCardAppliedDesc: "Gift card is ready to be used for your order.",
   
   // Toast messages
   orderSuccess: "Order created",
