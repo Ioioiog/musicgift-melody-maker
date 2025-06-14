@@ -16,19 +16,34 @@ import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FileMetadata } from "@/types/order";
-
 const Order = () => {
-  const { toast } = useToast();
-  const { t } = useLanguage();
-  const { user } = useAuth();
-  const { currency } = useCurrency();
+  const {
+    toast
+  } = useToast();
+  const {
+    t
+  } = useLanguage();
+  const {
+    user
+  } = useAuth();
+  const {
+    currency
+  } = useCurrency();
   const navigate = useNavigate();
-  const { data: packages = [] } = usePackages();
-  const { data: addons = [] } = useAddons();
+  const {
+    data: packages = []
+  } = usePackages();
+  const {
+    data: addons = []
+  } = useAddons();
   const [searchParams] = useSearchParams();
   const [orderData, setOrderData] = useState<any>(null);
   const [appliedGiftCard, setAppliedGiftCard] = useState<any>(null);
-  const [appliedDiscount, setAppliedDiscount] = useState<{ code: string; amount: number; type: string } | null>(null);
+  const [appliedDiscount, setAppliedDiscount] = useState<{
+    code: string;
+    amount: number;
+    type: string;
+  } | null>(null);
   const isMobile = useIsMobile();
 
   // Extract gift card parameters from URL
@@ -36,11 +51,13 @@ const Order = () => {
   const preselectedPackage = searchParams.get('package');
 
   // Fetch gift card data if code is provided
-  const { data: urlGiftCard, isLoading: isLoadingGift } = useGiftCardByCode(giftCardCode || '');
+  const {
+    data: urlGiftCard,
+    isLoading: isLoadingGift
+  } = useGiftCardByCode(giftCardCode || '');
 
   // Check if the preselected package is the gift package
   const isGiftPackage = preselectedPackage === 'gift';
-
   useEffect(() => {
     if (giftCardCode && urlGiftCard) {
       setAppliedGiftCard(urlGiftCard);
@@ -50,7 +67,6 @@ const Order = () => {
       });
     }
   }, [giftCardCode, urlGiftCard, toast, t]);
-
   const calculateTotalPrice = (packageValue: string, selectedAddons: string[]) => {
     const packageData = packages.find(pkg => pkg.value === packageValue);
     const packagePrice = packageData ? getPackagePrice(packageData, currency) : 0;
@@ -64,36 +80,39 @@ const Order = () => {
   // Extract file metadata from addonFieldValues
   const extractFileData = (addonFieldValues: Record<string, any>) => {
     const fileData: Record<string, any> = {};
-    
+
     // Go through all addon field values
     Object.entries(addonFieldValues).forEach(([key, value]) => {
       // Check if the value has a url property (single file/audio)
       if (value && typeof value === 'object' && 'url' in value) {
         fileData[key] = value;
-      } 
+      }
       // Check if it's an array of file objects
       else if (Array.isArray(value) && value.length > 0 && 'url' in value[0]) {
         fileData[key] = value;
       }
     });
-    
     return fileData;
   };
 
   // Associate uploaded files with the order after creation
   const associateFilesWithOrder = async (orderId: string, addonFieldValues: Record<string, any>) => {
     const fileData = extractFileData(addonFieldValues);
-    
+
     // Skip if no files to associate
     if (Object.keys(fileData).length === 0) {
       return;
     }
-    
     try {
-      const { data, error } = await supabase.functions.invoke('associate-files-with-order', {
-        body: { orderId, fileData }
+      const {
+        data,
+        error
+      } = await supabase.functions.invoke('associate-files-with-order', {
+        body: {
+          orderId,
+          fileData
+        }
       });
-      
       if (error) {
         console.error('Error associating files with order:', error);
       } else {
@@ -112,7 +131,6 @@ const Order = () => {
         const addon = addons.find(a => a.addon_key === addonKey);
         return addon ? addon.addon_key : addonKey;
       }) || [];
-
       const emailSubject = `New Order Received - ${orderId.slice(0, 8)}`;
       const emailMessage = `
 New Order Notification:
@@ -139,7 +157,6 @@ ${orderData.city ? `City: ${orderData.city}` : ''}
 This order was submitted through the MusicGift website.
 Order Management: View full details in the admin panel.
       `.trim();
-
       await supabase.functions.invoke('send-contact-email', {
         body: {
           firstName: 'Order',
@@ -149,14 +166,12 @@ Order Management: View full details in the admin panel.
           message: emailMessage
         }
       });
-
       console.log('Order notification email sent successfully');
     } catch (error) {
       console.error('Failed to send order notification email:', error);
       // Don't throw - this shouldn't block the order process
     }
   };
-
   const handleOrderComplete = async (orderData: any) => {
     try {
       console.log("🔄 Processing order with selected payment provider:", orderData.paymentProvider);
@@ -174,7 +189,6 @@ Order Management: View full details in the admin panel.
       // Calculate gift card application (keep in base monetary units)
       let giftCreditApplied = 0;
       let finalPrice = totalPrice;
-      
       if (appliedGiftCard) {
         const giftBalance = (appliedGiftCard.gift_amount || 0) / 100; // Convert from cents to base units
         giftCreditApplied = Math.min(giftBalance, totalPrice);
@@ -206,10 +220,12 @@ Order Management: View full details in the admin panel.
         // Gift card fields (keep gift_credit_applied in cents for database consistency)
         gift_card_id: appliedGiftCard?.id || null,
         is_gift_redemption: !!appliedGiftCard,
-        gift_credit_applied: giftCreditApplied * 100, // Convert to cents for database
+        gift_credit_applied: giftCreditApplied * 100,
+        // Convert to cents for database
         // Discount fields
         discount_code: appliedDiscount?.code || null,
-        discount_amount: discountApplied * 100, // Convert to cents for database
+        discount_amount: discountApplied * 100,
+        // Convert to cents for database
         // Package detail columns
         package_value: selectedPackage.value,
         package_name: selectedPackage.label_key,
@@ -220,14 +236,16 @@ Order Management: View full details in the admin panel.
         user_id: user?.id || null,
         payment_provider: paymentProvider
       };
-
       let paymentResponse;
       let paymentError;
 
       // Route to the correct payment provider (no price conversion in frontend)
       if (paymentProvider === 'stripe') {
         console.log('🟣 Processing with Stripe');
-        const { data, error } = await supabase.functions.invoke('stripe-create-payment', {
+        const {
+          data,
+          error
+        } = await supabase.functions.invoke('stripe-create-payment', {
           body: {
             orderData: baseOrderPayload,
             returnUrl: `${window.location.origin}/payment/success`
@@ -237,7 +255,10 @@ Order Management: View full details in the admin panel.
         paymentError = error;
       } else if (paymentProvider === 'revolut') {
         console.log('🟠 Processing with Revolut');
-        const { data, error } = await supabase.functions.invoke('revolut-create-payment', {
+        const {
+          data,
+          error
+        } = await supabase.functions.invoke('revolut-create-payment', {
           body: {
             orderData: baseOrderPayload,
             returnUrl: `${window.location.origin}/payment/success`
@@ -247,7 +268,10 @@ Order Management: View full details in the admin panel.
         paymentError = error;
       } else if (paymentProvider === 'smartbill') {
         console.log('🔵 Processing with SmartBill');
-        const { data, error } = await supabase.functions.invoke('smartbill-create-invoice', {
+        const {
+          data,
+          error
+        } = await supabase.functions.invoke('smartbill-create-invoice', {
           body: {
             orderData: baseOrderPayload
           }
@@ -263,7 +287,6 @@ Order Management: View full details in the admin panel.
         console.error(`❌ ${paymentProvider.toUpperCase()} integration error:`, paymentError);
         throw new Error(`Failed to process order with ${paymentProvider.toUpperCase()}`);
       }
-
       console.log(`✅ ${paymentProvider.toUpperCase()} integration response:`, paymentResponse);
 
       // Check if payment provider operation failed
@@ -276,7 +299,6 @@ Order Management: View full details in the admin panel.
           description: `${paymentProvider.toUpperCase()} payment failed: ${errorMessage}`,
           variant: "destructive"
         });
-
         navigate('/payment/error?orderId=' + paymentResponse?.orderId + '&error=' + errorCode);
         return;
       }
@@ -289,15 +311,15 @@ Order Management: View full details in the admin panel.
 
       // If gift card was used, create redemption record
       if (appliedGiftCard && giftCreditApplied > 0) {
-        const { error: redemptionError } = await supabase
-          .from('gift_redemptions')
-          .insert({
-            gift_card_id: appliedGiftCard.id,
-            order_id: paymentResponse.orderId,
-            redeemed_amount: giftCreditApplied * 100, // Convert to cents for database
-            remaining_balance: Math.max(0, (appliedGiftCard.gift_amount || 0) - giftCreditApplied * 100)
-          });
-
+        const {
+          error: redemptionError
+        } = await supabase.from('gift_redemptions').insert({
+          gift_card_id: appliedGiftCard.id,
+          order_id: paymentResponse.orderId,
+          redeemed_amount: giftCreditApplied * 100,
+          // Convert to cents for database
+          remaining_balance: Math.max(0, (appliedGiftCard.gift_amount || 0) - giftCreditApplied * 100)
+        });
         if (redemptionError) {
           console.error("Error creating gift redemption:", redemptionError);
         } else {
@@ -329,35 +351,29 @@ Order Management: View full details in the admin panel.
       });
     }
   };
-
   const handleGiftCardComplete = (data: any) => {
     console.log("Gift card purchase completed:", data);
   };
-
   if (isLoadingGift && giftCardCode) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="text-center relative z-10">
-          <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white">{t('loadingGiftCard')}</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen relative overflow-hidden" style={{
+    return <div className="min-h-screen flex items-center justify-center" style={{
       backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }}>
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="text-center relative z-10">
+          <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white">{t('loadingGiftCard')}</p>
+        </div>
+      </div>;
+  }
+  return <div className="min-h-screen relative overflow-hidden" style={{
+    backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
+  }}>
       <div className="absolute inset-0 bg-black/20"></div>
 
       <div className="relative z-10">
@@ -365,54 +381,31 @@ Order Management: View full details in the admin panel.
         
         <OrderHeroSection />
         
-        <section className="py-2 sm:py-4 md:py-6 lg:py-8">
+        <section className="py-2 sm:py-4 md:py-6 lg:py-8 px-[16px]">
           <div className="container mx-auto px-2 sm:px-4 lg:px-6">
-            {isGiftPackage ? (
-              <div className="max-w-4xl mx-auto">
+            {isGiftPackage ? <div className="max-w-4xl mx-auto">
                 <GiftPurchaseWizard onComplete={handleGiftCardComplete} />
-              </div>
-            ) : (
-              <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6 lg:items-end">
+              </div> : <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6 lg:items-end">
                 {/* Main content - Order Wizard */}
                 <div className="flex-1 order-2 lg:order-1 my-0">
-                  <OrderWizard 
-                    onComplete={handleOrderComplete} 
-                    giftCard={appliedGiftCard} 
-                    preselectedPackage={preselectedPackage} 
-                    onOrderDataChange={setOrderData} 
-                  />
+                  <OrderWizard onComplete={handleOrderComplete} giftCard={appliedGiftCard} preselectedPackage={preselectedPackage} onOrderDataChange={setOrderData} />
                 </div>
                 
                 {/* Mobile Order Summary - Above wizard on mobile */}
-                {isMobile && orderData?.selectedPackage && (
-                  <div className="order-1 lg:hidden">
-                    <OrderSidebarSummary 
-                      orderData={orderData} 
-                      giftCard={appliedGiftCard}
-                      onGiftCardChange={setAppliedGiftCard}
-                      onDiscountChange={setAppliedDiscount}
-                    />
-                  </div>
-                )}
+                {isMobile && orderData?.selectedPackage && <div className="order-1 lg:hidden">
+                    <OrderSidebarSummary orderData={orderData} giftCard={appliedGiftCard} onGiftCardChange={setAppliedGiftCard} onDiscountChange={setAppliedDiscount} />
+                  </div>}
                 
                 {/* Desktop Sidebar - Order Summary */}
                 <div className="hidden lg:block lg:w-80 xl:w-96 order-3 lg:order-2">
-                  <OrderSidebarSummary 
-                    orderData={orderData} 
-                    giftCard={appliedGiftCard}
-                    onGiftCardChange={setAppliedGiftCard}
-                    onDiscountChange={setAppliedDiscount}
-                  />
+                  <OrderSidebarSummary orderData={orderData} giftCard={appliedGiftCard} onGiftCardChange={setAppliedGiftCard} onDiscountChange={setAppliedDiscount} />
                 </div>
-              </div>
-            )}
+              </div>}
           </div>
         </section>
 
         <Footer />
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Order;
