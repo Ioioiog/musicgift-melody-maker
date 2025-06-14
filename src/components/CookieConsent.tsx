@@ -52,7 +52,7 @@ const CookieConsent: React.FC = () => {
                         onClick={() => setShowSettings(true)}
                         className="text-xs text-orange-600 hover:text-orange-700 underline mt-1 font-medium"
                       >
-                        {t('learnMore', 'Learn more about our cookies')}
+                        {t('learnMoreAboutCookies', 'Learn more about our cookies')}
                       </button>
                     </div>
                   </div>
