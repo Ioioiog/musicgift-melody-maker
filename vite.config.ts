@@ -17,13 +17,15 @@ function ensureMimeTypeForModules(): Plugin {
           res: ServerResponse,
           next: () => void
         ) => {
-          if (req.url?.endsWith('.js')) {
-            res.setHeader('Content-Type', 'application/javascript');
-          } else if (req.url?.endsWith('.ts')) {
-            res.setHeader('Content-Type', 'application/typescript');
-          } else if (req.url?.endsWith('.tsx')) {
-            res.setHeader('Content-Type', 'application/typescript');
+          const url = req.url || '';
+          
+          // Set correct MIME types for JavaScript and TypeScript files
+          if (url.endsWith('.js') || url.endsWith('.mjs')) {
+            res.setHeader('Content-Type', 'text/javascript');
+          } else if (url.endsWith('.ts') || url.endsWith('.tsx')) {
+            res.setHeader('Content-Type', 'text/typescript');
           }
+          
           next();
         }
       );
@@ -36,6 +38,9 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    headers: {
+      'Content-Type': 'text/javascript'
+    }
   },
   plugins: [
     react(),
