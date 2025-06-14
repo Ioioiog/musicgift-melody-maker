@@ -1,201 +1,108 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Play, Pause, Volume2, VolumeX, AlertCircle } from 'lucide-react';
+import { Play, Pause, Volume2, AlertCircle } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useLocation } from 'react-router-dom';
+
+const supportsWebM = (): boolean => {
+  const video = document.createElement('video');
+  return video.canPlayType('video/webm') !== '';
+};
 
 const VideoHero = () => {
   const { t, language } = useLanguage();
+  const location = useLocation();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
   const isMobile = useIsMobile();
-  
-  // Browser detection - done once at component mount
-  const [isSafari] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const userAgent = navigator.userAgent;
-    return /Safari/.test(userAgent) && !/Chrome/.test(userAgent) && !/Chromium/.test(userAgent);
-  });
-  
-  const [isIOS] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return /iPad|iPhone|iPod/.test(navigator.userAgent);
-  });
-
-  // State management
-  const [isPlaying, setIsPlaying] = useState(false);
   const [hasAudio, setHasAudio] = useState(false);
+  const [videoPlayedOnce, setVideoPlayedOnce] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [useWebM, setUseWebM] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [shouldAutoplay, setShouldAutoplay] = useState(true);
   const [videoError, setVideoError] = useState<string | null>(null);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
-  const [showMutedNotice, setShowMutedNotice] = useState(false);
-  const [showPlayButton, setShowPlayButton] = useState(false);
-  const [userInteracted, setUserInteracted] = useState(false);
-  const [isInViewport, setIsInViewport] = useState(false);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
+  const videoWebM = `/uploads/${baseName}.webm`;
   const posterSrc = '/uploads/video_placeholder.png';
 
-  // Reset state when language changes
   useEffect(() => {
+    const playedLangKey = `played-${language}`;
+    const sessionHasPlayed = sessionStorage.getItem(playedLangKey) === 'true';
+
+    if (!sessionHasPlayed) {
+      setShouldAutoplay(true);
+      sessionStorage.setItem(playedLangKey, 'true');
+    } else {
+      setShouldAutoplay(false);
+    }
+
+    setUseWebM(supportsWebM());
+    setIsMounted(true);
+    setVideoPlayedOnce(false);
     setIsPlaying(false);
-    setHasAudio(false);
     setVideoError(null);
-    setShowMutedNotice(false);
-    setShowPlayButton(false);
-    setUserInteracted(false);
     setIsVideoLoading(true);
   }, [language]);
 
-  // Handle user interaction for Safari
-  useEffect(() => {
-    const handleUserInteraction = () => {
-      setUserInteracted(true);
-    };
-
-    if (isSafari || isIOS) {
-      document.addEventListener('click', handleUserInteraction, { once: true });
-      document.addEventListener('touchstart', handleUserInteraction, { once: true });
-      
-      return () => {
-        document.removeEventListener('click', handleUserInteraction);
-        document.removeEventListener('touchstart', handleUserInteraction);
-      };
-    }
-  }, [isSafari, isIOS]);
-
-  // Safari-specific autoplay attempt
-  const attemptSafariAutoplay = useCallback(async () => {
-    const video = videoRef.current;
-    if (!video) return false;
-
-    try {
-      video.muted = true;
-      video.playsInline = true;
-      
-      // Wait for video to be ready
-      if (video.readyState < 2) {
-        await new Promise((resolve, reject) => {
-          const timeout = setTimeout(() => reject(new Error('Load timeout')), 5000);
-          const onCanPlay = () => {
-            clearTimeout(timeout);
-            resolve(true);
-          };
-          video.addEventListener('canplay', onCanPlay, { once: true });
-        });
-      }
-
-      await video.play();
-      setIsPlaying(true);
-      setHasAudio(false);
-      setShowMutedNotice(true);
-      setIsVideoLoading(false);
-      return true;
-    } catch (error) {
-      console.log('Safari autoplay failed, showing play button');
-      setShowPlayButton(true);
-      setIsVideoLoading(false);
-      return false;
-    }
-  }, []);
-
-  // Standard autoplay attempt for other browsers
-  const attemptStandardAutoplay = useCallback(async () => {
-    const video = videoRef.current;
-    if (!video) return false;
-
-    try {
-      // First try with sound
-      video.muted = false;
-      await video.play();
-      setIsPlaying(true);
-      setHasAudio(true);
-      setIsVideoLoading(false);
-      return true;
-    } catch (error) {
-      try {
-        // Fallback to muted
-        video.muted = true;
-        await video.play();
-        setIsPlaying(true);
-        setHasAudio(false);
-        setShowMutedNotice(true);
-        setIsVideoLoading(false);
-        return true;
-      } catch (e) {
-        console.warn('Autoplay failed completely');
-        setShowPlayButton(true);
-        setIsVideoLoading(false);
-        return false;
-      }
-    }
-  }, []);
-
-  // Intersection Observer setup
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (video) {
+      video.pause();
+      setIsPlaying(false);
+    }
+  }, [location.pathname]);
 
-    observerRef.current = new IntersectionObserver(
-      ([entry]) => {
-        setIsInViewport(entry.isIntersecting);
-      },
-      { threshold: 0.5 }
-    );
-
-    observerRef.current.observe(video);
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, [language]);
-
-  // Autoplay when video enters viewport
-  useEffect(() => {
-    if (!isInViewport || isPlaying || videoError) return;
-
-    const timer = setTimeout(() => {
-      if (isSafari || isIOS) {
-        attemptSafariAutoplay();
-      } else {
-        attemptStandardAutoplay();
-      }
-    }, 200);
-
-    return () => clearTimeout(timer);
-  }, [isInViewport, isPlaying, videoError, isSafari, isIOS, attemptSafariAutoplay, attemptStandardAutoplay]);
-
-  const handleVideoError = useCallback(() => {
+  const handleVideoError = useCallback((error: any) => {
+    console.warn('Video loading error:', error);
     setVideoError('Video cannot be loaded');
     setIsVideoLoading(false);
     setIsPlaying(false);
   }, []);
 
-  const handleManualPlay = async () => {
+  const handleVideoLoad = useCallback(() => {
+    setIsVideoLoading(false);
+    setVideoError(null);
+  }, []);
+
+  useEffect(() => {
     const video = videoRef.current;
-    if (!video || videoError) return;
-    
-    try {
-      video.currentTime = 0;
-      video.muted = !hasAudio;
-      
-      if ((isSafari || isIOS) && !hasAudio) {
-        video.muted = true;
+    if (!video || !shouldAutoplay || videoError) return;
+
+    const attemptPlay = async () => {
+      try {
+        video.muted = false;
+        await video.play();
+        setHasAudio(true);
+        setIsPlaying(true);
+      } catch (err) {
+        console.warn('Autoplay with sound failed, falling back to muted:', err);
+        try {
+          video.muted = true;
+          await video.play();
+          setHasAudio(false);
+          setIsPlaying(true);
+        } catch (mutedErr) {
+          console.warn('Muted autoplay also failed:', mutedErr);
+          handleVideoError(mutedErr);
+        }
       }
-      
-      await video.play();
-      setIsPlaying(true);
-      setShowPlayButton(false);
-      setUserInteracted(true);
-    } catch (error) {
-      handleVideoError();
+    };
+
+    if (!isVideoLoading) {
+      attemptPlay();
     }
+  }, [shouldAutoplay, language, isVideoLoading, videoError, handleVideoError]);
+
+  const handleVideoEnd = () => {
+    setIsPlaying(false);
+    setVideoPlayedOnce(true);
   };
 
-  const handleTogglePlay = async () => {
+  const handleTogglePlay = () => {
     const video = videoRef.current;
     if (!video || videoError) return;
     
@@ -203,148 +110,107 @@ const VideoHero = () => {
       video.pause();
       setIsPlaying(false);
     } else {
-      await handleManualPlay();
+      video.currentTime = 0;
+      video.muted = !hasAudio;
+      video.play().catch(handleVideoError);
+      setIsPlaying(true);
     }
   };
 
-  const handleToggleAudio = useCallback(async () => {
+  const handleToggleAudio = useCallback(() => {
     const video = videoRef.current;
     if (!video || videoError) return;
     
-    if ((isSafari || isIOS) && !hasAudio && !userInteracted) {
-      setUserInteracted(true);
-    }
-    
-    try {
-      video.muted = hasAudio;
-      setHasAudio(!hasAudio);
-      setShowMutedNotice(false);
-      
-      if (!hasAudio && !isPlaying) {
-        await video.play();
-        setIsPlaying(true);
-      }
-    } catch (error) {
-      console.warn('Audio toggle failed:', error);
+    if (hasAudio) {
       video.muted = true;
       setHasAudio(false);
+    } else {
+      video.muted = false;
+      setHasAudio(true);
     }
-  }, [hasAudio, videoError, isPlaying, isSafari, isIOS, userInteracted]);
+  }, [hasAudio, videoError]);
 
-  const videoHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
+  const mobileHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
+
+  if (!isMounted) return null;
 
   return (
-    <>
-      {/* Video Controls */}
-      {!videoError && (
-        <div className="fixed top-16 right-4 z-[60] flex gap-3">
-          <Button
-            onClick={handleTogglePlay}
-            size="icon"
-            className="bg-black/80 hover:bg-black/90 text-white rounded-full shadow-xl border-2 border-white/30 backdrop-blur-md w-12 h-12 transition-all duration-200 hover:scale-105"
+    <section
+      className={`video-hero relative overflow-hidden video-hero-optimized critical-resource ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`}
+      style={isMobile && mobileHeight ? { height: mobileHeight } : {}}
+      role="banner"
+      aria-label="Hero video section"
+    >
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${posterSrc})` }}
+        aria-hidden="true"
+      ></div>
+
+      {videoError ? (
+        <div className="absolute inset-0 video-error-fallback" role="alert">
+          <div className="text-center">
+            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-white/80" aria-hidden="true" />
+            <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
+            <p className="text-sm opacity-90">The video content is temporarily unavailable</p>
+          </div>
+        </div>
+      ) : (
+        <video
+          key={language}
+          ref={videoRef}
+          playsInline
+          preload="metadata"
+          muted={!hasAudio}
+          onEnded={handleVideoEnd}
+          onError={handleVideoError}
+          onLoadedData={handleVideoLoad}
+          onCanPlay={handleVideoLoad}
+          className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover hw-accelerated ${isVideoLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+          poster={posterSrc}
+          aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
+        >
+          {useWebM && <source src={videoWebM} type="video/webm" onError={handleVideoError} />}
+          <source src={videoSrc} type="video/mp4" onError={handleVideoError} />
+          <track 
+            kind="captions" 
+            src={`/uploads/captions_${language}.vtt`} 
+            srcLang={language} 
+            label={language === 'ro' ? 'Română' : 'English'}
+            default 
+          />
+        </video>
+      )}
+
+      {!shouldAutoplay && !videoError && (
+        <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
+          <Button 
+            onClick={handleTogglePlay} 
+            size="icon" 
+            className="bg-white/80 text-black rounded-full shadow hw-accelerated"
             aria-label={isPlaying ? 'Pause video' : 'Play video'}
           >
-            {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
+            {isPlaying ? <Pause className="w-5 h-5" aria-hidden="true" /> : <Play className="w-5 h-5" aria-hidden="true" />}
           </Button>
-          <Button
-            onClick={handleToggleAudio}
-            size="icon"
-            className={`rounded-full shadow-xl border-2 backdrop-blur-md w-12 h-12 transition-all duration-200 hover:scale-105 ${
-              hasAudio 
-                ? 'bg-black/80 hover:bg-black/90 text-white border-white/30' 
-                : 'bg-red-600/90 hover:bg-red-700/90 text-white border-red-400/50'
-            }`}
+          <Button 
+            onClick={handleToggleAudio} 
+            size="icon" 
+            className="bg-white/80 text-black rounded-full shadow hw-accelerated"
             aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
           >
-            {hasAudio ? <Volume2 className="w-6 h-6" /> : <VolumeX className="w-6 h-6" />}
+            <Volume2 className="w-5 h-5" aria-hidden="true" />
           </Button>
         </div>
       )}
 
-      <section
-        className={`video-hero relative overflow-hidden ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`}
-        style={isMobile && videoHeight ? { height: videoHeight } : {}}
-        role="banner"
-        aria-label="Hero video section"
-      >
-        {/* Background poster */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${posterSrc})` }}
-          aria-hidden="true"
-        />
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" aria-hidden="true"></div>
 
-        {videoError ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-black/70 z-10" role="alert">
-            <div className="text-center text-white">
-              <AlertCircle className="w-12 h-12 mx-auto mb-4 text-white/80" />
-              <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
-              <p className="text-sm opacity-90 mb-4">The video content is temporarily unavailable</p>
-              <Button onClick={() => window.location.reload()} className="bg-orange-500 hover:bg-orange-600 text-white">
-                Try Again
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <>
-            <video
-              key={language}
-              ref={videoRef}
-              playsInline
-              preload={isSafari || isIOS ? "metadata" : "auto"}
-              muted={!hasAudio}
-              onError={handleVideoError}
-              onLoadStart={() => setIsVideoLoading(true)}
-              onCanPlay={() => setIsVideoLoading(false)}
-              className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
-              style={isMobile ? { height: videoHeight } : {}}
-              poster={posterSrc}
-              aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
-              webkit-playsinline="true"
-            >
-              <source src={videoSrc} type="video/mp4" />
-            </video>
-
-            {/* Safari Play Button Overlay */}
-            {showPlayButton && (
-              <div className="absolute inset-0 flex items-center justify-center z-20">
-                <Button
-                  onClick={handleManualPlay}
-                  size="lg"
-                  className="bg-black/80 hover:bg-black/90 text-white rounded-full shadow-2xl border-4 border-white/50 backdrop-blur-md w-20 h-20 transition-all duration-200 hover:scale-110"
-                  aria-label="Play video"
-                >
-                  <Play className="w-10 h-10 ml-1" />
-                </Button>
-              </div>
-            )}
-          </>
-        )}
-
-        {/* Toast Notification */}
-        {showMutedNotice && (
-          <div className="absolute top-20 right-4 z-[60] bg-black/90 text-white text-sm px-4 py-2 rounded-lg shadow-lg flex items-start gap-2 max-w-xs border border-white/20">
-            <span className="pt-0.5">🔇</span>
-            <span className="flex-1">{t('mutedAutoplayNotice')}</span>
-            <button
-              onClick={() => setShowMutedNotice(false)}
-              className="ml-2 text-white/70 hover:text-white font-bold"
-              aria-label={t('closeNotice')}
-            >
-              ✕
-            </button>
-          </div>
-        )}
-
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 z-5" aria-hidden="true" />
-
-        <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4 z-10">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-            {t('heroTitle')}
-          </h1>
-        </div>
-      </section>
-    </>
+      <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent hw-accelerated">
+          {t('heroTitle')}
+        </h1>
+      </div>
+    </section>
   );
 };
 
