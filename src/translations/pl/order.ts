@@ -153,9 +153,9 @@ export const orderTranslations = {
   fullName: "Twoje pełne imię i nazwisko",
   email: "Adres e-mail",
   phone: "Numer telefonu (Opcjonalnie)",
-  acceptMentionObligation: "Akceptuję obowiązek wspomnienia",
-  acceptDistribution: "Akceptuję dystrybucję",
-  finalNote: "Zgadzam się z warunkami końcowymi",
+  acceptMentionObligation: "Akceptuję wymagania dotyczące uznania autorstwa",
+  acceptDistribution: "Wyrażam zgodę na warunki dystrybucji",
+  finalNote: "Akceptuję wszystkie warunki i postanowienia",
   voiceFemale: "Głos żeński",
   voiceMale: "Głos męski",
   voiceDuet: "Duet (Oba głosy)",
@@ -469,7 +469,7 @@ export const orderTranslations = {
   businessUsageEvents: "Wydarzenia Korporacyjne",
   businessContactNamePlaceholder: "Główna osoba kontaktowa",
   businessAcceptTermsPlaceholder: "Akceptuję warunki komercyjne",
-
+  
   // Artist Package
   artistStep1Title: "Informacje o Artyście",
   artistStep2Title: "Koncepcja Piosenki",
@@ -489,7 +489,7 @@ export const orderTranslations = {
   artistPlatformYouTubeMusic: "YouTube Music",
   artistPlatformAllPlatforms: "Wszystkie Główne Platformy",
   artistAcceptCollaborationPlaceholder: "Akceptuję warunki współpracy 50/50",
-
+  
   // Remix Package
   remixStep1Title: "Przesłanie Oryginalnej Piosenki",
   remixStep2Title: "Preferencje Remixa",
@@ -507,7 +507,7 @@ export const orderTranslations = {
   remixVocalsTimeStretch: "Rozciągnij Wokal w Czasie",
   remixSpecialRequestsPlaceholder: "Jakieś specjalne życzenia lub modyfikacje?",
   remixRightsConfirmationPlaceholder: "Potwierdzam, że posiadam prawa do tej piosenki",
-
+  
   // Instrumental Package
   instrumentalStep1Title: "Styl Muzyczny",
   instrumentalStep2Title: "Wymagania Techniczne",
@@ -526,7 +526,7 @@ export const orderTranslations = {
   instrumentalUsageYouTube: "Treści YouTube",
   instrumentalReferenceSongsPlaceholder: "Podziel się utworami referencyjnymi dla inspiracji",
   instrumentalAcceptLicensePlaceholder: "Akceptuję warunki licencji",
-
+  
   // Gift Package
   giftStep1Title: "Kwota Karty Podarunkowej",
   giftStep2Title: "Szczegóły Prezentu",
@@ -537,7 +537,7 @@ export const orderTranslations = {
   giftRecipientNamePlaceholder: "Imię odbiorcy",
   giftRecipientEmailPlaceholder: "Email odbiorcy",
   giftMessagePlaceholder: "Osobista wiadomość dla odbiorcy",
-
+  
   // Form validation and UI
   required: "Wymagane",
   optional: "Opcjonalne",
@@ -569,10 +569,14 @@ export const orderTranslations = {
   packageContextWedding: "Unikalna piosenka taneczna na ślub",
   packageContextBaptism: "Spersonalizowana melodia na chrzest",
   packageContextComingOfAge: "Hymn 18. urodzin",
-
+  
   // Language options
   romanianLanguage: "Rumuński",
   englishLanguage: "Angielski", 
   frenchLanguage: "Francuski",
-  italianLanguage: "Włoski"
+  italianLanguage: "Włoski",
+  
+  // New conditional agreement texts
+  socialMediaCreditAgreement: "Zgadzam się, że jeśli opublikuję piosenkę na jakiejkolwiek platformie mediów społecznościowych, oznaczę 'Music Gift by Mango Records'",
+  distributionConsentAgreement: "Wyrażam zgodę na profesjonalną dystrybucję mojej piosenki przez sieć Mango Records na wszystkich głównych platformach streamingowych",
 };
