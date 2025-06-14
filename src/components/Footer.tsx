@@ -35,28 +35,31 @@ const Footer = () => {
     });
   };
   
-  return <>
+  return (
+    <>
       {/* Back to Top Button */}
-      {showBackToTop && <motion.div initial={{
-      opacity: 0,
-      scale: 0.8
-    }} animate={{
-      opacity: 1,
-      scale: 1
-    }} exit={{
-      opacity: 0,
-      scale: 0.8
-    }} transition={{
-      duration: 0.3
-    }} className="fixed bottom-6 left-6 z-[99999]">
-          <Button onClick={scrollToTop} className="w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-2xl transition-all duration-300 hover:scale-110 border-4 border-white/30 backdrop-blur-sm" size="icon" aria-label="Back to top">
+      {showBackToTop && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.3 }}
+          className="fixed bottom-6 left-6 z-[99999]"
+        >
+          <Button
+            onClick={scrollToTop}
+            className="w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-2xl transition-all duration-300 hover:scale-110 border-4 border-white/30 backdrop-blur-sm"
+            size="icon"
+            aria-label="Back to top"
+          >
             <ArrowUp className="w-7 h-7 text-white drop-shadow-lg" />
           </Button>
-        </motion.div>}
+        </motion.div>
+      )}
 
       <footer className="relative text-gray-900 bg-cover bg-center bg-no-repeat" style={{
-      backgroundImage: `url('/lovable-uploads/c8247b19-53ef-4926-888f-4d4fd609e783.png')`
-    }}>
+        backgroundImage: `url('/uploads/c8247b19-53ef-4926-888f-4d4fd609e783.png')`
+      }}>
         {/* Semi-transparent overlay for better text readability */}
         <div className="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
 
@@ -261,7 +264,8 @@ const Footer = () => {
         {/* Include the Legal Modals */}
         <LegalModals t={t} />
       </footer>
-    </>;
+    </>
+  );
 };
 
 export default Footer;

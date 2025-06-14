@@ -106,7 +106,7 @@ This is a collaboration application submitted through the MusicGift website.
 
   return (
     <section className="py-8 relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
