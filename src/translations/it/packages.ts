@@ -83,7 +83,7 @@ export const packagesTranslations = {
   
   giftInclude1: "Carta regalo digitale valida per qualsiasi pacchetto MusicGift",
   giftInclude2: "Consegna istantanea via email",
-  giftInclude3: "Il beneficiario sceglie il pacchetto desiderato",
+  giftInclude3: "Il beneficiario sceglie da solo lo stile e l'atmosfera della canzone.",
   
   // Tags
   newTag: "Nuovo",
