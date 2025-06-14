@@ -72,11 +72,39 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: scroll; /* Changed from fixed to scroll for better mobile performance */
+    min-height: 100vh; /* Ensure full viewport height coverage */
     /* Performance optimizations */
     text-rendering: optimizeSpeed;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Mobile-specific background improvements */
+  @media (max-width: 767px) {
+    body {
+      background-attachment: scroll; /* Ensure scroll on mobile for better performance */
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+  }
+
+  /* Ensure background appears on all page containers */
+  html, body, #root {
+    min-height: 100vh;
+    background-image: url('/uploads/background.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+  }
+
+  /* Additional mobile optimization */
+  @media (max-width: 767px) {
+    html, body, #root {
+      background-attachment: scroll;
+    }
   }
 }
 

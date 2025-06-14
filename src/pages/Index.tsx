@@ -201,15 +201,11 @@ const Index = () => {
             </section>
           </LazyComponent>
 
-          {/* Call-to-Action Section */}
+          {/* Call-to-Action Section - Removed mobile-specific background override */}
           <section 
             className="px-2 text-white text-center relative overflow-hidden py-4" 
             aria-labelledby="cta-heading"
-            style={{
-              background: isMobile ? '#1a1a1a' : 'url(/uploads/background.webp) center/cover no-repeat fixed'
-            }}
           >
-            
             <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" aria-hidden="true" />
             <div className="max-w-4xl mx-auto relative z-10">
               <h2 id="cta-heading" className="text-lg font-bold mb-2">
