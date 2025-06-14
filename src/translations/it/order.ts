@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   contactDetailsStep: "Dettagli di contatto e accettazione legale",
   fillContactAndLegalInfo: "Inserisci i tuoi dettagli di contatto e accetta i termini legali",
@@ -67,7 +68,6 @@ export const orderTranslations = {
   orderSuccessMessage: "Il tuo ordine è stato creato con successo.",
   loadingGiftCard: "Caricamento della carta regalo...",
   giftCardAppliedDesc: "La carta regalo {giftCardCode} è pronta per essere utilizzata per il tuo ordine.",
-  giftCardApplied: "Carta regalo applicata",
   paymentProvider: "Fornitore di pagamento",
   smartbillInvoice: "Fattura SmartBill",
   smartbillProforma: "Proforma SmartBill",
@@ -101,12 +101,10 @@ export const orderTranslations = {
   remove: "Rimuovi",
   paymentError: "Errore di pagamento",
   
-  // Contact and Legal Step - Updated with clearer terms
   acceptMentionObligation: "Accetto i requisiti di accreditamento",
   acceptDistribution: "Acconsento ai termini di distribuzione",
   finalNote: "Accetto tutti i termini e condizioni",
   
-  // New conditional agreement texts
   socialMediaCreditAgreement: "Accetto che se pubblico la canzone su qualsiasi piattaforma di social media, taggherò 'Music Gift by Mango Records'",
   distributionConsentAgreement: "Acconsento alla distribuzione professionale della mia canzone attraverso la rete Mango Records su tutte le principali piattaforme di streaming",
 };

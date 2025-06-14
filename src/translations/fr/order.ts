@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   orderTitle: "Votre Commande",
   orderSubtitle: "Vérifiez votre commande et passez à la caisse",
@@ -16,7 +17,7 @@ export const orderTranslations = {
   selectAddOns: "Sélectionnez les options supplémentaires que vous souhaitez ajouter à votre forfait",
   
   // Contact Details Step
-  contactDetailsStep: "Vos coordonnées",
+  contactDetailsStep: "Coordonnées & Acceptation Légale",
   fillContactDetails: "Renseignez vos coordonnées pour finaliser votre commande",
   fullName: "Nom complet",
   email: "Adresse e-mail",
@@ -79,8 +80,6 @@ export const orderTranslations = {
   companyAddress: "Adresse de l'entreprise",
   representativeName: "Nom du représentant",
   
-  // Legal Acceptance
-  contactDetailsStep: "Coordonnées & Acceptation Légale",
   fillContactAndLegalInfo: "Renseignez vos coordonnées et acceptez les conditions légales",
   
   // New translations for CodeInputSection
@@ -89,16 +88,13 @@ export const orderTranslations = {
   codePlaceholder: "GIFT-XXXX-XXXX ou REDUCTION10",
   giftCardHelp: "Les cartes cadeaux commencent par GIFT-XXXX-XXXX",
   discountHelp: "Les codes de réduction peuvent avoir des exigences de commande minimale",
-  giftCardApplied: "Carte cadeau appliquée",
   discountApplied: "Réduction appliquée",
   applying: "Application...",
   
-  // Contact and Legal Step - Updated with clearer terms
   acceptMentionObligation: "J'accepte les exigences de crédit",
   acceptDistribution: "Je consens aux conditions de distribution",
   finalNote: "J'accepte tous les termes et conditions",
   
-  // New conditional agreement texts
   socialMediaCreditAgreement: "J'accepte que si je publie la chanson sur n'importe quelle plateforme de médias sociaux, je créditerai 'Music Gift by Mango Records'",
   distributionConsentAgreement: "Je consens à la distribution professionnelle de ma chanson via le réseau Mango Records sur toutes les principales plateformes de streaming",
 

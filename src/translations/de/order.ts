@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   orderTitle: "Bestellung",
   orderSubtitle: "Überprüfen Sie Ihre Bestellung und fahren Sie mit der Zahlung fort",
@@ -88,17 +89,14 @@ export const orderTranslations = {
   giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX oder DISCOUNT10",
   giftCardStartsWith: "Geschenkkarten beginnen mit GIFT-XXXX-XXXX",
   discountCodeMinimum: "Rabattcodes können Mindestbestellanforderungen haben",
-  contactDetailsStepTitle: "Kontaktdaten",
   fillContactAndLegalInfo: "Füllen Sie Ihre Kontaktdaten aus und akzeptieren Sie die rechtlichen Bedingungen",
   paymentDetailsStep: "Zahlungsdetails",
   paymentDetailsStepSubtitle: "Wählen Sie Ihre bevorzugte Zahlungsmethode, um die Bestellung abzuschließen.",
   orderSuccess: "Bestellung erfolgreich",
   orderSuccessMessage: "Ihre Bestellung wurde erfolgreich erstellt. ID: {orderId}",
-  // Contact and Legal Step - Updated with clearer terms
   acceptMentionObligation: "Ich akzeptiere die Kreditanforderungen",
   acceptDistribution: "Ich stimme den Vertriebsbedingungen zu",
   finalNote: "Ich akzeptiere alle Geschäftsbedingungen",
-  // New conditional agreement texts
   socialMediaCreditAgreement: "Ich stimme zu, dass ich, wenn ich das Lied auf einer Social-Media-Plattform poste, 'Music Gift by Mango Records' markieren werde",
   distributionConsentAgreement: "Ich stimme der professionellen Verbreitung meines Liedes über das Mango Records Netzwerk auf allen wichtigen Streaming-Plattformen zu",
 };
