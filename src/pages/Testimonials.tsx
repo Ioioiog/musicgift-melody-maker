@@ -34,7 +34,7 @@ const Testimonials = () => {
   }, []);
 
   const backgroundStyle = {
-    backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+    backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
@@ -101,7 +101,7 @@ const Testimonials = () => {
                     Review us on 
                   </span>
                   <img 
-                    src="/uploads/47cbf05f-3839-40b6-abc6-584208546eb2.png" 
+                    src="/lovable-uploads/47cbf05f-3839-40b6-abc6-584208546eb2.png" 
                     alt="Trustpilot" 
                     className="ml-1 h-4 w-auto"
                     loading="lazy"

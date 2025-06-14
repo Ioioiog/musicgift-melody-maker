@@ -71,18 +71,13 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                   )}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent 
-                className="w-full max-w-[calc(100vw-2rem)] sm:max-w-none bg-white/95 backdrop-blur-md border border-white/40 shadow-2xl rounded-lg overflow-hidden"
-                side="bottom"
-                sideOffset={4}
-                style={{ zIndex: 99999 }}
-              >
-                <div className="max-h-[70vh] overflow-y-auto">
+              <SelectContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-none bg-white/90 backdrop-blur-md border border-white/40 shadow-xl z-[9999] rounded-lg overflow-hidden max-h-[60vh] sm:max-h-96" side="bottom">
+                <ScrollArea className="h-full max-h-[50vh] sm:max-h-80">
                   {packages.map(pkg => (
                     <SelectItem 
                       key={pkg.value} 
                       value={pkg.value} 
-                      className="p-3 hover:bg-orange-50/80 focus:bg-orange-50/80 cursor-pointer border-b border-gray-100/50 last:border-b-0 mx-1 my-0.5 rounded-md transition-all duration-200 group min-h-[3rem]"
+                      className="p-2 sm:p-3 hover:bg-orange-50/80 focus:bg-orange-50/80 cursor-pointer border-b border-gray-100/50 last:border-b-0 mx-1 my-0.5 rounded-md transition-all duration-200 group min-h-[2.5rem] sm:min-h-[3rem]"
                     >
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-2 sm:gap-4">
                         <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
@@ -94,20 +89,20 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                               </div>
                             </Badge>
                           )}
-                          <div className="font-medium text-gray-900 text-sm group-hover:text-gray-700 transition-colors duration-200 truncate">
+                          <div className="font-medium text-gray-900 text-xs sm:text-sm group-hover:text-gray-700 transition-colors duration-200 truncate">
                             {t(pkg.label_key)}
                           </div>
                         </div>
                         <div className="flex items-center gap-2 sm:gap-3 shrink-0 justify-between sm:justify-end w-full sm:w-auto">
-                          <div className="text-sm font-bold text-orange-600">
+                          <div className="text-xs sm:text-sm font-bold text-orange-600">
                             {currency === 'EUR' ? '€' : ''}{getPackagePrice(pkg, currency)}{currency === 'RON' ? ' RON' : ''}
                           </div>
-                          {selectedPackage === pkg.value && <Check className="w-4 h-4 text-orange-600" />}
+                          {selectedPackage === pkg.value && <Check className="w-3 h-3 sm:w-4 sm:h-4 text-orange-600" />}
                         </div>
                       </div>
                     </SelectItem>
                   ))}
-                </div>
+                </ScrollArea>
               </SelectContent>
             </Select>
           </CardContent>

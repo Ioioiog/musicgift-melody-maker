@@ -64,15 +64,15 @@ const PaymentProviderSelection: React.FC<PaymentProviderSelectionProps> = ({
   };
 
   const getNetopiaLogo = () => {
-    return "/uploads/3862e26e-cb46-45d9-8e43-4fd26ad7cf96.png";
+    return "/lovable-uploads/3862e26e-cb46-45d9-8e43-4fd26ad7cf96.png";
   };
 
   const getStripeLogo = () => {
-    return "/uploads/c2fa4958-8447-4873-81b0-7c4ce43e678b.png";
+    return "/lovable-uploads/c2fa4958-8447-4873-81b0-7c4ce43e678b.png";
   };
 
   const getRevolutLogo = () => {
-    return "/uploads/351bae23-e0e6-4f76-97c1-140c628569bf.png";
+    return "/lovable-uploads/351bae23-e0e6-4f76-97c1-140c628569bf.png";
   };
 
   if (isLoading) {

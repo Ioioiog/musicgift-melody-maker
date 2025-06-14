@@ -1,18 +1,17 @@
 
-import { commonTranslations } from './common';
-import { giftTranslations } from './gift';
-import { heroTranslations } from './hero';
 import { orderTranslations } from './order';
-import { packagesTranslations } from './packages';
+import { heroTranslations } from './hero';
 import { collaborationTranslations } from './collaboration';
-import { newsletterTranslations } from './newsletter';
+import { giftTranslations } from './gift';
+import { packagesTranslations } from './packages';
+import { commonTranslations } from './common';
 
 export const itTranslations = {
-  ...commonTranslations,
-  ...giftTranslations,
-  ...heroTranslations,
   ...orderTranslations,
-  ...packagesTranslations,
+  ...heroTranslations,
   ...collaborationTranslations,
-  ...newsletterTranslations,
+  ...giftTranslations,
+  ...packagesTranslations,
+  ...commonTranslations,
+  // Add other translation modules here when they exist
 };
