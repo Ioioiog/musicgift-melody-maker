@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -115,7 +116,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/59966179-f008-4ec2-b3e6-5b45f100d21f.png)',
+      backgroundImage: 'url(/uploads/59966179-f008-4ec2-b3e6-5b45f100d21f.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -148,7 +149,7 @@ const Auth = () => {
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full blur-2xl opacity-40 group-hover:opacity-60 transition-all duration-500 scale-110"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-300 scale-125 animate-pulse"></div>
-                <img src="/lovable-uploads/cb090c51-8b0c-4906-8ec4-8f0ca3583f84.png" alt="MusicGift Logo" className="relative w-48 lg:w-56 h-auto drop-shadow-2xl group-hover:scale-105 transition-all duration-500" />
+                <img src="/uploads/logo_musicgift.webp" alt="MusicGift Logo" className="relative w-48 lg:w-56 h-auto drop-shadow-2xl group-hover:scale-105 transition-all duration-500" />
               </div>
             </div>
             
