@@ -1,3 +1,4 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
@@ -64,129 +65,23 @@
   * {
     @apply border-border;
   }
-  
-  /* Updated background loading with correct WebP path - mobile z-index fix */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", sans-serif;
     background-image: url('/uploads/background.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: scroll;
-    z-index: -1;
-    pointer-events: none;
-  }
-  
-  body {
-    @apply bg-background text-foreground;
-    font-family: "Inter", sans-serif;
-    background: transparent !important;
-    min-height: 100vh;
+    background-attachment: fixed;
     /* Performance optimizations */
     text-rendering: optimizeSpeed;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
-  /* Mobile-specific background - lower z-index to stay behind video */
-  @media (max-width: 767px) {
-    body::before {
-      background-image: url('/uploads/background.webp') !important;
-      background-attachment: scroll !important;
-      background-size: cover !important;
-      background-position: center center !important;
-      background-repeat: no-repeat !important;
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      z-index: -10 !important;
-    }
-    
-    body {
-      background: transparent !important;
-      background-color: transparent !important;
-    }
-  }
-
-  /* Ensure all containers are transparent - mobile priority */
-  html, body, #root {
-    min-height: 100vh;
-    background: transparent !important;
-  }
-
-  /* Mobile-specific container transparency */
-  @media (max-width: 767px) {
-    html, body, #root {
-      background: transparent !important;
-      background-color: transparent !important;
-    }
-    
-    /* Ensure main containers are transparent on mobile */
-    .main-mobile-critical {
-      background: transparent !important;
-      background-color: transparent !important;
-    }
-    
-    /* Video hero mobile transparency enforcement with proper z-index */
-    .video-hero-mobile {
-      background: transparent !important;
-      background-color: transparent !important;
-      position: relative !important;
-      z-index: 20 !important;
-    }
-    
-    /* Additional mobile transparency for common containers */
-    .min-h-screen, main, section {
-      background: transparent !important;
-      background-color: transparent !important;
-    }
-  }
-
-  /* Desktop background using traditional method */
-  @media (min-width: 768px) {
-    body::before {
-      display: none;
-    }
-    
-    html, body, #root {
-      background-image: url('/uploads/background.webp');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: scroll;
-    }
-  }
 }
 
 /* Optimized scroll animation with hardware acceleration */
 @keyframes scroll {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-/* Mobile-optimized scroll animation */
-@keyframes mobileScroll {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-/* Ultra-optimized scroll for desktop */
-@keyframes ultraScroll {
   0% {
     transform: translate3d(0, 0, 0);
   }
@@ -273,63 +168,11 @@
   transform: translate3d(0, 0, 0);
 }
 
-/* Mobile-optimized horizontal scroll classes */
-.mobile-scroll-optimized {
-  animation: mobileScroll 35s linear infinite;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-}
-
-.mobile-scroll-optimized:hover {
-  animation-play-state: paused;
-}
-
-/* Desktop ultra-optimized scroll */
-.scroll-ultra-optimized {
-  animation: ultraScroll 25s linear infinite;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-}
-
-.scroll-ultra-optimized:hover {
-  animation-play-state: paused;
-}
-
-/* Infinite scroll container optimizations */
-.infinite-scroll-container {
-  overflow: hidden;
-  position: relative;
-  contain: layout style paint;
-}
-
-.scroll-content {
-  display: flex;
-  gap: 1rem;
-  min-width: max-content;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-}
-
-/* Responsive scroll speeds */
-@media (max-width: 767px) {
-  .mobile-scroll-optimized {
-    animation-duration: 40s;
-  }
-}
-
-@media (min-width: 1024px) {
-  .scroll-ultra-optimized {
-    animation-duration: 20s;
-  }
-}
-
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
   .animate-fade-in,
-  .animate-pulse,
-  .mobile-scroll-optimized,
-  .scroll-ultra-optimized {
+  .animate-pulse {
     animation: none;
   }
   

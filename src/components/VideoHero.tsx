@@ -1,243 +1,161 @@
 
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { Play, Pause, Volume2 } from 'lucide-react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useLocation } from 'react-router-dom';
+
+const supportsWebM = (): boolean => {
+  const video = document.createElement('video');
+  return video.canPlayType('video/webm') !== '';
+};
 
 const VideoHero = () => {
   const { t, language } = useLanguage();
+  const location = useLocation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMobile = useIsMobile();
-  const [hasAudio, setHasAudio] = useState(true);
+  const [hasAudio, setHasAudio] = useState(false);
+  const [videoPlayedOnce, setVideoPlayedOnce] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [useWebM, setUseWebM] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [videoError, setVideoError] = useState<string | null>(null);
-  const [isVideoLoading, setIsVideoLoading] = useState(true);
+  const [shouldAutoplay, setShouldAutoplay] = useState(true);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
+  const videoWebM = `/uploads/${baseName}.webm`;
   const posterSrc = '/uploads/video_placeholder.png';
 
-  console.log('VideoHero: Current language:', language);
-  console.log('VideoHero: Video source:', videoSrc);
-  console.log('VideoHero: Base name:', baseName);
-  console.log('VideoHero: Is mobile:', isMobile);
-  
-  // Debug background image loading with correct WebP path
   useEffect(() => {
-    const img = new Image();
-    img.onload = () => console.log('Background image loaded successfully');
-    img.onerror = () => console.error('Background image failed to load');
-    img.src = '/uploads/background.webp'; // Updated to use correct path
-  }, []);
+    const playedLangKey = `played-${language}`;
+    const sessionHasPlayed = sessionStorage.getItem(playedLangKey) === 'true';
 
-  // Mobile height calculation - further reduced to 25vh to show more background
-  const mobileHeight = isMobile ? `25vh` : undefined;
+    if (!sessionHasPlayed) {
+      setShouldAutoplay(true);
+      sessionStorage.setItem(playedLangKey, 'true');
+    } else {
+      setShouldAutoplay(false);
+    }
 
-  // Simple autoplay with sound
+    setUseWebM(supportsWebM());
+    setIsMounted(true);
+    setVideoPlayedOnce(false);
+    setIsPlaying(false);
+  }, [language]);
+
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (video) {
+      video.pause();
+      setIsPlaying(false);
+    }
+  }, [location.pathname]);
 
-    console.log('VideoHero: Setting up autoplay for:', videoSrc);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (shouldAutoplay && video) {
+      video.muted = false;
+      const playPromise = video.play();
 
-    const attemptAutoplay = async () => {
-      try {
-        console.log('VideoHero: Attempting autoplay with sound');
-        video.muted = false; // Try with sound first
-        await video.play();
-        setIsPlaying(true);
-        setHasAudio(true);
-        console.log('VideoHero: Autoplay with sound succeeded');
-      } catch (err) {
-        console.log('VideoHero: Autoplay with sound failed:', err);
-        // Fallback to muted autoplay
-        try {
-          console.log('VideoHero: Attempting muted autoplay');
-          video.muted = true;
-          await video.play();
-          setIsPlaying(true);
-          setHasAudio(false);
-          console.log('VideoHero: Muted autoplay succeeded');
-        } catch (mutedErr) {
-          console.log('VideoHero: Muted autoplay failed:', mutedErr);
-          console.log('Autoplay failed, user interaction required');
-          setIsPlaying(false);
-        }
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setHasAudio(true);
+            setIsPlaying(true);
+          })
+          .catch((err) => {
+            console.warn('Autoplay with sound failed, falling back to muted:', err);
+            video.muted = true;
+            video.play().then(() => {
+              setHasAudio(false);
+              setIsPlaying(true);
+            });
+          });
       }
-    };
+    }
+  }, [shouldAutoplay, language]);
 
-    const handleCanPlay = () => {
-      console.log('VideoHero: Video can play event fired');
-      setIsVideoLoading(false);
-      attemptAutoplay();
-    };
-
-    const handleLoadStart = () => {
-      console.log('VideoHero: Video load started');
-      setIsVideoLoading(true);
-    };
-
-    const handleLoadedData = () => {
-      console.log('VideoHero: Video data loaded');
-    };
-
-    const handleError = (e: Event) => {
-      console.error('VideoHero: Video error event:', e);
-      const target = e.target as HTMLVideoElement;
-      if (target && target.error) {
-        console.error('VideoHero: Video error details:', {
-          code: target.error.code,
-          message: target.error.message
-        });
-      }
-    };
-
-    video.addEventListener('canplay', handleCanPlay);
-    video.addEventListener('loadstart', handleLoadStart);
-    video.addEventListener('loadeddata', handleLoadedData);
-    video.addEventListener('error', handleError);
-    
-    return () => {
-      video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('loadstart', handleLoadStart);
-      video.removeEventListener('loadeddata', handleLoadedData);
-      video.removeEventListener('error', handleError);
-    };
-  }, [language, videoSrc]);
-
-  const handleVideoError = () => {
-    console.error('VideoHero: handleVideoError called for:', videoSrc);
-    setVideoError('Video cannot be loaded');
-    setIsVideoLoading(false);
+  const handleVideoEnd = () => {
     setIsPlaying(false);
+    setVideoPlayedOnce(true);
   };
 
   const handleTogglePlay = () => {
     const video = videoRef.current;
-    if (!video || videoError) return;
-    
-    console.log('VideoHero: Toggle play clicked, current playing state:', isPlaying);
-    
+    if (!video) return;
     if (isPlaying) {
       video.pause();
       setIsPlaying(false);
     } else {
       video.currentTime = 0;
       video.muted = !hasAudio;
-      video.play().catch((err) => {
-        console.error('VideoHero: Play failed:', err);
-        handleVideoError();
-      });
+      video.play();
       setIsPlaying(true);
     }
   };
 
-  const handleToggleAudio = () => {
+  const handleToggleAudio = useCallback(() => {
     const video = videoRef.current;
-    if (!video || videoError) return;
-    
-    console.log('VideoHero: Toggle audio clicked, current audio state:', hasAudio);
-    video.muted = hasAudio;
-    setHasAudio(!hasAudio);
-  };
+    if (!video) return;
+    if (hasAudio) {
+      video.muted = true;
+      setHasAudio(false);
+    } else {
+      video.muted = false;
+      setHasAudio(true);
+    }
+  }, [hasAudio]);
+
+  const mobileHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
+
+  if (!isMounted) return null;
 
   return (
-    <div className="relative">
-      {/* Video Hero Section - Fixed z-index for mobile */}
-      <section
-        className={`video-hero relative overflow-hidden ${
-          isMobile 
-            ? 'bg-transparent z-20' 
-            : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'
-        }`}
-        style={isMobile && mobileHeight ? { height: mobileHeight } : {}}
-        role="banner"
-        aria-label="Hero video section"
+    <section
+      className={`video-hero relative overflow-hidden video-hero-optimized critical-resource ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`}
+      style={isMobile && mobileHeight ? { height: mobileHeight } : {}}
+    >
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${posterSrc})` }}
+      ></div>
+
+      <video
+        key={language}
+        ref={videoRef}
+        playsInline
+        preload="metadata"
+        muted={!hasAudio}
+        onEnded={handleVideoEnd}
+        className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover hw-accelerated`}
+        poster={posterSrc}
       >
-        {/* Remove poster background completely on mobile */}
-        {!isMobile && (
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${posterSrc})` }}
-            aria-hidden="true"
-          ></div>
-        )}
+        {useWebM && <source src={videoWebM} type="video/webm" />}
+        <source src={videoSrc} type="video/mp4" />
+      </video>
 
-        {videoError ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-black/70 z-30" role="alert">
-            <div className="text-center text-white">
-              <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
-              <p className="text-sm opacity-90 mb-4">The video content is temporarily unavailable</p>
-              <p className="text-xs opacity-75 mb-4">Video source: {videoSrc}</p>
-              <Button onClick={() => window.location.reload()} className="bg-orange-500 hover:bg-orange-600 text-white">
-                Try Again
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <video
-            key={language}
-            ref={videoRef}
-            playsInline
-            preload="metadata"
-            muted={!hasAudio}
-            onError={handleVideoError}
-            onLoadStart={() => setIsVideoLoading(true)}
-            onCanPlay={() => setIsVideoLoading(false)}
-            className={`absolute ${
-              isMobile 
-                ? 'top-8 h-auto opacity-90 z-30' 
-                : 'top-0 h-full'
-            } left-0 w-full object-cover transition-opacity duration-300 ${
-              isVideoLoading ? 'opacity-0' : 'opacity-100'
-            }`}
-            poster={!isMobile ? posterSrc : undefined}
-            aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-        )}
-
-        {/* Transparent gradient overlay on mobile - adjusted z-index */}
-        <div className={`absolute inset-0 ${
-          isMobile 
-            ? 'bg-gradient-to-br from-black/5 via-purple-900/3 to-black/8 z-25' 
-            : 'bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50'
-        }`} aria-hidden="true"></div>
-
-        <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4 z-40">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-            {t('heroTitle')}
-          </h1>
-        </div>
-      </section>
-
-      {/* Controls moved after navbar - higher z-index */}
-      {!videoError && (
-        <div className="absolute top-20 right-4 z-50 flex gap-2">
-          <Button
-            onClick={handleTogglePlay}
-            size="icon"
-            className="bg-white/90 hover:bg-white text-black rounded-full shadow-lg border border-white/20 backdrop-blur-sm"
-            aria-label={isPlaying ? 'Pause video' : 'Play video'}
-          >
+      {!shouldAutoplay && (
+        <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
+          <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
             {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
           </Button>
-          <Button
-            onClick={handleToggleAudio}
-            size="icon"
-            className={`rounded-full shadow-lg border backdrop-blur-sm ${hasAudio ? 'bg-white/90 hover:bg-white text-black border-white/20' : 'bg-red-500/90 hover:bg-red-600 text-white border-red-300/20'}`}
-            aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
-          >
-            {hasAudio ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+          <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
+            <Volume2 className="w-5 h-5" />
           </Button>
         </div>
       )}
-    </div>
+
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
+
+      <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent hw-accelerated">
+          {t('heroTitle')}
+        </h1>
+      </div>
+    </section>
   );
 };
 
 export default VideoHero;
-

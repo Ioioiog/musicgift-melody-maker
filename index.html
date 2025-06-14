@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- Critical Logo Preload for LCP Optimization -->
     <link rel="preload" href="/uploads/logo_musicgift.webp" as="image" type="image/webp" fetchpriority="high">
@@ -22,9 +22,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- Critical Resource Preloads -->
+    <link rel="preload" href="/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png" as="image" type="image/png">
     <link rel="modulepreload" href="/src/main.tsx">
     
-    <!-- Ultra-Aggressive Mobile LCP Critical CSS -->
+    <!-- Aggressive Critical CSS for LCP Optimization -->
     <style>
       /* Reset and base styles for faster paint */
       * {
@@ -35,7 +36,7 @@
       
       body {
         font-family: "Inter", sans-serif;
-        background: #1a1a1a url('/uploads/background.webp') center/cover no-repeat fixed;
+        background: url('/uploads/background.webp') center/cover no-repeat fixed;
         color: white;
         line-height: 1.5;
         -webkit-font-smoothing: antialiased;
@@ -43,206 +44,140 @@
         will-change: auto;
       }
       
-      /* Mobile-First Critical Navigation */
-      .nav-mobile-critical {
+      /* Ultra-critical navigation styles for instant paint */
+      .nav-ultra-critical {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         z-index: 50;
-        background: rgba(0, 0, 0, 0.95);
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(8px);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         transform: translate3d(0, 0, 0);
-        contain: layout style paint;
       }
       
-      /* Mobile-Optimized Logo */
-      .logo-mobile-critical {
-        width: 7rem;
+      /* Ultra-critical logo styles */
+      .logo-ultra-critical {
+        width: 8rem;
         height: auto;
         transform: translate3d(0, 0, 0);
         image-rendering: -webkit-optimize-contrast;
-        contain: layout style;
       }
       
       @media (min-width: 640px) {
-        .logo-mobile-critical { width: 10rem; }
+        .logo-ultra-critical { width: 10rem; }
       }
       
-      /* Mobile-First Main Content - Ultra Optimized */
-      .main-mobile-critical {
+      @media (min-width: 768px) {
+        .logo-ultra-critical { width: 12rem; }
+      }
+      
+      @media (min-width: 1024px) {
+        .logo-ultra-critical { width: 15rem; }
+      }
+      
+      /* Ultra-critical main content - inline styles for fastest LCP */
+      .main-ultra-critical {
         position: relative;
         min-height: 100vh;
         transform: translate3d(0, 0, 0);
-        contain: layout style;
-        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+        will-change: auto;
       }
       
-      /* Mobile Video Hero - Simplified */
-      .video-hero-mobile {
+      /* Simple overlay for performance */
+      .overlay-simple {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        transform: translate3d(0, 0, 0);
+      }
+      
+      /* Video hero ultra-critical styles */
+      .video-hero-ultra {
         height: 60vh;
         position: relative;
         overflow: hidden;
         transform: translate3d(0, 0, 0);
-        contain: layout style paint;
+      }
+      
+      @media (min-width: 640px) {
+        .video-hero-ultra { height: 70vh; }
       }
       
       @media (min-width: 768px) {
-        .video-hero-mobile { height: 80vh; }
+        .video-hero-ultra { height: 80vh; }
       }
       
-      /* Mobile HeroContent - Critical */
-      .hero-content-mobile {
-        padding: 1rem;
-        text-align: center;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 1rem;
-        margin: 1rem;
+      @media (min-width: 1024px) {
+        .video-hero-ultra { height: 100vh; }
+      }
+      
+      /* Ultra-optimized scroll for statistics */
+      .scroll-ultra-optimized {
+        animation: scrollUltra 30s linear infinite;
         transform: translate3d(0, 0, 0);
-        contain: layout style;
       }
       
-      /* Mobile Buttons - Simplified */
-      .button-mobile-critical {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.75rem 1.5rem;
-        border-radius: 9999px;
-        font-weight: 600;
-        text-decoration: none;
-        transform: translate3d(0, 0, 0);
-        contain: layout style;
-        min-width: 160px;
-        margin: 0.25rem;
-      }
-      
-      .button-orange {
-        background: #ea580c;
-        color: white;
-      }
-      
-      .button-purple {
-        background: #c026d3;
-        color: white;
-      }
-      
-      .button-white {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-      }
-      
-      /* Hide below-fold content initially for mobile LCP */
-      .mobile-hidden {
-        display: none;
-      }
-      
-      /* Mobile-optimized scroll animation */
-      .mobile-scroll-optimized {
-        animation: mobileScroll 25s linear infinite;
-        transform: translate3d(0, 0, 0);
-        contain: layout style;
-      }
-      
-      @keyframes mobileScroll {
+      @keyframes scrollUltra {
         0% { transform: translate3d(0, 0, 0); }
         100% { transform: translate3d(-50%, 0, 0); }
       }
       
-      /* Mobile performance optimizations */
-      @media (max-width: 767px) {
-        .main-mobile-critical {
-          background: #1a1a1a;
-        }
-        
-        .hero-content-mobile {
-          background: rgba(0, 0, 0, 0.8);
-          backdrop-filter: none;
-        }
-        
-        .video-hero-mobile {
-          height: 50vh;
-        }
+      /* Defer loading optimization */
+      .defer-ultra {
+        content-visibility: auto;
+        contain-intrinsic-size: 0 300px;
       }
       
-      /* Show content after mobile load */
-      .mobile-show {
-        display: block;
-        animation: mobileFadeIn 0.3s ease-out;
+      /* Hide non-critical content initially */
+      .below-fold-hidden {
+        visibility: hidden;
       }
       
-      @keyframes mobileFadeIn {
+      /* Show content after load */
+      .below-fold-visible {
+        visibility: visible;
+        animation: fadeInFast 0.2s ease-out;
+      }
+      
+      @keyframes fadeInFast {
         from { opacity: 0; }
         to { opacity: 1; }
       }
-      
-      /* Error handling styles */
-      .video-error-fallback {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.2rem;
-        text-align: center;
-        padding: 2rem;
-      }
     </style>
     
-    <!-- Enhanced Brevo Conversations Widget with Error Handling -->
+    <!-- Brevo Conversations Widget - Deferred -->
     <script>
         (function(d, w, c) {
-            try {
-                w.BrevoConversationsID = '68374d9e93ba39a2030dfb0e';
-                w[c] = w[c] || function() {
-                    (w[c].q = w[c].q || []).push(arguments);
-                };
-                var s = d.createElement('script');
-                s.async = true;
-                s.defer = true;
-                s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
-                s.onerror = function() {
-                    console.warn('Brevo widget failed to load');
-                };
-                if (d.head) d.head.appendChild(s);
-            } catch (error) {
-                console.warn('Brevo initialization failed:', error);
-            }
+            w.BrevoConversationsID = '68374d9e93ba39a2030dfb0e';
+            w[c] = w[c] || function() {
+                (w[c].q = w[c].q || []).push(arguments);
+            };
+            var s = d.createElement('script');
+            s.async = true;
+            s.defer = true;
+            s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
+            if (d.head) d.head.appendChild(s);
         })(document, window, 'BrevoConversations');
     </script>
     <!-- /Brevo Conversations -->
   </head>
   <body>
     <div id="root"></div>
-    <!-- Removed GPTEngineer script that was causing MIME type errors -->
+    <!-- Defer non-critical scripts -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module" defer></script>
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Enhanced Mobile LCP optimization script -->
+    <!-- Script to show below-fold content after load -->
     <script>
-      // Show below-fold content after critical paint
-      window.addEventListener('DOMContentLoaded', function() {
+      window.addEventListener('load', function() {
         setTimeout(function() {
-          document.querySelectorAll('.mobile-hidden').forEach(function(el) {
-            el.classList.remove('mobile-hidden');
-            el.classList.add('mobile-show');
+          document.querySelectorAll('.below-fold-hidden').forEach(function(el) {
+            el.classList.remove('below-fold-hidden');
+            el.classList.add('below-fold-visible');
           });
-        }, 200);
-      });
-      
-      // Optimize mobile performance
-      if (window.innerWidth < 768) {
-        document.documentElement.style.setProperty('--mobile-optimized', 'true');
-      }
-      
-      // Global error handler for unhandled errors
-      window.addEventListener('error', function(event) {
-        console.warn('Resource loading error:', event.filename, event.message);
-      });
-      
-      // Handle unhandled promise rejections
-      window.addEventListener('unhandledrejection', function(event) {
-        console.warn('Unhandled promise rejection:', event.reason);
+        }, 100);
       });
     </script>
   </body>
