@@ -314,15 +314,12 @@ export const packagesTranslations = {
   otherSource: "Altă sursă",
   
   // Order Summary Gift Card/Discount Section
-giftCardOrDiscount: "Card Cadou sau Cod de Reducere",
-enterCode: "Introduceți cardul cadou sau codul de reducere",
-codePlaceholder: "GIFT-XXXX-XXXX sau DISCOUNT10",
-giftCardHelp: "Cardurile cadou încep cu GIFT-XXXX-XXXX",
-discountHelp: "Codurile de reducere pot avea cerințe minime de comandă",
-giftCardApplied: "Card cadou aplicat",
-discountApplied: "Reducere aplicată",
-applying: "Se aplică..."
-
+  giftCardOrDiscountCode: "Card Cadou sau Cod de Reducere",
+  enterGiftCardOrDiscountCode: "Introdu cardul cadou sau codul de reducere",
+  giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX sau DISCOUNT10",
+  apply: "Aplică",
+  giftCardStartsWith: "Cardurile cadou încep cu GIFT-XXXX-XXXX",
+  discountCodeMinimum: "Codurile de reducere pot avea cerințe minime de comandă",
   
   // Tags
   exclusive: "Exclusiv"
