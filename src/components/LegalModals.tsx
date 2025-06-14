@@ -1,21 +1,20 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface LegalModalsProps {
-  t: (key: string) => string;
+  showModal: string | null;
+  onClose: () => void;
 }
 
-const LegalModals = ({ t }: LegalModalsProps) => {
-  const [termsOpen, setTermsOpen] = useState(false);
-  const [privacyOpen, setPrivacyOpen] = useState(false);
-  const [refundOpen, setRefundOpen] = useState(false);
-  const [cookieOpen, setCookieOpen] = useState(false);
+const LegalModals = ({ showModal, onClose }: LegalModalsProps) => {
+  const { t } = useLanguage();
 
   // Get current language from the t function
   const getCurrentLanguage = () => {
@@ -323,7 +322,7 @@ Nous pouvons refuser des commandes dans des cas justifiés (ex : contenu inaccep
 MusicGift n'est pas responsable des dommages indirects. Notre responsabilité maximale est le montant payé par le client.
 
 18. Force majeure
-Nous ne sommes pas responsables des retards causés par des facteurs externes : catastrophes, pandémies, conflits etc.
+Nous ne sommes pas responsables des retards causés par des facteurs externes : catastrophes, pandémies, conflictes etc.
 
 19. Utilisation de la chanson
 Le client est seul responsable de comment, où et dans quel contexte il utilise la chanson.
@@ -582,7 +581,7 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
   return (
     <>
       {/* Terms & Conditions Modal */}
-      <Dialog open={termsOpen} onOpenChange={setTermsOpen}>
+      <Dialog open={showModal === 'terms'} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white/95 backdrop-blur-md border border-gray-200">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-gray-900 mb-4">
@@ -610,7 +609,7 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
       </Dialog>
 
       {/* Privacy Policy Modal */}
-      <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
+      <Dialog open={showModal === 'privacy'} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white/95 backdrop-blur-md border border-gray-200">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-gray-900 mb-4">
@@ -664,7 +663,7 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
       </Dialog>
 
       {/* Refund Policy Modal */}
-      <Dialog open={refundOpen} onOpenChange={setRefundOpen}>
+      <Dialog open={showModal === 'refund'} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white/95 backdrop-blur-md border border-gray-200">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-gray-900 mb-4">
@@ -716,7 +715,7 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
       </Dialog>
 
       {/* Cookie Policy Modal */}
-      <Dialog open={cookieOpen} onOpenChange={setCookieOpen}>
+      <Dialog open={showModal === 'cookies'} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white/95 backdrop-blur-md border border-gray-200">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-gray-900 mb-4">
@@ -772,26 +771,8 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* Trigger Functions - exposed for Footer to use */}
-      <div className="hidden">
-        <button onClick={() => setTermsOpen(true)} id="terms-trigger" />
-        <button onClick={() => setPrivacyOpen(true)} id="privacy-trigger" />
-        <button onClick={() => setRefundOpen(true)} id="refund-trigger" />
-        <button onClick={() => setCookieOpen(true)} id="cookie-trigger" />
-      </div>
     </>
   );
-};
-
-// Export the trigger functions for Footer to use
-export const useLegalModals = () => {
-  return {
-    openTerms: () => document.getElementById('terms-trigger')?.click(),
-    openPrivacy: () => document.getElementById('privacy-trigger')?.click(),
-    openRefund: () => document.getElementById('refund-trigger')?.click(),
-    openCookie: () => document.getElementById('cookie-trigger')?.click(),
-  };
 };
 
 export default LegalModals;
