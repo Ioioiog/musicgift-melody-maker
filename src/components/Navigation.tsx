@@ -162,7 +162,7 @@ const Navigation = () => {
   return <>
       {/* Background behind navbar */}
       <div style={{
-      backgroundImage: 'url(/lovable-uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png)',
+      backgroundImage: 'url(/uploads/c84c3950-498f-4375-9214-40fe7004aa5f.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
