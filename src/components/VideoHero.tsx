@@ -1,23 +1,15 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, AlertCircle } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useLocation } from 'react-router-dom';
-
-const supportsWebM = (): boolean => {
-  const video = document.createElement('video');
-  return video.canPlayType('video/webm') !== '';
-};
-
-const isSafari = (): boolean => {
-  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-};
+import { isSafari, isIOSDevice, supportsWebM } from '@/utils/browserUtils';
 
 const VideoHero = () => {
   const { t, language } = useLanguage();
-  const location = useLocation();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const intersectionObserver = useRef<IntersectionObserver | null>(null);
   const isMobile = useIsMobile();
   const [hasAudio, setHasAudio] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -26,11 +18,17 @@ const VideoHero = () => {
   const [videoError, setVideoError] = useState<string | null>(null);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
   const [showMutedNotice, setShowMutedNotice] = useState(false);
+  const [showClickToPlay, setShowClickToPlay] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [isVideoVisible, setIsVideoVisible] = useState(false);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
   const videoWebM = `/uploads/${baseName}.webm`;
   const posterSrc = '/uploads/video_placeholder.png';
+
+  const safariDetected = isSafari();
+  const iosDevice = isIOSDevice();
 
   useEffect(() => {
     setIsMounted(true);
@@ -38,19 +36,65 @@ const VideoHero = () => {
     setHasAudio(false);
     setVideoError(null);
     setShowMutedNotice(false);
+    setShowClickToPlay(false);
     setIsVideoLoading(true);
-    const safariDetected = isSafari();
+    setHasUserInteracted(false);
+    
+    // For Safari, prioritize MP4 format
     setUseWebM(supportsWebM() && !safariDetected);
-  }, [language]);
+  }, [language, safariDetected]);
 
+  // Track user interaction for Safari audio enablement
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      setHasUserInteracted(true);
+    };
+
+    document.addEventListener('click', handleUserInteraction);
+    document.addEventListener('touchstart', handleUserInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+    };
+  }, []);
+
+  // Intersection Observer for lazy loading
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Don't autoplay if navigating back
-    if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') return;
+    intersectionObserver.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsVideoVisible(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.1 }
+    );
 
-    const playVideo = async () => {
+    intersectionObserver.current.observe(video);
+
+    return () => {
+      if (intersectionObserver.current) {
+        intersectionObserver.current.disconnect();
+      }
+    };
+  }, []);
+
+  // Safari-specific autoplay logic
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !isVideoVisible) return;
+
+    // Check if navigating back to avoid autoplay
+    const navigationEntries = performance.getEntriesByType('navigation');
+    if (navigationEntries.length > 0) {
+      const navEntry = navigationEntries[0] as PerformanceNavigationTiming;
+      if (navEntry.type === 'back_forward') return;
+    }
+
+    const attemptAutoplay = async () => {
       try {
         if (video.readyState < 3) {
           video.load();
@@ -58,27 +102,30 @@ const VideoHero = () => {
             video.addEventListener('canplay', resolve, { once: true });
           });
         }
-        video.muted = false;
-        await video.play();
-        setIsPlaying(true);
-        setHasAudio(true);
-      } catch (err) {
-        console.warn('Autoplay with sound failed, retrying muted...', err);
-        try {
+
+        // For Safari, always start muted
+        if (safariDetected) {
           video.muted = true;
           await video.play();
           setIsPlaying(true);
           setHasAudio(false);
           setShowMutedNotice(true);
-        } catch (e) {
-          console.warn('Muted autoplay also failed:', e);
-          setVideoError('Video cannot be played.');
+        } else {
+          // Try unmuted first for other browsers
+          video.muted = false;
+          await video.play();
+          setIsPlaying(true);
+          setHasAudio(true);
         }
+      } catch (err) {
+        console.warn('Autoplay failed, showing click-to-play:', err);
+        setShowClickToPlay(true);
+        setIsPlaying(false);
       }
     };
 
-    playVideo();
-  }, [language]);
+    attemptAutoplay();
+  }, [language, isVideoVisible, safariDetected]);
 
   const handleVideoError = useCallback((error: any) => {
     console.warn('Video loading error:', error);
@@ -90,6 +137,9 @@ const VideoHero = () => {
   const handleTogglePlay = () => {
     const video = videoRef.current;
     if (!video || videoError) return;
+    
+    setShowClickToPlay(false);
+    
     if (isPlaying) {
       video.pause();
       setIsPlaying(false);
@@ -104,9 +154,17 @@ const VideoHero = () => {
   const handleToggleAudio = useCallback(() => {
     const video = videoRef.current;
     if (!video || videoError) return;
+    
+    // For Safari, require user interaction
+    if (safariDetected && !hasUserInteracted) {
+      setShowMutedNotice(true);
+      return;
+    }
+    
     video.muted = hasAudio;
     setHasAudio(!hasAudio);
-  }, [hasAudio, videoError]);
+    setShowMutedNotice(false);
+  }, [hasAudio, videoError, safariDetected, hasUserInteracted]);
 
   const mobileHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
 
@@ -145,20 +203,39 @@ const VideoHero = () => {
           muted={!hasAudio}
           onError={handleVideoError}
           onLoadStart={() => setIsVideoLoading(true)}
+          onCanPlay={() => setIsVideoLoading(false)}
           className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover transition-opacity duration-300 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
           poster={posterSrc}
           aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
         >
-          {useWebM && <source src={videoWebM} type="video/webm" />}
+          {/* For Safari, prioritize MP4 */}
           <source src={videoSrc} type="video/mp4" />
+          {useWebM && <source src={videoWebM} type="video/webm" />}
         </video>
+      )}
+
+      {/* Click-to-play overlay */}
+      {showClickToPlay && (
+        <div 
+          className="absolute inset-0 flex items-center justify-center bg-black/20 cursor-pointer z-40"
+          onClick={handleTogglePlay}
+        >
+          <div className="bg-white/90 hover:bg-white rounded-full p-6 shadow-xl">
+            <Play className="w-12 h-12 text-black ml-1" />
+          </div>
+        </div>
       )}
 
       {/* Toast Notification */}
       {showMutedNotice && (
         <div className="absolute top-20 right-4 z-50 bg-black/80 text-white text-sm px-4 py-2 rounded-lg shadow-md flex items-start gap-2 max-w-xs">
           <span className="pt-0.5">🔇</span>
-          <span className="flex-1">{t('mutedAutoplayNotice')}</span>
+          <span className="flex-1">
+            {safariDetected && !hasUserInteracted 
+              ? 'Click anywhere to enable audio' 
+              : t('mutedAutoplayNotice')
+            }
+          </span>
           <button
             onClick={() => setShowMutedNotice(false)}
             className="ml-2 text-white/70 hover:text-white font-bold"

@@ -4,14 +4,14 @@ export const isSafari = (): boolean => {
   
   const userAgent = window.navigator.userAgent;
   const isSafariDesktop = /^((?!chrome|android).)*safari/i.test(userAgent);
-  const isIOSSafari = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+  const isIOSSafari = /iPad|iPhone|iPod/.test(userAgent);
   
   return isSafariDesktop || isIOSSafari;
 };
 
 export const isIOSDevice = (): boolean => {
   if (typeof window === 'undefined') return false;
-  return /iPad|iPhone|iPod/.test(window.navigator.userAgent) && !window.MSStream;
+  return /iPad|iPhone|iPod/.test(window.navigator.userAgent);
 };
 
 export const supportsWebM = (): boolean => {
