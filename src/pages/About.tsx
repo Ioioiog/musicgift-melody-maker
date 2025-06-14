@@ -291,7 +291,7 @@ const About = () => {
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
                         <div className="w-24 h-24 group-hover:w-32 group-hover:h-32 rounded-full mx-auto mb-3 overflow-hidden transition-all duration-300">
-                          <img src="/lovable-uploads/23e06586-3da9-43f2-9b3c-9ae8bb17fa42.png" alt="Mihai Gruia" className="w-full h-full object-cover" />
+                          <img src="/uploads/mihaigruia.webp" alt="Mihai Gruia" className="w-full h-full object-cover" />
                         </div>
                         <h4 className="text-lg group-hover:text-xl font-bold text-white mb-2 transition-all duration-300">Mihai Gruia</h4>
                       </div>
@@ -317,7 +317,7 @@ const About = () => {
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
                         <div className="w-24 h-24 group-hover:w-32 group-hover:h-32 rounded-full mx-auto mb-3 overflow-hidden transition-all duration-300">
-                          <img src="/lovable-uploads/47cac880-f533-4319-bdcb-58c2b7147f23.png" alt="Mango Records" className="w-full h-full object-cover" />
+                          <img src="/uploads/mangorecords.webp" alt="Mango Records" className="w-full h-full object-cover" />
                         </div>
                         <h4 className="text-lg group-hover:text-xl font-bold text-white mb-2 transition-all duration-300">Mango Records</h4>
                       </div>
@@ -343,7 +343,7 @@ const About = () => {
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
                         <div className="w-24 h-24 group-hover:w-32 group-hover:h-32 rounded-full mx-auto mb-3 overflow-hidden transition-all duration-300">
-                          <img src="/lovable-uploads/b4c3e4f4-7bf8-4e27-9293-dbbd3de72dc2.png" alt="DOMG Studio" className="w-full h-full object-cover" />
+                          <img src="/uploads/domg.webp" alt="DOMG Studio" className="w-full h-full object-cover" />
                         </div>
                         <h4 className="text-lg group-hover:text-xl font-bold text-white mb-2 transition-all duration-300">DOMG Studio</h4>
                       </div>
@@ -369,7 +369,7 @@ const About = () => {
                     <CardContent className="p-6 flex flex-col h-full transition-all duration-300">
                       <div className="text-center transition-all duration-300 group-hover:flex-1 group-hover:flex group-hover:flex-col group-hover:justify-center">
                         <div className="w-24 h-24 group-hover:w-32 group-hover:h-32 rounded-full mx-auto mb-3 overflow-hidden transition-all duration-300">
-                          <img alt="Do Music for Good Band" className="w-full h-full object-cover" src="/lovable-uploads/147370e9-f8dd-43f1-8124-9d8f3a541805.png" />
+                          <img src="/uploads/domusic.webp" alt="Do Music for Good Band" className="w-full h-full object-cover" />
                         </div>
                         <h4 className="text-lg group-hover:text-xl font-bold text-white mb-2 transition-all duration-300">Do Music for Good Band</h4>
                       </div>
