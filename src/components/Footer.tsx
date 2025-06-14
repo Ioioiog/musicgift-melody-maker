@@ -95,13 +95,13 @@ const Footer = () => {
                 <ul className="space-y-3 text-sm">
                   <li className="flex items-center space-x-2">
                     <Phone className="w-4 h-4 text-orange-500" />
-                    <a href="tel:+40758048048" className="text-gray-700 hover:text-orange-500 transition-colors">
-                      +40 758 048 048
+                    <a href="tel:+40723141501" className="text-gray-700 hover:text-orange-500 transition-colors">
+                      +40 723 141 501
                     </a>
                   </li>
                   <li className="flex items-center space-x-2">
                     <MessageCircle className="w-4 h-4 text-orange-500" />
-                    <a href="https://wa.me/40758048048" className="text-gray-700 hover:text-orange-500 transition-colors">
+                    <a href="https://wa.me/40723141501" className="text-gray-700 hover:text-orange-500 transition-colors">
                       WhatsApp
                     </a>
                   </li>
