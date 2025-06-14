@@ -30,11 +30,11 @@ const Footer = () => {
 
   return (
     <>
-      <footer className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
+      <footer className="bg-white text-black relative overflow-hidden border-t border-gray-200">
         
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiI+PHBhdGggZD0iTTM2IDM0di00aC0ydjRoLTR2Mmg0djRoMnYtNGg0di0yaC00em0wLTMwVjBoLTJ2NGgtNHYyaDR2NGgyVjZoNFY0aC00ek02IDM0di00SDR2NGgwdjJoNHY0aDJ2LTRoNHYtMkg2ek02IDRWMEG0djRIMHYyaDR2NGgyVjZoNFY0SDZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30"></div>
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMC4wMiI+PHBhdGggZD0iTTM2IDM0di00aC0ydjRoLTR2Mmg0djRoMnYtNGg0di0yaC00em0wLTMwVjBoLTJ2NGgtNHYyaDR2NGgyVjZoNFY0aC00ek02IDM0di00SDR2NGgwdjJoNHY0aDJ2LTRoNHYtMkg2ek02IDRWMEG0djRIMHYyaDR2NGgyVjZoNFY0SDZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30"></div>
         </div>
         
         <div className="relative z-10">
@@ -51,17 +51,17 @@ const Footer = () => {
                 <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
                   MusicGift.ro
                 </h3>
-                <p className="text-gray-300 text-sm leading-relaxed">
+                <p className="text-gray-700 text-sm leading-relaxed">
                   {t('footerDescription')}
                 </p>
                 <div className="flex space-x-4">
-                  <a href="https://facebook.com/musicgift.ro" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <a href="https://facebook.com/musicgift.ro" className="text-gray-600 hover:text-blue-600 transition-colors">
                     <Facebook className="w-5 h-5" />
                   </a>
-                  <a href="https://instagram.com/musicgift.ro" className="text-gray-400 hover:text-pink-400 transition-colors">
+                  <a href="https://instagram.com/musicgift.ro" className="text-gray-600 hover:text-pink-600 transition-colors">
                     <Instagram className="w-5 h-5" />
                   </a>
-                  <a href="https://youtube.com/@musicgift" className="text-gray-400 hover:text-red-400 transition-colors">
+                  <a href="https://youtube.com/@musicgift" className="text-gray-600 hover:text-red-600 transition-colors">
                     <Youtube className="w-5 h-5" />
                   </a>
                 </div>
@@ -74,13 +74,13 @@ const Footer = () => {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="space-y-4"
               >
-                <h4 className="text-md font-semibold text-white">{t('quickLinks')}</h4>
+                <h4 className="text-md font-semibold text-black">{t('quickLinks')}</h4>
                 <ul className="space-y-2 text-sm">
-                  <li><Link to="/packages" className="text-gray-300 hover:text-orange-400 transition-colors">{t('packages')}</Link></li>
-                  <li><Link to="/how-it-works" className="text-gray-300 hover:text-orange-400 transition-colors">{t('howItWorks')}</Link></li>
-                  <li><Link to="/about" className="text-gray-300 hover:text-orange-400 transition-colors">{t('about')}</Link></li>
-                  <li><Link to="/contact" className="text-gray-300 hover:text-orange-400 transition-colors">{t('contact')}</Link></li>
-                  <li><Link to="/testimonials" className="text-gray-300 hover:text-orange-400 transition-colors">{t('testimonials')}</Link></li>
+                  <li><Link to="/packages" className="text-gray-700 hover:text-orange-500 transition-colors">{t('packages')}</Link></li>
+                  <li><Link to="/how-it-works" className="text-gray-700 hover:text-orange-500 transition-colors">{t('howItWorks')}</Link></li>
+                  <li><Link to="/about" className="text-gray-700 hover:text-orange-500 transition-colors">{t('about')}</Link></li>
+                  <li><Link to="/contact" className="text-gray-700 hover:text-orange-500 transition-colors">{t('contact')}</Link></li>
+                  <li><Link to="/testimonials" className="text-gray-700 hover:text-orange-500 transition-colors">{t('testimonials')}</Link></li>
                 </ul>
               </motion.div>
 
@@ -91,29 +91,29 @@ const Footer = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="space-y-4"
               >
-                <h4 className="text-md font-semibold text-white">{t('contactInfo')}</h4>
+                <h4 className="text-md font-semibold text-black">{t('contactInfo')}</h4>
                 <ul className="space-y-3 text-sm">
                   <li className="flex items-center space-x-2">
-                    <Phone className="w-4 h-4 text-orange-400" />
-                    <a href="tel:+40758048048" className="text-gray-300 hover:text-orange-400 transition-colors">
+                    <Phone className="w-4 h-4 text-orange-500" />
+                    <a href="tel:+40758048048" className="text-gray-700 hover:text-orange-500 transition-colors">
                       +40 758 048 048
                     </a>
                   </li>
                   <li className="flex items-center space-x-2">
-                    <MessageCircle className="w-4 h-4 text-orange-400" />
-                    <a href="https://wa.me/40758048048" className="text-gray-300 hover:text-orange-400 transition-colors">
+                    <MessageCircle className="w-4 h-4 text-orange-500" />
+                    <a href="https://wa.me/40758048048" className="text-gray-700 hover:text-orange-500 transition-colors">
                       WhatsApp
                     </a>
                   </li>
                   <li className="flex items-center space-x-2">
-                    <Mail className="w-4 h-4 text-orange-400" />
-                    <a href="mailto:info@musicgift.ro" className="text-gray-300 hover:text-orange-400 transition-colors">
+                    <Mail className="w-4 h-4 text-orange-500" />
+                    <a href="mailto:info@musicgift.ro" className="text-gray-700 hover:text-orange-500 transition-colors">
                       info@musicgift.ro
                     </a>
                   </li>
                   <li className="flex items-start space-x-2">
-                    <MapPin className="w-4 h-4 text-orange-400 mt-0.5" />
-                    <span className="text-gray-300">Bucharest, Romania</span>
+                    <MapPin className="w-4 h-4 text-orange-500 mt-0.5" />
+                    <span className="text-gray-700">Bucharest, Romania</span>
                   </li>
                 </ul>
               </motion.div>
@@ -125,8 +125,8 @@ const Footer = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="space-y-4"
               >
-                <h4 className="text-md font-semibold text-white">{t('stayUpdated')}</h4>
-                <p className="text-gray-300 text-xs leading-relaxed">
+                <h4 className="text-md font-semibold text-black">{t('stayUpdated')}</h4>
+                <p className="text-gray-700 text-xs leading-relaxed">
                   {t('newsletterDescription')}
                 </p>
                 <NewsletterForm />
@@ -138,37 +138,37 @@ const Footer = () => {
               initial={{ opacity: 0, y: 20 }} 
               whileInView={{ opacity: 1, y: 0 }} 
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="border-t border-gray-700 pt-8 mb-8"
+              className="border-t border-gray-300 pt-8 mb-8"
             >
               <div className="flex flex-wrap justify-center md:justify-between items-center gap-4">
                 <div className="flex flex-wrap justify-center gap-4 text-xs">
                   <button
                     onClick={() => setShowLegalModal('terms')}
-                    className="text-gray-400 hover:text-orange-400 transition-colors"
+                    className="text-gray-600 hover:text-orange-500 transition-colors"
                   >
                     {t('termsConditions')}
                   </button>
                   <button
                     onClick={() => setShowLegalModal('privacy')}
-                    className="text-gray-400 hover:text-orange-400 transition-colors"
+                    className="text-gray-600 hover:text-orange-500 transition-colors"
                   >
                     {t('privacyPolicy')}
                   </button>
                   <button
                     onClick={() => setShowLegalModal('refund')}
-                    className="text-gray-400 hover:text-orange-400 transition-colors"
+                    className="text-gray-600 hover:text-orange-500 transition-colors"
                   >
                     {t('refundPolicy')}
                   </button>
                   <button
                     onClick={() => setShowLegalModal('cookies')}
-                    className="text-gray-400 hover:text-orange-400 transition-colors"
+                    className="text-gray-600 hover:text-orange-500 transition-colors"
                   >
                     {t('cookiePolicy')}
                   </button>
                   <button
                     onClick={() => setShowCookieSettings(true)}
-                    className="text-gray-400 hover:text-orange-400 transition-colors flex items-center gap-1"
+                    className="text-gray-600 hover:text-orange-500 transition-colors flex items-center gap-1"
                   >
                     <Cookie className="w-3 h-3" />
                     {t('manageCookies')}
@@ -185,7 +185,7 @@ const Footer = () => {
               initial={{ opacity: 0 }} 
               whileInView={{ opacity: 1 }} 
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-center text-xs text-gray-400 border-t border-gray-700 pt-6"
+              className="text-center text-xs text-gray-600 border-t border-gray-300 pt-6"
             >
               <p>{t('copyright', `© ${currentYear} MusicGift.ro. All rights reserved. Made by RED DOMAIN with ❤️ for music lovers`)}</p>
             </motion.div>
