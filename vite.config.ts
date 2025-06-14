@@ -19,11 +19,16 @@ function ensureMimeTypeForModules(): Plugin {
         ) => {
           const url = req.url || '';
           
-          // Set correct MIME types for JavaScript and TypeScript files
-          if (url.endsWith('.js') || url.endsWith('.mjs')) {
-            res.setHeader('Content-Type', 'text/javascript');
-          } else if (url.endsWith('.ts') || url.endsWith('.tsx')) {
-            res.setHeader('Content-Type', 'text/typescript');
+          // Handle Vite's transformed module URLs and direct file requests
+          if (url.includes('.js') || url.includes('.mjs') || 
+              url.includes('.ts') || url.includes('.tsx') ||
+              url.endsWith('.js') || url.endsWith('.mjs') ||
+              url.endsWith('.ts') || url.endsWith('.tsx')) {
+            
+            // Set correct MIME type for all JavaScript/TypeScript modules
+            res.setHeader('Content-Type', 'text/javascript; charset=utf-8');
+            
+            console.log(`[MIME Fix] Setting text/javascript for: ${url}`);
           }
           
           next();
@@ -38,15 +43,14 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    headers: {
-      'Content-Type': 'text/javascript'
-    }
+    // Remove the global Content-Type header that was causing conflicts
   },
   plugins: [
+    // Ensure the MIME type fix runs first
+    ensureMimeTypeForModules(),
     react(),
     mode === 'development' &&
     componentTagger(),
-    ensureMimeTypeForModules(),
   ].filter(Boolean),
   resolve: {
     alias: {
