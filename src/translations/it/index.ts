@@ -5,6 +5,7 @@ import { collaborationTranslations } from './collaboration';
 import { giftTranslations } from './gift';
 import { packagesTranslations } from './packages';
 import { commonTranslations } from './common';
+import { newsletterTranslations } from './newsletter';
 
 export const itTranslations = {
   ...orderTranslations,
@@ -13,5 +14,6 @@ export const itTranslations = {
   ...giftTranslations,
   ...packagesTranslations,
   ...commonTranslations,
+  ...newsletterTranslations,
   // Add other translation modules here when they exist
 };

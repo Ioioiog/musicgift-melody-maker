@@ -15,6 +15,7 @@ import { testimonialsTranslations } from './testimonials';
 import { unsubscribeTranslations } from './unsubscribe';
 import { footerTranslations } from './footer';
 import { cookiesTranslations } from './cookies';
+import { newsletterTranslations } from './newsletter';
 
 export const enTranslations = {
   ...commonTranslations,
@@ -33,4 +34,5 @@ export const enTranslations = {
   ...unsubscribeTranslations,
   ...footerTranslations,
   ...cookiesTranslations,
+  ...newsletterTranslations,
 };
