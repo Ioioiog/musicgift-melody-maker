@@ -16,7 +16,7 @@ const LegalCompliance = () => {
         </h4>
         <div className="space-y-1">
           <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity duration-300 hover:scale-105 min-h-[80px] flex items-center justify-center">
-            <img src="/uploads/1f4ebed9-cee9-49a4-9585-1bbe339732a2.png" alt="Soluționarea alternativă a litigiilor - ANPC" className="max-w-[120px] max-h-[80px] w-auto h-full hover:opacity-90 transition object-fill" />
+            <img src="/uploads/anpc.webp" alt="Soluționarea alternativă a litigiilor - ANPC" className="max-w-[120px] max-h-[80px] w-auto h-full hover:opacity-90 transition object-fill" />
           </a>
           <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity duration-300 hover:scale-105 min-h-[80px] flex items-center justify-center">
             <img src="/uploads/e923f28a-a040-43f3-a749-31a8b2e479b3.png" alt={t('onlineDisputeResolution')} className="max-w-[120px] max-h-[60px] w-full h-auto hover:opacity-90 transition object-fill" />
@@ -54,10 +54,10 @@ const LegalCompliance = () => {
         </h4>
         <div className="space-y-1">
           <a href="https://www.billionareboysclub.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[40px]">
-            <img src="/uploads/318e18fe-b529-4525-8ddf-74bb1d3a3962.png" alt="Billionaire Boys Club" className="max-w-[60px] max-h-[30px] w-full h-auto hover:opacity-80 transition object-fill" />
+            <img src="/uploads/bilionnaire.webp" alt="Billionaire Boys Club" className="max-w-[60px] max-h-[30px] w-full h-auto hover:opacity-80 transition object-fill" />
           </a>
           <a href="https://www.mgnews.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[40px]">
-            <img src="/uploads/2db89d5c-d0a3-4a0e-b17a-4969d3f1164f.png" alt="MG News" className="max-w-[60px] max-h-[30px] w-full h-auto hover:opacity-80 transition object-fill" />
+            <img src="/uploads/mgnews.webp" alt="MG News" className="max-w-[60px] max-h-[30px] w-full h-auto hover:opacity-80 transition object-fill" />
           </a>
           <a href="https://www.evonews.ro" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center hover:opacity-80 transition-opacity duration-300 hover:scale-105 min-h-[40px]">
             <img src="/uploads/e48515de-2c58-4a30-819d-fa1862f6373f.png" alt="Evo News" className="max-w-[60px] max-h-[30px] w-full h-auto hover:opacity-80 transition object-fill" />
