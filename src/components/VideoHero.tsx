@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX, AlertCircle } from 'lucide-react';
@@ -11,7 +12,12 @@ const supportsWebM = (): boolean => {
 };
 
 const isSafari = (): boolean => {
-  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  const userAgent = navigator.userAgent;
+  return /Safari/.test(userAgent) && !/Chrome/.test(userAgent) && !/Chromium/.test(userAgent);
+};
+
+const isIOS = (): boolean => {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent);
 };
 
 const VideoHero = () => {
@@ -21,79 +27,155 @@ const VideoHero = () => {
   const isMobile = useIsMobile();
   const [hasAudio, setHasAudio] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [useWebM, setUseWebM] = useState(true);
+  const [isSafariBrowser, setIsSafariBrowser] = useState(false);
+  const [isIOSDevice, setIsIOSDevice] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoError, setVideoError] = useState<string | null>(null);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
   const [showMutedNotice, setShowMutedNotice] = useState(false);
+  const [userInteracted, setUserInteracted] = useState(false);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
   const videoWebM = `/uploads/${baseName}.webm`;
   const posterSrc = '/uploads/video_placeholder.png';
 
+  // Detect browser and device early
   useEffect(() => {
     setIsMounted(true);
+    setIsSafariBrowser(isSafari());
+    setIsIOSDevice(isIOS());
     setIsPlaying(false);
     setHasAudio(false);
     setVideoError(null);
     setShowMutedNotice(false);
     setIsVideoLoading(true);
-    const safariDetected = isSafari();
-    setUseWebM(supportsWebM() && !safariDetected);
+    setUserInteracted(false);
   }, [language]);
+
+  // Handle user interaction for Safari
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      setUserInteracted(true);
+    };
+
+    if (isSafariBrowser || isIOSDevice) {
+      document.addEventListener('click', handleUserInteraction, { once: true });
+      document.addEventListener('touchstart', handleUserInteraction, { once: true });
+    }
+
+    return () => {
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+    };
+  }, [isSafariBrowser, isIOSDevice]);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !isMounted) return;
 
     // Don't autoplay if navigating back
     try {
       const entries = performance.getEntriesByType('navigation');
       if (entries.length > 0) {
         const navEntry = entries[0] as PerformanceNavigationTiming;
-        // Check if navigation type is back_forward (value 2)
         if (typeof navEntry.type === 'number' && navEntry.type === 2) {
+          setIsVideoLoading(false);
           return;
         }
       }
     } catch (e) {
-      // Fallback if performance API is not available
       console.warn('Performance API not available');
     }
 
-    const playVideo = async () => {
+    const attemptVideoPlay = async () => {
       try {
-        if (video.readyState < 3) {
-          video.load();
-          await new Promise(resolve => {
-            video.addEventListener('canplay', resolve, { once: true });
-          });
-        }
-        video.muted = false;
-        await video.play();
-        setIsPlaying(true);
-        setHasAudio(true);
-        setIsVideoLoading(false);
-      } catch (err) {
-        console.warn('Autoplay with sound failed, retrying muted...', err);
-        try {
+        // Safari-specific loading strategy
+        if (isSafariBrowser || isIOSDevice) {
+          // For Safari/iOS, start with muted and wait for user interaction
           video.muted = true;
+          video.playsInline = true;
+          
+          // Load the video first
+          if (video.readyState < 3) {
+            video.load();
+            await new Promise((resolve, reject) => {
+              const onCanPlay = () => {
+                video.removeEventListener('canplay', onCanPlay);
+                video.removeEventListener('error', onError);
+                resolve(true);
+              };
+              const onError = () => {
+                video.removeEventListener('canplay', onCanPlay);
+                video.removeEventListener('error', onError);
+                reject(new Error('Video failed to load'));
+              };
+              video.addEventListener('canplay', onCanPlay, { once: true });
+              video.addEventListener('error', onError, { once: true });
+              
+              // Timeout after 10 seconds
+              setTimeout(() => {
+                video.removeEventListener('canplay', onCanPlay);
+                video.removeEventListener('error', onError);
+                reject(new Error('Video load timeout'));
+              }, 10000);
+            });
+          }
+
+          // Try muted autoplay for Safari
           await video.play();
           setIsPlaying(true);
           setHasAudio(false);
           setShowMutedNotice(true);
           setIsVideoLoading(false);
-        } catch (e) {
-          console.warn('Muted autoplay also failed:', e);
-          setVideoError('Video cannot be played.');
+          
+        } else {
+          // Non-Safari browsers - try normal autoplay flow
+          if (video.readyState < 3) {
+            video.load();
+            await new Promise(resolve => {
+              video.addEventListener('canplay', resolve, { once: true });
+            });
+          }
+          
+          // Try with sound first
+          video.muted = false;
+          await video.play();
+          setIsPlaying(true);
+          setHasAudio(true);
           setIsVideoLoading(false);
+        }
+        
+      } catch (err) {
+        console.warn('Video autoplay failed:', err);
+        
+        if (!isSafariBrowser && !isIOSDevice) {
+          // For non-Safari, try muted fallback
+          try {
+            video.muted = true;
+            await video.play();
+            setIsPlaying(true);
+            setHasAudio(false);
+            setShowMutedNotice(true);
+            setIsVideoLoading(false);
+          } catch (e) {
+            console.warn('Muted autoplay also failed:', e);
+            setVideoError('Video cannot be played.');
+            setIsVideoLoading(false);
+          }
+        } else {
+          // For Safari, show poster and wait for user interaction
+          setVideoError(null);
+          setIsVideoLoading(false);
+          setIsPlaying(false);
         }
       }
     };
 
-    playVideo();
-  }, [language]);
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(attemptVideoPlay, 100);
+    return () => clearTimeout(timer);
+  }, [language, isMounted, isSafariBrowser, isIOSDevice]);
 
   const handleVideoError = useCallback((error: any) => {
     console.warn('Video loading error:', error);
@@ -102,27 +184,58 @@ const VideoHero = () => {
     setIsPlaying(false);
   }, []);
 
-  const handleTogglePlay = () => {
+  const handleTogglePlay = async () => {
     const video = videoRef.current;
     if (!video || videoError) return;
+    
     if (isPlaying) {
       video.pause();
       setIsPlaying(false);
     } else {
-      video.currentTime = 0;
-      video.muted = !hasAudio;
-      video.play().catch(handleVideoError);
-      setIsPlaying(true);
+      try {
+        video.currentTime = 0;
+        video.muted = !hasAudio;
+        
+        // For Safari/iOS with no user interaction, ensure muted playback
+        if ((isSafariBrowser || isIOSDevice) && !userInteracted) {
+          video.muted = true;
+          setHasAudio(false);
+        }
+        
+        await video.play();
+        setIsPlaying(true);
+      } catch (error) {
+        handleVideoError(error);
+      }
     }
   };
 
-  const handleToggleAudio = useCallback(() => {
+  const handleToggleAudio = useCallback(async () => {
     const video = videoRef.current;
     if (!video || videoError) return;
-    video.muted = hasAudio;
-    setHasAudio(!hasAudio);
-    setShowMutedNotice(false);
-  }, [hasAudio, videoError]);
+    
+    // For Safari/iOS, user interaction is required for unmuted playback
+    if ((isSafariBrowser || isIOSDevice) && !hasAudio && !userInteracted) {
+      setUserInteracted(true);
+    }
+    
+    try {
+      video.muted = hasAudio;
+      setHasAudio(!hasAudio);
+      setShowMutedNotice(false);
+      
+      // If video is not playing and we're unmuting, try to play
+      if (!hasAudio && !isPlaying) {
+        await video.play();
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.warn('Audio toggle failed:', error);
+      // Fallback to muted if unmuting fails
+      video.muted = true;
+      setHasAudio(false);
+    }
+  }, [hasAudio, videoError, isPlaying, isSafariBrowser, isIOSDevice, userInteracted]);
 
   // Calculate 16:9 aspect ratio height for mobile
   const videoHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
@@ -185,7 +298,7 @@ const VideoHero = () => {
             key={language}
             ref={videoRef}
             playsInline
-            preload="metadata"
+            preload={isSafariBrowser || isIOSDevice ? "metadata" : "metadata"}
             muted={!hasAudio}
             onError={handleVideoError}
             onLoadStart={() => setIsVideoLoading(true)}
@@ -194,9 +307,18 @@ const VideoHero = () => {
             style={isMobile ? { height: videoHeight } : {}}
             poster={posterSrc}
             aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
+            webkit-playsinline="true"
           >
-            {useWebM && <source src={videoWebM} type="video/webm" />}
-            <source src={videoSrc} type="video/mp4" />
+            {/* For Safari, only use MP4 to avoid any WebM conflicts */}
+            {isSafariBrowser || isIOSDevice ? (
+              <source src={videoSrc} type="video/mp4" />
+            ) : (
+              <>
+                {supportsWebM() && <source src={videoWebM} type="video/webm" />}
+                <source src={videoSrc} type="video/mp4" />
+              </>
+            )}
+            
             {/* Add captions */}
             <track
               kind="captions"
