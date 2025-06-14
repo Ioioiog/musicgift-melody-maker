@@ -6,7 +6,7 @@ export const cookiesTranslations = {
   acceptAll: "Acceptă toate",
   rejectAll: "Respinge toate",
   customize: "Personalizează",
-  learnMore: "Află mai multe despre cookie-urile noastre",
+  learnMore: "Află mai multe",
   
   // Cookie Settings
   cookieSettings: "Setări Cookie-uri",
