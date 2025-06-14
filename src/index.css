@@ -1,4 +1,3 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
@@ -66,7 +65,7 @@
     @apply border-border;
   }
   
-  /* Updated background loading with correct WebP path */
+  /* Updated background loading with correct WebP path - mobile z-index fix */
   body::before {
     content: '';
     position: fixed;
@@ -94,7 +93,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Mobile-specific background - using ::before pseudo-element for better mobile compatibility */
+  /* Mobile-specific background - lower z-index to stay behind video */
   @media (max-width: 767px) {
     body::before {
       background-image: url('/uploads/background.webp') !important;
@@ -135,10 +134,12 @@
       background-color: transparent !important;
     }
     
-    /* Video hero mobile transparency enforcement */
+    /* Video hero mobile transparency enforcement with proper z-index */
     .video-hero-mobile {
       background: transparent !important;
       background-color: transparent !important;
+      position: relative !important;
+      z-index: 20 !important;
     }
     
     /* Additional mobile transparency for common containers */

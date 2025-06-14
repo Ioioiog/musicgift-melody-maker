@@ -1,4 +1,5 @@
 
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
@@ -144,11 +145,11 @@ const VideoHero = () => {
 
   return (
     <div className="relative">
-      {/* Video Hero Section - Extremely transparent on mobile */}
+      {/* Video Hero Section - Fixed z-index for mobile */}
       <section
         className={`video-hero relative overflow-hidden ${
           isMobile 
-            ? 'bg-transparent' 
+            ? 'bg-transparent z-20' 
             : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'
         }`}
         style={isMobile && mobileHeight ? { height: mobileHeight } : {}}
@@ -165,7 +166,7 @@ const VideoHero = () => {
         )}
 
         {videoError ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-black/70" role="alert">
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-black/70 z-30" role="alert">
             <div className="text-center text-white">
               <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
               <p className="text-sm opacity-90 mb-4">The video content is temporarily unavailable</p>
@@ -187,7 +188,7 @@ const VideoHero = () => {
             onCanPlay={() => setIsVideoLoading(false)}
             className={`absolute ${
               isMobile 
-                ? 'top-8 h-auto opacity-40' 
+                ? 'top-8 h-auto opacity-90 z-30' 
                 : 'top-0 h-full'
             } left-0 w-full object-cover transition-opacity duration-300 ${
               isVideoLoading ? 'opacity-0' : 'opacity-100'
@@ -199,21 +200,21 @@ const VideoHero = () => {
           </video>
         )}
 
-        {/* Ultra-transparent gradient overlay on mobile */}
+        {/* Transparent gradient overlay on mobile - adjusted z-index */}
         <div className={`absolute inset-0 ${
           isMobile 
-            ? 'bg-gradient-to-br from-black/5 via-purple-900/3 to-black/8' 
+            ? 'bg-gradient-to-br from-black/5 via-purple-900/3 to-black/8 z-25' 
             : 'bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50'
         }`} aria-hidden="true"></div>
 
-        <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
+        <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4 z-40">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
             {t('heroTitle')}
           </h1>
         </div>
       </section>
 
-      {/* Controls moved after navbar */}
+      {/* Controls moved after navbar - higher z-index */}
       {!videoError && (
         <div className="absolute top-20 right-4 z-50 flex gap-2">
           <Button
@@ -239,3 +240,4 @@ const VideoHero = () => {
 };
 
 export default VideoHero;
+
