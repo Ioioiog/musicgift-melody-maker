@@ -3,6 +3,7 @@ export const packagesTranslations = {
   chooseYourPackage: "Choose Your Package",
   selectPerfectPackage: "Select the perfect package that fits your needs and budget",
   viewAllPackages: "View All Packages",
+  learnMore: "Learn More",
   
   // Package names
   plusPackage: "Plus Package",
