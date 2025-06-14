@@ -36,7 +36,7 @@ export const orderTranslations = {
   
   // Toast messages
   orderSuccess: "Ordine creato",
-  orderSuccessMessage: "Il tuo ordine è stato creato con successo. Questo utilizza dati demo.",
+  orderSuccessMessage: "Il tuo ordine è stato creato con successo.",
   orderError: "Errore",
   orderErrorMessage: "Si è verificato un errore",
   
