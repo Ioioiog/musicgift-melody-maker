@@ -262,8 +262,11 @@ export const packagesTranslations = {
   djStepFinalNotes: "Goals & Additional Notes",
   
   // DJ Form Fields
+  djName: "DJ Name",
   enterDjName: "Enter your DJ name or artist name",
+  identityKeywords: "Identity Keywords",
   enterIdentityKeywords: "Describe your identity, style, and what makes you unique as an artist",
+  publicPersona: "Public Persona",
   describePublicPersona: "Describe your public persona and artistic image (optional)",
   describeTargetAudience: "Describe your target audience and fanbase (optional)",
   
@@ -274,15 +277,20 @@ export const packagesTranslations = {
   futureRave: "Future Rave",
   techno: "Techno",
   
+  vocalChoice: "Vocal Choice",
   selectVocalChoice: "Select vocal preference",
   duet: "Duet",
   instrumental: "Instrumental (no vocals)",
   
+  soundReferenceLink: "Sound Reference Link",
   enterSoundReference: "Enter a reference track URL (Spotify, YouTube, SoundCloud)",
   enterTempoPreference: "Enter preferred BPM or tempo (e.g., 128 BPM)",
+  whatToAvoid: "What to Avoid",
   enterWhatToAvoid: "What sounds or elements should we avoid?",
   
+  coverPreferences: "Cover Preferences",
   describeCoverPreferences: "Describe your cover art preferences and visual style",
+  platformPreferences: "Platform Preferences",
   selectPlatforms: "Select preferred distribution platforms",
   spotify: "Spotify",
   appleMusic: "Apple Music",
@@ -290,17 +298,30 @@ export const packagesTranslations = {
   youtube: "YouTube",
   soundcloud: "SoundCloud",
   
+  releasePlan: "Release Plan",
   describeReleasePlan: "Describe your release plan and timeline",
+  socialLinks: "Social Links",
   enterSocialLinks: "Enter your social media links (Instagram, TikTok, etc.)",
   
+  goalsWithSong: "Goals with Song",
   describeGoalsWithSong: "What are your goals with this song? (clubs, festivals, radio, etc.)",
+  messageToProducer: "Message to Producer",
   enterMessageToProducer: "Any specific message or requirements for the producer?",
+  heardAboutUs: "How did you hear about us?",
   selectHeardAboutUs: "How did you hear about us?",
   tiktok: "TikTok",
   instagram: "Instagram",
   friendRecommendation: "Friend recommendation",
   googleSearch: "Google search",
   otherSource: "Other source",
+  
+  // Order Summary Gift Card/Discount Section
+  giftCardOrDiscountCode: "Gift Card or Discount Code",
+  enterGiftCardOrDiscountCode: "Enter gift card or discount code",
+  giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX or DISCOUNT10",
+  apply: "Apply",
+  giftCardStartsWith: "Gift cards start with GIFT-XXXX-XXXX",
+  discountCodeMinimum: "Discount codes may have minimum order requirements",
   
   // Tags
   exclusive: "Exclusive"

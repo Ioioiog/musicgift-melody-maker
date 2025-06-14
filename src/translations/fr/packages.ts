@@ -261,8 +261,11 @@ export const packagesTranslations = {
   djStepFinalNotes: "Objectifs & Notes Additionnelles",
   
   // DJ Form Fields
+  djName: "Nom DJ",
   enterDjName: "Entrez votre nom de DJ ou nom d'artiste",
+  identityKeywords: "Mots-clés d'identité",
   enterIdentityKeywords: "Décrivez votre identité, votre style et ce qui vous rend unique en tant qu'artiste",
+  publicPersona: "Persona publique",
   describePublicPersona: "Décrivez votre persona publique et image artistique (optionnel)",
   describeTargetAudience: "Décrivez votre public cible et fanbase (optionnel)",
   
@@ -273,15 +276,20 @@ export const packagesTranslations = {
   futureRave: "Future Rave",
   techno: "Techno",
   
+  vocalChoice: "Choix vocal",
   selectVocalChoice: "Sélectionnez la préférence vocale",
   duet: "Duo",
   instrumental: "Instrumental (sans voix)",
   
+  soundReferenceLink: "Lien de référence audio",
   enterSoundReference: "Entrez une URL de morceau de référence (Spotify, YouTube, SoundCloud)",
   enterTempoPreference: "Entrez le BPM préféré ou tempo (ex: 128 BPM)",
+  whatToAvoid: "Quoi éviter",
   enterWhatToAvoid: "Quels sons ou éléments devons-nous éviter?",
   
+  coverPreferences: "Préférences de pochette",
   describeCoverPreferences: "Décrivez vos préférences pour la pochette et le style visuel",
+  platformPreferences: "Préférences de plateformes",
   selectPlatforms: "Sélectionnez les plateformes de distribution préférées",
   spotify: "Spotify",
   appleMusic: "Apple Music",
@@ -289,17 +297,30 @@ export const packagesTranslations = {
   youtube: "YouTube",
   soundcloud: "SoundCloud",
   
+  releasePlan: "Plan de sortie",
   describeReleasePlan: "Décrivez votre plan de sortie et calendrier",
+  socialLinks: "Liens sociaux",
   enterSocialLinks: "Entrez vos liens de médias sociaux (Instagram, TikTok, etc.)",
   
+  goalsWithSong: "Objectifs avec la chanson",
   describeGoalsWithSong: "Quels sont vos objectifs avec cette chanson? (clubs, festivals, radio, etc.)",
+  messageToProducer: "Message au producteur",
   enterMessageToProducer: "Un message spécifique ou des exigences pour le producteur?",
+  heardAboutUs: "Comment vous nous avez connus",
   selectHeardAboutUs: "Comment avez-vous entendu parler de nous?",
   tiktok: "TikTok",
   instagram: "Instagram",
   friendRecommendation: "Recommandation d'ami",
   googleSearch: "Recherche Google",
   otherSource: "Autre source",
+  
+  // Order Summary Gift Card/Discount Section
+  giftCardOrDiscountCode: "Carte Cadeau ou Code de Réduction",
+  enterGiftCardOrDiscountCode: "Entrez la carte cadeau ou le code de réduction",
+  giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX ou DISCOUNT10",
+  apply: "Appliquer",
+  giftCardStartsWith: "Les cartes cadeaux commencent par GIFT-XXXX-XXXX",
+  discountCodeMinimum: "Les codes de réduction peuvent avoir des exigences de commande minimum",
   
   // Tags
   exclusive: "Exclusif"

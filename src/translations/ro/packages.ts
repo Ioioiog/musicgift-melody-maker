@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Alege-ți pachetul",
   selectPerfectPackage: "Selectează pachetul perfect care se potrivește nevoilor și bugetului tău",
@@ -261,8 +260,11 @@ export const packagesTranslations = {
   djStepFinalNotes: "Obiective & Note Adiționale",
   
   // DJ Form Fields
+  djName: "Nume DJ",
   enterDjName: "Introdu numele tău de DJ sau numele de artist",
+  identityKeywords: "Cuvinte cheie de identitate",
   enterIdentityKeywords: "Descrie identitatea ta, stilul și ce te face unic ca artist",
+  publicPersona: "Persona publică",
   describePublicPersona: "Descrie persona ta publică și imaginea artistică (opțional)",
   describeTargetAudience: "Descrie publicul țintă și fanbase-ul tău (opțional)",
   
@@ -273,15 +275,20 @@ export const packagesTranslations = {
   futureRave: "Future Rave",
   techno: "Techno",
   
+  vocalChoice: "Alegere vocală",
   selectVocalChoice: "Selectează preferința vocală",
   duet: "Duet",
   instrumental: "Instrumental (fără voce)",
   
+  soundReferenceLink: "Link de referință audio",
   enterSoundReference: "Introdu URL-ul unei piese de referință (Spotify, YouTube, SoundCloud)",
   enterTempoPreference: "Introdu BPM-ul preferat sau tempo-ul (ex: 128 BPM)",
+  whatToAvoid: "Ce să evităm",
   enterWhatToAvoid: "Ce sunete sau elemente ar trebui să evităm?",
   
+  coverPreferences: "Preferințe cover art",
   describeCoverPreferences: "Descrie preferințele pentru cover art și stilul vizual",
+  platformPreferences: "Preferințe platforme",
   selectPlatforms: "Selectează platformele preferate de distribuție",
   spotify: "Spotify",
   appleMusic: "Apple Music",
@@ -289,17 +296,30 @@ export const packagesTranslations = {
   youtube: "YouTube",
   soundcloud: "SoundCloud",
   
+  releasePlan: "Plan de lansare",
   describeReleasePlan: "Descrie planul de lansare și cronologia",
+  socialLinks: "Linkuri sociale",
   enterSocialLinks: "Introdu linkurile de social media (Instagram, TikTok, etc.)",
   
+  goalsWithSong: "Obiective cu piesa",
   describeGoalsWithSong: "Care sunt obiectivele tale cu această piesă? (cluburi, festivaluri, radio, etc.)",
+  messageToProducer: "Mesaj pentru producător",
   enterMessageToProducer: "Vreun mesaj specific sau cerințe pentru producător?",
+  heardAboutUs: "Cum ai aflat despre noi",
   selectHeardAboutUs: "Cum ai aflat despre noi?",
   tiktok: "TikTok",
   instagram: "Instagram",
   friendRecommendation: "Recomandare de la prieten",
   googleSearch: "Căutare Google",
   otherSource: "Altă sursă",
+  
+  // Order Summary Gift Card/Discount Section
+  giftCardOrDiscountCode: "Card Cadou sau Cod de Reducere",
+  enterGiftCardOrDiscountCode: "Introdu cardul cadou sau codul de reducere",
+  giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX sau DISCOUNT10",
+  apply: "Aplică",
+  giftCardStartsWith: "Cardurile cadou încep cu GIFT-XXXX-XXXX",
+  discountCodeMinimum: "Codurile de reducere pot avea cerințe minime de comandă",
   
   // Tags
   exclusive: "Exclusiv"

@@ -238,5 +238,89 @@ export const packagesTranslations = {
   
   // Common voice options
   voiceFemale: "Głos żeński",
-  voiceMale: "Głos męski"
+  voiceMale: "Głos męski",
+  
+  // DJ Package
+  djPackage: "Pakiet DJ",
+  djTagline: "Profesjonalna produkcja muzyki elektronicznej dla DJ-ów i artystów",
+  djDescription: "Kompletny pakiet produkcji muzyki elektronicznej dla DJ-ów i artystów muzyki elektronicznej. Od koncepcji do wydania, tworzymy profesjonalne utwory gotowe do klubów, festiwali i platform streamingowych.",
+  djDelivery: "7–10 dni roboczych",
+  
+  // DJ Package includes
+  djInclude1: "Oryginalna kompozycja utworu elektronicznego w wybranym stylu",
+  djInclude2: "Profesjonalny mixing i mastering do jakości klubowej/festiwalowej",
+  djInclude3: "Pliki audio wysokiej jakości (MP3, dodatkowo na żądanie WAV HQ)",
+  djInclude4: "Profesjonalny design okładki",
+  djInclude5: "Dystrybucja na głównych platformach streamingowych",
+  
+  // DJ Form Steps
+  djStepIdentity: "Tożsamość DJ i Branding",
+  djStepSound: "Preferencje Dźwięku i Stylu",
+  djStepRelease: "Wydanie i Dystrybucja",
+  djStepFinalNotes: "Cele i Dodatkowe Notatki",
+  
+  // DJ Form Fields
+  djName: "Nazwa DJ",
+  enterDjName: "Wprowadź swoją nazwę DJ lub nazwę artystyczną",
+  identityKeywords: "Słowa kluczowe tożsamości",
+  enterIdentityKeywords: "Opisz swoją tożsamość, styl i to, co czyni Cię wyjątkowym jako artystę",
+  publicPersona: "Publiczna persona",
+  describePublicPersona: "Opisz swoją publiczną personę i wizerunek artystyczny (opcjonalnie)",
+  describeTargetAudience: "Opisz swoją grupę docelową i fanbase (opcjonalnie)",
+  
+  selectMusicStyle: "Wybierz preferowany styl muzyki elektronicznej",
+  afroHouse: "Afro House",
+  edm: "EDM / Big Room",
+  dance: "Dance / Commercial",
+  futureRave: "Future Rave",
+  techno: "Techno",
+  
+  vocalChoice: "Wybór wokalny",
+  selectVocalChoice: "Wybierz preferencję wokalną",
+  duet: "Duet",
+  instrumental: "Instrumental (bez wokalu)",
+  
+  soundReferenceLink: "Link referencyjny dźwięku",
+  enterSoundReference: "Wprowadź URL utworu referencyjnego (Spotify, YouTube, SoundCloud)",
+  enterTempoPreference: "Wprowadź preferowane BPM lub tempo (np. 128 BPM)",
+  whatToAvoid: "Czego unikać",
+  enterWhatToAvoid: "Jakich dźwięków lub elementów powinniśmy unikać?",
+  
+  coverPreferences: "Preferencje okładki",
+  describeCoverPreferences: "Opisz swoje preferencje dotyczące okładki i stylu wizualnego",
+  platformPreferences: "Preferencje platform",
+  selectPlatforms: "Wybierz preferowane platformy dystrybucji",
+  spotify: "Spotify",
+  appleMusic: "Apple Music",
+  beatport: "Beatport",
+  youtube: "YouTube",
+  soundcloud: "SoundCloud",
+  
+  releasePlan: "Plan wydania",
+  describeReleasePlan: "Opisz swój plan wydania i harmonogram",
+  socialLinks: "Linki społecznościowe",
+  enterSocialLinks: "Wprowadź swoje linki do mediów społecznościowych (Instagram, TikTok, itp.)",
+  
+  goalsWithSong: "Cele z utworem",
+  describeGoalsWithSong: "Jakie są Twoje cele z tym utworem? (kluby, festiwale, radio, itp.)",
+  messageToProducer: "Wiadomość do producenta",
+  enterMessageToProducer: "Jakieś konkretne wiadomości lub wymagania dla producenta?",
+  heardAboutUs: "Jak o nas usłyszałeś",
+  selectHeardAboutUs: "Jak usłyszałeś o nas?",
+  tiktok: "TikTok",
+  instagram: "Instagram",
+  friendRecommendation: "Rekomendacja znajomego",
+  googleSearch: "Wyszukiwanie Google",
+  otherSource: "Inne źródło",
+  
+  // Order Summary Gift Card/Discount Section
+  giftCardOrDiscountCode: "Karta Podarunkowa lub Kod Rabatowy",
+  enterGiftCardOrDiscountCode: "Wprowadź kartę podarunkową lub kod rabatowy",
+  giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX lub DISCOUNT10",
+  apply: "Zastosuj",
+  giftCardStartsWith: "Karty podarunkowe zaczynają się od GIFT-XXXX-XXXX",
+  discountCodeMinimum: "Kody rabatowe mogą mieć minimalne wymagania zamówienia",
+  
+  // Tags
+  exclusive: "Ekskluzywny"
 };
