@@ -90,13 +90,11 @@ Deno.serve(async (req) => {
 
     console.log(`Fetching proforma PDF from SmartBill: ${smartbillUrl}`);
 
-    // Fetch PDF from SmartBill API with all required headers
+    // Fetch PDF from SmartBill API with corrected headers
     const smartbillResponse = await fetch(smartbillUrl, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/xml',
         'Accept': 'application/octet-stream',
-        'Accept': 'application/xml',
         'Authorization': `Basic ${authString}`,
       },
     });
