@@ -115,20 +115,20 @@ export const packagesTranslations = {
   sourceFiles: "Pliki źródłowe",
   sourceFilesDesc: "Dostęp do wszystkich plików projektu (stems, MIDI)",
 
-  socialMediaRights: "Prawa do mediów społecznościowych",
+  socialMediaRights: "Prawa Social Media",
   socialMediaRightsDesc: "Uzyskaj prawa do publikowania piosenki na dowolnej platformie mediów społecznościowych. Wymaga akceptacji oznaczenia piosenki jako 'Music Gift by Mango Records'.",
   
   mangoRecordsDistribution: "Dystrybucja Mango Records",
   mangoRecordsDistributionDesc: "Profesjonalna dystrybucja przez sieć Mango Records na wszystkich głównych platformach streamingowych (Spotify, Apple Music, YouTube Music, itp.)",
   
-  customVideo: "Niestandardowe wideo",
-  customVideoDesc: "Spersonalizowane wideo utworzone z Twoimi zdjęciami lub/i filmami dla kompletnego doświadczenia",
+  customVideo: "Spersonalizowane wideo",
+  customVideoDesc: "Spersonalizowane wideo stworzone z Twoimi zdjęciami lub/i filmami dla kompletnego doświadczenia",
   
   audioMessageFromSender: "Wiadomość audio od nadawcy",
   audioMessageFromSenderDesc: "Dodaj osobistą wiadomość audio od nadawcy dla dodatkowej niespodzianki",
   
-  brandedAudioMessage: "Markowa wiadomość audio",
-  brandedAudioMessageDesc: "Umieść krótką markową wiadomość głosową na początku piosenki – idealna do spersonalizowanych wprowadzeń, wiadomości kampanijnych lub sloganów marki.",
+  brandedAudioMessage: "Wiadomość audio marki",
+  brandedAudioMessageDesc: "Dołącz krótką wiadomość głosową marki na początku piosenki – idealna dla spersonalizowanych wprowadzeń, wiadomości kampanii lub sloganów marki.",
   
   commercialRightsUpgrade: "Upgrade praw komercyjnych",
   commercialRightsUpgradeDesc: "Rozszerzone prawa komercyjne do użytku biznesowego w tv/radio",
@@ -136,26 +136,26 @@ export const packagesTranslations = {
   extendedSong: "Rozszerzona piosenka",
   extendedSongDesc: "Dłuższa wersja Twojej piosenki",
   
-  godparentsmelody: "Melodia dla rodziców chrzestnych",
+  godparentsmelody: "Melodia rodziców chrzestnych",
   godparentsmelodyDesc: "Specjalna melodia dla rodziców chrzestnych",
   
-  separatedStems: "Oddzielne Stemy",
-  separatedStemsDesc: "Oryginalny beat + indywidualne pliki ścieżek. Idealny do miksowania, remiksu i synchronizacji wideo. Zawiera prawa komercyjne.",
+  separatedStems: "Oddzielone Stems",
+  separatedStemsDesc: "Oryginalny beat + indywidualne pliki ścieżek. Idealne do miksowania, remixowania i synchronizacji wideo. Zawiera prawa komercyjne.",
   
   // New Special Event Package names
-  weddingPackage: "Pakiet ślubny",
-  baptismPackage: "Pakiet chrzcin",
-  comingOfAgePackage: "Pakiet pełnoletności",
+  weddingPackage: "Pakiet Ślubny",
+  baptismPackage: "Pakiet Chrzest",
+  comingOfAgePackage: "Pakiet 18 Urodziny",
   
   // Package taglines
-  weddingTagline: "Wasza unikalna piosenka do tańca – stworzona z Waszej historii miłosnej",
-  baptismTagline: "Oryginalna melodia na szczególny dzień Waszego aniołka",
-  comingOfAgeTagline: "Spersonalizowany hymn na podróż ku dorosłości",
+  weddingTagline: "Wasza unikalna piosenka taneczna – stworzona z Waszej historii miłosnej",
+  baptismTagline: "Oryginalna melodia na specjalny dzień Waszego małego aniołka",
+  comingOfAgeTagline: "Spersonalizowany hymn dla podróży w dorosłość",
   
   // Package descriptions
-  weddingDescription: "Czy marzyliście o tym, żeby nie tańczyć najważniejszego tańca swojego życia do tej samej piosenki, do której tańczyli inni? MusicGift tworzy oryginalną piosenkę, spersonalizowaną dla tańca państwa młodej lub rodziców chrzestnych, opartą na ich historii miłosnej lub przyjaźni.",
-  baptismDescription: "Oryginalna, wzruszająca i spersonalizowana melodia dedykowana ochrzczonemu dziecku – idealna do zaśpiewania lub odtworzenia podczas uroczystości i pozostania wspomnieniem na całe życie.",
-  comingOfAgeDescription: "Wyjątkowy i wzruszający muzyczny prezent dla młodego mężczyzny lub kobiety, która kończy 18 lat – stworzony z ich historii, energii i aspiracji.",
+  weddingDescription: "Czy marzyliście o tym, żeby nie tańczyć najważniejszego tańca w waszym życiu do tej samej piosenki, do której tańczyli inni? MusicGift tworzy oryginalną piosenkę, spersonalizowaną dla tańca młodej pary lub rodziców chrzestnych, opartą na ich historii miłosnej lub przyjaźni.",
+  baptismDescription: "Oryginalna, emocjonalna i spersonalizowana melodia dedykowana ochrzczonemu dziecku – idealna do śpiewania lub odtwarzania podczas wydarzenia oraz do pozostania wspomnieniem na całe życie.",
+  comingOfAgeDescription: "Wyjątkowy i emocjonalny muzyczny prezent dla młodego mężczyzny lub kobiety, która kończy 18 lat – stworzony z ich historii, energii i aspiracji.",
   
   // New Delivery times
   weddingDelivery: "5–7 dni roboczych",
@@ -163,14 +163,14 @@ export const packagesTranslations = {
   comingOfAgeDelivery: "5–7 dni roboczych",
   
   // Wedding Package includes
-  weddingInclude1: "Sesja konsultacji kreatywnej między parą młodą a zespołem MusicGift (historia pary młodej/rodziców chrzestnych)",
+  weddingInclude1: "Sesja konsultacyjna kreatywna między młodą parą a zespołem MusicGift (historia młodej pary/rodziców chrzestnych)",
   weddingInclude2: "Spersonalizowana kompozycja melodii + tekst napisany specjalnie dla Was",
   weddingInclude3: "Oryginalny instrumental",
   weddingInclude4: "Ekspresyjna interpretacja wokalna",
   weddingInclude5: "Profesjonalny mix & master",
-  weddingInclude6: "Końcowe pliki MP3, dodatkowo na żądanie WAV HQ",
+  weddingInclude6: "Finalne pliki MP3, dodatkowo na żądanie WAV HQ",
   weddingInclude7: "Darmowa rewizja (1x)",
-  weddingInclude8: "Jedna prośba o modyfikację wliczona",
+  weddingInclude8: "Jedna prośba o modyfikację włączona",
   
   // Baptism Package includes
   baptismInclude1: "Konsultacja z rodzicami (imię dziecka, znaczenie)",
@@ -178,54 +178,54 @@ export const packagesTranslations = {
   baptismInclude3: "Linia melodyczna + oryginalny instrumental",
   baptismInclude4: "Profesjonalny głos (do wyboru: żeński/męski)",
   baptismInclude5: "Profesjonalny mix & master",
-  baptismInclude6: "Końcowe pliki MP3, dodatkowo na żądanie WAV HQ",
+  baptismInclude6: "Finalne pliki MP3, dodatkowo na żądanie WAV HQ",
   
   // Coming of Age Package includes
-  comingOfAgeInclude1: "Wywiad/briefing o świętującym z zespołem MusicGift",
+  comingOfAgeInclude1: "Wywiad/brief o jubilacie z zespołem MusicGift",
   comingOfAgeInclude2: "Spersonalizowany tekst o ich marzeniach, pasjach i osobowości",
-  comingOfAgeInclude3: "Dopasowany klimat (hip-hop, pop, trap, lofi, itp.)",
+  comingOfAgeInclude3: "Dostosowany klimat (hip-hop, pop, trap, lofi, itp.)",
   comingOfAgeInclude4: "Oryginalna piosenka skomponowana od zera",
   comingOfAgeInclude5: "Profesjonalny mix & master",
-  comingOfAgeInclude6: "Końcowe pliki MP3, dodatkowo na żądanie WAV HQ",
+  comingOfAgeInclude6: "Finalne pliki MP3, dodatkowo na żądanie WAV HQ",
   
   // New Add-ons
-  personalizedAudioMessage: "Spersonalizowana wiadomość audio",
+  personalizedAudioMessage: "Spersonalizowana Wiadomość Audio",
   personalizedAudioMessageDesc: "Wiadomość audio na początku piosenki",
-  godparentsSpecialMelody: "Specjalna melodia dla rodziców chrzestnych",
-  godparentsSpecialMelodyDesc: "Druga melodia jako niespodzianka dla rodziców chrzestnych",
+  godparentsSpecialMelody: "Specjalna Melodia dla Rodziców Chrzestnych",
+  godparentsSpecialMelodyDesc: "Druga melodia jako niespodzianka prezent dla rodziców chrzestnych",
   
   // Wedding form fields
-  weddingStep1Title: "Szczegóły pary",
-  weddingStep2Title: "Historia i preferencje",
+  weddingStep1Title: "Szczegóły Pary",
+  weddingStep2Title: "Historia i Preferencje",
   weddingCoupleNamesPlaceholder: "Wprowadź imiona panny młodej i pana młodego lub rodziców chrzestnych",
-  weddingBrideGroom: "Panna młoda i pan młody",
-  weddingGodparents: "Rodzice chrzestni",
-  weddingHowMetPlaceholder: "Opowiedz nam, jak się poznali...",
+  weddingBrideGroom: "Panna Młoda i Pan Młody",
+  weddingGodparents: "Rodzice Chrzestni",
+  weddingHowMetPlaceholder: "Powiedz nam, jak się poznali...",
   weddingLoveStoryPlaceholder: "Podziel się ich szczegółową historią miłosną lub przyjaźni...",
   weddingAtmosphereRomantic: "Romantyczna",
   weddingAtmosphereEmotional: "Emocjonalna",
   weddingAtmosphereElegant: "Elegancka",
-  weddingMusicalStylePlaceholder: "Preferowany styl muzyczny lub piosenka inspirująca",
+  weddingMusicalStylePlaceholder: "Preferowany styl muzyczny lub piosenka inspiracyjna",
   
   // Baptism form fields
-  baptismStep1Title: "Informacje o dziecku",
-  baptismStep2Title: "Preferencje muzyczne",
+  baptismStep1Title: "Informacje o Dziecku",
+  baptismStep2Title: "Preferencje Muzyczne",
   baptismChildNamePlaceholder: "Imię dziecka",
-  baptismNameMeaningPlaceholder: "Znaczenie imienia (opcjonalnie)",
+  baptismNameMeaningPlaceholder: "Znaczenie imienia (opcjonalne)",
   baptismBirthStoryPlaceholder: "Historia narodzin / życzenia rodziców",
   baptismAtmosphereCalm: "Spokojna",
   baptismAtmospherePlayful: "Zabawna",
   baptismAtmosphereEmotional: "Emocjonalna",
   baptismStyleBallad: "Ballada",
   baptismStyleLullaby: "Kołysanka",
-  baptismStyleAcousticPop: "Pop akustyczny",
+  baptismStyleAcousticPop: "Pop Akustyczny",
   
   // Coming of Age form fields
-  comingOfAgeStep1Title: "Informacje o świętującym 18. urodziny",
-  comingOfAgeStep2Title: "Styl muzyczny i klimat",
-  comingOfAgeCelebrantNamePlaceholder: "Imię świętującego 18. urodziny",
+  comingOfAgeStep1Title: "Informacje o Jubilacie 18 Urodzin",
+  comingOfAgeStep2Title: "Styl Muzyczny i Klimat",
+  comingOfAgeCelebrantNamePlaceholder: "Imię jubilata 18 urodzin",
   comingOfAgeHobbiesPlaceholder: "Ich hobby, pasje i cechy osobowości",
-  comingOfAgePersonalMessagePlaceholder: "Osobista wiadomość od rodziny/przyjaciół na 18. urodziny",
+  comingOfAgePersonalMessagePlaceholder: "Osobista wiadomość od rodziny/przyjaciół na 18 urodziny",
   comingOfAgeStyleHipHop: "Hip-Hop",
   comingOfAgeStylePop: "Pop",
   comingOfAgeStyleTrap: "Trap",
@@ -237,19 +237,19 @@ export const packagesTranslations = {
   comingOfAgeFavoriteArtistsPlaceholder: "Przykłady ulubionych artystów lub piosenek",
   
   // Common voice options
-  voiceFemale: "Głos żeński",
-  voiceMale: "Głos męski",
+  voiceFemale: "Głos Żeński",
+  voiceMale: "Głos Męski",
   
   // DJ Package
   djPackage: "Pakiet DJ",
   djTagline: "Profesjonalna produkcja muzyki elektronicznej dla DJ-ów i artystów",
-  djDescription: "Kompletny pakiet produkcji muzyki elektronicznej dla DJ-ów i artystów muzyki elektronicznej. Od koncepcji do wydania, tworzymy profesjonalne utwory gotowe do klubów, festiwali i platform streamingowych.",
+  djDescription: "Kompletny pakiet produkcji muzyki elektronicznej dla DJ-ów i artystów muzyki elektronicznej. Od koncepcji do wydania, tworzymy profesjonalne utwory gotowe na kluby, festiwale i platformy streamingowe.",
   djDelivery: "7–10 dni roboczych",
   
   // DJ Package includes
   djInclude1: "Oryginalna kompozycja utworu elektronicznego w wybranym stylu",
-  djInclude2: "Profesjonalny mixing i mastering do jakości klubowej/festiwalowej",
-  djInclude3: "Pliki audio wysokiej jakości (MP3, dodatkowo na żądanie WAV HQ)",
+  djInclude2: "Profesjonalne miksowanie i mastering dla jakości klubowej/festiwalowej",
+  djInclude3: "Wysokiej jakości pliki audio (MP3, dodatkowo na żądanie WAV HQ)",
   djInclude4: "Profesjonalny design okładki",
   djInclude5: "Dystrybucja na głównych platformach streamingowych",
   
@@ -264,31 +264,31 @@ export const packagesTranslations = {
   enterDjName: "Wprowadź swoją nazwę DJ lub nazwę artystyczną",
   identityKeywords: "Słowa kluczowe tożsamości",
   enterIdentityKeywords: "Opisz swoją tożsamość, styl i to, co czyni Cię wyjątkowym jako artystę",
-  publicPersona: "Publiczna persona",
-  describePublicPersona: "Opisz swoją publiczną personę i wizerunek artystyczny (opcjonalnie)",
-  describeTargetAudience: "Opisz swoją grupę docelową i fanbase (opcjonalnie)",
+  publicPersona: "Publiczna Persona",
+  describePublicPersona: "Opisz swoją publiczną personę i wizerunek artystyczny (opcjonalne)",
+  describeTargetAudience: "Opisz swoją grupę docelową i fanbase (opcjonalne)",
   
-  selectMusicStyle: "Wybierz preferowany styl muzyki elektronicznej",
+  selectMusicStyle: "Wybierz swój preferowany styl muzyki elektronicznej",
   afroHouse: "Afro House",
   edm: "EDM / Big Room",
   dance: "Dance / Commercial",
   futureRave: "Future Rave",
   techno: "Techno",
   
-  vocalChoice: "Wybór wokalny",
+  vocalChoice: "Wybór Wokalu",
   selectVocalChoice: "Wybierz preferencję wokalną",
   duet: "Duet",
   instrumental: "Instrumental (bez wokalu)",
   
-  soundReferenceLink: "Link referencyjny dźwięku",
+  soundReferenceLink: "Link Referencyjny Dźwięku",
   enterSoundReference: "Wprowadź URL utworu referencyjnego (Spotify, YouTube, SoundCloud)",
   enterTempoPreference: "Wprowadź preferowane BPM lub tempo (np. 128 BPM)",
-  whatToAvoid: "Czego unikać",
+  whatToAvoid: "Czego Unikać",
   enterWhatToAvoid: "Jakich dźwięków lub elementów powinniśmy unikać?",
   
-  coverPreferences: "Preferencje okładki",
+  coverPreferences: "Preferencje Okładki",
   describeCoverPreferences: "Opisz swoje preferencje dotyczące okładki i stylu wizualnego",
-  platformPreferences: "Preferencje platform",
+  platformPreferences: "Preferencje Platform",
   selectPlatforms: "Wybierz preferowane platformy dystrybucji",
   spotify: "Spotify",
   appleMusic: "Apple Music",
@@ -296,15 +296,15 @@ export const packagesTranslations = {
   youtube: "YouTube",
   soundcloud: "SoundCloud",
   
-  releasePlan: "Plan wydania",
+  releasePlan: "Plan Wydania",
   describeReleasePlan: "Opisz swój plan wydania i harmonogram",
-  socialLinks: "Linki społecznościowe",
+  socialLinks: "Linki Społecznościowe",
   enterSocialLinks: "Wprowadź swoje linki do mediów społecznościowych (Instagram, TikTok, itp.)",
   
-  goalsWithSong: "Cele z utworem",
-  describeGoalsWithSong: "Jakie są Twoje cele z tym utworem? (kluby, festiwale, radio, itp.)",
-  messageToProducer: "Wiadomość do producenta",
-  enterMessageToProducer: "Jakieś konkretne wiadomości lub wymagania dla producenta?",
+  goalsWithSong: "Cele z Piosenką",
+  describeGoalsWithSong: "Jakie są Twoje cele z tą piosenką? (kluby, festiwale, radio, itp.)",
+  messageToProducer: "Wiadomość do Producenta",
+  enterMessageToProducer: "Jakaś konkretna wiadomość lub wymagania dla producenta?",
   heardAboutUs: "Jak o nas usłyszałeś",
   selectHeardAboutUs: "Jak usłyszałeś o nas?",
   tiktok: "TikTok",
@@ -320,6 +320,16 @@ export const packagesTranslations = {
   apply: "Zastosuj",
   giftCardStartsWith: "Karty podarunkowe zaczynają się od GIFT-XXXX-XXXX",
   discountCodeMinimum: "Kody rabatowe mogą mieć minimalne wymagania zamówienia",
+  
+  // Missing translations for CodeInputSection
+  giftCardOrDiscount: "Karta Podarunkowa lub Kod Rabatowy",
+  enterCode: "Wprowadź kartę podarunkową lub kod rabatowy",
+  codePlaceholder: "GIFT-XXXX-XXXX lub DISCOUNT10",
+  giftCardHelp: "Karty podarunkowe zaczynają się od GIFT-XXXX-XXXX",
+  discountHelp: "Kody rabatowe mogą mieć minimalne wymagania zamówienia",
+  giftCardApplied: "Karta podarunkowa zastosowana",
+  discountApplied: "Rabat zastosowany",
+  applying: "Zastosowywanie...",
   
   // Tags
   exclusive: "Ekskluzywny"

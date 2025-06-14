@@ -321,6 +321,16 @@ export const packagesTranslations = {
   giftCardStartsWith: "Cardurile cadou încep cu GIFT-XXXX-XXXX",
   discountCodeMinimum: "Codurile de reducere pot avea cerințe minime de comandă",
   
+  // Missing translations for CodeInputSection
+  giftCardOrDiscount: "Card Cadou sau Cod de Reducere",
+  enterCode: "Introdu cardul cadou sau codul de reducere",
+  codePlaceholder: "GIFT-XXXX-XXXX sau DISCOUNT10",
+  giftCardHelp: "Cardurile cadou încep cu GIFT-XXXX-XXXX",
+  discountHelp: "Codurile de reducere pot avea cerințe minime de comandă",
+  giftCardApplied: "Card cadou aplicat",
+  discountApplied: "Reducere aplicată",
+  applying: "Se aplică...",
+  
   // Tags
   exclusive: "Exclusiv"
 };
