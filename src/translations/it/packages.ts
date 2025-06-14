@@ -1,4 +1,3 @@
-
 export const packagesTranslations = {
   chooseYourPackage: "Scegli il tuo pacchetto",
   selectPerfectPackage: "Seleziona il pacchetto perfetto che si adatta alle tue esigenze e al tuo budget",
@@ -60,7 +59,7 @@ export const packagesTranslations = {
   
   businessInclude1: "Sessione di brainstorming con il team MusicGift per comprendere la visione e i valori del brand",
   businessInclude2: "Canzone personalizzata per la tua azienda",
-  businessInclude3: "Produzione completa, con voce adattata al tuo brand",
+  businessInclude3: "Produzione completa con voce adattata al tuo brand",
   businessInclude4: "Mix & Master di qualità superiore",
   businessInclude5: "Licenza commerciale (a seconda della direzione e preferenza del cliente)",
   
@@ -321,6 +320,16 @@ export const packagesTranslations = {
   apply: "Applica",
   giftCardStartsWith: "Le carte regalo iniziano con GIFT-XXXX-XXXX",
   discountCodeMinimum: "I codici sconto potrebbero avere requisiti minimi dell'ordine",
+  
+  // New required gift card/discount keys
+  giftCardOrDiscount: "Carta Regalo o Codice Sconto",
+  enterCode: "Inserisci carta regalo o codice sconto",
+  codePlaceholder: "GIFT-XXXX-XXXX o DISCOUNT10",
+  giftCardHelp: "Le carte regalo iniziano con GIFT-XXXX-XXXX",
+  discountHelp: "I codici sconto potrebbero avere requisiti minimi dell'ordine",
+  giftCardApplied: "Carta regalo applicata",
+  discountApplied: "Sconto applicato",
+  applying: "Applicazione in corso...",
   
   // Tags
   exclusive: "Esclusivo"

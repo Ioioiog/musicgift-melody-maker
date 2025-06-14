@@ -321,6 +321,16 @@ export const packagesTranslations = {
   giftCardStartsWith: "Karty podarunkowe zaczynają się od GIFT-XXXX-XXXX",
   discountCodeMinimum: "Kody rabatowe mogą mieć minimalne wymagania zamówienia",
   
+  // New required gift card/discount keys
+  giftCardOrDiscount: "Karta Podarunkowa lub Kod Rabatowy",
+  enterCode: "Wprowadź kartę podarunkową lub kod rabatowy",
+  codePlaceholder: "GIFT-XXXX-XXXX lub DISCOUNT10",
+  giftCardHelp: "Karty podarunkowe zaczynają się od GIFT-XXXX-XXXX",
+  discountHelp: "Kody rabatowe mogą mieć minimalne wymagania zamówienia",
+  giftCardApplied: "Karta podarunkowa zastosowana",
+  discountApplied: "Rabat zastosowany",
+  applying: "Stosowanie...",
+  
   // Tags
   exclusive: "Ekskluzywny"
 };

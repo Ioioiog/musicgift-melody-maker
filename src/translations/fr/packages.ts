@@ -116,10 +116,10 @@ export const packagesTranslations = {
   sourceFilesDesc: "Accès à tous les fichiers de projet (stems, MIDI)",
   
   socialMediaRights: "Droits Réseaux Sociaux",
-  socialMediaRightsDesc: "Obtenez les droits de publier la chanson sur toute plateforme de réseaux sociaux. Nécessite l'acceptation d'étiqueter la chanson avec 'Music Gift by Mango Records'.",
+  socialMediaRightsDesc: "Obtenez les droits de publier la chanson sur n'importe quelle plateforme de médias sociaux. Nécessite l'acceptation d'étiqueter la chanson avec 'Music Gift by Mango Records'.",
   
   mangoRecordsDistribution: "Distribution Mango Records",
-  mangoRecordsDistributionDesc: "Distribution professionnelle via le réseau Mango Records sur toutes les plateformes de streaming majeures (Spotify, Apple Music, YouTube Music, etc.)",
+  mangoRecordsDistributionDesc: "Distribution professionnelle via le réseau Mango Records sur toutes les principales plateformes de streaming (Spotify, Apple Music, YouTube Music, etc.)",
   
   customVideo: "Vidéo personnalisée",
   customVideoDesc: "Une vidéo personnalisée créée avec vos photos ou/et vidéos pour une expérience complète",
@@ -131,7 +131,7 @@ export const packagesTranslations = {
   brandedAudioMessageDesc: "Incluez un court message vocal de marque au début de la chanson – parfait pour les introductions personnalisées, les messages de campagne ou les slogans de marque.",
   
   commercialRightsUpgrade: "Mise à niveau des droits commerciaux",
-  commercialRightsUpgradeDesc: "Droits commerciaux étendus pour une utilisation professionnelle à la télévision/radio",
+  commercialRightsUpgradeDesc: "Droits commerciaux étendus pour usage professionnel à la tv/radio",
   
   extendedSong: "Chanson étendue",
   extendedSongDesc: "Version plus longue de votre chanson",
@@ -139,8 +139,8 @@ export const packagesTranslations = {
   godparentsmelody: "Mélodie des parrains",
   godparentsmelodyDesc: "Mélodie spéciale pour les parrains",
   
-  separatedStems: "Stems Séparés",
-  separatedStemsDesc: "Beat original + fichiers de pistes individuelles. Idéal pour le mixage, le remixage et la synchronisation vidéo. Inclut les droits commerciaux.",
+  separatedStems: "Stems séparés",
+  separatedStemsDesc: "Beat original + fichiers de pistes individuelles. Idéal pour le mixage, le remix et la synchronisation vidéo. Inclut les droits commerciaux.",
   
   // New Special Event Package names
   weddingPackage: "Forfait Mariage",
@@ -314,13 +314,23 @@ export const packagesTranslations = {
   googleSearch: "Recherche Google",
   otherSource: "Autre source",
   
-  // Order Summary Gift Card/Discount Section
+  // Order Summary Gift Card/Discount Section  
   giftCardOrDiscountCode: "Carte Cadeau ou Code de Réduction",
   enterGiftCardOrDiscountCode: "Entrez la carte cadeau ou le code de réduction",
   giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX ou DISCOUNT10",
   apply: "Appliquer",
   giftCardStartsWith: "Les cartes cadeaux commencent par GIFT-XXXX-XXXX",
-  discountCodeMinimum: "Les codes de réduction peuvent avoir des exigences de commande minimum",
+  discountCodeMinimum: "Les codes de réduction peuvent avoir des exigences de commande minimales",
+  
+  // New required gift card/discount keys
+  giftCardOrDiscount: "Carte Cadeau ou Code de Réduction",
+  enterCode: "Entrez la carte cadeau ou le code de réduction",
+  codePlaceholder: "GIFT-XXXX-XXXX ou DISCOUNT10",
+  giftCardHelp: "Les cartes cadeaux commencent par GIFT-XXXX-XXXX",
+  discountHelp: "Les codes de réduction peuvent avoir des exigences de commande minimales",
+  giftCardApplied: "Carte cadeau appliquée",
+  discountApplied: "Réduction appliquée",
+  applying: "Application en cours...",
   
   // Tags
   exclusive: "Exclusif"
