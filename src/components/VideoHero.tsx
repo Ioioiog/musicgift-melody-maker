@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, AlertCircle } from 'lucide-react';
@@ -139,16 +138,19 @@ const VideoHero = () => {
     <section
       className={`video-hero relative overflow-hidden video-hero-optimized critical-resource ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`}
       style={isMobile && mobileHeight ? { height: mobileHeight } : {}}
+      role="banner"
+      aria-label="Hero video section"
     >
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${posterSrc})` }}
+        aria-hidden="true"
       ></div>
 
       {videoError ? (
-        <div className="absolute inset-0 video-error-fallback">
+        <div className="absolute inset-0 video-error-fallback" role="alert">
           <div className="text-center">
-            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-white/80" />
+            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-white/80" aria-hidden="true" />
             <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
             <p className="text-sm opacity-90">The video content is temporarily unavailable</p>
           </div>
@@ -166,24 +168,42 @@ const VideoHero = () => {
           onCanPlay={handleVideoLoad}
           className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover hw-accelerated ${isVideoLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
           poster={posterSrc}
+          aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
         >
           {useWebM && <source src={videoWebM} type="video/webm" onError={handleVideoError} />}
           <source src={videoSrc} type="video/mp4" onError={handleVideoError} />
+          <track 
+            kind="captions" 
+            src={`/uploads/captions_${language}.vtt`} 
+            srcLang={language} 
+            label={language === 'ro' ? 'Română' : 'English'}
+            default 
+          />
         </video>
       )}
 
       {!shouldAutoplay && !videoError && (
         <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
-          <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
-            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+          <Button 
+            onClick={handleTogglePlay} 
+            size="icon" 
+            className="bg-white/80 text-black rounded-full shadow hw-accelerated"
+            aria-label={isPlaying ? 'Pause video' : 'Play video'}
+          >
+            {isPlaying ? <Pause className="w-5 h-5" aria-hidden="true" /> : <Play className="w-5 h-5" aria-hidden="true" />}
           </Button>
-          <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
-            <Volume2 className="w-5 h-5" />
+          <Button 
+            onClick={handleToggleAudio} 
+            size="icon" 
+            className="bg-white/80 text-black rounded-full shadow hw-accelerated"
+            aria-label={hasAudio ? 'Mute video' : 'Unmute video'}
+          >
+            <Volume2 className="w-5 h-5" aria-hidden="true" />
           </Button>
         </div>
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" aria-hidden="true"></div>
 
       <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent hw-accelerated">

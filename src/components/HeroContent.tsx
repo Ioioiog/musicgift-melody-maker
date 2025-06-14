@@ -2,6 +2,7 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Heart, Sparkles } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Link } from 'react-router-dom';
 
 const HeroContent = () => {
   const { t } = useLanguage();
@@ -20,29 +21,31 @@ const HeroContent = () => {
           </p>
           
           <div className="flex flex-col gap-3 justify-center items-center mb-4">
-            <a
-              href="/order"
-              className={`group flex items-center gap-2 justify-center font-bold text-sm rounded-full shadow-lg ${
+            <Link
+              to="/order"
+              className={`group flex items-center gap-2 justify-center font-bold text-sm rounded-full shadow-lg no-underline ${
                 isMobile
                   ? 'button-mobile-critical button-orange'
                   : 'bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 min-w-[180px] transform translate3d(0,0,0) transition-all duration-200'
               }`}
+              aria-label="Get started with creating your personalized musical gift"
             >
-              <Heart className="w-5 h-5" />
+              <Heart className="w-5 h-5" aria-hidden="true" />
               {t('getStarted') || 'Get Started'}
-            </a>
+            </Link>
             
-            <a
-              href="/packages"
-              className={`group flex items-center gap-2 justify-center font-bold text-sm rounded-full ${
+            <Link
+              to="/packages"
+              className={`group flex items-center gap-2 justify-center font-bold text-sm rounded-full no-underline ${
                 isMobile
                   ? 'button-mobile-critical button-white'
                   : 'border-2 border-white/60 hover:border-white text-white hover:bg-white/10 py-3 px-6 backdrop-blur-sm min-w-[180px] transform translate3d(0,0,0) transition-all duration-200'
               }`}
+              aria-label="View all available musical packages and pricing"
             >
-              <Sparkles className="w-5 h-5" />
+              <Sparkles className="w-5 h-5" aria-hidden="true" />
               {t('viewPackages') || 'View Packages'}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -106,7 +107,7 @@ const Index = () => {
                 <h2 id="stats-heading" className="sr-only">Statistici și Realizări MusicGift.ro</h2>
                 <div className="bg-gradient-to-r from-black/20 via-black/40 to-black/20 border-y border-white/10 py-1 relative z-10">
                   
-                  <div className={`scroll-content ${isMobile ? 'mobile-scroll-optimized' : 'scroll-ultra-optimized'}`}>
+                  <div className={`scroll-content ${isMobile ? 'mobile-scroll-optimized' : 'scroll-ultra-optimized'}`} role="marquee" aria-label="Company statistics and achievements">
                     
                     {/* First set of statistics */}
                     <div className="flex items-center space-x-2 text-sm font-bold">
@@ -209,7 +210,7 @@ const Index = () => {
             }}
           >
             
-            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
+            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" aria-hidden="true" />
             <div className="max-w-4xl mx-auto relative z-10">
               <h2 id="cta-heading" className="text-lg font-bold mb-2">
                 {t('heroCtaTitle')}
