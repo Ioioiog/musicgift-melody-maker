@@ -20,9 +20,18 @@ const VideoHero = () => {
   console.log('VideoHero: Current language:', language);
   console.log('VideoHero: Video source:', videoSrc);
   console.log('VideoHero: Base name:', baseName);
+  console.log('VideoHero: Is mobile:', isMobile);
+  
+  // Debug background image loading
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => console.log('Background image loaded successfully');
+    img.onerror = () => console.error('Background image failed to load');
+    img.src = '/uploads/background.jpeg';
+  }, []);
 
-  // Mobile height calculation - reduced to 40vh to allow more background to show
-  const mobileHeight = isMobile ? `40vh` : undefined;
+  // Mobile height calculation - further reduced to 25vh to show more background
+  const mobileHeight = isMobile ? `25vh` : undefined;
 
   // Simple autoplay with sound
   useEffect(() => {
@@ -134,14 +143,18 @@ const VideoHero = () => {
 
   return (
     <div className="relative">
-      {/* Video Hero Section - Made transparent on mobile to allow background to show */}
+      {/* Video Hero Section - Extremely transparent on mobile */}
       <section
-        className={`video-hero relative overflow-hidden ${isMobile ? 'bg-transparent' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`}
+        className={`video-hero relative overflow-hidden ${
+          isMobile 
+            ? 'bg-transparent' 
+            : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'
+        }`}
         style={isMobile && mobileHeight ? { height: mobileHeight } : {}}
         role="banner"
         aria-label="Hero video section"
       >
-        {/* Remove poster background completely on mobile to allow body background to show */}
+        {/* Remove poster background completely on mobile */}
         {!isMobile && (
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -171,7 +184,13 @@ const VideoHero = () => {
             onError={handleVideoError}
             onLoadStart={() => setIsVideoLoading(true)}
             onCanPlay={() => setIsVideoLoading(false)}
-            className={`absolute ${isMobile ? 'top-8' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto opacity-70' : 'h-full'} object-cover transition-opacity duration-300 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
+            className={`absolute ${
+              isMobile 
+                ? 'top-8 h-auto opacity-40' 
+                : 'top-0 h-full'
+            } left-0 w-full object-cover transition-opacity duration-300 ${
+              isVideoLoading ? 'opacity-0' : 'opacity-100'
+            }`}
             poster={!isMobile ? posterSrc : undefined}
             aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
           >
@@ -179,8 +198,12 @@ const VideoHero = () => {
           </video>
         )}
 
-        {/* Much more transparent gradient overlay on mobile */}
-        <div className={`absolute inset-0 ${isMobile ? 'bg-gradient-to-br from-black/10 via-purple-900/5 to-black/15' : 'bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50'}`} aria-hidden="true"></div>
+        {/* Ultra-transparent gradient overlay on mobile */}
+        <div className={`absolute inset-0 ${
+          isMobile 
+            ? 'bg-gradient-to-br from-black/5 via-purple-900/3 to-black/8' 
+            : 'bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50'
+        }`} aria-hidden="true"></div>
 
         <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
