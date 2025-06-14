@@ -21,14 +21,25 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    target: ['es2022', 'chrome89', 'firefox89', 'safari15'],
+    minify: 'esbuild',
     sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-slot'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-slot', '@radix-ui/react-tooltip'],
+          router: ['react-router-dom'],
+          query: ['@tanstack/react-query'],
+          motion: ['framer-motion'],
+          icons: ['lucide-react']
         }
       }
-    }
+    },
+    chunkSizeWarningLimit: 1000
   },
+  esbuild: {
+    target: 'es2022',
+    treeShaking: true
+  }
 }));

@@ -3,11 +3,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
 import HeroContent from "@/components/HeroContent";
-import ScenarioHero from "@/components/ScenarioHero";
-import AnimatedStepFlow from "@/components/AnimatedStepFlow";
-import LazyTestimonialSlider from "@/components/LazyTestimonialSlider";
-import ImpactCards from "@/components/ImpactCards";
-import CollaborationSection from "@/components/CollaborationSection";
+import LazyComponent, { createLazyComponent } from "@/components/LazyComponent";
 import SEOHead from "@/components/SEOHead";
 import StructuredDataLoader from "@/components/StructuredDataLoader";
 import { Button } from "@/components/ui/button";
@@ -16,6 +12,12 @@ import { Link } from "react-router-dom";
 import { Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+// Lazy load non-critical components
+const LazyAnimatedStepFlow = createLazyComponent(() => import("@/components/AnimatedStepFlow"));
+const LazyTestimonialSlider = createLazyComponent(() => import("@/components/LazyTestimonialSlider"));
+const LazyImpactCards = createLazyComponent(() => import("@/components/ImpactCards"));
+const LazyCollaborationSection = createLazyComponent(() => import("@/components/CollaborationSection"));
 
 const Index = () => {
   const { t } = useLanguage();
@@ -73,26 +75,32 @@ const Index = () => {
             <HeroContent />
           </section>
 
-          {/* Below-fold content - Hidden initially for mobile LCP */}
+          {/* Below-fold content - Lazy loaded for better performance */}
           {showBelowFold && (
             <>
               {/* Impact Cards Section */}
-              <section className="py-2" aria-labelledby="impact-heading">
-                <h2 id="impact-heading" className="sr-only">Impactul Serviciilor Noastre Muzicale</h2>
-                <ImpactCards />
-              </section>
+              <LazyComponent>
+                <section className="py-2" aria-labelledby="impact-heading">
+                  <h2 id="impact-heading" className="sr-only">Impactul Serviciilor Noastre Muzicale</h2>
+                  <LazyImpactCards />
+                </section>
+              </LazyComponent>
 
               {/* Process Flow Section */}
-              <section className="py-2" aria-labelledby="process-heading">
-                <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
-                <AnimatedStepFlow />
-              </section>
+              <LazyComponent>
+                <section className="py-2" aria-labelledby="process-heading">
+                  <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
+                  <LazyAnimatedStepFlow />
+                </section>
+              </LazyComponent>
 
               {/* Testimonials Section */}
-              <section className="py-2" aria-labelledby="testimonials-heading">
-                <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
-                <LazyTestimonialSlider />
-              </section>
+              <LazyComponent>
+                <section className="py-2" aria-labelledby="testimonials-heading">
+                  <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
+                  <LazyTestimonialSlider />
+                </section>
+              </LazyComponent>
 
               {/* Mobile-Optimized Statistics Section */}
               <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 overflow-hidden" aria-labelledby="stats-heading">
@@ -144,14 +152,16 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Below-fold sections - Hidden initially */}
+      {/* Below-fold sections - Lazy loaded */}
       {showBelowFold && (
         <>
           {/* Collaboration Section */}
-          <section aria-labelledby="collaboration-heading">
-            <h2 id="collaboration-heading" className="sr-only">Colaborarea Noastră cu Artiștii</h2>
-            <CollaborationSection />
-          </section>
+          <LazyComponent>
+            <section aria-labelledby="collaboration-heading">
+              <h2 id="collaboration-heading" className="sr-only">Colaborarea Noastră cu Artiștii</h2>
+              <LazyCollaborationSection />
+            </section>
+          </LazyComponent>
 
           {/* Call-to-Action Section */}
           <section 
