@@ -1,4 +1,7 @@
-import { defineConfig } from "vite";
+
+// Add the required imports for types
+import { defineConfig, Plugin, ViteDevServer } from "vite";
+import type { IncomingMessage, ServerResponse } from "node:http";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
