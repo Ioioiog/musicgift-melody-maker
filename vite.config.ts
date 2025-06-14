@@ -1,24 +1,29 @@
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // Custom middleware to set Content-Type headers for JS/TS files
-function ensureMimeTypeForModules() {
+function ensureMimeTypeForModules(): Plugin {
   return {
     name: 'vite:mime-type-fix',
-    configureServer(server) {
-      server.middlewares.use((req, res, next) => {
-        if (req.url?.endsWith('.js')) {
-          res.setHeader('Content-Type', 'application/javascript');
-        } else if (req.url?.endsWith('.ts')) {
-          res.setHeader('Content-Type', 'application/typescript');
-        } else if (req.url?.endsWith('.tsx')) {
-          res.setHeader('Content-Type', 'application/typescript');
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use(
+        (
+          req: IncomingMessage,
+          res: ServerResponse,
+          next: () => void
+        ) => {
+          if (req.url?.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+          } else if (req.url?.endsWith('.ts')) {
+            res.setHeader('Content-Type', 'application/typescript');
+          } else if (req.url?.endsWith('.tsx')) {
+            res.setHeader('Content-Type', 'application/typescript');
+          }
+          next();
         }
-        next();
-      });
+      );
     },
   };
 }
