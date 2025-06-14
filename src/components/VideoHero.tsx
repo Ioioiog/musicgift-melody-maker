@@ -48,7 +48,18 @@ const VideoHero = () => {
     if (!video) return;
 
     // Don't autoplay if navigating back
-    if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') return;
+    try {
+      const entries = performance.getEntriesByType('navigation');
+      if (entries.length > 0) {
+        const navEntry = entries[0] as PerformanceNavigationTiming;
+        if (navEntry.type === 2) { // 2 is TYPE_BACK_FORWARD
+          return;
+        }
+      }
+    } catch (e) {
+      // Fallback if performance API is not available
+      console.warn('Performance API not available');
+    }
 
     const playVideo = async () => {
       try {
