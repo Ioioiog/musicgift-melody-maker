@@ -38,8 +38,8 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <SEOHead 
-        title="MusicGift.ro - Cadouri Muzicale Personalizate | Melodii Unice pentru Persoanele Dragi"
-        description="Creează melodii personalizate și cadouri muzicale unice pentru persoanele dragi. Servicii profesionale de compoziție muzicală, înregistrare și producție. Peste 2000 de melodii create cu dragoste în România."
+        title="MusicGift.ro - Cadouri Muzicale Personalizate"
+        description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste."
       />
       
       {/* Skip Navigation for Accessibility */}
@@ -80,7 +80,7 @@ const Index = () => {
           {/* Hero Content Section */}
           <section className="py-4 md:py-0" aria-labelledby="hero-heading">
             <div className="sr-only">
-              <h1 id="hero-heading">Cadouri Muzicale Personalizate - MusicGift.ro</h1>
+              <h2 id="hero-heading">Cadouri Muzicale Personalizate - MusicGift.ro</h2>
               <p>Transformă emoțiile în muzică cu serviciile noastre profesionale de compoziție muzicală personalizată. Creăm melodii unice pentru nunți, botezuri, aniversări și orice moment special din viața ta.</p>
             </div>
             <HeroContent />

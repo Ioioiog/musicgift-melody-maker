@@ -21,8 +21,8 @@ const SEOHead = ({
 }: SEOHeadProps) => {
   const { language } = useLanguage();
   
-  const defaultTitle = "MusicGift.ro - Cadouri Muzicale Personalizate | Melodii Unice pentru Persoanele Dragi";
-  const defaultDescription = "Creează melodii personalizate și cadouri muzicale unice pentru persoanele dragi. Servicii profesionale de compoziție muzicală, înregistrare și producție. Peste 2000 de melodii create cu dragoste.";
+  const defaultTitle = "MusicGift.ro - Cadouri Muzicale Personalizate";
+  const defaultDescription = "Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste.";
 
   const finalTitle = title || defaultTitle;
   const finalDescription = description || defaultDescription;
