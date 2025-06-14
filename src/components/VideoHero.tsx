@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
@@ -22,12 +23,12 @@ const VideoHero = () => {
   console.log('VideoHero: Base name:', baseName);
   console.log('VideoHero: Is mobile:', isMobile);
   
-  // Debug background image loading
+  // Debug background image loading with correct WebP path
   useEffect(() => {
     const img = new Image();
     img.onload = () => console.log('Background image loaded successfully');
     img.onerror = () => console.error('Background image failed to load');
-    img.src = '/uploads/background.jpeg';
+    img.src = '/uploads/background.webp'; // Updated to use correct path
   }, []);
 
   // Mobile height calculation - further reduced to 25vh to show more background
