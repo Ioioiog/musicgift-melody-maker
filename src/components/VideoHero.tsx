@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX, AlertCircle } from 'lucide-react';
@@ -131,75 +130,10 @@ const VideoHero = () => {
   if (!isMounted) return null;
 
   return (
-    <section
-      className={`video-hero relative overflow-hidden ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`}
-      style={isMobile && videoHeight ? { height: videoHeight } : {}}
-      role="banner"
-      aria-label="Hero video section"
-    >
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${posterSrc})` }}
-        aria-hidden="true"
-      ></div>
-
-      {videoError ? (
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-black/70 z-10" role="alert">
-          <div className="text-center text-white">
-            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-white/80" />
-            <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
-            <p className="text-sm opacity-90 mb-4">The video content is temporarily unavailable</p>
-            <Button onClick={() => window.location.reload()} className="bg-orange-500 hover:bg-orange-600 text-white">
-              Try Again
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <video
-          key={language}
-          ref={videoRef}
-          playsInline
-          preload="metadata"
-          muted={!hasAudio}
-          onError={handleVideoError}
-          onLoadStart={() => setIsVideoLoading(true)}
-          onCanPlay={() => setIsVideoLoading(false)}
-          className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
-          style={isMobile ? { height: videoHeight } : {}}
-          poster={posterSrc}
-          aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
-        >
-          {useWebM && <source src={videoWebM} type="video/webm" />}
-          <source src={videoSrc} type="video/mp4" />
-          {/* Add captions */}
-          <track
-            kind="captions"
-            src={`/uploads/captions_${language === 'ro' ? 'ro' : 'eng'}.vtt`}
-            srcLang={language === 'ro' ? 'ro' : 'en'}
-            label={language === 'ro' ? 'Română' : 'English'}
-            default
-          />
-        </video>
-      )}
-
-      {/* Toast Notification */}
-      {showMutedNotice && (
-        <div className="absolute top-20 right-4 z-[60] bg-black/90 text-white text-sm px-4 py-2 rounded-lg shadow-lg flex items-start gap-2 max-w-xs border border-white/20">
-          <span className="pt-0.5">🔇</span>
-          <span className="flex-1">{t('mutedAutoplayNotice')}</span>
-          <button
-            onClick={() => setShowMutedNotice(false)}
-            className="ml-2 text-white/70 hover:text-white font-bold"
-            aria-label={t('closeNotice')}
-          >
-            ✕
-          </button>
-        </div>
-      )}
-
-      {/* Enhanced Controls with better visibility */}
+    <>
+      {/* Video Controls positioned after navbar */}
       {!videoError && (
-        <div className={`absolute ${isMobile ? 'top-20' : 'top-4'} right-4 z-[60] flex gap-3`}>
+        <div className="fixed top-16 right-4 z-[60] flex gap-3">
           <Button
             onClick={handleTogglePlay}
             size="icon"
@@ -223,14 +157,81 @@ const VideoHero = () => {
         </div>
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 z-5" aria-hidden="true"></div>
+      <section
+        className={`video-hero relative overflow-hidden ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`}
+        style={isMobile && videoHeight ? { height: videoHeight } : {}}
+        role="banner"
+        aria-label="Hero video section"
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${posterSrc})` }}
+          aria-hidden="true"
+        ></div>
 
-      <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4 z-10">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-          {t('heroTitle')}
-        </h1>
-      </div>
-    </section>
+        {videoError ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-black/70 z-10" role="alert">
+            <div className="text-center text-white">
+              <AlertCircle className="w-12 h-12 mx-auto mb-4 text-white/80" />
+              <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
+              <p className="text-sm opacity-90 mb-4">The video content is temporarily unavailable</p>
+              <Button onClick={() => window.location.reload()} className="bg-orange-500 hover:bg-orange-600 text-white">
+                Try Again
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <video
+            key={language}
+            ref={videoRef}
+            playsInline
+            preload="metadata"
+            muted={!hasAudio}
+            onError={handleVideoError}
+            onLoadStart={() => setIsVideoLoading(true)}
+            onCanPlay={() => setIsVideoLoading(false)}
+            className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
+            style={isMobile ? { height: videoHeight } : {}}
+            poster={posterSrc}
+            aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
+          >
+            {useWebM && <source src={videoWebM} type="video/webm" />}
+            <source src={videoSrc} type="video/mp4" />
+            {/* Add captions */}
+            <track
+              kind="captions"
+              src={`/uploads/captions_${language === 'ro' ? 'ro' : 'eng'}.vtt`}
+              srcLang={language === 'ro' ? 'ro' : 'en'}
+              label={language === 'ro' ? 'Română' : 'English'}
+              default
+            />
+          </video>
+        )}
+
+        {/* Toast Notification */}
+        {showMutedNotice && (
+          <div className="absolute top-20 right-4 z-[60] bg-black/90 text-white text-sm px-4 py-2 rounded-lg shadow-lg flex items-start gap-2 max-w-xs border border-white/20">
+            <span className="pt-0.5">🔇</span>
+            <span className="flex-1">{t('mutedAutoplayNotice')}</span>
+            <button
+              onClick={() => setShowMutedNotice(false)}
+              className="ml-2 text-white/70 hover:text-white font-bold"
+              aria-label={t('closeNotice')}
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 z-5" aria-hidden="true"></div>
+
+        <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4 z-10">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+            {t('heroTitle')}
+          </h1>
+        </div>
+      </section>
+    </>
   );
 };
 
