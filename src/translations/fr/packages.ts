@@ -320,17 +320,7 @@ export const packagesTranslations = {
   giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX ou DISCOUNT10",
   apply: "Appliquer",
   giftCardStartsWith: "Les cartes cadeaux commencent par GIFT-XXXX-XXXX",
-  discountCodeMinimum: "Les codes de réduction peuvent avoir des exigences de commande minimales",
-  
-  // Missing translations for CodeInputSection
-  giftCardOrDiscount: "Carte Cadeau ou Code de Réduction",
-  enterCode: "Entrez la carte cadeau ou le code de réduction",
-  codePlaceholder: "GIFT-XXXX-XXXX ou DISCOUNT10",
-  giftCardHelp: "Les cartes cadeaux commencent par GIFT-XXXX-XXXX",
-  discountHelp: "Les codes de réduction peuvent avoir des exigences de commande minimales",
-  giftCardApplied: "Carte cadeau appliquée",
-  discountApplied: "Réduction appliquée",
-  applying: "Application...",
+  discountCodeMinimum: "Les codes de réduction peuvent avoir des exigences de commande minimum",
   
   // Tags
   exclusive: "Exclusif"

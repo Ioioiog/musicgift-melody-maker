@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Scegli il tuo pacchetto",
   selectPerfectPackage: "Seleziona il pacchetto perfetto che si adatta alle tue esigenze e al tuo budget",
@@ -314,22 +315,12 @@ export const packagesTranslations = {
   otherSource: "Altra fonte",
   
   // Order Summary Gift Card/Discount Section
-  giftCardOrDiscountCode: "Carta Regalo o Codice Sconto",
+  giftCardOrDiscountCode: "Carta regalo o codice sconto",
   enterGiftCardOrDiscountCode: "Inserisci carta regalo o codice sconto",
   giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX o DISCOUNT10",
   apply: "Applica",
   giftCardStartsWith: "Le carte regalo iniziano con GIFT-XXXX-XXXX",
   discountCodeMinimum: "I codici sconto potrebbero avere requisiti minimi dell'ordine",
-  
-  // Missing translations for CodeInputSection
-  giftCardOrDiscount: "Carta Regalo o Codice Sconto",
-  enterCode: "Inserisci carta regalo o codice sconto",
-  codePlaceholder: "GIFT-XXXX-XXXX o DISCOUNT10",
-  giftCardHelp: "Le carte regalo iniziano con GIFT-XXXX-XXXX",
-  discountHelp: "I codici sconto potrebbero avere requisiti minimi dell'ordine",
-  giftCardApplied: "Carta regalo applicata",
-  discountApplied: "Sconto applicato",
-  applying: "Applicando...",
   
   // Tags
   exclusive: "Esclusivo"
