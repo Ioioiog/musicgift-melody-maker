@@ -129,7 +129,7 @@ const Packages = () => {
             delay: index * 0.1
           }} onHoverStart={() => setHoveredCard(pkg.value)} onHoverEnd={() => setHoveredCard(null)}>
                 <Card className={`h-full transition-all duration-300 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:shadow-xl ${hoveredCard === pkg.value ? 'scale-105' : ''} ${pkg.tag === 'popular' ? 'ring-2 ring-purple-500' : ''}`}>
-                  <CardHeader className="relative">
+                  <CardHeader className="relative px-[7px] mx-[9px]">
                     {pkg.tag === 'popular' && <Badge className="absolute -top-2 -right-2 bg-orange-500">
                         <Star className="w-4 h-4 mr-1" />
                         {t('popular', 'Popular')}
