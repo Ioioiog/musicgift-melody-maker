@@ -6,7 +6,7 @@ export const cookiesTranslations = {
   acceptAll: "Zaakceptuj wszystkie",
   rejectAll: "Odrzuć wszystkie",
   customize: "Dostosuj",
-  learnMore: "Dowiedz się więcej o naszych plikach cookie",
+  learnMoreAboutCookies: "Dowiedz się więcej o naszych plikach cookie",
   
   // Cookie Settings
   cookieSettings: "Ustawienia plików cookie",
