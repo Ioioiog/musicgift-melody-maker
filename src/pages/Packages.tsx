@@ -82,7 +82,7 @@ const Packages = () => {
       
       {/* Compact Hero Section with Music Background - Matching Gift Cards Style */}
       <section className="pt-16 md:pt-20 lg:pt-24 pb-6 px-4 text-center text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -110,7 +110,7 @@ const Packages = () => {
 
       {/* Packages Grid with Music Background */}
       <section className="py-20 px-4 relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
