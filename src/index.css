@@ -68,41 +68,66 @@
   body {
     @apply bg-background text-foreground;
     font-family: "Inter", sans-serif;
-    background-image: url('/uploads/background.webp');
+    background-image: url('/uploads/background.jpeg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: scroll; /* Changed from fixed to scroll for better mobile performance */
-    min-height: 100vh; /* Ensure full viewport height coverage */
+    background-attachment: scroll;
+    min-height: 100vh;
     /* Performance optimizations */
     text-rendering: optimizeSpeed;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Mobile-specific background improvements */
+  /* Mobile-specific background improvements - stronger enforcement */
   @media (max-width: 767px) {
     body {
-      background-attachment: scroll; /* Ensure scroll on mobile for better performance */
-      background-size: cover;
-      background-position: center center;
-      background-repeat: no-repeat;
+      background-image: url('/uploads/background.jpeg') !important;
+      background-attachment: scroll !important;
+      background-size: cover !important;
+      background-position: center center !important;
+      background-repeat: no-repeat !important;
+      background-color: transparent !important;
     }
   }
 
-  /* Ensure background appears on all page containers */
+  /* Ensure background appears on all page containers - mobile priority */
   html, body, #root {
     min-height: 100vh;
-    background-image: url('/uploads/background.webp');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
   }
 
-  /* Additional mobile optimization */
+  /* Mobile-specific container transparency */
   @media (max-width: 767px) {
     html, body, #root {
+      background-image: url('/uploads/background.jpeg') !important;
+      background-size: cover !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+      background-attachment: scroll !important;
+      background-color: transparent !important;
+    }
+    
+    /* Ensure main containers are transparent on mobile */
+    .main-mobile-critical {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+    
+    /* Video hero mobile transparency enforcement */
+    .video-hero-mobile {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+  }
+
+  /* Desktop background */
+  @media (min-width: 768px) {
+    html, body, #root {
+      background-image: url('/uploads/background.jpeg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       background-attachment: scroll;
     }
   }
