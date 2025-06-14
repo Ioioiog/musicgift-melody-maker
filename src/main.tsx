@@ -7,6 +7,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { CookieProvider } from "@/contexts/CookieContext";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -29,7 +30,9 @@ root.render(
           <AuthProvider>
             <LanguageProvider>
               <CurrencyProvider>
-                <App />
+                <CookieProvider>
+                  <App />
+                </CookieProvider>
               </CurrencyProvider>
             </LanguageProvider>
           </AuthProvider>

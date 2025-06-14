@@ -6,6 +6,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { CookieProvider } from "@/contexts/CookieContext";
+import CookieConsent from "@/components/CookieConsent";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Packages from "./pages/Packages";
@@ -80,14 +82,17 @@ const AppContent = () => (
       />
       <Route path="*" element={<NotFound />} />
     </Routes>
+    <CookieConsent />
   </ErrorBoundary>
 );
 
 const App = () => (
   <>
-    <TooltipProvider>
-      <AppContent />
-    </TooltipProvider>
+    <CookieProvider>
+      <TooltipProvider>
+        <AppContent />
+      </TooltipProvider>
+    </CookieProvider>
     <Toaster />
     <Sonner />
   </>
