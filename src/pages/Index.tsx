@@ -14,19 +14,29 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 import { Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
+  const [showBelowFold, setShowBelowFold] = useState(false);
   
   // Performance monitoring
   useEffect(() => {
     performance.mark('index-page-start');
+    
+    // Show below-fold content after critical render
+    const timer = setTimeout(() => {
+      setShowBelowFold(true);
+    }, isMobile ? 300 : 200);
+    
     return () => {
+      clearTimeout(timer);
       performance.mark('index-page-end');
       performance.measure('index-page-load', 'index-page-start', 'index-page-end');
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div className="min-h-screen">
@@ -42,26 +52,20 @@ const Index = () => {
       
       <Navigation />
       
-      {/* Video Hero Section with Ultra LCP optimizations */}
-      <div className="video-hero-ultra">
+      {/* Mobile-Optimized Video Hero Section */}
+      <div className="video-hero-mobile">
         <VideoHero />
       </div>
 
-      {/* Ultra-optimized Main Content for LCP */}
+      {/* Mobile-Optimized Main Content for LCP */}
       <main 
         id="main-content" 
-        className="main-ultra-critical"
-        style={{
-          background: 'url(/uploads/background.webp) center/cover no-repeat fixed'
-        }}
+        className="main-mobile-critical"
       >
-        {/* Simple overlay for better performance */}
-        <div className="overlay-simple" />
-
         <div className="relative z-10">
           
-          {/* Hero Content Section - Critical above-the-fold */}
-          <section className="py-4 md:py-0" aria-labelledby="hero-heading">
+          {/* Hero Content Section - Mobile Critical */}
+          <section className="py-2" aria-labelledby="hero-heading">
             <div className="sr-only">
               <h2 id="hero-heading">Cadouri Muzicale Personalizate - MusicGift.ro</h2>
               <p>Transformă emoțiile în muzică cu serviciile noastre profesionale de compoziție muzicală personalizată. Creăm melodii unice pentru nunți, botezuri, aniversări și orice moment special din viața ta.</p>
@@ -69,129 +73,136 @@ const Index = () => {
             <HeroContent />
           </section>
 
-          {/* Impact Cards Section - Hidden initially for LCP */}
-          <section className="py-2 md:py-4 below-fold-hidden defer-ultra" aria-labelledby="impact-heading">
-            <h2 id="impact-heading" className="sr-only">Impactul Serviciilor Noastre Muzicale</h2>
-            <ImpactCards />
+          {/* Below-fold content - Hidden initially for mobile LCP */}
+          {showBelowFold && (
+            <>
+              {/* Impact Cards Section */}
+              <section className="py-2" aria-labelledby="impact-heading">
+                <h2 id="impact-heading" className="sr-only">Impactul Serviciilor Noastre Muzicale</h2>
+                <ImpactCards />
+              </section>
+
+              {/* Process Flow Section */}
+              <section className="py-2" aria-labelledby="process-heading">
+                <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
+                <AnimatedStepFlow />
+              </section>
+
+              {/* Testimonials Section */}
+              <section className="py-2" aria-labelledby="testimonials-heading">
+                <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
+                <LazyTestimonialSlider />
+              </section>
+
+              {/* Mobile-Optimized Statistics Section */}
+              <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 overflow-hidden" aria-labelledby="stats-heading">
+                <h2 id="stats-heading" className="sr-only">Statistici și Realizări MusicGift.ro</h2>
+                <div className="bg-gradient-to-r from-black/20 via-black/40 to-black/20 border-y border-white/10 py-1 relative z-10">
+                  
+                  <div className={`flex space-x-8 whitespace-nowrap ${isMobile ? 'mobile-scroll-optimized' : 'scroll-ultra-optimized'}`}>
+                    
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Music className="w-6 h-6 text-blue-300" aria-hidden="true" />
+                      <span className="text-lg text-white">2.000+</span>
+                      <span className="opacity-90 text-sm text-white">{t('personalizedSongs')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Mic className="w-6 h-6 text-purple-300" aria-hidden="true" />
+                      <span className="text-lg text-white">20+</span>
+                      <span className="opacity-90 text-sm text-white">{t('yearsMusicalPassion')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Star className="w-6 h-6 text-yellow-400" aria-hidden="true" />
+                      <span className="text-lg text-white">98%</span>
+                      <span className="opacity-90 text-sm text-white">{t('happyClients')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Rocket className="w-6 h-6 text-orange-400" aria-hidden="true" />
+                      <span className="text-lg text-white">50+</span>
+                      <span className="opacity-90 text-sm text-white">{t('launchedArtists')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <PartyPopper className="w-6 h-6 text-red-200" aria-hidden="true" />
+                      <span className="text-lg text-white">400+</span>
+                      <span className="opacity-90 text-sm text-white">{t('memorableEvents')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Disc className="w-6 h-6 text-indigo-300" aria-hidden="true" />
+                      <span className="text-lg text-white">100+</span>
+                      <span className="opacity-90 text-sm text-white">{t('releasedAlbums')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Trophy className="w-6 h-6 text-orange-300" aria-hidden="true" />
+                      <span className="text-lg text-white">1 Milion+</span>
+                      <span className="opacity-90 text-sm text-white">{t('copiesSold')}</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </>
+          )}
+        </div>
+      </main>
+
+      {/* Below-fold sections - Hidden initially */}
+      {showBelowFold && (
+        <>
+          {/* Collaboration Section */}
+          <section aria-labelledby="collaboration-heading">
+            <h2 id="collaboration-heading" className="sr-only">Colaborarea Noastră cu Artiștii</h2>
+            <CollaborationSection />
           </section>
 
-          {/* Process Flow Section - Hidden initially for LCP */}
-          <section className="py-2 md:py-4 below-fold-hidden defer-ultra" aria-labelledby="process-heading">
-            <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
-            <AnimatedStepFlow />
-          </section>
-
-          {/* Testimonials Section - Hidden initially for LCP */}
-          <section className="py-2 md:py-4 below-fold-hidden defer-ultra" aria-labelledby="testimonials-heading">
-            <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
-            <LazyTestimonialSlider />
-          </section>
-
-          {/* Ultra-optimized Statistics Section for LCP */}
-          <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 md:my-4 overflow-hidden below-fold-hidden" aria-labelledby="stats-heading">
-            <h2 id="stats-heading" className="sr-only">Statistici și Realizări MusicGift.ro</h2>
-            <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[2px] relative z-10">
+          {/* Call-to-Action Section */}
+          <section 
+            className="px-2 text-white text-center relative overflow-hidden py-4" 
+            aria-labelledby="cta-heading"
+            style={{
+              background: isMobile ? '#1a1a1a' : 'url(/uploads/background.webp) center/cover no-repeat fixed'
+            }}
+          >
+            
+            <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
+            <div className="max-w-4xl mx-auto relative z-10">
+              <h2 id="cta-heading" className="text-lg font-bold mb-2">
+                {t('heroCtaTitle')}
+              </h2>
+              <p className="text-sm mb-4 opacity-90">
+                {t('heroCtaSubtitle')}
+              </p>
               
-              <div className="flex space-x-8 md:space-x-16 whitespace-nowrap scroll-ultra-optimized">
+              {/* Mobile-Optimized Call-to-Action Buttons */}
+              <div className="flex flex-col gap-2 justify-center items-center">
+                <Link to="/order" aria-label="Comandă acum o melodie personalizată">
+                  <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white border-0 min-w-[160px] text-sm">
+                    <ShoppingCart className="w-4 h-4 mr-2" aria-hidden="true" />
+                    {t('orderNow')}
+                  </Button>
+                </Link>
                 
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Music className="w-6 h-6 md:w-12 md:h-12 text-blue-300" aria-hidden="true" />
-                  <span className="text-lg md:text-3xl text-white">2.000+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('personalizedSongs')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Mic className="w-6 h-6 md:w-12 md:h-12 text-purple-300" aria-hidden="true" />
-                  <span className="text-lg md:text-3xl text-white">20+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('yearsMusicalPassion')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Star className="w-6 h-6 md:w-12 md:h-12 text-yellow-400" aria-hidden="true" />
-                  <span className="text-lg md:text-3xl text-white">98%</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('happyClients')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Rocket className="w-6 h-6 md:w-12 md:h-12 text-orange-400" aria-hidden="true" />
-                  <span className="text-lg md:text-3xl text-white">50+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('launchedArtists')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <PartyPopper className="w-6 h-6 md:w-12 md:h-12 text-red-200" aria-hidden="true" />
-                  <span className="text-lg md:text-3xl text-white">400+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('memorableEvents')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Disc className="w-6 h-6 md:w-12 md:h-12 text-indigo-300" aria-hidden="true" />
-                  <span className="text-lg md:text-3xl text-white">100+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('releasedAlbums')}</span>
-                </div>
-                <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                  <Trophy className="w-6 h-6 md:w-12 md:h-12 text-orange-300" aria-hidden="true" />
-                  <span className="text-lg md:text-3xl text-white">1 Milion+</span>
-                  <span className="opacity-90 text-sm md:text-xl text-white">{t('copiesSold')}</span>
-                </div>
+                <Link to="/gift" aria-label="Cumpără un card cadou muzical">
+                  <Button size="sm" className="border-red-200 min-w-[160px] bg-fuchsia-600 hover:bg-fuchsia-500 text-sm">
+                    <Gift className="w-4 h-4 mr-2" aria-hidden="true" />
+                    {t('buyGiftCard', 'Buy a Gift Card')}
+                  </Button>
+                </Link>
+                
+                <Link to="/packages" aria-label="Vezi toate pachetele muzicale disponibile">
+                  <Button size="sm" className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm min-w-[160px] text-sm">
+                    <Music className="w-4 h-4 mr-2" aria-hidden="true" />
+                    {t('seePackages')}
+                  </Button>
+                </Link>
               </div>
             </div>
           </section>
 
-          {/* Decorative separator element */}
-          <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[1px] below-fold-hidden" role="separator" aria-hidden="true" />
-        </div>
-      </main>
-
-      {/* Collaboration Section - Hidden initially for LCP */}
-      <section aria-labelledby="collaboration-heading" className="below-fold-hidden defer-ultra">
-        <h2 id="collaboration-heading" className="sr-only">Colaborarea Noastră cu Artiștii</h2>
-        <CollaborationSection />
-      </section>
-
-      {/* Call-to-Action Section - Hidden initially for LCP */}
-      <section 
-        className="px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8 below-fold-hidden" 
-        aria-labelledby="cta-heading"
-        style={{
-          background: 'url(/uploads/background.webp) center/cover no-repeat fixed'
-        }}
-      >
-        
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 py-0" />
-        <div className="max-w-4xl mx-auto relative z-10">
-          <h2 id="cta-heading" className="text-base md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3">
-            {t('heroCtaTitle')}
-          </h2>
-          <p className="text-sm md:text-xl mb-4 md:mb-6 opacity-90">
-            {t('heroCtaSubtitle')}
-          </p>
-          
-          {/* Three Call-to-Action Buttons with Enhanced Accessibility */}
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
-            <Link to="/order" aria-label="Comandă acum o melodie personalizată">
-              <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white border-0 min-w-[140px] md:min-w-[180px] text-sm md:text-base focus:ring-2 focus:ring-orange-400 focus:ring-offset-2">
-                <ShoppingCart className="w-4 h-4 md:w-5 md:h-5 mr-2" aria-hidden="true" />
-                {t('orderNow')}
-              </Button>
-            </Link>
-            
-            <Link to="/gift" aria-label="Cumpără un card cadou muzical">
-              <Button size="sm" className="border-red-200 min-w-[140px] md:min-w-[180px] bg-fuchsia-600 hover:bg-fuchsia-500 text-sm md:text-base focus:ring-2 focus:ring-fuchsia-400 focus:ring-offset-2">
-                <Gift className="w-4 h-4 md:w-5 md:h-5 mr-2" aria-hidden="true" />
-                {t('buyGiftCard', 'Buy a Gift Card')}
-              </Button>
-            </Link>
-            
-            <Link to="/packages" aria-label="Vezi toate pachetele muzicale disponibile">
-              <Button size="sm" className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm min-w-[140px] md:min-w-[180px] text-sm md:text-base focus:ring-2 focus:ring-white/50 focus:ring-offset-2">
-                <Music className="w-4 h-4 md:w-5 md:h-5 mr-2" aria-hidden="true" />
-                {t('seePackages')}
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <Footer />
+          <Footer />
+        </>
+      )}
       
       {/* Load structured data at the end for better performance */}
-      <StructuredDataLoader />
+      {showBelowFold && <StructuredDataLoader />}
     </div>
   );
 };
