@@ -21,7 +21,8 @@ const VideoHero = () => {
   console.log('VideoHero: Video source:', videoSrc);
   console.log('VideoHero: Base name:', baseName);
 
-  const mobileHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
+  // Mobile height calculation - reduced to 50vh to allow background to show
+  const mobileHeight = isMobile ? `50vh` : undefined;
 
   // Simple autoplay with sound
   useEffect(() => {
@@ -140,8 +141,9 @@ const VideoHero = () => {
         role="banner"
         aria-label="Hero video section"
       >
+        {/* Mobile: Semi-transparent background overlay to allow background.webp to show through */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className={`absolute inset-0 bg-cover bg-center bg-no-repeat ${isMobile ? 'opacity-60' : ''}`}
           style={{ backgroundImage: `url(${posterSrc})` }}
           aria-hidden="true"
         ></div>
@@ -167,7 +169,7 @@ const VideoHero = () => {
             onError={handleVideoError}
             onLoadStart={() => setIsVideoLoading(true)}
             onCanPlay={() => setIsVideoLoading(false)}
-            className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover transition-opacity duration-300 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
+            className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto opacity-80' : 'h-full'} object-cover transition-opacity duration-300 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`}
             poster={posterSrc}
             aria-label={`MusicGift promotional video in ${language === 'ro' ? 'Romanian' : 'English'}`}
           >
@@ -175,7 +177,8 @@ const VideoHero = () => {
           </video>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" aria-hidden="true"></div>
+        {/* Adjusted gradient overlay for mobile to be more transparent */}
+        <div className={`absolute inset-0 ${isMobile ? 'bg-gradient-to-br from-black/20 via-purple-900/15 to-black/30' : 'bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50'}`} aria-hidden="true"></div>
 
         <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
