@@ -17,6 +17,7 @@ import Order from "./pages/Order";
 import Gift from "./pages/Gift";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
+import Newsletter from "./pages/Newsletter";
 import Settings from "./pages/Settings";
 import History from "./pages/History";
 import AccessDenied from "./pages/AccessDenied";
@@ -39,6 +40,7 @@ const AppContent = () => (
       <Route path="/order" element={<Order />} />
       <Route path="/gift" element={<Gift />} />
       <Route path="/auth" element={<Auth />} />
+      <Route path="/newsletter" element={<Newsletter />} />
       <Route path="/unsubscribe" element={<Unsubscribe />} />
       
       {/* Standardized payment routes */}
