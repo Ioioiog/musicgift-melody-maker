@@ -1,7 +1,7 @@
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Play, Pause, Volume2 } from 'lucide-react';
+import { Play, Pause, Volume2, AlertCircle } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useLocation } from 'react-router-dom';
@@ -22,6 +22,8 @@ const VideoHero = () => {
   const [useWebM, setUseWebM] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [shouldAutoplay, setShouldAutoplay] = useState(true);
+  const [videoError, setVideoError] = useState<string | null>(null);
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
@@ -43,6 +45,8 @@ const VideoHero = () => {
     setIsMounted(true);
     setVideoPlayedOnce(false);
     setIsPlaying(false);
+    setVideoError(null);
+    setIsVideoLoading(true);
   }, [language]);
 
   useEffect(() => {
@@ -53,29 +57,46 @@ const VideoHero = () => {
     }
   }, [location.pathname]);
 
+  const handleVideoError = useCallback((error: any) => {
+    console.warn('Video loading error:', error);
+    setVideoError('Video cannot be loaded');
+    setIsVideoLoading(false);
+    setIsPlaying(false);
+  }, []);
+
+  const handleVideoLoad = useCallback(() => {
+    setIsVideoLoading(false);
+    setVideoError(null);
+  }, []);
+
   useEffect(() => {
     const video = videoRef.current;
-    if (shouldAutoplay && video) {
-      video.muted = false;
-      const playPromise = video.play();
+    if (!video || !shouldAutoplay || videoError) return;
 
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setHasAudio(true);
-            setIsPlaying(true);
-          })
-          .catch((err) => {
-            console.warn('Autoplay with sound failed, falling back to muted:', err);
-            video.muted = true;
-            video.play().then(() => {
-              setHasAudio(false);
-              setIsPlaying(true);
-            });
-          });
+    const attemptPlay = async () => {
+      try {
+        video.muted = false;
+        await video.play();
+        setHasAudio(true);
+        setIsPlaying(true);
+      } catch (err) {
+        console.warn('Autoplay with sound failed, falling back to muted:', err);
+        try {
+          video.muted = true;
+          await video.play();
+          setHasAudio(false);
+          setIsPlaying(true);
+        } catch (mutedErr) {
+          console.warn('Muted autoplay also failed:', mutedErr);
+          handleVideoError(mutedErr);
+        }
       }
+    };
+
+    if (!isVideoLoading) {
+      attemptPlay();
     }
-  }, [shouldAutoplay, language]);
+  }, [shouldAutoplay, language, isVideoLoading, videoError, handleVideoError]);
 
   const handleVideoEnd = () => {
     setIsPlaying(false);
@@ -84,21 +105,23 @@ const VideoHero = () => {
 
   const handleTogglePlay = () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || videoError) return;
+    
     if (isPlaying) {
       video.pause();
       setIsPlaying(false);
     } else {
       video.currentTime = 0;
       video.muted = !hasAudio;
-      video.play();
+      video.play().catch(handleVideoError);
       setIsPlaying(true);
     }
   };
 
   const handleToggleAudio = useCallback(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || videoError) return;
+    
     if (hasAudio) {
       video.muted = true;
       setHasAudio(false);
@@ -106,7 +129,7 @@ const VideoHero = () => {
       video.muted = false;
       setHasAudio(true);
     }
-  }, [hasAudio]);
+  }, [hasAudio, videoError]);
 
   const mobileHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
 
@@ -122,21 +145,34 @@ const VideoHero = () => {
         style={{ backgroundImage: `url(${posterSrc})` }}
       ></div>
 
-      <video
-        key={language}
-        ref={videoRef}
-        playsInline
-        preload="metadata"
-        muted={!hasAudio}
-        onEnded={handleVideoEnd}
-        className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover hw-accelerated`}
-        poster={posterSrc}
-      >
-        {useWebM && <source src={videoWebM} type="video/webm" />}
-        <source src={videoSrc} type="video/mp4" />
-      </video>
+      {videoError ? (
+        <div className="absolute inset-0 video-error-fallback">
+          <div className="text-center">
+            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-white/80" />
+            <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
+            <p className="text-sm opacity-90">The video content is temporarily unavailable</p>
+          </div>
+        </div>
+      ) : (
+        <video
+          key={language}
+          ref={videoRef}
+          playsInline
+          preload="metadata"
+          muted={!hasAudio}
+          onEnded={handleVideoEnd}
+          onError={handleVideoError}
+          onLoadedData={handleVideoLoad}
+          onCanPlay={handleVideoLoad}
+          className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover hw-accelerated ${isVideoLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+          poster={posterSrc}
+        >
+          {useWebM && <source src={videoWebM} type="video/webm" onError={handleVideoError} />}
+          <source src={videoSrc} type="video/mp4" onError={handleVideoError} />
+        </video>
+      )}
 
-      {!shouldAutoplay && (
+      {!shouldAutoplay && !videoError && (
         <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
           <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
             {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}

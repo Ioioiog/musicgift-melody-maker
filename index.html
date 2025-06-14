@@ -177,31 +177,49 @@
         from { opacity: 0; }
         to { opacity: 1; }
       }
+      
+      /* Error handling styles */
+      .video-error-fallback {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        text-align: center;
+        padding: 2rem;
+      }
     </style>
     
-    <!-- Brevo Conversations Widget - Deferred -->
+    <!-- Enhanced Brevo Conversations Widget with Error Handling -->
     <script>
         (function(d, w, c) {
-            w.BrevoConversationsID = '68374d9e93ba39a2030dfb0e';
-            w[c] = w[c] || function() {
-                (w[c].q = w[c].q || []).push(arguments);
-            };
-            var s = d.createElement('script');
-            s.async = true;
-            s.defer = true;
-            s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
-            if (d.head) d.head.appendChild(s);
+            try {
+                w.BrevoConversationsID = '68374d9e93ba39a2030dfb0e';
+                w[c] = w[c] || function() {
+                    (w[c].q = w[c].q || []).push(arguments);
+                };
+                var s = d.createElement('script');
+                s.async = true;
+                s.defer = true;
+                s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
+                s.onerror = function() {
+                    console.warn('Brevo widget failed to load');
+                };
+                if (d.head) d.head.appendChild(s);
+            } catch (error) {
+                console.warn('Brevo initialization failed:', error);
+            }
         })(document, window, 'BrevoConversations');
     </script>
     <!-- /Brevo Conversations -->
   </head>
   <body>
     <div id="root"></div>
-    <!-- Defer non-critical scripts -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module" defer></script>
+    <!-- Removed GPTEngineer script that was causing MIME type errors -->
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Mobile LCP optimization script -->
+    <!-- Enhanced Mobile LCP optimization script -->
     <script>
       // Show below-fold content after critical paint
       window.addEventListener('DOMContentLoaded', function() {
@@ -217,6 +235,16 @@
       if (window.innerWidth < 768) {
         document.documentElement.style.setProperty('--mobile-optimized', 'true');
       }
+      
+      // Global error handler for unhandled errors
+      window.addEventListener('error', function(event) {
+        console.warn('Resource loading error:', event.filename, event.message);
+      });
+      
+      // Handle unhandled promise rejections
+      window.addEventListener('unhandledrejection', function(event) {
+        console.warn('Unhandled promise rejection:', event.reason);
+      });
     </script>
   </body>
 </html>
