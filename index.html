@@ -9,6 +9,9 @@
     <!-- Critical Logo Preload for LCP Optimization -->
     <link rel="preload" href="/uploads/logo_musicgift.webp" as="image" type="image/webp" fetchpriority="high">
     
+    <!-- Critical Background Preload for LCP Optimization -->
+    <link rel="preload" href="/uploads/background.webp" as="image" type="image/webp" fetchpriority="high">
+    
     <!-- Critical DNS Prefetch for Performance -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://conversations-widget.brevo.com">
@@ -20,7 +23,6 @@
     
     <!-- Critical Resource Preloads -->
     <link rel="preload" href="/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png" as="image" type="image/png">
-    <link rel="preload" href="/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png" as="image" type="image/png">
     <link rel="modulepreload" href="/src/main.tsx">
     
     <!-- Critical CSS for Above-the-Fold Content -->
@@ -83,6 +85,15 @@
       .hw-accelerated {
         transform: translate3d(0, 0, 0);
         will-change: transform;
+      }
+      
+      /* Critical main content styles for LCP optimization */
+      .main-lcp-critical {
+        background-image: url('/uploads/background.webp');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
       }
     </style>
     

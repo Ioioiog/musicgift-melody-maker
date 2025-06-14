@@ -27,13 +27,6 @@ const Index = () => {
     };
   }, []);
 
-  const backgroundStyle = {
-    backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
-  };
-
   return (
     <div className="min-h-screen">
       <SEOHead 
@@ -53,28 +46,10 @@ const Index = () => {
         <VideoHero />
       </div>
 
-      {/* Main Content with Semantic HTML and SEO Optimizations */}
-      <main id="main-content" className="relative overflow-hidden critical-resource" style={backgroundStyle}>
-        {/* Enhanced overlay with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
-        
-        {/* Minimal CSS-only background animation - Only for desktop and deferred */}
-        {!window.matchMedia('(max-width: 768px)').matches && (
-          <div className="absolute inset-0 overflow-hidden defer-load">
-            <div className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse hw-accelerated" style={{
-              top: '10%',
-              left: '20%',
-              animationDelay: '0s',
-              animationDuration: '4s'
-            }} />
-            <div className="absolute w-1 h-1 bg-white/15 rounded-full animate-pulse hw-accelerated" style={{
-              top: '70%',
-              right: '25%',
-              animationDelay: '2s',
-              animationDuration: '6s'
-            }} />
-          </div>
-        )}
+      {/* Main Content with Semantic HTML and SEO Optimizations - Simplified for LCP */}
+      <main id="main-content" className="main-lcp-critical relative overflow-hidden critical-resource">
+        {/* Simplified overlay for better LCP */}
+        <div className="absolute inset-0 bg-black/40" />
 
         <div className="relative z-10">
           
@@ -114,7 +89,7 @@ const Index = () => {
                 animation: 'scroll 30s linear infinite',
                 transform: 'translate3d(0,0,0)' // Hardware acceleration
               }}>
-                {/* ... keep existing code (statistics content) */}
+                
                 <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
                   <Music className="w-6 h-6 md:w-12 md:h-12 text-blue-300" aria-hidden="true" />
                   <span className="text-lg md:text-3xl text-white">2.000+</span>
@@ -165,9 +140,9 @@ const Index = () => {
         <CollaborationSection />
       </section>
 
-      {/* Call-to-Action Section - Deferred for LCP */}
-      <section className="px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8 defer-load" style={backgroundStyle} aria-labelledby="cta-heading">
-        {/* ... keep existing code (CTA section content) */}
+      {/* Call-to-Action Section - Deferred for LCP and using consistent background */}
+      <section className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8 defer-load" aria-labelledby="cta-heading">
+        
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 py-0" />
         <div className="max-w-4xl mx-auto relative z-10">
           <h2 id="cta-heading" className="text-base md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3">
