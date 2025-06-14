@@ -315,7 +315,7 @@ export const packagesTranslations = {
   otherSource: "Altra fonte",
   
   // Order Summary Gift Card/Discount Section
-  giftCardOrDiscountCode: "Carta regalo o codice sconto",
+  giftCardOrDiscountCode: "Carta Regalo o Codice Sconto",
   enterGiftCardOrDiscountCode: "Inserisci carta regalo o codice sconto",
   giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX o DISCOUNT10",
   apply: "Applica",

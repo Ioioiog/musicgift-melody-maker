@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Choisissez votre forfait",
   selectPerfectPackage: "Sélectionnez le forfait parfait qui correspond à vos besoins et à votre budget",
@@ -320,7 +321,7 @@ export const packagesTranslations = {
   giftCardDiscountPlaceholder: "GIFT-XXXX-XXXX ou DISCOUNT10",
   apply: "Appliquer",
   giftCardStartsWith: "Les cartes cadeaux commencent par GIFT-XXXX-XXXX",
-  discountCodeMinimum: "Les codes de réduction peuvent avoir des exigences de commande minimum",
+  discountCodeMinimum: "Les codes de réduction peuvent avoir des exigences de commande minimales",
   
   // Tags
   exclusive: "Exclusif"
