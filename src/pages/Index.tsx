@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -102,13 +101,51 @@ const Index = () => {
                 </section>
               </LazyComponent>
 
-              {/* Mobile-Optimized Statistics Section */}
-              <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 overflow-hidden" aria-labelledby="stats-heading">
+              {/* Mobile-Optimized Statistics Section with Proper Scrolling */}
+              <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 infinite-scroll-container" aria-labelledby="stats-heading">
                 <h2 id="stats-heading" className="sr-only">Statistici și Realizări MusicGift.ro</h2>
                 <div className="bg-gradient-to-r from-black/20 via-black/40 to-black/20 border-y border-white/10 py-1 relative z-10">
                   
-                  <div className={`flex space-x-8 whitespace-nowrap ${isMobile ? 'mobile-scroll-optimized' : 'scroll-ultra-optimized'}`}>
+                  <div className={`scroll-content ${isMobile ? 'mobile-scroll-optimized' : 'scroll-ultra-optimized'}`}>
                     
+                    {/* First set of statistics */}
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Music className="w-6 h-6 text-blue-300" aria-hidden="true" />
+                      <span className="text-lg text-white">2.000+</span>
+                      <span className="opacity-90 text-sm text-white">{t('personalizedSongs')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Mic className="w-6 h-6 text-purple-300" aria-hidden="true" />
+                      <span className="text-lg text-white">20+</span>
+                      <span className="opacity-90 text-sm text-white">{t('yearsMusicalPassion')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Star className="w-6 h-6 text-yellow-400" aria-hidden="true" />
+                      <span className="text-lg text-white">98%</span>
+                      <span className="opacity-90 text-sm text-white">{t('happyClients')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Rocket className="w-6 h-6 text-orange-400" aria-hidden="true" />
+                      <span className="text-lg text-white">50+</span>
+                      <span className="opacity-90 text-sm text-white">{t('launchedArtists')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <PartyPopper className="w-6 h-6 text-red-200" aria-hidden="true" />
+                      <span className="text-lg text-white">400+</span>
+                      <span className="opacity-90 text-sm text-white">{t('memorableEvents')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Disc className="w-6 h-6 text-indigo-300" aria-hidden="true" />
+                      <span className="text-lg text-white">100+</span>
+                      <span className="opacity-90 text-sm text-white">{t('releasedAlbums')}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm font-bold">
+                      <Trophy className="w-6 h-6 text-orange-300" aria-hidden="true" />
+                      <span className="text-lg text-white">1 Milion+</span>
+                      <span className="opacity-90 text-sm text-white">{t('copiesSold')}</span>
+                    </div>
+                    
+                    {/* Duplicate set for seamless infinite scrolling */}
                     <div className="flex items-center space-x-2 text-sm font-bold">
                       <Music className="w-6 h-6 text-blue-300" aria-hidden="true" />
                       <span className="text-lg text-white">2.000+</span>

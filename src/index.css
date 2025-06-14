@@ -90,6 +90,26 @@
   }
 }
 
+/* Mobile-optimized scroll animation */
+@keyframes mobileScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Ultra-optimized scroll for desktop */
+@keyframes ultraScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 /* Optimized float animation with hardware acceleration */
 @keyframes float {
   0%, 100% { 
@@ -168,11 +188,63 @@
   transform: translate3d(0, 0, 0);
 }
 
+/* Mobile-optimized horizontal scroll classes */
+.mobile-scroll-optimized {
+  animation: mobileScroll 35s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.mobile-scroll-optimized:hover {
+  animation-play-state: paused;
+}
+
+/* Desktop ultra-optimized scroll */
+.scroll-ultra-optimized {
+  animation: ultraScroll 25s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.scroll-ultra-optimized:hover {
+  animation-play-state: paused;
+}
+
+/* Infinite scroll container optimizations */
+.infinite-scroll-container {
+  overflow: hidden;
+  position: relative;
+  contain: layout style paint;
+}
+
+.scroll-content {
+  display: flex;
+  gap: 1rem;
+  min-width: max-content;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Responsive scroll speeds */
+@media (max-width: 767px) {
+  .mobile-scroll-optimized {
+    animation-duration: 40s;
+  }
+}
+
+@media (min-width: 1024px) {
+  .scroll-ultra-optimized {
+    animation-duration: 20s;
+  }
+}
+
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
   .animate-fade-in,
-  .animate-pulse {
+  .animate-pulse,
+  .mobile-scroll-optimized,
+  .scroll-ultra-optimized {
     animation: none;
   }
   
