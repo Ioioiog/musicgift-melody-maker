@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -42,26 +41,20 @@ const Index = () => {
       
       <Navigation />
       
-      {/* Video Hero Section with Ultra LCP optimizations */}
-      <div className="video-hero-ultra">
+      {/* Video Hero Section with LCP optimizations */}
+      <div className="video-hero-optimized">
         <VideoHero />
       </div>
 
-      {/* Ultra-optimized Main Content for LCP */}
-      <main 
-        id="main-content" 
-        className="main-ultra-critical"
-        style={{
-          background: 'url(/uploads/background.webp) center/cover no-repeat fixed'
-        }}
-      >
-        {/* Simple overlay for better performance */}
-        <div className="overlay-simple" />
+      {/* Main Content with Semantic HTML and SEO Optimizations - Simplified for LCP */}
+      <main id="main-content" className="main-lcp-critical relative overflow-hidden critical-resource">
+        {/* Simplified overlay for better LCP */}
+        <div className="absolute inset-0 bg-black/40" />
 
         <div className="relative z-10">
           
-          {/* Hero Content Section - Critical above-the-fold */}
-          <section className="py-4 md:py-0" aria-labelledby="hero-heading">
+          {/* Hero Content Section */}
+          <section className="py-4 md:py-0 critical-resource" aria-labelledby="hero-heading">
             <div className="sr-only">
               <h2 id="hero-heading">Cadouri Muzicale Personalizate - MusicGift.ro</h2>
               <p>Transformă emoțiile în muzică cu serviciile noastre profesionale de compoziție muzicală personalizată. Creăm melodii unice pentru nunți, botezuri, aniversări și orice moment special din viața ta.</p>
@@ -69,30 +62,33 @@ const Index = () => {
             <HeroContent />
           </section>
 
-          {/* Impact Cards Section - Hidden initially for LCP */}
-          <section className="py-2 md:py-4 below-fold-hidden defer-ultra" aria-labelledby="impact-heading">
+          {/* Impact Cards Section - Deferred for LCP */}
+          <section className="py-2 md:py-4 defer-load" aria-labelledby="impact-heading">
             <h2 id="impact-heading" className="sr-only">Impactul Serviciilor Noastre Muzicale</h2>
             <ImpactCards />
           </section>
 
-          {/* Process Flow Section - Hidden initially for LCP */}
-          <section className="py-2 md:py-4 below-fold-hidden defer-ultra" aria-labelledby="process-heading">
+          {/* Process Flow Section - Deferred for LCP */}
+          <section className="py-2 md:py-4 defer-load" aria-labelledby="process-heading">
             <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
             <AnimatedStepFlow />
           </section>
 
-          {/* Testimonials Section - Hidden initially for LCP */}
-          <section className="py-2 md:py-4 below-fold-hidden defer-ultra" aria-labelledby="testimonials-heading">
+          {/* Testimonials Section - Deferred for LCP */}
+          <section className="py-2 md:py-4 defer-load" aria-labelledby="testimonials-heading">
             <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
             <LazyTestimonialSlider />
           </section>
 
-          {/* Ultra-optimized Statistics Section for LCP */}
-          <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 md:my-4 overflow-hidden below-fold-hidden" aria-labelledby="stats-heading">
+          {/* Statistics Section with Enhanced SEO - Deferred for LCP */}
+          <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 md:my-4 overflow-hidden defer-load" aria-labelledby="stats-heading">
             <h2 id="stats-heading" className="sr-only">Statistici și Realizări MusicGift.ro</h2>
             <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[2px] relative z-10">
-              
-              <div className="flex space-x-8 md:space-x-16 whitespace-nowrap scroll-ultra-optimized">
+              {/* Single set with CSS animation for better performance */}
+              <div className="flex space-x-8 md:space-x-16 whitespace-nowrap hw-accelerated" style={{
+                animation: 'scroll 30s linear infinite',
+                transform: 'translate3d(0,0,0)' // Hardware acceleration
+              }}>
                 
                 <div className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
                   <Music className="w-6 h-6 md:w-12 md:h-12 text-blue-300" aria-hidden="true" />
@@ -134,24 +130,18 @@ const Index = () => {
           </section>
 
           {/* Decorative separator element */}
-          <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[1px] below-fold-hidden" role="separator" aria-hidden="true" />
+          <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[1px]" role="separator" aria-hidden="true" />
         </div>
       </main>
 
-      {/* Collaboration Section - Hidden initially for LCP */}
-      <section aria-labelledby="collaboration-heading" className="below-fold-hidden defer-ultra">
+      {/* Collaboration Section - Keep separate background - Deferred for LCP */}
+      <section aria-labelledby="collaboration-heading" className="defer-load">
         <h2 id="collaboration-heading" className="sr-only">Colaborarea Noastră cu Artiștii</h2>
         <CollaborationSection />
       </section>
 
-      {/* Call-to-Action Section - Hidden initially for LCP */}
-      <section 
-        className="px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8 below-fold-hidden" 
-        aria-labelledby="cta-heading"
-        style={{
-          background: 'url(/uploads/background.webp) center/cover no-repeat fixed'
-        }}
-      >
+      {/* Call-to-Action Section - Deferred for LCP and using consistent background */}
+      <section className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8 defer-load" aria-labelledby="cta-heading">
         
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 py-0" />
         <div className="max-w-4xl mx-auto relative z-10">
