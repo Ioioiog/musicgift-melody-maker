@@ -101,7 +101,7 @@ const PaymentSuccess = () => {
   };
   if (loading) {
     return <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
-      backgroundImage: "url('/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
+      backgroundImage: "url('/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
     }}>
         {/* Enhanced background overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
@@ -129,7 +129,7 @@ const PaymentSuccess = () => {
   // Quote Request Success View
   if (isQuoteRequest) {
     return <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
-      backgroundImage: "url('/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
+      backgroundImage: "url('/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
     }}>
         {/* Enhanced background overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
@@ -306,7 +306,7 @@ const PaymentSuccess = () => {
 
   // Original Payment Success View
   return <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
-    backgroundImage: "url('/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
+    backgroundImage: "url('/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
   }}>
       {/* Enhanced background overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />

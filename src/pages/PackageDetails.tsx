@@ -429,7 +429,7 @@ const PackageDetails = () => {
       
       {/* Hero Section with Music Background */}
       <div className="py-20 px-4 relative overflow-hidden min-h-screen" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
