@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
@@ -18,6 +17,10 @@ const VideoHero = () => {
   const videoSrc = `/uploads/${baseName}.mp4`;
   const posterSrc = '/uploads/video_placeholder.png';
 
+  console.log('VideoHero: Current language:', language);
+  console.log('VideoHero: Video source:', videoSrc);
+  console.log('VideoHero: Base name:', baseName);
+
   const mobileHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
 
   // Simple autoplay with sound
@@ -25,20 +28,28 @@ const VideoHero = () => {
     const video = videoRef.current;
     if (!video) return;
 
+    console.log('VideoHero: Setting up autoplay for:', videoSrc);
+
     const attemptAutoplay = async () => {
       try {
+        console.log('VideoHero: Attempting autoplay with sound');
         video.muted = false; // Try with sound first
         await video.play();
         setIsPlaying(true);
         setHasAudio(true);
+        console.log('VideoHero: Autoplay with sound succeeded');
       } catch (err) {
+        console.log('VideoHero: Autoplay with sound failed:', err);
         // Fallback to muted autoplay
         try {
+          console.log('VideoHero: Attempting muted autoplay');
           video.muted = true;
           await video.play();
           setIsPlaying(true);
           setHasAudio(false);
+          console.log('VideoHero: Muted autoplay succeeded');
         } catch (mutedErr) {
+          console.log('VideoHero: Muted autoplay failed:', mutedErr);
           console.log('Autoplay failed, user interaction required');
           setIsPlaying(false);
         }
@@ -46,18 +57,46 @@ const VideoHero = () => {
     };
 
     const handleCanPlay = () => {
+      console.log('VideoHero: Video can play event fired');
       setIsVideoLoading(false);
       attemptAutoplay();
     };
 
+    const handleLoadStart = () => {
+      console.log('VideoHero: Video load started');
+      setIsVideoLoading(true);
+    };
+
+    const handleLoadedData = () => {
+      console.log('VideoHero: Video data loaded');
+    };
+
+    const handleError = (e: Event) => {
+      console.error('VideoHero: Video error event:', e);
+      const target = e.target as HTMLVideoElement;
+      if (target && target.error) {
+        console.error('VideoHero: Video error details:', {
+          code: target.error.code,
+          message: target.error.message
+        });
+      }
+    };
+
     video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('loadstart', handleLoadStart);
+    video.addEventListener('loadeddata', handleLoadedData);
+    video.addEventListener('error', handleError);
     
     return () => {
       video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('loadstart', handleLoadStart);
+      video.removeEventListener('loadeddata', handleLoadedData);
+      video.removeEventListener('error', handleError);
     };
-  }, [language]);
+  }, [language, videoSrc]);
 
   const handleVideoError = () => {
+    console.error('VideoHero: handleVideoError called for:', videoSrc);
     setVideoError('Video cannot be loaded');
     setIsVideoLoading(false);
     setIsPlaying(false);
@@ -67,13 +106,18 @@ const VideoHero = () => {
     const video = videoRef.current;
     if (!video || videoError) return;
     
+    console.log('VideoHero: Toggle play clicked, current playing state:', isPlaying);
+    
     if (isPlaying) {
       video.pause();
       setIsPlaying(false);
     } else {
       video.currentTime = 0;
       video.muted = !hasAudio;
-      video.play().catch(handleVideoError);
+      video.play().catch((err) => {
+        console.error('VideoHero: Play failed:', err);
+        handleVideoError();
+      });
       setIsPlaying(true);
     }
   };
@@ -82,6 +126,7 @@ const VideoHero = () => {
     const video = videoRef.current;
     if (!video || videoError) return;
     
+    console.log('VideoHero: Toggle audio clicked, current audio state:', hasAudio);
     video.muted = hasAudio;
     setHasAudio(!hasAudio);
   };
@@ -106,6 +151,7 @@ const VideoHero = () => {
             <div className="text-center text-white">
               <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
               <p className="text-sm opacity-90 mb-4">The video content is temporarily unavailable</p>
+              <p className="text-xs opacity-75 mb-4">Video source: {videoSrc}</p>
               <Button onClick={() => window.location.reload()} className="bg-orange-500 hover:bg-orange-600 text-white">
                 Try Again
               </Button>
