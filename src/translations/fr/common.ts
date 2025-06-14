@@ -108,4 +108,5 @@ export const commonTranslations = {
   readyToCreate: "Prêt à Créer Votre Chanson ?",
   createYourPersonalizedSong: "Créez votre chanson personnalisée aujourd'hui",
   onTimeDelivery: "Livraison à temps",
+  learnMore: "En savoir plus",
 };
