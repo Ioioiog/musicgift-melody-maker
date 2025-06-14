@@ -114,7 +114,7 @@ const VideoHero = () => {
 
   return (
     <section
-      className={`video-hero relative overflow-hidden ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`}
+      className={`video-hero relative overflow-hidden video-hero-optimized critical-resource ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`}
       style={isMobile && mobileHeight ? { height: mobileHeight } : {}}
     >
       <div
@@ -129,7 +129,7 @@ const VideoHero = () => {
         preload="metadata"
         muted={!hasAudio}
         onEnded={handleVideoEnd}
-        className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover`}
+        className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover hw-accelerated`}
         poster={posterSrc}
       >
         {useWebM && <source src={videoWebM} type="video/webm" />}
@@ -137,11 +137,11 @@ const VideoHero = () => {
       </video>
 
       {!shouldAutoplay && (
-        <div className="absolute top-24 right-4 z-30 flex gap-2">
-          <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow">
+        <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
+          <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
             {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
           </Button>
-          <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow">
+          <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
             <Volume2 className="w-5 h-5" />
           </Button>
         </div>
@@ -150,7 +150,7 @@ const VideoHero = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
 
       <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent hw-accelerated">
           {t('heroTitle')}
         </h1>
       </div>

@@ -6,6 +6,9 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
+    <!-- Critical Logo Preload for LCP Optimization -->
+    <link rel="preload" href="/uploads/logo_musicgift.webp" as="image" type="image/webp" fetchpriority="high">
+    
     <!-- Critical DNS Prefetch for Performance -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://conversations-widget.brevo.com">
@@ -18,10 +21,72 @@
     <!-- Critical Resource Preloads -->
     <link rel="preload" href="/uploads/e53a847b-7672-4212-aa90-b31d0bc6d328.png" as="image" type="image/png">
     <link rel="preload" href="/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png" as="image" type="image/png">
-    <link rel="preload" href="/uploads/logo_musicgift.webp" as="image" type="image/webp">
     <link rel="modulepreload" href="/src/main.tsx">
     
-    <!-- Brevo Conversations Widget -->
+    <!-- Critical CSS for Above-the-Fold Content -->
+    <style>
+      /* Critical CSS for logo and navigation to prevent render blocking */
+      .logo-critical {
+        width: 8rem;
+        height: auto;
+        transition: all 0.3s;
+        will-change: transform;
+        content-visibility: auto;
+        contain-intrinsic-size: 256px 64px;
+      }
+      
+      @media (min-width: 640px) {
+        .logo-critical { width: 10rem; }
+      }
+      
+      @media (min-width: 768px) {
+        .logo-critical { width: 12rem; }
+      }
+      
+      @media (min-width: 1024px) {
+        .logo-critical { width: 15rem; }
+      }
+      
+      /* Critical navigation styles */
+      .nav-critical {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        will-change: transform;
+      }
+      
+      /* Prevent layout shift */
+      .video-hero-critical {
+        height: 60vh;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      @media (min-width: 640px) {
+        .video-hero-critical { height: 70vh; }
+      }
+      
+      @media (min-width: 768px) {
+        .video-hero-critical { height: 80vh; }
+      }
+      
+      @media (min-width: 1024px) {
+        .video-hero-critical { height: 100vh; }
+      }
+      
+      /* Hardware acceleration for performance */
+      .hw-accelerated {
+        transform: translate3d(0, 0, 0);
+        will-change: transform;
+      }
+    </style>
+    
+    <!-- Brevo Conversations Widget - Deferred -->
     <script>
         (function(d, w, c) {
             w.BrevoConversationsID = '68374d9e93ba39a2030dfb0e';
@@ -30,6 +95,7 @@
             };
             var s = d.createElement('script');
             s.async = true;
+            s.defer = true;
             s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
             if (d.head) d.head.appendChild(s);
         })(document, window, 'BrevoConversations');
@@ -38,7 +104,8 @@
   </head>
   <body>
     <div id="root"></div>
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <!-- Defer non-critical scripts -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module" defer></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

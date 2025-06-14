@@ -73,6 +73,10 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    /* Performance optimizations */
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -99,10 +103,32 @@
 .animate-float {
   animation: float 6s ease-in-out infinite;
   will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 /* Performance optimizations with hardware acceleration */
 .will-change-transform {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Critical resource optimization for above-the-fold content */
+.critical-resource {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+  will-change: auto;
+}
+
+/* LCP optimizations for images */
+.lcp-optimized {
+  content-visibility: auto;
+  will-change: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Performance optimized navigation */
+.nav-optimized {
+  contain: layout style paint;
   will-change: transform;
   transform: translate3d(0, 0, 0);
 }
@@ -139,6 +165,7 @@
 .animate-pulse {
   animation: optimizedPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   will-change: opacity, transform;
+  transform: translate3d(0, 0, 0);
 }
 
 /* Reduce motion for users who prefer it */
@@ -156,19 +183,39 @@
   }
 }
 
-/* Critical resource hints */
-.critical-resource {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 500px;
-}
-
 /* Performance optimizations for video and images */
 video, img {
   will-change: auto;
+  content-visibility: auto;
 }
 
 /* Optimized background images */
 .bg-cover {
   background-size: cover;
   will-change: auto;
+}
+
+/* Logo specific optimizations for LCP */
+.logo-lcp-optimized {
+  content-visibility: auto;
+  contain-intrinsic-size: 256px 64px;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Video hero optimizations */
+.video-hero-optimized {
+  content-visibility: auto;
+  will-change: auto;
+  contain: layout style paint;
+}
+
+/* Defer non-critical styles */
+@media screen and (min-width: 1px) {
+  .defer-load {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 300px;
+  }
 }
