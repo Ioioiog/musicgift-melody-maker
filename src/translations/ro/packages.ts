@@ -116,10 +116,10 @@ export const packagesTranslations = {
   sourceFilesDesc: "Acces la toate fișierele proiectului (stems, MIDI)",
 
   socialMediaRights: "Drepturi Social Media",
-  socialMediaRightsDesc: "GRATUIT - Postează melodia pe orice platformă de social media cu creditarea obligatorie către 'Music Gift by Mango Records'",
+  socialMediaRightsDesc: "Obții drepturile de a posta melodia pe orice platformă de social media. Necesită acceptarea etichetării melodiei cu 'Music Gift by Mango Records'.",
   
   mangoRecordsDistribution: "Distribuție Mango Records",
-  mangoRecordsDistributionDesc: "Distribuție profesională pe toate platformele majore (Spotify, Apple Music, YouTube Music, etc.) prin Mango Records",
+  mangoRecordsDistributionDesc: "Distribuție profesională prin rețeaua Mango Records pe toate platformele majore de streaming (Spotify, Apple Music, YouTube Music, etc.)",
   
   customVideo: "Video personalizat",
   customVideoDesc: "Un video personalizat creat cu fotografiile sau/și videoclipurile tale pentru o experiență completă",

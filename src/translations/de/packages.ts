@@ -1,3 +1,4 @@
+
 export const packagesTranslations = {
   chooseYourPackage: "Wählen Sie Ihr Paket",
   selectPerfectPackage: "Wählen Sie das perfekte Paket, das Ihren Bedürfnissen und Ihrem Budget entspricht",
@@ -116,10 +117,10 @@ export const packagesTranslations = {
   sourceFilesDesc: "Zugang zu allen Projektdateien (Stems, MIDI)",
 
   socialMediaRights: "Social Media Rechte",
-  socialMediaRightsDesc: "KOSTENLOS - Veröffentlichen Sie Ihr Lied auf jeder Social-Media-Plattform mit erforderlicher Namensnennung zu 'Music Gift by Mango Records'",
+  socialMediaRightsDesc: "Erhalten Sie die Rechte, das Lied auf jeder Social Media Plattform zu posten. Erfordert die Akzeptanz, das Lied mit 'Music Gift by Mango Records' zu kennzeichnen.",
   
   mangoRecordsDistribution: "Mango Records Distribution",
-  mangoRecordsDistributionDesc: "Professionelle Verbreitung auf allen wichtigen Plattformen (Spotify, Apple Music, YouTube Music, etc.) über Mango Records",
+  mangoRecordsDistributionDesc: "Professionelle Distribution über das Mango Records Netzwerk auf allen wichtigen Streaming-Plattformen (Spotify, Apple Music, YouTube Music, etc.)",
   
   customVideo: "Personalisiertes Video",
   customVideoDesc: "Ein personalisiertes Video erstellt mit Ihren Fotos oder/und Videos für ein komplettes Erlebnis",

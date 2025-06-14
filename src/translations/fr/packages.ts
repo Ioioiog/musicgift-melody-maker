@@ -116,10 +116,10 @@ export const packagesTranslations = {
   sourceFilesDesc: "Accès à tous les fichiers de projet (stems, MIDI)",
   
   socialMediaRights: "Droits Réseaux Sociaux",
-  socialMediaRightsDesc: "GRATUIT - Publiez votre chanson sur n'importe quelle plateforme de médias sociaux avec crédit obligatoire vers 'Music Gift by Mango Records'",
+  socialMediaRightsDesc: "Obtenez les droits de publier la chanson sur toute plateforme de réseaux sociaux. Nécessite l'acceptation d'étiqueter la chanson avec 'Music Gift by Mango Records'.",
   
   mangoRecordsDistribution: "Distribution Mango Records",
-  mangoRecordsDistributionDesc: "Distribution professionnelle sur toutes les principales plateformes (Spotify, Apple Music, YouTube Music, etc.) via Mango Records",
+  mangoRecordsDistributionDesc: "Distribution professionnelle via le réseau Mango Records sur toutes les plateformes de streaming majeures (Spotify, Apple Music, YouTube Music, etc.)",
   
   customVideo: "Vidéo personnalisée",
   customVideoDesc: "Une vidéo personnalisée créée avec vos photos ou/et vidéos pour une expérience complète",
