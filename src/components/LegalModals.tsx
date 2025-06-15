@@ -28,16 +28,6 @@ const LegalModals = ({ showModal, onClose }: LegalModalsProps) => {
 
   const currentLang = getCurrentLanguage();
 
-  // Helper function to safely get array translations
-  const getArrayTranslation = (key: string): string[] => {
-    const translation = t(key);
-    if (Array.isArray(translation)) {
-      return translation;
-    }
-    // Fallback to empty array if translation is not an array
-    return [];
-  };
-
   const termsContent = {
     ro: {
       title: "Termeni și Condiții – MusicGift.ro",
@@ -628,41 +618,45 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
           </DialogHeader>
           <div className="space-y-6 text-gray-700 leading-relaxed">
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('dataCollection')}</h3>
-              <p>{t('dataCollectionContent')}</p>
+              <h3 className="text-lg font-semibold mb-3">Data Collection</h3>
+              <p>We collect information you provide when creating your musical gift, including personal details, preferences, and payment information.</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('howWeUseData')}</h3>
+              <h3 className="text-lg font-semibold mb-3">How We Use Your Data</h3>
               <ul className="list-disc pl-6 space-y-2">
-                {getArrayTranslation('howWeUseDataList').map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
+                <li>Create personalized musical content</li>
+                <li>Process payments and deliver services</li>
+                <li>Communicate about your order</li>
+                <li>Improve our services</li>
+                <li>Send marketing communications (with consent)</li>
               </ul>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('dataProtection')}</h3>
-              <p>{t('dataProtectionContent')}</p>
+              <h3 className="text-lg font-semibold mb-3">Data Protection</h3>
+              <p>We implement appropriate security measures to protect your personal information. Data is encrypted in transit and at rest.</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('thirdPartyServices')}</h3>
-              <p>{t('thirdPartyServicesContent')}</p>
+              <h3 className="text-lg font-semibold mb-3">Third-Party Services</h3>
+              <p>We may use third-party services for payment processing, analytics, and email communications. These services have their own privacy policies.</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('yourRights')}</h3>
+              <h3 className="text-lg font-semibold mb-3">Your Rights</h3>
               <ul className="list-disc pl-6 space-y-2">
-                {getArrayTranslation('yourRightsList').map((right, index) => (
-                  <li key={index}>{right}</li>
-                ))}
+                <li>Access your personal data</li>
+                <li>Correct inaccurate information</li>
+                <li>Request data deletion</li>
+                <li>Withdraw consent for marketing</li>
+                <li>Data portability</li>
               </ul>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('contact')}</h3>
-              <p>{t('contactContent')}</p>
+              <h3 className="text-lg font-semibold mb-3">Contact</h3>
+              <p>For privacy-related questions, contact us at mihai.gruia@mangorecords.net</p>
             </section>
           </div>
         </DialogContent>
@@ -678,40 +672,43 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
           </DialogHeader>
           <div className="space-y-6 text-gray-700 leading-relaxed">
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('refundEligibility')}</h3>
-              <p>{t('refundEligibilityContent')}</p>
+              <h3 className="text-lg font-semibold mb-3">Refund Eligibility</h3>
+              <p>Refunds are available under specific circumstances due to the personalized nature of our services.</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('whenRefundsApply')}</h3>
+              <h3 className="text-lg font-semibold mb-3">When Refunds Apply</h3>
               <ul className="list-disc pl-6 space-y-2">
-                {getArrayTranslation('whenRefundsApplyList').map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
+                <li>Technical issues preventing delivery</li>
+                <li>Significant deviation from specified requirements</li>
+                <li>Service not delivered within promised timeframe</li>
+                <li>Cancellation within 24 hours of order placement (before work begins)</li>
               </ul>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('refundProcess')}</h3>
+              <h3 className="text-lg font-semibold mb-3">Refund Process</h3>
               <ol className="list-decimal pl-6 space-y-2">
-                {getArrayTranslation('refundProcessList').map((step, index) => (
-                  <li key={index}>{step}</li>
-                ))}
+                <li>Contact our support team within 7 days of delivery</li>
+                <li>Provide detailed explanation of the issue</li>
+                <li>Allow up to 48 hours for review</li>
+                <li>Approved refunds processed within 5-10 business days</li>
               </ol>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('nonRefundableSituations')}</h3>
+              <h3 className="text-lg font-semibold mb-3">Non-Refundable Situations</h3>
               <ul className="list-disc pl-6 space-y-2">
-                {getArrayTranslation('nonRefundableSituationsList').map((situation, index) => (
-                  <li key={index}>{situation}</li>
-                ))}
+                <li>Change of mind after delivery</li>
+                <li>Dissatisfaction with artistic style (within specifications)</li>
+                <li>Orders already completed and delivered</li>
+                <li>Custom requests that were accurately fulfilled</li>
               </ul>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('partialRefunds')}</h3>
-              <p>{t('partialRefundsContent')}</p>
+              <h3 className="text-lg font-semibold mb-3">Partial Refunds</h3>
+              <p>In some cases, partial refunds may be offered for services that partially meet requirements but have minor issues.</p>
             </section>
           </div>
         </DialogContent>
@@ -727,49 +724,49 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
           </DialogHeader>
           <div className="space-y-6 text-gray-700 leading-relaxed">
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('whatAreCookies')}</h3>
-              <p>{t('whatAreCookiesContent')}</p>
+              <h3 className="text-lg font-semibold mb-3">What Are Cookies</h3>
+              <p>Cookies are small text files stored on your device when you visit our website. They help us provide a better user experience.</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('typesOfCookies')}</h3>
+              <h3 className="text-lg font-semibold mb-3">Types of Cookies We Use</h3>
               
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium">{t('essentialCookies')}</h4>
-                  <p className="text-sm">{t('essentialCookiesContent')}</p>
+                  <h4 className="font-medium">Essential Cookies</h4>
+                  <p className="text-sm">Required for basic website functionality, including authentication and security.</p>
                 </div>
                 
                 <div>
-                  <h4 className="font-medium">{t('analyticsCookies')}</h4>
-                  <p className="text-sm">{t('analyticsCookiesContent')}</p>
+                  <h4 className="font-medium">Analytics Cookies</h4>
+                  <p className="text-sm">Help us understand how visitors interact with our website to improve user experience.</p>
                 </div>
                 
                 <div>
-                  <h4 className="font-medium">{t('preferenceCookies')}</h4>
-                  <p className="text-sm">{t('preferenceCookiesContent')}</p>
+                  <h4 className="font-medium">Preference Cookies</h4>
+                  <p className="text-sm">Remember your language preferences and other settings.</p>
                 </div>
                 
                 <div>
-                  <h4 className="font-medium">{t('marketingCookies')}</h4>
-                  <p className="text-sm">{t('marketingCookiesContent')}</p>
+                  <h4 className="font-medium">Marketing Cookies</h4>
+                  <p className="text-sm">Used to deliver relevant advertisements and track campaign effectiveness.</p>
                 </div>
               </div>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('managingCookies')}</h3>
-              <p>{t('managingCookiesContent')}</p>
+              <h3 className="text-lg font-semibold mb-3">Managing Cookies</h3>
+              <p>You can control cookies through your browser settings. However, disabling certain cookies may affect website functionality.</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('thirdPartyCookies')}</h3>
-              <p>{t('thirdPartyCookiesContent')}</p>
+              <h3 className="text-lg font-semibold mb-3">Third-Party Cookies</h3>
+              <p>We may use third-party services that set their own cookies, including payment processors and analytics providers.</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">{t('updates')}</h3>
-              <p>{t('updatesContent')}</p>
+              <h3 className="text-lg font-semibold mb-3">Updates</h3>
+              <p>This cookie policy may be updated periodically. Changes will be posted on this page with the effective date.</p>
             </section>
           </div>
         </DialogContent>

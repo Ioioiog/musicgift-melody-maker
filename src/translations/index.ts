@@ -7,7 +7,7 @@ import { deTranslations } from './de';
 import { itTranslations } from './it';
 import type { Language } from '@/types/language';
 
-export const translations: Record<Language, Record<string, string | string[]>> = {
+export const translations: Record<Language, Record<string, string>> = {
   ro: roTranslations,
   en: enTranslations,
   fr: frTranslations,

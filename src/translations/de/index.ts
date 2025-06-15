@@ -15,7 +15,6 @@ import { unsubscribeTranslations } from './unsubscribe';
 import { footerTranslations } from './footer';
 import { cookiesTranslations } from './cookies';
 import { newsletterTranslations } from './newsletter';
-import { legalTranslations } from './legal';
 
 export const deTranslations = {
   ...commonTranslations,
@@ -34,5 +33,4 @@ export const deTranslations = {
   ...footerTranslations,
   ...cookiesTranslations,
   ...newsletterTranslations,
-  ...legalTranslations,
 };
