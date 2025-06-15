@@ -4,11 +4,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Download, ChevronDown, ChevronRight } from 'lucide-react';
+import { Eye, Download, ChevronDown, ChevronRight, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getCustomerName, getCustomerEmail, getArrayFromJson } from '@/types/order';
 import { formatCurrency } from '@/utils/currencyUtils';
+import { useDeliveryCalculation } from '@/hooks/useDeliveryCalculation';
 import OrderExpandedDetails from './OrderExpandedDetails';
 
 interface EnhancedOrderTableProps {
@@ -77,6 +78,44 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
     return addonsArray.length;
   };
 
+  const DeliveryCountdown = ({ order }: { order: any }) => {
+    const { remainingDays, isOverdue, status } = useDeliveryCalculation(order.created_at, order.package_value);
+
+    if (remainingDays === null) {
+      return <span className="text-gray-400">-</span>;
+    }
+
+    let badgeVariant: "default" | "secondary" | "destructive" | "outline" = "secondary";
+    let textColor = "text-gray-600";
+    let icon = <Clock className="w-3 h-3" />;
+
+    if (isOverdue) {
+      badgeVariant = "destructive";
+      textColor = "text-red-600";
+    } else if (status === 'urgent') {
+      badgeVariant = "destructive";
+      textColor = "text-red-600";
+    } else if (status === 'warning') {
+      badgeVariant = "outline";
+      textColor = "text-orange-600";
+    } else {
+      badgeVariant = "secondary";
+      textColor = "text-blue-600";
+    }
+
+    return (
+      <div className="flex items-center gap-1">
+        {icon}
+        <span className={`text-sm font-medium ${textColor}`}>
+          {isOverdue 
+            ? `${remainingDays} ${t('daysOverdue')}`
+            : `${remainingDays} ${t('daysLeft')}`
+          }
+        </span>
+      </div>
+    );
+  };
+
   if (isMobile) {
     return (
       <div className="space-y-4">
@@ -86,34 +125,40 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
               <div className="space-y-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-semibold">{order.package_name || 'Order'}</h3>
+                    <h3 className="font-semibold">{order.package_name || t('order')}</h3>
                     <p className="text-sm text-gray-600">
                       {getCustomerName(order.form_data)}
                     </p>
                   </div>
                   <div className="flex gap-2">
                     <Badge variant={getStatusColor(order.status)} className="text-xs">
-                      {order.status}
+                      {t(order.status)}
                     </Badge>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <span className="text-gray-500">Amount:</span>
+                    <span className="text-gray-500">{t('amount')}:</span>
                     <span className="ml-1 font-medium">
                       {order.total_price ? formatCurrency(order.total_price, order.currency, order.payment_provider) : 'N/A'}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-500">Date:</span>
+                    <span className="text-gray-500">{t('date')}:</span>
                     <span className="ml-1">
                       {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}
                     </span>
                   </div>
+                  <div className="col-span-2">
+                    <span className="text-gray-500">{t('delivery')}:</span>
+                    <span className="ml-1">
+                      <DeliveryCountdown order={order} />
+                    </span>
+                  </div>
                   {order.smartbill_invoice_id && (
                     <div className="col-span-2">
-                      <span className="text-gray-500">Invoice:</span>
+                      <span className="text-gray-500">{t('invoice')}:</span>
                       <span className="ml-1">{order.smartbill_invoice_id}</span>
                     </div>
                   )}
@@ -128,12 +173,12 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                     {expandedRows.has(order.id) ? (
                       <>
                         <ChevronDown className="w-4 h-4 mr-1" />
-                        Less
+                        {t('less')}
                       </>
                     ) : (
                       <>
                         <ChevronRight className="w-4 h-4 mr-1" />
-                        More
+                        {t('more')}
                       </>
                     )}
                   </Button>
@@ -143,7 +188,7 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                     onClick={() => onViewDetails(order)}
                   >
                     <Eye className="w-4 h-4 mr-1" />
-                    Details
+                    {t('details')}
                   </Button>
                 </div>
 
@@ -169,26 +214,27 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                 className="cursor-pointer hover:bg-gray-50"
                 onClick={() => handleSort('package_name')}
               >
-                Package
+                {t('package')}
               </TableHead>
               <TableHead 
                 className="cursor-pointer hover:bg-gray-50"
                 onClick={() => handleSort('created_at')}
               >
-                Order Date
+                {t('orderDate')}
               </TableHead>
-              <TableHead>Customer</TableHead>
+              <TableHead>{t('customer')}</TableHead>
               <TableHead 
                 className="cursor-pointer hover:bg-gray-50"
                 onClick={() => handleSort('total_price')}
               >
-                Amount
+                {t('amount')}
               </TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Payment</TableHead>
-              <TableHead>Invoice</TableHead>
-              <TableHead>Add-ons</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>{t('status')}</TableHead>
+              <TableHead>{t('payment')}</TableHead>
+              <TableHead>{t('invoice')}</TableHead>
+              <TableHead>{t('addons')}</TableHead>
+              <TableHead>{t('delivery')}</TableHead>
+              <TableHead className="text-right">{t('actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -210,7 +256,7 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                 </TableCell>
                 <TableCell>
                   <div>
-                    <div className="font-medium">{order.package_name || 'Order'}</div>
+                    <div className="font-medium">{order.package_name || t('order')}</div>
                     <div className="text-sm text-gray-500">{order.package_value}</div>
                   </div>
                 </TableCell>
@@ -235,19 +281,19 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                     </div>
                     {order.gift_credit_applied > 0 && (
                       <div className="text-sm text-green-600">
-                        Gift: -{formatCurrency(order.gift_credit_applied, order.currency, order.payment_provider)}
+                        {t('gift')}: -{formatCurrency(order.gift_credit_applied, order.currency, order.payment_provider)}
                       </div>
                     )}
                   </div>
                 </TableCell>
                 <TableCell>
                   <Badge variant={getStatusColor(order.status)}>
-                    {order.status}
+                    {t(order.status)}
                   </Badge>
                 </TableCell>
                 <TableCell>
                   <Badge variant={getPaymentStatusColor(order.payment_status)}>
-                    {order.payment_status}
+                    {t(order.payment_status)}
                   </Badge>
                 </TableCell>
                 <TableCell>
@@ -266,8 +312,11 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">
-                    {getAddonsCount(order.selected_addons)} add-ons
+                    {getAddonsCount(order.selected_addons)} {t('addonsCount')}
                   </span>
+                </TableCell>
+                <TableCell>
+                  <DeliveryCountdown order={order} />
                 </TableCell>
                 <TableCell className="text-right">
                   <Button
@@ -282,7 +331,7 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
               </TableRow>,
               ...(expandedRows.has(order.id) ? [
                 <TableRow key={`${order.id}-expanded`}>
-                  <TableCell colSpan={10} className="p-0">
+                  <TableCell colSpan={11} className="p-0">
                     <div className="p-4 bg-gray-50 border-t">
                       <OrderExpandedDetails order={order} />
                     </div>
