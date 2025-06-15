@@ -5,16 +5,15 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import UserOrderHistory from '@/components/user/UserOrderHistory';
-
 const History = () => {
-  const { t } = useLanguage();
-
-  return (
-    <>
+  const {
+    t
+  } = useLanguage();
+  return <>
       <Navigation />
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pt-24 pb-12">
-        <div className="container max-w-7xl my-[105px] mx-[86px] px-[4px]">
-          <div className="mb-8">
+        <div className="container max-w-7xl px-[34px] mx-[56px] my-[50px]">
+          <div className="mb-8 mx-0">
             <Link to="/" className="inline-flex items-center text-purple-600 hover:text-purple-700 transition-colors mb-6">
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t('backHome')}
@@ -37,8 +36,6 @@ const History = () => {
         </div>
       </div>
       <Footer />
-    </>
-  );
+    </>;
 };
-
 export default History;
