@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Dialog,
@@ -618,45 +617,41 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
           </DialogHeader>
           <div className="space-y-6 text-gray-700 leading-relaxed">
             <section>
-              <h3 className="text-lg font-semibold mb-3">Data Collection</h3>
-              <p>We collect information you provide when creating your musical gift, including personal details, preferences, and payment information.</p>
+              <h3 className="text-lg font-semibold mb-3">{t('dataCollection')}</h3>
+              <p>{t('dataCollectionContent')}</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">How We Use Your Data</h3>
+              <h3 className="text-lg font-semibold mb-3">{t('howWeUseData')}</h3>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Create personalized musical content</li>
-                <li>Process payments and deliver services</li>
-                <li>Communicate about your order</li>
-                <li>Improve our services</li>
-                <li>Send marketing communications (with consent)</li>
+                {(t('howWeUseDataList') as string[]).map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
               </ul>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Data Protection</h3>
-              <p>We implement appropriate security measures to protect your personal information. Data is encrypted in transit and at rest.</p>
+              <h3 className="text-lg font-semibold mb-3">{t('dataProtection')}</h3>
+              <p>{t('dataProtectionContent')}</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Third-Party Services</h3>
-              <p>We may use third-party services for payment processing, analytics, and email communications. These services have their own privacy policies.</p>
+              <h3 className="text-lg font-semibold mb-3">{t('thirdPartyServices')}</h3>
+              <p>{t('thirdPartyServicesContent')}</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Your Rights</h3>
+              <h3 className="text-lg font-semibold mb-3">{t('yourRights')}</h3>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Access your personal data</li>
-                <li>Correct inaccurate information</li>
-                <li>Request data deletion</li>
-                <li>Withdraw consent for marketing</li>
-                <li>Data portability</li>
+                {(t('yourRightsList') as string[]).map((right, index) => (
+                  <li key={index}>{right}</li>
+                ))}
               </ul>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Contact</h3>
-              <p>For privacy-related questions, contact us at mihai.gruia@mangorecords.net</p>
+              <h3 className="text-lg font-semibold mb-3">{t('contact')}</h3>
+              <p>{t('contactContent')}</p>
             </section>
           </div>
         </DialogContent>
@@ -672,43 +667,40 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
           </DialogHeader>
           <div className="space-y-6 text-gray-700 leading-relaxed">
             <section>
-              <h3 className="text-lg font-semibold mb-3">Refund Eligibility</h3>
-              <p>Refunds are available under specific circumstances due to the personalized nature of our services.</p>
+              <h3 className="text-lg font-semibold mb-3">{t('refundEligibility')}</h3>
+              <p>{t('refundEligibilityContent')}</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">When Refunds Apply</h3>
+              <h3 className="text-lg font-semibold mb-3">{t('whenRefundsApply')}</h3>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Technical issues preventing delivery</li>
-                <li>Significant deviation from specified requirements</li>
-                <li>Service not delivered within promised timeframe</li>
-                <li>Cancellation within 24 hours of order placement (before work begins)</li>
+                {(t('whenRefundsApplyList') as string[]).map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
               </ul>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Refund Process</h3>
+              <h3 className="text-lg font-semibold mb-3">{t('refundProcess')}</h3>
               <ol className="list-decimal pl-6 space-y-2">
-                <li>Contact our support team within 7 days of delivery</li>
-                <li>Provide detailed explanation of the issue</li>
-                <li>Allow up to 48 hours for review</li>
-                <li>Approved refunds processed within 5-10 business days</li>
+                {(t('refundProcessList') as string[]).map((step, index) => (
+                  <li key={index}>{step}</li>
+                ))}
               </ol>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Non-Refundable Situations</h3>
+              <h3 className="text-lg font-semibold mb-3">{t('nonRefundableSituations')}</h3>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Change of mind after delivery</li>
-                <li>Dissatisfaction with artistic style (within specifications)</li>
-                <li>Orders already completed and delivered</li>
-                <li>Custom requests that were accurately fulfilled</li>
+                {(t('nonRefundableSituationsList') as string[]).map((situation, index) => (
+                  <li key={index}>{situation}</li>
+                ))}
               </ul>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Partial Refunds</h3>
-              <p>In some cases, partial refunds may be offered for services that partially meet requirements but have minor issues.</p>
+              <h3 className="text-lg font-semibold mb-3">{t('partialRefunds')}</h3>
+              <p>{t('partialRefundsContent')}</p>
             </section>
           </div>
         </DialogContent>
@@ -724,49 +716,49 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
           </DialogHeader>
           <div className="space-y-6 text-gray-700 leading-relaxed">
             <section>
-              <h3 className="text-lg font-semibold mb-3">What Are Cookies</h3>
-              <p>Cookies are small text files stored on your device when you visit our website. They help us provide a better user experience.</p>
+              <h3 className="text-lg font-semibold mb-3">{t('whatAreCookies')}</h3>
+              <p>{t('whatAreCookiesContent')}</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Types of Cookies We Use</h3>
+              <h3 className="text-lg font-semibold mb-3">{t('typesOfCookies')}</h3>
               
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium">Essential Cookies</h4>
-                  <p className="text-sm">Required for basic website functionality, including authentication and security.</p>
+                  <h4 className="font-medium">{t('essentialCookies')}</h4>
+                  <p className="text-sm">{t('essentialCookiesContent')}</p>
                 </div>
                 
                 <div>
-                  <h4 className="font-medium">Analytics Cookies</h4>
-                  <p className="text-sm">Help us understand how visitors interact with our website to improve user experience.</p>
+                  <h4 className="font-medium">{t('analyticsCookies')}</h4>
+                  <p className="text-sm">{t('analyticsCookiesContent')}</p>
                 </div>
                 
                 <div>
-                  <h4 className="font-medium">Preference Cookies</h4>
-                  <p className="text-sm">Remember your language preferences and other settings.</p>
+                  <h4 className="font-medium">{t('preferenceCookies')}</h4>
+                  <p className="text-sm">{t('preferenceCookiesContent')}</p>
                 </div>
                 
                 <div>
-                  <h4 className="font-medium">Marketing Cookies</h4>
-                  <p className="text-sm">Used to deliver relevant advertisements and track campaign effectiveness.</p>
+                  <h4 className="font-medium">{t('marketingCookies')}</h4>
+                  <p className="text-sm">{t('marketingCookiesContent')}</p>
                 </div>
               </div>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Managing Cookies</h3>
-              <p>You can control cookies through your browser settings. However, disabling certain cookies may affect website functionality.</p>
+              <h3 className="text-lg font-semibold mb-3">{t('managingCookies')}</h3>
+              <p>{t('managingCookiesContent')}</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Third-Party Cookies</h3>
-              <p>We may use third-party services that set their own cookies, including payment processors and analytics providers.</p>
+              <h3 className="text-lg font-semibold mb-3">{t('thirdPartyCookies')}</h3>
+              <p>{t('thirdPartyCookiesContent')}</p>
             </section>
 
             <section>
-              <h3 className="text-lg font-semibold mb-3">Updates</h3>
-              <p>This cookie policy may be updated periodically. Changes will be posted on this page with the effective date.</p>
+              <h3 className="text-lg font-semibold mb-3">{t('updates')}</h3>
+              <p>{t('updatesContent')}</p>
             </section>
           </div>
         </DialogContent>
