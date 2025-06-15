@@ -66,19 +66,41 @@ const OrderActionMenu = ({ order, onRefresh }: OrderActionMenuProps) => {
   };
 
   const viewProformaPDF = async () => {
-    const { data, error } = await supabase.functions.invoke('smartbill-get-proforma-pdf', {
-      body: { orderId: order.id }
-    });
+    try {
+      // Use direct fetch to the edge function to get binary PDF data
+      const response = await fetch(`https://ehvzhnzqcbzuirovwjsr.supabase.co/functions/v1/smartbill-get-proforma-pdf`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabase.supabaseKey}`,
+        },
+        body: JSON.stringify({ orderId: order.id })
+      });
 
-    if (error) {
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch PDF');
+      }
+
+      // Get the PDF as a blob
+      const pdfBlob = await response.blob();
+      
+      // Create a blob URL and open it
+      const pdfUrl = URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
+      window.open(pdfUrl, '_blank');
+      
+      // Clean up the blob URL after a short delay
+      setTimeout(() => {
+        URL.revokeObjectURL(pdfUrl);
+      }, 1000);
+
+    } catch (error) {
+      console.error('Error viewing proforma PDF:', error);
       toast({
         title: 'Error',
-        description: 'Failed to get proforma PDF',
+        description: error instanceof Error ? error.message : 'Failed to view proforma PDF',
         variant: 'destructive',
       });
-    } else {
-      // Handle PDF download/view
-      window.open(URL.createObjectURL(new Blob([data])), '_blank');
     }
   };
 
