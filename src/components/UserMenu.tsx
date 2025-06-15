@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { User, LogOut, Settings, UserCircle } from 'lucide-react';
+import { User, LogOut, Settings, UserCircle, History } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const UserMenu = () => {
@@ -48,6 +48,12 @@ const UserMenu = () => {
           <div className="text-xs text-gray-500 truncate">{user.email}</div>
         </div>
         <DropdownMenuSeparator className="bg-pink-200 my-2" />
+        <DropdownMenuItem asChild>
+          <Link to="/history" className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105">
+            <History className="w-4 h-4 mr-3" />
+            <span className="font-medium">{t('history')}</span>
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/settings" className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105">
             <Settings className="w-4 h-4 mr-3" />
