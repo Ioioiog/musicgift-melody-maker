@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, RefreshCw, FileText, Receipt, CreditCard, Globe } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, SUPABASE_PUBLISHABLE_KEY } from '@/integrations/supabase/client';
 
 interface OrderActionMenuProps {
   order: any;
@@ -72,7 +71,7 @@ const OrderActionMenu = ({ order, onRefresh }: OrderActionMenuProps) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabase.supabaseKey}`,
+          'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({ orderId: order.id })
       });
