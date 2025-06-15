@@ -8,6 +8,7 @@ import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
+import { convertGiftCardAmount } from '@/utils/currencyUtils';
 
 interface OrderSummaryProps {
   selectedPackage: string;
@@ -35,8 +36,13 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
   
   let giftCreditApplied = 0;
   if (giftCard) {
-    const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
-    giftCreditApplied = Math.min(giftBalance, subtotal);
+    // Gift card amounts are stored in base currency units (not cents)
+    const giftAmount = giftCard.gift_amount || 0;
+    const giftCurrency = giftCard.currency || 'RON';
+    
+    // Convert gift card amount to current display currency
+    const convertedGiftAmount = convertGiftCardAmount(giftAmount, giftCurrency, currency);
+    giftCreditApplied = Math.min(convertedGiftAmount, subtotal);
   }
   
   const finalTotal = Math.max(0, subtotal - giftCreditApplied);

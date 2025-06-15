@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +9,7 @@ import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
+import { convertCurrency, convertGiftCardAmount } from '@/utils/currencyUtils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import CodeInputSection from './CodeInputSection';
 
@@ -81,11 +83,16 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   );
   const subtotal = packagePrice + addonsPrice;
 
-  // Calculate gift card credit (only for non-quote packages)
+  // Calculate gift card credit with currency conversion (only for non-quote packages)
   let giftCreditApplied = 0;
   if (!packageIsQuoteOnly && appliedGiftCard) {
-    const giftBalance = (appliedGiftCard.gift_amount || 0) / 100; // Convert from cents
-    giftCreditApplied = Math.min(giftBalance, subtotal);
+    // Gift card amounts are stored in base currency units (not cents)
+    const giftAmount = appliedGiftCard.gift_amount || 0;
+    const giftCurrency = appliedGiftCard.currency || 'RON';
+    
+    // Convert gift card amount to current display currency
+    const convertedGiftAmount = convertGiftCardAmount(giftAmount, giftCurrency, currency);
+    giftCreditApplied = Math.min(convertedGiftAmount, subtotal);
   }
 
   // Apply discount (only for non-quote packages)

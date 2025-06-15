@@ -59,3 +59,57 @@ export const convertAmountForSmartBill = (
   // Return as-is for other providers (already in base currency)
   return amount;
 };
+
+/**
+ * Fixed exchange rate: 1 EUR = 5 RON
+ */
+export const EXCHANGE_RATE_EUR_TO_RON = 5;
+
+/**
+ * Convert RON to EUR using fixed rate (1 EUR = 5 RON)
+ */
+export const convertRonToEur = (ronAmount: number): number => {
+  return ronAmount / EXCHANGE_RATE_EUR_TO_RON;
+};
+
+/**
+ * Convert EUR to RON using fixed rate (1 EUR = 5 RON)
+ */
+export const convertEurToRon = (eurAmount: number): number => {
+  return eurAmount * EXCHANGE_RATE_EUR_TO_RON;
+};
+
+/**
+ * Convert amount between currencies
+ */
+export const convertCurrency = (
+  amount: number, 
+  fromCurrency: 'EUR' | 'RON', 
+  toCurrency: 'EUR' | 'RON'
+): number => {
+  if (fromCurrency === toCurrency) {
+    return amount;
+  }
+  
+  if (fromCurrency === 'RON' && toCurrency === 'EUR') {
+    return convertRonToEur(amount);
+  }
+  
+  if (fromCurrency === 'EUR' && toCurrency === 'RON') {
+    return convertEurToRon(amount);
+  }
+  
+  return amount;
+};
+
+/**
+ * Convert gift card amount to target currency
+ * Gift cards store amounts in base currency units (not cents)
+ */
+export const convertGiftCardAmount = (
+  giftAmount: number,
+  giftCurrency: 'EUR' | 'RON',
+  targetCurrency: 'EUR' | 'RON'
+): number => {
+  return convertCurrency(giftAmount, giftCurrency, targetCurrency);
+};
