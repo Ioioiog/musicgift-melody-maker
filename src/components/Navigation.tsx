@@ -269,6 +269,10 @@ const Navigation = () => {
                       <div className="text-xs text-gray-500 truncate">{user.email}</div>
                     </div>
                     <div className="bg-pink-200 my-2 h-px" />
+                    <Link to="/history" className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105" onClick={closeAllMenus}>
+                      <History className="w-4 h-4 mr-3" />
+                      <span className="font-medium">{t('history')}</span>
+                    </Link>
                     <Link to="/settings" className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105" onClick={closeAllMenus}>
                       <Settings className="w-4 h-4 mr-3" />
                       <span className="font-medium">{t('accountSettings')}</span>
