@@ -20,6 +20,16 @@ export const formatCurrency = (
   // Ensure we always show 2 decimal places
   const formattedAmount = displayAmount.toFixed(2);
   
+  // Format based on currency
+  if (currency === 'EUR') {
+    return `${formattedAmount} €`;
+  } else if (currency === 'RON') {
+    return `${formattedAmount} RON`;
+  } else if (currency === 'USD') {
+    return `$${formattedAmount}`;
+  }
+  
+  // Default format
   return `${formattedAmount} ${currency?.toUpperCase() || 'EUR'}`;
 };
 

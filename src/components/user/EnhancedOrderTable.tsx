@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Download, ChevronDown, ChevronRight, Clock } from 'lucide-react';
+import { Download, ChevronDown, ChevronRight, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getCustomerName, getCustomerEmail, getArrayFromJson } from '@/types/order';
@@ -76,6 +76,13 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
   const getAddonsCount = (addons: any) => {
     const addonsArray = getArrayFromJson(addons);
     return addonsArray.length;
+  };
+
+  const handleDownloadSong = (order: any) => {
+    // TODO: Implement song download functionality
+    console.log('Download song for order:', order.id);
+    // For now, we'll just open the order details
+    onViewDetails(order);
   };
 
   const DeliveryCountdown = ({ order }: { order: any }) => {
@@ -185,10 +192,10 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onViewDetails(order)}
+                    onClick={() => handleDownloadSong(order)}
                   >
-                    <Eye className="w-4 h-4 mr-1" />
-                    {t('details')}
+                    <Download className="w-4 h-4 mr-1" />
+                    {t('downloadSong')}
                   </Button>
                 </div>
 
@@ -322,10 +329,10 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onViewDetails(order)}
+                    onClick={() => handleDownloadSong(order)}
                   >
-                    <Eye className="w-4 h-4 mr-1" />
-                    {t('viewDetails')}
+                    <Download className="w-4 h-4 mr-1" />
+                    {t('downloadSong')}
                   </Button>
                 </TableCell>
               </TableRow>,
