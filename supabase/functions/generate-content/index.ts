@@ -98,13 +98,6 @@ Return the response in this JSON format:
       "lyrics": "Complete song lyrics in ${language} with verse-chorus-bridge structure",
       "technicalTags": "Music generation technical tags (genre, tempo, instruments, voice, etc.)",
       "prompt": "Complete music generation prompt combining lyrics and technical tags"
-    },
-    {
-      "title": "Prompt 3 Title",
-      "description": "Brief description of this variation's musical style and approach",
-      "lyrics": "Complete song lyrics in ${language} with verse-chorus-bridge structure",
-      "technicalTags": "Music generation technical tags (genre, tempo, instruments, voice, etc.)",
-      "prompt": "Complete music generation prompt combining lyrics and technical tags"
     }
   ]
 }
