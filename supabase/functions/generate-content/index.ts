@@ -25,11 +25,10 @@ serve(async (req) => {
       );
     }
 
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAIApiKey) {
-      console.error('OpenAI API key not found');
+    const serviceApiKey = Deno.env.get('OPENAI_API_KEY');
+    if (!serviceApiKey) {
       return new Response(
-        JSON.stringify({ error: 'AI service not configured' }),
+        JSON.stringify({ error: 'Content generation service not configured' }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -37,11 +36,8 @@ serve(async (req) => {
       );
     }
 
-    console.log('Generating Suno.AI prompts for order:', orderData.id);
-
     const formData = orderData.form_data || {};
     
-    // Extract relevant information from order data
     const storyDetails = formData.story || formData.personalizedStory || formData.message || '';
     const occasion = formData.occasion || '';
     const recipientName = formData.recipientName || '';
@@ -51,7 +47,7 @@ serve(async (req) => {
     const language = formData.language || 'English';
     const keywords = formData.keywords || formData.specialRequests || '';
 
-    const prompt = `Create 3 different Suno.AI song generation prompts with complete lyrics based on this music order information:
+    const prompt = `Create 3 different music generation prompts with complete lyrics based on this music order information:
 
 **Order Details:**
 - Story/Message: ${storyDetails}
@@ -63,7 +59,7 @@ serve(async (req) => {
 - Language: ${language}
 - Special Keywords: ${keywords}
 
-Generate 3 different prompt variations for Suno.AI that include:
+Generate 3 different prompt variations for music generation that include:
 
 1. **Complete song lyrics** written in ${language} that:
    - Tell the story from the order details
@@ -74,7 +70,7 @@ Generate 3 different prompt variations for Suno.AI that include:
    - Maintain cultural authenticity for ${language}
    - Include rhyme schemes appropriate for the language
 
-2. **Technical Suno.AI tags** including:
+2. **Technical music generation tags** including:
    - Musical style and genre tags
    - Tempo and rhythm indicators
    - Instrumentation specifications
@@ -82,7 +78,7 @@ Generate 3 different prompt variations for Suno.AI that include:
    - Language specifications
    - Mood and atmosphere descriptors
 
-3. **Combined prompt** ready for Suno.AI that merges the lyrics with technical tags
+3. **Combined prompt** ready for music generation that merges the lyrics with technical tags
 
 Each variation should have a different musical approach while maintaining the core story and emotional message.
 
@@ -93,32 +89,32 @@ Return the response in this JSON format:
       "title": "Prompt 1 Title",
       "description": "Brief description of this variation's musical style and approach",
       "lyrics": "Complete song lyrics in ${language} with verse-chorus-bridge structure",
-      "technicalTags": "Suno.AI technical tags (genre, tempo, instruments, voice, etc.)",
-      "prompt": "Complete Suno.AI prompt combining lyrics and technical tags"
+      "technicalTags": "Music generation technical tags (genre, tempo, instruments, voice, etc.)",
+      "prompt": "Complete music generation prompt combining lyrics and technical tags"
     },
     {
       "title": "Prompt 2 Title", 
       "description": "Brief description of this variation's musical style and approach",
       "lyrics": "Complete song lyrics in ${language} with verse-chorus-bridge structure",
-      "technicalTags": "Suno.AI technical tags (genre, tempo, instruments, voice, etc.)",
-      "prompt": "Complete Suno.AI prompt combining lyrics and technical tags"
+      "technicalTags": "Music generation technical tags (genre, tempo, instruments, voice, etc.)",
+      "prompt": "Complete music generation prompt combining lyrics and technical tags"
     },
     {
       "title": "Prompt 3 Title",
       "description": "Brief description of this variation's musical style and approach",
       "lyrics": "Complete song lyrics in ${language} with verse-chorus-bridge structure",
-      "technicalTags": "Suno.AI technical tags (genre, tempo, instruments, voice, etc.)",
-      "prompt": "Complete Suno.AI prompt combining lyrics and technical tags"
+      "technicalTags": "Music generation technical tags (genre, tempo, instruments, voice, etc.)",
+      "prompt": "Complete music generation prompt combining lyrics and technical tags"
     }
   ]
 }
 
-Make the lyrics emotionally resonant, culturally appropriate for ${language}, and technically optimized for Suno.AI generation. Ensure each variation offers a different musical interpretation of the same story.`;
+Make the lyrics emotionally resonant, culturally appropriate for ${language}, and technically optimized for music generation. Ensure each variation offers a different musical interpretation of the same story.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${serviceApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -126,7 +122,7 @@ Make the lyrics emotionally resonant, culturally appropriate for ${language}, an
         messages: [
           {
             role: 'system',
-            content: `You are an expert AI music prompt engineer and lyricist specialized in creating optimized prompts for Suno.AI. You are fluent in multiple languages and can write authentic, culturally appropriate lyrics in any language. You understand song structure, rhyme schemes, and how to create emotionally compelling lyrics that work well with AI music generation. Generate creative, detailed prompts that include complete lyrics and proper technical specifications for the best AI music generation results.`
+            content: `You are an expert music prompt engineer and lyricist specialized in creating optimized prompts for music generation platforms. You are fluent in multiple languages and can write authentic, culturally appropriate lyrics in any language. You understand song structure, rhyme schemes, and how to create emotionally compelling lyrics that work well with music generation systems. Generate creative, detailed prompts that include complete lyrics and proper technical specifications for the best music generation results.`
           },
           {
             role: 'user',
@@ -140,9 +136,8 @@ Make the lyrics emotionally resonant, culturally appropriate for ${language}, an
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenAI API error:', response.status, errorText);
       return new Response(
-        JSON.stringify({ error: 'AI generation failed', details: errorText }),
+        JSON.stringify({ error: 'Content generation failed', details: errorText }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -151,10 +146,9 @@ Make the lyrics emotionally resonant, culturally appropriate for ${language}, an
     }
 
     const data = await response.json();
-    const aiResponse = data.choices[0]?.message?.content?.trim();
+    const serviceResponse = data.choices[0]?.message?.content?.trim();
 
-    if (!aiResponse) {
-      console.error('No response from OpenAI');
+    if (!serviceResponse) {
       return new Response(
         JSON.stringify({ error: 'No response generated' }),
         { 
@@ -164,24 +158,17 @@ Make the lyrics emotionally resonant, culturally appropriate for ${language}, an
       );
     }
 
-    console.log('Raw AI response:', aiResponse);
-
     let generatedPrompts;
     try {
-      // Try to parse the JSON response
-      generatedPrompts = JSON.parse(aiResponse);
+      generatedPrompts = JSON.parse(serviceResponse);
     } catch (parseError) {
-      console.error('Failed to parse AI response as JSON:', parseError);
-      
-      // Try to extract JSON from the response if it contains additional text
-      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+      const jsonMatch = serviceResponse.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         try {
           generatedPrompts = JSON.parse(jsonMatch[0]);
         } catch (secondParseError) {
-          console.error('Failed to parse extracted JSON:', secondParseError);
           return new Response(
-            JSON.stringify({ error: 'Invalid AI response format' }),
+            JSON.stringify({ error: 'Invalid service response format' }),
             { 
               status: 500, 
               headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -190,7 +177,7 @@ Make the lyrics emotionally resonant, culturally appropriate for ${language}, an
         }
       } else {
         return new Response(
-          JSON.stringify({ error: 'No valid JSON found in AI response' }),
+          JSON.stringify({ error: 'No valid JSON found in service response' }),
           { 
             status: 500, 
             headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -199,9 +186,7 @@ Make the lyrics emotionally resonant, culturally appropriate for ${language}, an
       }
     }
 
-    // Validate the generated data structure
     if (!generatedPrompts.prompts || !Array.isArray(generatedPrompts.prompts)) {
-      console.error('Invalid generated prompts structure:', generatedPrompts);
       return new Response(
         JSON.stringify({ error: 'Generated prompts missing required fields' }),
         { 
@@ -211,10 +196,8 @@ Make the lyrics emotionally resonant, culturally appropriate for ${language}, an
       );
     }
 
-    // Validate that each prompt has the required fields including lyrics
     for (const prompt of generatedPrompts.prompts) {
       if (!prompt.title || !prompt.description || !prompt.lyrics || !prompt.technicalTags || !prompt.prompt) {
-        console.error('Missing required fields in prompt:', prompt);
         return new Response(
           JSON.stringify({ error: 'Generated prompts missing required fields (lyrics, technicalTags, etc.)' }),
           { 
@@ -224,8 +207,6 @@ Make the lyrics emotionally resonant, culturally appropriate for ${language}, an
         );
       }
     }
-
-    console.log('Successfully generated Suno.AI prompts with lyrics');
     
     return new Response(
       JSON.stringify({ 
@@ -238,7 +219,6 @@ Make the lyrics emotionally resonant, culturally appropriate for ${language}, an
     );
 
   } catch (error) {
-    console.error('Error in generate-suno-prompts function:', error);
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error', 
