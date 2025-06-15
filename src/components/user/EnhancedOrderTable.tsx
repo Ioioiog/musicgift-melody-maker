@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
@@ -330,6 +329,7 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                     variant="outline"
                     size="sm"
                     onClick={() => handleDownloadSong(order)}
+                    disabled
                   >
                     <Download className="w-4 h-4 mr-1" />
                     {t('downloadSong')}
