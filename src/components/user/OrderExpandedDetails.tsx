@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -26,7 +27,7 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
     }
   };
 
-  // Enhanced helper function with extensive debugging and error handling
+  // Enhanced helper function with package translation support
   const getDisplayValue = (item: any, context: string = 'unknown'): string => {
     console.log(`[OrderExpandedDetails] Processing item in ${context}:`, item);
     console.log(`[OrderExpandedDetails] Item type:`, typeof item);
@@ -39,6 +40,43 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
       
       if (typeof item === 'string') {
         console.log(`[OrderExpandedDetails] String item: "${item}"`);
+        
+        // Check if this is a package translation key
+        const packageKeyPatterns = [
+          /^(plus|personal|premium|business|artist|remix|instrumental|gift|wedding|baptism|comingOfAge|dj)Package$/,
+          /^(plus|personal|premium|business|artist|remix|instrumental|gift|wedding|baptism|comingOfAge|dj)Delivery$/,
+          /^(plus|personal|premium|business|artist|remix|instrumental|gift|wedding|baptism|comingOfAge|dj)Include\d+$/,
+          /^(plus|personal|premium|business|artist|remix|instrumental|gift|wedding|baptism|comingOfAge|dj)Tagline$/,
+          /^(plus|personal|premium|business|artist|remix|instrumental|gift|wedding|baptism|comingOfAge|dj)Description$/
+        ];
+        
+        const isPackageKey = packageKeyPatterns.some(pattern => pattern.test(item));
+        
+        if (isPackageKey) {
+          console.log(`[OrderExpandedDetails] Found package translation key: "${item}"`);
+          // Try to get translation from packages context
+          try {
+            const translatedValue = t(`packages.${item}`);
+            if (translatedValue && translatedValue !== `packages.${item}`) {
+              console.log(`[OrderExpandedDetails] Successfully translated package key: "${item}" -> "${translatedValue}"`);
+              return translatedValue;
+            }
+          } catch (translationError) {
+            console.warn(`[OrderExpandedDetails] Package translation failed for "${item}":`, translationError);
+          }
+        }
+        
+        // Check if this is a regular order translation key
+        try {
+          const translatedValue = t(item);
+          if (translatedValue && translatedValue !== item) {
+            console.log(`[OrderExpandedDetails] Successfully translated order key: "${item}" -> "${translatedValue}"`);
+            return translatedValue;
+          }
+        } catch (translationError) {
+          console.warn(`[OrderExpandedDetails] Order translation failed for "${item}":`, translationError);
+        }
+        
         return item;
       }
       
@@ -58,35 +96,35 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
         // Handle objects with include_key or similar structure
         if (item.include_key && typeof item.include_key === 'string') {
           console.log(`[OrderExpandedDetails] Found include_key: "${item.include_key}"`);
-          return item.include_key;
+          return getDisplayValue(item.include_key, `${context}.include_key`);
         }
         
         // Handle other possible object structures
         if (item.label && typeof item.label === 'string') {
           console.log(`[OrderExpandedDetails] Found label: "${item.label}"`);
-          return item.label;
+          return getDisplayValue(item.label, `${context}.label`);
         }
         
         if (item.name && typeof item.name === 'string') {
           console.log(`[OrderExpandedDetails] Found name: "${item.name}"`);
-          return item.name;
+          return getDisplayValue(item.name, `${context}.name`);
         }
         
         if (item.value && typeof item.value === 'string') {
           console.log(`[OrderExpandedDetails] Found value: "${item.value}"`);
-          return item.value;
+          return getDisplayValue(item.value, `${context}.value`);
         }
         
         if (item.title && typeof item.title === 'string') {
           console.log(`[OrderExpandedDetails] Found title: "${item.title}"`);
-          return item.title;
+          return getDisplayValue(item.title, `${context}.title`);
         }
         
         // Try to extract any string value from the object
         const stringValues = Object.values(item).filter(val => typeof val === 'string');
         if (stringValues.length > 0) {
           console.log(`[OrderExpandedDetails] Using first string value: "${stringValues[0]}"`);
-          return String(stringValues[0]);
+          return getDisplayValue(String(stringValues[0]), `${context}.firstString`);
         }
         
         // If it's an object but we can't extract a meaningful value, stringify it safely
