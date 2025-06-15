@@ -62,19 +62,19 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
         y: 0
       }} className="space-y-4">
             <div>
-              <p className="text-sm text-purple-600 mb-4">
+              <p className="text-sm mb-4 text-orange-500">
                 {t('enterGiftCardCode')}
               </p>
               
               <div className="space-y-3">
                 <div>
-                  <Label htmlFor="giftCardCode" className="text-sm font-medium text-purple-600">
+                  <Label htmlFor="giftCardCode" className="text-sm font-medium text-orange-500 bg-transparent">
                     {t('giftCardCode')}
                   </Label>
-                  <Input id="giftCardCode" type="text" value={giftCardCode} onChange={e => setGiftCardCode(e.target.value.toUpperCase())} placeholder={t('enterCodeHere')} className="mt-1 bg-white/10 border-white/30 text-purple-600 placeholder:text-purple-400" disabled={isValidating} />
+                  <Input id="giftCardCode" type="text" value={giftCardCode} onChange={e => setGiftCardCode(e.target.value.toUpperCase())} placeholder={t('enterCodeHere')} disabled={isValidating} className="mt-1 bg-white/10 border-white/30 text-purple-600 placeholder:text-white-100" />
                 </div>
                 
-                <Button onClick={handleValidateGiftCard} disabled={!giftCardCode.trim() || isValidating} className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
+                <Button onClick={handleValidateGiftCard} disabled={!giftCardCode.trim() || isValidating} className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 bg-orange-500 hover:bg-orange-400">
                   {isValidating ? t('validatingCode') : t('validateGiftCard')}
                 </Button>
               </div>
