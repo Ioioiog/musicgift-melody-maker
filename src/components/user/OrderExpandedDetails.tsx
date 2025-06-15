@@ -1,10 +1,12 @@
 
+
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Calendar, Package, CreditCard, User, Mail, Phone, Clock, Gift, ListChecks } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getOrderFormData, getArrayFromJson } from '@/types/order';
+import { formatCurrency } from '@/utils/currencyUtils';
 import StepProgress from './StepProgress';
 
 interface OrderExpandedDetailsProps {
@@ -13,10 +15,6 @@ interface OrderExpandedDetailsProps {
 
 const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) => {
   const { t } = useLanguage();
-
-  const formatPrice = (price: number, currency: string) => {
-    return `${currency} ${price.toFixed(2)}`;
-  };
 
   const getPaymentStatusColor = (status: string) => {
     switch (status) {
@@ -267,7 +265,7 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
                 Gift Credit Applied:
               </span>
               <div className="text-green-600 font-medium">
-                -{formatPrice(order.gift_credit_applied, order.currency)}
+                -{formatCurrency(order.gift_credit_applied, order.currency, order.payment_provider)}
               </div>
             </div>
           )}
@@ -308,7 +306,7 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
             <div>
               <span className="text-gray-500">Package Price:</span>
               <div className="text-gray-900">
-                {formatPrice(order.package_price, order.currency)}
+                {formatCurrency(order.package_price, order.currency, order.payment_provider)}
               </div>
             </div>
           )}
@@ -409,3 +407,4 @@ const OrderExpandedDetails: React.FC<OrderExpandedDetailsProps> = ({ order }) =>
 };
 
 export default OrderExpandedDetails;
+
