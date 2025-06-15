@@ -11,15 +11,21 @@ const supportsWebM = (): boolean => {
   return video.canPlayType('video/webm') !== '';
 };
 
+const isMobileDevice = (): boolean => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+};
+
 const VideoHero = () => {
   const { t, language } = useLanguage();
   const location = useLocation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMobile = useIsMobile();
-  const [hasAudio, setHasAudio] = useState(true); // Start with audio enabled
+  const [hasAudio, setHasAudio] = useState(false); // Start with audio disabled for mobile
   const [isMounted, setIsMounted] = useState(false);
   const [useWebM, setUseWebM] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showPlayOverlay, setShowPlayOverlay] = useState(false);
+  const [userInteracted, setUserInteracted] = useState(false);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
@@ -30,6 +36,56 @@ const VideoHero = () => {
   useEffect(() => {
     setUseWebM(supportsWebM());
     setIsMounted(true);
+    
+    // On mobile, show overlay for user interaction
+    if (isMobileDevice()) {
+      setShowPlayOverlay(true);
+      setHasAudio(false);
+    } else {
+      setHasAudio(true);
+    }
+  }, []);
+
+  const startVideoWithSound = useCallback(async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    try {
+      video.muted = false;
+      setHasAudio(true);
+      video.currentTime = 0;
+      
+      await video.play();
+      setIsPlaying(true);
+      setShowPlayOverlay(false);
+      setUserInteracted(true);
+    } catch (error) {
+      console.warn('Autoplay with sound failed, starting muted:', error);
+      video.muted = true;
+      setHasAudio(false);
+      try {
+        await video.play();
+        setIsPlaying(true);
+      } catch (mutedError) {
+        console.warn('Even muted autoplay failed:', mutedError);
+      }
+    }
+  }, []);
+
+  const startVideoMuted = useCallback(async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    try {
+      video.muted = true;
+      setHasAudio(false);
+      video.currentTime = 0;
+      
+      await video.play();
+      setIsPlaying(true);
+    } catch (error) {
+      console.warn('Muted autoplay failed:', error);
+    }
   }, []);
 
   // Handle language changes - restart video
@@ -38,61 +94,33 @@ const VideoHero = () => {
     if (video && isMounted) {
       video.pause();
       setIsPlaying(false);
-      // Reset video and restart with sound
-      video.currentTime = 0;
-      video.muted = false;
-      setHasAudio(true);
       
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch((err) => {
-            console.warn('Autoplay with sound failed, falling back to muted:', err);
-            video.muted = true;
-            setHasAudio(false);
-            video.play().then(() => {
-              setIsPlaying(true);
-            });
-          });
+      if (isMobileDevice() && !userInteracted) {
+        // On mobile without interaction, start muted
+        startVideoMuted();
+      } else {
+        // On desktop or after user interaction, try with sound
+        startVideoWithSound();
       }
     }
-  }, [language, isMounted]);
+  }, [language, isMounted, userInteracted, startVideoMuted, startVideoWithSound]);
 
   // Handle route changes - pause when leaving home page
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
       if (location.pathname !== '/') {
-        // Pause video when navigating away from home
         video.pause();
         setIsPlaying(false);
       } else {
-        // Restart video with sound when returning to home page
-        video.currentTime = 0;
-        video.muted = false;
-        setHasAudio(true);
-        
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              setIsPlaying(true);
-            })
-            .catch((err) => {
-              console.warn('Autoplay with sound failed, falling back to muted:', err);
-              video.muted = true;
-              setHasAudio(false);
-              video.play().then(() => {
-                setIsPlaying(true);
-              });
-            });
+        if (isMobileDevice() && !userInteracted) {
+          startVideoMuted();
+        } else {
+          startVideoWithSound();
         }
       }
     }
-  }, [location.pathname]);
+  }, [location.pathname, userInteracted, startVideoMuted, startVideoWithSound]);
 
   const handleVideoEnd = () => {
     setIsPlaying(false);
@@ -123,8 +151,14 @@ const VideoHero = () => {
     } else {
       video.muted = false;
       setHasAudio(true);
+      setUserInteracted(true);
     }
   }, [hasAudio]);
+
+  const handlePlayWithSound = () => {
+    setUserInteracted(true);
+    startVideoWithSound();
+  };
 
   const mobileHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
 
@@ -143,7 +177,9 @@ const VideoHero = () => {
       <video
         key={language}
         ref={videoRef}
+        autoPlay
         playsInline
+        webkit-playsinline="true"
         preload="metadata"
         muted={!hasAudio}
         onEnded={handleVideoEnd}
@@ -154,7 +190,21 @@ const VideoHero = () => {
         <source src={videoSrc} type="video/mp4" />
       </video>
 
-      {/* Always show video controls */}
+      {/* Mobile Play Overlay */}
+      {showPlayOverlay && isMobileDevice() && (
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
+          <Button
+            onClick={handlePlayWithSound}
+            size="lg"
+            className="bg-white/90 text-black rounded-full shadow-lg hover:bg-white transform hover:scale-105 transition-all duration-300 animate-pulse"
+          >
+            <Play className="w-8 h-8 mr-3" />
+            {t('tapToPlayWithSound', 'Tap to play with sound')}
+          </Button>
+        </div>
+      )}
+
+      {/* Video controls */}
       <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
         <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
           {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
