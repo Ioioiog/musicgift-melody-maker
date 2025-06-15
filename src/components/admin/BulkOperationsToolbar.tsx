@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -30,6 +29,20 @@ const BulkOperationsToolbar = ({
 }: BulkOperationsToolbarProps) => {
   const [bulkLoading, setBulkLoading] = useState(false);
   const { toast } = useToast();
+  const checkboxRef = useRef<HTMLButtonElement>(null);
+
+  const isAllSelected = selectedOrders.length === allOrders.length && allOrders.length > 0;
+  const isIndeterminate = selectedOrders.length > 0 && selectedOrders.length < allOrders.length;
+
+  // Set indeterminate state using ref
+  useEffect(() => {
+    if (checkboxRef.current) {
+      const input = checkboxRef.current.querySelector('input[type="checkbox"]') as HTMLInputElement;
+      if (input) {
+        input.indeterminate = isIndeterminate;
+      }
+    }
+  }, [isIndeterminate]);
 
   const handleBulkRefresh = async () => {
     setBulkLoading(true);
@@ -80,16 +93,13 @@ const BulkOperationsToolbar = ({
     document.body.removeChild(link);
   };
 
-  const isAllSelected = selectedOrders.length === allOrders.length && allOrders.length > 0;
-  const isIndeterminate = selectedOrders.length > 0 && selectedOrders.length < allOrders.length;
-
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 bg-gray-50 border rounded-lg">
       <div className="flex items-center gap-4 flex-1">
         <div className="flex items-center space-x-2">
           <Checkbox
+            ref={checkboxRef}
             checked={isAllSelected}
-            indeterminate={isIndeterminate}
             onCheckedChange={onSelectAll}
           />
           <span className="text-sm font-medium">
