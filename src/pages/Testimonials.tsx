@@ -101,7 +101,7 @@ const Testimonials = () => {
                     Review us on 
                   </span>
                   <img 
-                    src="/lovable-uploads/47cbf05f-3839-40b6-abc6-584208546eb2.png" 
+                    src="/uploads/trustpilot.webp" 
                     alt="Trustpilot" 
                     className="ml-1 h-4 w-auto"
                     loading="lazy"
