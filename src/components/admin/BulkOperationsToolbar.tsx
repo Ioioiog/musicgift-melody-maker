@@ -89,9 +89,7 @@ const BulkOperationsToolbar = ({
         <div className="flex items-center space-x-2">
           <Checkbox
             checked={isAllSelected}
-            ref={(ref) => {
-              if (ref) ref.indeterminate = isIndeterminate;
-            }}
+            indeterminate={isIndeterminate}
             onCheckedChange={onSelectAll}
           />
           <span className="text-sm font-medium">

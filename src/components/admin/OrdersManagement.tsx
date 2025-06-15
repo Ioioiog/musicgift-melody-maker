@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -5,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 import OrderEditDialog from './OrderEditDialog';
 import MusicPromptsDialog from './MusicPromptsDialog';
 import PaymentStatusBadge from './PaymentStatusBadge';
@@ -43,7 +45,6 @@ interface Order {
   smartbill_invoice_id?: string;
   revolut_order_id?: string;
   revolut_payment_id?: string;
-  netopia_order_id?: string;
   last_status_check_at?: string;
 }
 
@@ -118,7 +119,6 @@ const OrdersManagement = () => {
             smartbill_invoice_id: order.smartbill_invoice_id,
             revolut_order_id: order.revolut_order_id,
             revolut_payment_id: order.revolut_payment_id,
-            netopia_order_id: order.netopia_order_id,
             last_status_check_at: order.last_status_check_at
           };
         });
