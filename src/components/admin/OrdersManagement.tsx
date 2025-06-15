@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import { Button } from '@/components/ui/button';
@@ -55,19 +54,28 @@ const OrdersManagement = () => {
         });
       } else {
         // Transform the data to match our Order interface
-        const transformedOrders = (data || []).map(order => ({
-          id: order.id,
-          created_at: order.created_at,
-          email: order.form_data?.email || order.form_data?.customerEmail || 'N/A',
-          total_price: order.total_price || 0,
-          status: order.status || 'pending',
-          form_data: order.form_data,
-          payment_status: order.payment_status,
-          payment_provider: order.payment_provider,
-          currency: order.currency,
-          package_name: order.package_name,
-          package_value: order.package_value
-        }));
+        const transformedOrders = (data || []).map(order => {
+          // Safely extract email from form_data with proper type checking
+          let email = 'N/A';
+          if (order.form_data && typeof order.form_data === 'object') {
+            const formData = order.form_data as Record<string, any>;
+            email = formData.email || formData.customerEmail || 'N/A';
+          }
+
+          return {
+            id: order.id,
+            created_at: order.created_at,
+            email,
+            total_price: order.total_price || 0,
+            status: order.status || 'pending',
+            form_data: order.form_data,
+            payment_status: order.payment_status,
+            payment_provider: order.payment_provider,
+            currency: order.currency,
+            package_name: order.package_name,
+            package_value: order.package_value
+          };
+        });
         setOrders(transformedOrders);
       }
     } finally {

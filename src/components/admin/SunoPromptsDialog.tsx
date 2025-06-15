@@ -20,7 +20,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
-interface SunoPrompt {
+interface MusicPrompt {
   title: string;
   description: string;
   lyrics: string;
@@ -28,7 +28,7 @@ interface SunoPrompt {
   prompt: string;
 }
 
-interface EditablePrompt extends SunoPrompt {
+interface EditablePrompt extends MusicPrompt {
   isEditing: boolean;
   editedTitle: string;
   editedDescription: string;
@@ -71,14 +71,14 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
     setIsGenerating(true);
     try {
       console.log('Generating new prompts for order:', orderData?.id);
-      const { data, error } = await supabase.functions.invoke('generate-suno-prompts', {
+      const { data, error } = await supabase.functions.invoke('generate-content', {
         body: { orderData }
       });
 
       if (error) throw error;
 
       if (data.success && data.prompts) {
-        const editablePrompts = data.prompts.map((prompt: SunoPrompt) => ({
+        const editablePrompts = data.prompts.map((prompt: MusicPrompt) => ({
           ...prompt,
           isEditing: false,
           editedTitle: prompt.title,
@@ -112,14 +112,14 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
     setIsRegeneratingVersions(true);
     try {
       console.log('Generating additional versions for order:', orderData?.id);
-      const { data, error } = await supabase.functions.invoke('generate-suno-prompts', {
+      const { data, error } = await supabase.functions.invoke('generate-content', {
         body: { orderData }
       });
 
       if (error) throw error;
 
       if (data.success && data.prompts) {
-        const newEditablePrompts = data.prompts.map((prompt: SunoPrompt) => ({
+        const newEditablePrompts = data.prompts.map((prompt: MusicPrompt) => ({
           ...prompt,
           isEditing: false,
           editedTitle: prompt.title,
@@ -160,8 +160,9 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
     setIsLoading(true);
     try {
       console.log('Loading existing prompts for order:', orderData.id);
-      const { data: existingPromptsData, error } = await supabase
-        .from('suno_prompts')
+      // Use type casting to work around TypeScript issues with the renamed table
+      const { data: existingPromptsData, error } = await (supabase as any)
+        .from('music_prompts')
         .select('*')
         .eq('order_id', orderData.id)
         .order('created_at', { ascending: false });
@@ -191,7 +192,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
         setShowingExisting(true);
         
         // Set the optimized prompt ID
-        const optimizedPrompt = existingPromptsData.find(p => p.is_optimized);
+        const optimizedPrompt = existingPromptsData.find((p: any) => p.is_optimized);
         if (optimizedPrompt) {
           setSavedPromptId(optimizedPrompt.id);
         }
@@ -303,15 +304,15 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
       }
 
       // First, unmark any existing optimized prompts for this order
-      await supabase
-        .from('suno_prompts')
+      await (supabase as any)
+        .from('music_prompts')
         .update({ is_optimized: false })
         .eq('order_id', orderData.id)
         .eq('is_optimized', true);
 
       // Save the new optimized prompt
-      const { data: newPrompt, error } = await supabase
-        .from('suno_prompts')
+      const { data: newPrompt, error } = await (supabase as any)
+        .from('music_prompts')
         .insert({
           order_id: orderData.id,
           title: prompt.title,
@@ -421,7 +422,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
           <DialogTitle className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 text-lg sm:text-xl">
             <div className="flex items-center space-x-2">
               <Music className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
-              <span className="text-sm sm:text-base">Suno.AI Song Prompts - Order #{orderData?.id?.slice(0, 8)}</span>
+              <span className="text-sm sm:text-base">Music Content Prompts - Order #{orderData?.id?.slice(0, 8)}</span>
             </div>
             <div className="flex flex-wrap gap-1 sm:gap-2">
               <Badge variant="outline" className="text-xs">
@@ -457,7 +458,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                   <p className="text-xs sm:text-sm text-gray-600">
                     {showingExisting 
                       ? `Showing ${existingPrompts.length} saved prompts${prompts.length > existingPrompts.length ? ` and ${prompts.length - existingPrompts.length} new versions` : ''} in ${getLanguage()}`
-                      : `Generated prompts with complete lyrics in ${getLanguage()}, optimized for Suno.AI music generation`
+                      : `Generated prompts with complete lyrics in ${getLanguage()}, optimized for music generation`
                     }
                   </p>
                   {showingExisting && existingPrompts.length > 0 && (
@@ -508,7 +509,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                               Generate Additional Versions?
                             </AlertDialogTitle>
                             <AlertDialogDescription className="text-xs sm:text-sm">
-                              This will generate 3 additional AI prompt versions while keeping your existing saved prompts unchanged. 
+                              This will generate 3 additional content prompt versions while keeping your existing saved prompts unchanged. 
                               You'll be able to compare all versions and choose which one to save as the optimized version.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
@@ -540,7 +541,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                               Replace with New Prompts?
                             </AlertDialogTitle>
                             <AlertDialogDescription className="text-xs sm:text-sm">
-                              This will generate completely new AI prompts and replace what you're currently viewing. 
+                              This will generate completely new content prompts and replace what you're currently viewing. 
                               Your saved prompts in the database will remain unchanged. Are you sure you want to continue?
                             </AlertDialogDescription>
                           </AlertDialogHeader>
@@ -705,7 +706,7 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                                   value={prompt.editedTechnicalTags}
                                   onChange={(e) => updateEditedField(index, 'editedTechnicalTags', e.target.value)}
                                   className="min-h-[60px] sm:min-h-[80px] font-mono text-xs sm:text-sm"
-                                  placeholder="Suno.AI technical tags..."
+                                  placeholder="Music generation technical tags..."
                                 />
                               ) : (
                                 <pre className="text-xs sm:text-sm whitespace-pre-wrap font-mono pr-8">
@@ -728,14 +729,14 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
 
                           {/* Complete Prompt Section */}
                           <div className="space-y-2">
-                            <h4 className="font-semibold text-xs sm:text-sm text-gray-700">Complete Suno.AI Prompt</h4>
+                            <h4 className="font-semibold text-xs sm:text-sm text-gray-700">Complete Music Generation Prompt</h4>
                             <div className="bg-gray-50 rounded-md p-3 sm:p-4 relative">
                               {prompt.isEditing ? (
                                 <Textarea
                                   value={prompt.editedPrompt}
                                   onChange={(e) => updateEditedField(index, 'editedPrompt', e.target.value)}
                                   className="min-h-[100px] sm:min-h-[120px] font-mono text-xs sm:text-sm"
-                                  placeholder="Complete Suno.AI prompt combining lyrics and technical tags..."
+                                  placeholder="Complete music generation prompt combining lyrics and technical tags..."
                                 />
                               ) : (
                                 <pre className="text-xs sm:text-sm whitespace-pre-wrap font-mono pr-16 sm:pr-20">
@@ -821,8 +822,8 @@ const SunoPromptsDialog = ({ isOpen, onClose, orderData }: SunoPromptsDialogProp
                     <li>3. Adjust technical tags to match your musical vision</li>
                     {(!showingExisting || prompts.length > existingPrompts.length) && <li>4. Save your preferred version as the optimized version to the database</li>}
                     <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '5' : '4'}. Copy the complete prompt (lyrics + technical tags)</li>
-                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '6' : '5'}. Go to Suno.AI and create a new song</li>
-                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '7' : '6'}. Paste the complete prompt in Suno.AI</li>
+                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '6' : '5'}. Go to your preferred music generation platform</li>
+                    <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '7' : '6'}. Paste the complete prompt in the generation tool</li>
                     <li>{(!showingExisting || prompts.length > existingPrompts.length) ? '8' : '7'}. Generate your personalized multilingual song</li>
                   </ol>
                 </div>
