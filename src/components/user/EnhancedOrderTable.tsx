@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,6 +8,7 @@ import { Eye, Download, ChevronDown, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getCustomerName, getCustomerEmail, getArrayFromJson } from '@/types/order';
+import { formatCurrency } from '@/utils/currencyUtils';
 import OrderExpandedDetails from './OrderExpandedDetails';
 
 interface EnhancedOrderTableProps {
@@ -70,10 +72,6 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
     }
   };
 
-  const formatPrice = (price: number, currency: string) => {
-    return `${currency} ${price.toFixed(2)}`;
-  };
-
   const getAddonsCount = (addons: any) => {
     const addonsArray = getArrayFromJson(addons);
     return addonsArray.length;
@@ -104,7 +102,7 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                   <div>
                     <span className="text-gray-500">Amount:</span>
                     <span className="ml-1 font-medium">
-                      {order.total_price ? formatPrice(order.total_price, order.currency) : 'N/A'}
+                      {order.total_price ? formatCurrency(order.total_price, order.currency, order.payment_provider) : 'N/A'}
                     </span>
                   </div>
                   <div>
@@ -233,11 +231,11 @@ const EnhancedOrderTable: React.FC<EnhancedOrderTableProps> = ({ orders, onViewD
                 <TableCell>
                   <div>
                     <div className="font-medium">
-                      {order.total_price ? formatPrice(order.total_price, order.currency) : 'N/A'}
+                      {order.total_price ? formatCurrency(order.total_price, order.currency, order.payment_provider) : 'N/A'}
                     </div>
                     {order.gift_credit_applied > 0 && (
                       <div className="text-sm text-green-600">
-                        Gift: -{formatPrice(order.gift_credit_applied, order.currency)}
+                        Gift: -{formatCurrency(order.gift_credit_applied, order.currency, order.payment_provider)}
                       </div>
                     )}
                   </div>
