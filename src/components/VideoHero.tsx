@@ -1,7 +1,7 @@
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Play, Pause, Volume2 } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useLocation } from 'react-router-dom';
@@ -16,75 +16,92 @@ const VideoHero = () => {
   const location = useLocation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMobile = useIsMobile();
-  const [hasAudio, setHasAudio] = useState(false);
-  const [videoPlayedOnce, setVideoPlayedOnce] = useState(false);
+  const [hasAudio, setHasAudio] = useState(true); // Start with audio enabled
   const [isMounted, setIsMounted] = useState(false);
   const [useWebM, setUseWebM] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [shouldAutoplay, setShouldAutoplay] = useState(true);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
   const videoWebM = `/uploads/${baseName}.webm`;
   const posterSrc = '/uploads/video_placeholder.png';
 
+  // Initialize video format support
   useEffect(() => {
-    const playedLangKey = `played-${language}`;
-    const sessionHasPlayed = sessionStorage.getItem(playedLangKey) === 'true';
-
-    if (!sessionHasPlayed) {
-      setShouldAutoplay(true);
-      sessionStorage.setItem(playedLangKey, 'true');
-    } else {
-      setShouldAutoplay(false);
-    }
-
     setUseWebM(supportsWebM());
     setIsMounted(true);
-    setVideoPlayedOnce(false);
-    setIsPlaying(false);
-  }, [language]);
+  }, []);
 
+  // Handle language changes - restart video
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
+    if (video && isMounted) {
       video.pause();
       setIsPlaying(false);
-    }
-  }, [location.pathname]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (shouldAutoplay && video) {
+      // Reset video and restart with sound
+      video.currentTime = 0;
       video.muted = false;
+      setHasAudio(true);
+      
       const playPromise = video.play();
-
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
-            setHasAudio(true);
             setIsPlaying(true);
           })
           .catch((err) => {
             console.warn('Autoplay with sound failed, falling back to muted:', err);
             video.muted = true;
+            setHasAudio(false);
             video.play().then(() => {
-              setHasAudio(false);
               setIsPlaying(true);
             });
           });
       }
     }
-  }, [shouldAutoplay, language]);
+  }, [language, isMounted]);
+
+  // Handle route changes - pause when leaving home page
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      if (location.pathname !== '/') {
+        // Pause video when navigating away from home
+        video.pause();
+        setIsPlaying(false);
+      } else {
+        // Restart video with sound when returning to home page
+        video.currentTime = 0;
+        video.muted = false;
+        setHasAudio(true);
+        
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch((err) => {
+              console.warn('Autoplay with sound failed, falling back to muted:', err);
+              video.muted = true;
+              setHasAudio(false);
+              video.play().then(() => {
+                setIsPlaying(true);
+              });
+            });
+        }
+      }
+    }
+  }, [location.pathname]);
 
   const handleVideoEnd = () => {
     setIsPlaying(false);
-    setVideoPlayedOnce(true);
   };
 
   const handleTogglePlay = () => {
     const video = videoRef.current;
     if (!video) return;
+    
     if (isPlaying) {
       video.pause();
       setIsPlaying(false);
@@ -99,6 +116,7 @@ const VideoHero = () => {
   const handleToggleAudio = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
+    
     if (hasAudio) {
       video.muted = true;
       setHasAudio(false);
@@ -136,16 +154,15 @@ const VideoHero = () => {
         <source src={videoSrc} type="video/mp4" />
       </video>
 
-      {!shouldAutoplay && (
-        <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
-          <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
-            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-          </Button>
-          <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
-            <Volume2 className="w-5 h-5" />
-          </Button>
-        </div>
-      )}
+      {/* Always show video controls */}
+      <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
+        <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
+          {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+        </Button>
+        <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
+          {hasAudio ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+        </Button>
+      </div>
 
       <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
 
