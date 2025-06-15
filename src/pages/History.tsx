@@ -12,7 +12,7 @@ const History = () => {
   return <>
       <Navigation />
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pt-24 pb-12">
-        <div className="container max-w-6xl mx-[230px] my-[133px] px-0">
+        <div className="container max-w-6xl my-[105px] mx-[86px] px-[4px]">
           <div className="mb-8">
             <Link to="/" className="inline-flex items-center text-purple-600 hover:text-purple-700 transition-colors mb-6">
               <ArrowLeft className="w-4 h-4 mr-2" />
