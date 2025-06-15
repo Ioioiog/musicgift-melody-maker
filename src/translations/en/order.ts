@@ -1,4 +1,5 @@
 
+
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -567,7 +568,6 @@ export const orderTranslations = {
   customer: 'Customer',
   amount: 'Amount',
   status: 'Status',
-  payment: 'Payment',
   invoice: 'Invoice',
   delivery: 'Delivery',
   actions: 'Actions',
@@ -587,6 +587,7 @@ export const orderTranslations = {
   orderHistory: 'Order History',
   viewManageOrders: 'View and manage your orders',
   backHome: 'Back Home',
-  orderError: 'Error loading orders',
+  loadingOrdersError: 'Error loading orders',
   noOrdersYet: 'No orders yet'
 };
+
