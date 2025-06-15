@@ -15,3 +15,6 @@ verify_jwt = true
 
 [functions.update-testimonials-file]
 verify_jwt = true
+
+[functions.generate-content]
+verify_jwt = true
