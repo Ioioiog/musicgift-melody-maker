@@ -156,7 +156,8 @@ const MusicPromptsDialog = ({ isOpen, onClose, orderData }: MusicPromptsDialogPr
 
     setIsLoading(true);
     try {
-      const { data: existingPromptsData, error } = await supabase
+      // Use type casting to work around TypeScript issues with the renamed table
+      const { data: existingPromptsData, error } = await (supabase as any)
         .from('music_prompts')
         .select('*')
         .eq('order_id', orderData.id)
@@ -184,7 +185,7 @@ const MusicPromptsDialog = ({ isOpen, onClose, orderData }: MusicPromptsDialogPr
         setPrompts(editablePrompts);
         setShowingExisting(true);
         
-        const optimizedPrompt = existingPromptsData.find(p => p.is_optimized);
+        const optimizedPrompt = existingPromptsData.find((p: any) => p.is_optimized);
         if (optimizedPrompt) {
           setSavedPromptId(optimizedPrompt.id);
         }
@@ -292,13 +293,15 @@ const MusicPromptsDialog = ({ isOpen, onClose, orderData }: MusicPromptsDialogPr
         return;
       }
 
-      await supabase
+      // First, unmark any existing optimized prompts for this order
+      await (supabase as any)
         .from('music_prompts')
         .update({ is_optimized: false })
         .eq('order_id', orderData.id)
         .eq('is_optimized', true);
 
-      const { data: newPrompt, error } = await supabase
+      // Save the new optimized prompt
+      const { data: newPrompt, error } = await (supabase as any)
         .from('music_prompts')
         .insert({
           order_id: orderData.id,

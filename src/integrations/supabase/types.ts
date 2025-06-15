@@ -713,6 +713,51 @@ export type Database = {
           },
         ]
       }
+      music_prompts: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_optimized: boolean
+          language: string
+          lyrics: string
+          order_id: string
+          prompt: string
+          technical_tags: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_optimized?: boolean
+          language?: string
+          lyrics: string
+          order_id: string
+          prompt: string
+          technical_tags: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_optimized?: boolean
+          language?: string
+          lyrics?: string
+          order_id?: string
+          prompt?: string
+          technical_tags?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           brevo_contact_id: string | null
@@ -1183,51 +1228,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      suno_prompts: {
-        Row: {
-          created_at: string
-          created_by: string | null
-          description: string | null
-          id: string
-          is_optimized: boolean
-          language: string
-          lyrics: string
-          order_id: string
-          prompt: string
-          technical_tags: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          is_optimized?: boolean
-          language?: string
-          lyrics: string
-          order_id: string
-          prompt: string
-          technical_tags: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          is_optimized?: boolean
-          language?: string
-          lyrics?: string
-          order_id?: string
-          prompt?: string
-          technical_tags?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
       }
       testimonials: {
         Row: {

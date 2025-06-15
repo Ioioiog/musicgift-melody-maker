@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,11 @@ interface Order {
   total_price: number;
   status: string;
   form_data: any;
+  payment_status?: string;
+  payment_provider?: string;
+  currency?: string;
+  package_name?: string;
+  package_value?: string;
 }
 
 const OrdersManagement = () => {
@@ -48,7 +54,21 @@ const OrdersManagement = () => {
           variant: 'destructive',
         });
       } else {
-        setOrders(data || []);
+        // Transform the data to match our Order interface
+        const transformedOrders = (data || []).map(order => ({
+          id: order.id,
+          created_at: order.created_at,
+          email: order.form_data?.email || order.form_data?.customerEmail || 'N/A',
+          total_price: order.total_price || 0,
+          status: order.status || 'pending',
+          form_data: order.form_data,
+          payment_status: order.payment_status,
+          payment_provider: order.payment_provider,
+          currency: order.currency,
+          package_name: order.package_name,
+          package_value: order.package_value
+        }));
+        setOrders(transformedOrders);
       }
     } finally {
       setLoading(false);
@@ -69,7 +89,12 @@ const OrdersManagement = () => {
     try {
       const { data, error } = await supabase
         .from('orders')
-        .update(updatedOrder)
+        .update({
+          status: updatedOrder.status,
+          payment_status: updatedOrder.payment_status,
+          total_price: updatedOrder.total_price,
+          form_data: updatedOrder.form_data
+        })
         .eq('id', updatedOrder.id);
 
       if (error) {
