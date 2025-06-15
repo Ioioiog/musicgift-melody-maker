@@ -1,13 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Edit, CheckCircle, Music, ChevronDown, ChevronUp } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { useLanguage } from '@/contexts/LanguageContext';
 import OrderEditDialog from './OrderEditDialog';
 import MusicPromptsDialog from './MusicPromptsDialog';
+import PaymentStatusBadge from './PaymentStatusBadge';
+import PaymentProviderIcon from './PaymentProviderIcon';
+import OrderActionMenu from './OrderActionMenu';
+import BulkOperationsToolbar from './BulkOperationsToolbar';
+import { useOrderActions } from '@/hooks/useOrderActions';
 import {
   Table,
   TableBody,
@@ -31,6 +35,16 @@ interface Order {
   currency?: string;
   package_name?: string;
   package_value?: string;
+  stripe_session_id?: string;
+  stripe_payment_intent_id?: string;
+  smartbill_proforma_id?: string;
+  smartbill_proforma_status?: string;
+  smartbill_payment_status?: string;
+  smartbill_invoice_id?: string;
+  revolut_order_id?: string;
+  revolut_payment_id?: string;
+  netopia_order_id?: string;
+  last_status_check_at?: string;
 }
 
 const OrdersManagement = () => {
@@ -43,12 +57,15 @@ const OrdersManagement = () => {
   const [selectedOrderForPrompts, setSelectedOrderForPrompts] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [providerFilter, setProviderFilter] = useState('all');
   const [sortField, setSortField] = useState<keyof Order>('created_at');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
+  const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const { toast } = useToast();
   const { t } = useLanguage();
+  const orderActions = useOrderActions();
 
   useEffect(() => {
     fetchOrders();
@@ -56,7 +73,7 @@ const OrdersManagement = () => {
 
   useEffect(() => {
     filterAndSortOrders();
-  }, [orders, searchTerm, statusFilter, sortField, sortDirection]);
+  }, [orders, searchTerm, statusFilter, providerFilter, sortField, sortDirection]);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -74,9 +91,7 @@ const OrdersManagement = () => {
           variant: 'destructive',
         });
       } else {
-        // Transform the data to match our Order interface
         const transformedOrders = (data || []).map(order => {
-          // Safely extract email from form_data with proper type checking
           let email = 'N/A';
           if (order.form_data && typeof order.form_data === 'object' && order.form_data !== null) {
             const formData = order.form_data as Record<string, any>;
@@ -94,7 +109,17 @@ const OrdersManagement = () => {
             payment_provider: order.payment_provider,
             currency: order.currency,
             package_name: order.package_name,
-            package_value: order.package_value
+            package_value: order.package_value,
+            stripe_session_id: order.stripe_session_id,
+            stripe_payment_intent_id: order.stripe_payment_intent_id,
+            smartbill_proforma_id: order.smartbill_proforma_id,
+            smartbill_proforma_status: order.smartbill_proforma_status,
+            smartbill_payment_status: order.smartbill_payment_status,
+            smartbill_invoice_id: order.smartbill_invoice_id,
+            revolut_order_id: order.revolut_order_id,
+            revolut_payment_id: order.revolut_payment_id,
+            netopia_order_id: order.netopia_order_id,
+            last_status_check_at: order.last_status_check_at
           };
         });
         setOrders(transformedOrders);
@@ -111,12 +136,12 @@ const OrdersManagement = () => {
         order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (order.package_name && order.package_name.toLowerCase().includes(searchTerm.toLowerCase()));
       
-      const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
+      const matchesStatus = statusFilter === 'all' || order.payment_status === statusFilter;
+      const matchesProvider = providerFilter === 'all' || order.payment_provider === providerFilter;
       
-      return matchesSearch && matchesStatus;
+      return matchesSearch && matchesStatus && matchesProvider;
     });
 
-    // Sort orders
     filtered.sort((a, b) => {
       const aValue = a[sortField];
       const bValue = b[sortField];
@@ -127,7 +152,23 @@ const OrdersManagement = () => {
     });
 
     setFilteredOrders(filtered);
-    setCurrentPage(1); // Reset to first page when filtering
+    setCurrentPage(1);
+  };
+
+  const handleSelectOrder = (orderId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedOrders(prev => [...prev, orderId]);
+    } else {
+      setSelectedOrders(prev => prev.filter(id => id !== orderId));
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedOrders(currentOrders.map(order => order.id));
+    } else {
+      setSelectedOrders([]);
+    }
   };
 
   const handleSort = (field: keyof Order) => {
@@ -197,7 +238,6 @@ const OrdersManagement = () => {
     setIsMusicPromptsDialogOpen(true);
   };
 
-  // Pagination
   const totalPages = Math.ceil(filteredOrders.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
@@ -213,7 +253,7 @@ const OrdersManagement = () => {
 
   return (
     <div className="space-y-4">
-      {/* Filters */}
+      {/* Enhanced Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <Input
           placeholder="Search by email, ID, or package..."
@@ -228,64 +268,57 @@ const OrdersManagement = () => {
           <SelectContent>
             <SelectItem value="all">All statuses</SelectItem>
             <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="processing">Processing</SelectItem>
             <SelectItem value="completed">Completed</SelectItem>
+            <SelectItem value="failed">Failed</SelectItem>
             <SelectItem value="cancelled">Cancelled</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      {/* Table */}
+      {/* Bulk Operations Toolbar */}
+      <BulkOperationsToolbar
+        selectedOrders={selectedOrders}
+        allOrders={currentOrders}
+        onSelectAll={handleSelectAll}
+        onRefreshComplete={fetchOrders}
+        providerFilter={providerFilter}
+        statusFilter={statusFilter}
+        onProviderFilterChange={setProviderFilter}
+        onStatusFilterChange={setStatusFilter}
+      />
+
+      {/* Enhanced Table */}
       <div className="border rounded-md">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead 
-                className="cursor-pointer select-none"
-                onClick={() => handleSort('id')}
-              >
-                <div className="flex items-center gap-1">
-                  ID {getSortIcon('id')}
-                </div>
+              <TableHead className="w-12">
+                <Checkbox
+                  checked={selectedOrders.length === currentOrders.length && currentOrders.length > 0}
+                  onCheckedChange={handleSelectAll}
+                />
               </TableHead>
-              <TableHead 
-                className="cursor-pointer select-none"
-                onClick={() => handleSort('created_at')}
-              >
-                <div className="flex items-center gap-1">
-                  Date {getSortIcon('created_at')}
-                </div>
-              </TableHead>
-              <TableHead 
-                className="cursor-pointer select-none"
-                onClick={() => handleSort('email')}
-              >
-                <div className="flex items-center gap-1">
-                  Email {getSortIcon('email')}
-                </div>
-              </TableHead>
-              <TableHead 
-                className="cursor-pointer select-none"
-                onClick={() => handleSort('total_price')}
-              >
-                <div className="flex items-center gap-1">
-                  Total Price {getSortIcon('total_price')}
-                </div>
-              </TableHead>
-              <TableHead 
-                className="cursor-pointer select-none"
-                onClick={() => handleSort('status')}
-              >
-                <div className="flex items-center gap-1">
-                  Status {getSortIcon('status')}
-                </div>
-              </TableHead>
+              <TableHead>ID</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Provider</TableHead>
+              <TableHead>Payment Status</TableHead>
+              <TableHead>Proforma</TableHead>
+              <TableHead>Invoice</TableHead>
+              <TableHead>Total Price</TableHead>
+              <TableHead>Last Check</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {currentOrders.map((order) => (
               <TableRow key={order.id}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedOrders.includes(order.id)}
+                    onCheckedChange={(checked) => handleSelectOrder(order.id, checked as boolean)}
+                  />
+                </TableCell>
                 <TableCell className="font-mono text-xs">
                   {order.id.slice(0, 8)}...
                 </TableCell>
@@ -293,16 +326,47 @@ const OrdersManagement = () => {
                   {format(new Date(order.created_at), 'yyyy-MM-dd HH:mm')}
                 </TableCell>
                 <TableCell>{order.email}</TableCell>
-                <TableCell>{order.total_price}</TableCell>
                 <TableCell>
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    order.status === 'completed' ? 'bg-green-100 text-green-800' :
-                    order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
-                    order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                    'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {order.status}
-                  </span>
+                  <PaymentProviderIcon provider={order.payment_provider || 'unknown'} />
+                </TableCell>
+                <TableCell>
+                  <PaymentStatusBadge status={order.payment_status || 'pending'} type="payment" />
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-1">
+                    <PaymentStatusBadge 
+                      status={order.smartbill_proforma_status || 'not_requested'} 
+                      type="proforma" 
+                    />
+                    {order.smartbill_proforma_id && (
+                      <div className="text-xs text-gray-500 font-mono">
+                        {order.smartbill_proforma_id}
+                      </div>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-1">
+                    <PaymentStatusBadge 
+                      status={order.smartbill_invoice_id ? 'generated' : 'not_requested'} 
+                      type="invoice" 
+                    />
+                    {order.smartbill_invoice_id && (
+                      <div className="text-xs text-gray-500 font-mono">
+                        {order.smartbill_invoice_id}
+                      </div>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>{order.total_price} {order.currency}</TableCell>
+                <TableCell>
+                  {order.last_status_check_at ? (
+                    <div className="text-xs text-gray-500">
+                      {format(new Date(order.last_status_check_at), 'MM/dd HH:mm')}
+                    </div>
+                  ) : (
+                    <span className="text-xs text-gray-400">Never</span>
+                  )}
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-2">
@@ -312,28 +376,20 @@ const OrdersManagement = () => {
                       onClick={() => handleEditOrder(order)}
                       className="text-xs"
                     >
-                      <Edit className="w-3 h-3 mr-1" />
                       Edit
                     </Button>
-                    {order.status === 'completed' && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-xs"
-                      >
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Completed
-                      </Button>
-                    )}
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleGeneratePrompts(order)}
                       className="text-xs"
                     >
-                      <Music className="w-3 h-3 mr-1" />
-                      Generate Music Content
+                      Music Content
                     </Button>
+                    <OrderActionMenu 
+                      order={order} 
+                      onRefresh={fetchOrders}
+                    />
                   </div>
                 </TableCell>
               </TableRow>
