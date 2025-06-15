@@ -36,7 +36,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [language, isInitialized]);
 
-  const t = (key: string, fallback?: string): string => {
+  const t = (key: string, fallback?: string): string | string[] => {
     try {
       // Get the current language translations
       const currentLangTranslations = translations[language as keyof typeof translations];
@@ -53,13 +53,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       // Try to get the translation
       const translation = currentLangTranslations?.[key];
       
-      if (translation) {
+      if (translation !== undefined) {
         return translation;
       }
       
       // If no translation found, try English fallback
       const englishFallback = translations['en']?.[key];
-      if (englishFallback) {
+      if (englishFallback !== undefined) {
         console.warn('LanguageProvider: Using English fallback for missing key:', key);
         return englishFallback;
       }
@@ -101,7 +101,7 @@ export const useLanguage = (): LanguageContextType => {
         setLanguage: (lang: string) => {
           console.warn('useLanguage: Fallback setLanguage called with:', lang);
         },
-        t: (key: string, fallback?: string) => {
+        t: (key: string, fallback?: string): string | string[] => {
           // Try to get translation directly from translations object
           try {
             const roTranslations = translations['ro'];
@@ -123,7 +123,7 @@ export const useLanguage = (): LanguageContextType => {
     return {
       language: 'ro',
       setLanguage: () => {},
-      t: (key: string, fallback?: string) => fallback || key
+      t: (key: string, fallback?: string): string | string[] => fallback || key
     };
   }
 };
