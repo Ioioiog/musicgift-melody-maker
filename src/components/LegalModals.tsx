@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Dialog,
@@ -26,6 +27,16 @@ const LegalModals = ({ showModal, onClose }: LegalModalsProps) => {
   };
 
   const currentLang = getCurrentLanguage();
+
+  // Helper function to safely get array translations
+  const getArrayTranslation = (key: string): string[] => {
+    const translation = t(key);
+    if (Array.isArray(translation)) {
+      return translation;
+    }
+    // Fallback to empty array if translation is not an array
+    return [];
+  };
 
   const termsContent = {
     ro: {
@@ -624,7 +635,7 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
             <section>
               <h3 className="text-lg font-semibold mb-3">{t('howWeUseData')}</h3>
               <ul className="list-disc pl-6 space-y-2">
-                {(t('howWeUseDataList') as string[]).map((item, index) => (
+                {getArrayTranslation('howWeUseDataList').map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
               </ul>
@@ -643,7 +654,7 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
             <section>
               <h3 className="text-lg font-semibold mb-3">{t('yourRights')}</h3>
               <ul className="list-disc pl-6 space-y-2">
-                {(t('yourRightsList') as string[]).map((right, index) => (
+                {getArrayTranslation('yourRightsList').map((right, index) => (
                   <li key={index}>{right}</li>
                 ))}
               </ul>
@@ -674,7 +685,7 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
             <section>
               <h3 className="text-lg font-semibold mb-3">{t('whenRefundsApply')}</h3>
               <ul className="list-disc pl-6 space-y-2">
-                {(t('whenRefundsApplyList') as string[]).map((item, index) => (
+                {getArrayTranslation('whenRefundsApplyList').map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
               </ul>
@@ -683,7 +694,7 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
             <section>
               <h3 className="text-lg font-semibold mb-3">{t('refundProcess')}</h3>
               <ol className="list-decimal pl-6 space-y-2">
-                {(t('refundProcessList') as string[]).map((step, index) => (
+                {getArrayTranslation('refundProcessList').map((step, index) => (
                   <li key={index}>{step}</li>
                 ))}
               </ol>
@@ -692,7 +703,7 @@ Po tym okresie mogą zostać automatycznie usunięte bez powiadomienia.
             <section>
               <h3 className="text-lg font-semibold mb-3">{t('nonRefundableSituations')}</h3>
               <ul className="list-disc pl-6 space-y-2">
-                {(t('nonRefundableSituationsList') as string[]).map((situation, index) => (
+                {getArrayTranslation('nonRefundableSituationsList').map((situation, index) => (
                   <li key={index}>{situation}</li>
                 ))}
               </ul>
