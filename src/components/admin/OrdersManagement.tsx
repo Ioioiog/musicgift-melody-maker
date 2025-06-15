@@ -14,6 +14,7 @@ import PaymentProviderIcon from './PaymentProviderIcon';
 import OrderActionMenu from './OrderActionMenu';
 import BulkOperationsToolbar from './BulkOperationsToolbar';
 import { useOrderActions } from '@/hooks/useOrderActions';
+import { formatCurrency } from '@/utils/currencyUtils';
 import {
   Table,
   TableBody,
@@ -358,7 +359,7 @@ const OrdersManagement = () => {
                     )}
                   </div>
                 </TableCell>
-                <TableCell>{order.total_price} {order.currency}</TableCell>
+                <TableCell>{formatCurrency(order.total_price, order.currency, order.payment_provider)}</TableCell>
                 <TableCell>
                   {order.last_status_check_at ? (
                     <div className="text-xs text-gray-500">
