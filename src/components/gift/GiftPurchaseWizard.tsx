@@ -12,32 +12,32 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import { addDays, format } from 'date-fns';
 import GiftCardPreview from './GiftCardPreview';
+import PaymentProviderSelection from '@/components/order/PaymentProviderSelection';
 import { useToast } from '@/hooks/use-toast';
-import { useGiftCardDesigns } from '@/hooks/useGiftCards';
+import { useGiftCardDesigns, useCreateGiftCard } from '@/hooks/useGiftCards';
+import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
 import { Skeleton } from '@/components/ui/skeleton';
+
 interface GiftPurchaseWizardProps {
   onComplete: (data: any) => void;
 }
+
 const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
   onComplete
 }) => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    user
-  } = useAuth();
+  const { t } = useLanguage();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
-  const {
-    data: designs,
-    isLoading: designsLoading
-  } = useGiftCardDesigns();
+  const { toast } = useToast();
+  const { data: designs, isLoading: designsLoading } = useGiftCardDesigns();
+  const createGiftCard = useCreateGiftCard();
+  const initiatePayment = useGiftCardPayment();
+
   const [step, setStep] = useState(1);
   const [giftAmount, setGiftAmount] = useState(50);
   const [currency, setCurrency] = useState('RON');
+  const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('');
+  const [isCreatingGiftCard, setIsCreatingGiftCard] = useState(false);
   const [giftData, setGiftData] = useState({
     sender_name: user?.user_metadata?.full_name || user?.email || '',
     sender_email: user?.email || '',
@@ -47,8 +47,8 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
     delivery_date: undefined as Date | undefined
   });
   const [selectedDesign, setSelectedDesign] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [date, setDate] = React.useState<Date | undefined>(undefined);
+  
   const amountOptions = [25, 50, 100, 200];
 
   // Get active designs only
@@ -101,6 +101,9 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
   const handleDesignSelect = (design: any) => {
     setSelectedDesign(design);
   };
+  const handlePaymentProviderSelect = (provider: string) => {
+    setSelectedPaymentProvider(provider);
+  };
   const handleSubmit = async () => {
     if (!user) {
       toast({
@@ -108,20 +111,84 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       });
       return;
     }
-    setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      const giftCardData = {
-        code: 'GIFT-1234-5678',
-        amount: giftAmount,
+    if (!selectedPaymentProvider) {
+      toast({
+        title: 'Error',
+        description: 'Please select a payment provider',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setIsCreatingGiftCard(true);
+
+    try {
+      console.log('Creating gift card with data:', {
+        giftAmount,
+        currency,
+        giftData,
+        selectedDesign: selectedDesign?.id
+      });
+
+      // Create gift card record in database
+      const giftCardRecord = await createGiftCard.mutateAsync({
+        sender_user_id: user.id,
+        sender_name: giftData.sender_name,
+        sender_email: giftData.sender_email,
+        recipient_name: giftData.recipient_name,
+        recipient_email: giftData.recipient_email,
+        message_text: giftData.message_text || '',
         currency: currency,
-        recipient_email: giftData.recipient_email
-      };
-      onComplete(giftCardData);
-      setIsSubmitting(false);
-      navigate('/gift?payment=success');
-    }, 1500);
+        gift_amount: giftAmount,
+        design_id: selectedDesign?.id || null,
+        delivery_date: giftData.delivery_date?.toISOString() || null,
+        status: 'pending',
+        payment_status: 'pending'
+      });
+
+      console.log('Gift card created:', giftCardRecord);
+
+      // Initiate payment
+      const paymentResponse = await initiatePayment.mutateAsync({
+        giftCardId: giftCardRecord.id,
+        returnUrl: `${window.location.origin}/gift?payment=success`,
+        paymentProvider: selectedPaymentProvider
+      });
+
+      console.log('Payment initiated:', paymentResponse);
+
+      // Open payment URL in new tab
+      if (paymentResponse.paymentUrl || paymentResponse.url) {
+        const paymentUrl = paymentResponse.paymentUrl || paymentResponse.url;
+        window.open(paymentUrl, '_blank');
+        
+        toast({
+          title: 'Payment Initiated',
+          description: 'Please complete the payment in the new tab'
+        });
+
+        // Call onComplete with the gift card data
+        onComplete({
+          code: giftCardRecord.code,
+          amount: giftAmount,
+          currency: currency,
+          recipient_email: giftData.recipient_email
+        });
+      } else {
+        throw new Error('No payment URL received');
+      }
+
+    } catch (error) {
+      console.error('Error creating gift card or initiating payment:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to create gift card. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsCreatingGiftCard(false);
+    }
   };
   return <div className="max-w-4xl mx-auto">
       {/* Step Indicator */}
@@ -130,13 +197,14 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
           {t('purchaseGiftCard')}
         </h2>
         <p className="text-sm text-gray-300">
-          {t('stepXOfY').replace('{{current}}', step.toString()).replace('{{total}}', '4')}
+          {t('stepXOfY').replace('{{current}}', step.toString()).replace('{{total}}', '5')}
         </p>
         <div className="flex items-center justify-between">
           <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-            <div style={{
-            width: `${step / 4 * 100}%`
-          }} className="h-2.5 rounded-full bg-orange-500"></div>
+            <div 
+              style={{ width: `${(step / 5) * 100}%` }} 
+              className="h-2.5 rounded-full bg-orange-500"
+            ></div>
           </div>
         </div>
       </div>
@@ -251,20 +319,46 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
             </div>}
 
           {step === 4 && <div>
+              <h3 className="text-lg font-semibold mb-4 text-white">{t('selectPaymentMethod', 'Select Payment Method')}</h3>
+              <p className="text-sm text-gray-300 mb-4">{t('choosePaymentProvider', 'Choose how you\'d like to pay for your gift card')}</p>
+
+              <PaymentProviderSelection
+                selectedProvider={selectedPaymentProvider}
+                onProviderSelect={handlePaymentProviderSelect}
+              />
+
+              <div className="flex justify-between mt-8">
+                <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
+                <Button 
+                  onClick={nextStep} 
+                  disabled={!selectedPaymentProvider} 
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                >
+                  {t('nextReview')}
+                </Button>
+              </div>
+            </div>}
+
+          {step === 5 && <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('reviewGiftCard')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('confirmDetailsBeforePayment')}</p>
 
-              <div className="mb-4">
+              <div className="mb-4 space-y-2">
                 <h4 className="text-sm font-semibold text-white">{t('giftCardSummary')}</h4>
                 <p className="text-gray-300">{t('amount')}: {giftAmount} {currency}</p>
                 <p className="text-gray-300">{t('design')}: {selectedDesign?.name || t('default')}</p>
                 <p className="text-gray-300">{t('deliveryDateLabel')}: {giftData.delivery_date ? format(giftData.delivery_date, 'PPP') : t('immediate')}</p>
+                <p className="text-gray-300">{t('paymentMethod', 'Payment Method')}: {selectedPaymentProvider}</p>
               </div>
 
               <div className="flex justify-between">
                 <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
-                <Button onClick={handleSubmit} disabled={isSubmitting} className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400">
-                  {isSubmitting ? t('processing') : t('pay')}
+                <Button 
+                  onClick={handleSubmit} 
+                  disabled={isCreatingGiftCard} 
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                >
+                  {isCreatingGiftCard ? t('processing') : t('pay')}
                 </Button>
               </div>
             </div>}
