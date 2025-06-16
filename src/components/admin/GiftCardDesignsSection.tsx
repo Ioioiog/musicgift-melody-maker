@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Eye, ToggleLeft, ToggleRight } from "lucide-react";
+import { Plus, Edit, Trash2, ToggleLeft, ToggleRight, Sparkles, Palette } from "lucide-react";
 import { useGiftCardDesigns, useDeleteGiftCardDesign, useUpdateGiftCardDesign } from "@/hooks/useGiftCards";
 import { ResponsiveTable } from "@/components/ui/responsive-table";
 import { TableCell } from "@/components/ui/table";
@@ -227,14 +227,16 @@ const GiftCardDesignsSection = () => {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowInactive(!showInactive)}
-                className="whitespace-nowrap"
-              >
-                {showInactive ? "Hide Inactive" : "Show All"}
-              </Button>
+              {designs.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowInactive(!showInactive)}
+                  className="whitespace-nowrap"
+                >
+                  {showInactive ? "Hide Inactive" : "Show All"}
+                </Button>
+              )}
               <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <DialogTrigger asChild>
                   <Button onClick={handleAdd} className="whitespace-nowrap">
@@ -261,30 +263,60 @@ const GiftCardDesignsSection = () => {
         </CardHeader>
       </Card>
 
-      {/* Designs Table */}
-      <Card>
-        <CardContent className="p-0">
-          <ResponsiveTable
-            headers={["Design", "Status", "Created", "Actions"]}
-            data={designs}
-            renderRow={renderDesktopRow}
-            renderMobileCard={renderMobileCard}
-          />
-          {designs.length === 0 && (
-            <div className="text-center py-12 text-muted-foreground">
-              <div className="mb-2">
-                {showInactive ? "No gift card designs found." : "No active gift card designs found."}
-              </div>
-              <p className="text-sm">
-                {designs.length === 0 && allDesigns.length === 0 
-                  ? "Get started by creating your first design."
-                  : "Try adjusting your filters or create a new design."
-                }
-              </p>
+      {/* Designs Table or Empty State */}
+      {designs.length > 0 ? (
+        <Card>
+          <CardContent className="p-0">
+            <ResponsiveTable
+              headers={["Design", "Status", "Created", "Actions"]}
+              data={designs}
+              renderRow={renderDesktopRow}
+              renderMobileCard={renderMobileCard}
+            />
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="border-dashed border-2 border-gray-200">
+          <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="rounded-full bg-blue-50 p-6 mb-4">
+              <Palette className="h-12 w-12 text-blue-500" />
             </div>
-          )}
-        </CardContent>
-      </Card>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No Gift Card Designs Yet
+            </h3>
+            <p className="text-gray-500 mb-6 max-w-md">
+              Create your first gift card design using our intuitive canvas editor. 
+              Add text, shapes, and placeholders to build beautiful gift cards.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                <DialogTrigger asChild>
+                  <Button onClick={handleAdd} className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    Create Your First Design
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-[95vw] max-h-[95vh] w-full overflow-hidden">
+                  <DialogHeader className="pb-4 border-b flex-shrink-0">
+                    <DialogTitle className="text-lg">
+                      Create New Gift Card Design
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="flex-1 overflow-auto">
+                    <GiftCardDesignForm 
+                      design={null}
+                      onSuccess={handleFormSuccess}
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <div className="mt-6 text-sm text-gray-400">
+              <p>💡 Use placeholders like "Recipient Name" and "Gift Amount" to make your designs dynamic</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

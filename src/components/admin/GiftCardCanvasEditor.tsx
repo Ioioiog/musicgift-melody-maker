@@ -433,7 +433,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     try {
       console.log('Adding placeholder element with text:', placeholderText);
       
-      // Validate placeholder text
       if (!placeholderText || typeof placeholderText !== 'string' || placeholderText.trim() === '') {
         console.error('Invalid placeholder text:', placeholderText);
         setError('Invalid placeholder text provided');
@@ -599,7 +598,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     
     if (!currentElement) return;
 
-    // Update the element data
     updatedElements[selectedElementIndex] = {
       ...currentElement,
       [property]: newValue
@@ -610,7 +608,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       elements: updatedElements
     };
 
-    // Update the canvas immediately
     const fabricObject = fabricCanvas.getObjects().find(obj => obj.get('elementIndex') === selectedElementIndex);
     if (fabricObject) {
       try {
@@ -687,7 +684,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         interactive: !readOnly,
       });
 
-      // Load background image if provided (Fixed Fabric.js v6 API)
       if (backgroundImage) {
         FabricImage.fromURL(backgroundImage, {
           crossOrigin: 'anonymous'
@@ -701,21 +697,18 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
               excludeFromExport: false,
             });
             
-            // Scale the image to cover the entire canvas while maintaining aspect ratio
             const canvasAspect = CANVAS_DISPLAY_WIDTH / CANVAS_DISPLAY_HEIGHT;
             const imgAspect = (img.width || 1) / (img.height || 1);
             
             if (imgAspect > canvasAspect) {
-              // Image is wider - scale to height
               img.scaleToHeight(CANVAS_DISPLAY_HEIGHT);
               img.set({ left: (CANVAS_DISPLAY_WIDTH - (img.getScaledWidth() || 0)) / 2 });
             } else {
-              // Image is taller - scale to width
               img.scaleToWidth(CANVAS_DISPLAY_WIDTH);
               img.set({ top: (CANVAS_DISPLAY_HEIGHT - (img.getScaledHeight() || 0)) / 2 });
             }
             
-            canvas.backgroundImage = img; // Fixed API for Fabric.js v6
+            canvas.backgroundImage = img;
             canvas.renderAll();
           }
         }).catch((error) => {
@@ -724,7 +717,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         });
       }
 
-      // Create and add fabric objects for each element
       value.elements.forEach((element, index) => {
         const fabricObject = createFabricObject(element, index);
         if (fabricObject) {
@@ -732,7 +724,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         }
       });
 
-      // Event handlers
       canvas.on('selection:created', (e) => {
         const selectedObj = e.selected?.[0];
         setSelectedObject(selectedObj || null);
