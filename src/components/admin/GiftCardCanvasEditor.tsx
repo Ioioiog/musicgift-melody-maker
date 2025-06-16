@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Canvas as FabricCanvas, IText, FabricImage, Rect, Circle, Line } from 'fabric';
 import { Button } from '@/components/ui/button';
@@ -86,21 +85,92 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   // Convert canvas coordinates to template coordinates
   const canvasToTemplate = (coord: number) => coord / SCALE_FACTOR;
 
+  // Add useEffect to watch for value.elements changes and update Fabric.js objects
   useEffect(() => {
-    if (!fabricCanvas) return;
+    if (!fabricCanvas || !value.elements) return;
 
-    if (selectedElementIndex !== null && selectedElementIndex !== undefined) {
-      const objects = fabricCanvas.getObjects();
-      const targetObject = objects[selectedElementIndex];
-      if (targetObject) {
-        fabricCanvas.setActiveObject(targetObject);
-        setSelectedObject(targetObject);
-        fabricCanvas.renderAll();
+    const objects = fabricCanvas.getObjects();
+    
+    // Update existing objects with new properties from value.elements
+    value.elements.forEach((element, index) => {
+      const fabricObject = objects.find(obj => obj.get('elementIndex') === index);
+      if (!fabricObject) return;
+
+      // Update properties based on element type
+      if (element.type === 'text' || element.type === 'placeholder') {
+        const textObj = fabricObject as IText;
+        if (textObj.fill !== element.color) {
+          textObj.set('fill', element.color);
+        }
+        if (textObj.text !== element.text) {
+          textObj.set('text', element.text || '');
+        }
+        if (textObj.fontSize !== (element.fontSize || 16) * SCALE_FACTOR) {
+          textObj.set('fontSize', (element.fontSize || 16) * SCALE_FACTOR);
+        }
+        if (textObj.fontWeight !== (element.bold ? 'bold' : 'normal')) {
+          textObj.set('fontWeight', element.bold ? 'bold' : 'normal');
+        }
+        if (textObj.fontStyle !== (element.italic ? 'italic' : 'normal')) {
+          textObj.set('fontStyle', element.italic ? 'italic' : 'normal');
+        }
+      } else if (element.type === 'rectangle' || element.type === 'rounded-rectangle') {
+        const rectObj = fabricObject as Rect;
+        if (rectObj.fill !== element.color) {
+          rectObj.set('fill', element.color);
+        }
+        if (rectObj.stroke !== element.strokeColor) {
+          rectObj.set('stroke', element.strokeColor || '');
+        }
+        if (rectObj.strokeWidth !== (element.strokeWidth || 0) * SCALE_FACTOR) {
+          rectObj.set('strokeWidth', (element.strokeWidth || 0) * SCALE_FACTOR);
+        }
+        if (rectObj.opacity !== (element.opacity || 100) / 100) {
+          rectObj.set('opacity', (element.opacity || 100) / 100);
+        }
+        if (element.type === 'rounded-rectangle') {
+          const cornerRadius = templateToCanvas(element.cornerRadius || 10);
+          if (rectObj.rx !== cornerRadius) {
+            rectObj.set({ rx: cornerRadius, ry: cornerRadius });
+          }
+        }
+      } else if (element.type === 'circle') {
+        const circleObj = fabricObject as Circle;
+        if (circleObj.fill !== element.color) {
+          circleObj.set('fill', element.color);
+        }
+        if (circleObj.stroke !== element.strokeColor) {
+          circleObj.set('stroke', element.strokeColor || '');
+        }
+        if (circleObj.strokeWidth !== (element.strokeWidth || 0) * SCALE_FACTOR) {
+          circleObj.set('strokeWidth', (element.strokeWidth || 0) * SCALE_FACTOR);
+        }
+        if (circleObj.opacity !== (element.opacity || 100) / 100) {
+          circleObj.set('opacity', (element.opacity || 100) / 100);
+        }
+      } else if (element.type === 'line') {
+        const lineObj = fabricObject as Line;
+        if (lineObj.stroke !== element.color) {
+          lineObj.set('stroke', element.color);
+        }
+        if (lineObj.strokeWidth !== (element.strokeWidth || 2) * SCALE_FACTOR) {
+          lineObj.set('strokeWidth', (element.strokeWidth || 2) * SCALE_FACTOR);
+        }
+        if (lineObj.opacity !== (element.opacity || 100) / 100) {
+          lineObj.set('opacity', (element.opacity || 100) / 100);
+        }
       }
-    } else {
-      fabricCanvas.discardActiveObject();
+    });
+
+    // Re-render the canvas to show changes
+    fabricCanvas.renderAll();
+  }, [value.elements, fabricCanvas]);
+
+  useEffect(() => {
+    if (!selectedElementIndex || selectedElementIndex === null) {
+      fabricCanvas?.discardActiveObject();
       setSelectedObject(null);
-      fabricCanvas.renderAll();
+      fabricCanvas?.renderAll();
     }
   }, [selectedElementIndex, fabricCanvas]);
 
