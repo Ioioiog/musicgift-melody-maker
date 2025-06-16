@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ColorPicker } from '@/components/ui/color-picker';
@@ -531,10 +530,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     }
   }, [fabricCanvas, selectedObject, value, onChange, addToHistory, onElementSelect, readOnly]);
 
-  const updateSelectedElementProperty = useCallback((property: string, value: any) => {
+  const updateSelectedElementProperty = useCallback((property: string, newValue: any) => {
     if (selectedElementIndex === null || !fabricCanvas) return;
 
-    console.log('Updating property:', property, 'with value:', value);
+    console.log('Updating property:', property, 'with value:', newValue);
 
     const updatedElements = [...value.elements];
     const currentElement = updatedElements[selectedElementIndex];
@@ -544,7 +543,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     // Update the element data
     updatedElements[selectedElementIndex] = {
       ...currentElement,
-      [property]: value
+      [property]: newValue
     };
 
     const updatedData: CanvasData = {
@@ -558,27 +557,27 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       try {
         if (property === 'color' || property === 'fill') {
           if (fabricObject instanceof IText) {
-            fabricObject.set({ fill: value });
+            fabricObject.set({ fill: newValue });
           } else if (fabricObject instanceof Rect || fabricObject instanceof Circle) {
-            fabricObject.set({ fill: value });
+            fabricObject.set({ fill: newValue });
           } else if (fabricObject instanceof Line) {
-            fabricObject.set({ stroke: value });
+            fabricObject.set({ stroke: newValue });
           }
         } else if (property === 'strokeColor' || property === 'stroke') {
           if (fabricObject instanceof Rect || fabricObject instanceof Circle) {
-            fabricObject.set({ stroke: value });
+            fabricObject.set({ stroke: newValue });
           }
         } else if (property === 'strokeWidth') {
-          fabricObject.set({ strokeWidth: templateToCanvas(value) });
+          fabricObject.set({ strokeWidth: templateToCanvas(newValue) });
         } else if (property === 'opacity') {
-          fabricObject.set({ opacity: value / 100 });
+          fabricObject.set({ opacity: newValue / 100 });
         } else if (property === 'fontSize') {
           if (fabricObject instanceof IText) {
-            fabricObject.set({ fontSize: templateToCanvas(value) });
+            fabricObject.set({ fontSize: templateToCanvas(newValue) });
           }
         } else if (property === 'text') {
           if (fabricObject instanceof IText) {
-            const displayText = currentElement.type === 'placeholder' ? `[${value}]` : value;
+            const displayText = currentElement.type === 'placeholder' ? `[${newValue}]` : newValue;
             fabricObject.set({ text: displayText });
           }
         }
@@ -1027,7 +1026,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
                           <Label className="text-sm font-medium">Font Weight</Label>
                           <Select
                             value={(selectedElement as TextElement).bold ? 'bold' : 'normal'}
-                            onValueChange={(value) => updateSelectedElementProperty('bold', value === 'bold')}
+                            onValueChange={(val) => updateSelectedElementProperty('bold', val === 'bold')}
                           >
                             <SelectTrigger className="mt-1">
                               <SelectValue />
