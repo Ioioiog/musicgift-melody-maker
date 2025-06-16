@@ -1,9 +1,10 @@
+
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Canvas as FabricCanvas, IText, FabricImage, Rect, Circle, Line, Object as FabricObject } from 'fabric';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectSeparator } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ColorPicker } from '@/components/ui/color-picker';
@@ -1083,11 +1084,12 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
                               <SelectValue placeholder="Select placeholder type" />
                             </SelectTrigger>
                             <SelectContent className="bg-white z-[9999]">
-                              {PLACEHOLDER_OPTIONS.map((category) => (
+                              {PLACEHOLDER_OPTIONS.map((category, categoryIndex) => (
                                 <div key={category.category}>
-                                  <SelectItem value="" disabled className="text-xs font-semibold text-gray-500 uppercase">
+                                  {categoryIndex > 0 && <SelectSeparator />}
+                                  <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 uppercase bg-gray-50">
                                     {category.category}
-                                  </SelectItem>
+                                  </div>
                                   {category.placeholders.map((placeholder) => (
                                     <SelectItem key={placeholder.value} value={placeholder.value}>
                                       {placeholder.label}
