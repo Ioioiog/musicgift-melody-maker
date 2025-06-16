@@ -17,6 +17,8 @@ import { useNavigate } from 'react-router-dom';
 import { addDays, format } from 'date-fns';
 import GiftCardPreview from './GiftCardPreview';
 import { useToast } from '@/hooks/use-toast';
+import { useGiftCardDesigns } from '@/hooks/useGiftCards';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface GiftPurchaseWizardProps {
   onComplete: (data: any) => void;
@@ -27,6 +29,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { data: designs, isLoading: designsLoading } = useGiftCardDesigns();
 
   const [step, setStep] = useState(1);
   const [giftAmount, setGiftAmount] = useState(50);
@@ -44,6 +47,9 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
   const [date, setDate] = React.useState<Date | undefined>(undefined)
 
   const amountOptions = [25, 50, 100, 200];
+
+  // Get active designs only
+  const activeDesigns = designs?.filter(design => design.is_active) || [];
 
   // Sync date with giftData.delivery_date
   useEffect(() => {
@@ -63,6 +69,13 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
       }));
     }
   }, [user]);
+
+  // Auto-select first design when designs are loaded
+  useEffect(() => {
+    if (activeDesigns.length > 0 && !selectedDesign) {
+      setSelectedDesign(activeDesigns[0]);
+    }
+  }, [activeDesigns, selectedDesign]);
 
   const nextStep = () => {
     setStep(step + 1);
@@ -286,24 +299,56 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
               <h3 className="text-lg font-semibold mb-4 text-white">{t('selectDesign')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('chooseDesignPreview')}</p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="border rounded-lg p-4 cursor-pointer" onClick={() => handleDesignSelect({ name: 'Default Design 1', preview_image_url: '/lovable-uploads/gift_card_template_1.png' })}>
-                  <img src="/lovable-uploads/gift_card_template_1.png" alt="Design 1" className="rounded-md mb-2" />
-                  <h4 className="text-sm font-semibold text-white">Classic</h4>
+              {designsLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="border rounded-lg p-4">
+                      <Skeleton className="h-32 mb-2 rounded-md" />
+                      <Skeleton className="h-4 w-20" />
+                    </div>
+                  ))}
                 </div>
-                <div className="border rounded-lg p-4 cursor-pointer" onClick={() => handleDesignSelect({ name: 'Default Design 2', preview_image_url: '/lovable-uploads/gift_card_template_2.png' })}>
-                  <img src="/lovable-uploads/gift_card_template_2.png" alt="Design 2" className="rounded-md mb-2" />
-                  <h4 className="text-sm font-semibold text-white">Modern</h4>
+              ) : activeDesigns.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-white mb-4">No gift card designs available at the moment.</p>
+                  <p className="text-gray-300 text-sm">Please contact support or try again later.</p>
                 </div>
-                <div className="border rounded-lg p-4 cursor-pointer" onClick={() => handleDesignSelect({ name: 'Default Design 3', preview_image_url: '/lovable-uploads/gift_card_template_3.png' })}>
-                  <img src="/lovable-uploads/gift_card_template_3.png" alt="Design 3" className="rounded-md mb-2" />
-                  <h4 className="text-sm font-semibold text-white">Elegant</h4>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {activeDesigns.map((design) => (
+                    <div 
+                      key={design.id} 
+                      className={`border rounded-lg p-4 cursor-pointer transition-all hover:border-blue-400 ${
+                        selectedDesign?.id === design.id ? 'border-blue-500 bg-blue-50/10' : 'border-gray-300'
+                      }`}
+                      onClick={() => handleDesignSelect(design)}
+                    >
+                      {design.preview_image_url ? (
+                        <img 
+                          src={design.preview_image_url} 
+                          alt={design.name} 
+                          className="w-full h-32 object-cover rounded-md mb-2" 
+                        />
+                      ) : (
+                        <div className="w-full h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-md mb-2 flex items-center justify-center">
+                          <span className="text-white font-semibold">{design.name}</span>
+                        </div>
+                      )}
+                      <h4 className="text-sm font-semibold text-white">{design.name}</h4>
+                      <p className="text-xs text-gray-300 mt-1">{design.theme}</p>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
 
               <div className="flex justify-between mt-8">
                 <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
-                <Button onClick={nextStep}>{t('nextReview')}</Button>
+                <Button 
+                  onClick={nextStep} 
+                  disabled={!selectedDesign}
+                >
+                  {t('nextReview')}
+                </Button>
               </div>
             </div>
           )}
