@@ -466,7 +466,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
               excludeFromExport: false,
             });
             img.scaleToWidth(CANVAS_DISPLAY_WIDTH);
-            canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+            canvas.backgroundImage = img;
+            canvas.renderAll();
           }
         }).catch((error) => {
           console.error('Error loading background image:', error);
