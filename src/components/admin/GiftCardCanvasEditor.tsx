@@ -391,130 +391,174 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   const addTextElement = useCallback(() => {
     if (!fabricCanvas || readOnly) return;
 
-    const newElement: TextElement = {
-      id: generateId(),
-      type: 'text',
-      x: 50,
-      y: 50,
-      text: 'New Text',
-      fontSize: DEFAULT_FONT_SIZE,
-      color: '#000000',
-    };
-
-    const updatedElements = [...value.elements, newElement];
-    const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
-    
-    if (fabricObject) {
-      fabricCanvas.add(fabricObject);
-      fabricCanvas.setActiveObject(fabricObject);
-      fabricCanvas.renderAll();
+    try {
+      console.log('Adding text element...');
       
-      const updatedData: CanvasData = {
-        ...value,
-        elements: updatedElements,
+      const newElement: TextElement = {
+        id: generateId(),
+        type: 'text',
+        x: 50,
+        y: 50,
+        text: 'New Text',
+        fontSize: DEFAULT_FONT_SIZE,
+        color: '#000000',
       };
+
+      const updatedElements = [...value.elements, newElement];
+      const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
       
-      onChange(updatedData);
-      addToHistory(updatedData);
+      if (fabricObject) {
+        fabricCanvas.add(fabricObject);
+        fabricCanvas.setActiveObject(fabricObject);
+        fabricCanvas.renderAll();
+        
+        const updatedData: CanvasData = {
+          ...value,
+          elements: updatedElements,
+        };
+        
+        onChange(updatedData);
+        addToHistory(updatedData);
+        console.log('Text element added successfully');
+      }
+    } catch (error) {
+      console.error('Error adding text element:', error);
+      setError('Failed to add text element');
     }
   }, [fabricCanvas, value, onChange, addToHistory, createFabricObject, readOnly]);
 
   const addPlaceholderElement = useCallback((placeholderText: string) => {
     if (!fabricCanvas || readOnly) return;
 
-    const newElement: TextElement = {
-      id: generateId(),
-      type: 'placeholder',
-      x: 50,
-      y: 100,
-      text: placeholderText,
-      fontSize: DEFAULT_FONT_SIZE,
-      color: '#1976d2',
-    };
+    try {
+      console.log('Adding placeholder element with text:', placeholderText);
+      
+      // Validate placeholder text
+      if (!placeholderText || typeof placeholderText !== 'string' || placeholderText.trim() === '') {
+        console.error('Invalid placeholder text:', placeholderText);
+        setError('Invalid placeholder text provided');
+        return;
+      }
 
-    const updatedElements = [...value.elements, newElement];
-    const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
-    
-    if (fabricObject) {
-      fabricCanvas.add(fabricObject);
-      fabricCanvas.setActiveObject(fabricObject);
-      fabricCanvas.renderAll();
-      
-      const updatedData: CanvasData = {
-        ...value,
-        elements: updatedElements,
+      const newElement: TextElement = {
+        id: generateId(),
+        type: 'placeholder',
+        x: 50,
+        y: 100,
+        text: placeholderText.trim(),
+        fontSize: DEFAULT_FONT_SIZE,
+        color: '#1976d2',
       };
+
+      console.log('Creating placeholder element:', newElement);
+
+      const updatedElements = [...value.elements, newElement];
+      const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
       
-      onChange(updatedData);
-      addToHistory(updatedData);
+      if (fabricObject) {
+        fabricCanvas.add(fabricObject);
+        fabricCanvas.setActiveObject(fabricObject);
+        fabricCanvas.renderAll();
+        
+        const updatedData: CanvasData = {
+          ...value,
+          elements: updatedElements,
+        };
+        
+        onChange(updatedData);
+        addToHistory(updatedData);
+        console.log('Placeholder element added successfully:', placeholderText);
+      } else {
+        console.error('Failed to create fabric object for placeholder');
+        setError('Failed to create placeholder on canvas');
+      }
+    } catch (error) {
+      console.error('Error adding placeholder element:', error);
+      setError(`Failed to add placeholder: ${error.message}`);
     }
   }, [fabricCanvas, value, onChange, addToHistory, createFabricObject, readOnly]);
 
   const addShapeElement = useCallback((shapeType: 'rectangle' | 'rounded-rectangle' | 'circle') => {
     if (!fabricCanvas || readOnly) return;
 
-    const newElement: ShapeElement = {
-      id: generateId(),
-      type: shapeType,
-      x: 100,
-      y: 100,
-      width: shapeType === 'circle' ? 80 : 120,
-      height: shapeType === 'circle' ? 80 : 80,
-      color: '#cccccc',
-      strokeColor: '#000000',
-      strokeWidth: 1,
-      opacity: DEFAULT_OPACITY,
-      ...(shapeType === 'rounded-rectangle' && { cornerRadius: 10 }),
-    };
-
-    const updatedElements = [...value.elements, newElement];
-    const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
-    
-    if (fabricObject) {
-      fabricCanvas.add(fabricObject);
-      fabricCanvas.setActiveObject(fabricObject);
-      fabricCanvas.renderAll();
+    try {
+      console.log('Adding shape element:', shapeType);
       
-      const updatedData: CanvasData = {
-        ...value,
-        elements: updatedElements,
+      const newElement: ShapeElement = {
+        id: generateId(),
+        type: shapeType,
+        x: 100,
+        y: 100,
+        width: shapeType === 'circle' ? 80 : 120,
+        height: shapeType === 'circle' ? 80 : 80,
+        color: '#cccccc',
+        strokeColor: '#000000',
+        strokeWidth: 1,
+        opacity: DEFAULT_OPACITY,
+        ...(shapeType === 'rounded-rectangle' && { cornerRadius: 10 }),
       };
+
+      const updatedElements = [...value.elements, newElement];
+      const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
       
-      onChange(updatedData);
-      addToHistory(updatedData);
+      if (fabricObject) {
+        fabricCanvas.add(fabricObject);
+        fabricCanvas.setActiveObject(fabricObject);
+        fabricCanvas.renderAll();
+        
+        const updatedData: CanvasData = {
+          ...value,
+          elements: updatedElements,
+        };
+        
+        onChange(updatedData);
+        addToHistory(updatedData);
+        console.log('Shape element added successfully:', shapeType);
+      }
+    } catch (error) {
+      console.error('Error adding shape element:', error);
+      setError(`Failed to add ${shapeType}`);
     }
   }, [fabricCanvas, value, onChange, addToHistory, createFabricObject, readOnly]);
 
   const addLineElement = useCallback(() => {
     if (!fabricCanvas || readOnly) return;
 
-    const newElement: LineElement = {
-      id: generateId(),
-      type: 'line',
-      x: 50,
-      y: 150,
-      x2: 200,
-      y2: 150,
-      color: '#000000',
-      strokeWidth: DEFAULT_STROKE_WIDTH,
-      opacity: DEFAULT_OPACITY,
-    };
-
-    const updatedElements = [...value.elements, newElement];
-    const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
-    
-    if (fabricObject) {
-      fabricCanvas.add(fabricObject);
-      fabricCanvas.setActiveObject(fabricObject);
-      fabricCanvas.renderAll();
+    try {
+      console.log('Adding line element...');
       
-      const updatedData: CanvasData = {
-        ...value,
-        elements: updatedElements,
+      const newElement: LineElement = {
+        id: generateId(),
+        type: 'line',
+        x: 50,
+        y: 150,
+        x2: 200,
+        y2: 150,
+        color: '#000000',
+        strokeWidth: DEFAULT_STROKE_WIDTH,
+        opacity: DEFAULT_OPACITY,
       };
+
+      const updatedElements = [...value.elements, newElement];
+      const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
       
-      onChange(updatedData);
-      addToHistory(updatedData);
+      if (fabricObject) {
+        fabricCanvas.add(fabricObject);
+        fabricCanvas.setActiveObject(fabricObject);
+        fabricCanvas.renderAll();
+        
+        const updatedData: CanvasData = {
+          ...value,
+          elements: updatedElements,
+        };
+        
+        onChange(updatedData);
+        addToHistory(updatedData);
+        console.log('Line element added successfully');
+      }
+    } catch (error) {
+      console.error('Error adding line element:', error);
+      setError('Failed to add line element');
     }
   }, [fabricCanvas, value, onChange, addToHistory, createFabricObject, readOnly]);
 
@@ -887,25 +931,30 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
                   <ChevronDown className="h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 bg-white z-[9999]">
+              <DropdownMenuContent className="w-64 bg-white border border-gray-200 shadow-lg z-[10000] max-h-80 overflow-y-auto">
                 {PLACEHOLDER_OPTIONS.map((category) => (
                   <div key={category.category}>
-                    <DropdownMenuLabel className="text-xs font-semibold text-gray-500 uppercase">
+                    <DropdownMenuLabel className="text-xs font-semibold text-gray-500 uppercase bg-gray-50 px-3 py-2">
                       {category.category}
                     </DropdownMenuLabel>
                     {category.placeholders.map((placeholder) => (
                       <DropdownMenuItem
                         key={placeholder.value}
-                        onClick={() => addPlaceholderElement(placeholder.value)}
-                        className="cursor-pointer hover:bg-gray-100"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('Dropdown clicked for placeholder:', placeholder.value);
+                          addPlaceholderElement(placeholder.value);
+                        }}
+                        className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100 px-3 py-2"
                       >
                         <div className="flex flex-col">
-                          <span className="font-medium">{placeholder.label}</span>
+                          <span className="font-medium text-gray-900">{placeholder.label}</span>
                           <span className="text-xs text-gray-500">{placeholder.description}</span>
                         </div>
                       </DropdownMenuItem>
                     ))}
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator className="bg-gray-200" />
                   </div>
                 ))}
               </DropdownMenuContent>
