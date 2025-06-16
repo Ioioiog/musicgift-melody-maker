@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "@/components/ui/image-upload";
+import { ColorPicker } from "@/components/ui/color-picker";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateGiftCardDesign, useUpdateGiftCardDesign } from "@/hooks/useGiftCards";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -280,17 +281,13 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
                             />
                           </div>
                           
+                          <ColorPicker
+                            label="Text Color"
+                            value={selectedElement.fill || '#000000'}
+                            onChange={(color) => updateSelectedElementProperty('fill', color)}
+                          />
+                          
                           <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <Label className="text-sm font-medium text-gray-700">Text Color</Label>
-                              <input
-                                type="color"
-                                value={selectedElement.fill || '#000000'}
-                                onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
-                                className="w-full h-10 rounded border cursor-pointer mt-1"
-                              />
-                            </div>
-                            
                             <div>
                               <Label className="text-sm font-medium text-gray-700">Font Size</Label>
                               <Input
@@ -302,19 +299,19 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
                                 max="72"
                               />
                             </div>
-                          </div>
-                          
-                          <div>
-                            <Label className="text-sm font-medium text-gray-700">Font Weight</Label>
-                            <select
-                              value={selectedElement.fontWeight || 'normal'}
-                              onChange={(e) => updateSelectedElementProperty('fontWeight', e.target.value)}
-                              className="w-full h-10 px-3 border rounded mt-1"
-                            >
-                              <option value="normal">Normal</option>
-                              <option value="bold">Bold</option>
-                              <option value="lighter">Light</option>
-                            </select>
+                            
+                            <div>
+                              <Label className="text-sm font-medium text-gray-700">Font Weight</Label>
+                              <select
+                                value={selectedElement.fontWeight || 'normal'}
+                                onChange={(e) => updateSelectedElementProperty('fontWeight', e.target.value)}
+                                className="w-full h-10 px-3 border rounded mt-1"
+                              >
+                                <option value="normal">Normal</option>
+                                <option value="bold">Bold</option>
+                                <option value="lighter">Light</option>
+                              </select>
+                            </div>
                           </div>
                         </div>
                       )}
@@ -322,27 +319,17 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
                       {/* Shape Element Properties */}
                       {selectedElement.type === 'shape' && (
                         <div className="space-y-4">
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <Label className="text-sm font-medium text-gray-700">Fill Color</Label>
-                              <input
-                                type="color"
-                                value={selectedElement.fill || '#000000'}
-                                onChange={(e) => updateSelectedElementProperty('fill', e.target.value)}
-                                className="w-full h-10 rounded border cursor-pointer mt-1"
-                              />
-                            </div>
-                            
-                            <div>
-                              <Label className="text-sm font-medium text-gray-700">Border Color</Label>
-                              <input
-                                type="color"
-                                value={selectedElement.stroke || '#000000'}
-                                onChange={(e) => updateSelectedElementProperty('stroke', e.target.value)}
-                                className="w-full h-10 rounded border cursor-pointer mt-1"
-                              />
-                            </div>
-                          </div>
+                          <ColorPicker
+                            label="Fill Color"
+                            value={selectedElement.fill || '#000000'}
+                            onChange={(color) => updateSelectedElementProperty('fill', color)}
+                          />
+                          
+                          <ColorPicker
+                            label="Border Color"
+                            value={selectedElement.stroke || '#000000'}
+                            onChange={(color) => updateSelectedElementProperty('stroke', color)}
+                          />
                           
                           <div className="grid grid-cols-2 gap-3">
                             <div>
@@ -371,6 +358,32 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
                           </div>
                         </div>
                       )}
+
+                      {/* Universal Color Options for Any Element */}
+                      <div className="pt-4 border-t">
+                        <Label className="text-sm font-semibold text-gray-700 mb-3 block">Universal Colors</Label>
+                        <div className="space-y-3">
+                          {selectedElement.type !== 'text' && (
+                            <ColorPicker
+                              label="Background/Fill Color"
+                              value={selectedElement.fill || selectedElement.backgroundColor || '#000000'}
+                              onChange={(color) => {
+                                updateSelectedElementProperty('fill', color);
+                                updateSelectedElementProperty('backgroundColor', color);
+                              }}
+                            />
+                          )}
+                          
+                          <ColorPicker
+                            label="Border/Stroke Color"
+                            value={selectedElement.stroke || selectedElement.borderColor || '#000000'}
+                            onChange={(color) => {
+                              updateSelectedElementProperty('stroke', color);
+                              updateSelectedElementProperty('borderColor', color);
+                            }}
+                          />
+                        </div>
+                      </div>
 
                       {/* Common Actions */}
                       <div className="pt-4 border-t">
