@@ -99,11 +99,6 @@ serve(async (req) => {
     const issueDate = new Date().toISOString().split('T')[0]
     const dueDate = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0] // 7 days from now
 
-    // Prepare redirect URLs with gift card tracking
-    const giftReturnUrl = `https://www.musicgift.ro/payment/success?giftCardId=${giftCard.id}&status=success`
-    const giftCancelUrl = `https://www.musicgift.ro/payment/cancel?giftCardId=${giftCard.id}&status=cancel`
-    const giftNotifyUrl = `https://ehvzhnzqcbzuirovwjsr.supabase.co/functions/v1/smartbill-webhook`
-
     // Create SmartBill proforma XML for gift card - matching the working orders function structure
     const proformaXml = `<?xml version="1.0" encoding="UTF-8"?>
 <estimate>
@@ -134,9 +129,6 @@ serve(async (req) => {
     <saveToDb>false</saveToDb>
     <isService>true</isService>
   </product>
-  <returnUrl>${giftReturnUrl}</returnUrl>
-  <cancelUrl>${giftCancelUrl}</cancelUrl>
-  <notifyUrl>${giftNotifyUrl}</notifyUrl>
   <observations>${escapeXml(`Gift Card ${giftCard.code} pentru ${giftCard.recipient_name}. Cumparat de: ${giftCard.sender_name}`)}</observations>
 </estimate>`
 

@@ -1,3 +1,4 @@
+
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -295,11 +296,6 @@ serve(async (req) => {
       currency: orderData.currency,
       paymentProvider: orderData.payment_provider
     })
-
-    // Prepare redirect URLs with order tracking
-    const returnUrl = `https://www.musicgift.ro/payment/success?orderId=${savedOrder.id}&status=success`
-    const cancelUrl = `https://www.musicgift.ro/payment/cancel?orderId=${savedOrder.id}&status=cancel`
-    const notifyUrl = `https://ehvzhnzqcbzuirovwjsr.supabase.co/functions/v1/smartbill-webhook`
     
     // Create proforma with payment link using STRP series
     const proformaXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -331,9 +327,6 @@ serve(async (req) => {
     <saveToDb>false</saveToDb>
     <isService>true</isService>
   </product>
-  <returnUrl>${returnUrl}</returnUrl>
-  <cancelUrl>${cancelUrl}</cancelUrl>
-  <notifyUrl>${notifyUrl}</notifyUrl>
   <observations>${escapeXml(isCompanyInvoice && orderData.form_data.representativeName ?
     `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}. Reprezentant companie: ${orderData.form_data.representativeName}. ID comandă: ${savedOrder.id}` :
     `Comandă cadou musical personalizat pentru ${orderData.form_data.recipientName || 'destinatar'}. ID comandă: ${savedOrder.id}`)}</observations>

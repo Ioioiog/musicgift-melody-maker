@@ -47,11 +47,6 @@ serve(async (req) => {
 
     console.log(`Final amount for SmartBill proforma: ${totalPrice} ${currency}`)
 
-    // Prepare redirect URLs with order tracking
-    const returnUrl = `https://www.musicgift.ro/payment/success?orderId=${orderData.id}&status=success`
-    const cancelUrl = `https://www.musicgift.ro/payment/cancel?orderId=${orderData.id}&status=cancel`
-    const notifyUrl = `https://ehvzhnzqcbzuirovwjsr.supabase.co/functions/v1/smartbill-webhook`
-
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <estimate>
   <companyVatCode>${companyVatCode}</companyVatCode>
@@ -80,9 +75,6 @@ serve(async (req) => {
     <saveToDb>false</saveToDb>
     <isService>false</isService>
   </product>
-  <returnUrl>${returnUrl}</returnUrl>
-  <cancelUrl>${cancelUrl}</cancelUrl>
-  <notifyUrl>${notifyUrl}</notifyUrl>
 </estimate>`
 
     console.log('Generated XML for SmartBill:', xml)
