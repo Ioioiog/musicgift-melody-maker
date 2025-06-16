@@ -155,7 +155,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
                   <Button
                     key={amount}
                     variant="outline"
-                    className={`rounded-full ${giftAmount === amount ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600' : 'text-white border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'}`}
+                    className={`rounded-full ${giftAmount === amount ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600' : 'text-orange-500 border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'}`}
                     onClick={() => handleAmountChange(amount)}
                   >
                     {amount} {currency}
@@ -163,7 +163,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
                 ))}
                 <Button
                   variant="outline"
-                  className={`rounded-full ${giftAmount === 0 ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600' : 'text-white border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'}`}
+                  className={`rounded-full ${giftAmount === 0 ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600' : 'text-orange-500 border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'}`}
                   onClick={() => setGiftAmount(0)}
                 >
                   {t('customAmount')}
