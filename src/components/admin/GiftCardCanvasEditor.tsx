@@ -534,9 +534,16 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   const updateSelectedElementProperty = useCallback((property: string, value: any) => {
     if (selectedElementIndex === null || !fabricCanvas) return;
 
+    console.log('Updating property:', property, 'with value:', value);
+
     const updatedElements = [...value.elements];
+    const currentElement = updatedElements[selectedElementIndex];
+    
+    if (!currentElement) return;
+
+    // Update the element data
     updatedElements[selectedElementIndex] = {
-      ...updatedElements[selectedElementIndex],
+      ...currentElement,
       [property]: value
     };
 
@@ -544,6 +551,43 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       ...value,
       elements: updatedElements
     };
+
+    // Update the canvas immediately
+    const fabricObject = fabricCanvas.getObjects().find(obj => obj.get('elementIndex') === selectedElementIndex);
+    if (fabricObject) {
+      try {
+        if (property === 'color' || property === 'fill') {
+          if (fabricObject instanceof IText) {
+            fabricObject.set({ fill: value });
+          } else if (fabricObject instanceof Rect || fabricObject instanceof Circle) {
+            fabricObject.set({ fill: value });
+          } else if (fabricObject instanceof Line) {
+            fabricObject.set({ stroke: value });
+          }
+        } else if (property === 'strokeColor' || property === 'stroke') {
+          if (fabricObject instanceof Rect || fabricObject instanceof Circle) {
+            fabricObject.set({ stroke: value });
+          }
+        } else if (property === 'strokeWidth') {
+          fabricObject.set({ strokeWidth: templateToCanvas(value) });
+        } else if (property === 'opacity') {
+          fabricObject.set({ opacity: value / 100 });
+        } else if (property === 'fontSize') {
+          if (fabricObject instanceof IText) {
+            fabricObject.set({ fontSize: templateToCanvas(value) });
+          }
+        } else if (property === 'text') {
+          if (fabricObject instanceof IText) {
+            const displayText = currentElement.type === 'placeholder' ? `[${value}]` : value;
+            fabricObject.set({ text: displayText });
+          }
+        }
+        
+        fabricCanvas.renderAll();
+      } catch (error) {
+        console.error('Error updating fabric object:', error);
+      }
+    }
 
     onChange(updatedData);
   }, [selectedElementIndex, value, onChange, fabricCanvas]);
@@ -598,7 +642,21 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
               evented: false,
               excludeFromExport: false,
             });
-            img.scaleToWidth(CANVAS_DISPLAY_WIDTH);
+            
+            // Scale the image to cover the entire canvas while maintaining aspect ratio
+            const canvasAspect = CANVAS_DISPLAY_WIDTH / CANVAS_DISPLAY_HEIGHT;
+            const imgAspect = (img.width || 1) / (img.height || 1);
+            
+            if (imgAspect > canvasAspect) {
+              // Image is wider - scale to height
+              img.scaleToHeight(CANVAS_DISPLAY_HEIGHT);
+              img.set({ left: (CANVAS_DISPLAY_WIDTH - (img.getScaledWidth() || 0)) / 2 });
+            } else {
+              // Image is taller - scale to width
+              img.scaleToWidth(CANVAS_DISPLAY_WIDTH);
+              img.set({ top: (CANVAS_DISPLAY_HEIGHT - (img.getScaledHeight() || 0)) / 2 });
+            }
+            
             canvas.backgroundImage = img; // Fixed API for Fabric.js v6
             canvas.renderAll();
           }
