@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Canvas as FabricCanvas, IText, FabricImage, Rect, Circle, Line, Object as FabricObject } from 'fabric';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ColorPicker } from '@/components/ui/color-picker';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
 import { Type, FileText, Square, RectangleHorizontal, Circle as CircleIcon, Minus, Trash2, Undo, Redo, Palette, ChevronDown, ChevronRight } from 'lucide-react';
 
 // ========================================================================================
@@ -90,6 +90,28 @@ const CANVAS_DISPLAY_HEIGHT = 400;
 const DEFAULT_FONT_SIZE = 16;
 const DEFAULT_STROKE_WIDTH = 2;
 const DEFAULT_OPACITY = 100;
+
+// Predefined placeholder options
+const PLACEHOLDER_OPTIONS = [
+  { category: 'Personal', placeholders: [
+    { value: 'Recipient Name', label: 'Recipient Name', description: 'Name of the gift recipient' },
+    { value: 'Sender Name', label: 'Sender Name', description: 'Name of the gift sender' },
+    { value: 'Personal Message', label: 'Personal Message', description: 'Custom message from sender' },
+  ]},
+  { category: 'Gift Details', placeholders: [
+    { value: 'Gift Amount', label: 'Gift Amount', description: 'Monetary value of the gift' },
+    { value: 'Occasion', label: 'Occasion', description: 'Special occasion or event' },
+    { value: 'Date', label: 'Date', description: 'Important date' },
+  ]},
+  { category: 'Business', placeholders: [
+    { value: 'Company Name', label: 'Company Name', description: 'Business or organization name' },
+    { value: 'Employee Name', label: 'Employee Name', description: 'Staff member name' },
+  ]},
+  { category: 'Custom', placeholders: [
+    { value: 'Custom Field 1', label: 'Custom Field 1', description: 'Flexible custom field' },
+    { value: 'Custom Field 2', label: 'Custom Field 2', description: 'Additional custom field' },
+  ]},
+];
 
 const generateId = (): string => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 const templateToCanvas = (coord: number): number => coord * SCALE_FACTOR;
@@ -404,7 +426,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     }
   }, [fabricCanvas, value, onChange, addToHistory, createFabricObject, readOnly]);
 
-  const addPlaceholderElement = useCallback(() => {
+  const addPlaceholderElement = useCallback((placeholderText: string) => {
     if (!fabricCanvas || readOnly) return;
 
     const newElement: TextElement = {
@@ -412,7 +434,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       type: 'placeholder',
       x: 50,
       y: 100,
-      text: 'Recipient Name',
+      text: placeholderText,
       fontSize: DEFAULT_FONT_SIZE,
       color: '#1976d2',
     };
@@ -860,15 +882,41 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
               Add Text
             </Button>
             
-            <Button 
-              onClick={addPlaceholderElement} 
-              size="sm" 
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <FileText className="h-4 w-4" />
-              Add Placeholder
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <FileText className="h-4 w-4" />
+                  Add Placeholder
+                  <ChevronDown className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-64 bg-white z-[9999]">
+                {PLACEHOLDER_OPTIONS.map((category) => (
+                  <div key={category.category}>
+                    <DropdownMenuLabel className="text-xs font-semibold text-gray-500 uppercase">
+                      {category.category}
+                    </DropdownMenuLabel>
+                    {category.placeholders.map((placeholder) => (
+                      <DropdownMenuItem
+                        key={placeholder.value}
+                        onClick={() => addPlaceholderElement(placeholder.value)}
+                        className="cursor-pointer hover:bg-gray-100"
+                      >
+                        <div className="flex flex-col">
+                          <span className="font-medium">{placeholder.label}</span>
+                          <span className="text-xs text-gray-500">{placeholder.description}</span>
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                  </div>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             
             <Button 
               onClick={() => addShapeElement('rectangle')} 
@@ -991,17 +1039,43 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
                   {/* Text/Placeholder Properties */}
                   {(selectedElement.type === 'text' || selectedElement.type === 'placeholder') && (
                     <>
-                      <div>
-                        <Label className="text-sm font-medium">
-                          {selectedElement.type === 'placeholder' ? 'Placeholder Text' : 'Text Content'}
-                        </Label>
-                        <Input
-                          value={(selectedElement as TextElement).text || ''}
-                          onChange={(e) => updateSelectedElementProperty('text', e.target.value)}
-                          className="mt-1"
-                          placeholder={selectedElement.type === 'placeholder' ? 'e.g., Recipient Name' : 'Enter text'}
-                        />
-                      </div>
+                      {selectedElement.type === 'placeholder' ? (
+                        <div>
+                          <Label className="text-sm font-medium">Placeholder Type</Label>
+                          <Select
+                            value={(selectedElement as TextElement).text || ''}
+                            onValueChange={(val) => updateSelectedElementProperty('text', val)}
+                          >
+                            <SelectTrigger className="mt-1">
+                              <SelectValue placeholder="Select placeholder type" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white z-[9999]">
+                              {PLACEHOLDER_OPTIONS.map((category) => (
+                                <div key={category.category}>
+                                  <SelectItem value="" disabled className="text-xs font-semibold text-gray-500 uppercase">
+                                    {category.category}
+                                  </SelectItem>
+                                  {category.placeholders.map((placeholder) => (
+                                    <SelectItem key={placeholder.value} value={placeholder.value}>
+                                      {placeholder.label}
+                                    </SelectItem>
+                                  ))}
+                                </div>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      ) : (
+                        <div>
+                          <Label className="text-sm font-medium">Text Content</Label>
+                          <Input
+                            value={(selectedElement as TextElement).text || ''}
+                            onChange={(e) => updateSelectedElementProperty('text', e.target.value)}
+                            className="mt-1"
+                            placeholder="Enter text"
+                          />
+                        </div>
+                      )}
                       
                       <ColorPicker
                         label="Text Color"
@@ -1031,7 +1105,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
                             <SelectTrigger className="mt-1">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-white z-[9999]">
                               <SelectItem value="normal">Normal</SelectItem>
                               <SelectItem value="bold">Bold</SelectItem>
                             </SelectContent>
