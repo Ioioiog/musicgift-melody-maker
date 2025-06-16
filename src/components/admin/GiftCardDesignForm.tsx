@@ -266,25 +266,33 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
                     <div className="space-y-4">
                       <div className="text-sm font-medium text-gray-700 mb-3 p-2 bg-blue-50 rounded">
                         Editing: {selectedElement.type || 'Element'} {(selectedElementIndex || 0) + 1}
+                        {selectedElement.type === 'placeholder' && (
+                          <span className="text-blue-600 ml-2">(Placeholder)</span>
+                        )}
                       </div>
 
-                      {/* Text Element Properties */}
-                      {selectedElement.type === 'text' && (
+                      {/* Text/Placeholder Element Properties */}
+                      {(selectedElement.type === 'text' || selectedElement.type === 'placeholder') && (
                         <div className="space-y-4">
                           <div>
-                            <Label className="text-sm font-medium text-gray-700">Text Content</Label>
+                            <Label className="text-sm font-medium text-gray-700">
+                              {selectedElement.type === 'placeholder' ? 'Placeholder Text' : 'Text Content'}
+                            </Label>
                             <Input
                               value={selectedElement.text || ''}
                               onChange={(e) => updateSelectedElementProperty('text', e.target.value)}
                               className="mt-1"
-                              placeholder="Enter text"
+                              placeholder={selectedElement.type === 'placeholder' ? 'e.g., Recipient Name' : 'Enter text'}
                             />
                           </div>
                           
                           <ColorPicker
                             label="Text Color"
-                            value={selectedElement.fill || '#000000'}
-                            onChange={(color) => updateSelectedElementProperty('fill', color)}
+                            value={selectedElement.color || selectedElement.fill || '#000000'}
+                            onChange={(color) => {
+                              updateSelectedElementProperty('color', color);
+                              updateSelectedElementProperty('fill', color);
+                            }}
                           />
                           
                           <div className="grid grid-cols-2 gap-3">
@@ -317,18 +325,26 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
                       )}
 
                       {/* Shape Element Properties */}
-                      {selectedElement.type === 'shape' && (
+                      {(selectedElement.type === 'rectangle' || selectedElement.type === 'rounded-rectangle' || selectedElement.type === 'circle') && (
                         <div className="space-y-4">
                           <ColorPicker
                             label="Fill Color"
-                            value={selectedElement.fill || '#000000'}
-                            onChange={(color) => updateSelectedElementProperty('fill', color)}
+                            value={selectedElement.color || selectedElement.fill || selectedElement.backgroundColor || '#cccccc'}
+                            onChange={(color) => {
+                              updateSelectedElementProperty('color', color);
+                              updateSelectedElementProperty('fill', color);
+                              updateSelectedElementProperty('backgroundColor', color);
+                            }}
                           />
                           
                           <ColorPicker
                             label="Border Color"
-                            value={selectedElement.stroke || '#000000'}
-                            onChange={(color) => updateSelectedElementProperty('stroke', color)}
+                            value={selectedElement.strokeColor || selectedElement.stroke || selectedElement.borderColor || '#000000'}
+                            onChange={(color) => {
+                              updateSelectedElementProperty('strokeColor', color);
+                              updateSelectedElementProperty('stroke', color);
+                              updateSelectedElementProperty('borderColor', color);
+                            }}
                           />
                           
                           <div className="grid grid-cols-2 gap-3">
@@ -348,8 +364,8 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
                               <Label className="text-sm font-medium text-gray-700">Opacity (%)</Label>
                               <Input
                                 type="number"
-                                value={Math.round((selectedElement.opacity || 1) * 100)}
-                                onChange={(e) => updateSelectedElementProperty('opacity', parseInt(e.target.value) / 100)}
+                                value={Math.round((selectedElement.opacity || 100))}
+                                onChange={(e) => updateSelectedElementProperty('opacity', parseInt(e.target.value))}
                                 className="mt-1"
                                 min="0"
                                 max="100"
@@ -359,31 +375,45 @@ const GiftCardDesignForm: React.FC<GiftCardDesignFormProps> = ({ design, onSucce
                         </div>
                       )}
 
-                      {/* Universal Color Options for Any Element */}
-                      <div className="pt-4 border-t">
-                        <Label className="text-sm font-semibold text-gray-700 mb-3 block">Universal Colors</Label>
-                        <div className="space-y-3">
-                          {selectedElement.type !== 'text' && (
-                            <ColorPicker
-                              label="Background/Fill Color"
-                              value={selectedElement.fill || selectedElement.backgroundColor || '#000000'}
-                              onChange={(color) => {
-                                updateSelectedElementProperty('fill', color);
-                                updateSelectedElementProperty('backgroundColor', color);
-                              }}
-                            />
-                          )}
-                          
+                      {/* Line Element Properties */}
+                      {selectedElement.type === 'line' && (
+                        <div className="space-y-4">
                           <ColorPicker
-                            label="Border/Stroke Color"
-                            value={selectedElement.stroke || selectedElement.borderColor || '#000000'}
+                            label="Line Color"
+                            value={selectedElement.color || selectedElement.stroke || '#000000'}
                             onChange={(color) => {
+                              updateSelectedElementProperty('color', color);
                               updateSelectedElementProperty('stroke', color);
-                              updateSelectedElementProperty('borderColor', color);
                             }}
                           />
+                          
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <Label className="text-sm font-medium text-gray-700">Line Width</Label>
+                              <Input
+                                type="number"
+                                value={selectedElement.strokeWidth || 2}
+                                onChange={(e) => updateSelectedElementProperty('strokeWidth', parseInt(e.target.value))}
+                                className="mt-1"
+                                min="1"
+                                max="20"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label className="text-sm font-medium text-gray-700">Opacity (%)</Label>
+                              <Input
+                                type="number"
+                                value={Math.round((selectedElement.opacity || 100))}
+                                onChange={(e) => updateSelectedElementProperty('opacity', parseInt(e.target.value))}
+                                className="mt-1"
+                                min="0"
+                                max="100"
+                              />
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* Common Actions */}
                       <div className="pt-4 border-t">

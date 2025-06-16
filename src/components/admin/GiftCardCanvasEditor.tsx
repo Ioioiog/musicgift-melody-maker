@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Type, Image as ImageIcon, Palette, Move, RotateCcw, Trash2, Square, Circle as CircleIcon, Minus, RectangleHorizontal, ChevronDown, ChevronRight, Plus, Save, Undo, Redo } from 'lucide-react';
+import { Type, Image as ImageIcon, Palette, Move, RotateCcw, Trash2, Square, Circle as CircleIcon, Minus, RectangleHorizontal, ChevronDown, ChevronRight, Plus, Save, Undo, Redo, FileText } from 'lucide-react';
 
 // Enhanced TypeScript interfaces
 interface ElementBase {
@@ -179,7 +179,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         case 'text':
         case 'placeholder':
           const textElement = element as TextElement;
-          fabricObject = new IText(textElement.text || '', {
+          const displayText = element.type === 'placeholder' ? `[${textElement.text || 'Placeholder'}]` : textElement.text || '';
+          fabricObject = new IText(displayText, {
             left: templateToCanvas(textElement.x),
             top: templateToCanvas(textElement.y),
             fontSize: templateToCanvas(textElement.fontSize || DEFAULT_FONT_SIZE),
@@ -191,6 +192,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
             textAlign: textElement.textAlign || 'left',
             selectable: !readOnly,
             editable: !readOnly && element.type === 'text',
+            backgroundColor: element.type === 'placeholder' ? '#e3f2fd' : undefined,
           });
           break;
 
@@ -284,11 +286,17 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         let updatedElement: Element;
 
         if (obj instanceof IText) {
+          let text = obj.text || '';
+          // Remove placeholder brackets if it's a placeholder
+          if (originalElement.type === 'placeholder' && text.startsWith('[') && text.endsWith(']')) {
+            text = text.slice(1, -1);
+          }
+          
           updatedElement = {
             ...originalElement,
             x: canvasToTemplate(obj.left || 0),
             y: canvasToTemplate(obj.top || 0),
-            text: obj.text || '',
+            text: text,
             fontSize: canvasToTemplate(obj.fontSize || DEFAULT_FONT_SIZE),
             rotation: obj.angle || 0,
           } as TextElement;
@@ -354,7 +362,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     }
   }, [value, debouncedOnChange, readOnly]);
 
-  // Enhanced element synchronization
+  // Enhanced element synchronization - Fixed color mapping
   useEffect(() => {
     if (!fabricCanvas || !value.elements) return;
 
@@ -368,9 +376,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         // Update properties based on element type with type checking
         if ((element.type === 'text' || element.type === 'placeholder') && fabricObject instanceof IText) {
           const textElement = element as TextElement;
+          const displayText = element.type === 'placeholder' ? `[${textElement.text || 'Placeholder'}]` : textElement.text || '';
           fabricObject.set({
-            fill: textElement.color || '#000000',
-            text: textElement.text || '',
+            fill: textElement.color || textElement.fill || '#000000',
+            text: displayText,
             fontSize: templateToCanvas(textElement.fontSize || DEFAULT_FONT_SIZE),
             fontWeight: textElement.bold ? 'bold' : 'normal',
             fontStyle: textElement.italic ? 'italic' : 'normal',
@@ -380,8 +389,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         } else if ((element.type === 'rectangle' || element.type === 'rounded-rectangle') && fabricObject instanceof Rect) {
           const shapeElement = element as ShapeElement;
           const updates: any = {
-            fill: shapeElement.color || '#cccccc',
-            stroke: shapeElement.strokeColor || '',
+            fill: shapeElement.color || shapeElement.fill || shapeElement.backgroundColor || '#cccccc',
+            stroke: shapeElement.strokeColor || shapeElement.stroke || shapeElement.borderColor || '',
             strokeWidth: templateToCanvas(shapeElement.strokeWidth || 0),
             opacity: (shapeElement.opacity || DEFAULT_OPACITY) / 100,
           };
@@ -396,15 +405,15 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         } else if (element.type === 'circle' && fabricObject instanceof Circle) {
           const shapeElement = element as ShapeElement;
           fabricObject.set({
-            fill: shapeElement.color || '#cccccc',
-            stroke: shapeElement.strokeColor || '',
+            fill: shapeElement.color || shapeElement.fill || shapeElement.backgroundColor || '#cccccc',
+            stroke: shapeElement.strokeColor || shapeElement.stroke || shapeElement.borderColor || '',
             strokeWidth: templateToCanvas(shapeElement.strokeWidth || 0),
             opacity: (shapeElement.opacity || DEFAULT_OPACITY) / 100,
           });
         } else if (element.type === 'line' && fabricObject instanceof Line) {
           const lineElement = element as LineElement;
           fabricObject.set({
-            stroke: lineElement.color || '#000000',
+            stroke: lineElement.color || lineElement.stroke || '#000000',
             strokeWidth: templateToCanvas(lineElement.strokeWidth || DEFAULT_STROKE_WIDTH),
             opacity: (lineElement.opacity || DEFAULT_OPACITY) / 100,
             strokeDashArray: lineElement.strokeDashArray || [],
@@ -547,6 +556,37 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       text: 'New Text',
       fontSize: DEFAULT_FONT_SIZE,
       color: '#000000',
+    };
+
+    const updatedElements = [...value.elements, newElement];
+    const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
+    
+    if (fabricObject) {
+      fabricCanvas.add(fabricObject);
+      fabricCanvas.setActiveObject(fabricObject);
+      fabricCanvas.renderAll();
+      
+      const updatedData: CanvasData = {
+        ...value,
+        elements: updatedElements,
+      };
+      
+      onChange(updatedData);
+      addToHistory(updatedData);
+    }
+  }, [fabricCanvas, value, onChange, addToHistory, createFabricObject, readOnly]);
+
+  const addPlaceholderElement = useCallback(() => {
+    if (!fabricCanvas || readOnly) return;
+
+    const newElement: TextElement = {
+      id: generateId(),
+      type: 'placeholder',
+      x: 50,
+      y: 100,
+      text: 'Recipient Name',
+      fontSize: DEFAULT_FONT_SIZE,
+      color: '#1976d2',
     };
 
     const updatedElements = [...value.elements, newElement];
@@ -719,6 +759,16 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
             >
               <Type className="h-4 w-4" />
               Add Text
+            </Button>
+            
+            <Button 
+              onClick={addPlaceholderElement} 
+              size="sm" 
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <FileText className="h-4 w-4" />
+              Add Placeholder
             </Button>
             
             <Button 
