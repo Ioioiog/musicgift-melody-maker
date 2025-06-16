@@ -378,7 +378,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           const textElement = element as TextElement;
           const displayText = element.type === 'placeholder' ? `[${textElement.text || 'Placeholder'}]` : textElement.text || '';
           fabricObject.set({
-            fill: textElement.color || textElement.fill || '#000000',
+            fill: textElement.color || '#000000',
             text: displayText,
             fontSize: templateToCanvas(textElement.fontSize || DEFAULT_FONT_SIZE),
             fontWeight: textElement.bold ? 'bold' : 'normal',
@@ -389,8 +389,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         } else if ((element.type === 'rectangle' || element.type === 'rounded-rectangle') && fabricObject instanceof Rect) {
           const shapeElement = element as ShapeElement;
           const updates: any = {
-            fill: shapeElement.color || shapeElement.fill || shapeElement.backgroundColor || '#cccccc',
-            stroke: shapeElement.strokeColor || shapeElement.stroke || shapeElement.borderColor || '',
+            fill: shapeElement.color || '#cccccc',
+            stroke: shapeElement.strokeColor || '',
             strokeWidth: templateToCanvas(shapeElement.strokeWidth || 0),
             opacity: (shapeElement.opacity || DEFAULT_OPACITY) / 100,
           };
@@ -405,15 +405,15 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         } else if (element.type === 'circle' && fabricObject instanceof Circle) {
           const shapeElement = element as ShapeElement;
           fabricObject.set({
-            fill: shapeElement.color || shapeElement.fill || shapeElement.backgroundColor || '#cccccc',
-            stroke: shapeElement.strokeColor || shapeElement.stroke || shapeElement.borderColor || '',
+            fill: shapeElement.color || '#cccccc',
+            stroke: shapeElement.strokeColor || '',
             strokeWidth: templateToCanvas(shapeElement.strokeWidth || 0),
             opacity: (shapeElement.opacity || DEFAULT_OPACITY) / 100,
           });
         } else if (element.type === 'line' && fabricObject instanceof Line) {
           const lineElement = element as LineElement;
           fabricObject.set({
-            stroke: lineElement.color || lineElement.stroke || '#000000',
+            stroke: lineElement.color || '#000000',
             strokeWidth: templateToCanvas(lineElement.strokeWidth || DEFAULT_STROKE_WIDTH),
             opacity: (lineElement.opacity || DEFAULT_OPACITY) / 100,
             strokeDashArray: lineElement.strokeDashArray || [],
