@@ -91,25 +91,18 @@ const DEFAULT_FONT_SIZE = 16;
 const DEFAULT_STROKE_WIDTH = 2;
 const DEFAULT_OPACITY = 100;
 
-// Predefined placeholder options
+// Updated placeholder options - only gift card relevant placeholders
 const PLACEHOLDER_OPTIONS = [
-  { category: 'Personal', placeholders: [
+  { category: 'Personal Information', placeholders: [
     { value: 'Recipient Name', label: 'Recipient Name', description: 'Name of the gift recipient' },
     { value: 'Sender Name', label: 'Sender Name', description: 'Name of the gift sender' },
     { value: 'Personal Message', label: 'Personal Message', description: 'Custom message from sender' },
   ]},
-  { category: 'Gift Details', placeholders: [
+  { category: 'Gift Card Details', placeholders: [
     { value: 'Gift Amount', label: 'Gift Amount', description: 'Monetary value of the gift' },
-    { value: 'Occasion', label: 'Occasion', description: 'Special occasion or event' },
-    { value: 'Date', label: 'Date', description: 'Important date' },
-  ]},
-  { category: 'Business', placeholders: [
-    { value: 'Company Name', label: 'Company Name', description: 'Business or organization name' },
-    { value: 'Employee Name', label: 'Employee Name', description: 'Staff member name' },
-  ]},
-  { category: 'Custom', placeholders: [
-    { value: 'Custom Field 1', label: 'Custom Field 1', description: 'Flexible custom field' },
-    { value: 'Custom Field 2', label: 'Custom Field 2', description: 'Additional custom field' },
+    { value: 'Currency', label: 'Currency', description: 'Gift card currency (RON/EUR)' },
+    { value: 'Gift Code', label: 'Gift Code', description: 'Unique gift card code' },
+    { value: 'Delivery Date', label: 'Delivery Date', description: 'When the gift card will be delivered' },
   ]},
 ];
 

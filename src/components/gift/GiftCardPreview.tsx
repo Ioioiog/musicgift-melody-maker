@@ -12,13 +12,15 @@ interface GiftCardPreviewProps {
   };
   amount: number;
   currency: string;
+  deliveryDate?: string;
 }
 
 const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({ 
   design, 
   formData, 
   amount, 
-  currency 
+  currency,
+  deliveryDate 
 }) => {
   if (!design) {
     return (
@@ -41,16 +43,23 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
   const templateData = design.template_data || {};
   const previewCode = "GIFT-XXXX-XXXX";
 
-  // Function to replace placeholders in text
+  // Function to replace standardized placeholders
   const replacePlaceholders = (text: string) => {
     if (!text) return '';
+    
+    // Format delivery date if available
+    const formattedDeliveryDate = deliveryDate ? 
+      new Date(deliveryDate).toLocaleDateString() : 
+      'Today';
+
     return text
-      .replace(/\{\{recipient_name\}\}/g, formData.recipient_name || 'Recipient Name')
-      .replace(/\{\{sender_name\}\}/g, formData.sender_name || 'Your Name')
-      .replace(/\{\{message\}\}/g, formData.message_text || 'Happy gifting!')
-      .replace(/\{\{card_value\}\}/g, amount.toString())
-      .replace(/\{\{currency\}\}/g, currency)
-      .replace(/\{\{code\}\}/g, previewCode);
+      .replace(/Recipient Name/g, formData.recipient_name || 'Recipient Name')
+      .replace(/Sender Name/g, formData.sender_name || 'Your Name')
+      .replace(/Personal Message/g, formData.message_text || 'Happy gifting!')
+      .replace(/Gift Amount/g, amount.toString())
+      .replace(/Currency/g, currency)
+      .replace(/Gift Code/g, previewCode)
+      .replace(/Delivery Date/g, formattedDeliveryDate);
   };
 
   // Handle new canvas-based design structure
@@ -161,24 +170,24 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
 
         <div className="relative z-10 text-center">
           <div className="text-3xl font-bold mb-2">
-            {replacePlaceholders(templateData.cardValue || '{{card_value}}')} {replacePlaceholders(templateData.currency || '{{currency}}')}
+            {amount} {currency}
           </div>
           
-          {templateData.recipientName && (
+          {formData.recipient_name && (
             <div className="text-lg mb-1">
-              For: {replacePlaceholders(templateData.recipientName)}
+              For: {formData.recipient_name}
             </div>
           )}
           
-          {templateData.senderName && (
+          {formData.sender_name && (
             <div className="text-sm opacity-90 mb-2">
-              From: {replacePlaceholders(templateData.senderName)}
+              From: {formData.sender_name}
             </div>
           )}
           
-          {templateData.personalMessage && formData.message_text && (
+          {formData.message_text && (
             <div className="text-sm opacity-90 italic">
-              "{replacePlaceholders(templateData.personalMessage)}"
+              "{formData.message_text}"
             </div>
           )}
         </div>
