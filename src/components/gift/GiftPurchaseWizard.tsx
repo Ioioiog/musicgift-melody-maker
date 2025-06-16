@@ -184,7 +184,12 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
               )}
 
               <div className="flex justify-end">
-                <Button onClick={nextStep}>{t('nextDetails')}</Button>
+                <Button 
+                  onClick={nextStep}
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500"
+                >
+                  {t('nextDetails')}
+                </Button>
               </div>
             </div>
           )}
@@ -289,7 +294,12 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
 
               <div className="flex justify-between">
                 <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
-                <Button onClick={nextStep}>{t('nextDesign')}</Button>
+                <Button 
+                  onClick={nextStep}
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500"
+                >
+                  {t('nextDesign')}
+                </Button>
               </div>
             </div>
           )}
@@ -346,6 +356,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
                 <Button 
                   onClick={nextStep} 
                   disabled={!selectedDesign}
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400"
                 >
                   {t('nextReview')}
                 </Button>
@@ -367,7 +378,11 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
 
               <div className="flex justify-between">
                 <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
-                <Button onClick={handleSubmit} disabled={isSubmitting}>
+                <Button 
+                  onClick={handleSubmit} 
+                  disabled={isSubmitting}
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                >
                   {isSubmitting ? t('processing') : t('pay')}
                 </Button>
               </div>
