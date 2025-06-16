@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,7 +32,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
   const [giftAmount, setGiftAmount] = useState(50);
   const [currency, setCurrency] = useState('RON');
   const [giftData, setGiftData] = useState({
-    sender_name: user?.name || '',
+    sender_name: user?.user_metadata?.full_name || user?.email || '',
     sender_email: user?.email || '',
     recipient_name: '',
     recipient_email: '',
@@ -44,6 +44,25 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
   const [date, setDate] = React.useState<Date | undefined>(undefined)
 
   const amountOptions = [25, 50, 100, 200];
+
+  // Sync date with giftData.delivery_date
+  useEffect(() => {
+    setGiftData(prevData => ({
+      ...prevData,
+      delivery_date: date
+    }));
+  }, [date]);
+
+  // Update giftData when user changes
+  useEffect(() => {
+    if (user) {
+      setGiftData(prevData => ({
+        ...prevData,
+        sender_name: user.user_metadata?.full_name || user.email || '',
+        sender_email: user.email || ''
+      }));
+    }
+  }, [user]);
 
   const nextStep = () => {
     setStep(step + 1);
@@ -102,7 +121,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({ onComplete }) =
           {t('purchaseGiftCard')}
         </h2>
         <p className="text-sm text-gray-300">
-          {t('stepXOfY', { current: step, total: 4 })}
+          {t('stepXOfY').replace('{{current}}', step.toString()).replace('{{total}}', '4')}
         </p>
         <div className="flex items-center justify-between">
           <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
