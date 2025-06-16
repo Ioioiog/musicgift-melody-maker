@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Canvas as FabricCanvas, IText, FabricImage, Rect, Circle, Line, Object as FabricObject } from 'fabric';
 import { Button } from '@/components/ui/button';
@@ -7,9 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Type, Image as ImageIcon, Palette, Move, RotateCcw, Trash2, Square, Circle as CircleIcon, Minus, RectangleHorizontal, ChevronDown, ChevronRight, Plus, Save, Undo, Redo, FileText } from 'lucide-react';
+import { ColorPicker } from '@/components/ui/color-picker';
+import { Type, FileText, Square, RectangleHorizontal, Circle as CircleIcon, Minus, Trash2, Undo, Redo, Palette, ChevronDown, ChevronRight } from 'lucide-react';
 
-// Enhanced TypeScript interfaces
+// ========================================================================================
+// TYPES AND INTERFACES
+// ========================================================================================
+
 interface ElementBase {
   id: string;
   type: 'text' | 'placeholder' | 'rectangle' | 'rounded-rectangle' | 'circle' | 'line' | 'image';
@@ -38,7 +43,7 @@ interface ShapeElement extends ElementBase {
   color?: string;
   strokeColor?: string;
   strokeWidth?: number;
-  cornerRadius?: number; // for rounded-rectangle
+  cornerRadius?: number;
 }
 
 interface LineElement extends ElementBase {
@@ -76,7 +81,10 @@ interface GiftCardCanvasEditorProps {
   maxUndoSteps?: number;
 }
 
-// Constants
+// ========================================================================================
+// CONSTANTS AND UTILITIES
+// ========================================================================================
+
 const SCALE_FACTOR = 2;
 const CANVAS_DISPLAY_WIDTH = 600;
 const CANVAS_DISPLAY_HEIGHT = 400;
@@ -84,9 +92,7 @@ const DEFAULT_FONT_SIZE = 16;
 const DEFAULT_STROKE_WIDTH = 2;
 const DEFAULT_OPACITY = 100;
 
-// Utility functions
 const generateId = (): string => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
 const templateToCanvas = (coord: number): number => coord * SCALE_FACTOR;
 const canvasToTemplate = (coord: number): number => coord / SCALE_FACTOR;
 
@@ -98,7 +104,10 @@ const debounce = <T extends (...args: any[]) => void>(func: T, delay: number): T
   }) as T;
 };
 
-// Custom hook for undo/redo functionality
+// ========================================================================================
+// UNDO/REDO HOOK
+// ========================================================================================
+
 const useUndoRedo = (initialState: CanvasData, maxSteps: number = 50) => {
   const [history, setHistory] = useState<CanvasData[]>([initialState]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -106,7 +115,7 @@ const useUndoRedo = (initialState: CanvasData, maxSteps: number = 50) => {
   const addToHistory = useCallback((state: CanvasData) => {
     setHistory(prev => {
       const newHistory = prev.slice(0, currentIndex + 1);
-      newHistory.push(state);
+      newHistory.push(JSON.parse(JSON.stringify(state)));
       return newHistory.slice(-maxSteps);
     });
     setCurrentIndex(prev => Math.min(prev + 1, maxSteps - 1));
@@ -134,6 +143,10 @@ const useUndoRedo = (initialState: CanvasData, maxSteps: number = 50) => {
   return { addToHistory, undo, redo, canUndo, canRedo };
 };
 
+// ========================================================================================
+// MAIN COMPONENT
+// ========================================================================================
+
 const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   value,
   onChange,
@@ -143,6 +156,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   readOnly = false,
   maxUndoSteps = 50
 }) => {
+  // State management
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [fabricCanvas, setFabricCanvas] = useState<FabricCanvas | null>(null);
   const [selectedObject, setSelectedObject] = useState<FabricObject | null>(null);
@@ -151,15 +165,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const { addToHistory, undo, redo, canUndo, canRedo } = useUndoRedo(value, maxUndoSteps);
-
-  // Memoized element lookup for performance
-  const elementMap = useMemo(() => {
-    const map = new Map<string, Element>();
-    value.elements.forEach(element => {
-      map.set(element.id, element);
-    });
-    return map;
-  }, [value.elements]);
 
   // Debounced onChange to prevent excessive updates
   const debouncedOnChange = useMemo(
@@ -170,7 +175,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     [onChange, addToHistory]
   );
 
-  // Enhanced object creation functions
+  // ========================================================================================
+  // FABRIC OBJECT CREATION
+  // ========================================================================================
+
   const createFabricObject = useCallback((element: Element, index: number): FabricObject | null => {
     try {
       let fabricObject: FabricObject;
@@ -251,7 +259,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           return null;
       }
 
-      // Set common properties
       fabricObject.set({
         elementIndex: index,
         elementId: element.id,
@@ -266,7 +273,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     }
   }, [readOnly]);
 
-  // Enhanced canvas update function
+  // ========================================================================================
+  // CANVAS DATA SYNCHRONIZATION
+  // ========================================================================================
+
   const updateCanvasData = useCallback((canvas: FabricCanvas) => {
     if (readOnly) return;
 
@@ -287,7 +297,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
 
         if (obj instanceof IText) {
           let text = obj.text || '';
-          // Remove placeholder brackets if it's a placeholder
           if (originalElement.type === 'placeholder' && text.startsWith('[') && text.endsWith(']')) {
             text = text.slice(1, -1);
           }
@@ -343,7 +352,6 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         updatedElements[elementIndex] = updatedElement;
       });
 
-      // Fill in any missing elements (those not on canvas)
       value.elements.forEach((element, index) => {
         if (!updatedElements[index]) {
           updatedElements[index] = element;
@@ -362,189 +370,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     }
   }, [value, debouncedOnChange, readOnly]);
 
-  // Enhanced element synchronization - Fixed color mapping
-  useEffect(() => {
-    if (!fabricCanvas || !value.elements) return;
+  // ========================================================================================
+  // ELEMENT ADDITION FUNCTIONS
+  // ========================================================================================
 
-    const objects = fabricCanvas.getObjects();
-    
-    value.elements.forEach((element, index) => {
-      const fabricObject = objects.find(obj => obj.get('elementIndex') === index);
-      if (!fabricObject) return;
-
-      try {
-        // Update properties based on element type with type checking
-        if ((element.type === 'text' || element.type === 'placeholder') && fabricObject instanceof IText) {
-          const textElement = element as TextElement;
-          const displayText = element.type === 'placeholder' ? `[${textElement.text || 'Placeholder'}]` : textElement.text || '';
-          fabricObject.set({
-            fill: textElement.color || '#000000',
-            text: displayText,
-            fontSize: templateToCanvas(textElement.fontSize || DEFAULT_FONT_SIZE),
-            fontWeight: textElement.bold ? 'bold' : 'normal',
-            fontStyle: textElement.italic ? 'italic' : 'normal',
-            underline: textElement.underline || false,
-            textAlign: textElement.textAlign || 'left',
-          });
-        } else if ((element.type === 'rectangle' || element.type === 'rounded-rectangle') && fabricObject instanceof Rect) {
-          const shapeElement = element as ShapeElement;
-          const updates: any = {
-            fill: shapeElement.color || '#cccccc',
-            stroke: shapeElement.strokeColor || '',
-            strokeWidth: templateToCanvas(shapeElement.strokeWidth || 0),
-            opacity: (shapeElement.opacity || DEFAULT_OPACITY) / 100,
-          };
-          
-          if (element.type === 'rounded-rectangle') {
-            const cornerRadius = templateToCanvas(shapeElement.cornerRadius || 10);
-            updates.rx = cornerRadius;
-            updates.ry = cornerRadius;
-          }
-          
-          fabricObject.set(updates);
-        } else if (element.type === 'circle' && fabricObject instanceof Circle) {
-          const shapeElement = element as ShapeElement;
-          fabricObject.set({
-            fill: shapeElement.color || '#cccccc',
-            stroke: shapeElement.strokeColor || '',
-            strokeWidth: templateToCanvas(shapeElement.strokeWidth || 0),
-            opacity: (shapeElement.opacity || DEFAULT_OPACITY) / 100,
-          });
-        } else if (element.type === 'line' && fabricObject instanceof Line) {
-          const lineElement = element as LineElement;
-          fabricObject.set({
-            stroke: lineElement.color || '#000000',
-            strokeWidth: templateToCanvas(lineElement.strokeWidth || DEFAULT_STROKE_WIDTH),
-            opacity: (lineElement.opacity || DEFAULT_OPACITY) / 100,
-            strokeDashArray: lineElement.strokeDashArray || [],
-          });
-        }
-      } catch (error) {
-        console.error('Error updating fabric object:', error);
-      }
-    });
-
-    fabricCanvas.renderAll();
-  }, [value.elements, fabricCanvas]);
-
-  // Handle selected element changes
-  useEffect(() => {
-    if (!fabricCanvas || selectedElementIndex === undefined) return;
-
-    const objects = fabricCanvas.getObjects();
-    const targetObject = objects.find(obj => obj.get('elementIndex') === selectedElementIndex);
-    
-    if (targetObject && targetObject !== fabricCanvas.getActiveObject()) {
-      fabricCanvas.setActiveObject(targetObject);
-      fabricCanvas.renderAll();
-      setSelectedObject(targetObject);
-    } else if (selectedElementIndex === null) {
-      fabricCanvas.discardActiveObject();
-      fabricCanvas.renderAll();
-      setSelectedObject(null);
-    }
-  }, [selectedElementIndex, fabricCanvas]);
-
-  // Enhanced canvas initialization
-  useEffect(() => {
-    if (!canvasRef.current) return;
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const canvas = new FabricCanvas(canvasRef.current, {
-        width: CANVAS_DISPLAY_WIDTH,
-        height: CANVAS_DISPLAY_HEIGHT,
-        backgroundColor: value.backgroundColor || '#ffffff',
-        selection: !readOnly,
-        interactive: !readOnly,
-      });
-
-      // Load background image if provided
-      if (backgroundImage) {
-        FabricImage.fromURL(backgroundImage, {
-          crossOrigin: 'anonymous'
-        }).then((img) => {
-          if (img) {
-            img.set({
-              left: 0,
-              top: 0,
-              selectable: false,
-              evented: false,
-              excludeFromExport: false,
-            });
-            img.scaleToWidth(CANVAS_DISPLAY_WIDTH);
-            canvas.backgroundImage = img;
-            canvas.renderAll();
-          }
-        }).catch((error) => {
-          console.error('Error loading background image:', error);
-          setError('Failed to load background image');
-        });
-      }
-
-      // Create and add fabric objects for each element
-      value.elements.forEach((element, index) => {
-        const fabricObject = createFabricObject(element, index);
-        if (fabricObject) {
-          canvas.add(fabricObject);
-        }
-      });
-
-      // Enhanced event handlers
-      canvas.on('selection:created', (e) => {
-        const selectedObj = e.selected?.[0];
-        setSelectedObject(selectedObj || null);
-        if (selectedObj && onElementSelect) {
-          const elementIndex = selectedObj.get('elementIndex');
-          if (elementIndex !== undefined) {
-            onElementSelect(elementIndex);
-          }
-        }
-      });
-
-      canvas.on('selection:updated', (e) => {
-        const selectedObj = e.selected?.[0];
-        setSelectedObject(selectedObj || null);
-        if (selectedObj && onElementSelect) {
-          const elementIndex = selectedObj.get('elementIndex');
-          if (elementIndex !== undefined) {
-            onElementSelect(elementIndex);
-          }
-        }
-      });
-
-      canvas.on('selection:cleared', () => {
-        setSelectedObject(null);
-        if (onElementSelect) {
-          onElementSelect(null);
-        }
-      });
-
-      canvas.on('object:modified', () => {
-        updateCanvasData(canvas);
-      });
-
-      // Handle text editing
-      canvas.on('text:changed', () => {
-        updateCanvasData(canvas);
-      });
-
-      setFabricCanvas(canvas);
-      setIsLoading(false);
-
-      return () => {
-        canvas.dispose();
-      };
-    } catch (error) {
-      console.error('Error initializing canvas:', error);
-      setError('Failed to initialize canvas');
-      setIsLoading(false);
-    }
-  }, [backgroundImage, value.backgroundColor, readOnly, createFabricObject, updateCanvasData, onElementSelect]);
-
-  // Enhanced add element functions
   const addTextElement = useCallback(() => {
     if (!fabricCanvas || readOnly) return;
 
@@ -675,6 +504,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     }
   }, [fabricCanvas, value, onChange, addToHistory, createFabricObject, readOnly]);
 
+  // ========================================================================================
+  // ELEMENT MANIPULATION
+  // ========================================================================================
+
   const deleteSelectedElement = useCallback(() => {
     if (!fabricCanvas || !selectedObject || readOnly) return;
 
@@ -698,6 +531,27 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     }
   }, [fabricCanvas, selectedObject, value, onChange, addToHistory, onElementSelect, readOnly]);
 
+  const updateSelectedElementProperty = useCallback((property: string, value: any) => {
+    if (selectedElementIndex === null || !fabricCanvas) return;
+
+    const updatedElements = [...value.elements];
+    updatedElements[selectedElementIndex] = {
+      ...updatedElements[selectedElementIndex],
+      [property]: value
+    };
+
+    const updatedData: CanvasData = {
+      ...value,
+      elements: updatedElements
+    };
+
+    onChange(updatedData);
+  }, [selectedElementIndex, value, onChange, fabricCanvas]);
+
+  // ========================================================================================
+  // UNDO/REDO HANDLERS
+  // ========================================================================================
+
   const handleUndo = useCallback(() => {
     const previousState = undo();
     if (previousState) {
@@ -712,7 +566,193 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     }
   }, [redo, onChange]);
 
-  // Enhanced error handling and loading states
+  // ========================================================================================
+  // CANVAS INITIALIZATION AND EFFECTS
+  // ========================================================================================
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const canvas = new FabricCanvas(canvasRef.current, {
+        width: CANVAS_DISPLAY_WIDTH,
+        height: CANVAS_DISPLAY_HEIGHT,
+        backgroundColor: value.backgroundColor || '#ffffff',
+        selection: !readOnly,
+        interactive: !readOnly,
+      });
+
+      // Load background image if provided (Fixed Fabric.js v6 API)
+      if (backgroundImage) {
+        FabricImage.fromURL(backgroundImage, {
+          crossOrigin: 'anonymous'
+        }).then((img) => {
+          if (img) {
+            img.set({
+              left: 0,
+              top: 0,
+              selectable: false,
+              evented: false,
+              excludeFromExport: false,
+            });
+            img.scaleToWidth(CANVAS_DISPLAY_WIDTH);
+            canvas.backgroundImage = img; // Fixed API for Fabric.js v6
+            canvas.renderAll();
+          }
+        }).catch((error) => {
+          console.error('Error loading background image:', error);
+          setError('Failed to load background image');
+        });
+      }
+
+      // Create and add fabric objects for each element
+      value.elements.forEach((element, index) => {
+        const fabricObject = createFabricObject(element, index);
+        if (fabricObject) {
+          canvas.add(fabricObject);
+        }
+      });
+
+      // Event handlers
+      canvas.on('selection:created', (e) => {
+        const selectedObj = e.selected?.[0];
+        setSelectedObject(selectedObj || null);
+        if (selectedObj && onElementSelect) {
+          const elementIndex = selectedObj.get('elementIndex');
+          if (elementIndex !== undefined) {
+            onElementSelect(elementIndex);
+          }
+        }
+      });
+
+      canvas.on('selection:updated', (e) => {
+        const selectedObj = e.selected?.[0];
+        setSelectedObject(selectedObj || null);
+        if (selectedObj && onElementSelect) {
+          const elementIndex = selectedObj.get('elementIndex');
+          if (elementIndex !== undefined) {
+            onElementSelect(elementIndex);
+          }
+        }
+      });
+
+      canvas.on('selection:cleared', () => {
+        setSelectedObject(null);
+        if (onElementSelect) {
+          onElementSelect(null);
+        }
+      });
+
+      canvas.on('object:modified', () => {
+        updateCanvasData(canvas);
+      });
+
+      canvas.on('text:changed', () => {
+        updateCanvasData(canvas);
+      });
+
+      setFabricCanvas(canvas);
+      setIsLoading(false);
+
+      return () => {
+        canvas.dispose();
+      };
+    } catch (error) {
+      console.error('Error initializing canvas:', error);
+      setError('Failed to initialize canvas');
+      setIsLoading(false);
+    }
+  }, [backgroundImage, value.backgroundColor, readOnly, createFabricObject, updateCanvasData, onElementSelect]);
+
+  // Element synchronization effect
+  useEffect(() => {
+    if (!fabricCanvas || !value.elements) return;
+
+    const objects = fabricCanvas.getObjects();
+    
+    value.elements.forEach((element, index) => {
+      const fabricObject = objects.find(obj => obj.get('elementIndex') === index);
+      if (!fabricObject) return;
+
+      try {
+        if ((element.type === 'text' || element.type === 'placeholder') && fabricObject instanceof IText) {
+          const textElement = element as TextElement;
+          const displayText = element.type === 'placeholder' ? `[${textElement.text || 'Placeholder'}]` : textElement.text || '';
+          fabricObject.set({
+            fill: textElement.color || '#000000',
+            text: displayText,
+            fontSize: templateToCanvas(textElement.fontSize || DEFAULT_FONT_SIZE),
+            fontWeight: textElement.bold ? 'bold' : 'normal',
+            fontStyle: textElement.italic ? 'italic' : 'normal',
+            underline: textElement.underline || false,
+            textAlign: textElement.textAlign || 'left',
+          });
+        } else if ((element.type === 'rectangle' || element.type === 'rounded-rectangle') && fabricObject instanceof Rect) {
+          const shapeElement = element as ShapeElement;
+          const updates: any = {
+            fill: shapeElement.color || '#cccccc',
+            stroke: shapeElement.strokeColor || '',
+            strokeWidth: templateToCanvas(shapeElement.strokeWidth || 0),
+            opacity: (shapeElement.opacity || DEFAULT_OPACITY) / 100,
+          };
+          
+          if (element.type === 'rounded-rectangle') {
+            const cornerRadius = templateToCanvas(shapeElement.cornerRadius || 10);
+            updates.rx = cornerRadius;
+            updates.ry = cornerRadius;
+          }
+          
+          fabricObject.set(updates);
+        } else if (element.type === 'circle' && fabricObject instanceof Circle) {
+          const shapeElement = element as ShapeElement;
+          fabricObject.set({
+            fill: shapeElement.color || '#cccccc',
+            stroke: shapeElement.strokeColor || '',
+            strokeWidth: templateToCanvas(shapeElement.strokeWidth || 0),
+            opacity: (shapeElement.opacity || DEFAULT_OPACITY) / 100,
+          });
+        } else if (element.type === 'line' && fabricObject instanceof Line) {
+          const lineElement = element as LineElement;
+          fabricObject.set({
+            stroke: lineElement.color || '#000000',
+            strokeWidth: templateToCanvas(lineElement.strokeWidth || DEFAULT_STROKE_WIDTH),
+            opacity: (lineElement.opacity || DEFAULT_OPACITY) / 100,
+            strokeDashArray: lineElement.strokeDashArray || [],
+          });
+        }
+      } catch (error) {
+        console.error('Error updating fabric object:', error);
+      }
+    });
+
+    fabricCanvas.renderAll();
+  }, [value.elements, fabricCanvas]);
+
+  // Handle selected element changes
+  useEffect(() => {
+    if (!fabricCanvas || selectedElementIndex === undefined) return;
+
+    const objects = fabricCanvas.getObjects();
+    const targetObject = objects.find(obj => obj.get('elementIndex') === selectedElementIndex);
+    
+    if (targetObject && targetObject !== fabricCanvas.getActiveObject()) {
+      fabricCanvas.setActiveObject(targetObject);
+      fabricCanvas.renderAll();
+      setSelectedObject(targetObject);
+    } else if (selectedElementIndex === null) {
+      fabricCanvas.discardActiveObject();
+      fabricCanvas.renderAll();
+      setSelectedObject(null);
+    }
+  }, [selectedElementIndex, fabricCanvas]);
+
+  // ========================================================================================
+  // RENDER LOGIC
+  // ========================================================================================
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -745,9 +785,11 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
     );
   }
 
+  const selectedElement = selectedElementIndex !== null ? value.elements[selectedElementIndex] : null;
+
   return (
     <div className="space-y-4">
-      {/* Enhanced toolbar */}
+      {/* Toolbar */}
       <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-lg">
         {!readOnly && (
           <>
@@ -850,7 +892,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         )}
       </div>
 
-      {/* Canvas container with better styling */}
+      {/* Canvas */}
       <div className="relative border-2 border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
         <canvas 
           ref={canvasRef} 
@@ -867,7 +909,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         )}
       </div>
 
-      {/* Enhanced properties panel */}
+      {/* Properties Panel */}
       {!readOnly && (
         <Collapsible open={toolsExpanded} onOpenChange={setToolsExpanded}>
           <CollapsibleTrigger asChild>
@@ -881,21 +923,170 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           </CollapsibleTrigger>
           
           <CollapsibleContent className="space-y-4 mt-4">
-            {selectedObject ? (
+            {selectedElement ? (
               <Card>
                 <CardHeader>
                   <CardTitle className="text-sm">
-                    Selected Element Properties
+                    {selectedElement.type === 'placeholder' ? 'Placeholder Element' : 'Selected Element'} Properties
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* Enhanced property controls would go here */}
-                  <p className="text-sm text-gray-600">
-                    Element type: {selectedObject.get('type') || 'Unknown'}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Position: ({Math.round(canvasToTemplate(selectedObject.left || 0))}, {Math.round(canvasToTemplate(selectedObject.top || 0))})
-                  </p>
+                  {/* Text/Placeholder Properties */}
+                  {(selectedElement.type === 'text' || selectedElement.type === 'placeholder') && (
+                    <>
+                      <div>
+                        <Label className="text-sm font-medium">
+                          {selectedElement.type === 'placeholder' ? 'Placeholder Text' : 'Text Content'}
+                        </Label>
+                        <Input
+                          value={(selectedElement as TextElement).text || ''}
+                          onChange={(e) => updateSelectedElementProperty('text', e.target.value)}
+                          className="mt-1"
+                          placeholder={selectedElement.type === 'placeholder' ? 'e.g., Recipient Name' : 'Enter text'}
+                        />
+                      </div>
+                      
+                      <ColorPicker
+                        label="Text Color"
+                        value={(selectedElement as TextElement).color || '#000000'}
+                        onChange={(color) => updateSelectedElementProperty('color', color)}
+                      />
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-sm font-medium">Font Size</Label>
+                          <Input
+                            type="number"
+                            value={(selectedElement as TextElement).fontSize || 16}
+                            onChange={(e) => updateSelectedElementProperty('fontSize', parseInt(e.target.value))}
+                            className="mt-1"
+                            min="8"
+                            max="72"
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label className="text-sm font-medium">Font Weight</Label>
+                          <Select
+                            value={(selectedElement as TextElement).bold ? 'bold' : 'normal'}
+                            onValueChange={(value) => updateSelectedElementProperty('bold', value === 'bold')}
+                          >
+                            <SelectTrigger className="mt-1">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="normal">Normal</SelectItem>
+                              <SelectItem value="bold">Bold</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Shape Properties */}
+                  {(selectedElement.type === 'rectangle' || selectedElement.type === 'rounded-rectangle' || selectedElement.type === 'circle') && (
+                    <>
+                      <ColorPicker
+                        label="Fill Color"
+                        value={(selectedElement as ShapeElement).color || '#cccccc'}
+                        onChange={(color) => updateSelectedElementProperty('color', color)}
+                      />
+                      
+                      <ColorPicker
+                        label="Border Color"
+                        value={(selectedElement as ShapeElement).strokeColor || '#000000'}
+                        onChange={(color) => updateSelectedElementProperty('strokeColor', color)}
+                      />
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-sm font-medium">Border Width</Label>
+                          <Input
+                            type="number"
+                            value={(selectedElement as ShapeElement).strokeWidth || 1}
+                            onChange={(e) => updateSelectedElementProperty('strokeWidth', parseInt(e.target.value))}
+                            className="mt-1"
+                            min="0"
+                            max="20"
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label className="text-sm font-medium">Opacity (%)</Label>
+                          <Input
+                            type="number"
+                            value={Math.round((selectedElement.opacity || 100))}
+                            onChange={(e) => updateSelectedElementProperty('opacity', parseInt(e.target.value))}
+                            className="mt-1"
+                            min="0"
+                            max="100"
+                          />
+                        </div>
+                      </div>
+
+                      {selectedElement.type === 'rounded-rectangle' && (
+                        <div>
+                          <Label className="text-sm font-medium">Corner Radius</Label>
+                          <Input
+                            type="number"
+                            value={(selectedElement as ShapeElement).cornerRadius || 10}
+                            onChange={(e) => updateSelectedElementProperty('cornerRadius', parseInt(e.target.value))}
+                            className="mt-1"
+                            min="0"
+                            max="50"
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Line Properties */}
+                  {selectedElement.type === 'line' && (
+                    <>
+                      <ColorPicker
+                        label="Line Color"
+                        value={(selectedElement as LineElement).color || '#000000'}
+                        onChange={(color) => updateSelectedElementProperty('color', color)}
+                      />
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-sm font-medium">Line Width</Label>
+                          <Input
+                            type="number"
+                            value={(selectedElement as LineElement).strokeWidth || 2}
+                            onChange={(e) => updateSelectedElementProperty('strokeWidth', parseInt(e.target.value))}
+                            className="mt-1"
+                            min="1"
+                            max="20"
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label className="text-sm font-medium">Opacity (%)</Label>
+                          <Input
+                            type="number"
+                            value={Math.round((selectedElement.opacity || 100))}
+                            onChange={(e) => updateSelectedElementProperty('opacity', parseInt(e.target.value))}
+                            className="mt-1"
+                            min="0"
+                            max="100"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Position and Transform */}
+                  <div className="border-t pt-4">
+                    <Label className="text-sm font-medium mb-2 block">Position & Transform</Label>
+                    <div className="grid grid-cols-3 gap-2 text-xs text-gray-600">
+                      <div>X: {Math.round(selectedElement.x)}</div>
+                      <div>Y: {Math.round(selectedElement.y)}</div>
+                      <div>Rotation: {Math.round(selectedElement.rotation || 0)}°</div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ) : (
