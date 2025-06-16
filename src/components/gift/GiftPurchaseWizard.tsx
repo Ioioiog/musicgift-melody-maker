@@ -79,31 +79,35 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       setSelectedDesign(activeDesigns[0]);
     }
   }, [activeDesigns, selectedDesign]);
+
   const nextStep = () => {
     setStep(step + 1);
   };
+
   const prevStep = () => {
     setStep(step - 1);
   };
+
   const handleAmountChange = (amount: number) => {
     setGiftAmount(amount);
   };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setGiftData(prevData => ({
       ...prevData,
       [name]: value
     }));
   };
+
   const handleDesignSelect = (design: any) => {
     setSelectedDesign(design);
   };
+
   const handlePaymentProviderSelect = (provider: string) => {
     setSelectedPaymentProvider(provider);
   };
+
   const handleSubmit = async () => {
     if (!user) {
       toast({
@@ -131,8 +135,9 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
         selectedDesign: selectedDesign?.id
       });
 
-      // Create gift card record in database
+      // Create gift card record in database - code will be auto-generated
       const giftCardRecord = await createGiftCard.mutateAsync({
+        code: `TEMP-${Date.now()}`, // Temporary code, will be replaced by database trigger
         sender_user_id: user.id,
         sender_name: giftData.sender_name,
         sender_email: giftData.sender_email,
@@ -143,7 +148,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
         gift_amount: giftAmount,
         design_id: selectedDesign?.id || null,
         delivery_date: giftData.delivery_date?.toISOString() || null,
-        status: 'pending',
+        status: 'active',
         payment_status: 'pending'
       });
 
@@ -190,7 +195,9 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       setIsCreatingGiftCard(false);
     }
   };
-  return <div className="max-w-4xl mx-auto">
+
+  return (
+    <div className="max-w-4xl mx-auto">
       {/* Step Indicator */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-white mb-2">
@@ -212,70 +219,151 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Form Area */}
         <div className="lg:col-span-2">
-          {step === 1 && <div>
+          {step === 1 && (
+            <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('chooseGiftCardAmount')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('selectGiftCardValue')}</p>
               <div className="flex flex-wrap gap-4 mb-6">
-                {amountOptions.map(amount => <Button key={amount} variant="outline" className={`rounded-full ${giftAmount === amount ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600' : 'text-orange-500 border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'}`} onClick={() => handleAmountChange(amount)}>
+                {amountOptions.map(amount => (
+                  <Button
+                    key={amount}
+                    variant="outline"
+                    className={`rounded-full ${
+                      giftAmount === amount 
+                        ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600' 
+                        : 'text-orange-500 border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'
+                    }`}
+                    onClick={() => handleAmountChange(amount)}
+                  >
                     {amount} {currency}
-                  </Button>)}
-                <Button variant="outline" className={`rounded-full ${giftAmount === 0 ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600' : 'text-orange-500 border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'}`} onClick={() => setGiftAmount(0)}>
+                  </Button>
+                ))}
+                <Button
+                  variant="outline"
+                  className={`rounded-full ${
+                    giftAmount === 0 
+                      ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600' 
+                      : 'text-orange-500 border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'
+                  }`}
+                  onClick={() => setGiftAmount(0)}
+                >
                   {t('customAmount')}
                 </Button>
               </div>
 
-              {giftAmount === 0 && <div className="mb-6">
+              {giftAmount === 0 && (
+                <div className="mb-6">
                   <Label htmlFor="customAmount" className="block text-sm font-medium text-white">{t('enterCustomAmount')}</Label>
-                  <Input type="number" id="customAmount" className="mt-1" placeholder={`${t('enterAmountIn')} ${currency}`} onChange={e => handleAmountChange(parseInt(e.target.value))} />
-                </div>}
+                  <Input
+                    type="number"
+                    id="customAmount"
+                    className="mt-1"
+                    placeholder={`${t('enterAmountIn')} ${currency}`}
+                    onChange={(e) => handleAmountChange(parseInt(e.target.value))}
+                  />
+                </div>
+              )}
 
               <div className="flex justify-end">
                 <Button onClick={nextStep} className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500">
                   {t('nextDetails')}
                 </Button>
               </div>
-            </div>}
+            </div>
+          )}
 
-          {step === 2 && <div>
+          {step === 2 && (
+            <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('enterGiftDetails')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('tellUsWhoGiftFor')}</p>
 
               <div className="mb-4">
                 <Label htmlFor="sender_name" className="block text-sm font-medium text-white">{t('yourName')}</Label>
-                <Input type="text" id="sender_name" name="sender_name" className="mt-1" placeholder={t('enterYourFullName')} value={giftData.sender_name} onChange={handleInputChange} />
+                <Input
+                  type="text"
+                  id="sender_name"
+                  name="sender_name"
+                  className="mt-1"
+                  placeholder={t('enterYourFullName')}
+                  value={giftData.sender_name}
+                  onChange={handleInputChange}
+                />
               </div>
 
               <div className="mb-4">
                 <Label htmlFor="sender_email" className="block text-sm font-medium text-white">{t('yourEmail')}</Label>
-                <Input type="email" id="sender_email" name="sender_email" className="mt-1" placeholder="you@example.com" value={giftData.sender_email} onChange={handleInputChange} />
+                <Input
+                  type="email"
+                  id="sender_email"
+                  name="sender_email"
+                  className="mt-1"
+                  placeholder="you@example.com"
+                  value={giftData.sender_email}
+                  onChange={handleInputChange}
+                />
               </div>
 
               <div className="mb-4">
                 <Label htmlFor="recipient_name" className="block text-sm font-medium text-white">{t('recipientName')}</Label>
-                <Input type="text" id="recipient_name" name="recipient_name" className="mt-1" placeholder={t('enterRecipientName')} value={giftData.recipient_name} onChange={handleInputChange} />
+                <Input
+                  type="text"
+                  id="recipient_name"
+                  name="recipient_name"
+                  className="mt-1"
+                  placeholder={t('enterRecipientName')}
+                  value={giftData.recipient_name}
+                  onChange={handleInputChange}
+                />
               </div>
 
               <div className="mb-4">
                 <Label htmlFor="recipient_email" className="block text-sm font-medium text-white">{t('recipientEmail')}</Label>
-                <Input type="email" id="recipient_email" name="recipient_email" className="mt-1" placeholder="recipient@example.com" value={giftData.recipient_email} onChange={handleInputChange} />
+                <Input
+                  type="email"
+                  id="recipient_email"
+                  name="recipient_email"
+                  className="mt-1"
+                  placeholder="recipient@example.com"
+                  value={giftData.recipient_email}
+                  onChange={handleInputChange}
+                />
               </div>
 
               <div className="mb-4">
                 <Label htmlFor="message_text" className="block text-sm font-medium text-white">{t('personalMessage')} (Optional)</Label>
-                <Input id="message_text" name="message_text" className="mt-1" placeholder={t('writeHeartfeltMessage')} value={giftData.message_text} onChange={handleInputChange} />
+                <Input
+                  id="message_text"
+                  name="message_text"
+                  className="mt-1"
+                  placeholder={t('writeHeartfeltMessage')}
+                  value={giftData.message_text}
+                  onChange={handleInputChange}
+                />
               </div>
 
               <div className="mb-4">
                 <Label className="block text-sm font-medium text-white">{t('deliveryDate')} (Optional)</Label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant={"outline"} className={cn("w-[240px] justify-start text-left font-normal", !date && "text-muted-foreground")}>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {date ? format(date, "PPP") : <span>{t('pickDate')}</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={date} onSelect={setDate} disabled={date => date < addDays(new Date(), 0)} initialFocus />
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      disabled={(date) => date < addDays(new Date(), 0)}
+                      initialFocus
+                    />
                   </PopoverContent>
                 </Popover>
               </div>
@@ -286,39 +374,71 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
                   {t('nextDesign')}
                 </Button>
               </div>
-            </div>}
+            </div>
+          )}
 
-          {step === 3 && <div>
+          {step === 3 && (
+            <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('selectDesign')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('chooseDesignPreview')}</p>
 
-              {designsLoading ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[1, 2, 3].map(i => <div key={i} className="border rounded-lg p-4">
+              {designsLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="border rounded-lg p-4">
                       <Skeleton className="h-32 mb-2 rounded-md" />
                       <Skeleton className="h-4 w-20" />
-                    </div>)}
-                </div> : activeDesigns.length === 0 ? <div className="text-center py-8">
+                    </div>
+                  ))}
+                </div>
+              ) : activeDesigns.length === 0 ? (
+                <div className="text-center py-8">
                   <p className="text-white mb-4">No gift card designs available at the moment.</p>
                   <p className="text-gray-300 text-sm">Please contact support or try again later.</p>
-                </div> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {activeDesigns.map(design => <div key={design.id} className={`border rounded-lg p-4 cursor-pointer transition-all hover:border-blue-400 ${selectedDesign?.id === design.id ? 'border-blue-500 bg-blue-50/10' : 'border-gray-300'}`} onClick={() => handleDesignSelect(design)}>
-                      {design.preview_image_url ? <img src={design.preview_image_url} alt={design.name} className="w-full h-32 object-cover rounded-md mb-2" /> : <div className="w-full h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-md mb-2 flex items-center justify-center">
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {activeDesigns.map((design) => (
+                    <div
+                      key={design.id}
+                      className={`border rounded-lg p-4 cursor-pointer transition-all hover:border-blue-400 ${
+                        selectedDesign?.id === design.id ? 'border-blue-500 bg-blue-50/10' : 'border-gray-300'
+                      }`}
+                      onClick={() => handleDesignSelect(design)}
+                    >
+                      {design.preview_image_url ? (
+                        <img
+                          src={design.preview_image_url}
+                          alt={design.name}
+                          className="w-full h-32 object-cover rounded-md mb-2"
+                        />
+                      ) : (
+                        <div className="w-full h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-md mb-2 flex items-center justify-center">
                           <span className="text-white font-semibold">{design.name}</span>
-                        </div>}
+                        </div>
+                      )}
                       <h4 className="text-sm font-semibold text-white">{design.name}</h4>
                       <p className="text-xs text-gray-300 mt-1">{design.theme}</p>
-                    </div>)}
-                </div>}
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="flex justify-between mt-8">
                 <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
-                <Button onClick={nextStep} disabled={!selectedDesign} className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400">
-                  {t('nextReview')}
+                <Button
+                  onClick={nextStep}
+                  disabled={!selectedDesign}
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                >
+                  {t('nextPayment', 'Next: Payment')}
                 </Button>
               </div>
-            </div>}
+            </div>
+          )}
 
-          {step === 4 && <div>
+          {step === 4 && (
+            <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('selectPaymentMethod', 'Select Payment Method')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('choosePaymentProvider', 'Choose how you\'d like to pay for your gift card')}</p>
 
@@ -337,9 +457,11 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
                   {t('nextReview')}
                 </Button>
               </div>
-            </div>}
+            </div>
+          )}
 
-          {step === 5 && <div>
+          {step === 5 && (
+            <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('reviewGiftCard')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('confirmDetailsBeforePayment')}</p>
 
@@ -361,7 +483,8 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
                   {isCreatingGiftCard ? t('processing') : t('pay')}
                 </Button>
               </div>
-            </div>}
+            </div>
+          )}
         </div>
 
         {/* Preview Sidebar */}
@@ -369,7 +492,13 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
           <div className="sticky top-4 space-y-4">
             <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('livePreview')}</h3>
-              <GiftCardPreview design={selectedDesign} formData={giftData} amount={giftAmount} currency={currency} deliveryDate={giftData.delivery_date?.toISOString()} />
+              <GiftCardPreview
+                design={selectedDesign}
+                formData={giftData}
+                amount={giftAmount}
+                currency={currency}
+                deliveryDate={giftData.delivery_date?.toISOString()}
+              />
             </div>
 
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4">
@@ -385,6 +514,8 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default GiftPurchaseWizard;
