@@ -190,7 +190,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       setIsCreatingGiftCard(false);
     }
   };
-  return <div className="max-w-4xl px-[108px] mx-0">
+  return <div className="max-w-4xl mx-0 px-[22px]">
       {/* Step Indicator */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-white mb-2">
@@ -210,8 +210,8 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Form Area */}
-        <div className="lg:col-span-2">
-          {step === 1 && <div>
+        <div className="lg:col-span-2 px-0">
+          {step === 1 && <div className="px-0">
               <h3 className="text-lg font-semibold mb-4 text-white">{t('chooseGiftCardAmount')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('selectGiftCardValue')}</p>
               <div className="flex flex-wrap gap-4 mb-6">
@@ -228,7 +228,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
                   <Input type="number" id="customAmount" className="mt-1" placeholder={`${t('enterAmountIn')} ${currency}`} onChange={e => handleAmountChange(parseInt(e.target.value))} />
                 </div>}
 
-              <div className="flex justify-end">
+              <div className="flex justify-end px-0 mx-[39px]">
                 <Button onClick={nextStep} className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500">
                   {t('nextDetails')}
                 </Button>
@@ -354,13 +354,13 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
 
         {/* Preview Sidebar */}
         <div className="lg:col-span-1">
-          <div className="sticky top-4 space-y-4">
+          <div className="sticky top-4 space-y-4 px-0 py-0 mx-0 my-0">
             <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('livePreview')}</h3>
               <GiftCardPreview design={selectedDesign} formData={giftData} amount={giftAmount} currency={currency} deliveryDate={giftData.delivery_date?.toISOString()} />
             </div>
 
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4 py-[26px] px-px mx-0 my-[17px]">
               <h4 className="text-sm font-semibold text-white mb-2">{t('yourCardWillInclude')}</h4>
               <ul className="list-disc list-inside text-sm text-gray-300">
                 <li>{t('cardValue')}: {giftAmount} {currency}</li>
