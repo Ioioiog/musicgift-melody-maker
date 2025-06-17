@@ -78,10 +78,10 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
   const replacePlaceholders = (text: string) => {
     if (!text) return '';
     
-    // Format delivery date if available
+    // Format delivery date - show actual date instead of "Today"
     const formattedDeliveryDate = deliveryDate ? 
       new Date(deliveryDate).toLocaleDateString() : 
-      'Today';
+      new Date().toLocaleDateString();
 
     return text
       .replace(/Recipient Name/g, formData.recipient_name || 'Recipient Name')
