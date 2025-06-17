@@ -14,7 +14,12 @@ export const useGiftCardsAdmin = (params: UseGiftCardsAdminParams = {}) => {
     queryFn: async () => {
       let query = supabase
         .from('gift_cards')
-        .select('*')
+        .select(`
+          *,
+          gift_card_designs (
+            template_data
+          )
+        `)
         .order('created_at', { ascending: false });
 
       // Apply search filter
@@ -40,18 +45,28 @@ export const useGiftCardsAdmin = (params: UseGiftCardsAdminParams = {}) => {
       
       // Ensure all template data has standardized dimensions
       const processedData = data?.map(card => {
-        if (card.template_data && typeof card.template_data === 'object') {
+        const templateData = card.gift_card_designs?.template_data;
+        
+        if (templateData && typeof templateData === 'object') {
           return {
             ...card,
             template_data: {
-              ...card.template_data,
+              ...templateData,
               canvasWidth: 400,
               canvasHeight: 250,
-              elements: card.template_data.elements || []
+              elements: templateData.elements || []
             }
           };
         }
-        return card;
+        
+        return {
+          ...card,
+          template_data: {
+            canvasWidth: 400,
+            canvasHeight: 250,
+            elements: []
+          }
+        };
       });
       
       return processedData;
