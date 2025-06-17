@@ -17,28 +17,22 @@ import { useToast } from '@/hooks/use-toast';
 import { useGiftCardDesigns, useCreateGiftCard } from '@/hooks/useGiftCards';
 import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
 import { Skeleton } from '@/components/ui/skeleton';
+
 interface GiftPurchaseWizardProps {
   onComplete: (data: any) => void;
 }
+
 const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
   onComplete
 }) => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    user
-  } = useAuth();
+  const { t } = useLanguage();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
-  const {
-    data: designs,
-    isLoading: designsLoading
-  } = useGiftCardDesigns();
+  const { toast } = useToast();
+  const { data: designs, isLoading: designsLoading } = useGiftCardDesigns();
   const createGiftCard = useCreateGiftCard();
   const initiatePayment = useGiftCardPayment();
+
   const [step, setStep] = useState(1);
   const [giftAmount, setGiftAmount] = useState(50);
   const [currency, setCurrency] = useState('RON');
@@ -84,6 +78,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       setSelectedDesign(activeDesigns[0]);
     }
   }, [activeDesigns, selectedDesign]);
+
   const nextStep = () => {
     setStep(step + 1);
   };
@@ -94,10 +89,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
     setGiftAmount(amount);
   };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setGiftData(prevData => ({
       ...prevData,
       [name]: value
@@ -190,7 +182,9 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       setIsCreatingGiftCard(false);
     }
   };
-  return <div className="max-w-4xl mx-0 px-[22px]">
+
+  return (
+    <div className="max-w-4xl mx-0 px-[22px]">
       {/* Step Indicator */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-white mb-2">
@@ -201,9 +195,10 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
         </p>
         <div className="flex items-center justify-between">
           <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-            <div style={{
-            width: `${step / 5 * 100}%`
-          }} className="h-2.5 rounded-full bg-orange-500"></div>
+            <div
+              style={{ width: `${(step / 5) * 100}%` }}
+              className="h-2.5 rounded-full bg-orange-500"
+            ></div>
           </div>
         </div>
       </div>
@@ -211,31 +206,66 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Form Area */}
         <div className="lg:col-span-2 px-0">
-          {step === 1 && <div className="px-0">
+          {step === 1 && (
+            <div className="px-0">
               <h3 className="text-lg font-semibold mb-4 text-white">{t('chooseGiftCardAmount')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('selectGiftCardValue')}</p>
               <div className="flex flex-wrap gap-4 mb-6">
-                {amountOptions.map(amount => <Button key={amount} variant="outline" className={`rounded-full ${giftAmount === amount ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600' : 'text-orange-500 border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'}`} onClick={() => handleAmountChange(amount)}>
+                {amountOptions.map((amount) => (
+                  <Button
+                    key={amount}
+                    variant="outline"
+                    className={`rounded-full ${
+                      giftAmount === amount
+                        ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600'
+                        : 'text-orange-500 border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'
+                    }`}
+                    onClick={() => handleAmountChange(amount)}
+                  >
                     {amount} {currency}
-                  </Button>)}
-                <Button variant="outline" className={`rounded-full ${giftAmount === 0 ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600' : 'text-orange-500 border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'}`} onClick={() => setGiftAmount(0)}>
+                  </Button>
+                ))}
+                <Button
+                  variant="outline"
+                  className={`rounded-full ${
+                    giftAmount === 0
+                      ? 'bg-orange-500 text-white border-orange-500 hover:bg-orange-600'
+                      : 'text-orange-500 border-white hover:bg-orange-500 hover:text-white hover:border-orange-500'
+                  }`}
+                  onClick={() => setGiftAmount(0)}
+                >
                   {t('customAmount')}
                 </Button>
               </div>
 
-              {giftAmount === 0 && <div className="mb-6">
-                  <Label htmlFor="customAmount" className="block text-sm font-medium text-white">{t('enterCustomAmount')}</Label>
-                  <Input type="number" id="customAmount" className="mt-1" placeholder={`${t('enterAmountIn')} ${currency}`} onChange={e => handleAmountChange(parseInt(e.target.value))} />
-                </div>}
+              {giftAmount === 0 && (
+                <div className="mb-6">
+                  <Label htmlFor="customAmount" className="block text-sm font-medium text-white">
+                    {t('enterCustomAmount')}
+                  </Label>
+                  <Input
+                    type="number"
+                    id="customAmount"
+                    className="mt-1"
+                    placeholder={`${t('enterAmountIn')} ${currency}`}
+                    onChange={(e) => handleAmountChange(parseInt(e.target.value))}
+                  />
+                </div>
+              )}
 
               <div className="flex justify-end px-0 mx-[39px]">
-                <Button onClick={nextStep} className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500">
+                <Button
+                  onClick={nextStep}
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500"
+                >
                   {t('nextDetails')}
                 </Button>
               </div>
-            </div>}
+            </div>
+          )}
 
-          {step === 2 && <div>
+          {step === 2 && (
+            <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('enterGiftDetails')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('tellUsWhoGiftFor')}</p>
 
@@ -268,70 +298,128 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
                 <Label className="block text-sm font-medium text-white">{t('deliveryDate')} (Optional)</Label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant={"outline"} className={cn("w-[240px] justify-start text-left font-normal", !date && "text-muted-foreground")}>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {date ? format(date, "PPP") : <span>{t('pickDate')}</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={date} onSelect={setDate} disabled={date => date < addDays(new Date(), 0)} initialFocus />
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      disabled={(date) => date < addDays(new Date(), 0)}
+                      initialFocus
+                    />
                   </PopoverContent>
                 </Popover>
               </div>
 
               <div className="flex justify-between">
                 <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
-                <Button onClick={nextStep} className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500">
+                <Button
+                  onClick={nextStep}
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500"
+                >
                   {t('nextDesign')}
                 </Button>
               </div>
-            </div>}
+            </div>
+          )}
 
-          {step === 3 && <div>
+          {step === 3 && (
+            <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('selectDesign')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('chooseDesignPreview')}</p>
 
-              {designsLoading ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[1, 2, 3].map(i => <div key={i} className="border rounded-lg p-4">
+              {designsLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="border rounded-lg p-4">
                       <Skeleton className="h-32 mb-2 rounded-md" />
                       <Skeleton className="h-4 w-20" />
-                    </div>)}
-                </div> : activeDesigns.length === 0 ? <div className="text-center py-8">
+                    </div>
+                  ))}
+                </div>
+              ) : activeDesigns.length === 0 ? (
+                <div className="text-center py-8">
                   <p className="text-white mb-4">No gift card designs available at the moment.</p>
                   <p className="text-gray-300 text-sm">Please contact support or try again later.</p>
-                </div> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {activeDesigns.map(design => <div key={design.id} className={`border rounded-lg p-4 cursor-pointer transition-all hover:border-blue-400 ${selectedDesign?.id === design.id ? 'border-blue-500 bg-blue-50/10' : 'border-gray-300'}`} onClick={() => handleDesignSelect(design)}>
-                      {design.preview_image_url ? <img src={design.preview_image_url} alt={design.name} className="w-full h-32 object-cover rounded-md mb-2" /> : <div className="w-full h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-md mb-2 flex items-center justify-center">
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {activeDesigns.map((design) => (
+                    <div
+                      key={design.id}
+                      className={`border rounded-lg p-4 cursor-pointer transition-all hover:border-blue-400 ${
+                        selectedDesign?.id === design.id
+                          ? 'border-blue-500 bg-blue-50/10'
+                          : 'border-gray-300'
+                      }`}
+                      onClick={() => handleDesignSelect(design)}
+                    >
+                      {design.preview_image_url ? (
+                        <img
+                          src={design.preview_image_url}
+                          alt={design.name}
+                          className="w-full h-32 object-cover rounded-md mb-2"
+                        />
+                      ) : (
+                        <div className="w-full h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-md mb-2 flex items-center justify-center">
                           <span className="text-white font-semibold">{design.name}</span>
-                        </div>}
+                        </div>
+                      )}
                       <h4 className="text-sm font-semibold text-white">{design.name}</h4>
                       <p className="text-xs text-gray-300 mt-1">{design.theme}</p>
-                    </div>)}
-                </div>}
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="flex justify-between mt-8">
                 <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
-                <Button onClick={nextStep} disabled={!selectedDesign} className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400">
+                <Button
+                  onClick={nextStep}
+                  disabled={!selectedDesign}
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                >
                   {t('nextPayment', 'Next: Payment')}
                 </Button>
               </div>
-            </div>}
+            </div>
+          )}
 
-          {step === 4 && <div>
+          {step === 4 && (
+            <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('selectPaymentMethod', 'Select Payment Method')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('choosePaymentProvider', 'Choose how you\'d like to pay for your gift card')}</p>
 
-              <PaymentProviderSelection selectedProvider={selectedPaymentProvider} onProviderSelect={handlePaymentProviderSelect} />
+              <PaymentProviderSelection
+                selectedProvider={selectedPaymentProvider}
+                onProviderSelect={handlePaymentProviderSelect}
+              />
 
               <div className="flex justify-between mt-8">
                 <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
-                <Button onClick={nextStep} disabled={!selectedPaymentProvider} className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400">
+                <Button
+                  onClick={nextStep}
+                  disabled={!selectedPaymentProvider}
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                >
                   {t('nextReview')}
                 </Button>
               </div>
-            </div>}
+            </div>
+          )}
 
-          {step === 5 && <div>
+          {step === 5 && (
+            <div>
               <h3 className="text-lg font-semibold mb-4 text-white">{t('reviewGiftCard')}</h3>
               <p className="text-sm text-gray-300 mb-4">{t('confirmDetailsBeforePayment')}</p>
 
@@ -345,34 +433,49 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
 
               <div className="flex justify-between">
                 <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
-                <Button onClick={handleSubmit} disabled={isCreatingGiftCard} className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400">
+                <Button
+                  onClick={handleSubmit}
+                  disabled={isCreatingGiftCard}
+                  className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                >
                   {isCreatingGiftCard ? t('processing') : t('pay')}
                 </Button>
               </div>
-            </div>}
+            </div>
+          )}
         </div>
 
-        {/* Preview Sidebar */}
+        {/* Preview Sidebar - Now wrapped in card container */}
         <div className="lg:col-span-1">
-          <div className="sticky top-4 space-y-4 px-0 py-0 mx-0 my-0">
-            <div>
-              <h3 className="text-lg font-semibold mb-4 text-white">{t('livePreview')}</h3>
-              <GiftCardPreview design={selectedDesign} formData={giftData} amount={giftAmount} currency={currency} deliveryDate={giftData.delivery_date?.toISOString()} />
-            </div>
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+            <div className="sticky top-4 space-y-4 p-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-white">{t('livePreview')}</h3>
+                <GiftCardPreview
+                  design={selectedDesign}
+                  formData={giftData}
+                  amount={giftAmount}
+                  currency={currency}
+                  deliveryDate={giftData.delivery_date?.toISOString()}
+                />
+              </div>
 
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4 py-[26px] px-px mx-0 my-[17px]">
-              <h4 className="text-sm font-semibold text-white mb-2">{t('yourCardWillInclude')}</h4>
-              <ul className="list-disc list-inside text-sm text-gray-300">
-                <li>{t('cardValue')}: {giftAmount} {currency}</li>
-                <li>{t('uniqueGiftCardCode')}</li>
-                <li>{t('recipient')}: {giftData.recipient_name}</li>
-                <li>{t('from')}: {giftData.sender_name}</li>
-                <li>{t('personalMessageIncluded')}</li>
-              </ul>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-4">
+                <h4 className="text-sm font-semibold text-white mb-2">{t('yourCardWillInclude')}</h4>
+                <ul className="list-disc list-inside text-sm text-gray-300">
+                  <li>{t('cardValue')}: {giftAmount} {currency}</li>
+                  <li>{t('uniqueGiftCardCode')}</li>
+                  <li>{t('recipient')}: {giftData.recipient_name}</li>
+                  <li>{t('from')}: {giftData.sender_name}</li>
+                  <li>{t('personalMessageIncluded')}</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default GiftPurchaseWizard;
