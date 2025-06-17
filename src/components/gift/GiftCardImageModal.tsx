@@ -32,6 +32,20 @@ const GiftCardImageModal: React.FC<GiftCardImageModalProps> = ({
   currency,
   deliveryDate
 }) => {
+  // Handle keyboard events for accessibility
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, onClose]);
+
   if (!design) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>

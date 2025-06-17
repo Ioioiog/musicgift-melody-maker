@@ -33,7 +33,7 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
     return (
       <>
         <Card 
-          className="w-full max-w-md mx-auto h-64 bg-gradient-to-br from-purple-500 to-pink-500 cursor-pointer hover:shadow-lg transition-shadow"
+          className="w-full max-w-md mx-auto h-64 bg-gradient-to-br from-purple-500 to-pink-500 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
           onClick={handlePreviewClick}
           role="button"
           tabIndex={0}
@@ -114,7 +114,7 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
     return (
       <>
         <Card 
-          className="mx-auto relative overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+          className="mx-auto relative overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
           style={{ 
             width: previewWidth,
             height: previewHeight,
@@ -223,7 +223,7 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
   return (
     <>
       <Card 
-        className="w-full max-w-md mx-auto h-64 relative overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+        className="w-full max-w-md mx-auto h-64 relative overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
         style={{ 
           backgroundColor,
           color: textColor,
