@@ -45,7 +45,9 @@ export const useGiftCardsAdmin = (params: UseGiftCardsAdminParams = {}) => {
       
       // Ensure all template data has standardized dimensions
       const processedData = data?.map(card => {
-        const templateData = card.gift_card_designs?.template_data;
+        // Access template_data from the nested gift_card_designs object
+        const designData = card.gift_card_designs as any;
+        const templateData = designData?.template_data;
         
         if (templateData && typeof templateData === 'object') {
           return {
