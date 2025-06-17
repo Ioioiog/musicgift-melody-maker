@@ -49,7 +49,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
   const [selectedDesign, setSelectedDesign] = useState(null);
   const [date, setDate] = React.useState<Date | undefined>(undefined);
   
-  const amountOptions = [25, 50, 100, 200];
+  const amountOptions = [299, 499, 799, 999];
 
   // Get active designs only
   const activeDesigns = designs?.filter(design => design.is_active) || [];
