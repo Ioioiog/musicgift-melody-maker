@@ -212,11 +212,17 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
   const createFabricObject = useCallback((element: Element, index: number): FabricObject | null => {
     try {
       let fabricObject: FabricObject;
+      
+      console.log('Creating fabric object for element:', element, 'at index:', index);
+      
       switch (element.type) {
         case 'text':
         case 'placeholder':
           const textElement = element as TextElement;
           const displayText = element.type === 'placeholder' ? `[${textElement.text || 'Placeholder'}]` : textElement.text || '';
+          
+          console.log('Creating text/placeholder with coordinates:', { x: element.x, y: element.y, scaledX: templateToCanvas(element.x), scaledY: templateToCanvas(element.y) });
+          
           fabricObject = new IText(displayText, {
             left: templateToCanvas(textElement.x),
             top: templateToCanvas(textElement.y),
@@ -280,6 +286,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         elementId: element.id,
         angle: element.rotation || 0
       });
+      
+      console.log('Fabric object created successfully:', fabricObject.left, fabricObject.top);
       return fabricObject;
     } catch (error) {
       console.error('Error creating fabric object:', error);
@@ -385,8 +393,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       const newElement: TextElement = {
         id: generateId(),
         type: 'text',
-        x: 50,
-        y: 50,
+        x: 25, // Better initial position
+        y: 25,
         text: 'New Text',
         fontSize: DEFAULT_FONT_SIZE,
         color: '#000000'
@@ -410,6 +418,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       setError('Failed to add text element');
     }
   }, [fabricCanvas, value, onChange, addToHistory, createFabricObject, readOnly]);
+
   const addPlaceholderElement = useCallback((placeholderText: string) => {
     if (!fabricCanvas || readOnly) return;
     try {
@@ -419,16 +428,20 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         setError('Invalid placeholder text provided');
         return;
       }
+      
+      // Better initial positioning - center the placeholder
       const newElement: TextElement = {
         id: generateId(),
         type: 'placeholder',
-        x: 50,
-        y: 100,
+        x: 100, // More centered position
+        y: 60,
         text: placeholderText.trim(),
         fontSize: DEFAULT_FONT_SIZE,
         color: '#1976d2'
       };
-      console.log('Creating placeholder element:', newElement);
+      
+      console.log('Creating placeholder element with coordinates:', { x: newElement.x, y: newElement.y });
+      
       const updatedElements = [...value.elements, newElement];
       const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
       if (fabricObject) {
@@ -441,7 +454,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         };
         onChange(updatedData);
         addToHistory(updatedData);
-        console.log('Placeholder element added successfully:', placeholderText);
+        console.log('Placeholder element added successfully at position:', fabricObject.left, fabricObject.top);
       } else {
         console.error('Failed to create fabric object for placeholder');
         setError('Failed to create placeholder on canvas');
@@ -451,6 +464,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       setError(`Failed to add placeholder: ${error.message}`);
     }
   }, [fabricCanvas, value, onChange, addToHistory, createFabricObject, readOnly]);
+
   const addShapeElement = useCallback((shapeType: 'rectangle' | 'rounded-rectangle' | 'circle') => {
     if (!fabricCanvas || readOnly) return;
     try {
@@ -458,8 +472,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       const newElement: ShapeElement = {
         id: generateId(),
         type: shapeType,
-        x: 100,
-        y: 100,
+        x: 75, // Better initial position
+        y: 75,
         width: shapeType === 'circle' ? 80 : 120,
         height: shapeType === 'circle' ? 80 : 80,
         color: '#cccccc',
@@ -489,6 +503,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       setError(`Failed to add ${shapeType}`);
     }
   }, [fabricCanvas, value, onChange, addToHistory, createFabricObject, readOnly]);
+
   const addLineElement = useCallback(() => {
     if (!fabricCanvas || readOnly) return;
     try {
@@ -496,10 +511,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       const newElement: LineElement = {
         id: generateId(),
         type: 'line',
-        x: 50,
-        y: 150,
-        x2: 200,
-        y2: 150,
+        x: 25, // Better initial position
+        y: 125,
+        x2: 175,
+        y2: 125,
         color: '#000000',
         strokeWidth: DEFAULT_STROKE_WIDTH,
         opacity: DEFAULT_OPACITY
@@ -545,6 +560,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       onElementSelect(null);
     }
   }, [fabricCanvas, selectedObject, value, onChange, addToHistory, onElementSelect, readOnly]);
+
   const updateSelectedElementProperty = useCallback((property: string, newValue: any) => {
     if (selectedElementIndex === null || !fabricCanvas) return;
     console.log('Updating property:', property, 'with value:', newValue);
@@ -622,6 +638,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       onChange(previousState);
     }
   }, [undo, onChange]);
+
   const handleRedo = useCallback(() => {
     const nextState = redo();
     if (nextState) {
@@ -645,6 +662,9 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         selection: !readOnly,
         interactive: !readOnly
       });
+      
+      console.log('Canvas initialized with dimensions:', CANVAS_DISPLAY_WIDTH, 'x', CANVAS_DISPLAY_HEIGHT);
+      
       if (backgroundImage) {
         FabricImage.fromURL(backgroundImage, {
           crossOrigin: 'anonymous'
@@ -678,12 +698,15 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           setError('Failed to load background image');
         });
       }
+      
       value.elements.forEach((element, index) => {
+        console.log('Loading element:', element, 'at index:', index);
         const fabricObject = createFabricObject(element, index);
         if (fabricObject) {
           canvas.add(fabricObject);
         }
       });
+      
       canvas.on('selection:created', e => {
         const selectedObj = e.selected?.[0];
         setSelectedObject(selectedObj || null);
@@ -851,9 +874,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
                     <DropdownMenuLabel className="text-xs font-semibold text-gray-500 uppercase bg-gray-50 px-3 py-2">
                       {category.category}
                     </DropdownMenuLabel>
-                    {category.placeholders.map(placeholder => <DropdownMenuItem key={placeholder.value} onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
+                    {category.placeholders.map(placeholder => <DropdownMenuItem key={placeholder.value} onClick={() => {
                 console.log('Dropdown clicked for placeholder:', placeholder.value);
                 addPlaceholderElement(placeholder.value);
               }} className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100 px-3 py-2">
@@ -907,7 +928,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       </div>
 
       {/* Canvas */}
-      <div className="relative border-2 border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm px-[181px] py-[125px]">
+      <div className="relative border-2 border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
         <canvas ref={canvasRef} className="block max-w-full h-auto" style={{
         cursor: readOnly ? 'default' : 'crosshair',
         touchAction: 'none'

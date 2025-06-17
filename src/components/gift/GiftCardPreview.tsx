@@ -64,6 +64,9 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
 
   // Handle new canvas-based design structure
   if (templateData.elements && Array.isArray(templateData.elements)) {
+    console.log('Preview: Template data:', templateData);
+    console.log('Preview: Elements:', templateData.elements);
+    
     // Use the template dimensions directly (400x250)
     const cardWidth = templateData.canvasWidth || 400;
     const cardHeight = templateData.canvasHeight || 250;
@@ -73,6 +76,8 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
     const scale = Math.min(maxPreviewWidth / cardWidth, 1); // Don't upscale if already small
     const previewWidth = cardWidth * scale;
     const previewHeight = cardHeight * scale;
+
+    console.log('Preview: Dimensions and scale:', { cardWidth, cardHeight, scale, previewWidth, previewHeight });
 
     return (
       <Card 
@@ -92,6 +97,8 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
           
           {/* Render canvas elements with proper scaling */}
           {templateData.elements.map((element: any, index: number) => {
+            console.log('Preview: Rendering element:', element, 'at index:', index);
+            
             // Only render text elements and placeholders in preview
             if (element.type !== 'text' && element.type !== 'placeholder') {
               return null;
@@ -104,20 +111,35 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
               return null;
             }
 
+            // Use the same coordinate system as the editor - no additional scaling
+            const displayX = element.x * scale;
+            const displayY = element.y * scale;
+            const displayFontSize = (element.fontSize || 16) * scale;
+
+            console.log('Preview: Element positioning:', {
+              originalX: element.x,
+              originalY: element.y,
+              displayX,
+              displayY,
+              scale,
+              fontSize: element.fontSize,
+              displayFontSize
+            });
+
             return (
               <div
                 key={element.id || index}
                 className="absolute whitespace-nowrap pointer-events-none select-none"
                 style={{
-                  left: element.x * scale,
-                  top: element.y * scale,
-                  fontSize: (element.fontSize || 16) * scale,
+                  left: displayX,
+                  top: displayY,
+                  fontSize: displayFontSize,
                   fontFamily: element.fontFamily || 'Arial',
                   color: element.color || '#000000',
                   fontWeight: element.bold ? 'bold' : 'normal',
                   fontStyle: element.italic ? 'italic' : 'normal',
                   zIndex: 10,
-                  maxWidth: previewWidth - (element.x * scale),
+                  maxWidth: previewWidth - displayX,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis'
                 }}
