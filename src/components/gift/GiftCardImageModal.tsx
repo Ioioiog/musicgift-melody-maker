@@ -1,14 +1,7 @@
-
 import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Gift } from 'lucide-react';
-
 interface GiftCardImageModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -22,7 +15,6 @@ interface GiftCardImageModalProps {
   currency: string;
   deliveryDate?: string;
 }
-
 const GiftCardImageModal: React.FC<GiftCardImageModalProps> = ({
   isOpen,
   onClose,
@@ -39,16 +31,13 @@ const GiftCardImageModal: React.FC<GiftCardImageModalProps> = ({
         onClose();
       }
     };
-
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
       return () => document.removeEventListener('keydown', handleKeyDown);
     }
   }, [isOpen, onClose]);
-
   if (!design) {
-    return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
+    return <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Gift Card Preview</DialogTitle>
@@ -69,29 +58,16 @@ const GiftCardImageModal: React.FC<GiftCardImageModalProps> = ({
             </Card>
           </div>
         </DialogContent>
-      </Dialog>
-    );
+      </Dialog>;
   }
-
   const templateData = design.template_data || {};
   const previewCode = "GIFT-XXXX-XXXX";
 
   // Function to replace standardized placeholders
   const replacePlaceholders = (text: string) => {
     if (!text) return '';
-    
-    const formattedDeliveryDate = deliveryDate ? 
-      new Date(deliveryDate).toLocaleDateString() : 
-      'Today';
-
-    return text
-      .replace(/Recipient Name/g, formData.recipient_name || 'Recipient Name')
-      .replace(/Sender Name/g, formData.sender_name || 'Your Name')
-      .replace(/Personal Message/g, formData.message_text || 'Happy gifting!')
-      .replace(/Gift Amount/g, amount.toString())
-      .replace(/Currency/g, currency)
-      .replace(/Gift Code/g, previewCode)
-      .replace(/Delivery Date/g, formattedDeliveryDate);
+    const formattedDeliveryDate = deliveryDate ? new Date(deliveryDate).toLocaleDateString() : 'Today';
+    return text.replace(/Recipient Name/g, formData.recipient_name || 'Recipient Name').replace(/Sender Name/g, formData.sender_name || 'Your Name').replace(/Personal Message/g, formData.message_text || 'Happy gifting!').replace(/Gift Amount/g, amount.toString()).replace(/Currency/g, currency).replace(/Gift Code/g, previewCode).replace(/Delivery Date/g, formattedDeliveryDate);
   };
 
   // Handle new canvas-based design structure
@@ -99,75 +75,58 @@ const GiftCardImageModal: React.FC<GiftCardImageModalProps> = ({
     // Use larger dimensions for modal view
     const templateWidth = 600;
     const templateHeight = 375;
-
-    return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
+    return <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>Gift Card Preview - {design.name}</DialogTitle>
           </DialogHeader>
-          <div className="flex justify-center p-4">
-            <Card 
-              className="relative overflow-hidden"
-              style={{ 
-                width: templateWidth,
-                height: templateHeight,
-                backgroundImage: design.preview_image_url ? `url(${design.preview_image_url})` : undefined,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-              }}
-            >
+          <div className="flex justify-center p-4 px-0 py-[53px]">
+            <Card className="relative overflow-hidden" style={{
+            width: templateWidth,
+            height: templateHeight,
+            backgroundImage: design.preview_image_url ? `url(${design.preview_image_url})` : undefined,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}>
               <CardContent className="p-0 h-full relative">
-                {design.preview_image_url && (
-                  <div className="absolute inset-0 bg-black/10"></div>
-                )}
+                {design.preview_image_url && <div className="absolute inset-0 bg-black/10 py-[37px] px-[44px]"></div>}
                 
                 {/* Render canvas elements with larger scale for modal */}
                 {templateData.elements.map((element: any, index: number) => {
-                  if (element.type !== 'text' && element.type !== 'placeholder') {
-                    return null;
-                  }
+                if (element.type !== 'text' && element.type !== 'placeholder') {
+                  return null;
+                }
+                const elementText = replacePlaceholders(element.text || '');
+                if (!elementText.trim()) {
+                  return null;
+                }
 
-                  const elementText = replacePlaceholders(element.text || '');
-                  
-                  if (!elementText.trim()) {
-                    return null;
-                  }
-
-                  // Scale up for modal view (1.5x larger than template)
-                  const modalScale = 1.5;
-                  const displayX = element.x * modalScale;
-                  const displayY = element.y * modalScale;
-                  const displayFontSize = (element.fontSize || 16) * modalScale;
-
-                  return (
-                    <div
-                      key={element.id || index}
-                      className="absolute whitespace-nowrap pointer-events-none select-none"
-                      style={{
-                        left: displayX,
-                        top: displayY,
-                        fontSize: displayFontSize,
-                        fontFamily: element.fontFamily || 'Arial',
-                        color: element.color || '#000000',
-                        fontWeight: element.bold ? 'bold' : 'normal',
-                        fontStyle: element.italic ? 'italic' : 'normal',
-                        zIndex: 10,
-                        maxWidth: templateWidth - displayX,
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}
-                    >
+                // Scale up for modal view (1.5x larger than template)
+                const modalScale = 1.5;
+                const displayX = element.x * modalScale;
+                const displayY = element.y * modalScale;
+                const displayFontSize = (element.fontSize || 16) * modalScale;
+                return <div key={element.id || index} className="absolute whitespace-nowrap pointer-events-none select-none" style={{
+                  left: displayX,
+                  top: displayY,
+                  fontSize: displayFontSize,
+                  fontFamily: element.fontFamily || 'Arial',
+                  color: element.color || '#000000',
+                  fontWeight: element.bold ? 'bold' : 'normal',
+                  fontStyle: element.italic ? 'italic' : 'normal',
+                  zIndex: 10,
+                  maxWidth: templateWidth - displayX,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}>
                       {elementText}
-                    </div>
-                  );
-                })}
+                    </div>;
+              })}
               </CardContent>
             </Card>
           </div>
         </DialogContent>
-      </Dialog>
-    );
+      </Dialog>;
   }
 
   // Fallback to old template format for backward compatibility
@@ -175,29 +134,22 @@ const GiftCardImageModal: React.FC<GiftCardImageModalProps> = ({
   const backgroundColor = designStyle.backgroundColor || '#4f46e5';
   const textColor = designStyle.textColor || '#ffffff';
   const font = designStyle.font || 'Arial';
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+  return <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Gift Card Preview - {design.name}</DialogTitle>
         </DialogHeader>
         <div className="flex justify-center p-4">
-          <Card 
-            className="w-full max-w-lg h-80 relative overflow-hidden"
-            style={{ 
-              backgroundColor,
-              color: textColor,
-              fontFamily: font,
-              backgroundImage: design.preview_image_url ? `url(${design.preview_image_url})` : undefined,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}
-          >
+          <Card className="w-full max-w-lg h-80 relative overflow-hidden" style={{
+          backgroundColor,
+          color: textColor,
+          fontFamily: font,
+          backgroundImage: design.preview_image_url ? `url(${design.preview_image_url})` : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}>
             <CardContent className="p-8 h-full flex flex-col justify-between relative">
-              {design.preview_image_url && (
-                <div className="absolute inset-0 bg-black/30"></div>
-              )}
+              {design.preview_image_url && <div className="absolute inset-0 bg-black/30"></div>}
               
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-2">
@@ -211,23 +163,17 @@ const GiftCardImageModal: React.FC<GiftCardImageModalProps> = ({
                   {amount} {currency}
                 </div>
                 
-                {formData.recipient_name && (
-                  <div className="text-xl mb-1">
+                {formData.recipient_name && <div className="text-xl mb-1">
                     For: {formData.recipient_name}
-                  </div>
-                )}
+                  </div>}
                 
-                {formData.sender_name && (
-                  <div className="text-lg opacity-90 mb-2">
+                {formData.sender_name && <div className="text-lg opacity-90 mb-2">
                     From: {formData.sender_name}
-                  </div>
-                )}
+                  </div>}
                 
-                {formData.message_text && (
-                  <div className="text-lg opacity-90 italic">
+                {formData.message_text && <div className="text-lg opacity-90 italic">
                     "{formData.message_text}"
-                  </div>
-                )}
+                  </div>}
               </div>
 
               <div className="relative z-10">
@@ -239,8 +185,6 @@ const GiftCardImageModal: React.FC<GiftCardImageModalProps> = ({
           </Card>
         </div>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 };
-
 export default GiftCardImageModal;
