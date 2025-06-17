@@ -37,7 +37,24 @@ export const useGiftCardsAdmin = (params: UseGiftCardsAdminParams = {}) => {
       const { data, error } = await query;
 
       if (error) throw error;
-      return data;
+      
+      // Ensure all template data has standardized dimensions
+      const processedData = data?.map(card => {
+        if (card.template_data && typeof card.template_data === 'object') {
+          return {
+            ...card,
+            template_data: {
+              ...card.template_data,
+              canvasWidth: 400,
+              canvasHeight: 250,
+              elements: card.template_data.elements || []
+            }
+          };
+        }
+        return card;
+      });
+      
+      return processedData;
     },
   });
 };

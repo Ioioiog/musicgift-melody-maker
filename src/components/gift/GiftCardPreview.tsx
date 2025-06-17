@@ -67,17 +67,18 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
     console.log('Preview: Template data:', templateData);
     console.log('Preview: Elements:', templateData.elements);
     
-    // Use the template dimensions directly (400x250)
-    const cardWidth = templateData.canvasWidth || 400;
-    const cardHeight = templateData.canvasHeight || 250;
+    // Use standardized template dimensions
+    const templateWidth = 400;
+    const templateHeight = 250;
     
     // Scale the preview to fit nicely (max width 320px)
     const maxPreviewWidth = 320;
-    const scale = Math.min(maxPreviewWidth / cardWidth, 1); // Don't upscale if already small
-    const previewWidth = cardWidth * scale;
-    const previewHeight = cardHeight * scale;
+    const previewScale = Math.min(maxPreviewWidth / templateWidth, 1);
+    const previewWidth = templateWidth * previewScale;
+    const previewHeight = templateHeight * previewScale;
 
-    console.log('Preview: Dimensions and scale:', { cardWidth, cardHeight, scale, previewWidth, previewHeight });
+    console.log('Preview: Using template dimensions:', { templateWidth, templateHeight });
+    console.log('Preview: Preview scale and dimensions:', { previewScale, previewWidth, previewHeight });
 
     return (
       <Card 
@@ -95,7 +96,7 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
             <div className="absolute inset-0 bg-black/10"></div>
           )}
           
-          {/* Render canvas elements with proper scaling */}
+          {/* Render canvas elements with proper scaling from template coordinates */}
           {templateData.elements.map((element: any, index: number) => {
             console.log('Preview: Rendering element:', element, 'at index:', index);
             
@@ -111,17 +112,17 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
               return null;
             }
 
-            // Use the same coordinate system as the editor - no additional scaling
-            const displayX = element.x * scale;
-            const displayY = element.y * scale;
-            const displayFontSize = (element.fontSize || 16) * scale;
+            // Convert from template coordinates to preview coordinates
+            const displayX = element.x * previewScale;
+            const displayY = element.y * previewScale;
+            const displayFontSize = (element.fontSize || 16) * previewScale;
 
             console.log('Preview: Element positioning:', {
-              originalX: element.x,
-              originalY: element.y,
+              templateX: element.x,
+              templateY: element.y,
               displayX,
               displayY,
-              scale,
+              previewScale,
               fontSize: element.fontSize,
               displayFontSize
             });
@@ -149,10 +150,10 @@ const GiftCardPreview: React.FC<GiftCardPreviewProps> = ({
             );
           })}
 
-          {/* Debug overlay - shows element positions (remove in production) */}
+          {/* Debug overlay - shows template and preview info */}
           {process.env.NODE_ENV === 'development' && (
             <div className="absolute top-2 left-2 bg-black/50 text-white text-xs p-1 rounded">
-              {cardWidth}×{cardHeight} (scale: {scale.toFixed(2)})
+              Template: {templateWidth}×{templateHeight} | Preview: {Math.round(previewWidth)}×{Math.round(previewHeight)} | Scale: {previewScale.toFixed(2)}
             </div>
           )}
         </CardContent>

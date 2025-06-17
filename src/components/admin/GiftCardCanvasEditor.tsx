@@ -77,9 +77,12 @@ interface GiftCardCanvasEditorProps {
 // CONSTANTS AND UTILITIES
 // ========================================================================================
 
-const SCALE_FACTOR = 2;
-const CANVAS_DISPLAY_WIDTH = 600;
-const CANVAS_DISPLAY_HEIGHT = 400;
+// Updated constants for consistent coordinate system
+const TEMPLATE_WIDTH = 400;
+const TEMPLATE_HEIGHT = 250;
+const EDITOR_SCALE = 1.5; // Scale for display in editor only
+const CANVAS_DISPLAY_WIDTH = TEMPLATE_WIDTH * EDITOR_SCALE;
+const CANVAS_DISPLAY_HEIGHT = TEMPLATE_HEIGHT * EDITOR_SCALE;
 const DEFAULT_FONT_SIZE = 16;
 const DEFAULT_STROKE_WIDTH = 2;
 const DEFAULT_OPACITY = 100;
@@ -121,8 +124,11 @@ const PLACEHOLDER_OPTIONS = [{
   }]
 }];
 const generateId = (): string => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-const templateToCanvas = (coord: number): number => coord * SCALE_FACTOR;
-const canvasToTemplate = (coord: number): number => coord / SCALE_FACTOR;
+
+// Updated coordinate conversion functions
+const templateToEditor = (coord: number): number => coord * EDITOR_SCALE;
+const editorToTemplate = (coord: number): number => coord / EDITOR_SCALE;
+
 const debounce = <T extends (...args: any[]) => void,>(func: T, delay: number): T => {
   let timeoutId: NodeJS.Timeout;
   return ((...args: any[]) => {
@@ -214,6 +220,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       let fabricObject: FabricObject;
       
       console.log('Creating fabric object for element:', element, 'at index:', index);
+      console.log('Template coordinates:', { x: element.x, y: element.y });
+      console.log('Editor coordinates:', { x: templateToEditor(element.x), y: templateToEditor(element.y) });
       
       switch (element.type) {
         case 'text':
@@ -221,12 +229,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           const textElement = element as TextElement;
           const displayText = element.type === 'placeholder' ? `[${textElement.text || 'Placeholder'}]` : textElement.text || '';
           
-          console.log('Creating text/placeholder with coordinates:', { x: element.x, y: element.y, scaledX: templateToCanvas(element.x), scaledY: templateToCanvas(element.y) });
-          
           fabricObject = new IText(displayText, {
-            left: templateToCanvas(textElement.x),
-            top: templateToCanvas(textElement.y),
-            fontSize: templateToCanvas(textElement.fontSize || DEFAULT_FONT_SIZE),
+            left: templateToEditor(textElement.x),
+            top: templateToEditor(textElement.y),
+            fontSize: templateToEditor(textElement.fontSize || DEFAULT_FONT_SIZE),
             fontFamily: textElement.fontFamily || 'Arial',
             fill: textElement.color || '#000000',
             fontWeight: textElement.bold ? 'bold' : 'normal',
@@ -242,37 +248,42 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         case 'rounded-rectangle':
           const rectElement = element as ShapeElement;
           fabricObject = new Rect({
-            left: templateToCanvas(rectElement.x),
-            top: templateToCanvas(rectElement.y),
-            width: templateToCanvas(rectElement.width || 100),
-            height: templateToCanvas(rectElement.height || 50),
+            left: templateToEditor(rectElement.x),
+            top: templateToEditor(rectElement.y),
+            width: templateToEditor(rectElement.width || 100),
+            height: templateToEditor(rectElement.height || 50),
             fill: rectElement.color || '#cccccc',
             stroke: rectElement.strokeColor || '',
-            strokeWidth: templateToCanvas(rectElement.strokeWidth || 0),
+            strokeWidth: templateToEditor(rectElement.strokeWidth || 0),
             opacity: (rectElement.opacity || DEFAULT_OPACITY) / 100,
-            rx: element.type === 'rounded-rectangle' ? templateToCanvas(rectElement.cornerRadius || 10) : 0,
-            ry: element.type === 'rounded-rectangle' ? templateToCanvas(rectElement.cornerRadius || 10) : 0,
+            rx: element.type === 'rounded-rectangle' ? templateToEditor(rectElement.cornerRadius || 10) : 0,
+            ry: element.type === 'rounded-rectangle' ? templateToEditor(rectElement.cornerRadius || 10) : 0,
             selectable: !readOnly
           });
           break;
         case 'circle':
           const circleElement = element as ShapeElement;
           fabricObject = new Circle({
-            left: templateToCanvas(circleElement.x),
-            top: templateToCanvas(circleElement.y),
-            radius: templateToCanvas((circleElement.width || 50) / 2),
+            left: templateToEditor(circleElement.x),
+            top: templateToEditor(circleElement.y),
+            radius: templateToEditor((circleElement.width || 50) / 2),
             fill: circleElement.color || '#cccccc',
             stroke: circleElement.strokeColor || '',
-            strokeWidth: templateToCanvas(circleElement.strokeWidth || 0),
+            strokeWidth: templateToEditor(circleElement.strokeWidth || 0),
             opacity: (circleElement.opacity || DEFAULT_OPACITY) / 100,
             selectable: !readOnly
           });
           break;
         case 'line':
           const lineElement = element as LineElement;
-          fabricObject = new Line([templateToCanvas(lineElement.x), templateToCanvas(lineElement.y), templateToCanvas(lineElement.x2), templateToCanvas(lineElement.y2)], {
+          fabricObject = new Line([
+            templateToEditor(lineElement.x), 
+            templateToEditor(lineElement.y), 
+            templateToEditor(lineElement.x2), 
+            templateToEditor(lineElement.y2)
+          ], {
             stroke: lineElement.color || '#000000',
-            strokeWidth: templateToCanvas(lineElement.strokeWidth || DEFAULT_STROKE_WIDTH),
+            strokeWidth: templateToEditor(lineElement.strokeWidth || DEFAULT_STROKE_WIDTH),
             opacity: (lineElement.opacity || DEFAULT_OPACITY) / 100,
             strokeDashArray: lineElement.strokeDashArray || [],
             selectable: !readOnly
@@ -287,7 +298,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         angle: element.rotation || 0
       });
       
-      console.log('Fabric object created successfully:', fabricObject.left, fabricObject.top);
+      console.log('Fabric object created at editor position:', fabricObject.left, fabricObject.top);
       return fabricObject;
     } catch (error) {
       console.error('Error creating fabric object:', error);
@@ -312,6 +323,9 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         const originalElement = value.elements[elementIndex];
         if (!originalElement) return;
         let updatedElement: Element;
+        
+        console.log('Updating element:', elementIndex, 'Editor pos:', obj.left, obj.top, 'Template pos:', editorToTemplate(obj.left || 0), editorToTemplate(obj.top || 0));
+        
         if (obj instanceof IText) {
           let text = obj.text || '';
           if (originalElement.type === 'placeholder' && text.startsWith('[') && text.endsWith(']')) {
@@ -319,28 +333,28 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           }
           updatedElement = {
             ...originalElement,
-            x: canvasToTemplate(obj.left || 0),
-            y: canvasToTemplate(obj.top || 0),
+            x: editorToTemplate(obj.left || 0),
+            y: editorToTemplate(obj.top || 0),
             text: text,
-            fontSize: canvasToTemplate(obj.fontSize || DEFAULT_FONT_SIZE),
+            fontSize: editorToTemplate(obj.fontSize || DEFAULT_FONT_SIZE),
             rotation: obj.angle || 0
           } as TextElement;
         } else if (obj instanceof Rect) {
           updatedElement = {
             ...originalElement,
-            x: canvasToTemplate(obj.left || 0),
-            y: canvasToTemplate(obj.top || 0),
-            width: canvasToTemplate(obj.width || 0),
-            height: canvasToTemplate(obj.height || 0),
+            x: editorToTemplate(obj.left || 0),
+            y: editorToTemplate(obj.top || 0),
+            width: editorToTemplate(obj.width || 0),
+            height: editorToTemplate(obj.height || 0),
             rotation: obj.angle || 0,
             opacity: (obj.opacity || 1) * 100
           } as ShapeElement;
         } else if (obj instanceof Circle) {
-          const radius = canvasToTemplate(obj.radius || 0);
+          const radius = editorToTemplate(obj.radius || 0);
           updatedElement = {
             ...originalElement,
-            x: canvasToTemplate(obj.left || 0),
-            y: canvasToTemplate(obj.top || 0),
+            x: editorToTemplate(obj.left || 0),
+            y: editorToTemplate(obj.top || 0),
             width: radius * 2,
             height: radius * 2,
             rotation: obj.angle || 0,
@@ -349,18 +363,18 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         } else if (obj instanceof Line) {
           updatedElement = {
             ...originalElement,
-            x: canvasToTemplate(obj.x1 || 0),
-            y: canvasToTemplate(obj.y1 || 0),
-            x2: canvasToTemplate(obj.x2 || 0),
-            y2: canvasToTemplate(obj.y2 || 0),
+            x: editorToTemplate(obj.x1 || 0),
+            y: editorToTemplate(obj.y1 || 0),
+            x2: editorToTemplate(obj.x2 || 0),
+            y2: editorToTemplate(obj.y2 || 0),
             rotation: obj.angle || 0,
             opacity: (obj.opacity || 1) * 100
           } as LineElement;
         } else {
           updatedElement = {
             ...originalElement,
-            x: canvasToTemplate(obj.left || 0),
-            y: canvasToTemplate(obj.top || 0),
+            x: editorToTemplate(obj.left || 0),
+            y: editorToTemplate(obj.top || 0),
             rotation: obj.angle || 0
           };
         }
@@ -393,8 +407,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       const newElement: TextElement = {
         id: generateId(),
         type: 'text',
-        x: 25, // Better initial position
-        y: 25,
+        x: 50, // Template coordinates
+        y: 50,
         text: 'New Text',
         fontSize: DEFAULT_FONT_SIZE,
         color: '#000000'
@@ -429,18 +443,18 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         return;
       }
       
-      // Better initial positioning - center the placeholder
+      // Template coordinates (will be converted to editor coordinates in createFabricObject)
       const newElement: TextElement = {
         id: generateId(),
         type: 'placeholder',
-        x: 100, // More centered position
-        y: 60,
+        x: 200, // Center horizontally in template space
+        y: 125, // Center vertically in template space
         text: placeholderText.trim(),
         fontSize: DEFAULT_FONT_SIZE,
         color: '#1976d2'
       };
       
-      console.log('Creating placeholder element with coordinates:', { x: newElement.x, y: newElement.y });
+      console.log('Creating placeholder element with template coordinates:', { x: newElement.x, y: newElement.y });
       
       const updatedElements = [...value.elements, newElement];
       const fabricObject = createFabricObject(newElement, updatedElements.length - 1);
@@ -454,7 +468,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         };
         onChange(updatedData);
         addToHistory(updatedData);
-        console.log('Placeholder element added successfully at position:', fabricObject.left, fabricObject.top);
+        console.log('Placeholder element added successfully at editor position:', fabricObject.left, fabricObject.top);
       } else {
         console.error('Failed to create fabric object for placeholder');
         setError('Failed to create placeholder on canvas');
@@ -472,8 +486,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       const newElement: ShapeElement = {
         id: generateId(),
         type: shapeType,
-        x: 75, // Better initial position
-        y: 75,
+        x: 150, // Template coordinates
+        y: 100,
         width: shapeType === 'circle' ? 80 : 120,
         height: shapeType === 'circle' ? 80 : 80,
         color: '#cccccc',
@@ -511,9 +525,9 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       const newElement: LineElement = {
         id: generateId(),
         type: 'line',
-        x: 25, // Better initial position
+        x: 50, // Template coordinates
         y: 125,
-        x2: 175,
+        x2: 350,
         y2: 125,
         color: '#000000',
         strokeWidth: DEFAULT_STROKE_WIDTH,
@@ -600,7 +614,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           }
         } else if (property === 'strokeWidth') {
           fabricObject.set({
-            strokeWidth: templateToCanvas(newValue)
+            strokeWidth: templateToEditor(newValue)
           });
         } else if (property === 'opacity') {
           fabricObject.set({
@@ -609,7 +623,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         } else if (property === 'fontSize') {
           if (fabricObject instanceof IText) {
             fabricObject.set({
-              fontSize: templateToCanvas(newValue)
+              fontSize: templateToEditor(newValue)
             });
           }
         } else if (property === 'text') {
@@ -664,6 +678,8 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
       });
       
       console.log('Canvas initialized with dimensions:', CANVAS_DISPLAY_WIDTH, 'x', CANVAS_DISPLAY_HEIGHT);
+      console.log('Template dimensions:', TEMPLATE_WIDTH, 'x', TEMPLATE_HEIGHT);
+      console.log('Editor scale:', EDITOR_SCALE);
       
       if (backgroundImage) {
         FabricImage.fromURL(backgroundImage, {
@@ -765,7 +781,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           fabricObject.set({
             fill: textElement.color || '#000000',
             text: displayText,
-            fontSize: templateToCanvas(textElement.fontSize || DEFAULT_FONT_SIZE),
+            fontSize: templateToEditor(textElement.fontSize || DEFAULT_FONT_SIZE),
             fontWeight: textElement.bold ? 'bold' : 'normal',
             fontStyle: textElement.italic ? 'italic' : 'normal',
             underline: textElement.underline || false,
@@ -776,11 +792,11 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           const updates: any = {
             fill: shapeElement.color || '#cccccc',
             stroke: shapeElement.strokeColor || '',
-            strokeWidth: templateToCanvas(shapeElement.strokeWidth || 0),
+            strokeWidth: templateToEditor(shapeElement.strokeWidth || 0),
             opacity: (shapeElement.opacity || DEFAULT_OPACITY) / 100
           };
           if (element.type === 'rounded-rectangle') {
-            const cornerRadius = templateToCanvas(shapeElement.cornerRadius || 10);
+            const cornerRadius = templateToEditor(shapeElement.cornerRadius || 10);
             updates.rx = cornerRadius;
             updates.ry = cornerRadius;
           }
@@ -790,14 +806,14 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
           fabricObject.set({
             fill: shapeElement.color || '#cccccc',
             stroke: shapeElement.strokeColor || '',
-            strokeWidth: templateToCanvas(shapeElement.strokeWidth || 0),
+            strokeWidth: templateToEditor(shapeElement.strokeWidth || 0),
             opacity: (shapeElement.opacity || DEFAULT_OPACITY) / 100
           });
         } else if (element.type === 'line' && fabricObject instanceof Line) {
           const lineElement = element as LineElement;
           fabricObject.set({
             stroke: lineElement.color || '#000000',
-            strokeWidth: templateToCanvas(lineElement.strokeWidth || DEFAULT_STROKE_WIDTH),
+            strokeWidth: templateToEditor(lineElement.strokeWidth || DEFAULT_STROKE_WIDTH),
             opacity: (lineElement.opacity || DEFAULT_OPACITY) / 100,
             strokeDashArray: lineElement.strokeDashArray || []
           });
@@ -936,6 +952,10 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
         {readOnly && <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">
             Read Only
           </div>}
+        {/* Debug info */}
+        <div className="absolute top-2 left-2 bg-black/50 text-white text-xs p-1 rounded">
+          Template: {TEMPLATE_WIDTH}×{TEMPLATE_HEIGHT} | Editor: {CANVAS_DISPLAY_WIDTH}×{CANVAS_DISPLAY_HEIGHT} | Scale: {EDITOR_SCALE}
+        </div>
       </div>
 
       {/* Properties Panel */}
@@ -1049,7 +1069,7 @@ const GiftCardCanvasEditor: React.FC<GiftCardCanvasEditorProps> = ({
 
                   {/* Position and Transform */}
                   <div className="border-t pt-4">
-                    <Label className="text-sm font-medium mb-2 block">Position & Transform</Label>
+                    <Label className="text-sm font-medium mb-2 block">Position & Transform (Template Space)</Label>
                     <div className="grid grid-cols-3 gap-2 text-xs text-gray-600">
                       <div>X: {Math.round(selectedElement.x)}</div>
                       <div>Y: {Math.round(selectedElement.y)}</div>
