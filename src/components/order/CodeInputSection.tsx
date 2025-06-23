@@ -138,7 +138,7 @@ const CodeInputSection: React.FC<CodeInputSectionProps> = ({
                 if (e.key === 'Enter') {
                   handleApplyCode();
                 }
-              }} className="bg-white/10 border-white/20 text-white placeholder:text-black/40" />
+              }} className="border-black/20 text-white placeholder:text-black/40 bg-transparent" />
                 <Button onClick={handleApplyCode} disabled={!codeInput.trim() || disabled || isLoading} size="sm" className="bg-orange-500 hover:bg-orange-600 text-white">
                   {isLoading ? t('applying', 'Applying...') : t('apply', 'Apply')}
                 </Button>
