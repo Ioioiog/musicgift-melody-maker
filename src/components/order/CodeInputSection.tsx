@@ -10,6 +10,7 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { useGiftCardByCode } from '@/hooks/useGiftCards';
 import { useValidateDiscountCode } from '@/hooks/useDiscountCodes';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+
 interface CodeInputSectionProps {
   onGiftCardApplied: (giftCard: any) => void;
   onDiscountApplied: (discount: {
@@ -28,6 +29,7 @@ interface CodeInputSectionProps {
   orderTotal: number;
   disabled?: boolean;
 }
+
 const CodeInputSection: React.FC<CodeInputSectionProps> = ({
   onGiftCardApplied,
   onDiscountApplied,
@@ -138,7 +140,7 @@ const CodeInputSection: React.FC<CodeInputSectionProps> = ({
                 if (e.key === 'Enter') {
                   handleApplyCode();
                 }
-              }} className="border-black/20 text-white placeholder:text-black/40 bg-transparent" />
+              }} className="border-black/20 text-black font-bold placeholder:text-black/40 bg-transparent" />
                 <Button onClick={handleApplyCode} disabled={!codeInput.trim() || disabled || isLoading} size="sm" className="bg-orange-500 hover:bg-orange-600 text-white">
                   {isLoading ? t('applying', 'Applying...') : t('apply', 'Apply')}
                 </Button>
@@ -154,4 +156,5 @@ const CodeInputSection: React.FC<CodeInputSectionProps> = ({
       </CollapsibleContent>
     </Collapsible>;
 };
+
 export default CodeInputSection;
