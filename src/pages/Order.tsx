@@ -237,16 +237,72 @@ Order Management: View full details in the admin panel.
         user_id: user?.id || null,
         payment_provider: paymentProvider
       };
+
+      // Handle zero-total orders (fully covered by gift card/discount)
+      if (paymentProvider === 'gift_card' || finalPrice === 0) {
+        console.log("🔄 Processing zero-total order (fully covered by gift card/discount)");
+        
+        // Create order directly with completed payment status
+        const { data: orderResponse, error: orderError } = await supabase
+          .from('orders')
+          .insert({
+            ...baseOrderPayload,
+            payment_status: 'completed',
+            status: 'completed'
+          })
+          .select()
+          .single();
+
+        if (orderError) {
+          console.error('❌ Zero-total order creation error:', orderError);
+          throw new Error(`Failed to create zero-total order: ${orderError.message}`);
+        }
+
+        console.log('✅ Zero-total order created successfully:', orderResponse.id);
+
+        // Associate files with the created order
+        await associateFilesWithOrder(orderResponse.id, orderData.addonFieldValues || {});
+
+        // Send order notification email
+        await sendOrderNotificationEmail(orderData, orderResponse.id, finalPrice);
+
+        // If gift card was used, create redemption record
+        if (appliedGiftCard && giftCreditApplied > 0) {
+          const { error: redemptionError } = await supabase
+            .from('gift_redemptions')
+            .insert({
+              gift_card_id: appliedGiftCard.id,
+              order_id: orderResponse.id,
+              redeemed_amount: giftCreditApplied * 100,
+              remaining_balance: Math.max(0, (appliedGiftCard.gift_amount || 0) - giftCreditApplied * 100)
+            });
+
+          if (redemptionError) {
+            console.error("Error creating gift redemption:", redemptionError);
+          } else {
+            console.log("Gift card redemption created successfully");
+          }
+        }
+
+        // Show success message
+        toast({
+          title: t('orderSuccess'),
+          description: t('orderSuccessMessage', `Your order has been created successfully. ID: ${orderResponse.id?.slice(0, 8)}...`),
+          variant: "default"
+        });
+
+        // Navigate to success page
+        navigate('/payment/success?orderId=' + orderResponse.id);
+        return;
+      }
+
       let paymentResponse;
       let paymentError;
 
       // Route to the correct payment provider (no price conversion in frontend)
       if (paymentProvider === 'stripe') {
         console.log('🟣 Processing with Stripe');
-        const {
-          data,
-          error
-        } = await supabase.functions.invoke('stripe-create-payment', {
+        const { data, error } = await supabase.functions.invoke('stripe-create-payment', {
           body: {
             orderData: baseOrderPayload,
             returnUrl: `${window.location.origin}/payment/success`
@@ -256,10 +312,7 @@ Order Management: View full details in the admin panel.
         paymentError = error;
       } else if (paymentProvider === 'revolut') {
         console.log('🟠 Processing with Revolut');
-        const {
-          data,
-          error
-        } = await supabase.functions.invoke('revolut-create-payment', {
+        const { data, error } = await supabase.functions.invoke('revolut-create-payment', {
           body: {
             orderData: baseOrderPayload,
             returnUrl: `${window.location.origin}/payment/success`
@@ -269,10 +322,7 @@ Order Management: View full details in the admin panel.
         paymentError = error;
       } else if (paymentProvider === 'smartbill') {
         console.log('🔵 Processing with SmartBill');
-        const {
-          data,
-          error
-        } = await supabase.functions.invoke('smartbill-create-invoice', {
+        const { data, error } = await supabase.functions.invoke('smartbill-create-invoice', {
           body: {
             orderData: baseOrderPayload
           }
@@ -312,15 +362,15 @@ Order Management: View full details in the admin panel.
 
       // If gift card was used, create redemption record
       if (appliedGiftCard && giftCreditApplied > 0) {
-        const {
-          error: redemptionError
-        } = await supabase.from('gift_redemptions').insert({
-          gift_card_id: appliedGiftCard.id,
-          order_id: paymentResponse.orderId,
-          redeemed_amount: giftCreditApplied * 100,
-          // Convert to cents for database
-          remaining_balance: Math.max(0, (appliedGiftCard.gift_amount || 0) - giftCreditApplied * 100)
-        });
+        const { error: redemptionError } = await supabase
+          .from('gift_redemptions')
+          .insert({
+            gift_card_id: appliedGiftCard.id,
+            order_id: paymentResponse.orderId,
+            redeemed_amount: giftCreditApplied * 100,
+            remaining_balance: Math.max(0, (appliedGiftCard.gift_amount || 0) - giftCreditApplied * 100)
+          });
+
         if (redemptionError) {
           console.error("Error creating gift redemption:", redemptionError);
         } else {
