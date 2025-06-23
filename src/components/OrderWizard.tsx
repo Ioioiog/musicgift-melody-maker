@@ -20,6 +20,11 @@ import WizardNavigation from './order/WizardNavigation';
 
 interface OrderWizardProps {
   giftCard?: any;
+  appliedDiscount?: {
+    code: string;
+    amount: number;
+    type: string;
+  };
   onComplete?: (orderData: any) => Promise<void>;
   preselectedPackage?: string;
   onOrderDataChange?: (orderData: any) => void;
@@ -27,6 +32,7 @@ interface OrderWizardProps {
 
 const OrderWizard: React.FC<OrderWizardProps> = ({
   giftCard,
+  appliedDiscount,
   onComplete,
   preselectedPackage,
   onOrderDataChange
@@ -57,6 +63,40 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const selectedPackage = formData.package as string;
   const { data: allPackageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
 
+  // Calculate the base total price
+  const calculateBaseTotal = () => {
+    const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
+    const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
+    const addonsPrice = selectedAddons.reduce((total, addonKey) => {
+      const addon = addons.find(addon => addon.addon_key === addonKey);
+      return total + (addon ? getAddonPrice(addon, currency) : 0);
+    }, 0);
+    return packagePrice + addonsPrice;
+  };
+
+  // Calculate final total after discounts and gift cards
+  const calculateFinalTotal = () => {
+    let finalTotal = calculateBaseTotal();
+    
+    // Apply gift card credit
+    if (giftCard) {
+      const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
+      const giftCreditApplied = Math.min(giftBalance, finalTotal);
+      finalTotal = Math.max(0, finalTotal - giftCreditApplied);
+    }
+    
+    // Apply discount
+    if (appliedDiscount) {
+      const discountApplied = Math.min(appliedDiscount.amount, finalTotal);
+      finalTotal = Math.max(0, finalTotal - discountApplied);
+    }
+    
+    return finalTotal;
+  };
+
+  const baseTotal = calculateBaseTotal();
+  const finalTotal = calculateFinalTotal();
+
   // Notify parent component of order data changes
   useEffect(() => {
     if (onOrderDataChange) {
@@ -82,19 +122,22 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
   
-  // Check if this is a quote-only package
+  // Check if this is a quote-only package or if total is zero
   const isQuoteOnly = selectedPackageData?.is_quote_only === true;
+  const skipPayment = isQuoteOnly || finalTotal === 0;
 
   // Build the complete step flow - Contact & Legal is now ALWAYS present
   const totalRegularSteps = regularSteps.length;
   const addonStepIndex = 1 + totalRegularSteps; // After package selection + regular steps
   const contactLegalStepIndex = addonStepIndex + 1; // Always after addons
-  const paymentStepIndex = isQuoteOnly ? -1 : contactLegalStepIndex + 1; // Skip payment for quotes
-  const totalSteps = isQuoteOnly ? contactLegalStepIndex + 1 : paymentStepIndex + 1;
+  const paymentStepIndex = skipPayment ? -1 : contactLegalStepIndex + 1; // Skip payment for quotes or zero total
+  const totalSteps = skipPayment ? contactLegalStepIndex + 1 : paymentStepIndex + 1;
 
-  console.log('🔍 Quote Request Debug:', {
+  console.log('🔍 Payment Skip Debug:', {
     selectedPackage,
     isQuoteOnly,
+    finalTotal,
+    skipPayment,
     currentStep,
     totalSteps,
     contactLegalStepIndex
@@ -141,8 +184,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       isCurrent: currentStep === contactLegalStepIndex
     });
 
-    // Only add Payment Step for non-quote packages
-    if (!isQuoteOnly) {
+    // Only add Payment Step if payment is required
+    if (!skipPayment) {
       const paymentStepNumber = contactStepNumber + 1;
       steps.push({
         number: paymentStepNumber,
@@ -160,10 +203,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       if (!formData.package) return;
       setCurrentStep(1); // Go to first form step
     } else if (currentStep < totalSteps - 1) {
-      // Skip payment step for quote-only packages
-      if (isQuoteOnly && currentStep === contactLegalStepIndex) {
-        console.log('⚠️ Should not proceed past contact/legal for quotes');
-        return; // Don't proceed past contact/legal for quotes
+      // Skip payment step for quote-only packages or zero total
+      if (skipPayment && currentStep === contactLegalStepIndex) {
+        console.log('⚠️ Should not proceed past contact/legal when payment is skipped');
+        return; // Don't proceed past contact/legal when payment is skipped
       }
       setCurrentStep(currentStep + 1);
     }
@@ -174,17 +217,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       setCurrentStep(currentStep - 1);
     }
   };
-
-  const calculateTotalPrice = () => {
-    const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
-    const addonsPrice = selectedAddons.reduce((total, addonKey) => {
-      const addon = addons.find(addon => addon.addon_key === addonKey);
-      return total + (addon ? getAddonPrice(addon, currency) : 0);
-    }, 0);
-    return packagePrice + addonsPrice;
-  };
-
-  const totalPrice = calculateTotalPrice();
 
   // Function to send quote request notification email
   const sendQuoteNotificationEmail = async (quoteData: any, quoteId: string) => {
@@ -264,7 +296,7 @@ Quote Management: Please review and respond to the customer with a personalized 
           selected_addons: selectedAddons,
           addon_field_values: addonFieldValues,
           form_data: formData,
-          estimated_price: totalPrice,
+          estimated_price: baseTotal,
           currency: currency,
           status: 'pending',
           user_id: null // Will be set by RLS if user is authenticated
@@ -306,17 +338,41 @@ Quote Management: Please review and respond to the customer with a personalized 
         return;
       }
 
-      // Continue with existing payment logic for non-quote packages ONLY
+      // Handle zero-total orders (fully covered by gift card/discount)
+      if (finalTotal === 0) {
+        console.log("🔄 Processing zero-total order (fully covered by gift card/discount)");
+        
+        // Validate required fields
+        if (!formData.fullName || !formData.email) {
+          throw new Error('Please fill in all required contact information');
+        }
+        
+        // Call onComplete with zero-total order data
+        if (onComplete) {
+          await onComplete({
+            ...formData,
+            addons: selectedAddons,
+            addonFieldValues,
+            package: selectedPackage,
+            paymentProvider: 'gift_card', // Special identifier for zero-total orders
+            totalPrice: finalTotal
+          });
+          return;
+        }
+      }
+
+      // Continue with existing payment logic for non-quote packages with positive totals
       console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
       console.log('📦 Order data being submitted:', {
         package: selectedPackage,
         addons: selectedAddons.length,
-        totalPrice,
+        baseTotal,
+        finalTotal,
         paymentProvider: selectedPaymentProvider,
         customerEmail: formData.email?.substring(0, 5) + '***'
       });
       
-      validateFormData(formData, selectedPackage, totalPrice);
+      validateFormData(formData, selectedPackage, finalTotal);
       
       // Only call onComplete for non-quote packages
       if (onComplete) {
@@ -326,7 +382,7 @@ Quote Management: Please review and respond to the customer with a personalized 
           addonFieldValues,
           package: selectedPackage,
           paymentProvider: selectedPaymentProvider,
-          totalPrice
+          totalPrice: finalTotal
         });
         return;
       }
@@ -335,7 +391,7 @@ Quote Management: Please review and respond to the customer with a personalized 
         throw new Error('Please select a payment method before proceeding');
       }
       
-      const orderData = prepareOrderData(formData, selectedAddons, addonFieldValues, selectedPackage, selectedPaymentProvider, totalPrice, packages, currency);
+      const orderData = prepareOrderData(formData, selectedAddons, addonFieldValues, selectedPackage, selectedPaymentProvider, finalTotal, packages, currency);
 
       // Handle SmartBill payment with enhanced error handling and logging
       if (selectedPaymentProvider === 'smartbill') {
@@ -416,18 +472,20 @@ Quote Management: Please review and respond to the customer with a personalized 
         throw new Error(`Unsupported payment provider: ${selectedPaymentProvider}`);
       }
     } catch (error) {
-      console.error(`💥 ${isQuoteOnly ? 'QUOTE REQUEST' : selectedPaymentProvider?.toUpperCase()} Error:`, error);
+      console.error(`💥 ${isQuoteOnly ? 'QUOTE REQUEST' : finalTotal === 0 ? 'ZERO-TOTAL ORDER' : selectedPaymentProvider?.toUpperCase()} Error:`, error);
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       console.error('💥 Full error details:', {
         message: errorMessage,
         provider: selectedPaymentProvider,
         package: selectedPackage,
-        totalPrice,
-        isQuoteOnly
+        baseTotal,
+        finalTotal,
+        isQuoteOnly,
+        skipPayment
       });
       toast({
-        title: t(isQuoteOnly ? 'quoteRequestError' : 'orderError', isQuoteOnly ? 'Quote Request Error' : 'Payment Error'),
-        description: `${isQuoteOnly ? 'Quote request' : 'Payment'} failed: ${errorMessage}`,
+        title: t(isQuoteOnly ? 'quoteRequestError' : 'orderError', isQuoteOnly ? 'Quote Request Error' : 'Order Error'),
+        description: `${isQuoteOnly ? 'Quote request' : finalTotal === 0 ? 'Order processing' : 'Payment'} failed: ${errorMessage}`,
         variant: "destructive"
       });
     } finally {
@@ -438,7 +496,7 @@ Quote Management: Please review and respond to the customer with a personalized 
   // Determine which step we're on
   const isAddonStep = currentStep === addonStepIndex;
   const isContactLegalStep = currentStep === contactLegalStepIndex;
-  const isPaymentStep = !isQuoteOnly && currentStep === paymentStepIndex;
+  const isPaymentStep = !skipPayment && currentStep === paymentStepIndex;
   const currentPackageStepIndex = currentStep - 1;
   const currentStepData = currentStep > 0 && currentStep <= totalRegularSteps ? regularSteps?.[currentPackageStepIndex] : null;
 

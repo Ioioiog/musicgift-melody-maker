@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, CreditCard, Send } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CreditCard, Send, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface WizardNavigationProps {
@@ -14,6 +14,7 @@ interface WizardNavigationProps {
   onSubmit: () => void;
   isQuoteOnly?: boolean;
   isContactLegalStep?: boolean;
+  skipPayment?: boolean;
 }
 
 const WizardNavigation: React.FC<WizardNavigationProps> = ({
@@ -25,10 +26,39 @@ const WizardNavigation: React.FC<WizardNavigationProps> = ({
   onNext,
   onSubmit,
   isQuoteOnly = false,
-  isContactLegalStep = false
+  isContactLegalStep = false,
+  skipPayment = false
 }) => {
   const { t } = useLanguage();
   const isLastStep = currentStep === totalSteps - 1;
+
+  // Determine button text and icon based on context
+  const getSubmitButtonContent = () => {
+    if (isQuoteOnly) {
+      return {
+        icon: <Send className="w-3 h-3 mr-1" />,
+        text: isSubmitting 
+          ? t('submittingRequest', 'Submitting request...') 
+          : t('submitQuoteRequest', 'Submit Quote Request')
+      };
+    } else if (skipPayment) {
+      return {
+        icon: <CheckCircle className="w-3 h-3 mr-1" />,
+        text: isSubmitting 
+          ? t('processing', 'Processing...') 
+          : t('completeOrder', 'Complete Order')
+      };
+    } else {
+      return {
+        icon: <CreditCard className="w-3 h-3 mr-1" />,
+        text: isSubmitting 
+          ? t('processing', 'Processing...') 
+          : t('completeOrder', 'Complete Order')
+      };
+    }
+  };
+
+  const submitContent = getSubmitButtonContent();
 
   return (
     <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/20">
@@ -53,16 +83,12 @@ const WizardNavigation: React.FC<WizardNavigationProps> = ({
           {isSubmitting ? (
             <div className="flex items-center">
               <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mr-1" />
-              <span>{isQuoteOnly ? t('submittingRequest', 'Submitting request...') : t('processing')}</span>
+              <span>{submitContent.text}</span>
             </div>
           ) : (
             <div className="flex items-center">
-              {isQuoteOnly ? (
-                <Send className="w-3 h-3 mr-1" />
-              ) : (
-                <CreditCard className="w-3 h-3 mr-1" />
-              )}
-              <span>{isQuoteOnly ? t('submitQuoteRequest', 'Submit Quote Request') : t('completeOrder')}</span>
+              {submitContent.icon}
+              <span>{submitContent.text}</span>
             </div>
           )}
         </Button>

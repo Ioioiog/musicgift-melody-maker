@@ -16,6 +16,7 @@ import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FileMetadata } from "@/types/order";
+
 const Order = () => {
   const {
     toast
@@ -388,7 +389,13 @@ Order Management: View full details in the admin panel.
               </div> : <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6 lg:items-end">
                 {/* Main content - Order Wizard */}
                 <div className="flex-1 order-2 lg:order-1 my-0">
-                  <OrderWizard onComplete={handleOrderComplete} giftCard={appliedGiftCard} preselectedPackage={preselectedPackage} onOrderDataChange={setOrderData} />
+                  <OrderWizard 
+                    onComplete={handleOrderComplete} 
+                    giftCard={appliedGiftCard}
+                    appliedDiscount={appliedDiscount}
+                    preselectedPackage={preselectedPackage} 
+                    onOrderDataChange={setOrderData} 
+                  />
                 </div>
                 
                 {/* Mobile Order Summary - Above wizard on mobile */}
@@ -408,4 +415,5 @@ Order Management: View full details in the admin panel.
       </div>
     </div>;
 };
+
 export default Order;
