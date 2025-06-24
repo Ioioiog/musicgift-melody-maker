@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -10,14 +11,10 @@ import { Search, Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clo
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useState, useMemo } from "react";
+
 const Blog = () => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    data: blogPosts = [],
-    isLoading
-  } = useBlogPosts();
+  const { t } = useLanguage();
+  const { data: blogPosts = [], isLoading } = useBlogPosts();
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filter posts based on search term
@@ -39,6 +36,7 @@ const Blog = () => {
       acc[post.category] = (acc[post.category] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
+
     const categoryIcons = {
       'Music Tips': Music,
       'Industry Insights': Headphones,
@@ -47,6 +45,7 @@ const Blog = () => {
       'Trends': Guitar,
       'General': Music
     };
+
     const categoryColors = {
       'Music Tips': "from-blue-500 to-blue-600",
       'Industry Insights': "from-purple-500 to-purple-600",
@@ -65,6 +64,7 @@ const Blog = () => {
       color: categoryColors[name as keyof typeof categoryColors] || "from-gray-500 to-gray-600"
     }));
   }, [blogPosts]);
+
   if (isLoading) {
     return <div className="min-h-screen text-white relative overflow-hidden" style={{
       backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
@@ -83,15 +83,21 @@ const Blog = () => {
         <Footer />
       </div>;
   }
-  return <>
-      <SEOHead title={t('blogPageTitle') || "Blog - MusicGift.ro | Music Industry Insights & Tips"} description={t('blogPageDescription') || "Discover music creation tips, industry insights, and inspiring stories from our personalized music journey. Expert advice for meaningful musical gifts."} url="https://www.musicgift.ro/blog" />
+
+  return (
+    <>
+      <SEOHead 
+        title={t('blogPageTitle') || "Blog - MusicGift.ro | Music Industry Insights & Tips"} 
+        description={t('blogPageDescription') || "Discover music creation tips, industry insights, and inspiring stories from our personalized music journey. Expert advice for meaningful musical gifts."} 
+        url="https://www.musicgift.ro/blog" 
+      />
       
       <div className="min-h-screen text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
 
@@ -149,20 +155,45 @@ const Blog = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
-              {categories.map((category, index) => {
-              const IconComponent = category.icon;
-              return <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-                    <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
-                    <CardContent className="p-8 text-center transition-colors">
-                      <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                        <IconComponent className="w-8 h-8 text-white" />
-                      </div>
-                      <h3 className="font-bold text-white mb-2 text-lg">{category.name}</h3>
-                      <p className="text-gray-300 font-medium">{category.count} {t('articles') || 'articles'}</p>
-                    </CardContent>
-                  </Card>;
-            })}
+            {/* Mobile: Single row with horizontal scroll, Desktop: Grid */}
+            <div className="md:grid md:grid-cols-2 lg:grid-cols-6 md:gap-6">
+              {/* Mobile scrollable container */}
+              <div className="flex overflow-x-auto space-x-4 pb-4 md:hidden scrollbar-hide">
+                {categories.map((category, index) => {
+                  const IconComponent = category.icon;
+                  return (
+                    <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden flex-shrink-0 w-48">
+                      <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
+                      <CardContent className="p-6 text-center transition-colors">
+                        <div className={`w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <h3 className="font-bold text-white mb-2 text-sm">{category.name}</h3>
+                        <p className="text-gray-300 font-medium text-xs">{category.count} {t('articles') || 'articles'}</p>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+              
+              {/* Desktop grid - hidden on mobile */}
+              <div className="hidden md:contents">
+                {categories.map((category, index) => {
+                  const IconComponent = category.icon;
+                  return (
+                    <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                      <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
+                      <CardContent className="p-8 text-center transition-colors">
+                        <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                          <IconComponent className="w-8 h-8 text-white" />
+                        </div>
+                        <h3 className="font-bold text-white mb-2 text-lg">{category.name}</h3>
+                        <p className="text-gray-300 font-medium">{category.count} {t('articles') || 'articles'}</p>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
           </section>
 
@@ -347,6 +378,8 @@ const Blog = () => {
 
         <Footer />
       </div>
-    </>;
+    </>
+  );
 };
+
 export default Blog;
