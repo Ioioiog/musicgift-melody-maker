@@ -331,12 +331,12 @@ const Blog = () => {
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/packages">
-                  <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Button size="lg" className="bg-white hover:bg-gray-100 px-8 py-4 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 text-orange-500">
                     {t('viewPackages') || "View Packages"}
                   </Button>
                 </Link>
                 <Link to="/contact">
-                  <Button size="lg" variant="outline" className="border-white text-orange hover:bg-white hover:text-purple-600 px-8 py-4 text-lg font-medium transition-all duration-300">
+                  <Button size="lg" variant="outline" className="border-white hover:bg-white px-8 py-4 text-lg font-medium transition-all duration-300 text-orange-500">
                     {t('getInTouch') || "Get in Touch"}
                   </Button>
                 </Link>
