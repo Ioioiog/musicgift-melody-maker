@@ -31,7 +31,7 @@ export interface CreateBlogPostData {
   content: string;
   author: string;
   category: string;
-  slug: string;
+  slug?: string;
   excerpt?: string;
   image_url?: string;
   status?: 'draft' | 'published';
@@ -101,10 +101,18 @@ export const useCreateBlogPost = () => {
       const user = await supabase.auth.getUser();
       const userId = user.data.user?.id;
       
+      // Generate slug if not provided
+      const slug = post.slug || post.title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '')
+        .replace(/\s+/g, '-')
+        .trim();
+      
       const { data, error } = await supabase
         .from('blog_posts')
         .insert({
           ...post,
+          slug,
           created_by: userId,
           updated_by: userId,
         })

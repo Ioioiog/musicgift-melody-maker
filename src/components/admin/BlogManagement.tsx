@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,7 +11,22 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Edit, Trash2, Eye, Calendar, User, Tag, Globe } from "lucide-react";
-import { useAllBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost, BlogPost } from "@/hooks/useBlogPosts";
+import { useAllBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost, BlogPost, CreateBlogPostData } from "@/hooks/useBlogPosts";
+
+interface BlogFormData {
+  title: string;
+  excerpt: string;
+  content: string;
+  image_url: string;
+  category: string;
+  author: string;
+  status: 'draft' | 'published';
+  is_featured: boolean;
+  meta_title: string;
+  meta_description: string;
+  tags: string[];
+  read_time: number;
+}
 
 const BlogManagement = () => {
   const { data: posts = [], isLoading } = useAllBlogPosts();
@@ -22,7 +36,7 @@ const BlogManagement = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
-  const [formData, setFormData] = useState<Partial<BlogPost>>({
+  const [formData, setFormData] = useState<BlogFormData>({
     title: '',
     excerpt: '',
     content: '',
@@ -45,6 +59,14 @@ const BlogManagement = () => {
     'Trends',
     'General'
   ];
+
+  const generateSlugFromTitle = (title: string): string => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, '-')
+      .trim();
+  };
 
   const resetForm = () => {
     setFormData({
@@ -92,15 +114,31 @@ const BlogManagement = () => {
       return;
     }
 
-    const postData = {
-      ...formData,
-      published_at: formData.status === 'published' ? new Date().toISOString() : null,
-    };
-
     if (editingPost) {
-      await updatePost.mutateAsync({ id: editingPost.id, ...postData });
+      const updateData = {
+        id: editingPost.id,
+        ...formData,
+        published_at: formData.status === 'published' ? new Date().toISOString() : null,
+      };
+      await updatePost.mutateAsync(updateData);
     } else {
-      await createPost.mutateAsync(postData);
+      const createData: CreateBlogPostData = {
+        title: formData.title,
+        content: formData.content,
+        author: formData.author,
+        category: formData.category,
+        slug: generateSlugFromTitle(formData.title),
+        excerpt: formData.excerpt || undefined,
+        image_url: formData.image_url || undefined,
+        status: formData.status,
+        is_featured: formData.is_featured,
+        meta_title: formData.meta_title || undefined,
+        meta_description: formData.meta_description || undefined,
+        tags: formData.tags.length > 0 ? formData.tags : undefined,
+        read_time: formData.read_time,
+        published_at: formData.status === 'published' ? new Date().toISOString() : undefined,
+      };
+      await createPost.mutateAsync(createData);
     }
 
     setIsDialogOpen(false);
@@ -253,7 +291,7 @@ const BlogManagement = () => {
                   <Label htmlFor="tags">Tags (comma-separated)</Label>
                   <Input
                     id="tags"
-                    value={formData.tags?.join(', ') || ''}
+                    value={formData.tags.join(', ')}
                     onChange={(e) => handleTagsChange(e.target.value)}
                     placeholder="music, tips, creativity"
                   />
