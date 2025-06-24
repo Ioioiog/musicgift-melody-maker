@@ -71,12 +71,18 @@ const Blog = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
-        <div className="flex justify-center items-center min-h-[50vh]">
+        <div className="flex justify-center items-center min-h-[50vh] relative z-10">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading blog posts...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>
+            <p className="text-white">Loading blog posts...</p>
           </div>
         </div>
         <Footer />
@@ -92,17 +98,24 @@ const Blog = () => {
         url="https://www.musicgift.ro/blog"
       />
       
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
 
-        {/* Modern Hero Section */}
-        <section className="relative pt-24 sm:pt-32 pb-20 overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-          <div className="absolute inset-0 bg-black/20"></div>
-          <div className="absolute inset-0 bg-[url('/uploads/background.webp')] bg-cover bg-center opacity-10"></div>
-          
-          {/* Animated background elements */}
-          <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-          <div className="absolute top-40 right-10 w-72 h-72 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
+        {/* Enhanced Hero Section with Purple Musical Background */}
+        <section className="py-20 text-white relative overflow-hidden">
+          {/* Floating Musical Notes */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-10 left-10 text-4xl opacity-30 animate-float">♪</div>
+            <div className="absolute bottom-10 right-10 text-6xl opacity-20 animate-float" style={{ animationDelay: '2s' }}>🎵</div>
+            <div className="absolute top-1/2 left-1/4 text-3xl opacity-25 animate-float" style={{ animationDelay: '1s' }}>♫</div>
+            <div className="absolute top-1/3 right-1/3 text-2xl opacity-30 animate-float" style={{ animationDelay: '3s' }}>♪</div>
+          </div>
           
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
             <div className="max-w-4xl mx-auto text-center text-white">
@@ -135,15 +148,15 @@ const Blog = () => {
           </div>
         </section>
 
-        <div className="container mx-auto px-4 sm:px-6 py-20">
+        <div className="container mx-auto px-4 sm:px-6 py-20 relative z-10">
           {/* Modern Categories Section */}
           {categories.length > 0 && (
             <section className="mb-20">
               <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                <h2 className="text-4xl font-bold text-white mb-4">
                   {t('blogCategoriesTitle') || "Explore Categories"}
                 </h2>
-                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                <p className="text-xl text-gray-200 max-w-2xl mx-auto">
                   Dive into our curated collection of music insights and stories
                 </p>
               </div>
@@ -152,14 +165,14 @@ const Blog = () => {
                 {categories.map((category, index) => {
                   const IconComponent = category.icon;
                   return (
-                    <Card key={index} className="group cursor-pointer border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                    <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
                       <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
-                      <CardContent className="p-8 text-center bg-white group-hover:bg-gray-50 transition-colors">
+                      <CardContent className="p-8 text-center transition-colors">
                         <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                           <IconComponent className="w-8 h-8 text-white" />
                         </div>
-                        <h3 className="font-bold text-gray-900 mb-2 text-lg">{category.name}</h3>
-                        <p className="text-gray-500 font-medium">{category.count} {t('articles') || 'articles'}</p>
+                        <h3 className="font-bold text-white mb-2 text-lg">{category.name}</h3>
+                        <p className="text-gray-300 font-medium">{category.count} {t('articles') || 'articles'}</p>
                       </CardContent>
                     </Card>
                   );
@@ -172,15 +185,15 @@ const Blog = () => {
           {featuredPost && (
             <section className="mb-20">
               <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                <h2 className="text-4xl font-bold text-white mb-4">
                   {t('featuredArticle') || "Featured Article"}
                 </h2>
-                <p className="text-xl text-gray-600">
+                <p className="text-xl text-gray-200">
                   Our most popular story this week
                 </p>
               </div>
               
-              <Card className="overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 border-0 bg-gradient-to-br from-white to-gray-50">
+              <Card className="overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white/10 backdrop-blur-md border border-white/20">
                 <div className="lg:flex">
                   <div className="lg:w-3/5 relative overflow-hidden">
                     <img 
@@ -201,15 +214,15 @@ const Blog = () => {
                       </Badge>
                     </div>
                     
-                    <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+                    <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight">
                       {featuredPost.title}
                     </h3>
                     
-                    <p className="text-gray-600 mb-8 text-lg leading-relaxed">
+                    <p className="text-gray-300 mb-8 text-lg leading-relaxed">
                       {featuredPost.excerpt}
                     </p>
                     
-                    <div className="flex items-center justify-between mb-8 text-gray-500 text-sm">
+                    <div className="flex items-center justify-between mb-8 text-gray-400 text-sm">
                       <div className="flex items-center space-x-6">
                         <div className="flex items-center">
                           <Calendar className="w-4 h-4 mr-2" />
@@ -248,17 +261,17 @@ const Blog = () => {
           {regularPosts.length > 0 && (
             <section className="mb-20">
               <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                <h2 className="text-4xl font-bold text-white mb-4">
                   {searchTerm ? `Search Results (${regularPosts.length})` : (t('recentArticles') || "Recent Articles")}
                 </h2>
-                <p className="text-xl text-gray-600">
+                <p className="text-xl text-gray-200">
                   {searchTerm ? `Results for "${searchTerm}"` : "Fresh insights and stories from our music experts"}
                 </p>
               </div>
               
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {regularPosts.map((post) => (
-                  <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border-0 shadow-lg bg-white">
+                  <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
                     <div className="relative overflow-hidden">
                       <img 
                         src={post.image_url || '/uploads/background.webp'} 
@@ -272,16 +285,16 @@ const Blog = () => {
                     </div>
                     
                     <CardHeader className="pb-4">
-                      <CardTitle className="text-xl group-hover:text-purple-600 transition-colors duration-300 leading-snug">
+                      <CardTitle className="text-xl group-hover:text-purple-300 transition-colors duration-300 leading-snug text-white">
                         {post.title}
                       </CardTitle>
-                      <CardDescription className="text-gray-600 text-base leading-relaxed">
+                      <CardDescription className="text-gray-300 text-base leading-relaxed">
                         {post.excerpt}
                       </CardDescription>
                     </CardHeader>
                     
                     <CardContent className="pt-0">
-                      <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                      <div className="flex items-center justify-between text-sm text-gray-400 mb-6">
                         <div className="flex items-center space-x-4">
                           <div className="flex items-center">
                             <Calendar className="w-4 h-4 mr-1" />
@@ -301,13 +314,13 @@ const Blog = () => {
                       </div>
                       
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center text-sm text-gray-500">
+                        <div className="flex items-center text-sm text-gray-400">
                           <User className="w-4 h-4 mr-1" />
                           {post.author}
                         </div>
                         
                         <Link to={`/blog/${post.slug}`}>
-                          <Button variant="ghost" className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 font-medium p-2">
+                          <Button variant="ghost" className="text-purple-300 hover:text-purple-200 hover:bg-white/10 font-medium p-2">
                             {t('readMore') || "Read More"}
                             <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
                           </Button>
@@ -323,17 +336,16 @@ const Blog = () => {
           {/* No Results Message */}
           {searchTerm && filteredPosts.length === 0 && (
             <div className="text-center py-20">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">No articles found</h3>
-              <p className="text-gray-600 mb-8">Try adjusting your search terms or browse all articles.</p>
-              <Button onClick={() => setSearchTerm("")} variant="outline">
+              <h3 className="text-2xl font-bold text-white mb-4">No articles found</h3>
+              <p className="text-gray-300 mb-8">Try adjusting your search terms or browse all articles.</p>
+              <Button onClick={() => setSearchTerm("")} variant="outline" className="border-white/20 text-white hover:bg-white/10">
                 Clear Search
               </Button>
             </div>
           )}
 
-          {/* Modern CTA Section */}
-          <section className="relative py-20 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl text-white overflow-hidden shadow-2xl">
-            <div className="absolute inset-0 bg-[url('/uploads/background.webp')] bg-cover bg-center opacity-10"></div>
+          {/* Enhanced CTA Section matching About page style */}
+          <section className="relative py-20 bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-3xl border border-white/30 text-white overflow-hidden shadow-2xl">
             <div className="absolute top-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
             <div className="absolute bottom-10 right-10 w-60 h-60 bg-white/5 rounded-full blur-3xl"></div>
             
