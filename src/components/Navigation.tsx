@@ -143,6 +143,9 @@ const Navigation = () => {
     path: "/about",
     label: t("about") || "About"
   }, {
+    path: "/blog",
+    label: t("blog") || "Blog"
+  }, {
     path: "/packages",
     label: t("packages") || "Packages"
   }, {
