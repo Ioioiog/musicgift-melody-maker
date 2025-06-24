@@ -9,6 +9,75 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          author: string
+          category: string
+          content: string
+          created_at: string
+          created_by: string | null
+          excerpt: string | null
+          id: string
+          image_url: string | null
+          is_featured: boolean
+          meta_description: string | null
+          meta_title: string | null
+          published_at: string | null
+          read_time: number | null
+          slug: string
+          status: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          updated_by: string | null
+          views: number | null
+        }
+        Insert: {
+          author: string
+          category?: string
+          content: string
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          read_time?: number | null
+          slug: string
+          status?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+          views?: number | null
+        }
+        Update: {
+          author?: string
+          category?: string
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          read_time?: number | null
+          slug?: string
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+          views?: number | null
+        }
+        Relationships: []
+      }
       campaign_metrics: {
         Row: {
           bounces: number | null
@@ -1410,6 +1479,10 @@ export type Database = {
     Functions: {
       generate_gift_card_code: {
         Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_slug_from_title: {
+        Args: { title_text: string }
         Returns: string
       }
       get_gift_card_balance: {
