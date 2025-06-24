@@ -26,6 +26,24 @@ export interface BlogPost {
   updated_by?: string;
 }
 
+export interface CreateBlogPostData {
+  title: string;
+  content: string;
+  author: string;
+  category: string;
+  slug: string;
+  excerpt?: string;
+  image_url?: string;
+  status?: 'draft' | 'published';
+  is_featured?: boolean;
+  meta_title?: string;
+  meta_description?: string;
+  tags?: string[];
+  read_time?: number;
+  views?: number;
+  published_at?: string;
+}
+
 export const useBlogPosts = () => {
   return useQuery({
     queryKey: ['blog-posts'],
@@ -79,14 +97,17 @@ export const useCreateBlogPost = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (post: Partial<BlogPost>) => {
+    mutationFn: async (post: CreateBlogPostData) => {
+      const user = await supabase.auth.getUser();
+      const userId = user.data.user?.id;
+      
       const { data, error } = await supabase
         .from('blog_posts')
-        .insert([{
+        .insert({
           ...post,
-          created_by: (await supabase.auth.getUser()).data.user?.id,
-          updated_by: (await supabase.auth.getUser()).data.user?.id,
-        }])
+          created_by: userId,
+          updated_by: userId,
+        })
         .select()
         .single();
       
@@ -117,11 +138,14 @@ export const useUpdateBlogPost = () => {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<BlogPost> & { id: string }) => {
+      const user = await supabase.auth.getUser();
+      const userId = user.data.user?.id;
+      
       const { data, error } = await supabase
         .from('blog_posts')
         .update({
           ...updates,
-          updated_by: (await supabase.auth.getUser()).data.user?.id,
+          updated_by: userId,
         })
         .eq('id', id)
         .select()
