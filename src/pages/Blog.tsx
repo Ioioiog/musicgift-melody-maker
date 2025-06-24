@@ -336,7 +336,7 @@ const Blog = () => {
                   </Button>
                 </Link>
                 <Link to="/contact">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600 px-8 py-4 text-lg font-medium transition-all duration-300">
+                  <Button size="lg" variant="outline" className="border-white text-orange hover:bg-white hover:text-purple-600 px-8 py-4 text-lg font-medium transition-all duration-300">
                     {t('getInTouch') || "Get in Touch"}
                   </Button>
                 </Link>
