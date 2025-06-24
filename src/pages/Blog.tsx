@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -36,7 +35,7 @@ const Blog = () => {
   // Get non-featured posts for the grid
   const regularPosts = filteredPosts.filter(post => !post.is_featured || post !== featuredPost);
 
-  // Get unique categories with counts
+  // Get all categories (predefined) with counts
   const categories = useMemo(() => {
     const categoryCount = blogPosts.reduce((acc, post) => {
       acc[post.category] = (acc[post.category] || 0) + 1;
@@ -61,9 +60,19 @@ const Blog = () => {
       'General': "from-gray-500 to-gray-600",
     };
 
-    return Object.entries(categoryCount).map(([name, count]) => ({
+    // Return all predefined categories, even if they have 0 posts
+    const predefinedCategories = [
+      'Music Tips',
+      'Industry Insights', 
+      'Client Stories',
+      'Behind the Scenes',
+      'Trends',
+      'General'
+    ];
+
+    return predefinedCategories.map(name => ({
       name,
-      count,
+      count: categoryCount[name] || 0,
       icon: categoryIcons[name as keyof typeof categoryIcons] || Music,
       color: categoryColors[name as keyof typeof categoryColors] || "from-gray-500 to-gray-600",
     }));
@@ -150,36 +159,34 @@ const Blog = () => {
 
         <div className="container mx-auto px-4 sm:px-6 py-20 relative z-10">
           {/* Modern Categories Section */}
-          {categories.length > 0 && (
-            <section className="mb-20">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-white mb-4">
-                  {t('blogCategoriesTitle') || "Explore Categories"}
-                </h2>
-                <p className="text-xl text-gray-200 max-w-2xl mx-auto">
-                  Dive into our curated collection of music insights and stories
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                {categories.map((category, index) => {
-                  const IconComponent = category.icon;
-                  return (
-                    <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-                      <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
-                      <CardContent className="p-8 text-center transition-colors">
-                        <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                          <IconComponent className="w-8 h-8 text-white" />
-                        </div>
-                        <h3 className="font-bold text-white mb-2 text-lg">{category.name}</h3>
-                        <p className="text-gray-300 font-medium">{category.count} {t('articles') || 'articles'}</p>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </section>
-          )}
+          <section className="mb-20">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-white mb-4">
+                {t('blogCategoriesTitle') || "Explore Categories"}
+              </h2>
+              <p className="text-xl text-gray-200 max-w-2xl mx-auto">
+                Dive into our curated collection of music insights and stories
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+              {categories.map((category, index) => {
+                const IconComponent = category.icon;
+                return (
+                  <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                    <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
+                    <CardContent className="p-8 text-center transition-colors">
+                      <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                        <IconComponent className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="font-bold text-white mb-2 text-lg">{category.name}</h3>
+                      <p className="text-gray-300 font-medium">{category.count} {t('articles') || 'articles'}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
 
           {/* Featured Article */}
           {featuredPost && (
