@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -78,15 +77,31 @@ const NewsletterManagement = () => {
 
   const getSyncStatusIcon = (subscriber: any) => {
     if (!subscriber.brevo_contact_id) {
-      return <AlertTriangle className="w-4 h-4 text-yellow-600" title="Not synced to Brevo" />;
+      return (
+        <div title="Not synced to Brevo">
+          <AlertTriangle className="w-4 h-4 text-yellow-600" />
+        </div>
+      );
     }
     if (subscriber.sync_status === 'sync_failed') {
-      return <AlertTriangle className="w-4 h-4 text-red-600" title="Sync failed" />;
+      return (
+        <div title="Sync failed">
+          <AlertTriangle className="w-4 h-4 text-red-600" />
+        </div>
+      );
     }
     if (subscriber.sync_status === 'pending_sync') {
-      return <Clock className="w-4 h-4 text-blue-600" title="Sync pending" />;
+      return (
+        <div title="Sync pending">
+          <Clock className="w-4 h-4 text-blue-600" />
+        </div>
+      );
     }
-    return <CheckCircle className="w-4 h-4 text-green-600" title="Synced" />;
+    return (
+      <div title="Synced">
+        <CheckCircle className="w-4 h-4 text-green-600" />
+      </div>
+    );
   };
 
   if (isLoading) {

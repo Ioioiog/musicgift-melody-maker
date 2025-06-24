@@ -13,6 +13,10 @@ export interface NewsletterSubscriber {
   brevo_contact_id?: string;
   created_at: string;
   updated_at: string;
+  last_brevo_sync?: string;
+  sync_status?: string;
+  brevo_updated_at?: string;
+  brevo_list_ids?: any;
 }
 
 export const useNewsletterSubscribe = () => {
