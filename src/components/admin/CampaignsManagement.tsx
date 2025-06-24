@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,8 +11,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useCampaigns, useCreateCampaign, useSendCampaign, useDeleteCampaign, useCampaignMetrics, useBrevoLists, useResyncCampaign, useSyncCampaignMetrics } from '@/hooks/useCampaigns';
-import { Plus, Send, Trash2, BarChart3, Mail, Users, Loader2, Eye, RefreshCw, AlertTriangle } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { useCampaigns, useCreateCampaign, useSendCampaign, useDeleteCampaign, useCampaignMetrics, useBrevoLists, useBrevoTemplates, useResyncCampaign, useSyncCampaignMetrics } from '@/hooks/useCampaigns';
+import { Plus, Send, Trash2, BarChart3, Mail, Users, Loader2, Eye, RefreshCw, AlertTriangle, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -19,24 +21,30 @@ import CampaignMetricsCard from '@/components/admin/CampaignMetricsCard';
 
 const CampaignsManagement = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [useTemplate, setUseTemplate] = useState(false);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [newCampaign, setNewCampaign] = useState({
     name: '',
     subject: '',
     content: '',
     html_content: '',
-    target_list_ids: [] as number[]
+    target_list_ids: [] as number[],
+    template_variables: {} as any
   });
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
   const { data: campaigns = [], isLoading, error } = useCampaigns();
   const { data: brevoLists } = useBrevoLists();
+  const { data: brevoTemplates } = useBrevoTemplates();
   const { data: selectedCampaignMetrics } = useCampaignMetrics(selectedCampaignId || undefined);
   const createCampaign = useCreateCampaign();
   const sendCampaign = useSendCampaign();
   const deleteCampaign = useDeleteCampaign();
   const resyncCampaign = useResyncCampaign();
   const syncMetrics = useSyncCampaignMetrics();
+
+  const selectedTemplate = brevoTemplates?.templates.find(t => t.id.toString() === selectedTemplateId);
 
   const handleCreateCampaign = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,15 +58,35 @@ const CampaignsManagement = () => {
       return;
     }
 
-    createCampaign.mutate(newCampaign, {
+    if (useTemplate && !selectedTemplateId) {
+      toast({
+        title: "Validation error",
+        description: "Please select a template",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const campaignData = {
+      ...newCampaign,
+      ...(useTemplate && selectedTemplateId ? {
+        template_id: selectedTemplateId,
+        template_variables: newCampaign.template_variables
+      } : {})
+    };
+
+    createCampaign.mutate(campaignData, {
       onSuccess: () => {
         setNewCampaign({ 
           name: '', 
           subject: '', 
           content: '', 
           html_content: '', 
-          target_list_ids: [] 
+          target_list_ids: [],
+          template_variables: {} 
         });
+        setSelectedTemplateId('');
+        setUseTemplate(false);
         setIsCreateDialogOpen(false);
       }
     });
@@ -289,7 +317,7 @@ const CampaignsManagement = () => {
                   Create Campaign
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Create New Campaign</DialogTitle>
                 </DialogHeader>
@@ -305,6 +333,7 @@ const CampaignsManagement = () => {
                       required
                     />
                   </div>
+                  
                   <div>
                     <Label htmlFor="campaign-subject">Subject Line</Label>
                     <Input
@@ -316,6 +345,121 @@ const CampaignsManagement = () => {
                       required
                     />
                   </div>
+
+                  {/* Template Toggle */}
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="use-template"
+                      checked={useTemplate}
+                      onCheckedChange={setUseTemplate}
+                    />
+                    <Label htmlFor="use-template">Use Brevo Template</Label>
+                  </div>
+
+                  {useTemplate ? (
+                    <div className="space-y-4">
+                      {/* Template Selector */}
+                      <div>
+                        <Label>Select Template</Label>
+                        {brevoTemplates ? (
+                          <Select value={selectedTemplateId} onValueChange={setSelectedTemplateId}>
+                            <SelectTrigger className="h-11">
+                              <SelectValue placeholder="Choose a template..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {brevoTemplates.templates.map((template) => (
+                                <SelectItem key={template.id} value={template.id.toString()}>
+                                  <div className="flex items-center space-x-2">
+                                    <FileText className="w-4 h-4" />
+                                    <span>{template.name}</span>
+                                    {template.tag && (
+                                      <Badge variant="outline" className="text-xs">
+                                        {template.tag}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <div className="flex items-center space-x-2 p-3 border rounded-lg">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Loading templates...</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Template Preview */}
+                      {selectedTemplate && (
+                        <div className="border rounded-lg p-4 bg-gray-50">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium">{selectedTemplate.name}</h4>
+                            <Badge variant={selectedTemplate.isActive ? 'default' : 'secondary'}>
+                              {selectedTemplate.isActive ? 'Active' : 'Inactive'}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">
+                            Subject: {selectedTemplate.subject || 'No subject set'}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Last modified: {format(new Date(selectedTemplate.modifiedAt), 'MMM dd, yyyy')}
+                          </p>
+                          
+                          {/* Template Variables */}
+                          {selectedTemplate.variables && selectedTemplate.variables.length > 0 && (
+                            <div className="mt-4">
+                              <Label className="text-sm font-medium">Template Variables</Label>
+                              <div className="mt-2 space-y-2">
+                                {selectedTemplate.variables.map((variable) => (
+                                  <div key={variable.name}>
+                                    <Label className="text-xs">{variable.name}</Label>
+                                    <Input
+                                      placeholder={variable.example || `Enter ${variable.name}`}
+                                      value={newCampaign.template_variables[variable.name] || ''}
+                                      onChange={(e) => setNewCampaign({
+                                        ...newCampaign,
+                                        template_variables: {
+                                          ...newCampaign.template_variables,
+                                          [variable.name]: e.target.value
+                                        }
+                                      })}
+                                      className="h-9"
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="campaign-content">Plain Text Content</Label>
+                        <Textarea
+                          id="campaign-content"
+                          value={newCampaign.content}
+                          onChange={(e) => setNewCampaign({ ...newCampaign, content: e.target.value })}
+                          placeholder="Enter plain text content"
+                          rows={4}
+                          className="resize-none"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="campaign-html">HTML Content</Label>
+                        <Textarea
+                          id="campaign-html"
+                          value={newCampaign.html_content}
+                          onChange={(e) => setNewCampaign({ ...newCampaign, html_content: e.target.value })}
+                          placeholder="Enter HTML content"
+                          rows={6}
+                          className="resize-none"
+                        />
+                      </div>
+                    </div>
+                  )}
                   
                   {brevoLists && brevoLists.lists.length > 0 && (
                     <div>
@@ -337,28 +481,6 @@ const CampaignsManagement = () => {
                     </div>
                   )}
                   
-                  <div>
-                    <Label htmlFor="campaign-content">Plain Text Content</Label>
-                    <Textarea
-                      id="campaign-content"
-                      value={newCampaign.content}
-                      onChange={(e) => setNewCampaign({ ...newCampaign, content: e.target.value })}
-                      placeholder="Enter plain text content"
-                      rows={4}
-                      className="resize-none"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="campaign-html">HTML Content</Label>
-                    <Textarea
-                      id="campaign-html"
-                      value={newCampaign.html_content}
-                      onChange={(e) => setNewCampaign({ ...newCampaign, html_content: e.target.value })}
-                      placeholder="Enter HTML content"
-                      rows={6}
-                      className="resize-none"
-                    />
-                  </div>
                   <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                     <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="h-11">
                       Cancel

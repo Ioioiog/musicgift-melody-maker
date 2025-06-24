@@ -13,7 +13,17 @@ serve(async (req) => {
   }
 
   try {
-    const { name, subject, content = '', html_content = '', target_list_ids = [], sender_email, sender_name } = await req.json()
+    const { 
+      name, 
+      subject, 
+      content = '', 
+      html_content = '', 
+      target_list_ids = [], 
+      sender_email, 
+      sender_name,
+      template_id,
+      template_variables = {}
+    } = await req.json()
 
     if (!name || !subject) {
       return new Response(
@@ -118,6 +128,29 @@ serve(async (req) => {
           }
         }
 
+        // Prepare campaign data for Brevo
+        const campaignPayload: any = {
+          name: name,
+          subject: subject,
+          type: 'classic',
+          recipients: {
+            listIds: finalListIds
+          },
+          sender: senderInfo
+        }
+
+        // Use template or HTML content
+        if (template_id) {
+          campaignPayload.templateId = parseInt(template_id)
+          // Add template parameters if provided
+          if (Object.keys(template_variables).length > 0) {
+            campaignPayload.params = template_variables
+          }
+          console.log('Creating campaign with template ID:', template_id, 'and variables:', template_variables)
+        } else {
+          campaignPayload.htmlContent = html_content || `<html><body>${content}</body></html>`
+        }
+
         const brevoResponse = await fetch('https://api.brevo.com/v3/emailCampaigns', {
           method: 'POST',
           headers: {
@@ -125,16 +158,7 @@ serve(async (req) => {
             'Content-Type': 'application/json',
             'api-key': brevoApiKey
           },
-          body: JSON.stringify({
-            name: name,
-            subject: subject,
-            type: 'classic',
-            htmlContent: html_content || `<html><body>${content}</body></html>`,
-            recipients: {
-              listIds: finalListIds
-            },
-            sender: senderInfo
-          })
+          body: JSON.stringify(campaignPayload)
         })
 
         if (brevoResponse.ok) {
@@ -150,6 +174,8 @@ serve(async (req) => {
             brevoError = `Sender email "${senderInfo.email}" is not verified in Brevo. Please verify your sender email in your Brevo account under Senders & IP → Senders.`
           } else if (errorText.includes('list ids are not valid')) {
             brevoError = `Invalid list IDs: ${finalListIds.join(', ')}. Please check your Brevo contact lists.`
+          } else if (errorText.includes('template')) {
+            brevoError = `Template error: ${errorText}. Please check if the template ID ${template_id} exists and is active.`
           } else {
             brevoError = `Brevo API error: ${errorText}`
           }
@@ -171,6 +197,8 @@ serve(async (req) => {
         content,
         html_content,
         target_list_ids,
+        template_id,
+        template_variables,
         brevo_campaign_id,
         status: 'draft',
         created_by: user.id

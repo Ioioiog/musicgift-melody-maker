@@ -13,6 +13,8 @@ export interface Campaign {
   scheduled_at: string | null;
   sent_at: string | null;
   target_list_ids: number[];
+  template_id: string | null;
+  template_variables: any;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -50,6 +52,23 @@ export interface BrevoSender {
   ips?: Array<{
     ip: string;
     domain: string;
+  }>;
+}
+
+export interface BrevoTemplate {
+  id: number;
+  name: string;
+  subject: string;
+  isActive: boolean;
+  tag: string;
+  createdAt: string;
+  modifiedAt: string;
+  htmlContent: string;
+  previewUrl: string | null;
+  variables: Array<{
+    name: string;
+    type: string;
+    example?: string;
   }>;
 }
 
@@ -141,6 +160,18 @@ export const useSyncCampaignMetrics = () => {
   });
 };
 
+export const useBrevoTemplates = () => {
+  return useQuery({
+    queryKey: ['brevo-templates'],
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke('brevo-templates');
+
+      if (error) throw error;
+      return data as { templates: BrevoTemplate[]; count: number };
+    },
+  });
+};
+
 export const useCreateCampaign = () => {
   const queryClient = useQueryClient();
 
@@ -153,6 +184,8 @@ export const useCreateCampaign = () => {
       target_list_ids?: number[];
       sender_email?: string;
       sender_name?: string;
+      template_id?: string;
+      template_variables?: any;
     }) => {
       const { data, error } = await supabase.functions.invoke('campaign-create', {
         body: campaignData

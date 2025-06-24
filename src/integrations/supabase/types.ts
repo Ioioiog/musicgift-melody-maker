@@ -126,6 +126,8 @@ export type Database = {
           status: string
           subject: string
           target_list_ids: Json | null
+          template_id: string | null
+          template_variables: Json | null
           updated_at: string
         }
         Insert: {
@@ -141,6 +143,8 @@ export type Database = {
           status?: string
           subject: string
           target_list_ids?: Json | null
+          template_id?: string | null
+          template_variables?: Json | null
           updated_at?: string
         }
         Update: {
@@ -156,6 +160,8 @@ export type Database = {
           status?: string
           subject?: string
           target_list_ids?: Json | null
+          template_id?: string | null
+          template_variables?: Json | null
           updated_at?: string
         }
         Relationships: []
