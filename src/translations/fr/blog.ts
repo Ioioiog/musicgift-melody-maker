@@ -1,4 +1,3 @@
-
 export const blogTranslations = {
   blog: "Blog",
   blogPageTitle: "Blog - MusicGift.ro | Conseils Musicaux et Perspectives de l'Industrie",
@@ -41,4 +40,7 @@ export const blogTranslations = {
   blogPost4Excerpt: "Lisez comment une chanson de mariage personnalisée a créé un moment inoubliable.",
   blogPost5Title: "Styles Musicaux Tendance pour les Cadeaux 2024",
   blogPost5Excerpt: "Explorez les genres musicaux les plus populaires pour les cadeaux personnalisés cette année.",
+  
+  // Navigation
+  backToBlog: "Retour au Blog",
 };

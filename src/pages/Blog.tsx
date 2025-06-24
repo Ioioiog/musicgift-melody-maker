@@ -183,9 +183,11 @@ const Blog = () => {
                     </div>
                     <span>{featuredPost.readTime} {t('read') || 'read'}</span>
                   </div>
-                  <Button variant="secondary" className="bg-white text-purple-600 hover:bg-gray-100">
-                    {t('readMore') || "Read More"} <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
+                  <Link to={`/blog/${featuredPost.id}`}>
+                    <Button variant="secondary" className="bg-white text-purple-600 hover:bg-gray-100">
+                      {t('readMore') || "Read More"} <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </Card>
@@ -231,9 +233,11 @@ const Blog = () => {
                       </div>
                       <span>{post.readTime} {t('read') || 'read'}</span>
                     </div>
-                    <Button variant="outline" className="w-full group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                      {t('readMore') || "Read More"}
-                    </Button>
+                    <Link to={`/blog/${post.id}`}>
+                      <Button variant="outline" className="w-full group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        {t('readMore') || "Read More"}
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               ))}

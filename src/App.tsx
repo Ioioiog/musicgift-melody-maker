@@ -10,6 +10,7 @@ import CookieConsent from "@/components/CookieConsent";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import Packages from "./pages/Packages";
 import PackageDetails from "./pages/PackageDetails";
 import HowItWorks from "./pages/HowItWorks";
@@ -35,6 +36,7 @@ const AppContent = () => (
       <Route path="/" element={<Index />} />
       <Route path="/about" element={<About />} />
       <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:id" element={<BlogPost />} />
       <Route path="/packages" element={<Packages />} />
       <Route path="/packages/:packageId" element={<PackageDetails />} />
       <Route path="/how-it-works" element={<HowItWorks />} />
