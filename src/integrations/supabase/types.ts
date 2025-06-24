@@ -761,39 +761,132 @@ export type Database = {
       newsletter_subscribers: {
         Row: {
           brevo_contact_id: string | null
+          brevo_list_ids: Json | null
+          brevo_updated_at: string | null
           created_at: string
           email: string
           id: string
           is_active: boolean
+          last_brevo_sync: string | null
           name: string | null
           source: string | null
           subscribed_at: string
+          sync_status: string | null
           unsubscribe_token: string
           updated_at: string
         }
         Insert: {
           brevo_contact_id?: string | null
+          brevo_list_ids?: Json | null
+          brevo_updated_at?: string | null
           created_at?: string
           email: string
           id?: string
           is_active?: boolean
+          last_brevo_sync?: string | null
           name?: string | null
           source?: string | null
           subscribed_at?: string
+          sync_status?: string | null
           unsubscribe_token?: string
           updated_at?: string
         }
         Update: {
           brevo_contact_id?: string | null
+          brevo_list_ids?: Json | null
+          brevo_updated_at?: string | null
           created_at?: string
           email?: string
           id?: string
           is_active?: boolean
+          last_brevo_sync?: string | null
           name?: string | null
           source?: string | null
           subscribed_at?: string
+          sync_status?: string | null
           unsubscribe_token?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      newsletter_sync_conflicts: {
+        Row: {
+          brevo_data: Json | null
+          conflict_type: string
+          created_at: string
+          email: string
+          id: string
+          local_data: Json | null
+          resolution_strategy: string | null
+          resolved: boolean | null
+          resolved_at: string | null
+          resolved_by: string | null
+        }
+        Insert: {
+          brevo_data?: Json | null
+          conflict_type: string
+          created_at?: string
+          email: string
+          id?: string
+          local_data?: Json | null
+          resolution_strategy?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+        }
+        Update: {
+          brevo_data?: Json | null
+          conflict_type?: string
+          created_at?: string
+          email?: string
+          id?: string
+          local_data?: Json | null
+          resolution_strategy?: string | null
+          resolved?: boolean | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+        }
+        Relationships: []
+      }
+      newsletter_sync_log: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          direction: string
+          error_details: Json | null
+          id: string
+          operation_type: string
+          records_failed: number | null
+          records_processed: number | null
+          records_succeeded: number | null
+          started_at: string
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          direction: string
+          error_details?: Json | null
+          id?: string
+          operation_type: string
+          records_failed?: number | null
+          records_processed?: number | null
+          records_succeeded?: number | null
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          direction?: string
+          error_details?: Json | null
+          id?: string
+          operation_type?: string
+          records_failed?: number | null
+          records_processed?: number | null
+          records_succeeded?: number | null
+          started_at?: string
+          status?: string
         }
         Relationships: []
       }
