@@ -10,28 +10,26 @@ import { Search, Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clo
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useState, useMemo } from "react";
-
 const Blog = () => {
-  const { t } = useLanguage();
-  const { data: blogPosts = [], isLoading } = useBlogPosts();
+  const {
+    t
+  } = useLanguage();
+  const {
+    data: blogPosts = [],
+    isLoading
+  } = useBlogPosts();
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filter posts based on search term
   const filteredPosts = useMemo(() => {
     if (!searchTerm) return blogPosts;
-    
     const term = searchTerm.toLowerCase();
-    return blogPosts.filter(post => 
-      post.title.toLowerCase().includes(term) ||
-      post.excerpt?.toLowerCase().includes(term) ||
-      post.category.toLowerCase().includes(term) ||
-      post.author.toLowerCase().includes(term)
-    );
+    return blogPosts.filter(post => post.title.toLowerCase().includes(term) || post.excerpt?.toLowerCase().includes(term) || post.category.toLowerCase().includes(term) || post.author.toLowerCase().includes(term));
   }, [blogPosts, searchTerm]);
 
   // Get featured post
   const featuredPost = blogPosts.find(post => post.is_featured) || blogPosts[0];
-  
+
   // Get non-featured posts for the grid
   const regularPosts = filteredPosts.filter(post => !post.is_featured || post !== featuredPost);
 
@@ -41,51 +39,39 @@ const Blog = () => {
       acc[post.category] = (acc[post.category] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
-
     const categoryIcons = {
       'Music Tips': Music,
       'Industry Insights': Headphones,
       'Client Stories': User,
       'Behind the Scenes': Mic,
       'Trends': Guitar,
-      'General': Music,
+      'General': Music
     };
-
     const categoryColors = {
       'Music Tips': "from-blue-500 to-blue-600",
       'Industry Insights': "from-purple-500 to-purple-600",
       'Client Stories': "from-pink-500 to-pink-600",
       'Behind the Scenes': "from-green-500 to-green-600",
       'Trends': "from-orange-500 to-orange-600",
-      'General': "from-gray-500 to-gray-600",
+      'General': "from-gray-500 to-gray-600"
     };
 
     // Return all predefined categories, even if they have 0 posts
-    const predefinedCategories = [
-      'Music Tips',
-      'Industry Insights', 
-      'Client Stories',
-      'Behind the Scenes',
-      'Trends',
-      'General'
-    ];
-
+    const predefinedCategories = ['Music Tips', 'Industry Insights', 'Client Stories', 'Behind the Scenes', 'Trends', 'General'];
     return predefinedCategories.map(name => ({
       name,
       count: categoryCount[name] || 0,
       icon: categoryIcons[name as keyof typeof categoryIcons] || Music,
-      color: categoryColors[name as keyof typeof categoryColors] || "from-gray-500 to-gray-600",
+      color: categoryColors[name as keyof typeof categoryColors] || "from-gray-500 to-gray-600"
     }));
   }, [blogPosts]);
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+    return <div className="min-h-screen text-white relative overflow-hidden" style={{
+      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
         <div className="flex justify-center items-center min-h-[50vh] relative z-10">
@@ -95,39 +81,38 @@ const Blog = () => {
           </div>
         </div>
         <Footer />
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <>
-      <SEOHead 
-        title={t('blogPageTitle') || "Blog - MusicGift.ro | Music Industry Insights & Tips"}
-        description={t('blogPageDescription') || "Discover music creation tips, industry insights, and inspiring stories from our personalized music journey. Expert advice for meaningful musical gifts."}
-        url="https://www.musicgift.ro/blog"
-      />
+  return <>
+      <SEOHead title={t('blogPageTitle') || "Blog - MusicGift.ro | Music Industry Insights & Tips"} description={t('blogPageDescription') || "Discover music creation tips, industry insights, and inspiring stories from our personalized music journey. Expert advice for meaningful musical gifts."} url="https://www.musicgift.ro/blog" />
       
       <div className="min-h-screen text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
 
         {/* Enhanced Hero Section with Purple Musical Background */}
-        <section className="py-20 text-white relative overflow-hidden">
+        <section className="text-white relative overflow-hidden py-[65px]">
           {/* Floating Musical Notes */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-10 left-10 text-4xl opacity-30 animate-float">♪</div>
-            <div className="absolute bottom-10 right-10 text-6xl opacity-20 animate-float" style={{ animationDelay: '2s' }}>🎵</div>
-            <div className="absolute top-1/2 left-1/4 text-3xl opacity-25 animate-float" style={{ animationDelay: '1s' }}>♫</div>
-            <div className="absolute top-1/3 right-1/3 text-2xl opacity-30 animate-float" style={{ animationDelay: '3s' }}>♪</div>
+            <div className="absolute bottom-10 right-10 text-6xl opacity-20 animate-float" style={{
+            animationDelay: '2s'
+          }}>🎵</div>
+            <div className="absolute top-1/2 left-1/4 text-3xl opacity-25 animate-float" style={{
+            animationDelay: '1s'
+          }}>♫</div>
+            <div className="absolute top-1/3 right-1/3 text-2xl opacity-30 animate-float" style={{
+            animationDelay: '3s'
+          }}>♪</div>
           </div>
           
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
-            <div className="max-w-4xl mx-auto text-center text-white">
+            <div className="max-w-4xl mx-auto text-center text-white px-0 py-[39px]">
               <div className="mb-6">
                 <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-sm px-4 py-2 text-sm font-medium">
                   Latest Insights & Stories
@@ -145,19 +130,14 @@ const Blog = () => {
               <div className="max-w-xl mx-auto">
                 <div className="relative group">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-purple-400 transition-colors" />
-                  <Input 
-                    placeholder={t('searchPlaceholder') || "Search articles..."}
-                    className="pl-12 pr-4 py-4 bg-white/10 backdrop-blur-md border-white/20 rounded-2xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 text-lg"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
+                  <Input placeholder={t('searchPlaceholder') || "Search articles..."} className="pl-12 pr-4 py-4 bg-white/10 backdrop-blur-md border-white/20 rounded-2xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 text-lg" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <div className="container mx-auto px-4 sm:px-6 py-20 relative z-10">
+        <div className="container mx-auto sm:px-6 relative z-10 px-[18px] py-0">
           {/* Modern Categories Section */}
           <section className="mb-20">
             <div className="text-center mb-16">
@@ -171,9 +151,8 @@ const Blog = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
               {categories.map((category, index) => {
-                const IconComponent = category.icon;
-                return (
-                  <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+              const IconComponent = category.icon;
+              return <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
                     <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
                     <CardContent className="p-8 text-center transition-colors">
                       <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
@@ -182,15 +161,13 @@ const Blog = () => {
                       <h3 className="font-bold text-white mb-2 text-lg">{category.name}</h3>
                       <p className="text-gray-300 font-medium">{category.count} {t('articles') || 'articles'}</p>
                     </CardContent>
-                  </Card>
-                );
-              })}
+                  </Card>;
+            })}
             </div>
           </section>
 
           {/* Featured Article */}
-          {featuredPost && (
-            <section className="mb-20">
+          {featuredPost && <section className="mb-20">
               <div className="text-center mb-16">
                 <h2 className="text-4xl font-bold text-white mb-4">
                   {t('featuredArticle') || "Featured Article"}
@@ -203,11 +180,7 @@ const Blog = () => {
               <Card className="overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white/10 backdrop-blur-md border border-white/20">
                 <div className="lg:flex">
                   <div className="lg:w-3/5 relative overflow-hidden">
-                    <img 
-                      src={featuredPost.image_url || '/uploads/background.webp'} 
-                      alt={featuredPost.title}
-                      className="w-full h-80 lg:h-full object-cover transition-transform duration-700 hover:scale-105"
-                    />
+                    <img src={featuredPost.image_url || '/uploads/background.webp'} alt={featuredPost.title} className="w-full h-80 lg:h-full object-cover transition-transform duration-700 hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
                     <Badge className="absolute top-6 left-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 font-medium">
                       {featuredPost.category}
@@ -243,17 +216,15 @@ const Blog = () => {
                           <Clock className="w-4 h-4 mr-2" />
                           {featuredPost.read_time} min
                         </div>
-                        {featuredPost.views && featuredPost.views > 0 && (
-                          <div className="flex items-center">
+                        {featuredPost.views && featuredPost.views > 0 && <div className="flex items-center">
                             <Eye className="w-4 h-4 mr-2" />
                             {featuredPost.views}
-                          </div>
-                        )}
+                          </div>}
                       </div>
                     </div>
                     
                     <Link to={`/blog/${featuredPost.slug}`}>
-                      <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
+                      <Button className="bg-orange-500 text-white border-0 px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
                         {t('readMore') || "Read More"} 
                         <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
                       </Button>
@@ -261,15 +232,13 @@ const Blog = () => {
                   </div>
                 </div>
               </Card>
-            </section>
-          )}
+            </section>}
 
           {/* Recent Posts - Modern Grid */}
-          {regularPosts.length > 0 && (
-            <section className="mb-20">
+          {regularPosts.length > 0 && <section className="mb-20">
               <div className="text-center mb-16">
                 <h2 className="text-4xl font-bold text-white mb-4">
-                  {searchTerm ? `Search Results (${regularPosts.length})` : (t('recentArticles') || "Recent Articles")}
+                  {searchTerm ? `Search Results (${regularPosts.length})` : t('recentArticles') || "Recent Articles"}
                 </h2>
                 <p className="text-xl text-gray-200">
                   {searchTerm ? `Results for "${searchTerm}"` : "Fresh insights and stories from our music experts"}
@@ -277,14 +246,9 @@ const Blog = () => {
               </div>
               
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
-                {regularPosts.map((post) => (
-                  <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+                {regularPosts.map(post => <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
                     <div className="relative overflow-hidden">
-                      <img 
-                        src={post.image_url || '/uploads/background.webp'} 
-                        alt={post.title}
-                        className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
+                      <img src={post.image_url || '/uploads/background.webp'} alt={post.title} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <Badge className="absolute top-4 left-4 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium">
                         {post.category}
@@ -312,12 +276,10 @@ const Blog = () => {
                             {post.read_time} min
                           </div>
                         </div>
-                        {post.views && post.views > 0 && (
-                          <div className="flex items-center">
+                        {post.views && post.views > 0 && <div className="flex items-center">
                             <Eye className="w-4 h-4 mr-1" />
                             {post.views}
-                          </div>
-                        )}
+                          </div>}
                       </div>
                       
                       <div className="flex items-center justify-between">
@@ -334,22 +296,18 @@ const Blog = () => {
                         </Link>
                       </div>
                     </CardContent>
-                  </Card>
-                ))}
+                  </Card>)}
               </div>
-            </section>
-          )}
+            </section>}
 
           {/* No Results Message */}
-          {searchTerm && filteredPosts.length === 0 && (
-            <div className="text-center py-20">
+          {searchTerm && filteredPosts.length === 0 && <div className="text-center py-20">
               <h3 className="text-2xl font-bold text-white mb-4">No articles found</h3>
               <p className="text-gray-300 mb-8">Try adjusting your search terms or browse all articles.</p>
               <Button onClick={() => setSearchTerm("")} variant="outline" className="border-white/20 text-white hover:bg-white/10">
                 Clear Search
               </Button>
-            </div>
-          )}
+            </div>}
 
           {/* Enhanced CTA Section matching About page style */}
           <section className="relative py-20 bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-3xl border border-white/30 text-white overflow-hidden shadow-2xl">
@@ -389,8 +347,6 @@ const Blog = () => {
 
         <Footer />
       </div>
-    </>
-  );
+    </>;
 };
-
 export default Blog;
