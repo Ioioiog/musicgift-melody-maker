@@ -17,6 +17,16 @@ function generateGiftCardCode(): string {
   return code;
 }
 
+function escapeXml(value: string): string {
+  if (!value) return '';
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -58,7 +68,7 @@ serve(async (req) => {
       username: Deno.env.get('SMARTBILL_USERNAME'),
       token: Deno.env.get('SMARTBILL_TOKEN'),
       companyVat: Deno.env.get('SMARTBILL_COMPANY_VAT'),
-      series: Deno.env.get('SMARTBILL_SERIES') || 'GC'
+      series: 'GC' // Gift Card series
     };
 
     console.log('SmartBill config check:', {
@@ -73,37 +83,41 @@ serve(async (req) => {
       throw new Error('Missing SmartBill credentials. Please check SMARTBILL_USERNAME, SMARTBILL_TOKEN, and SMARTBILL_COMPANY_VAT environment variables.');
     }
 
-    // Prepare SmartBill proforma data with proper structure
-    const proformaData = {
-      companyVat: smartbillConfig.companyVat,
-      client: {
-        name: giftCardData.sender_name,
-        email: giftCardData.sender_email,
-        vatCode: "",
-        regCom: "",
-        address: "",
-        isTaxPayer: false
-      },
-      issueDate: new Date().toISOString().split('T')[0],
-      seriesName: smartbillConfig.series,
-      currency: giftCardData.currency,
-      products: [{
-        name: `Gift Card - ${giftCardCode}`,
-        code: giftCardCode,
-        isDiscount: false,
-        measuringUnit: "buc",
-        currency: giftCardData.currency,
-        quantity: 1,
-        price: giftCardData.gift_amount,
-        isTaxIncluded: true,
-        taxName: "Taxă 0",
-        taxPercentage: 0,
-        isService: true
-      }],
-      language: "RO",
-      observations: `Gift Card pentru ${giftCardData.recipient_name}. ${giftCardData.message_text || ''}`,
-      mentions: ""
-    };
+    // Calculate dates
+    const issueDate = new Date().toISOString().split('T')[0]
+    const dueDate = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0] // 7 days from now
+
+    // Prepare SmartBill proforma XML data
+    const proformaXml = `<?xml version="1.0" encoding="UTF-8"?>
+<estimate>
+  <companyVatCode>${escapeXml(smartbillConfig.companyVat)}</companyVatCode>
+  <client>
+    <name>${escapeXml(giftCardData.sender_name)}</name>
+    <vatCode></vatCode>
+    <isTaxPayer>false</isTaxPayer>
+    <address>Gift Card Purchase</address>
+    <city>Bucuresti</city>
+    <country>Romania</country>
+    <email>${escapeXml(giftCardData.sender_email)}</email>
+  </client>
+  <issueDate>${issueDate}</issueDate>
+  <seriesName>${smartbillConfig.series}</seriesName>
+  <dueDate>${dueDate}</dueDate>
+  <product>
+    <name>${escapeXml(`Gift Card - ${giftCardCode}`)}</name>
+    <isDiscount>false</isDiscount>
+    <measuringUnitName>buc</measuringUnitName>
+    <currency>${giftCardData.currency}</currency>
+    <quantity>1</quantity>
+    <price>${giftCardData.gift_amount.toFixed(2)}</price>
+    <isTaxIncluded>true</isTaxIncluded>
+    <taxName>Taxă 0</taxName>
+    <taxPercentage>0</taxPercentage>
+    <saveToDb>false</saveToDb>
+    <isService>true</isService>
+  </product>
+  <observations>${escapeXml(`Gift Card ${giftCardCode} pentru ${giftCardData.recipient_name}. ${giftCardData.message_text || ''}`)}</observations>
+</estimate>`
 
     console.log('Creating SmartBill proforma for gift card:', {
       code: giftCardCode,
@@ -112,17 +126,17 @@ serve(async (req) => {
       companyVat: smartbillConfig.companyVat
     });
 
-    // Create SmartBill proforma with better error handling
+    // Create SmartBill proforma with XML format
     let smartbillResponse;
     try {
       smartbillResponse = await fetch('https://ws.smartbill.ro/SBORO/api/estimate', {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${btoa(`${smartbillConfig.username}:${smartbillConfig.token}`)}`
+          'Authorization': `Basic ${btoa(`${smartbillConfig.username}:${smartbillConfig.token}`)}`,
+          'Content-Type': 'application/xml',
+          'Accept': 'application/xml'
         },
-        body: JSON.stringify(proformaData)
+        body: proformaXml
       });
     } catch (fetchError) {
       console.error('SmartBill API request failed:', fetchError);
@@ -130,58 +144,44 @@ serve(async (req) => {
     }
 
     console.log('SmartBill response status:', smartbillResponse.status);
-    console.log('SmartBill response headers:', Object.fromEntries(smartbillResponse.headers.entries()));
 
-    const contentType = smartbillResponse.headers.get('content-type');
-    const smartbillResult = await smartbillResponse.text();
+    const responseText = await smartbillResponse.text();
+    console.log('SmartBill response (first 500 chars):', responseText.substring(0, 500));
+
+    if (!smartbillResponse.ok) {
+      console.error('SmartBill API error:', responseText);
+      throw new Error(`SmartBill API error: ${responseText}`);
+    }
+
+    // Parse XML response
+    const urlMatch = responseText.match(/<url>(.*?)<\/url>/);
+    const numberMatch = responseText.match(/<number>(.*?)<\/number>/);
+    const seriesMatch = responseText.match(/<series>(.*?)<\/series>/);
     
-    console.log('SmartBill response content-type:', contentType);
-    console.log('SmartBill response (first 500 chars):', smartbillResult.substring(0, 500));
+    const proformaNumber = numberMatch?.[1];
+    const proformaSeries = seriesMatch?.[1] || smartbillConfig.series;
+    const paymentUrl = urlMatch?.[1];
 
-    // Check if response is HTML (error page)
-    if (contentType?.includes('text/html') || smartbillResult.includes('<!DOCTYPE html')) {
-      console.error('SmartBill returned HTML error page instead of JSON');
-      
-      // Try to extract error message from HTML
-      let errorMessage = 'SmartBill API returned an error page';
-      const titleMatch = smartbillResult.match(/<title>(.*?)<\/title>/i);
-      if (titleMatch) {
-        errorMessage = `SmartBill API error: ${titleMatch[1]}`;
-      }
-      
-      throw new Error(errorMessage);
-    }
-
-    let proformaInfo;
-    try {
-      proformaInfo = JSON.parse(smartbillResult);
-    } catch (parseError) {
-      console.error('Failed to parse SmartBill response as JSON:', parseError);
-      throw new Error(`SmartBill API returned invalid JSON: ${smartbillResult.substring(0, 200)}...`);
-    }
-
-    if (!smartbillResponse.ok || proformaInfo.errorText) {
-      const errorMsg = proformaInfo.errorText || `HTTP ${smartbillResponse.status}: ${smartbillResult}`;
-      console.error('SmartBill API error:', errorMsg);
-      throw new Error(`SmartBill error: ${errorMsg}`);
-    }
-
-    if (!proformaInfo.number) {
-      console.error('SmartBill response missing proforma number:', proformaInfo);
+    if (!proformaNumber) {
+      console.error('SmartBill response missing proforma number:', responseText);
       throw new Error('SmartBill API did not return a proforma number');
     }
 
-    console.log('SmartBill proforma created successfully:', proformaInfo.number);
+    console.log('SmartBill proforma created successfully:', {
+      number: proformaNumber,
+      series: proformaSeries,
+      url: paymentUrl
+    });
 
     // Create gift card record in database with pending status
     const giftCardRecord = {
       ...giftCardData,
       code: giftCardCode,
-      smartbill_proforma_id: proformaInfo.number,
+      smartbill_proforma_id: `${proformaSeries}${proformaNumber}`,
       smartbill_proforma_status: 'created',
       payment_status: 'pending',
       payment_provider: 'smartbill',
-      payment_url: proformaInfo.url || `https://online.smartbill.ro/public/pay/${proformaInfo.number}`
+      payment_url: paymentUrl || `https://online.smartbill.ro/public/pay/${proformaNumber}`
     };
 
     const { data: createdGiftCard, error: giftCardError } = await supabaseClient
@@ -200,8 +200,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        url: proformaInfo.url || `https://online.smartbill.ro/public/pay/${proformaInfo.number}`,
-        proformaId: proformaInfo.number,
+        url: paymentUrl || `https://online.smartbill.ro/public/pay/${proformaNumber}`,
+        proformaId: `${proformaSeries}${proformaNumber}`,
         giftCardId: createdGiftCard.id,
         giftCardCode: giftCardCode
       }),
