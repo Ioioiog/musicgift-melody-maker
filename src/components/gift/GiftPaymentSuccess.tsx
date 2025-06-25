@@ -44,18 +44,19 @@ const GiftPaymentSuccess: React.FC = () => {
 
           console.log('Found gift card:', giftCard);
           
-          // Check if payment is actually completed
+          // Check payment status - accept both completed and pending
           if (giftCard.payment_status === 'completed') {
             setPaymentVerified(true);
             setGiftCardData(giftCard);
           } else if (giftCard.payment_status === 'pending') {
-            // Payment still pending, could be processing
-            setError('Payment is still being processed. Please check back in a few minutes.');
+            // For pending payments, still show success but with note
+            setPaymentVerified(true);
+            setGiftCardData(giftCard);
           } else {
             setError('Payment was not completed successfully');
           }
         } else {
-          // Fallback: check for recently completed gift cards for the current user
+          // Fallback: check for recently created gift cards for the current user
           const { data: { user } } = await supabase.auth.getUser();
           
           if (user) {
@@ -63,7 +64,7 @@ const GiftPaymentSuccess: React.FC = () => {
               .from('gift_cards')
               .select('*')
               .eq('sender_user_id', user.id)
-              .eq('payment_status', 'completed')
+              .in('payment_status', ['completed', 'pending'])
               .order('created_at', { ascending: false })
               .limit(1);
 
@@ -74,7 +75,7 @@ const GiftPaymentSuccess: React.FC = () => {
               setPaymentVerified(true);
               setGiftCardData(recentGiftCards[0]);
             } else {
-              setError('No completed payment found');
+              setError('No recent payment found');
             }
           } else {
             setError('Unable to verify payment - please sign in');
@@ -157,43 +158,66 @@ const GiftPaymentSuccess: React.FC = () => {
     );
   }
 
+  const isPending = giftCardData.payment_status === 'pending';
+
   return (
     <div className="max-w-2xl mx-auto">
       <Card className="bg-white/90 backdrop-blur-sm">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-8 h-8 text-green-600" />
+            <div className={`w-16 h-16 ${isPending ? 'bg-yellow-100' : 'bg-green-100'} rounded-full flex items-center justify-center`}>
+              {isPending ? (
+                <Loader2 className="w-8 h-8 text-yellow-600 animate-spin" />
+              ) : (
+                <CheckCircle className="w-8 h-8 text-green-600" />
+              )}
             </div>
           </div>
-          <CardTitle className="text-2xl text-green-800">Payment Successful!</CardTitle>
+          <CardTitle className={`text-2xl ${isPending ? 'text-yellow-800' : 'text-green-800'}`}>
+            {isPending ? 'Payment Processing' : 'Payment Successful!'}
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 text-center">
           <div className="space-y-4">
             <div className="flex items-center justify-center gap-3 text-lg">
               <Gift className="w-6 h-6 text-purple-600" />
-              <span>Gift card {giftCardData.code} has been created successfully</span>
+              <span>Gift card {giftCardData.code} has been created</span>
             </div>
             
             <div className="flex items-center justify-center gap-3 text-lg">
               <Mail className="w-6 h-6 text-blue-600" />
-              <span>The recipient will receive their gift card email shortly</span>
+              <span>
+                {isPending 
+                  ? 'The recipient will receive their gift card email once payment is confirmed'
+                  : 'The recipient will receive their gift card email shortly'
+                }
+              </span>
             </div>
           </div>
 
-          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-            <h3 className="font-semibold text-green-800 mb-2">Gift Card Details</h3>
-            <div className="text-sm text-green-700 space-y-1">
+          <div className={`${isPending ? 'bg-yellow-50' : 'bg-green-50'} p-4 rounded-lg border ${isPending ? 'border-yellow-200' : 'border-green-200'}`}>
+            <h3 className={`font-semibold ${isPending ? 'text-yellow-800' : 'text-green-800'} mb-2`}>Gift Card Details</h3>
+            <div className={`text-sm ${isPending ? 'text-yellow-700' : 'text-green-700'} space-y-1`}>
               <p><strong>Code:</strong> {giftCardData.code}</p>
               <p><strong>Amount:</strong> {giftCardData.gift_amount} {giftCardData.currency}</p>
               <p><strong>Recipient:</strong> {giftCardData.recipient_email}</p>
+              <p><strong>Status:</strong> {isPending ? 'Payment Processing' : 'Ready to Use'}</p>
             </div>
           </div>
+
+          {isPending && (
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h3 className="font-semibold text-blue-800 mb-2">Payment Processing</h3>
+              <p className="text-sm text-blue-700">
+                Your payment is being processed. The gift card will be activated and the recipient will receive their email once payment is confirmed. This usually takes a few minutes.
+              </p>
+            </div>
+          )}
 
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
             <h3 className="font-semibold text-blue-800 mb-2">What happens next?</h3>
             <ul className="text-sm text-blue-700 space-y-1 text-left">
-              <li>• The recipient will receive an email with their gift card details</li>
+              <li>• {isPending ? 'Once payment is confirmed, the' : 'The'} recipient will receive an email with their gift card details</li>
               <li>• They can redeem it anytime before the expiration date</li>
               <li>• You'll receive a confirmation email with the purchase details</li>
             </ul>

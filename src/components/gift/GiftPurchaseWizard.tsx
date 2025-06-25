@@ -103,7 +103,8 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
   const handleSubmit = async () => {
     if (!user) {
       toast({
-        title: t('pleaseSignInToPurchase')
+        title: t('pleaseSignInToPurchase'),
+        variant: 'destructive'
       });
       return;
     }
@@ -118,15 +119,15 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
 
     setIsProcessingPayment(true);
     try {
-      console.log('Initiating payment with gift card data:', {
+      console.log('Initiating payment with gift card form data:', {
         giftAmount,
         currency,
         giftData,
         selectedDesign: selectedDesign?.id
       });
 
-      // Prepare gift card data for payment initiation
-      const giftCardData = {
+      // Prepare form data for payment (DO NOT create gift card yet)
+      const formData = {
         sender_user_id: user.id,
         sender_name: giftData.sender_name,
         sender_email: giftData.sender_email,
@@ -137,41 +138,43 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
         gift_amount: giftAmount,
         design_id: selectedDesign?.id || null,
         delivery_date: giftData.delivery_date?.toISOString() || null,
-        status: 'active',
-        payment_status: 'pending'
+        status: 'active'
       };
 
-      // Initiate payment with form data instead of pre-created gift card
+      // Call payment provider directly with form data
       const functionName = selectedPaymentProvider === 'stripe' 
         ? 'gift-card-stripe-payment'
         : 'gift-card-smartbill-payment';
       
       const { data: paymentResponse, error } = await supabase.functions.invoke(functionName, {
         body: { 
-          giftCardData,
+          giftCardData: formData,
           returnUrl: `${window.location.origin}/gift?payment=success`
         }
       });
 
       if (error) throw error;
 
-      console.log('Payment initiated:', paymentResponse);
+      console.log('Payment initiated successfully:', paymentResponse);
 
       // Open payment URL in new tab
       if (paymentResponse.paymentUrl || paymentResponse.url) {
         const paymentUrl = paymentResponse.paymentUrl || paymentResponse.url;
         window.open(paymentUrl, '_blank');
+        
         toast({
           title: 'Payment Initiated',
-          description: 'Please complete the payment in the new tab'
+          description: 'Please complete the payment in the new tab. The gift card will be created after successful payment.',
+          duration: 5000
         });
 
-        // Call onComplete with the form data (no gift card created yet)
+        // Call onComplete with payment initiated status
         onComplete({
           amount: giftAmount,
           currency: currency,
           recipient_email: giftData.recipient_email,
-          payment_initiated: true
+          payment_initiated: true,
+          payment_provider: selectedPaymentProvider
         });
       } else {
         throw new Error('No payment URL received');
@@ -179,7 +182,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
     } catch (error) {
       console.error('Error initiating payment:', error);
       toast({
-        title: 'Error',
+        title: 'Payment Error',
         description: error.message || 'Failed to initiate payment. Please try again.',
         variant: 'destructive'
       });
@@ -434,6 +437,12 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
                 <p className="text-gray-300">{t('design')}: {selectedDesign?.name || t('default')}</p>
                 <p className="text-gray-300">{t('deliveryDateLabel')}: {giftData.delivery_date ? format(giftData.delivery_date, 'PPP') : t('immediate')}</p>
                 <p className="text-gray-300">{t('paymentMethod', 'Payment Method')}: {selectedPaymentProvider}</p>
+                <div className="mt-4 p-3 bg-blue-50/10 rounded-lg border border-blue-200/20">
+                  <p className="text-sm text-blue-200">
+                    <strong>Note:</strong> Your gift card will be created only after successful payment completion. 
+                    No charges will be made until you complete the payment process.
+                  </p>
+                </div>
               </div>
 
               <div className="flex justify-between">
@@ -443,7 +452,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
                   disabled={isProcessingPayment}
                   className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400"
                 >
-                  {isProcessingPayment ? 'Processing...' : t('pay')}
+                  {isProcessingPayment ? 'Processing...' : t('proceedToPayment')}
                 </Button>
               </div>
             </div>

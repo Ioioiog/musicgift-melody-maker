@@ -32,7 +32,7 @@ serve(async (req) => {
     const { giftCardData, returnUrl } = await req.json()
     console.log('Processing SmartBill payment for gift card data:', giftCardData)
 
-    // Generate unique gift card code
+    // Generate unique gift card code first
     let giftCardCode = generateGiftCardCode();
     
     // Ensure code is unique
@@ -53,7 +53,7 @@ serve(async (req) => {
 
     console.log('Generated unique gift card code:', giftCardCode)
 
-    // SmartBill API configuration
+    // Validate SmartBill configuration
     const smartbillConfig = {
       username: Deno.env.get('SMARTBILL_USERNAME'),
       token: Deno.env.get('SMARTBILL_TOKEN'),
@@ -61,7 +61,19 @@ serve(async (req) => {
       series: Deno.env.get('SMARTBILL_SERIES') || 'GC'
     };
 
-    // Prepare SmartBill proforma data
+    console.log('SmartBill config check:', {
+      hasUsername: !!smartbillConfig.username,
+      hasToken: !!smartbillConfig.token,
+      hasCompanyVat: !!smartbillConfig.companyVat,
+      series: smartbillConfig.series
+    });
+
+    // Validate required SmartBill credentials
+    if (!smartbillConfig.username || !smartbillConfig.token || !smartbillConfig.companyVat) {
+      throw new Error('Missing SmartBill credentials. Please check SMARTBILL_USERNAME, SMARTBILL_TOKEN, and SMARTBILL_COMPANY_VAT environment variables.');
+    }
+
+    // Prepare SmartBill proforma data with proper structure
     const proformaData = {
       companyVat: smartbillConfig.companyVat,
       client: {
@@ -93,37 +105,75 @@ serve(async (req) => {
       mentions: ""
     };
 
-    console.log('Creating SmartBill proforma for gift card:', giftCardCode)
-
-    // Create SmartBill proforma
-    const smartbillResponse = await fetch('https://ws.smartbill.ro/SBORO/api/estimate', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${btoa(`${smartbillConfig.username}:${smartbillConfig.token}`)}`
-      },
-      body: JSON.stringify(proformaData)
+    console.log('Creating SmartBill proforma for gift card:', {
+      code: giftCardCode,
+      amount: giftCardData.gift_amount,
+      currency: giftCardData.currency,
+      companyVat: smartbillConfig.companyVat
     });
 
+    // Create SmartBill proforma with better error handling
+    let smartbillResponse;
+    try {
+      smartbillResponse = await fetch('https://ws.smartbill.ro/SBORO/api/estimate', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa(`${smartbillConfig.username}:${smartbillConfig.token}`)}`
+        },
+        body: JSON.stringify(proformaData)
+      });
+    } catch (fetchError) {
+      console.error('SmartBill API request failed:', fetchError);
+      throw new Error(`SmartBill API connection failed: ${fetchError.message}`);
+    }
+
+    console.log('SmartBill response status:', smartbillResponse.status);
+    console.log('SmartBill response headers:', Object.fromEntries(smartbillResponse.headers.entries()));
+
+    const contentType = smartbillResponse.headers.get('content-type');
     const smartbillResult = await smartbillResponse.text();
-    console.log('SmartBill response:', smartbillResult);
+    
+    console.log('SmartBill response content-type:', contentType);
+    console.log('SmartBill response (first 500 chars):', smartbillResult.substring(0, 500));
+
+    // Check if response is HTML (error page)
+    if (contentType?.includes('text/html') || smartbillResult.includes('<!DOCTYPE html')) {
+      console.error('SmartBill returned HTML error page instead of JSON');
+      
+      // Try to extract error message from HTML
+      let errorMessage = 'SmartBill API returned an error page';
+      const titleMatch = smartbillResult.match(/<title>(.*?)<\/title>/i);
+      if (titleMatch) {
+        errorMessage = `SmartBill API error: ${titleMatch[1]}`;
+      }
+      
+      throw new Error(errorMessage);
+    }
 
     let proformaInfo;
     try {
       proformaInfo = JSON.parse(smartbillResult);
     } catch (parseError) {
-      console.error('Failed to parse SmartBill response:', parseError);
-      throw new Error(`SmartBill API error: ${smartbillResult}`);
+      console.error('Failed to parse SmartBill response as JSON:', parseError);
+      throw new Error(`SmartBill API returned invalid JSON: ${smartbillResult.substring(0, 200)}...`);
     }
 
     if (!smartbillResponse.ok || proformaInfo.errorText) {
-      throw new Error(`SmartBill error: ${proformaInfo.errorText || smartbillResult}`);
+      const errorMsg = proformaInfo.errorText || `HTTP ${smartbillResponse.status}: ${smartbillResult}`;
+      console.error('SmartBill API error:', errorMsg);
+      throw new Error(`SmartBill error: ${errorMsg}`);
     }
 
-    console.log('SmartBill proforma created:', proformaInfo.number)
+    if (!proformaInfo.number) {
+      console.error('SmartBill response missing proforma number:', proformaInfo);
+      throw new Error('SmartBill API did not return a proforma number');
+    }
 
-    // Create gift card record in database with real code and SmartBill details
+    console.log('SmartBill proforma created successfully:', proformaInfo.number);
+
+    // Create gift card record in database with pending status
     const giftCardRecord = {
       ...giftCardData,
       code: giftCardCode,
@@ -145,7 +195,7 @@ serve(async (req) => {
       throw giftCardError
     }
 
-    console.log('Gift card created successfully:', createdGiftCard.id)
+    console.log('Gift card created successfully with pending status:', createdGiftCard.id)
 
     return new Response(
       JSON.stringify({

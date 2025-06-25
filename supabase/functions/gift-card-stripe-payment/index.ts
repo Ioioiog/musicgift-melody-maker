@@ -65,7 +65,7 @@ serve(async (req) => {
       }
     }
 
-    // Create Stripe checkout session first
+    // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{
@@ -90,7 +90,7 @@ serve(async (req) => {
 
     console.log('Stripe session created successfully:', session.id)
 
-    // Now create gift card record in database with real code and session ID
+    // Create gift card record in database with pending status
     const giftCardRecord = {
       ...giftCardData,
       code: giftCardCode,
@@ -117,7 +117,7 @@ serve(async (req) => {
       throw giftCardError
     }
 
-    console.log('Gift card created successfully:', createdGiftCard.id)
+    console.log('Gift card created successfully with pending status:', createdGiftCard.id)
 
     return new Response(
       JSON.stringify({

@@ -36,6 +36,11 @@ export const useGiftCardPayment = () => {
       if (data.paymentUrl || data.url) {
         const paymentUrl = data.paymentUrl || data.url;
         window.open(paymentUrl, '_blank');
+        toast({
+          title: "Payment Initiated",
+          description: "Please complete the payment in the new tab. Your gift card will be created after successful payment.",
+          duration: 5000
+        });
       }
     },
     onError: (error) => {
