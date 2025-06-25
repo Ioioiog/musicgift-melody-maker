@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -12,22 +11,21 @@ import { Search, Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clo
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useState, useMemo } from "react";
-
 const Blog = () => {
-  const { t } = useLanguage();
-  const { data: blogPosts = [], isLoading } = useBlogPosts();
+  const {
+    t
+  } = useLanguage();
+  const {
+    data: blogPosts = [],
+    isLoading
+  } = useBlogPosts();
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filter posts based on search term
   const filteredPosts = useMemo(() => {
     if (!searchTerm) return blogPosts;
     const term = searchTerm.toLowerCase();
-    return blogPosts.filter(post => 
-      post?.title?.toLowerCase().includes(term) || 
-      post?.excerpt?.toLowerCase().includes(term) || 
-      post?.category?.toLowerCase().includes(term) || 
-      post?.author?.toLowerCase().includes(term)
-    );
+    return blogPosts.filter(post => post?.title?.toLowerCase().includes(term) || post?.excerpt?.toLowerCase().includes(term) || post?.category?.toLowerCase().includes(term) || post?.author?.toLowerCase().includes(term));
   }, [blogPosts, searchTerm]);
 
   // Get featured post
@@ -44,7 +42,6 @@ const Blog = () => {
       }
       return acc;
     }, {} as Record<string, number>);
-
     const categoryIcons = {
       'Music Tips': Music,
       'Industry Insights': Headphones,
@@ -53,7 +50,6 @@ const Blog = () => {
       'Trends': Guitar,
       'General': Music
     };
-
     const categoryColors = {
       'Music Tips': "from-blue-500 to-blue-600",
       'Industry Insights': "from-purple-500 to-purple-600",
@@ -72,7 +68,6 @@ const Blog = () => {
       color: categoryColors[name as keyof typeof categoryColors] || "from-gray-500 to-gray-600"
     }));
   }, [blogPosts]);
-
   if (isLoading) {
     return <div className="min-h-screen text-white relative overflow-hidden" style={{
       backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
@@ -91,21 +86,15 @@ const Blog = () => {
         <Footer />
       </div>;
   }
-
-  return (
-    <>
-      <SEOHead 
-        title={t('blogPageTitle') || "Blog - MusicGift.ro | Music Industry Insights & Tips"} 
-        description={t('blogPageDescription') || "Discover music creation tips, industry insights, and inspiring stories from our personalized music journey. Expert advice for meaningful musical gifts."} 
-        url="https://www.musicgift.ro/blog" 
-      />
+  return <>
+      <SEOHead title={t('blogPageTitle') || "Blog - MusicGift.ro | Music Industry Insights & Tips"} description={t('blogPageDescription') || "Discover music creation tips, industry insights, and inspiring stories from our personalized music journey. Expert advice for meaningful musical gifts."} url="https://www.musicgift.ro/blog" />
       
       <div className="min-h-screen text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
 
@@ -121,14 +110,12 @@ const Blog = () => {
           }}>♫</div>
           </div>
           
-          <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <div className="container mx-auto sm:px-6 relative z-10 px-0 py-0">
             {/* Hero Section - More Compact */}
             <div className="max-w-4xl mx-auto text-center mb-12">
-              <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-sm px-3 py-1 text-sm font-medium mb-4">
-                Latest Insights & Stories
-              </Badge>
               
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight">
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight px-0 py-[5px]">
                 {t('blogHeroTitle') || "Music Blog"}
               </h1>
               
@@ -139,13 +126,8 @@ const Blog = () => {
               {/* Compact Search */}
               <div className="max-w-md mx-auto mb-8">
                 <div className="relative group">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-purple-400 transition-colors" />
-                  <Input 
-                    placeholder={t('searchPlaceholder') || "Search articles..."} 
-                    className="pl-10 pr-4 py-3 bg-white/10 backdrop-blur-md border-white/20 rounded-xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20" 
-                    value={searchTerm} 
-                    onChange={e => setSearchTerm(e.target.value)} 
-                  />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-purple-400 transition-colors mx-[240px]" />
+                  <Input placeholder={t('searchPlaceholder') || "Search articles..."} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-3 bg-white/10 backdrop-blur-md border-white/20 rounded-xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 mx-[240px]" />
                 </div>
               </div>
             </div>
@@ -153,34 +135,23 @@ const Blog = () => {
             {/* Categories as Tabs */}
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold text-white mb-2">
-                  {t('blogCategoriesTitle') || "Explore Categories"}
-                </h2>
+                
               </div>
               
               <Tabs defaultValue="all" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 bg-white/10 backdrop-blur-md border border-white/20 p-1 rounded-xl">
-                  <TabsTrigger 
-                    value="all" 
-                    className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-sm py-2 px-3"
-                  >
+                  <TabsTrigger value="all" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-sm py-2 px-3">
                     All ({blogPosts.length})
                   </TabsTrigger>
                   {categories.map((category, index) => {
-                    const IconComponent = category.icon;
-                    return (
-                      <TabsTrigger 
-                        key={index}
-                        value={category.name.toLowerCase().replace(/\s+/g, '-')}
-                        className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-sm py-2 px-3 flex items-center gap-1"
-                      >
+                  const IconComponent = category.icon;
+                  return <TabsTrigger key={index} value={category.name.toLowerCase().replace(/\s+/g, '-')} className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-sm py-2 px-3 flex items-center gap-1">
                         <IconComponent className="w-3 h-3" />
                         <span className="hidden sm:inline">{category.name}</span>
                         <span className="sm:hidden">{category.name.split(' ')[0]}</span>
                         <span className="ml-1 text-xs opacity-75">({category.count})</span>
-                      </TabsTrigger>
-                    );
-                  })}
+                      </TabsTrigger>;
+                })}
                 </TabsList>
               </Tabs>
             </div>
@@ -368,8 +339,6 @@ const Blog = () => {
 
         <Footer />
       </div>
-    </>
-  );
+    </>;
 };
-
 export default Blog;
