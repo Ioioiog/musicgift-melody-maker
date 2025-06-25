@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -89,36 +88,50 @@ export const useBlogPost = (slug: string) => {
     queryFn: async () => {
       console.log('Fetching blog post with slug:', slug);
       
-      // Fix the query syntax - properly quote the slug parameter
+      // First try to get all published posts and filter by slug in JavaScript
+      // This is more reliable than complex PostgreSQL JSON queries
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
-        .or([
-          `translations->'ro'->>'slug'.eq."${slug}"`,
-          `translations->'en'->>'slug'.eq."${slug}"`,
-          `translations->'fr'->>'slug'.eq."${slug}"`,
-          `translations->'de'->>'slug'.eq."${slug}"`,
-          `translations->'pl'->>'slug'.eq."${slug}"`,
-          `translations->'it'->>'slug'.eq."${slug}"`
-        ].join(','))
-        .maybeSingle();
+        .eq('status', 'published');
       
       if (error) {
-        console.error('Error fetching blog post:', error);
+        console.error('Error fetching blog posts:', error);
         throw error;
       }
       
-      console.log('Blog post query result:', data);
+      console.log('All blog posts fetched:', data?.length);
       
-      if (!data) {
+      if (!data || data.length === 0) {
+        console.log('No blog posts found');
+        return null;
+      }
+      
+      // Find post by slug across all language translations
+      const foundPost = data.find(post => {
+        if (!post.translations) return false;
+        
+        const translations = safeCastToTranslations(post.translations);
+        
+        // Check if any language translation has the matching slug
+        return Object.values(translations).some(translation => {
+          const translationSlug = translation.slug || generateSlugFromTitle(translation.title);
+          console.log('Checking slug:', translationSlug, 'against:', slug);
+          return translationSlug === slug;
+        });
+      });
+      
+      console.log('Found post:', foundPost ? 'Yes' : 'No');
+      
+      if (!foundPost) {
         console.log('No blog post found with slug:', slug);
         return null;
       }
       
       // Safe type casting with proper validation
       const post = {
-        ...data,
-        translations: safeCastToTranslations(data.translations)
+        ...foundPost,
+        translations: safeCastToTranslations(foundPost.translations)
       } as BlogPost;
       
       const localizedPost = getLocalizedBlogPost(post, language);
