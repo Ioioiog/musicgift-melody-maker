@@ -50,19 +50,39 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Gift card updated successfully:', giftCard.id);
 
-    // If payment was successful, send the gift card email to recipient
+    // Only proceed with email sending if payment was successful
     if (paymentStatus === 'completed' || paymentStatus === 'paid') {
-      console.log('Payment successful, sending gift card email to recipient');
+      console.log('Payment successful, processing gift card delivery');
       
+      // Verify gift card data is complete before sending emails
+      if (!giftCard.code || giftCard.code.startsWith('TEMP-')) {
+        console.error('Gift card has invalid code, skipping email delivery:', giftCard.code);
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            error: 'Gift card has invalid code',
+            giftCardId: giftCard.id 
+          }),
+          {
+            status: 400,
+            headers: {
+              'Content-Type': 'application/json',
+              ...corsHeaders,
+            },
+          }
+        );
+      }
+
       try {
         // Send gift card email to recipient
+        console.log('Sending gift card email to recipient:', giftCard.recipient_email);
         const { error: giftEmailError } = await supabase.functions.invoke('send-gift-card-email', {
           body: {
             giftCardId: giftCard.id,
             recipientEmail: giftCard.recipient_email,
             recipientName: giftCard.recipient_name,
             senderName: giftCard.sender_name,
-            amount: giftCard.gift_amount || giftCard.amount_ron || giftCard.amount_eur,
+            amount: giftCard.gift_amount,
             currency: giftCard.currency || 'RON',
             personalMessage: giftCard.message_text,
             giftCardCode: giftCard.code
@@ -76,6 +96,7 @@ const handler = async (req: Request): Promise<Response> => {
         }
 
         // Send final confirmation email to purchaser
+        console.log('Sending purchase confirmation email to purchaser:', giftCard.sender_email);
         const { error: confirmationError } = await supabase.functions.invoke('send-gift-card-purchase-confirmation', {
           body: {
             giftCardId: giftCard.id,
@@ -83,10 +104,11 @@ const handler = async (req: Request): Promise<Response> => {
             purchaserName: giftCard.sender_name,
             recipientName: giftCard.recipient_name,
             recipientEmail: giftCard.recipient_email,
-            amount: giftCard.gift_amount || giftCard.amount_ron || giftCard.amount_eur,
+            amount: giftCard.gift_amount,
             currency: giftCard.currency || 'RON',
             deliveryDate: giftCard.delivery_date,
             personalMessage: giftCard.message_text,
+            giftCardCode: giftCard.code,
             designName: null // We can enhance this later to fetch design name
           }
         });
@@ -101,6 +123,8 @@ const handler = async (req: Request): Promise<Response> => {
         console.error('Error sending emails after successful payment:', emailError);
         // Don't throw - the payment was successful, email failures shouldn't block the webhook
       }
+    } else {
+      console.log('Payment not successful, skipping email delivery. Status:', paymentStatus);
     }
 
     return new Response(
@@ -108,7 +132,8 @@ const handler = async (req: Request): Promise<Response> => {
         success: true, 
         message: 'Gift card payment webhook processed successfully',
         giftCardId: giftCard.id,
-        paymentStatus 
+        paymentStatus,
+        emailsTriggered: paymentStatus === 'completed' || paymentStatus === 'paid'
       }),
       {
         status: 200,

@@ -8,15 +8,15 @@ export const useGiftCardPayment = () => {
 
   return useMutation({
     mutationFn: async ({ 
-      giftCardId, 
+      giftCardData, 
       returnUrl, 
       paymentProvider = 'smartbill' 
     }: { 
-      giftCardId: string; 
+      giftCardData: any; 
       returnUrl?: string; 
       paymentProvider?: string;
     }) => {
-      console.log(`Initiating ${paymentProvider} payment for gift card:`, giftCardId);
+      console.log(`Initiating ${paymentProvider} payment for gift card data:`, giftCardData);
       
       // Route to the appropriate payment provider edge function
       const functionName = paymentProvider === 'stripe' 
@@ -24,7 +24,7 @@ export const useGiftCardPayment = () => {
         : 'gift-card-smartbill-payment';
       
       const { data, error } = await supabase.functions.invoke(functionName, {
-        body: { giftCardId, returnUrl }
+        body: { giftCardData, returnUrl }
       });
 
       if (error) throw error;

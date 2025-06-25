@@ -245,10 +245,28 @@ serve(async (req) => {
       throw new Error('Gift card not found')
     }
 
-    // Check if gift card is active and payment completed
+    // CRITICAL: Check if gift card is active and payment completed
     if (giftCard.status !== 'active' || giftCard.payment_status !== 'completed') {
-      throw new Error('Gift card is not ready for delivery')
+      console.error('Gift card is not ready for delivery:', {
+        id: giftCard.id,
+        code: giftCard.code,
+        status: giftCard.status,
+        payment_status: giftCard.payment_status
+      });
+      throw new Error(`Gift card is not ready for delivery. Status: ${giftCard.status}, Payment: ${giftCard.payment_status}`);
     }
+
+    // CRITICAL: Validate gift card code is not temporary
+    if (!giftCard.code || giftCard.code.startsWith('TEMP-')) {
+      console.error('Gift card has invalid/temporary code:', giftCard.code);
+      throw new Error('Gift card has invalid or temporary code');
+    }
+
+    console.log('Gift card validation passed, proceeding with email delivery:', {
+      id: giftCard.id,
+      code: giftCard.code,
+      recipient: giftCard.recipient_email
+    });
 
     // Get SMTP password from environment
     const smtpPassword = Deno.env.get('SMTP_PASSWORD');
@@ -258,7 +276,7 @@ serve(async (req) => {
 
     // Create redemption URL
     const redemptionUrl = `${Deno.env.get('SITE_URL')}/gift?gift=${giftCard.code}`
-    const giftAmount = (giftCard.gift_amount || 0) / 100
+    const giftAmount = giftCard.gift_amount
 
     // Prepare email content with consistent styling
     const emailHtml = `
@@ -299,7 +317,7 @@ serve(async (req) => {
               
               <div class="gift-card">
                 <h3>🎁 Gift Card Details</h3>
-                <div class="amount">${giftAmount} RON</div>
+                <div class="amount">${giftAmount} ${giftCard.currency}</div>
                 <div class="code">${giftCard.code}</div>
                 <p>Use this code to create your personalized song</p>
               </div>
@@ -333,7 +351,7 @@ serve(async (req) => {
     const result = await sendEmailWithFallback(
       'info@musicgift.ro',
       [giftCard.recipient_email],
-      `🎵 Musical Gift from ${giftCard.sender_name} - ${giftAmount} RON`,
+      `🎵 Musical Gift from ${giftCard.sender_name} - ${giftAmount} ${giftCard.currency}`,
       emailHtml,
       smtpPassword
     );

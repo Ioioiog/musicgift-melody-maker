@@ -14,8 +14,8 @@ import { addDays, format } from 'date-fns';
 import GiftCardPreview from './GiftCardPreview';
 import PaymentProviderSelection from '@/components/order/PaymentProviderSelection';
 import { useToast } from '@/hooks/use-toast';
-import { useGiftCardDesigns, useCreateGiftCard } from '@/hooks/useGiftCards';
-import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
+import { useGiftCardDesigns } from '@/hooks/useGiftCards';
+import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface GiftPurchaseWizardProps {
@@ -30,14 +30,12 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
   const navigate = useNavigate();
   const { toast } = useToast();
   const { data: designs, isLoading: designsLoading } = useGiftCardDesigns();
-  const createGiftCard = useCreateGiftCard();
-  const initiatePayment = useGiftCardPayment();
 
   const [step, setStep] = useState(1);
   const [giftAmount, setGiftAmount] = useState(50);
   const [currency, setCurrency] = useState('RON');
   const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('');
-  const [isCreatingGiftCard, setIsCreatingGiftCard] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [giftData, setGiftData] = useState({
     sender_name: user?.user_metadata?.full_name || user?.email || '',
     sender_email: user?.email || '',
@@ -101,6 +99,7 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
   const handlePaymentProviderSelect = (provider: string) => {
     setSelectedPaymentProvider(provider);
   };
+
   const handleSubmit = async () => {
     if (!user) {
       toast({
@@ -116,19 +115,18 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
       });
       return;
     }
-    setIsCreatingGiftCard(true);
+
+    setIsProcessingPayment(true);
     try {
-      console.log('Creating gift card with data:', {
+      console.log('Initiating payment with gift card data:', {
         giftAmount,
         currency,
         giftData,
         selectedDesign: selectedDesign?.id
       });
 
-      // Create gift card record in database - code will be auto-generated
-      const giftCardRecord = await createGiftCard.mutateAsync({
-        code: `TEMP-${Date.now()}`,
-        // Temporary code, will be replaced by database trigger
+      // Prepare gift card data for payment initiation
+      const giftCardData = {
         sender_user_id: user.id,
         sender_name: giftData.sender_name,
         sender_email: giftData.sender_email,
@@ -141,15 +139,22 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
         delivery_date: giftData.delivery_date?.toISOString() || null,
         status: 'active',
         payment_status: 'pending'
-      });
-      console.log('Gift card created:', giftCardRecord);
+      };
 
-      // Initiate payment
-      const paymentResponse = await initiatePayment.mutateAsync({
-        giftCardId: giftCardRecord.id,
-        returnUrl: `${window.location.origin}/gift?payment=success`,
-        paymentProvider: selectedPaymentProvider
+      // Initiate payment with form data instead of pre-created gift card
+      const functionName = selectedPaymentProvider === 'stripe' 
+        ? 'gift-card-stripe-payment'
+        : 'gift-card-smartbill-payment';
+      
+      const { data: paymentResponse, error } = await supabase.functions.invoke(functionName, {
+        body: { 
+          giftCardData,
+          returnUrl: `${window.location.origin}/gift?payment=success`
+        }
       });
+
+      if (error) throw error;
+
       console.log('Payment initiated:', paymentResponse);
 
       // Open payment URL in new tab
@@ -161,25 +166,25 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
           description: 'Please complete the payment in the new tab'
         });
 
-        // Call onComplete with the gift card data
+        // Call onComplete with the form data (no gift card created yet)
         onComplete({
-          code: giftCardRecord.code,
           amount: giftAmount,
           currency: currency,
-          recipient_email: giftData.recipient_email
+          recipient_email: giftData.recipient_email,
+          payment_initiated: true
         });
       } else {
         throw new Error('No payment URL received');
       }
     } catch (error) {
-      console.error('Error creating gift card or initiating payment:', error);
+      console.error('Error initiating payment:', error);
       toast({
         title: 'Error',
-        description: error.message || 'Failed to create gift card. Please try again.',
+        description: error.message || 'Failed to initiate payment. Please try again.',
         variant: 'destructive'
       });
     } finally {
-      setIsCreatingGiftCard(false);
+      setIsProcessingPayment(false);
     }
   };
 
@@ -435,17 +440,17 @@ const GiftPurchaseWizard: React.FC<GiftPurchaseWizardProps> = ({
                 <Button variant="outline" onClick={prevStep}>{t('back')}</Button>
                 <Button
                   onClick={handleSubmit}
-                  disabled={isCreatingGiftCard}
+                  disabled={isProcessingPayment}
                   className="bg-orange-500 text-white hover:bg-orange-600 border-orange-500 disabled:bg-gray-400 disabled:hover:bg-gray-400"
                 >
-                  {isCreatingGiftCard ? t('processing') : t('pay')}
+                  {isProcessingPayment ? 'Processing...' : t('pay')}
                 </Button>
               </div>
             </div>
           )}
         </div>
 
-        {/* Preview Sidebar - Now wrapped in card container */}
+        {/* Preview Sidebar */}
         <div className="lg:col-span-1">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
             <div className="sticky top-4 space-y-4 p-6">
