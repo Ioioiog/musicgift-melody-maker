@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter, ChevronDown, Calendar, SortDesc, Music, Headphones, User, Mic, Guitar, X } from "lucide-react";
+import { Search, Filter, ChevronDown, Calendar, SortDesc, Music, X } from "lucide-react";
 
 interface Category {
   name: string;
@@ -77,18 +76,18 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
   return (
     <div className="max-w-5xl mx-auto">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        {/* Filter Header with Search */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6">
+        {/* Compact Filter Header with Search */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
           {/* Filter Trigger */}
           <CollapsibleTrigger asChild>
             <Button 
               variant="outline" 
-              className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/15 px-4 py-3 rounded-xl font-medium flex items-center gap-2 justify-start sm:w-auto"
+              className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/15 px-3 py-2 rounded-lg font-medium flex items-center gap-2 justify-start sm:w-auto text-sm"
             >
               <Filter className="w-4 h-4" />
               <span>Filters</span>
               {activeFiltersCount > 0 && (
-                <Badge className="bg-purple-500 text-white ml-1 px-2 py-1 text-xs">
+                <Badge className="bg-purple-500 text-white ml-1 px-1.5 py-0.5 text-xs">
                   {activeFiltersCount}
                 </Badge>
               )}
@@ -96,36 +95,36 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
             </Button>
           </CollapsibleTrigger>
 
-          {/* Search Bar */}
-          <div className="w-full sm:w-auto sm:min-w-[280px] sm:max-w-[320px]">
+          {/* Compact Search Bar */}
+          <div className="w-full sm:w-auto sm:min-w-[240px] sm:max-w-[280px]">
             <div className="relative group">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-purple-400 transition-colors" />
               <Input 
                 placeholder={t('searchPlaceholder') || "Search articles..."} 
                 value={searchTerm} 
                 onChange={e => setSearchTerm(e.target.value)} 
-                className="pl-10 pr-4 py-3 bg-white/10 backdrop-blur-md border-white/20 rounded-xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 w-full text-sm" 
+                className="pl-9 pr-4 py-2 bg-white/10 backdrop-blur-md border-white/20 rounded-lg text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 w-full text-sm h-9" 
               />
             </div>
           </div>
         </div>
 
-        {/* Active Filters Summary (when collapsed) */}
+        {/* Compact Active Filters Summary */}
         {!isOpen && activeFiltersCount > 0 && (
-          <div className="mb-6 flex flex-wrap items-center gap-2">
-            <span className="text-sm text-gray-300">Active filters:</span>
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="text-xs text-gray-300">Active:</span>
             {selectedCategory !== "all" && (
-              <Badge variant="secondary" className="bg-white/10 text-white border-white/20">
+              <Badge variant="secondary" className="bg-white/10 text-white border-white/20 text-xs px-2 py-0.5">
                 {getSelectedCategoryName()}
               </Badge>
             )}
             {searchTerm && (
-              <Badge variant="secondary" className="bg-white/10 text-white border-white/20">
+              <Badge variant="secondary" className="bg-white/10 text-white border-white/20 text-xs px-2 py-0.5">
                 Search: "{searchTerm}"
               </Badge>
             )}
             {dateFilter !== "all" && (
-              <Badge variant="secondary" className="bg-white/10 text-white border-white/20">
+              <Badge variant="secondary" className="bg-white/10 text-white border-white/20 text-xs px-2 py-0.5">
                 {dateFilter === "recent" ? "Recent" : dateFilter === "month" ? "This Month" : "This Year"}
               </Badge>
             )}
@@ -140,13 +139,13 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
           </div>
         )}
 
-        {/* Collapsible Filter Content */}
-        <CollapsibleContent className="space-y-6 mb-8">
-          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6">
+        {/* Compact Collapsible Filter Content */}
+        <CollapsibleContent className="space-y-4 mb-6">
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
             {/* Categories - Horizontal Scroll with Pills */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <Music className="w-5 h-5" />
+            <div className="mb-4">
+              <h3 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
+                <Music className="w-4 h-4" />
                 Categories
               </h3>
               <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
@@ -193,16 +192,16 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
               </div>
             </div>
 
-            {/* Additional Filters Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Compact Additional Filters Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* Date Filter */}
               <div>
-                <label className="text-sm font-medium text-white mb-2 flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
+                <label className="text-xs font-medium text-white mb-2 flex items-center gap-2">
+                  <Calendar className="w-3 h-3" />
                   Date Range
                 </label>
                 <Select value={dateFilter} onValueChange={setDateFilter}>
-                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                  <SelectTrigger className="bg-white/10 border-white/20 text-white h-8 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -216,12 +215,12 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
 
               {/* Sort Filter */}
               <div>
-                <label className="text-sm font-medium text-white mb-2 flex items-center gap-2">
-                  <SortDesc className="w-4 h-4" />
+                <label className="text-xs font-medium text-white mb-2 flex items-center gap-2">
+                  <SortDesc className="w-3 h-3" />
                   Sort By
                 </label>
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                  <SelectTrigger className="bg-white/10 border-white/20 text-white h-8 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -234,9 +233,9 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
               </div>
             </div>
 
-            {/* Results Summary and Clear Button */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-6 pt-4 border-t border-white/10">
-              <div className="text-sm text-gray-300">
+            {/* Compact Results Summary and Clear Button */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-4 pt-3 border-t border-white/10">
+              <div className="text-xs text-gray-300">
                 Showing <span className="font-semibold text-white">{filteredCount}</span> of <span className="font-semibold text-white">{totalPosts}</span> articles
                 {activeFiltersCount > 0 && (
                   <span className="ml-2">
@@ -250,7 +249,7 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={clearAllFilters}
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="border-white/20 text-white hover:bg-white/10 text-xs px-3 py-1"
                 >
                   Clear All Filters
                 </Button>
