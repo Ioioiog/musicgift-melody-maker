@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -107,7 +108,8 @@ const Blog = () => {
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
 
-        <section className="text-white relative overflow-hidden py-[65px]">
+        {/* Header Section with Hero and Categories */}
+        <header className="text-white relative overflow-hidden py-[65px]">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-10 left-10 text-4xl opacity-30 animate-float">♪</div>
             <div className="absolute bottom-10 right-10 text-6xl opacity-20 animate-float" style={{
@@ -137,66 +139,67 @@ const Blog = () => {
                 {t('blogHeroSubtitle') || "Discover the art of personalized music, industry insights, and inspiring stories"}
               </p>
               
-              <div className="max-w-xl mx-auto">
+              <div className="max-w-xl mx-auto mb-16">
                 <div className="relative group">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-purple-400 transition-colors" />
                   <Input placeholder={t('searchPlaceholder') || "Search articles..."} className="pl-12 pr-4 py-4 bg-white/10 backdrop-blur-md border-white/20 rounded-2xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 text-lg" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
                 </div>
               </div>
             </div>
-          </div>
-        </section>
 
-        <div className="container mx-auto sm:px-6 relative z-10 px-[18px] py-0">
-          <section className="mb-20">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-white mb-4">
-                {t('blogCategoriesTitle') || "Explore Categories"}
-              </h2>
-              <p className="text-xl text-gray-200 max-w-2xl mx-auto">
-                Dive into our curated collection of music insights and stories
-              </p>
-            </div>
-            
-            <div className="md:grid md:grid-cols-2 lg:grid-cols-6 md:gap-6">
-              <div className="flex overflow-x-auto space-x-4 pb-4 md:hidden scrollbar-hide">
-                {categories.map((category, index) => {
-                  const IconComponent = category.icon;
-                  return (
-                    <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden flex-shrink-0 w-48">
-                      <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
-                      <CardContent className="p-6 text-center transition-colors">
-                        <div className={`w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                          <IconComponent className="w-6 h-6 text-white" />
-                        </div>
-                        <h3 className="font-bold text-white mb-2 text-sm">{category.name}</h3>
-                        <p className="text-gray-300 font-medium text-xs">{category.count} {t('articles') || 'articles'}</p>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+            {/* Categories in Header */}
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-white mb-4">
+                  {t('blogCategoriesTitle') || "Explore Categories"}
+                </h2>
+                <p className="text-lg text-gray-200 max-w-2xl mx-auto">
+                  Dive into our curated collection of music insights and stories
+                </p>
               </div>
               
-              <div className="hidden md:contents">
-                {categories.map((category, index) => {
-                  const IconComponent = category.icon;
-                  return (
-                    <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-                      <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
-                      <CardContent className="p-8 text-center transition-colors">
-                        <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                          <IconComponent className="w-8 h-8 text-white" />
-                        </div>
-                        <h3 className="font-bold text-white mb-2 text-lg">{category.name}</h3>
-                        <p className="text-gray-300 font-medium">{category.count} {t('articles') || 'articles'}</p>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+              <div className="md:grid md:grid-cols-2 lg:grid-cols-6 md:gap-6">
+                <div className="flex overflow-x-auto space-x-4 pb-4 md:hidden scrollbar-hide">
+                  {categories.map((category, index) => {
+                    const IconComponent = category.icon;
+                    return (
+                      <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden flex-shrink-0 w-48">
+                        <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
+                        <CardContent className="p-6 text-center transition-colors">
+                          <div className={`w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                            <IconComponent className="w-6 h-6 text-white" />
+                          </div>
+                          <h3 className="font-bold text-white mb-2 text-sm">{category.name}</h3>
+                          <p className="text-gray-300 font-medium text-xs">{category.count} {t('articles') || 'articles'}</p>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+                
+                <div className="hidden md:contents">
+                  {categories.map((category, index) => {
+                    const IconComponent = category.icon;
+                    return (
+                      <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                        <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
+                        <CardContent className="p-8 text-center transition-colors">
+                          <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                            <IconComponent className="w-8 h-8 text-white" />
+                          </div>
+                          <h3 className="font-bold text-white mb-2 text-lg">{category.name}</h3>
+                          <p className="text-gray-300 font-medium">{category.count} {t('articles') || 'articles'}</p>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </section>
+          </div>
+        </header>
 
+        <div className="container mx-auto sm:px-6 relative z-10 px-[18px] py-0">
           {/* Featured Article */}
           {featuredPost && <section className="mb-20">
               <div className="text-center mb-16">
