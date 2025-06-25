@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -147,8 +146,11 @@ const Blog = () => {
             <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
               <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-6">
                 <div className="w-full lg:w-auto overflow-x-auto">
-                  <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 bg-white/10 backdrop-blur-md border border-white/20 p-1 rounded-xl min-w-max lg:min-w-0">
-                    <TabsTrigger value="all" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap">
+                  <TabsList className="flex flex-wrap gap-1 bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-xl min-w-max lg:min-w-0">
+                    <TabsTrigger 
+                      value="all" 
+                      className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-3 whitespace-nowrap"
+                    >
                       All ({blogPosts.length})
                     </TabsTrigger>
                     {categories.map((category, index) => {
@@ -158,10 +160,10 @@ const Blog = () => {
                         <TabsTrigger 
                           key={index} 
                           value={categoryValue} 
-                          className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-2 sm:px-3 flex items-center gap-1 whitespace-nowrap"
+                          className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-3 flex items-center gap-1 whitespace-nowrap"
                         >
                           <IconComponent className="w-3 h-3 flex-shrink-0" />
-                          <span className="truncate">{category.name}</span>
+                          <span>{category.name}</span>
                           <span className="ml-1 text-xs opacity-75">({category.count})</span>
                         </TabsTrigger>
                       );
