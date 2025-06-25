@@ -19,14 +19,14 @@ interface VideoCardProps {
     read_time?: number;
     views?: number;
     slug: string;
-    youtube_url: string;
+    youtube_url?: string;
     image_url?: string;
   };
   size?: 'small' | 'medium' | 'large';
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ post, size = 'medium' }) => {
-  const thumbnailUrl = getYouTubeThumbnail(post.youtube_url);
+  const thumbnailUrl = post.youtube_url ? getYouTubeThumbnail(post.youtube_url) : '';
   
   const sizeClasses = {
     small: 'h-24',
@@ -66,9 +66,11 @@ const VideoCard: React.FC<VideoCardProps> = ({ post, size = 'medium' }) => {
           <Badge className="bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium text-xs px-2 py-1">
             {post.category}
           </Badge>
-          <Badge className="bg-red-600 text-white border-0 backdrop-blur-sm font-medium text-xs px-2 py-1 flex items-center gap-1">
-            <Youtube className="w-2 h-2" />
-          </Badge>
+          {post.youtube_url && (
+            <Badge className="bg-red-600 text-white border-0 backdrop-blur-sm font-medium text-xs px-2 py-1 flex items-center gap-1">
+              <Youtube className="w-2 h-2" />
+            </Badge>
+          )}
         </div>
       </div>
       

@@ -8,7 +8,7 @@ interface VideoHeroSectionProps {
   post: {
     id: string;
     title: string;
-    youtube_url: string;
+    youtube_url?: string;
     category: string;
     author: string;
     published_at?: string;
@@ -21,7 +21,12 @@ interface VideoHeroSectionProps {
 
 const VideoHeroSection: React.FC<VideoHeroSectionProps> = ({ post }) => {
   const [isVideoLoaded, setIsVideoLoaded] = React.useState(false);
-  const thumbnailUrl = getYouTubeThumbnail(post.youtube_url);
+  const thumbnailUrl = post.youtube_url ? getYouTubeThumbnail(post.youtube_url) : '';
+
+  // If no YouTube URL, don't render anything
+  if (!post.youtube_url) {
+    return null;
+  }
 
   return (
     <div className="relative overflow-hidden rounded-3xl shadow-2xl mb-12">
