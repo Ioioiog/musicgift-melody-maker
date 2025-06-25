@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -8,11 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, User, Clock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useBlogPost } from "@/hooks/useBlogPosts";
+import { useBlogPostView } from "@/hooks/useBlogPostView";
 
 const BlogPost = () => {
   const { t } = useLanguage();
   const { id } = useParams();
   const { data: post, isLoading, error } = useBlogPost(id || '');
+  
+  // Track view for this blog post
+  useBlogPostView(post?.id);
 
   if (isLoading) {
     return (
@@ -123,6 +126,13 @@ const BlogPost = () => {
                     <Clock className="w-5 h-5 mr-2" />
                     {post.read_time} min {t('read') || 'read'}
                   </div>
+                  {post.views !== undefined && post.views > 0 && (
+                    <div className="flex items-center">
+                      <span className="text-sm">
+                        {post.views} {post.views === 1 ? 'view' : 'views'}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 {/* Use default placeholder image instead of post.image_url */}
                 <div className="relative overflow-hidden rounded-2xl shadow-xl">
