@@ -41,40 +41,37 @@ const VideoCard: React.FC<VideoCardProps> = ({ post, size = 'medium' }) => {
   };
 
   return (
-    <Card className="group overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
-      <div className="relative overflow-hidden">
+    <Card className="group overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-transparent backdrop-blur-none border-0 shadow-none">
+      {/* YouTube-like Video Thumbnail */}
+      <div className="relative overflow-hidden rounded-xl bg-black">
         <img 
           src={thumbnailUrl || post.image_url || '/uploads/background.webp'} 
           alt={post.title} 
-          className={`w-full ${sizeClasses[size]} object-cover group-hover:scale-110 transition-transform duration-700`}
+          className={`w-full ${sizeClasses[size]} object-cover transition-transform duration-700 group-hover:scale-105`}
         />
         
-        {/* Clean Play Button Overlay - Only on Hover */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <div className="w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/20">
-            <Play className="w-5 h-5 text-gray-800 ml-0.5" fill="currentColor" />
+        {/* YouTube-style Play Button */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg transform transition-all duration-300 group-hover:scale-110">
+            <Play className="w-4 h-4 text-white ml-0.5" fill="currentColor" />
           </div>
         </div>
         
-        {/* Clean Video Badge */}
-        <div className="absolute bottom-2 right-2 bg-red-500/90 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-md font-medium">
-          Video
+        {/* Duration Badge (YouTube-style) */}
+        <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded font-medium">
+          {post.read_time}:00
         </div>
         
-        {/* Category and Video Badges */}
-        <div className="absolute top-2 left-2 flex gap-1">
-          <Badge className="bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium text-xs px-2 py-1">
+        {/* Category Badge */}
+        <div className="absolute top-2 left-2">
+          <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 font-medium text-xs px-2 py-1">
             {post.category}
           </Badge>
-          {post.youtube_url && (
-            <Badge className="bg-red-500/90 backdrop-blur-sm text-white border-0 font-medium text-xs px-2 py-1 flex items-center gap-1">
-              <Youtube className="w-2 h-2" />
-            </Badge>
-          )}
         </div>
       </div>
       
-      <CardHeader className="pb-2 p-4">
+      {/* Transparent Content Area */}
+      <CardHeader className="pb-2 p-4 bg-transparent">
         <CardTitle className={`${titleClasses[size]} group-hover:text-purple-300 transition-colors duration-300 leading-snug text-white line-clamp-2`}>
           {post.title}
         </CardTitle>
@@ -83,7 +80,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ post, size = 'medium' }) => {
         </CardDescription>
       </CardHeader>
       
-      <CardContent className="pt-0 p-4">
+      <CardContent className="pt-0 p-4 bg-transparent">
         <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
           <div className="flex items-center space-x-2">
             <div className="flex items-center">

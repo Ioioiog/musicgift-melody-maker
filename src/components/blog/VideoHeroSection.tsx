@@ -29,11 +29,11 @@ const VideoHeroSection: React.FC<VideoHeroSectionProps> = ({ post }) => {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-3xl shadow-2xl mb-12">
-      {/* Video Container */}
-      <div className="relative aspect-video bg-gray-900">
+    <div className="mb-12">
+      {/* Video Container - Exactly like YouTube */}
+      <div className="relative aspect-video bg-black rounded-xl overflow-hidden shadow-2xl">
         {!isVideoLoaded ? (
-          // Clean Video Thumbnail with Play Overlay
+          // YouTube-like Thumbnail
           <div 
             className="relative w-full h-full cursor-pointer group"
             onClick={() => setIsVideoLoaded(true)}
@@ -41,32 +41,19 @@ const VideoHeroSection: React.FC<VideoHeroSectionProps> = ({ post }) => {
             <img 
               src={thumbnailUrl || post.image_url || '/uploads/background.webp'} 
               alt={post.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-full object-cover"
             />
             
-            {/* Subtle Gradient Overlay Only at Bottom */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-            
-            {/* Clean Play Button */}
+            {/* YouTube-style Play Button */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-20 h-20 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center shadow-2xl transform transition-all duration-300 group-hover:scale-110 group-hover:bg-white border border-white/20">
-                <Play className="w-8 h-8 text-gray-800 ml-1" fill="currentColor" />
+              <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:bg-red-700">
+                <Play className="w-6 h-6 text-white ml-1" fill="currentColor" />
               </div>
             </div>
             
-            {/* Clean Video Badge */}
-            <div className="absolute top-4 left-4">
-              <Badge className="bg-red-500/90 backdrop-blur-sm text-white border-0 px-3 py-1 text-sm font-medium flex items-center gap-2">
-                <Youtube className="w-4 h-4" />
-                Watch Video
-              </Badge>
-            </div>
-            
-            {/* Click to Play Text */}
-            <div className="absolute bottom-4 left-4 text-white/95">
-              <p className="text-sm font-medium bg-white/10 backdrop-blur-sm px-3 py-1 rounded-md border border-white/20">
-                Click to play video
-              </p>
+            {/* Duration Badge (YouTube-style) */}
+            <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded font-medium">
+              {post.read_time}:00
             </div>
           </div>
         ) : (
@@ -82,24 +69,24 @@ const VideoHeroSection: React.FC<VideoHeroSectionProps> = ({ post }) => {
         )}
       </div>
       
-      {/* Video Metadata Overlay - Only when not playing */}
+      {/* Transparent Metadata Section */}
       {!isVideoLoaded && (
-        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="mt-6 space-y-4">
+          <div className="flex items-center gap-2">
             <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
               {post.category}
             </Badge>
-            <Badge className="bg-red-500/90 backdrop-blur-sm text-white border-0 flex items-center gap-1">
+            <Badge className="bg-red-500 text-white border-0 flex items-center gap-1">
               <Youtube className="w-3 h-3" />
               Video
             </Badge>
           </div>
           
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 leading-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
             {post.title}
           </h1>
           
-          <div className="flex items-center space-x-4 text-white/90 text-sm">
+          <div className="flex items-center space-x-4 text-white/80 text-sm">
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-2" />
               {new Date(post.published_at || post.created_at).toLocaleDateString()}
