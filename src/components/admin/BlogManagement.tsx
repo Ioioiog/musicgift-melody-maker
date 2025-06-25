@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +14,7 @@ import { Plus, Edit, Trash2, Eye, Calendar, User, Tag, Globe, Languages } from "
 import { useAllBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost } from "@/hooks/useBlogPosts";
 import { BlogPost, CreateBlogPostData, CreateBlogPostTranslations, BlogPostTranslations } from "@/types/blog";
 import { getAvailableLanguages, hasTranslation, generateSlugFromTitle } from "@/utils/blogTranslations";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 const BlogManagement = () => {
   const { data: posts = [], isLoading } = useAllBlogPosts();
@@ -33,6 +33,7 @@ const BlogManagement = () => {
   const [isFeatured, setIsFeatured] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [readTime, setReadTime] = useState(5);
+  const [imageUrl, setImageUrl] = useState('');
 
   const availableLanguages = [
     { code: 'ro', name: 'Romanian' },
@@ -63,6 +64,7 @@ const BlogManagement = () => {
     setReadTime(5);
     setCurrentLanguage('ro');
     setEditingPost(null);
+    setImageUrl('');
   };
 
   const handleOpenDialog = (post?: BlogPost) => {
@@ -90,6 +92,7 @@ const BlogManagement = () => {
       setTags(post.tags || []);
       setReadTime(post.read_time || 5);
       setCurrentLanguage(post.default_language || 'ro');
+      setImageUrl(post.image_url || '');
     } else {
       resetForm();
     }
@@ -145,6 +148,7 @@ const BlogManagement = () => {
         is_featured: isFeatured,
         tags,
         read_time: readTime,
+        image_url: imageUrl,
         published_at: status === 'published' ? new Date().toISOString() : undefined,
       });
     } else {
@@ -157,6 +161,7 @@ const BlogManagement = () => {
         is_featured: isFeatured,
         tags,
         read_time: readTime,
+        image_url: imageUrl,
         published_at: status === 'published' ? new Date().toISOString() : undefined,
       };
       await createPost.mutateAsync(createData);
@@ -243,8 +248,9 @@ const BlogManagement = () => {
               </div>
 
               <Tabs defaultValue="content" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="content">Content ({availableLanguages.find(l => l.code === currentLanguage)?.name})</TabsTrigger>
+                  <TabsTrigger value="media">Media</TabsTrigger>
                   <TabsTrigger value="settings">Settings</TabsTrigger>
                   <TabsTrigger value="seo">SEO</TabsTrigger>
                 </TabsList>
@@ -292,6 +298,20 @@ const BlogManagement = () => {
                       rows={10}
                     />
                   </div>
+                </TabsContent>
+
+                <TabsContent value="media" className="space-y-4">
+                  <ImageUpload
+                    value={imageUrl}
+                    onChange={setImageUrl}
+                    label="Featured Image"
+                    bucketName="blog-images"
+                    maxSizeBytes={10 * 1024 * 1024} // 10MB
+                    acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+                  />
+                  <p className="text-sm text-gray-500">
+                    Upload a featured image for this blog post. This will be displayed in blog lists and at the top of the article.
+                  </p>
                 </TabsContent>
                 
                 <TabsContent value="settings" className="space-y-4">
@@ -444,7 +464,7 @@ const BlogManagement = () => {
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 mb-2">
                       <Languages className="w-4 h-4 text-gray-500" />
                       <span className="text-sm text-gray-500">Available in:</span>
                       {availableLangs.map(lang => (
@@ -453,6 +473,15 @@ const BlogManagement = () => {
                         </Badge>
                       ))}
                     </div>
+                    {post.image_url && (
+                      <div className="mt-2">
+                        <img 
+                          src={post.image_url} 
+                          alt={localizedPost?.title || 'Blog post image'} 
+                          className="w-20 h-20 object-cover rounded-md"
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="flex gap-2">
                     <Button variant="ghost" size="sm" asChild>

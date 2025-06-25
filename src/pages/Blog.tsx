@@ -10,14 +10,10 @@ import { Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye 
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useState, useMemo } from "react";
+
 const Blog = () => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    data: blogPosts = [],
-    isLoading
-  } = useBlogPosts();
+  const { t } = useLanguage();
+  const { data: blogPosts = [], isLoading } = useBlogPosts();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
@@ -37,7 +33,12 @@ const Blog = () => {
     // Filter by search term
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      posts = posts.filter(post => post?.title?.toLowerCase().includes(term) || post?.excerpt?.toLowerCase().includes(term) || post?.category?.toLowerCase().includes(term) || post?.author?.toLowerCase().includes(term));
+      posts = posts.filter(post => 
+        post?.title?.toLowerCase().includes(term) || 
+        post?.excerpt?.toLowerCase().includes(term) || 
+        post?.category?.toLowerCase().includes(term) || 
+        post?.author?.toLowerCase().includes(term)
+      );
     }
 
     // Filter by date
@@ -80,6 +81,7 @@ const Blog = () => {
           return new Date(b?.published_at || b?.created_at).getTime() - new Date(a?.published_at || a?.created_at).getTime();
       }
     });
+
     return posts;
   }, [blogPosts, searchTerm, selectedCategory, dateFilter, sortBy]);
 
@@ -97,6 +99,7 @@ const Blog = () => {
       }
       return acc;
     }, {} as Record<string, number>);
+
     const categoryIcons = {
       'Music Tips': Music,
       'Industry Insights': Headphones,
@@ -105,6 +108,7 @@ const Blog = () => {
       'Trends': Guitar,
       'General': Music
     };
+
     const categoryColors = {
       'Music Tips': "from-blue-500 to-blue-600",
       'Industry Insights': "from-purple-500 to-purple-600",
@@ -113,7 +117,9 @@ const Blog = () => {
       'Trends': "from-orange-500 to-orange-600",
       'General': "from-gray-500 to-gray-600"
     };
+
     const predefinedCategories = ['Music Tips', 'Industry Insights', 'Client Stories', 'Behind the Scenes', 'Trends', 'General'];
+
     return predefinedCategories.map(name => ({
       name,
       count: categoryCount[name] || 0,
@@ -121,13 +127,15 @@ const Blog = () => {
       color: categoryColors[name as keyof typeof categoryColors] || "from-gray-500 to-gray-600"
     }));
   }, [blogPosts]);
+
   if (isLoading) {
-    return <div className="min-h-screen text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+    return (
+      <div className="min-h-screen text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
         <div className="flex justify-center items-center min-h-[50vh] relative z-10">
@@ -137,17 +145,24 @@ const Blog = () => {
           </div>
         </div>
         <Footer />
-      </div>;
+      </div>
+    );
   }
-  return <>
-      <SEOHead title={t('blogPageTitle')} description={t('blogPageDescription')} url="https://www.musicgift.ro/blog" />
+
+  return (
+    <>
+      <SEOHead 
+        title={t('blogPageTitle')} 
+        description={t('blogPageDescription')} 
+        url="https://www.musicgift.ro/blog" 
+      />
       
       <div className="min-h-screen text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
 
@@ -155,12 +170,8 @@ const Blog = () => {
         <header className="text-white relative overflow-hidden pt-16 pb-6">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-4 left-4 text-2xl opacity-15 animate-float">♪</div>
-            <div className="absolute bottom-4 right-4 text-3xl opacity-10 animate-float" style={{
-            animationDelay: '2s'
-          }}>🎵</div>
-            <div className="absolute top-1/2 left-1/4 text-xl opacity-15 animate-float" style={{
-            animationDelay: '1s'
-          }}>♫</div>
+            <div className="absolute bottom-4 right-4 text-3xl opacity-10 animate-float" style={{ animationDelay: '2s' }}>🎵</div>
+            <div className="absolute top-1/2 left-1/4 text-xl opacity-15 animate-float" style={{ animationDelay: '1s' }}>♫</div>
           </div>
           
           <div className="container mx-auto sm:px-6 relative z-10 px-0 py-[55px]">
@@ -176,14 +187,29 @@ const Blog = () => {
             </div>
 
             {/* Filter Section */}
-            <BlogFilterSection searchTerm={searchTerm} setSearchTerm={setSearchTerm} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories} totalPosts={blogPosts.length} filteredCount={filteredPosts.length} sortBy={sortBy} setSortBy={setSortBy} dateFilter={dateFilter} setDateFilter={setDateFilter} isOpen={filtersOpen} setIsOpen={setFiltersOpen} />
+            <BlogFilterSection 
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              categories={categories}
+              totalPosts={blogPosts.length}
+              filteredCount={filteredPosts.length}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              dateFilter={dateFilter}
+              setDateFilter={setDateFilter}
+              isOpen={filtersOpen}
+              setIsOpen={setFiltersOpen}
+            />
           </div>
         </header>
 
         <div className="container mx-auto sm:px-6 relative z-10 px-0 py-0">
           <div className="space-y-8">
             {/* Compact Featured Article */}
-            {featuredPost && selectedCategory === "all" && !searchTerm && <section>
+            {featuredPost && selectedCategory === "all" && !searchTerm && (
+              <section>
                 <div className="text-center mb-8">
                   <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                     {t('featuredArticle')}
@@ -196,7 +222,11 @@ const Blog = () => {
                 <Card className="overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 bg-white/10 backdrop-blur-md border border-white/20">
                   <div className="lg:flex">
                     <div className="lg:w-2/3 relative overflow-hidden">
-                      <img src={'/uploads/background.webp'} alt={featuredPost.title} className="w-full h-48 lg:h-64 object-cover transition-transform duration-700 hover:scale-105" />
+                      <img 
+                        src={featuredPost.image_url || '/uploads/background.webp'} 
+                        alt={featuredPost.title} 
+                        className="w-full h-48 lg:h-64 object-cover transition-transform duration-700 hover:scale-105" 
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
                       <Badge className="absolute top-4 left-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-3 py-1 text-sm font-medium">
                         {featuredPost.category}
@@ -226,10 +256,12 @@ const Blog = () => {
                             <Clock className="w-3 h-3 mr-1" />
                             {featuredPost.read_time} {t('min')}
                           </div>
-                          {featuredPost.views && featuredPost.views > 0 && <div className="flex items-center">
+                          {featuredPost.views && featuredPost.views > 0 && (
+                            <div className="flex items-center">
                               <Eye className="w-3 h-3 mr-1" />
                               {featuredPost.views}
-                            </div>}
+                            </div>
+                          )}
                         </div>
                       </div>
                       
@@ -242,10 +274,12 @@ const Blog = () => {
                     </div>
                   </div>
                 </Card>
-              </section>}
+              </section>
+            )}
 
             {/* Compact Posts Grid */}
-            {regularPosts.length > 0 && <section>
+            {regularPosts.length > 0 && (
+              <section>
                 <div className="text-center mb-8">
                   <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                     {searchTerm ? `${t('searchResults')} (${regularPosts.length})` : t('recentArticles')}
@@ -256,9 +290,14 @@ const Blog = () => {
                 </div>
                 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {regularPosts.map(post => post && <Card key={post.id} className="group overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+                  {regularPosts.map(post => post && (
+                    <Card key={post.id} className="group overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
                       <div className="relative overflow-hidden">
-                        <img src={'/uploads/background.webp'} alt={post.title} className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-700" />
+                        <img 
+                          src={post.image_url || '/uploads/background.webp'} 
+                          alt={post.title} 
+                          className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-700" 
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <Badge className="absolute top-2 left-2 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium text-xs px-2 py-1">
                           {post.category}
@@ -286,10 +325,12 @@ const Blog = () => {
                               {post.read_time} {t('min')}
                             </div>
                           </div>
-                          {post.views && post.views > 0 && <div className="flex items-center">
+                          {post.views && post.views > 0 && (
+                            <div className="flex items-center">
                               <Eye className="w-3 h-3 mr-1" />
                               {post.views}
-                            </div>}
+                            </div>
+                          )}
                         </div>
                         
                         <div className="flex items-center justify-between">
@@ -306,23 +347,31 @@ const Blog = () => {
                           </Link>
                         </div>
                       </CardContent>
-                    </Card>)}
+                    </Card>
+                  ))}
                 </div>
-              </section>}
+              </section>
+            )}
 
             {/* No Results Message */}
-            {filteredPosts.length === 0 && <div className="text-center py-12">
+            {filteredPosts.length === 0 && (
+              <div className="text-center py-12">
                 <h3 className="text-xl font-bold text-white mb-3">{t('noArticlesFound')}</h3>
                 <p className="text-gray-300 mb-6">{t('tryAdjustingSearch')}</p>
-                <Button onClick={() => {
-              setSearchTerm("");
-              setSelectedCategory("all");
-              setDateFilter("all");
-              setSortBy("newest");
-            }} variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                <Button 
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedCategory("all");
+                    setDateFilter("all");
+                    setSortBy("newest");
+                  }}
+                  variant="outline" 
+                  className="border-white/20 text-white hover:bg-white/10"
+                >
                   {t('clearFilters')}
                 </Button>
-              </div>}
+              </div>
+            )}
           </div>
         </div>
 
@@ -365,6 +414,8 @@ const Blog = () => {
 
         <Footer />
       </div>
-    </>;
+    </>
+  );
 };
+
 export default Blog;

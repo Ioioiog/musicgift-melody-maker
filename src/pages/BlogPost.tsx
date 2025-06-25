@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -8,28 +9,23 @@ import { ArrowLeft, Calendar, User, Clock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useBlogPost } from "@/hooks/useBlogPosts";
 import { useBlogPostView } from "@/hooks/useBlogPostView";
+
 const BlogPost = () => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    id
-  } = useParams();
-  const {
-    data: post,
-    isLoading,
-    error
-  } = useBlogPost(id || '');
+  const { t } = useLanguage();
+  const { id } = useParams();
+  const { data: post, isLoading, error } = useBlogPost(id || '');
 
   // Track view for this blog post
   useBlogPostView(post?.id);
+
   if (isLoading) {
-    return <div className="min-h-screen text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+    return (
+      <div className="min-h-screen text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
         <div className="flex justify-center items-center min-h-[50vh] relative z-10">
@@ -39,16 +35,19 @@ const BlogPost = () => {
           </div>
         </div>
         <Footer />
-      </div>;
+      </div>
+    );
   }
+
   if (error) {
     console.error('Blog post error:', error);
-    return <div className="min-h-screen text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+    return (
+      <div className="min-h-screen text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
         <div className="pt-24 relative z-10">
@@ -64,15 +63,18 @@ const BlogPost = () => {
           </div>
         </div>
         <Footer />
-      </div>;
+      </div>
+    );
   }
+
   if (!post) {
-    return <div className="min-h-screen text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+    return (
+      <div className="min-h-screen text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
         <div className="pt-24 relative z-10">
@@ -88,31 +90,33 @@ const BlogPost = () => {
           </div>
         </div>
         <Footer />
-      </div>;
+      </div>
+    );
   }
-  return <>
-      <SEOHead title={`${post.meta_title || post.title} - MusicGift.ro Blog`} description={post.meta_description || post.excerpt || post.content.substring(0, 160).replace(/<[^>]*>/g, '') + '...'} url={`https://www.musicgift.ro/blog/${post.slug}`} type="article" />
+
+  return (
+    <>
+      <SEOHead 
+        title={`${post.meta_title || post.title} - MusicGift.ro Blog`} 
+        description={post.meta_description || post.excerpt || post.content.substring(0, 160).replace(/<[^>]*>/g, '') + '...'} 
+        url={`https://www.musicgift.ro/blog/${post.slug}`} 
+        type="article" 
+      />
       
       <div className="min-h-screen text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30"></div>
         
         {/* Floating Musical Notes */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-10 left-10 text-4xl opacity-30 animate-float">♪</div>
-          <div className="absolute bottom-10 right-10 text-6xl opacity-20 animate-float" style={{
-          animationDelay: '2s'
-        }}>🎵</div>
-          <div className="absolute top-1/2 left-1/4 text-3xl opacity-25 animate-float" style={{
-          animationDelay: '1s'
-        }}>♫</div>
-          <div className="absolute top-1/3 right-1/3 text-2xl opacity-30 animate-float" style={{
-          animationDelay: '3s'
-        }}>♪</div>
+          <div className="absolute bottom-10 right-10 text-6xl opacity-20 animate-float" style={{ animationDelay: '2s' }}>🎵</div>
+          <div className="absolute top-1/2 left-1/4 text-3xl opacity-25 animate-float" style={{ animationDelay: '1s' }}>♫</div>
+          <div className="absolute top-1/3 right-1/3 text-2xl opacity-30 animate-float" style={{ animationDelay: '3s' }}>♪</div>
         </div>
         
         <Navigation />
@@ -151,15 +155,21 @@ const BlogPost = () => {
                     <Clock className="w-5 h-5 mr-2" />
                     {post.read_time} min {t('read') || 'read'}
                   </div>
-                  {post.views !== undefined && post.views > 0 && <div className="flex items-center">
+                  {post.views !== undefined && post.views > 0 && (
+                    <div className="flex items-center">
                       <span className="text-sm">
                         {post.views} {post.views === 1 ? 'view' : 'views'}
                       </span>
-                    </div>}
+                    </div>
+                  )}
                 </div>
-                {/* Use default placeholder image instead of post.image_url */}
+                {/* Use featured image if available, otherwise fallback to default */}
                 <div className="relative overflow-hidden rounded-2xl shadow-xl">
-                  <img src="/uploads/background.webp" alt={post.title} className="w-full h-64 sm:h-96 object-cover" />
+                  <img 
+                    src={post.image_url || "/uploads/background.webp"} 
+                    alt={post.title} 
+                    className="w-full h-64 sm:h-96 object-cover" 
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                 </div>
               </div>
@@ -168,23 +178,26 @@ const BlogPost = () => {
             {/* Article Content */}
             <div className="max-w-4xl mx-auto">
               <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 mb-8">
-                <div className="prose prose-lg max-w-none text-gray-200 leading-relaxed prose-headings:text-white prose-a:text-purple-300 prose-strong:text-white" dangerouslySetInnerHTML={{
-                __html: post.content
-              }} style={{
-                fontSize: '18px',
-                lineHeight: '1.8'
-              }} />
+                <div 
+                  className="prose prose-lg max-w-none text-gray-200 leading-relaxed prose-headings:text-white prose-a:text-purple-300 prose-strong:text-white" 
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                  style={{ fontSize: '18px', lineHeight: '1.8' }}
+                />
               </div>
               
               {/* Tags */}
-              {post.tags && post.tags.length > 0 && <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+              {post.tags && post.tags.length > 0 && (
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
                   <div className="flex flex-wrap gap-2">
                     <span className="text-gray-300 font-medium mr-2">Tags:</span>
-                    {post.tags.map((tag, index) => <Badge key={index} variant="outline" className="text-sm border-white/20 text-gray-300">
+                    {post.tags.map((tag, index) => (
+                      <Badge key={index} variant="outline" className="text-sm border-white/20 text-gray-300">
                         {tag}
-                      </Badge>)}
+                      </Badge>
+                    ))}
                   </div>
-                </div>}
+                </div>
+              )}
             </div>
 
             {/* Call to Action matching About page style */}
@@ -224,6 +237,8 @@ const BlogPost = () => {
 
         <Footer />
       </div>
-    </>;
+    </>
+  );
 };
+
 export default BlogPost;
