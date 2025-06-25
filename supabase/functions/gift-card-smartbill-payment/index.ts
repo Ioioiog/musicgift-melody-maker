@@ -111,8 +111,8 @@ serve(async (req) => {
     <quantity>1</quantity>
     <price>${giftCardData.gift_amount.toFixed(2)}</price>
     <isTaxIncluded>true</isTaxIncluded>
-    <taxName>Taxă 0</taxName>
-    <taxPercentage>0</taxPercentage>
+    <taxName>Normala</taxName>
+    <taxPercentage>19</taxPercentage>
     <saveToDb>false</saveToDb>
     <isService>true</isService>
   </product>
