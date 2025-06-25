@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -11,6 +10,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import PaymentStatusBadge from './PaymentStatusBadge';
 import PaymentProviderIcon from './PaymentProviderIcon';
+import FormDataRenderer from './FormDataRenderer';
 import { format } from 'date-fns';
 
 interface Order {
@@ -147,21 +147,10 @@ const OrderEditDialog = ({ isOpen, onClose, order, onUpdate }: OrderEditDialogPr
             </div>
 
             <div>
-              <Label htmlFor="form_data">Form Data (JSON)</Label>
-              <Textarea
-                id="form_data"
-                value={JSON.stringify(editedOrder.form_data, null, 2)}
-                onChange={(e) => {
-                  try {
-                    const parsed = JSON.parse(e.target.value);
-                    handleFieldChange('form_data', parsed);
-                  } catch (error) {
-                    // Handle invalid JSON silently
-                  }
-                }}
-                rows={8}
-                className="font-mono text-sm"
-              />
+              <Label className="text-base font-semibold mb-4 block">Customer Form Data</Label>
+              <div className="max-h-96 overflow-y-auto border rounded-lg p-4 bg-gray-50">
+                <FormDataRenderer formData={editedOrder.form_data} />
+              </div>
             </div>
           </TabsContent>
 
@@ -244,6 +233,24 @@ const OrderEditDialog = ({ isOpen, onClose, order, onUpdate }: OrderEditDialogPr
           </TabsContent>
 
           <TabsContent value="debug" className="space-y-4">
+            <div>
+              <Label htmlFor="form_data">Raw Form Data (JSON) - Advanced Edit</Label>
+              <Textarea
+                id="form_data"
+                value={JSON.stringify(editedOrder.form_data, null, 2)}
+                onChange={(e) => {
+                  try {
+                    const parsed = JSON.parse(e.target.value);
+                    handleFieldChange('form_data', parsed);
+                  } catch (error) {
+                    // Handle invalid JSON silently
+                  }
+                }}
+                rows={12}
+                className="font-mono text-sm"
+              />
+            </div>
+
             <div className="space-y-4">
               <Collapsible open={debugExpanded} onOpenChange={setDebugExpanded}>
                 <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium">
