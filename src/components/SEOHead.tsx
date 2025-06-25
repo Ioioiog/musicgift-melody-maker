@@ -14,7 +14,7 @@ interface SEOHeadProps {
 const SEOHead = ({ 
   title, 
   description, 
-  image = "/uploads/logo_musicgift.webp",
+  image = "/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
   url = "https://www.musicgift.ro",
   type = "website",
   structuredData
@@ -26,13 +26,6 @@ const SEOHead = ({
 
   const finalTitle = title || defaultTitle;
   const finalDescription = description || defaultDescription;
-  
-  // Ensure the image URL is absolute
-  const absoluteImageUrl = image.startsWith('http') ? image : `${url}${image}`;
-  
-  // Log for debugging
-  console.log('SEO Head - Image URL:', absoluteImageUrl);
-  console.log('SEO Head - Title:', finalTitle);
 
   return (
     <Helmet>
@@ -53,11 +46,10 @@ const SEOHead = ({
       {/* Open Graph Tags */}
       <meta property="og:title" content={finalTitle} />
       <meta property="og:description" content={finalDescription} />
-      <meta property="og:image" content={absoluteImageUrl} />
-      <meta property="og:image:secure_url" content={absoluteImageUrl} />
+      <meta property="og:image" content={`${url}${image}`} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="MusicGift.ro - Cadouri Muzicale Personalizate - Logo oficial" />
+      <meta property="og:image:alt" content="MusicGift.ro - Cadouri Muzicale Personalizate" />
       <meta property="og:url" content={url} />
       <meta property="og:type" content={type} />
       <meta property="og:site_name" content="MusicGift.ro" />
@@ -67,14 +59,8 @@ const SEOHead = ({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={finalTitle} />
       <meta name="twitter:description" content={finalDescription} />
-      <meta name="twitter:image" content={absoluteImageUrl} />
-      <meta name="twitter:image:alt" content="MusicGift.ro - Cadouri Muzicale Personalizate - Logo oficial" />
-      <meta name="twitter:site" content="@MusicGiftRo" />
-      <meta name="twitter:creator" content="@MusicGiftRo" />
-      
-      {/* Additional Social Media Tags */}
-      <meta property="article:publisher" content="https://www.facebook.com/MusicGiftRo" />
-      <meta name="theme-color" content="#8B5CF6" />
+      <meta name="twitter:image" content={`${url}${image}`} />
+      <meta name="twitter:image:alt" content="MusicGift.ro - Cadouri Muzicale Personalizate" />
       
       {/* Performance Hints */}
       <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
@@ -82,13 +68,6 @@ const SEOHead = ({
       
       {/* Sitemap Reference */}
       <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-      
-      {/* Structured Data */}
-      {structuredData && (
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-      )}
     </Helmet>
   );
 };
