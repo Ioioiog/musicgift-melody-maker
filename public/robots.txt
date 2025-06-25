@@ -5,7 +5,7 @@ Disallow: /auth/
 Disallow: /settings/
 Disallow: /history/
 Disallow: /payment/error/
-Disallow: /payment/success/
+
 Disallow: /unsubscribe/
 
 User-agent: Bingbot
@@ -15,7 +15,6 @@ Disallow: /auth/
 Disallow: /settings/
 Disallow: /history/
 Disallow: /payment/error/
-Disallow: /payment/success/
 Disallow: /unsubscribe/
 
 User-agent: Twitterbot
@@ -31,7 +30,6 @@ Disallow: /auth/
 Disallow: /settings/
 Disallow: /history/
 Disallow: /payment/error/
-Disallow: /payment/success/
 Disallow: /unsubscribe/
 
 # Sitemaps
