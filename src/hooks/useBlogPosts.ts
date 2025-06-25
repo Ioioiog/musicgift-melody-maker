@@ -89,17 +89,17 @@ export const useBlogPost = (slug: string) => {
     queryFn: async () => {
       console.log('Fetching blog post with slug:', slug);
       
-      // Fix the query syntax - search across all language translations for the slug
+      // Fix the query syntax - properly quote the slug parameter
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
         .or([
-          `translations->'ro'->>'slug'.eq.${slug}`,
-          `translations->'en'->>'slug'.eq.${slug}`,
-          `translations->'fr'->>'slug'.eq.${slug}`,
-          `translations->'de'->>'slug'.eq.${slug}`,
-          `translations->'pl'->>'slug'.eq.${slug}`,
-          `translations->'it'->>'slug'.eq.${slug}`
+          `translations->'ro'->>'slug'.eq."${slug}"`,
+          `translations->'en'->>'slug'.eq."${slug}"`,
+          `translations->'fr'->>'slug'.eq."${slug}"`,
+          `translations->'de'->>'slug'.eq."${slug}"`,
+          `translations->'pl'->>'slug'.eq."${slug}"`,
+          `translations->'it'->>'slug'.eq."${slug}"`
         ].join(','))
         .maybeSingle();
       
