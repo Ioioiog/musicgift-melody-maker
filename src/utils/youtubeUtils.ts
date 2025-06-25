@@ -57,3 +57,13 @@ export const isValidYouTubeUrl = (url: string): boolean => {
   const videoId = extractYouTubeVideoId(url);
   return videoId !== null;
 };
+
+/**
+ * Gets YouTube video thumbnail URL
+ */
+export const getYouTubeThumbnail = (url: string): string => {
+  const videoId = extractYouTubeVideoId(url);
+  if (!videoId) return '';
+  
+  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+};

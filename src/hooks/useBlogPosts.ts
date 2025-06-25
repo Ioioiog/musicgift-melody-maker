@@ -174,6 +174,7 @@ export const useCreateBlogPost = () => {
           views: postData.views,
           published_at: postData.published_at,
           image_url: postData.image_url,
+          youtube_url: postData.youtube_url,
           created_by: userId,
           updated_by: userId,
         })

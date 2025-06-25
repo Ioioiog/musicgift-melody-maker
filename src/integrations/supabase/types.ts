@@ -71,6 +71,7 @@ export type Database = {
           updated_at: string
           updated_by: string | null
           views: number | null
+          youtube_url: string | null
         }
         Insert: {
           author: string
@@ -89,6 +90,7 @@ export type Database = {
           updated_at?: string
           updated_by?: string | null
           views?: number | null
+          youtube_url?: string | null
         }
         Update: {
           author?: string
@@ -107,6 +109,7 @@ export type Database = {
           updated_at?: string
           updated_by?: string | null
           views?: number | null
+          youtube_url?: string | null
         }
         Relationships: []
       }

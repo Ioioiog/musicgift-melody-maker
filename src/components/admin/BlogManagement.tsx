@@ -10,11 +10,12 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit, Trash2, Eye, Calendar, User, Tag, Globe, Languages } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, Calendar, User, Tag, Globe, Languages, Youtube } from "lucide-react";
 import { useAllBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost } from "@/hooks/useBlogPosts";
 import { BlogPost, CreateBlogPostData, CreateBlogPostTranslations, BlogPostTranslations } from "@/types/blog";
 import { getAvailableLanguages, hasTranslation, generateSlugFromTitle } from "@/utils/blogTranslations";
 import { ImageUpload } from "@/components/ui/image-upload";
+import { isValidYouTubeUrl } from "@/utils/youtubeUtils";
 
 const BlogManagement = () => {
   const { data: posts = [], isLoading } = useAllBlogPosts();
@@ -34,6 +35,7 @@ const BlogManagement = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [readTime, setReadTime] = useState(5);
   const [imageUrl, setImageUrl] = useState('');
+  const [youtubeUrl, setYoutubeUrl] = useState('');
 
   const availableLanguages = [
     { code: 'ro', name: 'Romanian' },
@@ -65,6 +67,7 @@ const BlogManagement = () => {
     setCurrentLanguage('ro');
     setEditingPost(null);
     setImageUrl('');
+    setYoutubeUrl('');
   };
 
   const handleOpenDialog = (post?: BlogPost) => {
@@ -93,6 +96,7 @@ const BlogManagement = () => {
       setReadTime(post.read_time || 5);
       setCurrentLanguage(post.default_language || 'ro');
       setImageUrl(post.image_url || '');
+      setYoutubeUrl(post.youtube_url || '');
     } else {
       resetForm();
     }
@@ -127,6 +131,12 @@ const BlogManagement = () => {
       return;
     }
 
+    // Validate YouTube URL if provided
+    if (youtubeUrl && !isValidYouTubeUrl(youtubeUrl)) {
+      alert('Please enter a valid YouTube URL');
+      return;
+    }
+
     // Ensure current language has slug and convert to proper format
     const updatedTranslations: BlogPostTranslations = {};
     Object.keys(translations).forEach(lang => {
@@ -149,6 +159,7 @@ const BlogManagement = () => {
         tags,
         read_time: readTime,
         image_url: imageUrl,
+        youtube_url: youtubeUrl,
         published_at: status === 'published' ? new Date().toISOString() : undefined,
       });
     } else {
@@ -162,6 +173,7 @@ const BlogManagement = () => {
         tags,
         read_time: readTime,
         image_url: imageUrl,
+        youtube_url: youtubeUrl,
         published_at: status === 'published' ? new Date().toISOString() : undefined,
       };
       await createPost.mutateAsync(createData);
@@ -301,17 +313,44 @@ const BlogManagement = () => {
                 </TabsContent>
 
                 <TabsContent value="media" className="space-y-4">
-                  <ImageUpload
-                    value={imageUrl}
-                    onChange={setImageUrl}
-                    label="Featured Image"
-                    bucketName="blog-images"
-                    maxSizeBytes={10 * 1024 * 1024} // 10MB
-                    acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
-                  />
-                  <p className="text-sm text-gray-500">
-                    Upload a featured image for this blog post. This will be displayed in blog lists and at the top of the article.
-                  </p>
+                  <div className="space-y-6">
+                    <div>
+                      <ImageUpload
+                        value={imageUrl}
+                        onChange={setImageUrl}
+                        label="Featured Image"
+                        bucketName="blog-images"
+                        maxSizeBytes={10 * 1024 * 1024} // 10MB
+                        acceptedTypes={['image/jpeg', 'image/png', 'image/webp', 'image/gif']}
+                      />
+                      <p className="text-sm text-gray-500 mt-2">
+                        Upload a featured image for this blog post. This will be displayed in blog lists and at the top of the article.
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="youtube_url" className="flex items-center gap-2">
+                        <Youtube className="w-4 h-4" />
+                        YouTube Video URL
+                      </Label>
+                      <Input
+                        id="youtube_url"
+                        type="url"
+                        value={youtubeUrl}
+                        onChange={(e) => setYoutubeUrl(e.target.value)}
+                        placeholder="https://www.youtube.com/watch?v=..."
+                        className="mt-2"
+                      />
+                      <p className="text-sm text-gray-500 mt-2">
+                        Add a YouTube video to embed in your blog post. Supports various YouTube URL formats.
+                      </p>
+                      {youtubeUrl && !isValidYouTubeUrl(youtubeUrl) && (
+                        <p className="text-sm text-red-500 mt-1">
+                          Please enter a valid YouTube URL
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </TabsContent>
                 
                 <TabsContent value="settings" className="space-y-4">
@@ -443,6 +482,12 @@ const BlogManagement = () => {
                       {post.is_featured && (
                         <Badge variant="outline">Featured</Badge>
                       )}
+                      {post.youtube_url && (
+                        <Badge variant="outline" className="flex items-center gap-1">
+                          <Youtube className="w-3 h-3" />
+                          Video
+                        </Badge>
+                      )}
                     </div>
                     <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
                       <div className="flex items-center gap-1">
@@ -473,15 +518,20 @@ const BlogManagement = () => {
                         </Badge>
                       ))}
                     </div>
-                    {post.image_url && (
-                      <div className="mt-2">
+                    <div className="flex gap-2 mt-2">
+                      {post.image_url && (
                         <img 
                           src={post.image_url} 
                           alt={localizedPost?.title || 'Blog post image'} 
                           className="w-20 h-20 object-cover rounded-md"
                         />
-                      </div>
-                    )}
+                      )}
+                      {post.youtube_url && (
+                        <div className="w-20 h-20 bg-red-100 rounded-md flex items-center justify-center">
+                          <Youtube className="w-8 h-8 text-red-600" />
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <Button variant="ghost" size="sm" asChild>

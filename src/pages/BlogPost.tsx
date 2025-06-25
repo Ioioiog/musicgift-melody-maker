@@ -1,14 +1,14 @@
-
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, User, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, User, Clock, Youtube } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useBlogPost } from "@/hooks/useBlogPosts";
 import { useBlogPostView } from "@/hooks/useBlogPostView";
+import { convertToYouTubeEmbed } from "@/utils/youtubeUtils";
 
 const BlogPost = () => {
   const { t } = useLanguage();
@@ -136,9 +136,17 @@ const BlogPost = () => {
             {/* Article Header */}
             <header className="mb-12">
               <div className="max-w-4xl mx-auto">
-                <Badge className="mb-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
-                  {post.category}
-                </Badge>
+                <div className="flex items-center gap-2 mb-4">
+                  <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
+                    {post.category}
+                  </Badge>
+                  {post.youtube_url && (
+                    <Badge className="bg-red-600 text-white border-0 flex items-center gap-1">
+                      <Youtube className="w-3 h-3" />
+                      Video
+                    </Badge>
+                  )}
+                </div>
                 <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight">
                   {post.title}
                 </h1>
@@ -163,15 +171,46 @@ const BlogPost = () => {
                     </div>
                   )}
                 </div>
-                {/* Use featured image if available, otherwise fallback to default */}
-                <div className="relative overflow-hidden rounded-2xl shadow-xl">
-                  <img 
-                    src={post.image_url || "/uploads/background.webp"} 
-                    alt={post.title} 
-                    className="w-full h-64 sm:h-96 object-cover" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                </div>
+                
+                {/* YouTube Video Embed */}
+                {post.youtube_url && (
+                  <div className="relative overflow-hidden rounded-2xl shadow-xl mb-8">
+                    <div className="aspect-video">
+                      <iframe
+                        src={convertToYouTubeEmbed(post.youtube_url)}
+                        title={post.title}
+                        className="w-full h-full"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Featured Image */}
+                {post.image_url && (
+                  <div className="relative overflow-hidden rounded-2xl shadow-xl">
+                    <img 
+                      src={post.image_url} 
+                      alt={post.title} 
+                      className="w-full h-64 sm:h-96 object-cover" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                  </div>
+                )}
+                
+                {/* Fallback image if no image or video */}
+                {!post.image_url && !post.youtube_url && (
+                  <div className="relative overflow-hidden rounded-2xl shadow-xl">
+                    <img 
+                      src="/uploads/background.webp" 
+                      alt={post.title} 
+                      className="w-full h-64 sm:h-96 object-cover" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                  </div>
+                )}
               </div>
             </header>
 

@@ -6,7 +6,7 @@ import BlogFilterSection from "@/components/BlogFilterSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye } from "lucide-react";
+import { Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useState, useMemo } from "react";
@@ -228,9 +228,17 @@ const Blog = () => {
                         className="w-full h-48 lg:h-64 object-cover transition-transform duration-700 hover:scale-105" 
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
-                      <Badge className="absolute top-4 left-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-3 py-1 text-sm font-medium">
-                        {featuredPost.category}
-                      </Badge>
+                      <div className="absolute top-4 left-4 flex gap-2">
+                        <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-3 py-1 text-sm font-medium">
+                          {featuredPost.category}
+                        </Badge>
+                        {featuredPost.youtube_url && (
+                          <Badge className="bg-red-600 text-white border-0 px-3 py-1 text-sm font-medium flex items-center gap-1">
+                            <Youtube className="w-3 h-3" />
+                            Video
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                     
                     <div className="lg:w-1/3 p-6 lg:p-8 flex flex-col justify-center">
@@ -299,9 +307,16 @@ const Blog = () => {
                           className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-700" 
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <Badge className="absolute top-2 left-2 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium text-xs px-2 py-1">
-                          {post.category}
-                        </Badge>
+                        <div className="absolute top-2 left-2 flex gap-1">
+                          <Badge className="bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium text-xs px-2 py-1">
+                            {post.category}
+                          </Badge>
+                          {post.youtube_url && (
+                            <Badge className="bg-red-600 text-white border-0 backdrop-blur-sm font-medium text-xs px-2 py-1 flex items-center gap-1">
+                              <Youtube className="w-2 h-2" />
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                       
                       <CardHeader className="pb-2 p-4">

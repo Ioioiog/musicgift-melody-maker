@@ -28,7 +28,8 @@ export interface BlogPost {
   updated_at: string;
   created_by?: string;
   updated_by?: string;
-  image_url?: string; // Added image_url field
+  image_url?: string;
+  youtube_url?: string; // Added YouTube URL field
 }
 
 export interface CreateBlogPostTranslations {
@@ -54,4 +55,5 @@ export interface CreateBlogPostData {
   views?: number;
   published_at?: string;
   image_url?: string;
+  youtube_url?: string; // Added YouTube URL field
 }
