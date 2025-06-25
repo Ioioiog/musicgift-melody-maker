@@ -6,28 +6,41 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Search, Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useState, useMemo } from "react";
 
 const Blog = () => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    data: blogPosts = [],
-    isLoading
-  } = useBlogPosts();
+  const { t } = useLanguage();
+  const { data: blogPosts = [], isLoading } = useBlogPosts();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
-  // Filter posts based on search term
+  // Filter posts based on search term and selected category
   const filteredPosts = useMemo(() => {
-    if (!searchTerm) return blogPosts;
-    const term = searchTerm.toLowerCase();
-    return blogPosts.filter(post => post?.title?.toLowerCase().includes(term) || post?.excerpt?.toLowerCase().includes(term) || post?.category?.toLowerCase().includes(term) || post?.author?.toLowerCase().includes(term));
-  }, [blogPosts, searchTerm]);
+    let posts = blogPosts;
+    
+    // Filter by category
+    if (selectedCategory !== "all") {
+      const categoryName = selectedCategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      posts = posts.filter(post => post?.category === categoryName);
+    }
+    
+    // Filter by search term
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      posts = posts.filter(post => 
+        post?.title?.toLowerCase().includes(term) || 
+        post?.excerpt?.toLowerCase().includes(term) || 
+        post?.category?.toLowerCase().includes(term) || 
+        post?.author?.toLowerCase().includes(term)
+      );
+    }
+    
+    return posts;
+  }, [blogPosts, searchTerm, selectedCategory]);
 
   // Get featured post
   const featuredPost = blogPosts.find(post => post?.is_featured) || blogPosts[0];
@@ -43,6 +56,7 @@ const Blog = () => {
       }
       return acc;
     }, {} as Record<string, number>);
+    
     const categoryIcons = {
       'Music Tips': Music,
       'Industry Insights': Headphones,
@@ -51,6 +65,7 @@ const Blog = () => {
       'Trends': Guitar,
       'General': Music
     };
+    
     const categoryColors = {
       'Music Tips': "from-blue-500 to-blue-600",
       'Industry Insights': "from-purple-500 to-purple-600",
@@ -88,67 +103,67 @@ const Blog = () => {
         <Footer />
       </div>;
   }
+
   return <>
-      <SEOHead title={t('blogPageTitle') || "Blog - MusicGift.ro | Music Industry Insights & Tips"} description={t('blogPageDescription') || "Discover music creation tips, industry insights, and inspiring stories from our personalized music journey. Expert advice for meaningful musical gifts."} url="https://www.musicgift.ro/blog" />
-      
-      <div className="min-h-screen text-white relative overflow-hidden" style={{
+    <SEOHead title={t('blogPageTitle') || "Blog - MusicGift.ro | Music Industry Insights & Tips"} description={t('blogPageDescription') || "Discover music creation tips, industry insights, and inspiring stories from our personalized music journey. Expert advice for meaningful musical gifts."} url="https://www.musicgift.ro/blog" />
+    
+    <div className="min-h-screen text-white relative overflow-hidden" style={{
       backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }}>
-        <div className="absolute inset-0 bg-black/30"></div>
-        <Navigation />
+      <div className="absolute inset-0 bg-black/30"></div>
+      <Navigation />
 
-        {/* Compact Modern Header */}
-        <header className="text-white relative overflow-hidden pt-20 pb-12">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-8 left-8 text-3xl opacity-20 animate-float">♪</div>
-            <div className="absolute bottom-8 right-8 text-4xl opacity-15 animate-float" style={{
-            animationDelay: '2s'
-          }}>🎵</div>
-            <div className="absolute top-1/2 left-1/4 text-2xl opacity-20 animate-float" style={{
-            animationDelay: '1s'
-          }}>♫</div>
+      {/* Compact Modern Header */}
+      <header className="text-white relative overflow-hidden pt-20 pb-12">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-8 left-8 text-3xl opacity-20 animate-float">♪</div>
+          <div className="absolute bottom-8 right-8 text-4xl opacity-15 animate-float" style={{
+          animationDelay: '2s'
+        }}>🎵</div>
+          <div className="absolute top-1/2 left-1/4 text-2xl opacity-20 animate-float" style={{
+          animationDelay: '1s'
+        }}>♫</div>
+        </div>
+        
+        <div className="container mx-auto sm:px-6 relative z-10 px-0 py-0">
+          {/* Hero Section - More Compact */}
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight px-0 py-[5px]">
+              {t('blogHeroTitle') || "Music Blog"}
+            </h1>
+            
+            <p className="text-lg sm:text-xl mb-8 text-gray-200 max-w-2xl mx-auto leading-relaxed">
+              {t('blogHeroSubtitle') || "Discover the art of personalized music, industry insights, and inspiring stories"}
+            </p>
           </div>
-          
-          <div className="container mx-auto sm:px-6 relative z-10 px-0 py-0">
-            {/* Hero Section - More Compact */}
-            <div className="max-w-4xl mx-auto text-center mb-12">
-              
-              
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight px-0 py-[5px]">
-                {t('blogHeroTitle') || "Music Blog"}
-              </h1>
-              
-              <p className="text-lg sm:text-xl mb-8 text-gray-200 max-w-2xl mx-auto leading-relaxed">
-                {t('blogHeroSubtitle') || "Discover the art of personalized music, industry insights, and inspiring stories"}
-              </p>
-            </div>
 
-            {/* Categories as Tabs with Search Bar */}
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-6">
-                
-              </div>
-              
+          {/* Categories as Tabs with Search Bar */}
+          <div className="max-w-5xl mx-auto">
+            <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
               <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-6">
-                <Tabs defaultValue="all" className="w-full lg:w-auto overflow-x-auto">
+                <div className="w-full lg:w-auto overflow-x-auto">
                   <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 bg-white/10 backdrop-blur-md border border-white/20 p-1 rounded-xl min-w-max lg:min-w-0">
                     <TabsTrigger value="all" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap">
                       All ({blogPosts.length})
                     </TabsTrigger>
                     {categories.map((category, index) => {
-                    const IconComponent = category.icon;
-                    return <TabsTrigger key={index} value={category.name.toLowerCase().replace(/\s+/g, '-')} className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-2 sm:px-3 flex items-center gap-1 whitespace-nowrap">
+                      const IconComponent = category.icon;
+                      const categoryValue = category.name.toLowerCase().replace(/\s+/g, '-');
+                      return (
+                        <TabsTrigger key={index} value={categoryValue} className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-2 sm:px-3 flex items-center gap-1 whitespace-nowrap">
                           <IconComponent className="w-3 h-3 flex-shrink-0" />
                           <span className="hidden sm:inline truncate">{category.name}</span>
                           <span className="sm:hidden truncate">{category.name.split(' ')[0]}</span>
                           <span className="ml-1 text-xs opacity-75">({category.count})</span>
-                        </TabsTrigger>;
-                  })}
+                        </TabsTrigger>
+                      );
+                    })}
                   </TabsList>
-                </Tabs>
+                </div>
                 
                 {/* Search Bar - Mobile Friendly */}
                 <div className="w-full lg:w-auto lg:min-w-[280px] lg:max-w-[320px]">
@@ -163,192 +178,303 @@ const Blog = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </header>
 
-        <div className="container mx-auto sm:px-6 relative z-10 px-[18px] py-0">
-          {/* Featured Article */}
-          {featuredPost && <section className="mb-20">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-white mb-4">
-                  {t('featuredArticle') || "Featured Article"}
-                </h2>
-                <p className="text-xl text-gray-200">
-                  Our most popular story this week
-                </p>
-              </div>
-              
-              <Card className="overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white/10 backdrop-blur-md border border-white/20">
-                <div className="lg:flex">
-                  <div className="lg:w-3/5 relative overflow-hidden">
-                    <img src={'/uploads/background.webp'} alt={featuredPost.title} className="w-full h-80 lg:h-full object-cover transition-transform duration-700 hover:scale-105" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
-                    <Badge className="absolute top-6 left-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 font-medium">
-                      {featuredPost.category}
-                    </Badge>
-                  </div>
-                  
-                  <div className="lg:w-2/5 p-8 lg:p-12 flex flex-col justify-center">
-                    <div className="mb-6 lg:hidden">
-                      <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 font-medium">
-                        {featuredPost.category}
-                      </Badge>
-                    </div>
-                    
-                    <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight">
-                      {featuredPost.title}
-                    </h3>
-                    
-                    <p className="text-gray-300 mb-8 text-lg leading-relaxed">
-                      {featuredPost.excerpt}
-                    </p>
-                    
-                    <div className="flex items-center justify-between mb-8 text-gray-400 text-sm">
-                      <div className="flex items-center space-x-6">
-                        <div className="flex items-center">
-                          <Calendar className="w-4 h-4 mr-2" />
-                          {new Date(featuredPost.published_at || featuredPost.created_at).toLocaleDateString()}
-                        </div>
-                        <div className="flex items-center">
-                          <User className="w-4 h-4 mr-2" />
-                          {featuredPost.author}
-                        </div>
-                        <div className="flex items-center">
-                          <Clock className="w-4 h-4 mr-2" />
-                          {featuredPost.read_time} min
-                        </div>
-                        {featuredPost.views && featuredPost.views > 0 && <div className="flex items-center">
-                            <Eye className="w-4 h-4 mr-2" />
-                            {featuredPost.views}
-                          </div>}
-                      </div>
-                    </div>
-                    
-                    <Link to={`/blog/${featuredPost.slug}`}>
-                      <Button className="bg-orange-500 text-white border-0 px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
-                        {t('readMore') || "Read More"} 
-                        <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </Card>
-            </section>}
-
-          {/* Recent Posts - Modern Grid */}
-          {regularPosts.length > 0 && <section className="mb-20">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-white mb-4">
-                  {searchTerm ? `Search Results (${regularPosts.length})` : t('recentArticles') || "Recent Articles"}
-                </h2>
-                <p className="text-xl text-gray-200">
-                  {searchTerm ? `Results for "${searchTerm}"` : "Fresh insights and stories from our music experts"}
-                </p>
-              </div>
-              
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
-                {regularPosts.map(post => post && <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
-                    <div className="relative overflow-hidden">
-                      <img src={'/uploads/background.webp'} alt={post.title} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <Badge className="absolute top-4 left-4 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium">
-                        {post.category}
-                      </Badge>
-                    </div>
-                    
-                    <CardHeader className="pb-4">
-                      <CardTitle className="text-xl group-hover:text-purple-300 transition-colors duration-300 leading-snug text-white">
-                        {post.title}
-                      </CardTitle>
-                      <CardDescription className="text-gray-300 text-base leading-relaxed">
-                        {post.excerpt}
-                      </CardDescription>
-                    </CardHeader>
-                    
-                    <CardContent className="pt-0">
-                      <div className="flex items-center justify-between text-sm text-gray-400 mb-6">
-                        <div className="flex items-center space-x-4">
-                          <div className="flex items-center">
-                            <Calendar className="w-4 h-4 mr-1" />
-                            {new Date(post.published_at || post.created_at).toLocaleDateString()}
-                          </div>
-                          <div className="flex items-center">
-                            <Clock className="w-4 h-4 mr-1" />
-                            {post.read_time} min
-                          </div>
-                        </div>
-                        {post.views && post.views > 0 && <div className="flex items-center">
-                            <Eye className="w-4 h-4 mr-1" />
-                            {post.views}
-                          </div>}
+              {/* Tab Content */}
+              <TabsContent value="all" className="mt-0">
+                <div className="space-y-20">
+                  {/* Featured Article */}
+                  {featuredPost && selectedCategory === "all" && (
+                    <section>
+                      <div className="text-center mb-16">
+                        <h2 className="text-4xl font-bold text-white mb-4">
+                          {t('featuredArticle') || "Featured Article"}
+                        </h2>
+                        <p className="text-xl text-gray-200">
+                          Our most popular story this week
+                        </p>
                       </div>
                       
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center text-sm text-gray-400">
-                          <User className="w-4 h-4 mr-1" />
-                          {post.author}
+                      <Card className="overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white/10 backdrop-blur-md border border-white/20">
+                        <div className="lg:flex">
+                          <div className="lg:w-3/5 relative overflow-hidden">
+                            <img src={'/uploads/background.webp'} alt={featuredPost.title} className="w-full h-80 lg:h-full object-cover transition-transform duration-700 hover:scale-105" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
+                            <Badge className="absolute top-6 left-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 font-medium">
+                              {featuredPost.category}
+                            </Badge>
+                          </div>
+                          
+                          <div className="lg:w-2/5 p-8 lg:p-12 flex flex-col justify-center">
+                            <div className="mb-6 lg:hidden">
+                              <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 font-medium">
+                                {featuredPost.category}
+                              </Badge>
+                            </div>
+                            
+                            <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight">
+                              {featuredPost.title}
+                            </h3>
+                            
+                            <p className="text-gray-300 mb-8 text-lg leading-relaxed">
+                              {featuredPost.excerpt}
+                            </p>
+                            
+                            <div className="flex items-center justify-between mb-8 text-gray-400 text-sm">
+                              <div className="flex items-center space-x-6">
+                                <div className="flex items-center">
+                                  <Calendar className="w-4 h-4 mr-2" />
+                                  {new Date(featuredPost.published_at || featuredPost.created_at).toLocaleDateString()}
+                                </div>
+                                <div className="flex items-center">
+                                  <User className="w-4 h-4 mr-2" />
+                                  {featuredPost.author}
+                                </div>
+                                <div className="flex items-center">
+                                  <Clock className="w-4 h-4 mr-2" />
+                                  {featuredPost.read_time} min
+                                </div>
+                                {featuredPost.views && featuredPost.views > 0 && <div className="flex items-center">
+                                    <Eye className="w-4 h-4 mr-2" />
+                                    {featuredPost.views}
+                                  </div>}
+                              </div>
+                            </div>
+                            
+                            <Link to={`/blog/${featuredPost.slug}`}>
+                              <Button className="bg-orange-500 text-white border-0 px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
+                                {t('readMore') || "Read More"} 
+                                <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
+                              </Button>
+                            </Link>
+                          </div>
                         </div>
-                        
-                        <Link to={`/blog/${post.slug}`}>
-                          <Button variant="ghost" className="text-purple-300 hover:text-purple-200 hover:bg-white/10 font-medium p-2">
-                            {t('readMore') || "Read More"}
-                            <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
-                          </Button>
-                        </Link>
+                      </Card>
+                    </section>
+                  )}
+
+                  {/* Recent Posts - Modern Grid */}
+                  {regularPosts.length > 0 && (
+                    <section>
+                      <div className="text-center mb-16">
+                        <h2 className="text-4xl font-bold text-white mb-4">
+                          {searchTerm ? `Search Results (${regularPosts.length})` : t('recentArticles') || "Recent Articles"}
+                        </h2>
+                        <p className="text-xl text-gray-200">
+                          {searchTerm ? `Results for "${searchTerm}"` : "Fresh insights and stories from our music experts"}
+                        </p>
                       </div>
-                    </CardContent>
-                  </Card>)}
-              </div>
-            </section>}
+                      
+                      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+                        {regularPosts.map(post => post && <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+                            <div className="relative overflow-hidden">
+                              <img src={'/uploads/background.webp'} alt={post.title} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                              <Badge className="absolute top-4 left-4 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium">
+                                {post.category}
+                              </Badge>
+                            </div>
+                            
+                            <CardHeader className="pb-4">
+                              <CardTitle className="text-xl group-hover:text-purple-300 transition-colors duration-300 leading-snug text-white">
+                                {post.title}
+                              </CardTitle>
+                              <CardDescription className="text-gray-300 text-base leading-relaxed">
+                                {post.excerpt}
+                              </CardDescription>
+                            </CardHeader>
+                            
+                            <CardContent className="pt-0">
+                              <div className="flex items-center justify-between text-sm text-gray-400 mb-6">
+                                <div className="flex items-center space-x-4">
+                                  <div className="flex items-center">
+                                    <Calendar className="w-4 h-4 mr-1" />
+                                    {new Date(post.published_at || post.created_at).toLocaleDateString()}
+                                  </div>
+                                  <div className="flex items-center">
+                                    <Clock className="w-4 h-4 mr-1" />
+                                    {post.read_time} min
+                                  </div>
+                                </div>
+                                {post.views && post.views > 0 && <div className="flex items-center">
+                                    <Eye className="w-4 h-4 mr-1" />
+                                    {post.views}
+                                  </div>}
+                              </div>
+                              
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center text-sm text-gray-400">
+                                  <User className="w-4 h-4 mr-1" />
+                                  {post.author}
+                                </div>
+                                
+                                <Link to={`/blog/${post.slug}`}>
+                                  <Button variant="ghost" className="text-purple-300 hover:text-purple-200 hover:bg-white/10 font-medium p-2">
+                                    {t('readMore') || "Read More"}
+                                    <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+                                  </Button>
+                                </Link>
+                              </div>
+                            </CardContent>
+                          </Card>)}
+                      </div>
+                    </section>
+                  )}
 
-          {/* No Results Message */}
-          {searchTerm && filteredPosts.length === 0 && <div className="text-center py-20">
-              <h3 className="text-2xl font-bold text-white mb-4">No articles found</h3>
-              <p className="text-gray-300 mb-8">Try adjusting your search terms or browse all articles.</p>
-              <Button onClick={() => setSearchTerm("")} variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                Clear Search
-              </Button>
-            </div>}
+                  {/* No Results Message */}
+                  {(searchTerm || selectedCategory !== "all") && filteredPosts.length === 0 && (
+                    <div className="text-center py-20">
+                      <h3 className="text-2xl font-bold text-white mb-4">No articles found</h3>
+                      <p className="text-gray-300 mb-8">Try adjusting your search terms or browse all articles.</p>
+                      <Button onClick={() => {
+                        setSearchTerm("");
+                        setSelectedCategory("all");
+                      }} variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                        Clear Filters
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
 
-          <section className="relative py-20 bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-3xl border border-white/30 text-white overflow-hidden shadow-2xl">
-            <div className="absolute top-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-            <div className="absolute bottom-10 right-10 w-60 h-60 bg-white/5 rounded-full blur-3xl"></div>
-            
-            <div className="relative z-10 text-center px-8">
-              <div className="mb-6">
-                <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-sm px-4 py-2 font-medium">
-                  Ready to Start?
-                </Badge>
-              </div>
-              
-              <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-                {t('blogCtaTitle') || "Ready to Create Your Musical Gift?"}
-              </h2>
-              
-              <p className="text-xl mb-10 text-white/90 max-w-3xl mx-auto leading-relaxed">
-                {t('blogCtaDescription') || "Let our expert team create a personalized song that tells your unique story"}
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/packages">
-                  <Button size="lg" className="bg-white hover:bg-gray-100 px-8 py-4 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 text-orange-500">
-                    {t('viewPackages') || "View Packages"}
-                  </Button>
-                </Link>
-                <Link to="/contact">
-                  <Button size="lg" variant="outline" className="border-white hover:bg-white px-8 py-4 text-lg font-medium transition-all duration-300 text-orange-500">
-                    {t('getInTouch') || "Get in Touch"}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </section>
+              {/* Category-specific tab contents */}
+              {categories.map((category) => {
+                const categoryValue = category.name.toLowerCase().replace(/\s+/g, '-');
+                return (
+                  <TabsContent key={categoryValue} value={categoryValue} className="mt-0">
+                    <div className="space-y-20">
+                      {regularPosts.length > 0 && (
+                        <section>
+                          <div className="text-center mb-16">
+                            <h2 className="text-4xl font-bold text-white mb-4">
+                              {category.name} {searchTerm ? `(${regularPosts.length} results)` : `(${regularPosts.length} articles)`}
+                            </h2>
+                            <p className="text-xl text-gray-200">
+                              {searchTerm ? `Results for "${searchTerm}" in ${category.name}` : `Latest insights in ${category.name}`}
+                            </p>
+                          </div>
+                          
+                          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+                            {regularPosts.map(post => post && <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+                                <div className="relative overflow-hidden">
+                                  <img src={'/uploads/background.webp'} alt={post.title} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                  <Badge className="absolute top-4 left-4 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium">
+                                    {post.category}
+                                  </Badge>
+                                </div>
+                                
+                                <CardHeader className="pb-4">
+                                  <CardTitle className="text-xl group-hover:text-purple-300 transition-colors duration-300 leading-snug text-white">
+                                    {post.title}
+                                  </CardTitle>
+                                  <CardDescription className="text-gray-300 text-base leading-relaxed">
+                                    {post.excerpt}
+                                  </CardDescription>
+                                </CardHeader>
+                                
+                                <CardContent className="pt-0">
+                                  <div className="flex items-center justify-between text-sm text-gray-400 mb-6">
+                                    <div className="flex items-center space-x-4">
+                                      <div className="flex items-center">
+                                        <Calendar className="w-4 h-4 mr-1" />
+                                        {new Date(post.published_at || post.created_at).toLocaleDateString()}
+                                      </div>
+                                      <div className="flex items-center">
+                                        <Clock className="w-4 h-4 mr-1" />
+                                        {post.read_time} min
+                                      </div>
+                                    </div>
+                                    {post.views && post.views > 0 && <div className="flex items-center">
+                                        <Eye className="w-4 h-4 mr-1" />
+                                        {post.views}
+                                      </div>}
+                                  </div>
+                                  
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center text-sm text-gray-400">
+                                      <User className="w-4 h-4 mr-1" />
+                                      {post.author}
+                                    </div>
+                                    
+                                    <Link to={`/blog/${post.slug}`}>
+                                      <Button variant="ghost" className="text-purple-300 hover:text-purple-200 hover:bg-white/10 font-medium p-2">
+                                        {t('readMore') || "Read More"}
+                                        <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+                                      </Button>
+                                    </Link>
+                                  </div>
+                                </CardContent>
+                              </Card>)}
+                          </div>
+                        </section>
+                      )}
+
+                      {/* No Results Message */}
+                      {regularPosts.length === 0 && (
+                        <div className="text-center py-20">
+                          <h3 className="text-2xl font-bold text-white mb-4">No articles found</h3>
+                          <p className="text-gray-300 mb-8">
+                            {searchTerm 
+                              ? `No articles found for "${searchTerm}" in ${category.name}` 
+                              : `No articles available in ${category.name} yet`
+                            }
+                          </p>
+                          <Button onClick={() => {
+                            setSearchTerm("");
+                            setSelectedCategory("all");
+                          }} variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                            View All Articles
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </TabsContent>
+                );
+              })}
+            </Tabs>
+          </div>
         </div>
+      </header>
 
-        <Footer />
+      <div className="container mx-auto sm:px-6 relative z-10 px-[18px] py-0">
+        <section className="relative py-20 bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-3xl border border-white/30 text-white overflow-hidden shadow-2xl">
+          <div className="absolute top-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-10 right-10 w-60 h-60 bg-white/5 rounded-full blur-3xl"></div>
+          
+          <div className="relative z-10 text-center px-8">
+            <div className="mb-6">
+              <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-sm px-4 py-2 font-medium">
+                Ready to Start?
+              </Badge>
+            </div>
+            
+            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
+              {t('blogCtaTitle') || "Ready to Create Your Musical Gift?"}
+            </h2>
+            
+            <p className="text-xl mb-10 text-white/90 max-w-3xl mx-auto leading-relaxed">
+              {t('blogCtaDescription') || "Let our expert team create a personalized song that tells your unique story"}
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/packages">
+                <Button size="lg" className="bg-white hover:bg-gray-100 px-8 py-4 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 text-orange-500">
+                  {t('viewPackages') || "View Packages"}
+                </Button>
+              </Link>
+              <Link to="/contact">
+                <Button size="lg" variant="outline" className="border-white hover:bg-white px-8 py-4 text-lg font-medium transition-all duration-300 text-orange-500">
+                  {t('getInTouch') || "Get in Touch"}
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
       </div>
-    </>;
+
+      <Footer />
+    </div>
+  </>;
 };
 
 export default Blog;
