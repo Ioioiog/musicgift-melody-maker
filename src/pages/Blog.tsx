@@ -69,6 +69,7 @@ const Blog = () => {
       color: categoryColors[name as keyof typeof categoryColors] || "from-gray-500 to-gray-600"
     }));
   }, [blogPosts]);
+
   if (isLoading) {
     return <div className="min-h-screen text-white relative overflow-hidden" style={{
       backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
@@ -131,33 +132,33 @@ const Blog = () => {
                 
               </div>
               
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-6 mb-6">
-                <Tabs defaultValue="all" className="w-full lg:w-auto">
-                  <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 bg-white/10 backdrop-blur-md border border-white/20 p-1 rounded-xl">
-                    <TabsTrigger value="all" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-sm py-2 px-3">
+              <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-6">
+                <Tabs defaultValue="all" className="w-full lg:w-auto overflow-x-auto">
+                  <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 bg-white/10 backdrop-blur-md border border-white/20 p-1 rounded-xl min-w-max lg:min-w-0">
+                    <TabsTrigger value="all" className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-2 sm:px-3 whitespace-nowrap">
                       All ({blogPosts.length})
                     </TabsTrigger>
                     {categories.map((category, index) => {
                     const IconComponent = category.icon;
-                    return <TabsTrigger key={index} value={category.name.toLowerCase().replace(/\s+/g, '-')} className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-sm py-2 px-3 flex items-center gap-1">
-                          <IconComponent className="w-3 h-3" />
-                          <span className="hidden sm:inline">{category.name}</span>
-                          <span className="sm:hidden">{category.name.split(' ')[0]}</span>
+                    return <TabsTrigger key={index} value={category.name.toLowerCase().replace(/\s+/g, '-')} className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-2 sm:px-3 flex items-center gap-1 whitespace-nowrap">
+                          <IconComponent className="w-3 h-3 flex-shrink-0" />
+                          <span className="hidden sm:inline truncate">{category.name}</span>
+                          <span className="sm:hidden truncate">{category.name.split(' ')[0]}</span>
                           <span className="ml-1 text-xs opacity-75">({category.count})</span>
                         </TabsTrigger>;
                   })}
                   </TabsList>
                 </Tabs>
                 
-                {/* Search Bar - Moved to the right */}
-                <div className="w-full lg:w-auto lg:min-w-[300px]">
+                {/* Search Bar - Mobile Friendly */}
+                <div className="w-full lg:w-auto lg:min-w-[280px] lg:max-w-[320px]">
                   <div className="relative group">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-purple-400 transition-colors" />
                     <Input 
                       placeholder={t('searchPlaceholder') || "Search articles..."} 
                       value={searchTerm} 
                       onChange={e => setSearchTerm(e.target.value)} 
-                      className="pl-10 pr-4 py-3 bg-white/10 backdrop-blur-md border-white/20 rounded-xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 w-full" 
+                      className="pl-10 pr-4 py-3 bg-white/10 backdrop-blur-md border-white/20 rounded-xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 w-full text-sm" 
                     />
                   </div>
                 </div>
