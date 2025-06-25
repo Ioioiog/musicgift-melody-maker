@@ -10,10 +10,14 @@ import { Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye 
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useState, useMemo } from "react";
-
 const Blog = () => {
-  const { t } = useLanguage();
-  const { data: blogPosts = [], isLoading } = useBlogPosts();
+  const {
+    t
+  } = useLanguage();
+  const {
+    data: blogPosts = [],
+    isLoading
+  } = useBlogPosts();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
@@ -23,29 +27,23 @@ const Blog = () => {
   // Filter and sort posts
   const filteredPosts = useMemo(() => {
     let posts = blogPosts;
-    
+
     // Filter by category
     if (selectedCategory !== "all") {
       const categoryName = selectedCategory.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
       posts = posts.filter(post => post?.category === categoryName);
     }
-    
+
     // Filter by search term
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      posts = posts.filter(post => 
-        post?.title?.toLowerCase().includes(term) || 
-        post?.excerpt?.toLowerCase().includes(term) || 
-        post?.category?.toLowerCase().includes(term) || 
-        post?.author?.toLowerCase().includes(term)
-      );
+      posts = posts.filter(post => post?.title?.toLowerCase().includes(term) || post?.excerpt?.toLowerCase().includes(term) || post?.category?.toLowerCase().includes(term) || post?.author?.toLowerCase().includes(term));
     }
 
     // Filter by date
     if (dateFilter !== "all") {
       const now = new Date();
       const filterDate = new Date();
-      
       switch (dateFilter) {
         case "recent":
           filterDate.setDate(now.getDate() - 30);
@@ -60,7 +58,6 @@ const Blog = () => {
           filterDate.setDate(1);
           break;
       }
-      
       if (dateFilter !== "all") {
         posts = posts.filter(post => {
           const postDate = new Date(post?.published_at || post?.created_at);
@@ -83,7 +80,6 @@ const Blog = () => {
           return new Date(b?.published_at || b?.created_at).getTime() - new Date(a?.published_at || a?.created_at).getTime();
       }
     });
-    
     return posts;
   }, [blogPosts, searchTerm, selectedCategory, dateFilter, sortBy]);
 
@@ -101,7 +97,6 @@ const Blog = () => {
       }
       return acc;
     }, {} as Record<string, number>);
-    
     const categoryIcons = {
       'Music Tips': Music,
       'Industry Insights': Headphones,
@@ -110,7 +105,6 @@ const Blog = () => {
       'Trends': Guitar,
       'General': Music
     };
-    
     const categoryColors = {
       'Music Tips': "from-blue-500 to-blue-600",
       'Industry Insights': "from-purple-500 to-purple-600",
@@ -119,7 +113,6 @@ const Blog = () => {
       'Trends': "from-orange-500 to-orange-600",
       'General': "from-gray-500 to-gray-600"
     };
-
     const predefinedCategories = ['Music Tips', 'Industry Insights', 'Client Stories', 'Behind the Scenes', 'Trends', 'General'];
     return predefinedCategories.map(name => ({
       name,
@@ -128,7 +121,6 @@ const Blog = () => {
       color: categoryColors[name as keyof typeof categoryColors] || "from-gray-500 to-gray-600"
     }));
   }, [blogPosts]);
-
   if (isLoading) {
     return <div className="min-h-screen text-white relative overflow-hidden" style={{
       backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
@@ -147,7 +139,6 @@ const Blog = () => {
         <Footer />
       </div>;
   }
-
   return <>
     <SEOHead title={t('blogPageTitle') || "Blog - MusicGift.ro | Music Industry Insights & Tips"} description={t('blogPageDescription') || "Discover music creation tips, industry insights, and inspiring stories from our personalized music journey. Expert advice for meaningful musical gifts."} url="https://www.musicgift.ro/blog" />
     
@@ -165,11 +156,11 @@ const Blog = () => {
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-8 left-8 text-3xl opacity-20 animate-float">♪</div>
           <div className="absolute bottom-8 right-8 text-4xl opacity-15 animate-float" style={{
-          animationDelay: '2s'
-        }}>🎵</div>
+            animationDelay: '2s'
+          }}>🎵</div>
           <div className="absolute top-1/2 left-1/4 text-2xl opacity-20 animate-float" style={{
-          animationDelay: '1s'
-        }}>♫</div>
+            animationDelay: '1s'
+          }}>♫</div>
         </div>
         
         <div className="container mx-auto sm:px-6 relative z-10 px-0 py-0">
@@ -185,29 +176,14 @@ const Blog = () => {
           </div>
 
           {/* Filter Section */}
-          <BlogFilterSection
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            categories={categories}
-            totalPosts={blogPosts.length}
-            filteredCount={filteredPosts.length}
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-            dateFilter={dateFilter}
-            setDateFilter={setDateFilter}
-            isOpen={filtersOpen}
-            setIsOpen={setFiltersOpen}
-          />
+          <BlogFilterSection searchTerm={searchTerm} setSearchTerm={setSearchTerm} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories} totalPosts={blogPosts.length} filteredCount={filteredPosts.length} sortBy={sortBy} setSortBy={setSortBy} dateFilter={dateFilter} setDateFilter={setDateFilter} isOpen={filtersOpen} setIsOpen={setFiltersOpen} />
         </div>
       </header>
 
       <div className="container mx-auto sm:px-6 relative z-10 px-0 py-0">
         <div className="space-y-20">
           {/* Featured Article */}
-          {featuredPost && selectedCategory === "all" && !searchTerm && (
-            <section>
+          {featuredPost && selectedCategory === "all" && !searchTerm && <section>
               <div className="text-center mb-16">
                 <h2 className="text-4xl font-bold text-white mb-4">
                   {t('featuredArticle') || "Featured Article"}
@@ -272,12 +248,10 @@ const Blog = () => {
                   </div>
                 </div>
               </Card>
-            </section>
-          )}
+            </section>}
 
           {/* Recent Posts - Modern Grid */}
-          {regularPosts.length > 0 && (
-            <section>
+          {regularPosts.length > 0 && <section>
               <div className="text-center mb-16">
                 <h2 className="text-4xl font-bold text-white mb-4">
                   {searchTerm ? `Search Results (${regularPosts.length})` : t('recentArticles') || "Recent Articles"}
@@ -340,34 +314,27 @@ const Blog = () => {
                     </CardContent>
                   </Card>)}
               </div>
-            </section>
-          )}
+            </section>}
 
           {/* No Results Message */}
-          {filteredPosts.length === 0 && (
-            <div className="text-center py-20">
+          {filteredPosts.length === 0 && <div className="text-center py-20">
               <h3 className="text-2xl font-bold text-white mb-4">No articles found</h3>
               <p className="text-gray-300 mb-8">Try adjusting your search terms or browse all articles.</p>
-              <Button 
-                onClick={() => {
-                  setSearchTerm("");
-                  setSelectedCategory("all");
-                  setDateFilter("all");
-                  setSortBy("newest");
-                }} 
-                variant="outline" 
-                className="border-white/20 text-white hover:bg-white/10"
-              >
+              <Button onClick={() => {
+              setSearchTerm("");
+              setSelectedCategory("all");
+              setDateFilter("all");
+              setSortBy("newest");
+            }} variant="outline" className="border-white/20 text-white hover:bg-white/10">
                 Clear Filters
               </Button>
-            </div>
-          )}
+            </div>}
         </div>
       </div>
 
       {/* CTA Section */}
       <div className="container mx-auto sm:px-6 relative z-10 px-[18px] py-0">
-        <section className="relative py-20 bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-3xl border border-white/30 text-white overflow-hidden shadow-2xl">
+        <section className="relative bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-3xl border border-white/30 text-white overflow-hidden shadow-2xl py-0">
           <div className="absolute top-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
           <div className="absolute bottom-10 right-10 w-60 h-60 bg-white/5 rounded-full blur-3xl"></div>
           
@@ -406,5 +373,4 @@ const Blog = () => {
     </div>
   </>;
 };
-
 export default Blog;
