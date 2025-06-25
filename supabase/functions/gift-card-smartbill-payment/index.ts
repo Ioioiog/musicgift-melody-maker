@@ -68,7 +68,7 @@ serve(async (req) => {
       username: Deno.env.get('SMARTBILL_USERNAME'),
       token: Deno.env.get('SMARTBILL_TOKEN'),
       companyVat: Deno.env.get('SMARTBILL_COMPANY_VAT'),
-      series: 'GC' // Gift Card series
+      series: 'STRP' // Using STRP series for gift cards
     };
 
     console.log('SmartBill config check:', {
@@ -123,7 +123,8 @@ serve(async (req) => {
       code: giftCardCode,
       amount: giftCardData.gift_amount,
       currency: giftCardData.currency,
-      companyVat: smartbillConfig.companyVat
+      companyVat: smartbillConfig.companyVat,
+      series: smartbillConfig.series
     });
 
     // Create SmartBill proforma with XML format
