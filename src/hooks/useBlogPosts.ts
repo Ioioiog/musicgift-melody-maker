@@ -1,10 +1,32 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { BlogPost, CreateBlogPostData, BlogPostTranslations } from "@/types/blog";
 import { getLocalizedBlogPost, generateSlugFromTitle } from "@/utils/blogTranslations";
+
+// Type guard to safely validate BlogPostTranslations structure
+const isBlogPostTranslations = (value: unknown): value is BlogPostTranslations => {
+  if (!value || typeof value !== 'object') return false;
+  const obj = value as Record<string, unknown>;
+  
+  // Check if all values are translation objects
+  return Object.values(obj).every(translation => 
+    translation && 
+    typeof translation === 'object' && 
+    'title' in translation && 
+    'content' in translation
+  );
+};
+
+// Safe casting function
+const safeCastToTranslations = (value: unknown): BlogPostTranslations => {
+  if (isBlogPostTranslations(value)) {
+    return value;
+  }
+  // Return empty translations object as fallback
+  return {};
+};
 
 export const useBlogPosts = () => {
   const { language } = useLanguage();
@@ -20,10 +42,10 @@ export const useBlogPosts = () => {
       
       if (error) throw error;
       
-      // Type assertion to handle Supabase Json type
+      // Safe type casting with proper validation
       const posts = data.map(post => ({
         ...post,
-        translations: post.translations as BlogPostTranslations
+        translations: safeCastToTranslations(post.translations)
       })) as BlogPost[];
       
       return posts.map(post => getLocalizedBlogPost(post, language)).filter(Boolean);
@@ -44,10 +66,10 @@ export const useAllBlogPosts = () => {
       
       if (error) throw error;
       
-      // Type assertion to handle Supabase Json type
+      // Safe type casting with proper validation
       const posts = data.map(post => ({
         ...post,
-        translations: post.translations as BlogPostTranslations
+        translations: safeCastToTranslations(post.translations)
       })) as BlogPost[];
       
       return posts.map(post => ({
@@ -72,10 +94,10 @@ export const useBlogPost = (slug: string) => {
       
       if (error) throw error;
       
-      // Type assertion to handle Supabase Json type
+      // Safe type casting with proper validation
       const post = {
         ...data,
-        translations: data.translations as BlogPostTranslations
+        translations: safeCastToTranslations(data.translations)
       } as BlogPost;
       
       return getLocalizedBlogPost(post, language);
@@ -104,7 +126,7 @@ export const useCreateBlogPost = () => {
       const { data, error } = await supabase
         .from('blog_posts')
         .insert({
-          translations: processedTranslations as any, // Type assertion for Supabase
+          translations: processedTranslations as unknown as any, // Safe casting to unknown first
           default_language: postData.default_language,
           category: postData.category,
           author: postData.author,
@@ -166,7 +188,7 @@ export const useUpdateBlogPost = () => {
         .from('blog_posts')
         .update({
           ...updates,
-          translations: updates.translations as any, // Type assertion for Supabase
+          translations: updates.translations as unknown as any, // Safe casting to unknown first
           updated_by: userId,
         })
         .eq('id', id)
