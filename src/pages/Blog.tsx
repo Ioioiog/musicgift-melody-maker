@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -108,92 +107,91 @@ const Blog = () => {
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
 
-        {/* Header Section with Hero and Categories */}
-        <header className="text-white relative overflow-hidden py-[65px]">
+        {/* Compact Modern Header */}
+        <header className="text-white relative overflow-hidden pt-20 pb-12">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-10 left-10 text-4xl opacity-30 animate-float">♪</div>
-            <div className="absolute bottom-10 right-10 text-6xl opacity-20 animate-float" style={{
+            <div className="absolute top-8 left-8 text-3xl opacity-20 animate-float">♪</div>
+            <div className="absolute bottom-8 right-8 text-4xl opacity-15 animate-float" style={{
             animationDelay: '2s'
           }}>🎵</div>
-            <div className="absolute top-1/2 left-1/4 text-3xl opacity-25 animate-float" style={{
+            <div className="absolute top-1/2 left-1/4 text-2xl opacity-20 animate-float" style={{
             animationDelay: '1s'
           }}>♫</div>
-            <div className="absolute top-1/3 right-1/3 text-2xl opacity-30 animate-float" style={{
-            animationDelay: '3s'
-          }}>♪</div>
           </div>
           
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
-            <div className="max-w-4xl mx-auto text-center text-white px-0 py-[39px]">
-              <div className="mb-6">
-                <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-sm px-4 py-2 text-sm font-medium">
-                  Latest Insights & Stories
-                </Badge>
-              </div>
+            {/* Hero Section - More Compact */}
+            <div className="max-w-4xl mx-auto text-center mb-12">
+              <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-sm px-3 py-1 text-sm font-medium mb-4">
+                Latest Insights & Stories
+              </Badge>
               
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-8 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight">
                 {t('blogHeroTitle') || "Music Blog"}
               </h1>
               
-              <p className="text-xl sm:text-2xl mb-12 text-gray-200 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg sm:text-xl mb-8 text-gray-200 max-w-2xl mx-auto leading-relaxed">
                 {t('blogHeroSubtitle') || "Discover the art of personalized music, industry insights, and inspiring stories"}
               </p>
               
-              <div className="max-w-xl mx-auto mb-16">
+              {/* Compact Search */}
+              <div className="max-w-md mx-auto mb-8">
                 <div className="relative group">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-purple-400 transition-colors" />
-                  <Input placeholder={t('searchPlaceholder') || "Search articles..."} className="pl-12 pr-4 py-4 bg-white/10 backdrop-blur-md border-white/20 rounded-2xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 text-lg" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-purple-400 transition-colors" />
+                  <Input 
+                    placeholder={t('searchPlaceholder') || "Search articles..."} 
+                    className="pl-10 pr-4 py-3 bg-white/10 backdrop-blur-md border-white/20 rounded-xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20" 
+                    value={searchTerm} 
+                    onChange={e => setSearchTerm(e.target.value)} 
+                  />
                 </div>
               </div>
             </div>
 
-            {/* Categories in Header */}
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-white mb-4">
+            {/* Compact Categories Grid */}
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold text-white mb-2">
                   {t('blogCategoriesTitle') || "Explore Categories"}
                 </h2>
-                <p className="text-lg text-gray-200 max-w-2xl mx-auto">
-                  Dive into our curated collection of music insights and stories
-                </p>
               </div>
               
-              <div className="md:grid md:grid-cols-2 lg:grid-cols-6 md:gap-6">
-                <div className="flex overflow-x-auto space-x-4 pb-4 md:hidden scrollbar-hide">
-                  {categories.map((category, index) => {
-                    const IconComponent = category.icon;
-                    return (
-                      <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden flex-shrink-0 w-48">
-                        <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
-                        <CardContent className="p-6 text-center transition-colors">
-                          <div className={`w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                            <IconComponent className="w-6 h-6 text-white" />
-                          </div>
-                          <h3 className="font-bold text-white mb-2 text-sm">{category.name}</h3>
-                          <p className="text-gray-300 font-medium text-xs">{category.count} {t('articles') || 'articles'}</p>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-                
-                <div className="hidden md:contents">
-                  {categories.map((category, index) => {
-                    const IconComponent = category.icon;
-                    return (
-                      <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-                        <div className={`h-2 bg-gradient-to-r ${category.color}`}></div>
-                        <CardContent className="p-8 text-center transition-colors">
-                          <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                            <IconComponent className="w-8 h-8 text-white" />
-                          </div>
-                          <h3 className="font-bold text-white mb-2 text-lg">{category.name}</h3>
-                          <p className="text-gray-300 font-medium">{category.count} {t('articles') || 'articles'}</p>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
+              {/* Mobile Horizontal Scroll */}
+              <div className="flex overflow-x-auto space-x-3 pb-4 md:hidden scrollbar-hide">
+                {categories.map((category, index) => {
+                  const IconComponent = category.icon;
+                  return (
+                    <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:-translate-y-1 overflow-hidden flex-shrink-0 w-40">
+                      <div className={`h-1 bg-gradient-to-r ${category.color}`}></div>
+                      <CardContent className="p-4 text-center">
+                        <div className={`w-8 h-8 mx-auto mb-2 rounded-lg bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                          <IconComponent className="w-4 h-4 text-white" />
+                        </div>
+                        <h3 className="font-semibold text-white mb-1 text-xs">{category.name}</h3>
+                        <p className="text-gray-300 text-xs">{category.count} {t('articles') || 'articles'}</p>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+              
+              {/* Desktop Grid - More Compact */}
+              <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-6 md:gap-4">
+                {categories.map((category, index) => {
+                  const IconComponent = category.icon;
+                  return (
+                    <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                      <div className={`h-1 bg-gradient-to-r ${category.color}`}></div>
+                      <CardContent className="p-5 text-center">
+                        <div className={`w-10 h-10 mx-auto mb-3 rounded-xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                          <IconComponent className="w-5 h-5 text-white" />
+                        </div>
+                        <h3 className="font-semibold text-white mb-1 text-sm">{category.name}</h3>
+                        <p className="text-gray-300 text-xs">{category.count} {t('articles') || 'articles'}</p>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             </div>
           </div>
