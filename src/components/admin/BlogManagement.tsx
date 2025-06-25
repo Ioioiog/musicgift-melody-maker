@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +17,8 @@ import { BlogPost, CreateBlogPostData, CreateBlogPostTranslations, BlogPostTrans
 import { getAvailableLanguages, hasTranslation, generateSlugFromTitle } from "@/utils/blogTranslations";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { isValidYouTubeUrl } from "@/utils/youtubeUtils";
+import RichTextEditor from "./RichTextEditor";
+import ContentPreview from "./ContentPreview";
 
 const BlogManagement = () => {
   const { data: posts = [], isLoading } = useAllBlogPosts();
@@ -36,6 +39,7 @@ const BlogManagement = () => {
   const [readTime, setReadTime] = useState(5);
   const [imageUrl, setImageUrl] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [useRichEditor, setUseRichEditor] = useState(true);
 
   const availableLanguages = [
     { code: 'ro', name: 'Romanian' },
@@ -201,7 +205,7 @@ const BlogManagement = () => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Blog Management</h2>
-          <p className="text-gray-600">Create, edit, and manage your multi-language blog posts</p>
+          <p className="text-gray-600">Create, edit, and manage your multi-language blog posts with ease</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
@@ -210,11 +214,11 @@ const BlogManagement = () => {
               New Post
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-7xl max-h-[95vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingPost ? 'Edit Post' : 'Create New Post'}</DialogTitle>
               <DialogDescription>
-                {editingPost ? 'Update your multi-language blog post' : 'Create a new multi-language blog post'}
+                {editingPost ? 'Update your multi-language blog post using our user-friendly editor' : 'Create a new multi-language blog post with rich text formatting'}
               </DialogDescription>
             </DialogHeader>
             
@@ -260,7 +264,7 @@ const BlogManagement = () => {
               </div>
 
               <Tabs defaultValue="content" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
+                <TabsList className="grid w-full grid-cols-4 bg-gray-100">
                   <TabsTrigger value="content">Content ({availableLanguages.find(l => l.code === currentLanguage)?.name})</TabsTrigger>
                   <TabsTrigger value="media">Media</TabsTrigger>
                   <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -268,47 +272,90 @@ const BlogManagement = () => {
                 </TabsList>
                 
                 <TabsContent value="content" className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="title">Title *</Label>
-                      <Input
-                        id="title"
-                        value={getCurrentTranslation().title}
-                        onChange={(e) => handleTranslationChange('title', e.target.value)}
-                        placeholder={`Enter post title in ${availableLanguages.find(l => l.code === currentLanguage)?.name}`}
+                  <div className="grid grid-cols-2 gap-6">
+                    {/* Left Column - Content Input */}
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="title">Title *</Label>
+                          <Input
+                            id="title"
+                            value={getCurrentTranslation().title}
+                            onChange={(e) => handleTranslationChange('title', e.target.value)}
+                            placeholder={`Enter post title in ${availableLanguages.find(l => l.code === currentLanguage)?.name}`}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="slug">Slug</Label>
+                          <Input
+                            id="slug"
+                            value={getCurrentTranslation().slug}
+                            onChange={(e) => handleTranslationChange('slug', e.target.value)}
+                            placeholder="Auto-generated from title"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="excerpt">Excerpt</Label>
+                        <Textarea
+                          id="excerpt"
+                          value={getCurrentTranslation().excerpt}
+                          onChange={(e) => handleTranslationChange('excerpt', e.target.value)}
+                          placeholder="Brief description of the post (will be used in previews)"
+                          rows={3}
+                        />
+                      </div>
+                      
+                      {/* Editor Toggle */}
+                      <div className="flex items-center space-x-2 p-3 bg-blue-50 rounded-lg">
+                        <Switch
+                          id="use-rich-editor"
+                          checked={useRichEditor}
+                          onCheckedChange={setUseRichEditor}
+                        />
+                        <Label htmlFor="use-rich-editor" className="font-medium">
+                          Use Rich Text Editor (Recommended)
+                        </Label>
+                        <span className="text-sm text-gray-600">
+                          - Easy formatting without HTML knowledge
+                        </span>
+                      </div>
+                      
+                      {/* Content Editor */}
+                      {useRichEditor ? (
+                        <RichTextEditor
+                          label="Content *"
+                          value={getCurrentTranslation().content}
+                          onChange={(value) => handleTranslationChange('content', value)}
+                          placeholder="Write your blog post content here. Use the toolbar above to format text, add links, images, and more!"
+                          minHeight="400px"
+                        />
+                      ) : (
+                        <div>
+                          <Label htmlFor="content">Content * (HTML)</Label>
+                          <Textarea
+                            id="content"
+                            value={getCurrentTranslation().content}
+                            onChange={(e) => handleTranslationChange('content', e.target.value)}
+                            placeholder="Write your post content here (HTML supported)"
+                            rows={15}
+                          />
+                          <p className="text-sm text-gray-500 mt-1">
+                            Advanced users only. Use HTML tags for formatting.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Right Column - Live Preview */}
+                    <div className="space-y-4">
+                      <ContentPreview
+                        title={getCurrentTranslation().title}
+                        content={getCurrentTranslation().content}
+                        excerpt={getCurrentTranslation().excerpt}
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="slug">Slug</Label>
-                      <Input
-                        id="slug"
-                        value={getCurrentTranslation().slug}
-                        onChange={(e) => handleTranslationChange('slug', e.target.value)}
-                        placeholder="Auto-generated from title"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="excerpt">Excerpt</Label>
-                    <Textarea
-                      id="excerpt"
-                      value={getCurrentTranslation().excerpt}
-                      onChange={(e) => handleTranslationChange('excerpt', e.target.value)}
-                      placeholder="Brief description of the post"
-                      rows={3}
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="content">Content *</Label>
-                    <Textarea
-                      id="content"
-                      value={getCurrentTranslation().content}
-                      onChange={(e) => handleTranslationChange('content', e.target.value)}
-                      placeholder="Write your post content here (HTML supported)"
-                      rows={10}
-                    />
                   </div>
                 </TabsContent>
 
