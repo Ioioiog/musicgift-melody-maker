@@ -327,7 +327,7 @@ const Blog = () => {
         </div>
 
         {/* Compact CTA Section */}
-        <div className="container mx-auto sm:px-6 relative z-10 px-[18px] py-0 mt-12">
+        <div className="container mx-auto sm:px-6 relative z-10 py-0 mt-12 px-[240px] my-[62px]">
           <section className="relative bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-2xl border border-white/30 text-white overflow-hidden shadow-xl py-8">
             <div className="absolute top-6 left-6 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
             <div className="absolute bottom-6 right-6 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
