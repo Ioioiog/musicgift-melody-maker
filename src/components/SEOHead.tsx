@@ -14,7 +14,7 @@ interface SEOHeadProps {
 const SEOHead = ({ 
   title, 
   description, 
-  image = "/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
+  image = "/uploads/logo_musicgift.webp",
   url = "https://www.musicgift.ro",
   type = "website",
   structuredData
@@ -47,9 +47,9 @@ const SEOHead = ({
       <meta property="og:title" content={finalTitle} />
       <meta property="og:description" content={finalDescription} />
       <meta property="og:image" content={`${url}${image}`} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="MusicGift.ro - Cadouri Muzicale Personalizate" />
+      <meta property="og:image:width" content="800" />
+      <meta property="og:image:height" content="600" />
+      <meta property="og:image:alt" content="MusicGift.ro - Cadouri Muzicale Personalizate - Logo oficial" />
       <meta property="og:url" content={url} />
       <meta property="og:type" content={type} />
       <meta property="og:site_name" content="MusicGift.ro" />
@@ -60,7 +60,7 @@ const SEOHead = ({
       <meta name="twitter:title" content={finalTitle} />
       <meta name="twitter:description" content={finalDescription} />
       <meta name="twitter:image" content={`${url}${image}`} />
-      <meta name="twitter:image:alt" content="MusicGift.ro - Cadouri Muzicale Personalizate" />
+      <meta name="twitter:image:alt" content="MusicGift.ro - Cadouri Muzicale Personalizate - Logo oficial" />
       
       {/* Performance Hints */}
       <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
