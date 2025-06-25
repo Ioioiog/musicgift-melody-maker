@@ -49,15 +49,15 @@ const VideoCard: React.FC<VideoCardProps> = ({ post, size = 'medium' }) => {
           className={`w-full ${sizeClasses[size]} object-cover group-hover:scale-110 transition-transform duration-700`}
         />
         
-        {/* Video Overlay */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
-            <Play className="w-5 h-5 text-white ml-0.5" fill="currentColor" />
+        {/* Clean Play Button Overlay - Only on Hover */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <div className="w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border border-white/20">
+            <Play className="w-5 h-5 text-gray-800 ml-0.5" fill="currentColor" />
           </div>
         </div>
         
-        {/* Video Duration Badge */}
-        <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
+        {/* Clean Video Badge */}
+        <div className="absolute bottom-2 right-2 bg-red-500/90 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-md font-medium">
           Video
         </div>
         
@@ -67,7 +67,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ post, size = 'medium' }) => {
             {post.category}
           </Badge>
           {post.youtube_url && (
-            <Badge className="bg-red-600 text-white border-0 backdrop-blur-sm font-medium text-xs px-2 py-1 flex items-center gap-1">
+            <Badge className="bg-red-500/90 backdrop-blur-sm text-white border-0 font-medium text-xs px-2 py-1 flex items-center gap-1">
               <Youtube className="w-2 h-2" />
             </Badge>
           )}
