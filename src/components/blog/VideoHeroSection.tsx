@@ -30,8 +30,8 @@ const VideoHeroSection: React.FC<VideoHeroSectionProps> = ({ post }) => {
 
   return (
     <div className="mb-12">
-      {/* Video Container - Exactly like YouTube */}
-      <div className="relative aspect-video bg-black rounded-xl overflow-hidden shadow-2xl">
+      {/* Video Container - Transparent background */}
+      <div className="relative aspect-video bg-transparent rounded-xl overflow-hidden shadow-2xl">
         {!isVideoLoaded ? (
           // YouTube-like Thumbnail
           <div 

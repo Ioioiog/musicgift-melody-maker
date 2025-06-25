@@ -43,7 +43,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ post, size = 'medium' }) => {
   return (
     <Card className="group overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-transparent backdrop-blur-none border-0 shadow-none">
       {/* YouTube-like Video Thumbnail */}
-      <div className="relative overflow-hidden rounded-xl bg-black">
+      <div className="relative overflow-hidden rounded-xl bg-transparent">
         <img 
           src={thumbnailUrl || post.image_url || '/uploads/background.webp'} 
           alt={post.title} 
