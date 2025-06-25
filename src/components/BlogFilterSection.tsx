@@ -143,25 +143,25 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
         {/* Collapsible Filter Content */}
         <CollapsibleContent className="space-y-6 mb-8">
           <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6">
-            {/* Categories Grid */}
+            {/* Categories - Horizontal Scroll with Pills */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                 <Music className="w-5 h-5" />
                 Categories
               </h3>
-              <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-1">
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                 <Button
                   variant={selectedCategory === "all" ? "default" : "outline"}
                   className={`${
                     selectedCategory === "all" 
                       ? "bg-purple-500 hover:bg-purple-600 text-white" 
                       : "bg-white/10 border-white/20 text-white hover:bg-white/15"
-                  } rounded-lg p-1.5 h-auto flex flex-col items-center gap-0.5 text-xs`}
+                  } rounded-full px-3 py-1.5 h-auto flex items-center gap-1.5 text-xs whitespace-nowrap flex-shrink-0`}
                   onClick={() => setSelectedCategory("all")}
                 >
-                  <Music className="w-2.5 h-2.5" />
-                  <span className="text-center leading-tight text-[10px]">All</span>
-                  <Badge variant="secondary" className="bg-white/20 text-white text-[9px] px-1 py-0">
+                  <Music className="w-3 h-3" />
+                  <span>All</span>
+                  <Badge variant="secondary" className="bg-white/20 text-white text-[9px] px-1.5 py-0.5 ml-1">
                     {totalPosts}
                   </Badge>
                 </Button>
@@ -179,12 +179,12 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
                         isSelected 
                           ? "bg-purple-500 hover:bg-purple-600 text-white" 
                           : "bg-white/10 border-white/20 text-white hover:bg-white/15"
-                      } rounded-lg p-1.5 h-auto flex flex-col items-center gap-0.5 text-xs`}
+                      } rounded-full px-3 py-1.5 h-auto flex items-center gap-1.5 text-xs whitespace-nowrap flex-shrink-0`}
                       onClick={() => setSelectedCategory(categoryValue)}
                     >
-                      <IconComponent className="w-2.5 h-2.5" />
-                      <span className="text-center leading-tight text-[10px]">{category.name}</span>
-                      <Badge variant="secondary" className="bg-white/20 text-white text-[9px] px-1 py-0">
+                      <IconComponent className="w-3 h-3" />
+                      <span>{category.name}</span>
+                      <Badge variant="secondary" className="bg-white/20 text-white text-[9px] px-1.5 py-0.5 ml-1">
                         {category.count}
                       </Badge>
                     </Button>
