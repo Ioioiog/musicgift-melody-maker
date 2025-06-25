@@ -10,14 +10,10 @@ import { Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye 
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useState, useMemo } from "react";
+
 const Blog = () => {
-  const {
-    t
-  } = useLanguage();
-  const {
-    data: blogPosts = [],
-    isLoading
-  } = useBlogPosts();
+  const { t } = useLanguage();
+  const { data: blogPosts = [], isLoading } = useBlogPosts();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
@@ -121,33 +117,42 @@ const Blog = () => {
       color: categoryColors[name as keyof typeof categoryColors] || "from-gray-500 to-gray-600"
     }));
   }, [blogPosts]);
+
   if (isLoading) {
-    return <div className="min-h-screen text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+    return (
+      <div className="min-h-screen text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
         <div className="flex justify-center items-center min-h-[50vh] relative z-10">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>
-            <p className="text-white">Loading blog posts...</p>
+            <p className="text-white">{t('loadingBlogPosts')}</p>
           </div>
         </div>
         <Footer />
-      </div>;
+      </div>
+    );
   }
-  return <>
-      <SEOHead title={t('blogPageTitle') || "Blog - MusicGift.ro | Music Industry Insights & Tips"} description={t('blogPageDescription') || "Discover music creation tips, industry insights, and inspiring stories from our personalized music journey. Expert advice for meaningful musical gifts."} url="https://www.musicgift.ro/blog" />
+
+  return (
+    <>
+      <SEOHead 
+        title={t('blogPageTitle')} 
+        description={t('blogPageDescription')} 
+        url="https://www.musicgift.ro/blog" 
+      />
       
       <div className="min-h-screen text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
 
@@ -167,36 +172,55 @@ const Blog = () => {
             {/* Compact Hero Section */}
             <div className="max-w-4xl mx-auto text-center mb-8">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight px-0 py-[3px]">
-                {t('blogHeroTitle') || "Music Blog"}
+                {t('blogHeroTitle')}
               </h1>
               
               <p className="text-base sm:text-lg mb-6 text-gray-200 max-w-2xl mx-auto leading-relaxed">
-                {t('blogHeroSubtitle') || "Discover the art of personalized music, industry insights, and inspiring stories"}
+                {t('blogHeroSubtitle')}
               </p>
             </div>
 
             {/* Filter Section */}
-            <BlogFilterSection searchTerm={searchTerm} setSearchTerm={setSearchTerm} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories} totalPosts={blogPosts.length} filteredCount={filteredPosts.length} sortBy={sortBy} setSortBy={setSortBy} dateFilter={dateFilter} setDateFilter={setDateFilter} isOpen={filtersOpen} setIsOpen={setFiltersOpen} />
+            <BlogFilterSection 
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              categories={categories}
+              totalPosts={blogPosts.length}
+              filteredCount={filteredPosts.length}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              dateFilter={dateFilter}
+              setDateFilter={setDateFilter}
+              isOpen={filtersOpen}
+              setIsOpen={setFiltersOpen}
+            />
           </div>
         </header>
 
         <div className="container mx-auto sm:px-6 relative z-10 px-0 py-0">
           <div className="space-y-8">
             {/* Compact Featured Article */}
-            {featuredPost && selectedCategory === "all" && !searchTerm && <section>
+            {featuredPost && selectedCategory === "all" && !searchTerm && (
+              <section>
                 <div className="text-center mb-8">
                   <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                    {t('featuredArticle') || "Featured Article"}
+                    {t('featuredArticle')}
                   </h2>
                   <p className="text-lg text-gray-200">
-                    Our most popular story this week
+                    {t('ourMostPopularStory')}
                   </p>
                 </div>
                 
                 <Card className="overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 bg-white/10 backdrop-blur-md border border-white/20">
                   <div className="lg:flex">
                     <div className="lg:w-2/3 relative overflow-hidden">
-                      <img src={'/uploads/background.webp'} alt={featuredPost.title} className="w-full h-48 lg:h-64 object-cover transition-transform duration-700 hover:scale-105" />
+                      <img 
+                        src={'/uploads/background.webp'} 
+                        alt={featuredPost.title} 
+                        className="w-full h-48 lg:h-64 object-cover transition-transform duration-700 hover:scale-105" 
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
                       <Badge className="absolute top-4 left-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-3 py-1 text-sm font-medium">
                         {featuredPost.category}
@@ -224,41 +248,50 @@ const Blog = () => {
                           </div>
                           <div className="flex items-center">
                             <Clock className="w-3 h-3 mr-1" />
-                            {featuredPost.read_time} min
+                            {featuredPost.read_time} {t('min')}
                           </div>
-                          {featuredPost.views && featuredPost.views > 0 && <div className="flex items-center">
+                          {featuredPost.views && featuredPost.views > 0 && (
+                            <div className="flex items-center">
                               <Eye className="w-3 h-3 mr-1" />
                               {featuredPost.views}
-                            </div>}
+                            </div>
+                          )}
                         </div>
                       </div>
                       
                       <Link to={`/blog/${featuredPost.slug}`}>
                         <Button className="bg-orange-500 text-white border-0 px-6 py-2 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300 w-full lg:w-auto">
-                          {t('readMore') || "Read More"} 
+                          {t('readMore')} 
                           <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                         </Button>
                       </Link>
                     </div>
                   </div>
                 </Card>
-              </section>}
+              </section>
+            )}
 
             {/* Compact Posts Grid */}
-            {regularPosts.length > 0 && <section>
+            {regularPosts.length > 0 && (
+              <section>
                 <div className="text-center mb-8">
                   <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                    {searchTerm ? `Search Results (${regularPosts.length})` : t('recentArticles') || "Recent Articles"}
+                    {searchTerm ? `${t('searchResults')} (${regularPosts.length})` : t('recentArticles')}
                   </h2>
                   <p className="text-lg text-gray-200">
-                    {searchTerm ? `Results for "${searchTerm}"` : "Fresh insights and stories from our music experts"}
+                    {searchTerm ? `${t('resultsFor')} "${searchTerm}"` : t('freshInsights')}
                   </p>
                 </div>
                 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {regularPosts.map(post => post && <Card key={post.id} className="group overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+                  {regularPosts.map(post => post && (
+                    <Card key={post.id} className="group overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
                       <div className="relative overflow-hidden">
-                        <img src={'/uploads/background.webp'} alt={post.title} className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-700" />
+                        <img 
+                          src={'/uploads/background.webp'} 
+                          alt={post.title} 
+                          className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-700" 
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <Badge className="absolute top-2 left-2 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium text-xs px-2 py-1">
                           {post.category}
@@ -283,13 +316,15 @@ const Blog = () => {
                             </div>
                             <div className="flex items-center">
                               <Clock className="w-3 h-3 mr-1" />
-                              {post.read_time} min
+                              {post.read_time} {t('min')}
                             </div>
                           </div>
-                          {post.views && post.views > 0 && <div className="flex items-center">
+                          {post.views && post.views > 0 && (
+                            <div className="flex items-center">
                               <Eye className="w-3 h-3 mr-1" />
                               {post.views}
-                            </div>}
+                            </div>
+                          )}
                         </div>
                         
                         <div className="flex items-center justify-between">
@@ -300,29 +335,37 @@ const Blog = () => {
                           
                           <Link to={`/blog/${post.slug}`}>
                             <Button variant="ghost" className="text-purple-300 hover:text-purple-200 hover:bg-white/10 font-medium p-1 text-xs">
-                              {t('readMore') || "Read More"}
+                              {t('readMore')}
                               <ArrowRight className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" />
                             </Button>
                           </Link>
                         </div>
                       </CardContent>
-                    </Card>)}
+                    </Card>
+                  ))}
                 </div>
-              </section>}
+              </section>
+            )}
 
             {/* No Results Message */}
-            {filteredPosts.length === 0 && <div className="text-center py-12">
-                <h3 className="text-xl font-bold text-white mb-3">No articles found</h3>
-                <p className="text-gray-300 mb-6">Try adjusting your search terms or browse all articles.</p>
-                <Button onClick={() => {
-              setSearchTerm("");
-              setSelectedCategory("all");
-              setDateFilter("all");
-              setSortBy("newest");
-            }} variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                  Clear Filters
+            {filteredPosts.length === 0 && (
+              <div className="text-center py-12">
+                <h3 className="text-xl font-bold text-white mb-3">{t('noArticlesFound')}</h3>
+                <p className="text-gray-300 mb-6">{t('tryAdjustingSearch')}</p>
+                <Button 
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedCategory("all");
+                    setDateFilter("all");
+                    setSortBy("newest");
+                  }} 
+                  variant="outline" 
+                  className="border-white/20 text-white hover:bg-white/10"
+                >
+                  {t('clearFilters')}
                 </Button>
-              </div>}
+              </div>
+            )}
           </div>
         </div>
 
@@ -335,27 +378,27 @@ const Blog = () => {
             <div className="relative z-10 text-center px-6">
               <div className="mb-4">
                 <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-sm px-3 py-1 font-medium text-sm">
-                  Ready to Start?
+                  {t('readyToStart')}
                 </Badge>
               </div>
               
               <h2 className="text-2xl lg:text-3xl font-bold mb-4">
-                {t('blogCtaTitle') || "Ready to Create Your Musical Gift?"}
+                {t('blogCtaTitle')}
               </h2>
               
               <p className="text-lg mb-8 text-white/90 max-w-2xl mx-auto leading-relaxed">
-                {t('blogCtaDescription') || "Let our expert team create a personalized song that tells your unique story"}
+                {t('blogCtaDescription')}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link to="/packages">
                   <Button size="lg" className="bg-white hover:bg-gray-100 px-6 py-3 text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 text-orange-500">
-                    {t('viewPackages') || "View Packages"}
+                    {t('viewPackages')}
                   </Button>
                 </Link>
                 <Link to="/contact">
                   <Button size="lg" variant="outline" className="border-white hover:bg-white px-6 py-3 text-base font-medium transition-all duration-300 text-orange-500">
-                    {t('getInTouch') || "Get in Touch"}
+                    {t('getInTouch')}
                   </Button>
                 </Link>
               </div>
@@ -365,6 +408,8 @@ const Blog = () => {
 
         <Footer />
       </div>
-    </>;
+    </>
+  );
 };
+
 export default Blog;

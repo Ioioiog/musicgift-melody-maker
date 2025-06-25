@@ -1,3 +1,4 @@
+
 export const blogTranslations = {
   blog: "Blog",
   blogPageTitle: "Blog - MusicGift.ro | Conseils Musicaux et Perspectives de l'Industrie",
@@ -43,4 +44,38 @@ export const blogTranslations = {
   
   // Navigation
   backToBlog: "Retour au Blog",
+  
+  // New missing translations
+  loadingBlogPosts: "Chargement des articles...",
+  ourMostPopularStory: "Notre histoire la plus populaire cette semaine",
+  freshInsights: "Nouvelles perspectives et histoires de nos experts musicaux",
+  searchResults: "Résultats de Recherche",
+  resultsFor: "Résultats pour",
+  noArticlesFound: "Aucun article trouvé",
+  tryAdjustingSearch: "Essayez d'ajuster vos termes de recherche ou parcourez tous les articles.",
+  clearFilters: "Effacer les Filtres",
+  readyToStart: "Prêt à Commencer?",
+  
+  // Filter section translations
+  filters: "Filtres",
+  active: "Actif",
+  search: "Rechercher",
+  allCategories: "Toutes les Catégories",
+  all: "Tout",
+  dateRange: "Période",
+  sortBy: "Trier Par",
+  allTime: "Toutes Périodes",
+  recent: "Récent (30 derniers jours)",
+  thisMonth: "Ce Mois",
+  thisYear: "Cette Année",
+  newestFirst: "Plus Récent d'Abord",
+  oldestFirst: "Plus Ancien d'Abord",
+  mostPopular: "Plus Populaire",
+  byTitleAZ: "Par Titre A-Z",
+  showing: "Affichage",
+  of: "de",
+  filter: "filtre",
+  filtersActive: "filtres actifs",
+  clearAllFilters: "Effacer Tous les Filtres",
+  min: "min"
 };

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -64,11 +65,20 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
   };
 
   const getSelectedCategoryName = () => {
-    if (selectedCategory === "all") return "All Categories";
+    if (selectedCategory === "all") return t('allCategories');
     const category = categories.find(cat => 
       cat.name.toLowerCase().replace(/\s+/g, '-') === selectedCategory
     );
-    return category?.name || "All Categories";
+    return category?.name || t('allCategories');
+  };
+
+  const getDateFilterLabel = (value: string) => {
+    switch (value) {
+      case "recent": return t('recent');
+      case "month": return t('thisMonth');
+      case "year": return t('thisYear');
+      default: return t('allTime');
+    }
   };
 
   const activeFiltersCount = getActiveFiltersCount();
@@ -85,7 +95,7 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
               className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/15 px-3 py-2 rounded-lg font-medium flex items-center gap-2 justify-start sm:w-auto text-sm"
             >
               <Filter className="w-4 h-4" />
-              <span>Filters</span>
+              <span>{t('filters')}</span>
               {activeFiltersCount > 0 && (
                 <Badge className="bg-purple-500 text-white ml-1 px-1.5 py-0.5 text-xs">
                   {activeFiltersCount}
@@ -100,7 +110,7 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
             <div className="relative group">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-purple-400 transition-colors" />
               <Input 
-                placeholder={t('searchPlaceholder') || "Search articles..."} 
+                placeholder={t('searchPlaceholder')} 
                 value={searchTerm} 
                 onChange={e => setSearchTerm(e.target.value)} 
                 className="pl-9 pr-4 py-2 bg-white/10 backdrop-blur-md border-white/20 rounded-lg text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 w-full text-sm h-9" 
@@ -112,7 +122,7 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
         {/* Compact Active Filters Summary */}
         {!isOpen && activeFiltersCount > 0 && (
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <span className="text-xs text-gray-300">Active:</span>
+            <span className="text-xs text-gray-300">{t('active')}:</span>
             {selectedCategory !== "all" && (
               <Badge variant="secondary" className="bg-white/10 text-white border-white/20 text-xs px-2 py-0.5">
                 {getSelectedCategoryName()}
@@ -120,12 +130,12 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
             )}
             {searchTerm && (
               <Badge variant="secondary" className="bg-white/10 text-white border-white/20 text-xs px-2 py-0.5">
-                Search: "{searchTerm}"
+                {t('search')}: "{searchTerm}"
               </Badge>
             )}
             {dateFilter !== "all" && (
               <Badge variant="secondary" className="bg-white/10 text-white border-white/20 text-xs px-2 py-0.5">
-                {dateFilter === "recent" ? "Recent" : dateFilter === "month" ? "This Month" : "This Year"}
+                {getDateFilterLabel(dateFilter)}
               </Badge>
             )}
             <Button
@@ -146,7 +156,7 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
             <div className="mb-4">
               <h3 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
                 <Music className="w-4 h-4" />
-                Categories
+                {t('allCategories')}
               </h3>
               <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                 <Button
@@ -159,7 +169,7 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
                   onClick={() => setSelectedCategory("all")}
                 >
                   <Music className="w-3 h-3" />
-                  <span>All</span>
+                  <span>{t('all')}</span>
                   <Badge variant="secondary" className="bg-white/20 text-white text-[9px] px-1.5 py-0.5 ml-1">
                     {totalPosts}
                   </Badge>
@@ -198,17 +208,17 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
               <div>
                 <label className="text-xs font-medium text-white mb-2 flex items-center gap-2">
                   <Calendar className="w-3 h-3" />
-                  Date Range
+                  {t('dateRange')}
                 </label>
                 <Select value={dateFilter} onValueChange={setDateFilter}>
                   <SelectTrigger className="bg-white/10 border-white/20 text-white h-8 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Time</SelectItem>
-                    <SelectItem value="recent">Recent (Last 30 days)</SelectItem>
-                    <SelectItem value="month">This Month</SelectItem>
-                    <SelectItem value="year">This Year</SelectItem>
+                    <SelectItem value="all">{t('allTime')}</SelectItem>
+                    <SelectItem value="recent">{t('recent')}</SelectItem>
+                    <SelectItem value="month">{t('thisMonth')}</SelectItem>
+                    <SelectItem value="year">{t('thisYear')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -217,17 +227,17 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
               <div>
                 <label className="text-xs font-medium text-white mb-2 flex items-center gap-2">
                   <SortDesc className="w-3 h-3" />
-                  Sort By
+                  {t('sortBy')}
                 </label>
                 <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger className="bg-white/10 border-white/20 text-white h-8 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="newest">Newest First</SelectItem>
-                    <SelectItem value="oldest">Oldest First</SelectItem>
-                    <SelectItem value="popular">Most Popular</SelectItem>
-                    <SelectItem value="title">By Title A-Z</SelectItem>
+                    <SelectItem value="newest">{t('newestFirst')}</SelectItem>
+                    <SelectItem value="oldest">{t('oldestFirst')}</SelectItem>
+                    <SelectItem value="popular">{t('mostPopular')}</SelectItem>
+                    <SelectItem value="title">{t('byTitleAZ')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -236,10 +246,10 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
             {/* Compact Results Summary and Clear Button */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-4 pt-3 border-t border-white/10">
               <div className="text-xs text-gray-300">
-                Showing <span className="font-semibold text-white">{filteredCount}</span> of <span className="font-semibold text-white">{totalPosts}</span> articles
+                {t('showing')} <span className="font-semibold text-white">{filteredCount}</span> {t('of')} <span className="font-semibold text-white">{totalPosts}</span> {t('articles')}
                 {activeFiltersCount > 0 && (
                   <span className="ml-2">
-                    ({activeFiltersCount} filter{activeFiltersCount !== 1 ? 's' : ''} active)
+                    ({activeFiltersCount} {activeFiltersCount !== 1 ? t('filtersActive') : t('filter')} {t('active')})
                   </span>
                 )}
               </div>
@@ -251,7 +261,7 @@ const BlogFilterSection: React.FC<BlogFilterSectionProps> = ({
                   onClick={clearAllFilters}
                   className="border-white/20 text-white hover:bg-white/10 text-xs px-3 py-1"
                 >
-                  Clear All Filters
+                  {t('clearAllFilters')}
                 </Button>
               )}
             </div>
