@@ -2,51 +2,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  excerpt?: string;
-  content: string;
-  image_url?: string;
-  category: string;
-  author: string;
-  slug: string;
-  status: 'draft' | 'published';
-  is_featured: boolean;
-  meta_title?: string;
-  meta_description?: string;
-  tags?: string[];
-  read_time?: number;
-  views?: number;
-  published_at?: string;
-  created_at: string;
-  updated_at: string;
-  created_by?: string;
-  updated_by?: string;
-}
-
-export interface CreateBlogPostData {
-  title: string;
-  content: string;
-  author: string;
-  category: string;
-  slug?: string;
-  excerpt?: string;
-  image_url?: string;
-  status?: 'draft' | 'published';
-  is_featured?: boolean;
-  meta_title?: string;
-  meta_description?: string;
-  tags?: string[];
-  read_time?: number;
-  views?: number;
-  published_at?: string;
-}
+import { useLanguage } from "@/contexts/LanguageContext";
+import { BlogPost, CreateBlogPostData } from "@/types/blog";
+import { getLocalizedBlogPost, generateSlugFromTitle } from "@/utils/blogTranslations";
 
 export const useBlogPosts = () => {
+  const { language } = useLanguage();
+  
   return useQuery({
-    queryKey: ['blog-posts'],
+    queryKey: ['blog-posts', language],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('blog_posts')
@@ -55,14 +19,18 @@ export const useBlogPosts = () => {
         .order('published_at', { ascending: false });
       
       if (error) throw error;
-      return data as BlogPost[];
+      
+      const posts = data as BlogPost[];
+      return posts.map(post => getLocalizedBlogPost(post, language)).filter(Boolean);
     },
   });
 };
 
 export const useAllBlogPosts = () => {
+  const { language } = useLanguage();
+  
   return useQuery({
-    queryKey: ['all-blog-posts'],
+    queryKey: ['all-blog-posts', language],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('blog_posts')
@@ -70,23 +38,32 @@ export const useAllBlogPosts = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as BlogPost[];
+      
+      const posts = data as BlogPost[];
+      return posts.map(post => ({
+        ...post,
+        localizedVersion: getLocalizedBlogPost(post, language)
+      }));
     },
   });
 };
 
 export const useBlogPost = (slug: string) => {
+  const { language } = useLanguage();
+  
   return useQuery({
-    queryKey: ['blog-post', slug],
+    queryKey: ['blog-post', slug, language],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
-        .eq('slug', slug)
+        .or(`translations->'ro'->>'slug'.eq.${slug},translations->'en'->>'slug'.eq.${slug},translations->'fr'->>'slug'.eq.${slug},translations->'de'->>'slug'.eq.${slug},translations->'pl'->>'slug'.eq.${slug},translations->'it'->>'slug'.eq.${slug}`)
         .single();
       
       if (error) throw error;
-      return data as BlogPost;
+      
+      const post = data as BlogPost;
+      return getLocalizedBlogPost(post, language);
     },
     enabled: !!slug,
   });
@@ -97,22 +74,31 @@ export const useCreateBlogPost = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (post: CreateBlogPostData) => {
+    mutationFn: async (postData: CreateBlogPostData) => {
       const user = await supabase.auth.getUser();
       const userId = user.data.user?.id;
       
-      // Generate slug if not provided
-      const slug = post.slug || post.title
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, '')
-        .replace(/\s+/g, '-')
-        .trim();
+      // Generate slugs for all translations if not provided
+      const processedTranslations = { ...postData.translations };
+      Object.keys(processedTranslations).forEach(lang => {
+        if (!processedTranslations[lang].slug) {
+          processedTranslations[lang].slug = generateSlugFromTitle(processedTranslations[lang].title);
+        }
+      });
       
       const { data, error } = await supabase
         .from('blog_posts')
         .insert({
-          ...post,
-          slug,
+          translations: processedTranslations,
+          default_language: postData.default_language,
+          category: postData.category,
+          author: postData.author,
+          status: postData.status || 'draft',
+          is_featured: postData.is_featured || false,
+          tags: postData.tags,
+          read_time: postData.read_time,
+          views: postData.views,
+          published_at: postData.published_at,
           created_by: userId,
           updated_by: userId,
         })
@@ -148,6 +134,17 @@ export const useUpdateBlogPost = () => {
     mutationFn: async ({ id, ...updates }: Partial<BlogPost> & { id: string }) => {
       const user = await supabase.auth.getUser();
       const userId = user.data.user?.id;
+      
+      // Process translations if they're being updated
+      if (updates.translations) {
+        const processedTranslations = { ...updates.translations };
+        Object.keys(processedTranslations).forEach(lang => {
+          if (!processedTranslations[lang].slug) {
+            processedTranslations[lang].slug = generateSlugFromTitle(processedTranslations[lang].title);
+          }
+        });
+        updates.translations = processedTranslations;
+      }
       
       const { data, error } = await supabase
         .from('blog_posts')

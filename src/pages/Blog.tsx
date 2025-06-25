@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -21,19 +20,26 @@ const Blog = () => {
   const filteredPosts = useMemo(() => {
     if (!searchTerm) return blogPosts;
     const term = searchTerm.toLowerCase();
-    return blogPosts.filter(post => post.title.toLowerCase().includes(term) || post.excerpt?.toLowerCase().includes(term) || post.category.toLowerCase().includes(term) || post.author.toLowerCase().includes(term));
+    return blogPosts.filter(post => 
+      post?.title?.toLowerCase().includes(term) || 
+      post?.excerpt?.toLowerCase().includes(term) || 
+      post?.category?.toLowerCase().includes(term) || 
+      post?.author?.toLowerCase().includes(term)
+    );
   }, [blogPosts, searchTerm]);
 
   // Get featured post
-  const featuredPost = blogPosts.find(post => post.is_featured) || blogPosts[0];
+  const featuredPost = blogPosts.find(post => post?.is_featured) || blogPosts[0];
 
   // Get non-featured posts for the grid
-  const regularPosts = filteredPosts.filter(post => !post.is_featured || post !== featuredPost);
+  const regularPosts = filteredPosts.filter(post => !post?.is_featured || post !== featuredPost);
 
   // Get all categories (predefined) with counts
   const categories = useMemo(() => {
     const categoryCount = blogPosts.reduce((acc, post) => {
-      acc[post.category] = (acc[post.category] || 0) + 1;
+      if (post?.category) {
+        acc[post.category] = (acc[post.category] || 0) + 1;
+      }
       return acc;
     }, {} as Record<string, number>);
 
@@ -101,9 +107,7 @@ const Blog = () => {
         <div className="absolute inset-0 bg-black/30"></div>
         <Navigation />
 
-        {/* Enhanced Hero Section with Purple Musical Background */}
         <section className="text-white relative overflow-hidden py-[65px]">
-          {/* Floating Musical Notes */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-10 left-10 text-4xl opacity-30 animate-float">♪</div>
             <div className="absolute bottom-10 right-10 text-6xl opacity-20 animate-float" style={{
@@ -144,7 +148,6 @@ const Blog = () => {
         </section>
 
         <div className="container mx-auto sm:px-6 relative z-10 px-[18px] py-0">
-          {/* Modern Categories Section */}
           <section className="mb-20">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-white mb-4">
@@ -155,9 +158,7 @@ const Blog = () => {
               </p>
             </div>
             
-            {/* Mobile: Single row with horizontal scroll, Desktop: Grid */}
             <div className="md:grid md:grid-cols-2 lg:grid-cols-6 md:gap-6">
-              {/* Mobile scrollable container */}
               <div className="flex overflow-x-auto space-x-4 pb-4 md:hidden scrollbar-hide">
                 {categories.map((category, index) => {
                   const IconComponent = category.icon;
@@ -176,7 +177,6 @@ const Blog = () => {
                 })}
               </div>
               
-              {/* Desktop grid - hidden on mobile */}
               <div className="hidden md:contents">
                 {categories.map((category, index) => {
                   const IconComponent = category.icon;
@@ -211,7 +211,7 @@ const Blog = () => {
               <Card className="overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white/10 backdrop-blur-md border border-white/20">
                 <div className="lg:flex">
                   <div className="lg:w-3/5 relative overflow-hidden">
-                    <img src={featuredPost.image_url || '/uploads/background.webp'} alt={featuredPost.title} className="w-full h-80 lg:h-full object-cover transition-transform duration-700 hover:scale-105" />
+                    <img src={'/uploads/background.webp'} alt={featuredPost.title} className="w-full h-80 lg:h-full object-cover transition-transform duration-700 hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
                     <Badge className="absolute top-6 left-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 font-medium">
                       {featuredPost.category}
@@ -277,9 +277,9 @@ const Blog = () => {
               </div>
               
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
-                {regularPosts.map(post => <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+                {regularPosts.map(post => post && <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
                     <div className="relative overflow-hidden">
-                      <img src={post.image_url || '/uploads/background.webp'} alt={post.title} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <img src={'/uploads/background.webp'} alt={post.title} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <Badge className="absolute top-4 left-4 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium">
                         {post.category}
@@ -340,7 +340,6 @@ const Blog = () => {
               </Button>
             </div>}
 
-          {/* Enhanced CTA Section matching About page style */}
           <section className="relative py-20 bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-3xl border border-white/30 text-white overflow-hidden shadow-2xl">
             <div className="absolute top-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
             <div className="absolute bottom-10 right-10 w-60 h-60 bg-white/5 rounded-full blur-3xl"></div>
