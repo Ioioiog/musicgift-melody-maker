@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -154,10 +155,13 @@ const Blog = () => {
                       const IconComponent = category.icon;
                       const categoryValue = category.name.toLowerCase().replace(/\s+/g, '-');
                       return (
-                        <TabsTrigger key={index} value={categoryValue} className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-2 sm:px-3 flex items-center gap-1 whitespace-nowrap">
+                        <TabsTrigger 
+                          key={index} 
+                          value={categoryValue} 
+                          className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-2 sm:px-3 flex items-center gap-1 whitespace-nowrap"
+                        >
                           <IconComponent className="w-3 h-3 flex-shrink-0" />
-                          <span className="hidden sm:inline truncate">{category.name}</span>
-                          <span className="sm:hidden truncate">{category.name.split(' ')[0]}</span>
+                          <span className="truncate">{category.name}</span>
                           <span className="ml-1 text-xs opacity-75">({category.count})</span>
                         </TabsTrigger>
                       );
