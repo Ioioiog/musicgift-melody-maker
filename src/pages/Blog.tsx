@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
@@ -148,7 +150,7 @@ const Blog = () => {
               </div>
             </div>
 
-            {/* Compact Categories Grid */}
+            {/* Categories as Tabs */}
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold text-white mb-2">
@@ -156,43 +158,31 @@ const Blog = () => {
                 </h2>
               </div>
               
-              {/* Mobile Horizontal Scroll */}
-              <div className="flex overflow-x-auto space-x-3 pb-4 md:hidden scrollbar-hide">
-                {categories.map((category, index) => {
-                  const IconComponent = category.icon;
-                  return (
-                    <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:-translate-y-1 overflow-hidden flex-shrink-0 w-40">
-                      <div className={`h-1 bg-gradient-to-r ${category.color}`}></div>
-                      <CardContent className="p-4 text-center">
-                        <div className={`w-8 h-8 mx-auto mb-2 rounded-lg bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                          <IconComponent className="w-4 h-4 text-white" />
-                        </div>
-                        <h3 className="font-semibold text-white mb-1 text-xs">{category.name}</h3>
-                        <p className="text-gray-300 text-xs">{category.count} {t('articles') || 'articles'}</p>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-              
-              {/* Desktop Grid - More Compact */}
-              <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-6 md:gap-4">
-                {categories.map((category, index) => {
-                  const IconComponent = category.icon;
-                  return (
-                    <Card key={index} className="group cursor-pointer bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-                      <div className={`h-1 bg-gradient-to-r ${category.color}`}></div>
-                      <CardContent className="p-5 text-center">
-                        <div className={`w-10 h-10 mx-auto mb-3 rounded-xl bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                          <IconComponent className="w-5 h-5 text-white" />
-                        </div>
-                        <h3 className="font-semibold text-white mb-1 text-sm">{category.name}</h3>
-                        <p className="text-gray-300 text-xs">{category.count} {t('articles') || 'articles'}</p>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
+              <Tabs defaultValue="all" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 bg-white/10 backdrop-blur-md border border-white/20 p-1 rounded-xl">
+                  <TabsTrigger 
+                    value="all" 
+                    className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-sm py-2 px-3"
+                  >
+                    All ({blogPosts.length})
+                  </TabsTrigger>
+                  {categories.map((category, index) => {
+                    const IconComponent = category.icon;
+                    return (
+                      <TabsTrigger 
+                        key={index}
+                        value={category.name.toLowerCase().replace(/\s+/g, '-')}
+                        className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-sm py-2 px-3 flex items-center gap-1"
+                      >
+                        <IconComponent className="w-3 h-3" />
+                        <span className="hidden sm:inline">{category.name}</span>
+                        <span className="sm:hidden">{category.name.split(' ')[0]}</span>
+                        <span className="ml-1 text-xs opacity-75">({category.count})</span>
+                      </TabsTrigger>
+                    );
+                  })}
+                </TabsList>
+              </Tabs>
             </div>
           </div>
         </header>
