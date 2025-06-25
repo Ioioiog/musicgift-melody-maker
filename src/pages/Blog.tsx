@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -145,8 +146,8 @@ const Blog = () => {
           <div className="max-w-5xl mx-auto">
             <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
               <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-6">
-                <div className="w-full lg:w-auto overflow-x-auto">
-                  <TabsList className="flex flex-wrap gap-1 bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-xl min-w-max lg:min-w-0">
+                <div className="w-full lg:flex-1 overflow-x-auto lg:overflow-visible">
+                  <TabsList className="flex flex-wrap gap-1 bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-xl w-full lg:w-auto justify-start lg:justify-center">
                     <TabsTrigger 
                       value="all" 
                       className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-3 whitespace-nowrap"
