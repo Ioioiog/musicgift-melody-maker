@@ -124,16 +124,15 @@ const BlogPost = () => {
                     {post.read_time} min {t('read') || 'read'}
                   </div>
                 </div>
-                {post.image_url && (
-                  <div className="relative overflow-hidden rounded-2xl shadow-xl">
-                    <img 
-                      src={post.image_url} 
-                      alt={post.title}
-                      className="w-full h-64 sm:h-96 object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                  </div>
-                )}
+                {/* Use default placeholder image instead of post.image_url */}
+                <div className="relative overflow-hidden rounded-2xl shadow-xl">
+                  <img 
+                    src="/uploads/background.webp" 
+                    alt={post.title}
+                    className="w-full h-64 sm:h-96 object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
               </div>
             </header>
 

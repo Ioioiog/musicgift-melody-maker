@@ -13,22 +13,16 @@ export type Database = {
         Row: {
           author: string
           category: string
-          content: string
           created_at: string
           created_by: string | null
           default_language: string | null
-          excerpt: string | null
           id: string
           image_url: string | null
           is_featured: boolean
-          meta_description: string | null
-          meta_title: string | null
           published_at: string | null
           read_time: number | null
-          slug: string
           status: string
           tags: string[] | null
-          title: string
           translations: Json | null
           updated_at: string
           updated_by: string | null
@@ -37,22 +31,16 @@ export type Database = {
         Insert: {
           author: string
           category?: string
-          content: string
           created_at?: string
           created_by?: string | null
           default_language?: string | null
-          excerpt?: string | null
           id?: string
           image_url?: string | null
           is_featured?: boolean
-          meta_description?: string | null
-          meta_title?: string | null
           published_at?: string | null
           read_time?: number | null
-          slug: string
           status?: string
           tags?: string[] | null
-          title: string
           translations?: Json | null
           updated_at?: string
           updated_by?: string | null
@@ -61,22 +49,16 @@ export type Database = {
         Update: {
           author?: string
           category?: string
-          content?: string
           created_at?: string
           created_by?: string | null
           default_language?: string | null
-          excerpt?: string | null
           id?: string
           image_url?: string | null
           is_featured?: boolean
-          meta_description?: string | null
-          meta_title?: string | null
           published_at?: string | null
           read_time?: number | null
-          slug?: string
           status?: string
           tags?: string[] | null
-          title?: string
           translations?: Json | null
           updated_at?: string
           updated_by?: string | null

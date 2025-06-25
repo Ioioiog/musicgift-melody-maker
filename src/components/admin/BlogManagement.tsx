@@ -13,7 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Edit, Trash2, Eye, Calendar, User, Tag, Globe, Languages } from "lucide-react";
 import { useAllBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost } from "@/hooks/useBlogPosts";
-import { BlogPost, CreateBlogPostData, CreateBlogPostTranslations } from "@/types/blog";
+import { BlogPost, CreateBlogPostData, CreateBlogPostTranslations, BlogPostTranslations } from "@/types/blog";
 import { getAvailableLanguages, hasTranslation, generateSlugFromTitle } from "@/utils/blogTranslations";
 
 const BlogManagement = () => {
@@ -68,7 +68,20 @@ const BlogManagement = () => {
   const handleOpenDialog = (post?: BlogPost) => {
     if (post) {
       setEditingPost(post);
-      setTranslations(post.translations || {});
+      // Convert BlogPostTranslations to CreateBlogPostTranslations format
+      const convertedTranslations: CreateBlogPostTranslations = {};
+      Object.keys(post.translations || {}).forEach(lang => {
+        const translation = post.translations[lang];
+        convertedTranslations[lang] = {
+          title: translation.title,
+          excerpt: translation.excerpt,
+          content: translation.content,
+          meta_title: translation.meta_title,
+          meta_description: translation.meta_description,
+          slug: translation.slug || generateSlugFromTitle(translation.title)
+        };
+      });
+      setTranslations(convertedTranslations);
       setDefaultLanguage(post.default_language || 'ro');
       setCategory(post.category);
       setAuthor(post.author);
@@ -111,14 +124,15 @@ const BlogManagement = () => {
       return;
     }
 
-    // Ensure current language has slug
-    const updatedTranslations = {
-      ...translations,
-      [currentLanguage]: {
-        ...currentTranslation,
-        slug: currentTranslation.slug || generateSlugFromTitle(currentTranslation.title)
-      }
-    };
+    // Ensure current language has slug and convert to proper format
+    const updatedTranslations: BlogPostTranslations = {};
+    Object.keys(translations).forEach(lang => {
+      const translation = translations[lang];
+      updatedTranslations[lang] = {
+        ...translation,
+        slug: translation.slug || generateSlugFromTitle(translation.title)
+      };
+    });
 
     if (editingPost) {
       await updatePost.mutateAsync({
@@ -135,7 +149,7 @@ const BlogManagement = () => {
       });
     } else {
       const createData: CreateBlogPostData = {
-        translations: updatedTranslations,
+        translations,
         default_language: defaultLanguage,
         category,
         author,
@@ -202,7 +216,7 @@ const BlogManagement = () => {
                         <SelectItem key={lang.code} value={lang.code}>
                           <div className="flex items-center gap-2">
                             {lang.name}
-                            {hasTranslation(translations, lang.code) && (
+                            {hasTranslation(translations as BlogPostTranslations, lang.code) && (
                               <Badge variant="secondary" className="text-xs">✓</Badge>
                             )}
                           </div>

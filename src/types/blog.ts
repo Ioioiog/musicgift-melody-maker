@@ -5,7 +5,7 @@ export interface Translation {
   content: string;
   meta_title?: string;
   meta_description?: string;
-  slug: string;
+  slug?: string; // Made optional to fix type errors
 }
 
 export interface BlogPostTranslations {
@@ -28,6 +28,7 @@ export interface BlogPost {
   updated_at: string;
   created_by?: string;
   updated_by?: string;
+  image_url?: string; // Added image_url field
 }
 
 export interface CreateBlogPostTranslations {
@@ -52,4 +53,5 @@ export interface CreateBlogPostData {
   read_time?: number;
   views?: number;
   published_at?: string;
+  image_url?: string;
 }

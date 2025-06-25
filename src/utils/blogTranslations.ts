@@ -44,7 +44,7 @@ export const getLocalizedBlogPost = (post: BlogPost, language: string) => {
     content: translation.content,
     meta_title: translation.meta_title,
     meta_description: translation.meta_description,
-    slug: translation.slug,
+    slug: translation.slug || generateSlugFromTitle(translation.title),
   };
 };
 

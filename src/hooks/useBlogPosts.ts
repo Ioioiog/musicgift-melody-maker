@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { BlogPost, CreateBlogPostData } from "@/types/blog";
+import { BlogPost, CreateBlogPostData, BlogPostTranslations } from "@/types/blog";
 import { getLocalizedBlogPost, generateSlugFromTitle } from "@/utils/blogTranslations";
 
 export const useBlogPosts = () => {
@@ -20,7 +20,12 @@ export const useBlogPosts = () => {
       
       if (error) throw error;
       
-      const posts = data as BlogPost[];
+      // Type assertion to handle Supabase Json type
+      const posts = data.map(post => ({
+        ...post,
+        translations: post.translations as BlogPostTranslations
+      })) as BlogPost[];
+      
       return posts.map(post => getLocalizedBlogPost(post, language)).filter(Boolean);
     },
   });
@@ -39,7 +44,12 @@ export const useAllBlogPosts = () => {
       
       if (error) throw error;
       
-      const posts = data as BlogPost[];
+      // Type assertion to handle Supabase Json type
+      const posts = data.map(post => ({
+        ...post,
+        translations: post.translations as BlogPostTranslations
+      })) as BlogPost[];
+      
       return posts.map(post => ({
         ...post,
         localizedVersion: getLocalizedBlogPost(post, language)
@@ -62,7 +72,12 @@ export const useBlogPost = (slug: string) => {
       
       if (error) throw error;
       
-      const post = data as BlogPost;
+      // Type assertion to handle Supabase Json type
+      const post = {
+        ...data,
+        translations: data.translations as BlogPostTranslations
+      } as BlogPost;
+      
       return getLocalizedBlogPost(post, language);
     },
     enabled: !!slug,
@@ -89,7 +104,7 @@ export const useCreateBlogPost = () => {
       const { data, error } = await supabase
         .from('blog_posts')
         .insert({
-          translations: processedTranslations,
+          translations: processedTranslations as any, // Type assertion for Supabase
           default_language: postData.default_language,
           category: postData.category,
           author: postData.author,
@@ -99,6 +114,7 @@ export const useCreateBlogPost = () => {
           read_time: postData.read_time,
           views: postData.views,
           published_at: postData.published_at,
+          image_url: postData.image_url,
           created_by: userId,
           updated_by: userId,
         })
@@ -150,6 +166,7 @@ export const useUpdateBlogPost = () => {
         .from('blog_posts')
         .update({
           ...updates,
+          translations: updates.translations as any, // Type assertion for Supabase
           updated_by: userId,
         })
         .eq('id', id)
