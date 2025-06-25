@@ -87,15 +87,31 @@ export const useBlogPost = (slug: string) => {
   return useQuery({
     queryKey: ['blog-post', slug, language],
     queryFn: async () => {
+      console.log('Fetching blog post with slug:', slug);
+      
+      // Fix the query syntax - search across all language translations for the slug
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
-        .or(`translations->'ro'->>'slug'.eq.${slug},translations->'en'->>'slug'.eq.${slug},translations->'fr'->>'slug'.eq.${slug},translations->'de'->>'slug'.eq.${slug},translations->'pl'->>'slug'.eq.${slug},translations->'it'->>'slug'.eq.${slug}`)
+        .or([
+          `translations->'ro'->>'slug'.eq.${slug}`,
+          `translations->'en'->>'slug'.eq.${slug}`,
+          `translations->'fr'->>'slug'.eq.${slug}`,
+          `translations->'de'->>'slug'.eq.${slug}`,
+          `translations->'pl'->>'slug'.eq.${slug}`,
+          `translations->'it'->>'slug'.eq.${slug}`
+        ].join(','))
         .maybeSingle();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching blog post:', error);
+        throw error;
+      }
+      
+      console.log('Blog post query result:', data);
       
       if (!data) {
+        console.log('No blog post found with slug:', slug);
         return null;
       }
       
@@ -105,7 +121,10 @@ export const useBlogPost = (slug: string) => {
         translations: safeCastToTranslations(data.translations)
       } as BlogPost;
       
-      return getLocalizedBlogPost(post, language);
+      const localizedPost = getLocalizedBlogPost(post, language);
+      console.log('Localized post:', localizedPost);
+      
+      return localizedPost;
     },
     enabled: !!slug,
   });
