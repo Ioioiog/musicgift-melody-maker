@@ -3,13 +3,15 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import BlogFilterSection from "@/components/BlogFilterSection";
+import VideoCard from "@/components/blog/VideoCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye, Youtube } from "lucide-react";
+import { Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye, Youtube, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useState, useMemo } from "react";
+import { getYouTubeThumbnail } from "@/utils/youtubeUtils";
 
 const Blog = () => {
   const { t } = useLanguage();
@@ -207,7 +209,7 @@ const Blog = () => {
 
         <div className="container mx-auto sm:px-6 relative z-10 px-0 py-0">
           <div className="space-y-8">
-            {/* Compact Featured Article */}
+            {/* Enhanced Featured Article with Video Support */}
             {featuredPost && selectedCategory === "all" && !searchTerm && (
               <section>
                 <div className="text-center mb-8">
@@ -222,11 +224,28 @@ const Blog = () => {
                 <Card className="overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 bg-white/10 backdrop-blur-md border border-white/20">
                   <div className="lg:flex">
                     <div className="lg:w-2/3 relative overflow-hidden">
-                      <img 
-                        src={featuredPost.image_url || '/uploads/background.webp'} 
-                        alt={featuredPost.title} 
-                        className="w-full h-48 lg:h-64 object-cover transition-transform duration-700 hover:scale-105" 
-                      />
+                      {featuredPost.youtube_url ? (
+                        <div className="relative group cursor-pointer">
+                          <img 
+                            src={getYouTubeThumbnail(featuredPost.youtube_url) || featuredPost.image_url || '/uploads/background.webp'} 
+                            alt={featuredPost.title} 
+                            className="w-full h-48 lg:h-64 object-cover transition-transform duration-700 hover:scale-105" 
+                          />
+                          {/* Video Play Overlay */}
+                          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-300 flex items-center justify-center">
+                            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-2xl transform transition-all duration-300 group-hover:scale-110">
+                              <Play className="w-6 h-6 text-white ml-1" fill="currentColor" />
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <img 
+                          src={featuredPost.image_url || '/uploads/background.webp'} 
+                          alt={featuredPost.title} 
+                          className="w-full h-48 lg:h-64 object-cover transition-transform duration-700 hover:scale-105" 
+                        />
+                      )}
+                      
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
                       <div className="absolute top-4 left-4 flex gap-2">
                         <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-3 py-1 text-sm font-medium">
@@ -275,7 +294,7 @@ const Blog = () => {
                       
                       <Link to={`/blog/${featuredPost.slug}`}>
                         <Button className="bg-orange-500 text-white border-0 px-6 py-2 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300 w-full lg:w-auto">
-                          {t('readMore')} 
+                          {featuredPost.youtube_url ? 'Watch Video' : t('readMore')} 
                           <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                         </Button>
                       </Link>
@@ -285,7 +304,7 @@ const Blog = () => {
               </section>
             )}
 
-            {/* Compact Posts Grid */}
+            {/* Enhanced Posts Grid with Video Cards */}
             {regularPosts.length > 0 && (
               <section>
                 <div className="text-center mb-8">
@@ -299,70 +318,69 @@ const Blog = () => {
                 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {regularPosts.map(post => post && (
-                    <Card key={post.id} className="group overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
-                      <div className="relative overflow-hidden">
-                        <img 
-                          src={post.image_url || '/uploads/background.webp'} 
-                          alt={post.title} 
-                          className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-700" 
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="absolute top-2 left-2 flex gap-1">
-                          <Badge className="bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium text-xs px-2 py-1">
-                            {post.category}
-                          </Badge>
-                          {post.youtube_url && (
-                            <Badge className="bg-red-600 text-white border-0 backdrop-blur-sm font-medium text-xs px-2 py-1 flex items-center gap-1">
-                              <Youtube className="w-2 h-2" />
+                    post.youtube_url ? (
+                      <VideoCard key={post.id} post={post} size="medium" />
+                    ) : (
+                      <Card key={post.id} className="group overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+                        <div className="relative overflow-hidden">
+                          <img 
+                            src={post.image_url || '/uploads/background.webp'} 
+                            alt={post.title} 
+                            className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-700" 
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          <div className="absolute top-2 left-2 flex gap-1">
+                            <Badge className="bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium text-xs px-2 py-1">
+                              {post.category}
                             </Badge>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <CardHeader className="pb-2 p-4">
-                        <CardTitle className="text-sm group-hover:text-purple-300 transition-colors duration-300 leading-snug text-white line-clamp-2">
-                          {post.title}
-                        </CardTitle>
-                        <CardDescription className="text-gray-300 text-xs leading-relaxed line-clamp-2">
-                          {post.excerpt}
-                        </CardDescription>
-                      </CardHeader>
-                      
-                      <CardContent className="pt-0 p-4">
-                        <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
-                          <div className="flex items-center space-x-2">
-                            <div className="flex items-center">
-                              <Calendar className="w-3 h-3 mr-1" />
-                              {new Date(post.published_at || post.created_at).toLocaleDateString()}
-                            </div>
-                            <div className="flex items-center">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {post.read_time} {t('min')}
-                            </div>
                           </div>
-                          {post.views && post.views > 0 && (
-                            <div className="flex items-center">
-                              <Eye className="w-3 h-3 mr-1" />
-                              {post.views}
-                            </div>
-                          )}
                         </div>
                         
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center text-xs text-gray-400">
-                            <User className="w-3 h-3 mr-1" />
-                            {post.author}
+                        <CardHeader className="pb-2 p-4">
+                          <CardTitle className="text-sm group-hover:text-purple-300 transition-colors duration-300 leading-snug text-white line-clamp-2">
+                            {post.title}
+                          </CardTitle>
+                          <CardDescription className="text-gray-300 text-xs leading-relaxed line-clamp-2">
+                            {post.excerpt}
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="pt-0 p-4">
+                          <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
+                            <div className="flex items-center space-x-2">
+                              <div className="flex items-center">
+                                <Calendar className="w-3 h-3 mr-1" />
+                                {new Date(post.published_at || post.created_at).toLocaleDateString()}
+                              </div>
+                              <div className="flex items-center">
+                                <Clock className="w-3 h-3 mr-1" />
+                                {post.read_time} {t('min')}
+                              </div>
+                            </div>
+                            {post.views && post.views > 0 && (
+                              <div className="flex items-center">
+                                <Eye className="w-3 h-3 mr-1" />
+                                {post.views}
+                              </div>
+                            )}
                           </div>
                           
-                          <Link to={`/blog/${post.slug}`}>
-                            <Button variant="ghost" className="text-purple-300 hover:text-purple-200 hover:bg-white/10 font-medium p-1 text-xs">
-                              {t('readMore')}
-                              <ArrowRight className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" />
-                            </Button>
-                          </Link>
-                        </div>
-                      </CardContent>
-                    </Card>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center text-xs text-gray-400">
+                              <User className="w-3 h-3 mr-1" />
+                              {post.author}
+                            </div>
+                            
+                            <Link to={`/blog/${post.slug}`}>
+                              <Button variant="ghost" className="text-purple-300 hover:text-purple-200 hover:bg-white/10 font-medium p-1 text-xs">
+                                {t('readMore')}
+                                <ArrowRight className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" />
+                              </Button>
+                            </Link>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )
                   ))}
                 </div>
               </section>

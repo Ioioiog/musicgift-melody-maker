@@ -2,6 +2,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
+import VideoHeroSection from "@/components/blog/VideoHeroSection";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, User, Clock, Youtube } from "lucide-react";
@@ -39,35 +40,7 @@ const BlogPost = () => {
     );
   }
 
-  if (error) {
-    console.error('Blog post error:', error);
-    return (
-      <div className="min-h-screen text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
-        <div className="absolute inset-0 bg-black/30"></div>
-        <Navigation />
-        <div className="pt-24 relative z-10">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-3xl font-bold text-white mb-4">Error Loading Article</h1>
-            <p className="text-gray-300 mb-8">There was an error loading the article. Please try again later.</p>
-            <Link to="/blog">
-              <Button className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Blog
-              </Button>
-            </Link>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (!post) {
+  if (error || !post) {
     return (
       <div className="min-h-screen text-white relative overflow-hidden" style={{
         backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
@@ -136,80 +109,66 @@ const BlogPost = () => {
             {/* Article Header */}
             <header className="mb-12">
               <div className="max-w-4xl mx-auto">
-                <div className="flex items-center gap-2 mb-4">
-                  <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
-                    {post.category}
-                  </Badge>
-                  {post.youtube_url && (
-                    <Badge className="bg-red-600 text-white border-0 flex items-center gap-1">
-                      <Youtube className="w-3 h-3" />
-                      Video
-                    </Badge>
-                  )}
-                </div>
-                <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight">
-                  {post.title}
-                </h1>
-                <div className="flex items-center space-x-6 text-gray-300 mb-8">
-                  <div className="flex items-center">
-                    <Calendar className="w-5 h-5 mr-2" />
-                    {new Date(post.published_at || post.created_at).toLocaleDateString()}
-                  </div>
-                  <div className="flex items-center">
-                    <User className="w-5 h-5 mr-2" />
-                    {post.author}
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="w-5 h-5 mr-2" />
-                    {post.read_time} min {t('read') || 'read'}
-                  </div>
-                  {post.views !== undefined && post.views > 0 && (
-                    <div className="flex items-center">
-                      <span className="text-sm">
-                        {post.views} {post.views === 1 ? 'view' : 'views'}
-                      </span>
+                {/* Enhanced YouTube Video Section */}
+                {post.youtube_url ? (
+                  <VideoHeroSection post={post} />
+                ) : (
+                  /* Traditional Header for Non-Video Posts */
+                  <>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
+                        {post.category}
+                      </Badge>
                     </div>
-                  )}
-                </div>
-                
-                {/* YouTube Video Embed */}
-                {post.youtube_url && (
-                  <div className="relative overflow-hidden rounded-2xl shadow-xl mb-8">
-                    <div className="aspect-video">
-                      <iframe
-                        src={convertToYouTubeEmbed(post.youtube_url)}
-                        title={post.title}
-                        className="w-full h-full"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      ></iframe>
+                    <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight">
+                      {post.title}
+                    </h1>
+                    <div className="flex items-center space-x-6 text-gray-300 mb-8">
+                      <div className="flex items-center">
+                        <Calendar className="w-5 h-5 mr-2" />
+                        {new Date(post.published_at || post.created_at).toLocaleDateString()}
+                      </div>
+                      <div className="flex items-center">
+                        <User className="w-5 h-5 mr-2" />
+                        {post.author}
+                      </div>
+                      <div className="flex items-center">
+                        <Clock className="w-5 h-5 mr-2" />
+                        {post.read_time} min {t('read') || 'read'}
+                      </div>
+                      {post.views !== undefined && post.views > 0 && (
+                        <div className="flex items-center">
+                          <span className="text-sm">
+                            {post.views} {post.views === 1 ? 'view' : 'views'}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                )}
-                
-                {/* Featured Image */}
-                {post.image_url && (
-                  <div className="relative overflow-hidden rounded-2xl shadow-xl">
-                    <img 
-                      src={post.image_url} 
-                      alt={post.title} 
-                      className="w-full h-64 sm:h-96 object-cover" 
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                  </div>
-                )}
-                
-                {/* Fallback image if no image or video */}
-                {!post.image_url && !post.youtube_url && (
-                  <div className="relative overflow-hidden rounded-2xl shadow-xl">
-                    <img 
-                      src="/uploads/background.webp" 
-                      alt={post.title} 
-                      className="w-full h-64 sm:h-96 object-cover" 
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                  </div>
+                    
+                    {/* Featured Image for non-video posts */}
+                    {post.image_url && (
+                      <div className="relative overflow-hidden rounded-2xl shadow-xl mb-8">
+                        <img 
+                          src={post.image_url} 
+                          alt={post.title} 
+                          className="w-full h-64 sm:h-96 object-cover" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                      </div>
+                    )}
+                    
+                    {/* Fallback image if no image */}
+                    {!post.image_url && (
+                      <div className="relative overflow-hidden rounded-2xl shadow-xl mb-8">
+                        <img 
+                          src="/uploads/background.webp" 
+                          alt={post.title} 
+                          className="w-full h-64 sm:h-96 object-cover" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </header>
