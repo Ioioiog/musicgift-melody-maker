@@ -1,14 +1,12 @@
-
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
+import BlogFilterSection from "@/components/BlogFilterSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Search, Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye } from "lucide-react";
+import { Calendar, User, ArrowRight, Music, Headphones, Mic, Guitar, Clock, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useState, useMemo } from "react";
@@ -18,8 +16,11 @@ const Blog = () => {
   const { data: blogPosts = [], isLoading } = useBlogPosts();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sortBy, setSortBy] = useState("newest");
+  const [dateFilter, setDateFilter] = useState("all");
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
-  // Filter posts based on search term and selected category
+  // Filter and sort posts
   const filteredPosts = useMemo(() => {
     let posts = blogPosts;
     
@@ -39,9 +40,52 @@ const Blog = () => {
         post?.author?.toLowerCase().includes(term)
       );
     }
+
+    // Filter by date
+    if (dateFilter !== "all") {
+      const now = new Date();
+      const filterDate = new Date();
+      
+      switch (dateFilter) {
+        case "recent":
+          filterDate.setDate(now.getDate() - 30);
+          break;
+        case "month":
+          filterDate.setMonth(now.getMonth());
+          filterDate.setDate(1);
+          break;
+        case "year":
+          filterDate.setFullYear(now.getFullYear());
+          filterDate.setMonth(0);
+          filterDate.setDate(1);
+          break;
+      }
+      
+      if (dateFilter !== "all") {
+        posts = posts.filter(post => {
+          const postDate = new Date(post?.published_at || post?.created_at);
+          return postDate >= filterDate;
+        });
+      }
+    }
+
+    // Sort posts
+    posts.sort((a, b) => {
+      switch (sortBy) {
+        case "oldest":
+          return new Date(a?.published_at || a?.created_at).getTime() - new Date(b?.published_at || b?.created_at).getTime();
+        case "popular":
+          return (b?.views || 0) - (a?.views || 0);
+        case "title":
+          return (a?.title || "").localeCompare(b?.title || "");
+        case "newest":
+        default:
+          return new Date(b?.published_at || b?.created_at).getTime() - new Date(a?.published_at || a?.created_at).getTime();
+      }
+    });
     
     return posts;
-  }, [blogPosts, searchTerm, selectedCategory]);
+  }, [blogPosts, searchTerm, selectedCategory, dateFilter, sortBy]);
 
   // Get featured post
   const featuredPost = blogPosts.find(post => post?.is_featured) || blogPosts[0];
@@ -49,7 +93,7 @@ const Blog = () => {
   // Get non-featured posts for the grid
   const regularPosts = filteredPosts.filter(post => !post?.is_featured || post !== featuredPost);
 
-  // Get all categories (predefined) with counts
+  // Get all categories with counts
   const categories = useMemo(() => {
     const categoryCount = blogPosts.reduce((acc, post) => {
       if (post?.category) {
@@ -76,7 +120,6 @@ const Blog = () => {
       'General': "from-gray-500 to-gray-600"
     };
 
-    // Return all predefined categories, even if they have 0 posts
     const predefinedCategories = ['Music Tips', 'Industry Insights', 'Client Stories', 'Behind the Scenes', 'Trends', 'General'];
     return predefinedCategories.map(name => ({
       name,
@@ -117,7 +160,7 @@ const Blog = () => {
       <div className="absolute inset-0 bg-black/30"></div>
       <Navigation />
 
-      {/* Compact Modern Header */}
+      {/* Header */}
       <header className="text-white relative overflow-hidden pt-20 pb-12">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-8 left-8 text-3xl opacity-20 animate-float">♪</div>
@@ -130,9 +173,8 @@ const Blog = () => {
         </div>
         
         <div className="container mx-auto sm:px-6 relative z-10 px-0 py-0">
-          {/* Hero Section - More Compact */}
+          {/* Hero Section */}
           <div className="max-w-4xl mx-auto text-center mb-12">
-            
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight px-0 py-[5px]">
               {t('blogHeroTitle') || "Music Blog"}
             </h1>
@@ -142,307 +184,188 @@ const Blog = () => {
             </p>
           </div>
 
-          {/* Categories as Tabs with Search Bar */}
-          <div className="max-w-5xl mx-auto">
-            <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-              <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-6">
-                <div className="w-full lg:flex-1 overflow-x-auto lg:overflow-visible">
-                  <TabsList className="flex flex-wrap gap-1 bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-xl w-full lg:w-auto justify-start lg:justify-center">
-                    <TabsTrigger 
-                      value="all" 
-                      className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-3 whitespace-nowrap"
-                    >
-                      All ({blogPosts.length})
-                    </TabsTrigger>
-                    {categories.map((category, index) => {
-                      const IconComponent = category.icon;
-                      const categoryValue = category.name.toLowerCase().replace(/\s+/g, '-');
-                      return (
-                        <TabsTrigger 
-                          key={index} 
-                          value={categoryValue} 
-                          className="text-white data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-lg font-medium text-xs sm:text-sm py-2 px-3 flex items-center gap-1 whitespace-nowrap"
-                        >
-                          <IconComponent className="w-3 h-3 flex-shrink-0" />
-                          <span>{category.name}</span>
-                          <span className="ml-1 text-xs opacity-75">({category.count})</span>
-                        </TabsTrigger>
-                      );
-                    })}
-                  </TabsList>
-                </div>
-                
-                {/* Search Bar - Mobile Friendly */}
-                <div className="w-full lg:w-auto lg:min-w-[280px] lg:max-w-[320px]">
-                  <div className="relative group">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-purple-400 transition-colors" />
-                    <Input 
-                      placeholder={t('searchPlaceholder') || "Search articles..."} 
-                      value={searchTerm} 
-                      onChange={e => setSearchTerm(e.target.value)} 
-                      className="pl-10 pr-4 py-3 bg-white/10 backdrop-blur-md border-white/20 rounded-xl text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 w-full text-sm" 
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Tab Content */}
-              <TabsContent value="all" className="mt-0">
-                <div className="space-y-20">
-                  {/* Featured Article */}
-                  {featuredPost && selectedCategory === "all" && (
-                    <section>
-                      <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-white mb-4">
-                          {t('featuredArticle') || "Featured Article"}
-                        </h2>
-                        <p className="text-xl text-gray-200">
-                          Our most popular story this week
-                        </p>
-                      </div>
-                      
-                      <Card className="overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white/10 backdrop-blur-md border border-white/20">
-                        <div className="lg:flex">
-                          <div className="lg:w-3/5 relative overflow-hidden">
-                            <img src={'/uploads/background.webp'} alt={featuredPost.title} className="w-full h-80 lg:h-full object-cover transition-transform duration-700 hover:scale-105" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
-                            <Badge className="absolute top-6 left-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 font-medium">
-                              {featuredPost.category}
-                            </Badge>
-                          </div>
-                          
-                          <div className="lg:w-2/5 p-8 lg:p-12 flex flex-col justify-center">
-                            <div className="mb-6 lg:hidden">
-                              <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 font-medium">
-                                {featuredPost.category}
-                              </Badge>
-                            </div>
-                            
-                            <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight">
-                              {featuredPost.title}
-                            </h3>
-                            
-                            <p className="text-gray-300 mb-8 text-lg leading-relaxed">
-                              {featuredPost.excerpt}
-                            </p>
-                            
-                            <div className="flex items-center justify-between mb-8 text-gray-400 text-sm">
-                              <div className="flex items-center space-x-6">
-                                <div className="flex items-center">
-                                  <Calendar className="w-4 h-4 mr-2" />
-                                  {new Date(featuredPost.published_at || featuredPost.created_at).toLocaleDateString()}
-                                </div>
-                                <div className="flex items-center">
-                                  <User className="w-4 h-4 mr-2" />
-                                  {featuredPost.author}
-                                </div>
-                                <div className="flex items-center">
-                                  <Clock className="w-4 h-4 mr-2" />
-                                  {featuredPost.read_time} min
-                                </div>
-                                {featuredPost.views && featuredPost.views > 0 && <div className="flex items-center">
-                                    <Eye className="w-4 h-4 mr-2" />
-                                    {featuredPost.views}
-                                  </div>}
-                              </div>
-                            </div>
-                            
-                            <Link to={`/blog/${featuredPost.slug}`}>
-                              <Button className="bg-orange-500 text-white border-0 px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
-                                {t('readMore') || "Read More"} 
-                                <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
-                              </Button>
-                            </Link>
-                          </div>
-                        </div>
-                      </Card>
-                    </section>
-                  )}
-
-                  {/* Recent Posts - Modern Grid */}
-                  {regularPosts.length > 0 && (
-                    <section>
-                      <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-white mb-4">
-                          {searchTerm ? `Search Results (${regularPosts.length})` : t('recentArticles') || "Recent Articles"}
-                        </h2>
-                        <p className="text-xl text-gray-200">
-                          {searchTerm ? `Results for "${searchTerm}"` : "Fresh insights and stories from our music experts"}
-                        </p>
-                      </div>
-                      
-                      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
-                        {regularPosts.map(post => post && <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
-                            <div className="relative overflow-hidden">
-                              <img src={'/uploads/background.webp'} alt={post.title} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                              <Badge className="absolute top-4 left-4 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium">
-                                {post.category}
-                              </Badge>
-                            </div>
-                            
-                            <CardHeader className="pb-4">
-                              <CardTitle className="text-xl group-hover:text-purple-300 transition-colors duration-300 leading-snug text-white">
-                                {post.title}
-                              </CardTitle>
-                              <CardDescription className="text-gray-300 text-base leading-relaxed">
-                                {post.excerpt}
-                              </CardDescription>
-                            </CardHeader>
-                            
-                            <CardContent className="pt-0">
-                              <div className="flex items-center justify-between text-sm text-gray-400 mb-6">
-                                <div className="flex items-center space-x-4">
-                                  <div className="flex items-center">
-                                    <Calendar className="w-4 h-4 mr-1" />
-                                    {new Date(post.published_at || post.created_at).toLocaleDateString()}
-                                  </div>
-                                  <div className="flex items-center">
-                                    <Clock className="w-4 h-4 mr-1" />
-                                    {post.read_time} min
-                                  </div>
-                                </div>
-                                {post.views && post.views > 0 && <div className="flex items-center">
-                                    <Eye className="w-4 h-4 mr-1" />
-                                    {post.views}
-                                  </div>}
-                              </div>
-                              
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center text-sm text-gray-400">
-                                  <User className="w-4 h-4 mr-1" />
-                                  {post.author}
-                                </div>
-                                
-                                <Link to={`/blog/${post.slug}`}>
-                                  <Button variant="ghost" className="text-purple-300 hover:text-purple-200 hover:bg-white/10 font-medium p-2">
-                                    {t('readMore') || "Read More"}
-                                    <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
-                                  </Button>
-                                </Link>
-                              </div>
-                            </CardContent>
-                          </Card>)}
-                      </div>
-                    </section>
-                  )}
-
-                  {/* No Results Message */}
-                  {(searchTerm || selectedCategory !== "all") && filteredPosts.length === 0 && (
-                    <div className="text-center py-20">
-                      <h3 className="text-2xl font-bold text-white mb-4">No articles found</h3>
-                      <p className="text-gray-300 mb-8">Try adjusting your search terms or browse all articles.</p>
-                      <Button onClick={() => {
-                        setSearchTerm("");
-                        setSelectedCategory("all");
-                      }} variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                        Clear Filters
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </TabsContent>
-
-              {/* Category-specific tab contents */}
-              {categories.map((category) => {
-                const categoryValue = category.name.toLowerCase().replace(/\s+/g, '-');
-                return (
-                  <TabsContent key={categoryValue} value={categoryValue} className="mt-0">
-                    <div className="space-y-20">
-                      {regularPosts.length > 0 && (
-                        <section>
-                          <div className="text-center mb-16">
-                            <h2 className="text-4xl font-bold text-white mb-4">
-                              {category.name} {searchTerm ? `(${regularPosts.length} results)` : `(${regularPosts.length} articles)`}
-                            </h2>
-                            <p className="text-xl text-gray-200">
-                              {searchTerm ? `Results for "${searchTerm}" in ${category.name}` : `Latest insights in ${category.name}`}
-                            </p>
-                          </div>
-                          
-                          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
-                            {regularPosts.map(post => post && <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
-                                <div className="relative overflow-hidden">
-                                  <img src={'/uploads/background.webp'} alt={post.title} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                  <Badge className="absolute top-4 left-4 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium">
-                                    {post.category}
-                                  </Badge>
-                                </div>
-                                
-                                <CardHeader className="pb-4">
-                                  <CardTitle className="text-xl group-hover:text-purple-300 transition-colors duration-300 leading-snug text-white">
-                                    {post.title}
-                                  </CardTitle>
-                                  <CardDescription className="text-gray-300 text-base leading-relaxed">
-                                    {post.excerpt}
-                                  </CardDescription>
-                                </CardHeader>
-                                
-                                <CardContent className="pt-0">
-                                  <div className="flex items-center justify-between text-sm text-gray-400 mb-6">
-                                    <div className="flex items-center space-x-4">
-                                      <div className="flex items-center">
-                                        <Calendar className="w-4 h-4 mr-1" />
-                                        {new Date(post.published_at || post.created_at).toLocaleDateString()}
-                                      </div>
-                                      <div className="flex items-center">
-                                        <Clock className="w-4 h-4 mr-1" />
-                                        {post.read_time} min
-                                      </div>
-                                    </div>
-                                    {post.views && post.views > 0 && <div className="flex items-center">
-                                        <Eye className="w-4 h-4 mr-1" />
-                                        {post.views}
-                                      </div>}
-                                  </div>
-                                  
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center text-sm text-gray-400">
-                                      <User className="w-4 h-4 mr-1" />
-                                      {post.author}
-                                    </div>
-                                    
-                                    <Link to={`/blog/${post.slug}`}>
-                                      <Button variant="ghost" className="text-purple-300 hover:text-purple-200 hover:bg-white/10 font-medium p-2">
-                                        {t('readMore') || "Read More"}
-                                        <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
-                                      </Button>
-                                    </Link>
-                                  </div>
-                                </CardContent>
-                              </Card>)}
-                          </div>
-                        </section>
-                      )}
-
-                      {/* No Results Message */}
-                      {regularPosts.length === 0 && (
-                        <div className="text-center py-20">
-                          <h3 className="text-2xl font-bold text-white mb-4">No articles found</h3>
-                          <p className="text-gray-300 mb-8">
-                            {searchTerm 
-                              ? `No articles found for "${searchTerm}" in ${category.name}` 
-                              : `No articles available in ${category.name} yet`
-                            }
-                          </p>
-                          <Button onClick={() => {
-                            setSearchTerm("");
-                            setSelectedCategory("all");
-                          }} variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                            View All Articles
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </TabsContent>
-                );
-              })}
-            </Tabs>
-          </div>
+          {/* Filter Section */}
+          <BlogFilterSection
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            categories={categories}
+            totalPosts={blogPosts.length}
+            filteredCount={filteredPosts.length}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            dateFilter={dateFilter}
+            setDateFilter={setDateFilter}
+            isOpen={filtersOpen}
+            setIsOpen={setFiltersOpen}
+          />
         </div>
       </header>
 
+      <div className="container mx-auto sm:px-6 relative z-10 px-0 py-0">
+        <div className="space-y-20">
+          {/* Featured Article */}
+          {featuredPost && selectedCategory === "all" && !searchTerm && (
+            <section>
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold text-white mb-4">
+                  {t('featuredArticle') || "Featured Article"}
+                </h2>
+                <p className="text-xl text-gray-200">
+                  Our most popular story this week
+                </p>
+              </div>
+              
+              <Card className="overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white/10 backdrop-blur-md border border-white/20">
+                <div className="lg:flex">
+                  <div className="lg:w-3/5 relative overflow-hidden">
+                    <img src={'/uploads/background.webp'} alt={featuredPost.title} className="w-full h-80 lg:h-full object-cover transition-transform duration-700 hover:scale-105" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden"></div>
+                    <Badge className="absolute top-6 left-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 font-medium">
+                      {featuredPost.category}
+                    </Badge>
+                  </div>
+                  
+                  <div className="lg:w-2/5 p-8 lg:p-12 flex flex-col justify-center">
+                    <div className="mb-6 lg:hidden">
+                      <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 font-medium">
+                        {featuredPost.category}
+                      </Badge>
+                    </div>
+                    
+                    <h3 className="text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight">
+                      {featuredPost.title}
+                    </h3>
+                    
+                    <p className="text-gray-300 mb-8 text-lg leading-relaxed">
+                      {featuredPost.excerpt}
+                    </p>
+                    
+                    <div className="flex items-center justify-between mb-8 text-gray-400 text-sm">
+                      <div className="flex items-center space-x-6">
+                        <div className="flex items-center">
+                          <Calendar className="w-4 h-4 mr-2" />
+                          {new Date(featuredPost.published_at || featuredPost.created_at).toLocaleDateString()}
+                        </div>
+                        <div className="flex items-center">
+                          <User className="w-4 h-4 mr-2" />
+                          {featuredPost.author}
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="w-4 h-4 mr-2" />
+                          {featuredPost.read_time} min
+                        </div>
+                        {featuredPost.views && featuredPost.views > 0 && <div className="flex items-center">
+                            <Eye className="w-4 h-4 mr-2" />
+                            {featuredPost.views}
+                          </div>}
+                      </div>
+                    </div>
+                    
+                    <Link to={`/blog/${featuredPost.slug}`}>
+                      <Button className="bg-orange-500 text-white border-0 px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
+                        {t('readMore') || "Read More"} 
+                        <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </Card>
+            </section>
+          )}
+
+          {/* Recent Posts - Modern Grid */}
+          {regularPosts.length > 0 && (
+            <section>
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold text-white mb-4">
+                  {searchTerm ? `Search Results (${regularPosts.length})` : t('recentArticles') || "Recent Articles"}
+                </h2>
+                <p className="text-xl text-gray-200">
+                  {searchTerm ? `Results for "${searchTerm}"` : "Fresh insights and stories from our music experts"}
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+                {regularPosts.map(post => post && <Card key={post.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+                    <div className="relative overflow-hidden">
+                      <img src={'/uploads/background.webp'} alt={post.title} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <Badge className="absolute top-4 left-4 bg-white/90 text-gray-800 border-0 backdrop-blur-sm font-medium">
+                        {post.category}
+                      </Badge>
+                    </div>
+                    
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-xl group-hover:text-purple-300 transition-colors duration-300 leading-snug text-white">
+                        {post.title}
+                      </CardTitle>
+                      <CardDescription className="text-gray-300 text-base leading-relaxed">
+                        {post.excerpt}
+                      </CardDescription>
+                    </CardHeader>
+                    
+                    <CardContent className="pt-0">
+                      <div className="flex items-center justify-between text-sm text-gray-400 mb-6">
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-1" />
+                            {new Date(post.published_at || post.created_at).toLocaleDateString()}
+                          </div>
+                          <div className="flex items-center">
+                            <Clock className="w-4 h-4 mr-1" />
+                            {post.read_time} min
+                          </div>
+                        </div>
+                        {post.views && post.views > 0 && <div className="flex items-center">
+                            <Eye className="w-4 h-4 mr-1" />
+                            {post.views}
+                          </div>}
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-sm text-gray-400">
+                          <User className="w-4 h-4 mr-1" />
+                          {post.author}
+                        </div>
+                        
+                        <Link to={`/blog/${post.slug}`}>
+                          <Button variant="ghost" className="text-purple-300 hover:text-purple-200 hover:bg-white/10 font-medium p-2">
+                            {t('readMore') || "Read More"}
+                            <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+                          </Button>
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>)}
+              </div>
+            </section>
+          )}
+
+          {/* No Results Message */}
+          {filteredPosts.length === 0 && (
+            <div className="text-center py-20">
+              <h3 className="text-2xl font-bold text-white mb-4">No articles found</h3>
+              <p className="text-gray-300 mb-8">Try adjusting your search terms or browse all articles.</p>
+              <Button 
+                onClick={() => {
+                  setSearchTerm("");
+                  setSelectedCategory("all");
+                  setDateFilter("all");
+                  setSortBy("newest");
+                }} 
+                variant="outline" 
+                className="border-white/20 text-white hover:bg-white/10"
+              >
+                Clear Filters
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* CTA Section */}
       <div className="container mx-auto sm:px-6 relative z-10 px-[18px] py-0">
         <section className="relative py-20 bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-md rounded-3xl border border-white/30 text-white overflow-hidden shadow-2xl">
           <div className="absolute top-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
