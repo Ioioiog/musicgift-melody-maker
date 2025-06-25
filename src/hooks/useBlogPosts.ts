@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -90,9 +91,13 @@ export const useBlogPost = (slug: string) => {
         .from('blog_posts')
         .select('*')
         .or(`translations->'ro'->>'slug'.eq.${slug},translations->'en'->>'slug'.eq.${slug},translations->'fr'->>'slug'.eq.${slug},translations->'de'->>'slug'.eq.${slug},translations->'pl'->>'slug'.eq.${slug},translations->'it'->>'slug'.eq.${slug}`)
-        .single();
+        .maybeSingle();
       
       if (error) throw error;
+      
+      if (!data) {
+        return null;
+      }
       
       // Safe type casting with proper validation
       const post = {

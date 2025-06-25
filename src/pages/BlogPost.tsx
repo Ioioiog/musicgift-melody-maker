@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -38,7 +39,35 @@ const BlogPost = () => {
     );
   }
 
-  if (error || !post) {
+  if (error) {
+    console.error('Blog post error:', error);
+    return (
+      <div className="min-h-screen text-white relative overflow-hidden" style={{
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        <div className="absolute inset-0 bg-black/30"></div>
+        <Navigation />
+        <div className="pt-24 relative z-10">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-3xl font-bold text-white mb-4">Error Loading Article</h1>
+            <p className="text-gray-300 mb-8">There was an error loading the article. Please try again later.</p>
+            <Link to="/blog">
+              <Button className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Blog
+              </Button>
+            </Link>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!post) {
     return (
       <div className="min-h-screen text-white relative overflow-hidden" style={{
         backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
@@ -51,7 +80,7 @@ const BlogPost = () => {
         <div className="pt-24 relative z-10">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-3xl font-bold text-white mb-4">Article Not Found</h1>
-            <p className="text-gray-300 mb-8">The article you're looking for doesn't exist.</p>
+            <p className="text-gray-300 mb-8">The article you're looking for doesn't exist or has been removed.</p>
             <Link to="/blog">
               <Button className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20">
                 <ArrowLeft className="w-4 h-4 mr-2" />

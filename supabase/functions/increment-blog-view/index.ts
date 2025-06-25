@@ -65,14 +65,6 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Get current user if authenticated
-    const authHeader = req.headers.get('authorization');
-    let userId = null;
-    if (authHeader) {
-      const { data: { user } } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
-      userId = user?.id || null;
-    }
-
     // Insert detailed view record
     const { error: viewError } = await supabase
       .from('blog_post_views')
@@ -82,11 +74,12 @@ Deno.serve(async (req) => {
         user_agent: userAgent,
         referrer: referrer || null,
         session_id: session_id || null,
-        user_id: userId
+        user_id: null // Anonymous tracking
       });
 
     if (viewError) {
       console.error('Error inserting view record:', viewError);
+      // Continue with incrementing views even if detailed tracking fails
     }
 
     // Increment the views counter on the blog post
@@ -101,7 +94,7 @@ Deno.serve(async (req) => {
       const { error: fallbackError } = await supabase
         .from('blog_posts')
         .update({ 
-          views: supabase.rpc('coalesce', { val: 'views', default_val: 0 }) + 1
+          views: 1 // Use direct increment instead of complex RPC
         })
         .eq('id', post_id);
 

@@ -39,14 +39,17 @@ export const useBlogPostView = (postId: string | undefined) => {
 
         if (error) {
           console.error('Failed to track blog post view:', error);
+          // Don't throw error, just log it - view tracking shouldn't break the page
         } else {
           // Mark this post as viewed in this session
           viewedPosts.push(postId);
           sessionStorage.setItem('viewed_posts', JSON.stringify(viewedPosts));
           hasTracked.current = true;
+          console.log('Blog post view tracked successfully');
         }
       } catch (error) {
         console.error('Error tracking blog post view:', error);
+        // Don't throw error, just log it - view tracking shouldn't break the page
       }
     };
 
