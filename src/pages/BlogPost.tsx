@@ -122,7 +122,7 @@ const BlogPost = () => {
             {/* Back Button */}
             <div className="mb-8">
               <Link to="/blog">
-                <Button variant="ghost" className="text-white hover:text-purple-300 hover:bg-white/10 backdrop-blur-sm">
+                <Button variant="ghost" className="text-white hover:text-purple-300 hover:bg-white/10 backdrop-blur-sm py-[21px] my-[26px]">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   {t('backToBlog') || 'Back to Blog'}
                 </Button>
