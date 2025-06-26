@@ -1,4 +1,3 @@
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -40,14 +39,15 @@ function parseSmartBillXML(xmlText: string): any {
       const areInvoicesCreatedMatch = xmlText.match(/<areInvoicesCreated>(.*?)<\/areInvoicesCreated>/);
       const areInvoicesCreated = areInvoicesCreatedMatch?.[1] === 'true';
       
-      // Extract invoices if they exist
+      // Extract invoices if they exist - fix the parsing logic
       const invoices: Array<{number: string, series: string}> = [];
-      const invoiceMatches = xmlText.matchAll(/<invoice>(.*?)<\/invoice>/gs);
       
-      for (const invoiceMatch of invoiceMatches) {
-        const invoiceXml = invoiceMatch[1];
-        const numberMatch = invoiceXml.match(/<number>(.*?)<\/number>/);
-        const seriesMatch = invoiceXml.match(/<series>(.*?)<\/series>/);
+      // Look for the invoices section which contains number and series directly
+      const invoicesMatch = xmlText.match(/<invoices>(.*?)<\/invoices>/s);
+      if (invoicesMatch) {
+        const invoicesContent = invoicesMatch[1];
+        const numberMatch = invoicesContent.match(/<number>(.*?)<\/number>/);
+        const seriesMatch = invoicesContent.match(/<series>(.*?)<\/series>/);
         
         if (numberMatch && seriesMatch) {
           invoices.push({
@@ -55,6 +55,11 @@ function parseSmartBillXML(xmlText: string): any {
             series: seriesMatch[1]
           });
         }
+      }
+      
+      console.log(`🔍 XML Parsing Results: areInvoicesCreated=${areInvoicesCreated}, invoices found: ${invoices.length}`);
+      if (invoices.length > 0) {
+        console.log(`📋 Invoice details: ${invoices[0].series}${invoices[0].number}`);
       }
       
       return {
