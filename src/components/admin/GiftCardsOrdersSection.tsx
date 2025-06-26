@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import {
   Card,
@@ -30,7 +29,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import {
   useGiftCardsAdmin,
-  useCreateGiftCard,
 } from "@/hooks/useGiftCardsAdmin";
 import {
   AlertDialog,
