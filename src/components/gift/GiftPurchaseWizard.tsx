@@ -20,6 +20,7 @@ import { useGiftCardPaymentState } from '@/hooks/useGiftCardPaymentState';
 import { useNavigate } from 'react-router-dom';
 import GiftPaymentStatusChecker from './GiftPaymentStatusChecker';
 import GiftCardPreview from './GiftCardPreview';
+import PaymentProviderSelection from '@/components/order/PaymentProviderSelection';
 
 interface GiftPurchaseWizardProps {
   onComplete?: (data: any) => void;
@@ -31,7 +32,7 @@ interface GiftCardFormData {
   recipient_name: string;
   recipient_email: string;
   gift_amount: number;
-  currency: string;
+  currency: 'RON' | 'EUR';
   message_text?: string;
   delivery_date?: Date | null;
 }
@@ -59,6 +60,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     delivery_date: null,
   });
   const [selectedDesign, setSelectedDesign] = useState<string>('');
+  const [selectedPaymentProvider, setSelectedPaymentProvider] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [showStatusChecker, setShowStatusChecker] = useState(false);
   const [paymentGiftCardId, setPaymentGiftCardId] = useState<string | null>(null);
@@ -70,6 +72,15 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       setSelectedDesign(designs[0].id);
     }
   }, [designs, selectedDesign]);
+
+  // Set default payment provider based on currency
+  useEffect(() => {
+    if (formData.currency === 'RON' && !selectedPaymentProvider) {
+      setSelectedPaymentProvider('smartbill');
+    } else if (formData.currency === 'EUR' && !selectedPaymentProvider) {
+      setSelectedPaymentProvider('stripe');
+    }
+  }, [formData.currency, selectedPaymentProvider]);
 
   // Single cleanup effect that runs only once when component mounts and user is available
   useEffect(() => {
@@ -101,8 +112,10 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     setFormData({ ...formData, gift_amount: amount });
   };
 
-  const handleCurrencyChange = (currency: string) => {
+  const handleCurrencyChange = (currency: 'RON' | 'EUR') => {
     setFormData({ ...formData, currency: currency });
+    // Reset payment provider when currency changes
+    setSelectedPaymentProvider('');
   };
 
   const handleDeliveryDateChange = (date: Date | undefined) => {
@@ -138,11 +151,12 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     };
   }, []);
 
-  const handlePayment = async (paymentProvider: string = 'smartbill') => {
+  const handlePayment = async (paymentProvider?: string) => {
     try {
       setIsProcessing(true);
       
       const selectedDesignObj = designs?.find(d => d.id === selectedDesign);
+      const providerToUse = paymentProvider || selectedPaymentProvider;
       
       const giftCardData = {
         sender_user_id: user?.id,
@@ -158,11 +172,11 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
         status: 'active'
       };
 
-      console.log('Creating gift card payment:', giftCardData);
+      console.log('Creating gift card payment:', giftCardData, 'with provider:', providerToUse);
       
       const result = await initiatePayment.mutateAsync({
         giftCardData,
-        paymentProvider
+        paymentProvider: providerToUse
       });
 
       console.log('Payment initiated:', result);
@@ -198,6 +212,27 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
         <p className="text-sm text-muted-foreground">{t('selectGiftCardValue')}</p>
       </div>
 
+      {/* Currency Selector */}
+      <div className="space-y-2">
+        <Label>{t('chooseCurrency', 'Choose Currency')}</Label>
+        <div className="flex gap-2">
+          <Button
+            variant={formData.currency === 'RON' ? 'default' : 'outline'}
+            onClick={() => handleCurrencyChange('RON')}
+            size="sm"
+          >
+            RON
+          </Button>
+          <Button
+            variant={formData.currency === 'EUR' ? 'default' : 'outline'}
+            onClick={() => handleCurrencyChange('EUR')}
+            size="sm"
+          >
+            EUR
+          </Button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-3 gap-4">
         {[50, 100, 200].map((amount) => (
           <Button
@@ -205,7 +240,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             variant={formData.gift_amount === amount ? 'default' : 'outline'}
             onClick={() => handleAmountChange(amount)}
           >
-            {amount} RON
+            {amount} {formData.currency}
           </Button>
         ))}
       </div>
@@ -215,7 +250,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
         <Input
           type="number"
           id="customAmount"
-          placeholder={t('enterAmountIn') + ' RON'}
+          placeholder={`${t('enterAmountIn')} ${formData.currency}`}
           value={formData.gift_amount.toString()}
           onChange={(e) => handleAmountChange(Number(e.target.value))}
         />
@@ -507,6 +542,15 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
         </div>
       </div>
 
+      {/* Payment Provider Selection */}
+      <div className="space-y-4">
+        <h5 className="text-md font-semibold">Alege Metoda de Plată</h5>
+        <PaymentProviderSelection
+          selectedProvider={selectedPaymentProvider}
+          onProviderSelect={setSelectedPaymentProvider}
+        />
+      </div>
+
       {/* Confirmation Checkbox */}
       <div className="space-y-4">
         <div className="flex items-start space-x-2">
@@ -534,9 +578,9 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           {t('back')}
         </Button>
         <Button 
-          disabled={isProcessing || !isConfirmed} 
-          onClick={() => handlePayment('smartbill')}
-          className={cn(!isConfirmed && "opacity-50 cursor-not-allowed")}
+          disabled={isProcessing || !isConfirmed || !selectedPaymentProvider} 
+          onClick={() => handlePayment()}
+          className={cn((!isConfirmed || !selectedPaymentProvider) && "opacity-50 cursor-not-allowed")}
         >
           {isProcessing ? (
             <>
