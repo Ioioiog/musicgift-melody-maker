@@ -1,14 +1,16 @@
+
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Home, Package, Clock, AlertCircle, FileText, Mail, Gift } from 'lucide-react';
+import { CheckCircle, Home, Package, Clock, AlertCircle, FileText, Mail, Gift, RefreshCw } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { formatCurrency } from '@/utils/currencyUtils';
 import { motion } from 'framer-motion';
+import { useGiftCardSync } from '@/hooks/useGiftCardSync';
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -17,7 +19,9 @@ const PaymentSuccess = () => {
   const [giftCardDetails, setGiftCardDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [paymentVerified, setPaymentVerified] = useState(false);
+  const [syncingGiftCard, setSyncingGiftCard] = useState(false);
   const { toast } = useToast();
+  const { syncGiftCard } = useGiftCardSync();
 
   // Handle multiple query parameters for different types
   const orderId = searchParams.get('orderId') || searchParams.get('order') || searchParams.get('order_id');
@@ -28,6 +32,43 @@ const PaymentSuccess = () => {
   const revolutOrderId = searchParams.get('revolut_order_id');
   const isQuoteRequest = requestType === 'quote' || !!quoteId;
   const isGiftCardRequest = requestType === 'gift' || !!giftCardId;
+
+  // Function to sync gift card status
+  const handleGiftCardSync = async (giftCardIdToSync: string) => {
+    if (!giftCardIdToSync) return;
+    
+    try {
+      setSyncingGiftCard(true);
+      console.log('Syncing gift card status:', giftCardIdToSync);
+      
+      const result = await syncGiftCard(giftCardIdToSync);
+      
+      if (result?.statusChanged) {
+        // Refetch gift card details after successful sync
+        const { data: updatedGiftCard, error } = await supabase
+          .from('gift_cards')
+          .select('*')
+          .eq('id', giftCardIdToSync)
+          .single();
+          
+        if (!error && updatedGiftCard) {
+          setGiftCardDetails(updatedGiftCard);
+          setPaymentVerified(updatedGiftCard.payment_status === 'completed');
+          
+          if (updatedGiftCard.payment_status === 'completed') {
+            toast({
+              title: "Payment Confirmed!",
+              description: "Your gift card payment has been verified and the gift card is now active.",
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Gift card sync failed:', error);
+    } finally {
+      setSyncingGiftCard(false);
+    }
+  };
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -50,6 +91,12 @@ const PaymentSuccess = () => {
           } else {
             setGiftCardDetails(data);
             setPaymentVerified(data.payment_status === 'completed');
+            
+            // Auto-sync if payment is still pending
+            if (data.payment_status === 'pending') {
+              console.log('Gift card payment pending, auto-syncing...');
+              await handleGiftCardSync(giftCardId);
+            }
           }
         } catch (error) {
           console.error('Error:', error);
@@ -113,6 +160,7 @@ const PaymentSuccess = () => {
       return () => clearInterval(pollInterval);
     }
   }, [orderId, quoteId, giftCardId, isQuoteRequest, isGiftCardRequest, toast, paymentVerified]);
+
   const getProviderName = (provider: string) => {
     switch (provider) {
       case 'stripe':
@@ -125,6 +173,7 @@ const PaymentSuccess = () => {
         return provider;
     }
   };
+
   if (loading) {
     return <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
       backgroundImage: "url('/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png')"
@@ -197,14 +246,14 @@ const PaymentSuccess = () => {
                     <div className="relative z-10">
                       <div className="mb-8">
                         <motion.div initial={{
-                          scale: 0
+                        scale: 0
                         }} animate={{
-                          scale: 1
+                        scale: 1
                         }} transition={{
-                          duration: 0.6,
-                          delay: 0.4
+                        duration: 0.6,
+                        delay: 0.4
                         }} className="inline-flex items-center justify-center w-24 h-24 rounded-full shadow-2xl mb-6" style={{
-                          background: paymentVerified ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #f59e0b, #d97706)'
+                        background: paymentVerified ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #f59e0b, #d97706)'
                         }}>
                           {paymentVerified ? <CheckCircle className="w-12 h-12 text-white" /> : <Clock className="w-12 h-12 text-white" />}
                         </motion.div>
@@ -218,29 +267,53 @@ const PaymentSuccess = () => {
                         </p>
                       </div>
 
-                      {!paymentVerified && (
+                      {syncingGiftCard && (
+                        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-300/20 rounded-xl p-6 mb-8">
+                          <div className="flex items-center gap-3 text-blue-200 mb-4">
+                            <RefreshCw className="w-6 h-6 animate-spin" />
+                            <span className="font-semibold text-lg">Verificăm statusul plății...</span>
+                          </div>
+                          <p className="text-sm text-blue-100/90">
+                            Se verifică automat statusul plății în SmartBill. Vă rugăm să așteptați...
+                          </p>
+                        </div>
+                      )}
+
+                      {!paymentVerified && !syncingGiftCard && (
                         <div className="bg-gradient-to-r from-orange-500/10 to-yellow-500/10 backdrop-blur-sm border border-orange-300/20 rounded-xl p-6 mb-8">
                           <div className="flex items-center gap-3 text-orange-200 mb-4">
                             <AlertCircle className="w-6 h-6" />
                             <span className="font-semibold text-lg">Gift Card în procesare</span>
                           </div>
-                          <p className="text-sm text-orange-100/90">
+                          <p className="text-sm text-orange-100/90 mb-4">
                             Gift card-ul dumneavoastră este în curs de verificare. Acest proces poate dura câteva minute. 
                             Veți primi un email de confirmare când va fi finalizat.
                           </p>
+                          {giftCardId && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleGiftCardSync(giftCardId)}
+                              disabled={syncingGiftCard}
+                              className="bg-orange-500/20 border-orange-300/30 text-orange-100 hover:bg-orange-500/30"
+                            >
+                              <RefreshCw className={`w-4 h-4 mr-2 ${syncingGiftCard ? 'animate-spin' : ''}`} />
+                              Verifică acum
+                            </Button>
+                          )}
                         </div>
                       )}
 
                       {giftCardDetails && (
                         <motion.div initial={{
-                          opacity: 0,
-                          y: 20
+                        opacity: 0,
+                        y: 20
                         }} animate={{
-                          opacity: 1,
-                          y: 0
+                        opacity: 1,
+                        y: 0
                         }} transition={{
-                          duration: 0.6,
-                          delay: 0.6
+                        duration: 0.6,
+                        delay: 0.6
                         }} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 mb-8 text-left">
                           <h3 className="font-semibold text-white mb-6 text-lg">Detalii Gift Card</h3>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
