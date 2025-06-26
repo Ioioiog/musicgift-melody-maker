@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -53,9 +52,9 @@ const PaymentSuccess = () => {
           
         if (!error && updatedGiftCard) {
           setGiftCardDetails(updatedGiftCard);
-          setPaymentVerified(updatedGiftCard.payment_status === 'completed');
+          setPaymentVerified(updatedGiftCard.payment_status === 'paid'); // Changed from 'completed' to 'paid'
           
-          if (updatedGiftCard.payment_status === 'completed') {
+          if (updatedGiftCard.payment_status === 'paid') { // Changed from 'completed' to 'paid'
             toast({
               title: "Payment Confirmed!",
               description: "Your gift card payment has been verified and the gift card is now active.",
@@ -90,7 +89,7 @@ const PaymentSuccess = () => {
             });
           } else {
             setGiftCardDetails(data);
-            setPaymentVerified(data.payment_status === 'completed');
+            setPaymentVerified(data.payment_status === 'paid'); // Changed from 'completed' to 'paid'
             
             // Auto-sync if payment is still pending
             if (data.payment_status === 'pending') {
@@ -340,7 +339,7 @@ const PaymentSuccess = () => {
                               <span className={`capitalize font-semibold px-3 py-1 rounded-full ${
                                 paymentVerified ? 'text-green-300 bg-green-500/20' : 'text-orange-300 bg-orange-500/20'
                               }`}>
-                                {giftCardDetails.payment_status === 'completed' ? 'Finalizat' : 
+                                {giftCardDetails.payment_status === 'paid' ? 'Finalizat' : 
                                  giftCardDetails.payment_status === 'pending' ? 'În procesare' : 
                                  giftCardDetails.payment_status}
                               </span>
