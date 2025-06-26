@@ -17,6 +17,7 @@ import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
 import { useGiftCardPaymentState } from '@/hooks/useGiftCardPaymentState';
 import { useNavigate } from 'react-router-dom';
 import GiftPaymentStatusChecker from './GiftPaymentStatusChecker';
+import GiftCardPreview from './GiftCardPreview';
 
 interface GiftPurchaseWizardProps {
   onComplete?: (data: any) => void;
@@ -330,7 +331,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   );
 
   const renderDesignStep = () => (
-    <CardContent className="space-y-4">
+    <CardContent className="space-y-6">
       <div className="space-y-2">
         <h4 className="text-lg font-semibold">{t('selectDesign')}</h4>
         <p className="text-sm text-muted-foreground">{t('chooseDesignPreview')}</p>
@@ -342,54 +343,81 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           Loading designs...
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {designs?.map((design) => (
-            <div
-              key={design.id}
-              className={cn(
-                "relative cursor-pointer rounded-lg border-2 p-2 transition-all hover:shadow-md",
-                selectedDesign === design.id
-                  ? "border-primary bg-primary/10"
-                  : "border-muted hover:border-primary/50"
-              )}
-              onClick={() => setSelectedDesign(design.id)}
-            >
-              <div className="aspect-[5/3] relative rounded-md overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500">
-                {design.preview_image_url ? (
-                  <img
-                    src={design.preview_image_url}
-                    alt={design.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white">
-                    <div className="text-center">
-                      <Gift className="w-8 h-8 mx-auto mb-2" />
-                      <span className="text-sm font-medium">{design.name}</span>
-                    </div>
-                  </div>
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {designs?.map((design) => (
+              <div
+                key={design.id}
+                className={cn(
+                  "relative cursor-pointer rounded-lg border-2 p-2 transition-all hover:shadow-md",
+                  selectedDesign === design.id
+                    ? "border-primary bg-primary/10"
+                    : "border-muted hover:border-primary/50"
                 )}
+                onClick={() => setSelectedDesign(design.id)}
+              >
+                <div className="aspect-[5/3] relative rounded-md overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500">
+                  {design.preview_image_url ? (
+                    <img
+                      src={design.preview_image_url}
+                      alt={design.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white">
+                      <div className="text-center">
+                        <Gift className="w-8 h-8 mx-auto mb-2" />
+                        <span className="text-sm font-medium">{design.name}</span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {selectedDesign === design.id && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-primary/20">
+                      <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 
-                {selectedDesign === design.id && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-primary/20">
-                    <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  </div>
-                )}
+                <div className="mt-2 text-center">
+                  <p className="text-sm font-medium capitalize">{design.name}</p>
+                </div>
               </div>
-              
-              <div className="mt-2 text-center">
-                <p className="text-sm font-medium capitalize">{design.name}</p>
+            ))}
+          </div>
+
+          {/* Dynamic Gift Card Preview */}
+          {selectedDesign && (
+            <div className="space-y-4">
+              <div className="border-t pt-6">
+                <h5 className="text-md font-semibold mb-3">Previzualizare Card Cadou</h5>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Așa va arăta cardul cadou cu datele introduse:
+                </p>
+                <div className="flex justify-center">
+                  <GiftCardPreview
+                    design={designs?.find(d => d.id === selectedDesign)}
+                    formData={{
+                      sender_name: formData.sender_name,
+                      recipient_name: formData.recipient_name,
+                      message_text: formData.message_text
+                    }}
+                    amount={formData.gift_amount}
+                    currency={formData.currency}
+                    deliveryDate={formData.delivery_date ? formData.delivery_date.toISOString() : undefined}
+                  />
+                </div>
               </div>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
 
       <div className="flex justify-between">
