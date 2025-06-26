@@ -1,4 +1,3 @@
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -225,116 +224,40 @@ Deno.serve(async (req) => {
       );
     }
 
-    // If proforma is not invoiced yet, payment is still pending
-    if (!estimateData.areInvoicesCreated || !estimateData.invoices || estimateData.invoices.length === 0) {
-      console.log('Proforma not yet invoiced - payment still pending');
-      return new Response(
-        JSON.stringify({ 
-          success: true,
-          giftCardId,
-          statusChanged: false,
-          currentPaymentStatus: giftCard.payment_status,
-          message: 'Proforma not yet invoiced - payment still pending'
-        }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Step 2: Check payment status of the generated invoice
-    const invoice = estimateData.invoices[0]; // Take the first invoice
-    console.log(`Checking payment status for invoice - Series: "${invoice.series}", Number: "${invoice.number}"`);
-
-    const paymentStatusUrl = `https://ws.smartbill.ro/SBORO/api/invoice/paymentstatus?cif=${smartbillCompanyVat}&seriesname=${encodeURIComponent(invoice.series)}&number=${encodeURIComponent(invoice.number)}`;
-    
-    const paymentResponse = await fetch(paymentStatusUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${smartbillAuth}`,
-        'Accept': 'application/xml',
-        'Content-Type': 'application/xml',
-      },
-    });
-
-    if (!paymentResponse.ok) {
-      console.error('SmartBill payment status API error:', paymentResponse.status, paymentResponse.statusText);
-      const errorText = await paymentResponse.text();
-      console.error('SmartBill payment error response:', errorText);
+    // FIXED LOGIC: If proforma has been invoiced, payment is completed
+    if (estimateData.areInvoicesCreated && estimateData.invoices && estimateData.invoices.length > 0) {
+      console.log('🎉 Proforma has been invoiced - payment completed!');
+      const invoice = estimateData.invoices[0];
       
-      return new Response(
-        JSON.stringify({ 
-          error: 'Failed to check SmartBill payment status',
-          details: `HTTP ${paymentResponse.status}: ${paymentResponse.statusText}`,
-          smartbillError: errorText
-        }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+      let statusChanged = false;
+      let newPaymentStatus = 'completed';
+      
+      // Update status if not already completed
+      if (giftCard.payment_status !== 'completed') {
+        statusChanged = true;
+        
+        const updateData = {
+          payment_status: newPaymentStatus,
+          smartbill_proforma_status: newPaymentStatus,
+          updated_at: new Date().toISOString(),
+        };
 
-    const paymentXmlText = await paymentResponse.text();
-    console.log('SmartBill payment status XML response:', paymentXmlText);
-    const paymentData: SmartBillPaymentStatusResponse = parseSmartBillXML(paymentXmlText);
-    console.log('Parsed payment status response:', paymentData);
+        const { error: updateError } = await supabase
+          .from('gift_cards')
+          .update(updateData)
+          .eq('id', giftCardId);
 
-    // Check for SmartBill payment errors
-    if (paymentData.errorText) {
-      console.error('SmartBill payment API returned error:', paymentData.errorText);
-      return new Response(
-        JSON.stringify({ 
-          error: 'SmartBill payment API error',
-          details: paymentData.errorText
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+        if (updateError) {
+          console.error('Error updating gift card:', updateError);
+          return new Response(
+            JSON.stringify({ error: 'Failed to update gift card status' }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
 
-    // Determine payment status based on SmartBill response
-    let newPaymentStatus = giftCard.payment_status;
-    let statusChanged = false;
+        console.log(`Gift card ${giftCardId} status updated to: ${newPaymentStatus}`);
 
-    const { invoiceTotalAmount, paidAmount, unpaidAmount } = paymentData;
-    
-    console.log(`Payment details - Total: ${invoiceTotalAmount}, Paid: ${paidAmount}, Unpaid: ${unpaidAmount}`);
-
-    // Update status based on payment amounts
-    if (unpaidAmount === 0 && paidAmount === invoiceTotalAmount) {
-      // Fully paid
-      newPaymentStatus = 'completed';
-      statusChanged = giftCard.payment_status !== 'completed';
-    } else if (paidAmount > 0 && unpaidAmount > 0) {
-      // Partially paid
-      newPaymentStatus = 'partial';
-      statusChanged = giftCard.payment_status !== 'partial';
-    } else if (paidAmount === 0) {
-      // Not paid yet
-      newPaymentStatus = 'pending';
-      statusChanged = giftCard.payment_status !== 'pending';
-    }
-
-    // Update the gift card status if changed
-    if (statusChanged) {
-      const updateData = {
-        payment_status: newPaymentStatus,
-        smartbill_proforma_status: newPaymentStatus,
-        updated_at: new Date().toISOString(),
-      };
-
-      const { error: updateError } = await supabase
-        .from('gift_cards')
-        .update(updateData)
-        .eq('id', giftCardId);
-
-      if (updateError) {
-        console.error('Error updating gift card:', updateError);
-        return new Response(
-          JSON.stringify({ error: 'Failed to update gift card status' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      console.log(`Gift card ${giftCardId} status updated to: ${newPaymentStatus}`);
-
-      // If payment is completed, trigger email sending
-      if (newPaymentStatus === 'completed') {
+        // Trigger email sending since payment is completed
         console.log('🎉 Gift card payment completed - triggering email delivery');
         
         // Send gift card to recipient
@@ -378,31 +301,39 @@ Deno.serve(async (req) => {
           console.error('❌ Error sending purchase confirmation email:', error);
         }
       }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          giftCardId,
+          statusChanged,
+          currentPaymentStatus: newPaymentStatus,
+          invoiceDetails: {
+            series: invoice.series,
+            number: invoice.number
+          },
+          message: statusChanged 
+            ? `Payment completed! Invoice ${invoice.series}${invoice.number} created` 
+            : `Payment already completed - Invoice ${invoice.series}${invoice.number}`
+        }),
+        { 
+          status: 200, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
     }
 
+    // If proforma is not invoiced yet, payment is still pending
+    console.log('Proforma not yet invoiced - payment still pending');
     return new Response(
-      JSON.stringify({
+      JSON.stringify({ 
         success: true,
         giftCardId,
-        statusChanged,
-        currentPaymentStatus: newPaymentStatus,
-        paymentDetails: {
-          invoiceTotalAmount,
-          paidAmount,
-          unpaidAmount
-        },
-        invoiceDetails: {
-          series: invoice.series,
-          number: invoice.number
-        },
-        message: statusChanged 
-          ? `Status updated successfully to ${newPaymentStatus}` 
-          : 'Status checked - no changes needed'
+        statusChanged: false,
+        currentPaymentStatus: giftCard.payment_status,
+        message: 'Proforma not yet invoiced - payment still pending'
       }),
-      { 
-        status: 200, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
