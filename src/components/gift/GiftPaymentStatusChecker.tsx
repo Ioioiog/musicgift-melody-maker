@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, CheckCircle, Clock, RefreshCw } from 'lucide-react';
@@ -17,6 +17,7 @@ const GiftPaymentStatusChecker: React.FC<GiftPaymentStatusCheckerProps> = ({
   onManualCheck
 }) => {
   const [showManualOptions, setShowManualOptions] = useState(false);
+  const pollingStartedRef = useRef(false);
   
   const {
     isPolling,
@@ -36,20 +37,28 @@ const GiftPaymentStatusChecker: React.FC<GiftPaymentStatusCheckerProps> = ({
     maxAttempts: 36
   });
 
+  // Start polling only once when component mounts
   useEffect(() => {
-    // Auto-start polling when component mounts
-    startPolling();
-    
-    // Show manual options after 30 seconds
+    if (giftCardId && !pollingStartedRef.current) {
+      pollingStartedRef.current = true;
+      console.log('Starting payment status polling for gift card:', giftCardId);
+      startPolling();
+    }
+
+    return () => {
+      stopPolling();
+      pollingStartedRef.current = false;
+    };
+  }, [giftCardId]); // Only depend on giftCardId
+
+  // Show manual options after 30 seconds
+  useEffect(() => {
     const timer = setTimeout(() => {
       setShowManualOptions(true);
     }, 30000);
 
-    return () => {
-      clearTimeout(timer);
-      stopPolling();
-    };
-  }, [startPolling, stopPolling]);
+    return () => clearTimeout(timer);
+  }, []); // Empty dependency array - only run once
 
   const handleManualCheck = async () => {
     const status = await checkGiftCardStatus();

@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useGiftCardSync } from './useGiftCardSync';
@@ -22,6 +22,11 @@ export const useGiftCardPaymentPolling = ({
   const [attempts, setAttempts] = useState(0);
   const { toast } = useToast();
   const { syncGiftCard } = useGiftCardSync();
+  
+  // Use refs to manage interval and prevent multiple polling sessions
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const attemptsRef = useRef(0);
+  const isPollingRef = useRef(false);
 
   const checkGiftCardStatus = useCallback(async () => {
     if (!giftCardId) return null;
@@ -42,12 +47,33 @@ export const useGiftCardPaymentPolling = ({
     }
   }, [giftCardId]);
 
+  const stopPolling = useCallback(() => {
+    console.log('Stopping gift card payment polling');
+    
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    
+    setIsPolling(false);
+    isPollingRef.current = false;
+    setAttempts(0);
+    attemptsRef.current = 0;
+  }, []);
+
   const startPolling = useCallback(async () => {
-    if (!giftCardId || isPolling) return;
+    if (!giftCardId || isPollingRef.current) {
+      console.log('Polling already active or no gift card ID');
+      return;
+    }
 
     console.log('Starting gift card payment polling for:', giftCardId);
+    
+    // Prevent multiple polling sessions
+    isPollingRef.current = true;
     setIsPolling(true);
     setAttempts(0);
+    attemptsRef.current = 0;
 
     const pollStatus = async () => {
       try {
@@ -62,7 +88,7 @@ export const useGiftCardPaymentPolling = ({
           
           if (status === 'completed') {
             console.log('Gift card payment completed!');
-            setIsPolling(false);
+            stopPolling();
             onStatusChange?.(status);
             toast({
               title: "Payment Confirmed!",
@@ -72,11 +98,31 @@ export const useGiftCardPaymentPolling = ({
           }
         }
 
-        setAttempts(prev => prev + 1);
+        attemptsRef.current += 1;
+        setAttempts(attemptsRef.current);
+        
+        // Check if we've reached max attempts
+        if (attemptsRef.current >= maxAttempts) {
+          console.log('Max polling attempts reached');
+          stopPolling();
+          toast({
+            title: "Payment Status Check Timeout",
+            description: "We're still processing your payment. You'll receive an email once it's completed.",
+            variant: "default",
+          });
+          return true; // Stop polling
+        }
+        
         return false; // Continue polling
       } catch (error) {
         console.error('Error during status polling:', error);
-        setAttempts(prev => prev + 1);
+        attemptsRef.current += 1;
+        setAttempts(attemptsRef.current);
+        
+        if (attemptsRef.current >= maxAttempts) {
+          stopPolling();
+        }
+        
         return false; // Continue polling despite error
       }
     };
@@ -85,42 +131,28 @@ export const useGiftCardPaymentPolling = ({
     const shouldStop = await pollStatus();
     if (shouldStop) return;
 
-    // Set up interval for continued polling
-    const intervalId = setInterval(async () => {
-      const shouldStop = await pollStatus();
-      
-      if (shouldStop || attempts >= maxAttempts) {
-        clearInterval(intervalId);
-        setIsPolling(false);
+    // Set up interval for continued polling - only if not already set
+    if (!intervalRef.current) {
+      intervalRef.current = setInterval(async () => {
+        const shouldStop = await pollStatus();
         
-        if (attempts >= maxAttempts) {
-          toast({
-            title: "Payment Status Check Timeout",
-            description: "We're still processing your payment. You'll receive an email once it's completed.",
-            variant: "default",
-          });
+        if (shouldStop) {
+          stopPolling();
         }
-      }
-    }, pollInterval);
+      }, pollInterval);
+    }
+  }, [giftCardId, checkGiftCardStatus, syncGiftCard, onStatusChange, maxAttempts, pollInterval, toast, stopPolling]);
 
-    // Cleanup function
-    return () => {
-      clearInterval(intervalId);
-      setIsPolling(false);
-    };
-  }, [giftCardId, isPolling, checkGiftCardStatus, syncGiftCard, onStatusChange, attempts, maxAttempts, pollInterval, toast]);
-
-  const stopPolling = useCallback(() => {
-    setIsPolling(false);
-    setAttempts(0);
-  }, []);
-
-  // Cleanup on unmount
+  // Cleanup on unmount or when dependencies change
   useEffect(() => {
     return () => {
-      stopPolling();
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      isPollingRef.current = false;
     };
-  }, [stopPolling]);
+  }, []);
 
   return {
     isPolling,
