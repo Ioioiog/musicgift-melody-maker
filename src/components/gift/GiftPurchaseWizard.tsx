@@ -6,6 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Gift, CreditCard, Loader2, Image, X, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -60,6 +62,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showStatusChecker, setShowStatusChecker] = useState(false);
   const [paymentGiftCardId, setPaymentGiftCardId] = useState<string | null>(null);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   // Set default design when designs are loaded
   useEffect(() => {
@@ -432,37 +435,119 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   );
 
   const renderReviewStep = () => (
-    <CardContent className="space-y-4">
+    <CardContent className="space-y-6">
       <div className="space-y-2">
         <h4 className="text-lg font-semibold">{t('reviewGiftCard')}</h4>
         <p className="text-sm text-muted-foreground">{t('confirmDetailsBeforePayment')}</p>
       </div>
 
-      <div className="space-y-2">
-        <h5 className="text-md font-semibold">{t('giftCardSummary')}</h5>
-        <p>
-          <strong>{t('amount')}:</strong> {formData.gift_amount} {formData.currency}
-        </p>
-        <p>
-          <strong>{t('design')}:</strong> {designs?.find(d => d.id === selectedDesign)?.name}
-        </p>
-        <p>
-          <strong>{t('deliveryDateLabel')}:</strong> {formData.delivery_date ? format(formData.delivery_date, 'PPP') : t('immediate')}
-        </p>
+      <Alert>
+        <AlertTriangle className="h-4 w-4" />
+        <AlertDescription>
+          <strong>Atenție:</strong> După confirmare, aceste informații nu mai pot fi modificate. Te rugăm să verifici cu atenție toate detaliile.
+        </AlertDescription>
+      </Alert>
+
+      {/* Visual Preview */}
+      <div className="space-y-4">
+        <h5 className="text-md font-semibold">Previzualizare Finală Card Cadou</h5>
+        <div className="flex justify-center">
+          <GiftCardPreview
+            design={designs?.find(d => d.id === selectedDesign)}
+            formData={{
+              sender_name: formData.sender_name,
+              recipient_name: formData.recipient_name,
+              message_text: formData.message_text
+            }}
+            amount={formData.gift_amount}
+            currency={formData.currency}
+            deliveryDate={formData.delivery_date ? formData.delivery_date.toISOString() : undefined}
+          />
+        </div>
+      </div>
+
+      {/* Detailed Information */}
+      <div className="space-y-4">
+        <h5 className="text-md font-semibold">Detalii Complete Card Cadou</h5>
+        
+        <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h6 className="font-medium text-sm text-muted-foreground mb-2">Informații Expeditor</h6>
+              <div className="space-y-1">
+                <p><strong>Nume:</strong> {formData.sender_name}</p>
+                <p><strong>Email:</strong> {formData.sender_email}</p>
+              </div>
+            </div>
+            
+            <div>
+              <h6 className="font-medium text-sm text-muted-foreground mb-2">Informații Destinatar</h6>
+              <div className="space-y-1">
+                <p><strong>Nume:</strong> {formData.recipient_name}</p>
+                <p><strong>Email:</strong> {formData.recipient_email}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t pt-3">
+            <h6 className="font-medium text-sm text-muted-foreground mb-2">Detalii Card Cadou</h6>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <p><strong>Valoare:</strong> {formData.gift_amount} {formData.currency}</p>
+                <p><strong>Design:</strong> {designs?.find(d => d.id === selectedDesign)?.name || 'Design selectat'}</p>
+              </div>
+              <div className="space-y-1">
+                <p><strong>Data livrării:</strong> {formData.delivery_date ? format(formData.delivery_date, 'dd/MM/yyyy') : 'Imediat'}</p>
+                {formData.message_text && (
+                  <p><strong>Mesaj personal:</strong> "{formData.message_text}"</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Confirmation Checkbox */}
+      <div className="space-y-4">
+        <div className="flex items-start space-x-2">
+          <Checkbox 
+            id="confirm-details" 
+            checked={isConfirmed}
+            onCheckedChange={(checked) => setIsConfirmed(checked === true)}
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="confirm-details"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+            >
+              Confirm că toate informațiile sunt corecte
+            </label>
+            <p className="text-xs text-muted-foreground">
+              Înțeleg că după confirmare, aceste detalii nu mai pot fi modificate și cardul cadou va fi procesat pentru plată.
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="flex justify-between">
         <Button variant="outline" onClick={prevStep}>
           {t('back')}
         </Button>
-        <Button disabled={isProcessing} onClick={() => handlePayment('smartbill')}>
+        <Button 
+          disabled={isProcessing || !isConfirmed} 
+          onClick={() => handlePayment('smartbill')}
+          className={cn(!isConfirmed && "opacity-50 cursor-not-allowed")}
+        >
           {isProcessing ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               {t('processing')}
             </>
           ) : (
-            t('pay')
+            <>
+              <CreditCard className="mr-2 h-4 w-4" />
+              {t('pay')} - {formData.gift_amount} {formData.currency}
+            </>
           )}
         </Button>
       </div>
