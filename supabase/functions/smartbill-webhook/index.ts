@@ -76,7 +76,7 @@ async function findOrderByDocumentId(supabaseClient: any, documentId: string) {
 
   if (!error && order) {
     console.log('✅ Order found by invoice ID:', order.id)
-    return order
+    return { type: 'order', data: order }
   }
 
   // Try to find by SmartBill proforma ID
@@ -88,10 +88,10 @@ async function findOrderByDocumentId(supabaseClient: any, documentId: string) {
 
   if (!proformaError && proformaOrder) {
     console.log('✅ Order found by proforma ID:', proformaOrder.id)
-    return proformaOrder
+    return { type: 'order', data: proformaOrder }
   }
 
-  // Try partial matches for cases where document ID might be modified
+  // Try partial matches for orders
   const { data: partialMatches, error: partialError } = await supabaseClient
     .from('orders')
     .select('*')
@@ -99,11 +99,146 @@ async function findOrderByDocumentId(supabaseClient: any, documentId: string) {
 
   if (!partialError && partialMatches && partialMatches.length > 0) {
     console.log('✅ Order found by partial match:', partialMatches[0].id)
-    return partialMatches[0]
+    return { type: 'order', data: partialMatches[0] }
   }
 
-  console.error('❌ No order found for document ID:', documentId)
-  throw new Error(`Order not found for document ID: ${documentId}`)
+  console.log('❌ No order found, searching for gift card...')
+  return null
+}
+
+async function findGiftCardByDocumentId(supabaseClient: any, documentId: string) {
+  console.log('🎁 Searching for gift card with document ID:', documentId)
+  
+  // Try to find by SmartBill proforma ID
+  const { data: giftCard, error } = await supabaseClient
+    .from('gift_cards')
+    .select('*')
+    .eq('smartbill_proforma_id', documentId)
+    .maybeSingle()
+
+  if (!error && giftCard) {
+    console.log('✅ Gift card found by proforma ID:', giftCard.id)
+    return { type: 'gift_card', data: giftCard }
+  }
+
+  // Try partial matches for gift cards
+  const { data: partialMatches, error: partialError } = await supabaseClient
+    .from('gift_cards')
+    .select('*')
+    .ilike('smartbill_proforma_id', `%${documentId}%`)
+
+  if (!partialError && partialMatches && partialMatches.length > 0) {
+    console.log('✅ Gift card found by partial match:', partialMatches[0].id)
+    return { type: 'gift_card', data: partialMatches[0] }
+  }
+
+  console.log('❌ No gift card found for document ID:', documentId)
+  return null
+}
+
+async function updateOrderStatus(supabaseClient: any, order: any, webhookData: SmartBillWebhookPayload, paymentStatus: string, orderStatus: string) {
+  const updateData: any = {
+    payment_status: paymentStatus,
+    status: orderStatus,
+    smartbill_payment_status: webhookData.paymentStatus || webhookData.status || 'unknown',
+    updated_at: new Date().toISOString(),
+    webhook_processed_at: new Date().toISOString()
+  }
+
+  // Add transaction details if available
+  if (webhookData.transactionId) {
+    updateData.payment_id = webhookData.transactionId
+  }
+
+  if (webhookData.paymentMethod) {
+    updateData.payment_method = webhookData.paymentMethod
+  }
+
+  if (webhookData.invoiceId && !order.smartbill_invoice_id) {
+    updateData.smartbill_invoice_id = webhookData.invoiceId
+  }
+
+  const { error: updateError } = await supabaseClient
+    .from('orders')
+    .update(updateData)
+    .eq('id', order.id)
+
+  if (updateError) {
+    throw new Error(`Failed to update order: ${updateError.message}`)
+  }
+
+  console.log(`✅ Order ${order.id} updated successfully`)
+}
+
+async function updateGiftCardStatus(supabaseClient: any, giftCard: any, webhookData: SmartBillWebhookPayload, paymentStatus: string) {
+  const updateData: any = {
+    payment_status: paymentStatus,
+    smartbill_proforma_status: paymentStatus,
+    updated_at: new Date().toISOString(),
+    webhook_processed_at: new Date().toISOString()
+  }
+
+  // Add transaction details if available
+  if (webhookData.transactionId) {
+    updateData.payment_id = webhookData.transactionId
+  }
+
+  if (webhookData.paymentMethod) {
+    updateData.payment_method = webhookData.paymentMethod
+  }
+
+  const { error: updateError } = await supabaseClient
+    .from('gift_cards')
+    .update(updateData)
+    .eq('id', giftCard.id)
+
+  if (updateError) {
+    throw new Error(`Failed to update gift card: ${updateError.message}`)
+  }
+
+  console.log(`✅ Gift card ${giftCard.id} updated successfully`)
+}
+
+async function triggerGiftCardEmails(supabaseClient: any, giftCard: any) {
+  console.log('📧 Triggering gift card email delivery for:', giftCard.id)
+  
+  try {
+    // Send gift card to recipient
+    const { error: deliveryError } = await supabaseClient.functions.invoke('send-gift-card-email', {
+      body: { giftCardId: giftCard.id }
+    })
+
+    if (deliveryError) {
+      console.error('❌ Failed to send gift card delivery email:', deliveryError)
+    } else {
+      console.log('✅ Gift card delivery email sent successfully')
+    }
+
+    // Send purchase confirmation to buyer
+    const { error: confirmationError } = await supabaseClient.functions.invoke('send-gift-card-purchase-confirmation', {
+      body: {
+        giftCardId: giftCard.id,
+        purchaserEmail: giftCard.sender_email,
+        purchaserName: giftCard.sender_name,
+        recipientName: giftCard.recipient_name,
+        recipientEmail: giftCard.recipient_email,
+        amount: giftCard.gift_amount,
+        currency: giftCard.currency,
+        deliveryDate: giftCard.delivery_date,
+        personalMessage: giftCard.message_text,
+        designName: 'Selected Design'
+      }
+    })
+
+    if (confirmationError) {
+      console.error('❌ Failed to send purchase confirmation email:', confirmationError)
+    } else {
+      console.log('✅ Purchase confirmation email sent successfully')
+    }
+
+  } catch (error) {
+    console.error('❌ Error triggering gift card emails:', error)
+  }
 }
 
 serve(async (req) => {
@@ -121,7 +256,6 @@ serve(async (req) => {
     const webhookData: SmartBillWebhookPayload = await req.json()
     console.log('📨 SmartBill webhook received:', {
       ...webhookData,
-      // Don't log sensitive payment data in full
       amount: webhookData.amount ? `${webhookData.amount} ${webhookData.currency}` : 'N/A'
     })
 
@@ -143,8 +277,18 @@ serve(async (req) => {
 
     console.log('📋 Processing webhook for document:', documentId, 'with status:', paymentStatus)
 
-    // Find the order by document ID
-    const order = await findOrderByDocumentId(supabaseClient, documentId)
+    // First try to find an order
+    let record = await findOrderByDocumentId(supabaseClient, documentId)
+    
+    // If no order found, try to find a gift card
+    if (!record) {
+      record = await findGiftCardByDocumentId(supabaseClient, documentId)
+    }
+
+    if (!record) {
+      console.error('❌ No order or gift card found for document ID:', documentId)
+      throw new Error(`No order or gift card found for document ID: ${documentId}`)
+    }
 
     // Normalize the payment status
     const { paymentStatus: newPaymentStatus, orderStatus: newOrderStatus } = normalizePaymentStatus(paymentStatus)
@@ -153,77 +297,59 @@ serve(async (req) => {
       originalStatus: paymentStatus,
       newPaymentStatus,
       newOrderStatus,
-      orderId: order.id
+      recordType: record.type,
+      recordId: record.data.id
     })
 
-    // Prepare update data
-    const updateData: any = {
-      payment_status: newPaymentStatus,
-      status: newOrderStatus,
-      smartbill_payment_status: paymentStatus,
-      updated_at: new Date().toISOString(),
-      webhook_processed_at: new Date().toISOString()
-    }
+    if (record.type === 'order') {
+      // Handle order payment
+      await updateOrderStatus(supabaseClient, record.data, webhookData, newPaymentStatus, newOrderStatus)
 
-    // Add transaction details if available
-    if (webhookData.transactionId) {
-      updateData.payment_id = webhookData.transactionId
-    }
-
-    // Add payment method if available
-    if (webhookData.paymentMethod) {
-      updateData.payment_method = webhookData.paymentMethod
-    }
-
-    // If this is an invoice confirmation, update the invoice ID
-    if (webhookData.invoiceId && !order.smartbill_invoice_id) {
-      updateData.smartbill_invoice_id = webhookData.invoiceId
-      console.log('📄 Setting invoice ID from webhook:', webhookData.invoiceId)
-    }
-
-    // Update order with payment information
-    const { error: updateError } = await supabaseClient
-      .from('orders')
-      .update(updateData)
-      .eq('id', order.id)
-
-    if (updateError) {
-      console.error('❌ Failed to update order:', updateError)
-      throw new Error(`Failed to update order: ${updateError.message}`)
-    }
-
-    console.log(`✅ Order ${order.id} updated successfully:`, {
-      status: newOrderStatus,
-      paymentStatus: newPaymentStatus,
-      smartbillStatus: paymentStatus
-    })
-
-    // Handle post-payment actions
-    if (newPaymentStatus === 'completed') {
-      console.log('🎉 Payment completed - order confirmed')
-      
-      // TODO: Add email notification or other post-payment actions here
-      // Example: Send confirmation email, trigger order fulfillment, etc.
-      
-    } else if (newPaymentStatus === 'failed' || newPaymentStatus === 'cancelled') {
-      console.log('❌ Payment failed or cancelled')
-      
-      // TODO: Add failure handling here
-      // Example: Send notification email, release inventory, etc.
-    }
-
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        orderId: order.id,
-        message: `Webhook processed successfully - order status updated to ${newOrderStatus}`,
-        paymentStatus: newPaymentStatus
-      }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 
+      // Handle post-payment actions for orders
+      if (newPaymentStatus === 'completed') {
+        console.log('🎉 Order payment completed')
+      } else if (newPaymentStatus === 'failed' || newPaymentStatus === 'cancelled') {
+        console.log('❌ Order payment failed or cancelled')
       }
-    )
+
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          orderId: record.data.id,
+          message: `Order webhook processed successfully - status updated to ${newOrderStatus}`,
+          paymentStatus: newPaymentStatus
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200 
+        }
+      )
+
+    } else if (record.type === 'gift_card') {
+      // Handle gift card payment
+      await updateGiftCardStatus(supabaseClient, record.data, webhookData, newPaymentStatus)
+
+      // Handle post-payment actions for gift cards
+      if (newPaymentStatus === 'completed') {
+        console.log('🎉 Gift card payment completed - triggering email delivery')
+        await triggerGiftCardEmails(supabaseClient, record.data)
+      } else if (newPaymentStatus === 'failed' || newPaymentStatus === 'cancelled') {
+        console.log('❌ Gift card payment failed or cancelled')
+      }
+
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          giftCardId: record.data.id,
+          message: `Gift card webhook processed successfully - status updated to ${newPaymentStatus}`,
+          paymentStatus: newPaymentStatus
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200 
+        }
+      )
+    }
 
   } catch (error) {
     console.error('💥 Error processing SmartBill webhook:', error)
