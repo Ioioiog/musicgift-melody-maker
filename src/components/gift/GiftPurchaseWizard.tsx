@@ -161,9 +161,10 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
 
       console.log('Payment initiated:', result);
       
-      // Store the gift card ID for status checking
+      // Store the gift card ID and immediately show status checker
       if (result.giftCardId) {
         setPaymentGiftCardId(result.giftCardId);
+        setShowStatusChecker(true);
       }
 
     } catch (error) {
