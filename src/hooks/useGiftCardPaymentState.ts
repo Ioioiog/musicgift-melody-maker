@@ -37,7 +37,10 @@ export const useGiftCardPaymentState = () => {
 
   // Load pending gift cards for current user
   const loadPendingGiftCards = async () => {
-    if (!user) return;
+    if (!user) {
+      setPendingGiftCards([]);
+      return [];
+    }
 
     setIsLoadingPending(true);
     try {
@@ -63,9 +66,11 @@ export const useGiftCardPaymentState = () => {
       });
 
       setPendingGiftCards(pendingCards);
+      return pendingCards;
 
     } catch (error) {
       console.error('Error loading pending gift cards:', error);
+      return [];
     } finally {
       setIsLoadingPending(false);
     }
@@ -85,7 +90,7 @@ export const useGiftCardPaymentState = () => {
 
       console.log(`Cleaned up ${cardIds.length} old pending gift cards`);
       
-      // Remove from local state
+      // Remove from local state without triggering a reload
       setPendingGiftCards(prev => prev.filter(card => !cardIds.includes(card.id)));
       
     } catch (error) {
@@ -156,21 +161,21 @@ export const useGiftCardPaymentState = () => {
 
       if (error) throw error;
 
-      // Reload pending cards
+      // Reload pending cards without causing infinite loops
       await loadPendingGiftCards();
     } catch (error) {
       console.error('Error updating gift card status:', error);
     }
   };
 
-  // Load pending cards when user changes
+  // Load pending cards when user changes - only once per user
   useEffect(() => {
     if (user) {
       loadPendingGiftCards();
     } else {
       setPendingGiftCards([]);
     }
-  }, [user]);
+  }, [user?.id]); // Only depend on user ID
 
   // Process payment return when detected
   useEffect(() => {
@@ -189,4 +194,3 @@ export const useGiftCardPaymentState = () => {
     cleanupOldPendingCards
   };
 };
-

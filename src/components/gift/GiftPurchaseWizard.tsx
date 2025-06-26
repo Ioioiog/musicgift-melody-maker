@@ -71,21 +71,38 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     }
   }, [designs, selectedDesign]);
 
-  // Auto-cleanup old pending cards when component mounts
+  // Single cleanup effect that runs only once when component mounts and user is available
   useEffect(() => {
-    const cleanup = async () => {
-      if (user && pendingGiftCards.length > 0) {
-        const oldCards = pendingGiftCards.filter(card => card.shouldCleanup);
-        if (oldCards.length > 0) {
-          await cleanupOldPendingCards(oldCards.map(card => card.id));
-          await loadPendingGiftCards();
-          console.log(`Cleaned up ${oldCards.length} old pending gift cards`);
-        }
+    if (!user) return;
+
+    let cleanupExecuted = false;
+
+    const performCleanup = async () => {
+      if (cleanupExecuted) return;
+      cleanupExecuted = true;
+
+      try {
+        // Load pending cards first
+        await loadPendingGiftCards();
+        
+        // Small delay to avoid race conditions
+        setTimeout(async () => {
+          const currentPendingCards = await loadPendingGiftCards();
+          if (currentPendingCards && currentPendingCards.length > 0) {
+            const oldCards = currentPendingCards.filter(card => card.shouldCleanup);
+            if (oldCards.length > 0) {
+              await cleanupOldPendingCards(oldCards.map(card => card.id));
+              console.log(`Cleaned up ${oldCards.length} old pending gift cards`);
+            }
+          }
+        }, 1000);
+      } catch (error) {
+        console.error('Cleanup error:', error);
       }
     };
 
-    cleanup();
-  }, [user, pendingGiftCards.length]);
+    performCleanup();
+  }, [user?.id]); // Only depend on user ID to avoid infinite loops
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
