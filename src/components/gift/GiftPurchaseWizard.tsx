@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,6 +39,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   const { toast } = useToast();
   const { data: designs, isLoading: isLoadingDesigns } = useGiftCardDesigns();
   const initiatePayment = useGiftCardPayment();
+  const { findReusablePendingCard } = useGiftCardPaymentState();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<GiftCardFormData>({
     sender_name: user?.user_metadata?.full_name || '',
@@ -103,7 +103,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   }, []);
 
   const handlePayment = async (paymentProvider: string = 'smartbill') => {
-    const { findReusablePendingCard } = useGiftCardPaymentState();
     const reusableCard = findReusablePendingCard(formData.gift_amount, formData.currency);
 
     if (reusableCard) {
