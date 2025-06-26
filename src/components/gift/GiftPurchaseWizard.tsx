@@ -14,7 +14,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useGiftCardDesigns } from '@/hooks/useGiftCards';
 import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
-import { useGiftCardPaymentState } from '@/hooks/useGiftCardPaymentState';
+import { useGiftCardPaymentState, type PendingGiftCard } from '@/hooks/useGiftCardPaymentState';
 import GiftPaymentStatusChecker from './GiftPaymentStatusChecker';
 import PendingPaymentNotification from './PendingPaymentNotification';
 
@@ -114,6 +114,29 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
 
   const prevStep = () => {
     setStep(step - 1);
+  };
+
+  // Handle continuing with pending gift card
+  const handleContinueWithPending = (pendingCard: PendingGiftCard) => {
+    setPaymentGiftCardId(pendingCard.id);
+    setShowStatusChecker(true);
+    setShowPendingNotification(false);
+    
+    toast({
+      title: "Continuing with existing gift card",
+      description: "We'll check the payment status for your existing gift card.",
+    });
+  };
+
+  // Handle dismissing pending notification
+  const handleDismissPendingNotification = () => {
+    setShowPendingNotification(false);
+    setIgnorePendingCards(true);
+    
+    toast({
+      title: "Creating new gift card",
+      description: "You can now proceed to create a new gift card.",
+    });
   };
 
   // Listen for payment window events
