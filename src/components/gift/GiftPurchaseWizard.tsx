@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -132,7 +133,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
 
       console.log('Creating gift card payment:', giftCardData);
       
-      const result = await initiatePayment({
+      const result = await initiatePayment.mutateAsync({
         giftCardData,
         paymentProvider
       });
@@ -399,7 +400,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       <Card>
         <CardHeader>
           <CardTitle>
-            {t('stepXOfY', { current: step, total: 4 })}: {step === 1 ? t('stepAmount') : step === 2 ? t('stepDetails') : step === 3 ? t('stepDesign') : t('stepReview')}
+            Step {step} of 4: {step === 1 ? t('stepAmount') : step === 2 ? t('stepDetails') : step === 3 ? t('stepDesign') : t('stepReview')}
           </CardTitle>
         </CardHeader>
         {step === 1 && renderAmountStep()}
