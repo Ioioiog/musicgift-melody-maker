@@ -103,7 +103,8 @@ Deno.serve(async (req) => {
     const smartbillAuth = btoa(`${smartbillUsername}:${smartbillToken}`);
     
     // Step 1: Check if proforma has been invoiced
-    const estimateInvoicesUrl = `https://ws.smartbill.ro/SBORO/api/estimate/invoices?cif=${smartbillCompanyVat}&seriesName=${encodeURIComponent(proformaSeries)}&number=${encodeURIComponent(proformaNumber)}`;
+    // Using lowercase 'seriesname' parameter as specified in the SmartBill documentation
+    const estimateInvoicesUrl = `https://ws.smartbill.ro/SBORO/api/estimate/invoices?cif=${smartbillCompanyVat}&seriesname=${encodeURIComponent(proformaSeries)}&number=${encodeURIComponent(proformaNumber)}`;
     
     console.log(`Checking if proforma is invoiced: ${estimateInvoicesUrl}`);
     
@@ -111,8 +112,8 @@ Deno.serve(async (req) => {
       method: 'GET',
       headers: {
         'Authorization': `Basic ${smartbillAuth}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        'Accept': 'application/xml',
+        'Content-Type': 'application/xml',
       },
     });
 
@@ -186,8 +187,8 @@ Deno.serve(async (req) => {
       method: 'GET',
       headers: {
         'Authorization': `Basic ${smartbillAuth}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        'Accept': 'application/xml',
+        'Content-Type': 'application/xml',
       },
     });
 
