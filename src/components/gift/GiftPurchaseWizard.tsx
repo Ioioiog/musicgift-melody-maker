@@ -14,9 +14,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useGiftCardDesigns } from '@/hooks/useGiftCards';
 import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
-import { useGiftCardPaymentState, type PendingGiftCard } from '@/hooks/useGiftCardPaymentState';
+import { useGiftCardPaymentState } from '@/hooks/useGiftCardPaymentState';
 import GiftPaymentStatusChecker from './GiftPaymentStatusChecker';
-import PendingPaymentNotification from './PendingPaymentNotification';
 
 interface GiftPurchaseWizardProps {
   onComplete?: (data: any) => void;
@@ -40,9 +39,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   const { data: designs, isLoading: isLoadingDesigns } = useGiftCardDesigns();
   const initiatePayment = useGiftCardPayment();
   const { 
-    pendingGiftCards, 
-    findReusablePendingCard, 
-    cleanupOldPendingCards,
     loadPendingGiftCards
   } = useGiftCardPaymentState();
   
@@ -61,8 +57,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showStatusChecker, setShowStatusChecker] = useState(false);
   const [paymentGiftCardId, setPaymentGiftCardId] = useState<string | null>(null);
-  const [showPendingNotification, setShowPendingNotification] = useState(true);
-  const [ignorePendingCards, setIgnorePendingCards] = useState(false);
 
   // Set default design when designs are loaded
   useEffect(() => {
@@ -82,20 +76,8 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       cleanupExecuted = true;
 
       try {
-        // Load pending cards first
+        // Load pending cards - this will auto-cleanup old ones
         await loadPendingGiftCards();
-        
-        // Small delay to avoid race conditions
-        setTimeout(async () => {
-          const currentPendingCards = await loadPendingGiftCards();
-          if (currentPendingCards && currentPendingCards.length > 0) {
-            const oldCards = currentPendingCards.filter(card => card.shouldCleanup);
-            if (oldCards.length > 0) {
-              await cleanupOldPendingCards(oldCards.map(card => card.id));
-              console.log(`Cleaned up ${oldCards.length} old pending gift cards`);
-            }
-          }
-        }, 1000);
       } catch (error) {
         console.error('Cleanup error:', error);
       }
@@ -133,29 +115,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     setStep(step - 1);
   };
 
-  // Handle continuing with pending gift card
-  const handleContinueWithPending = (pendingCard: PendingGiftCard) => {
-    setPaymentGiftCardId(pendingCard.id);
-    setShowStatusChecker(true);
-    setShowPendingNotification(false);
-    
-    toast({
-      title: "Continuing with existing gift card",
-      description: "We'll check the payment status for your existing gift card.",
-    });
-  };
-
-  // Handle dismissing pending notification
-  const handleDismissPendingNotification = () => {
-    setShowPendingNotification(false);
-    setIgnorePendingCards(true);
-    
-    toast({
-      title: "Creating new gift card",
-      description: "You can now proceed to create a new gift card.",
-    });
-  };
-
   // Listen for payment window events
   useEffect(() => {
     const handlePaymentWindowClosed = (event: CustomEvent) => {
@@ -174,21 +133,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   }, []);
 
   const handlePayment = async (paymentProvider: string = 'smartbill') => {
-    // Only check for reusable cards if user hasn't explicitly chosen to ignore them
-    if (!ignorePendingCards) {
-      const reusableCard = findReusablePendingCard(formData.gift_amount, formData.currency);
-
-      if (reusableCard) {
-        toast({
-          title: "Gift Card Existent",
-          description: "Ai un gift card cu aceeași sumă în așteptarea plății. Poți continua cu plata acestuia sau crea unul nou.",
-          duration: 8000,
-        });
-        setShowPendingNotification(true);
-        return;
-      }
-    }
-
     try {
       setIsProcessing(true);
       
@@ -266,7 +210,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           value={formData.gift_amount.toString()}
           onChange={(e) => handleAmountChange(Number(e.target.value))}
         />
-        {/* <p className="text-sm text-muted-foreground">{t('amountMustBeBetween')} 10 - 1000 RON</p> */}
       </div>
 
       <Button onClick={nextStep}>{t('nextDetails')}</Button>
@@ -493,13 +436,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     </CardContent>
   );
 
-  // Get pending cards that match current selection criteria
-  const relevantPendingCards = pendingGiftCards.filter(card => 
-    card.canReuse && 
-    card.gift_amount === formData.gift_amount && 
-    card.currency === formData.currency
-  );
-
   if (showStatusChecker && paymentGiftCardId) {
     return (
       <div className="max-w-2xl mx-auto">
@@ -525,17 +461,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             Step {step} of 4: {step === 1 ? t('stepAmount') : step === 2 ? t('stepDetails') : step === 3 ? t('stepDesign') : t('stepReview')}
           </CardTitle>
         </CardHeader>
-        
-        {/* Show pending notification if relevant */}
-        {showPendingNotification && relevantPendingCards.length > 0 && (
-          <div className="px-6 pb-4">
-            <PendingPaymentNotification
-              pendingCards={relevantPendingCards}
-              onContinuePayment={handleContinueWithPending}
-              onDismiss={handleDismissPendingNotification}
-            />
-          </div>
-        )}
         
         {step === 1 && renderAmountStep()}
         {step === 2 && renderDetailsStep()}

@@ -7,7 +7,6 @@ import { useToast } from '@/hooks/use-toast';
 import type { GiftCard } from '@/hooks/useGiftCards';
 
 export interface PendingGiftCard extends GiftCard {
-  canReuse: boolean;
   shouldCleanup: boolean;
 }
 
@@ -56,17 +55,24 @@ export const useGiftCardPaymentState = () => {
       const now = new Date();
       const pendingCards: PendingGiftCard[] = (giftCards || []).map(card => {
         const createdAt = new Date(card.created_at);
-        const hoursSinceCreated = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+        const minutesSinceCreated = (now.getTime() - createdAt.getTime()) / (1000 * 60);
         
         return {
           ...card,
-          canReuse: hoursSinceCreated < 2, // More permissive - 2 hours instead of 24
-          shouldCleanup: hoursSinceCreated > 24 // Still cleanup after 24 hours
+          shouldCleanup: minutesSinceCreated > 3 // Cleanup after 3 minutes
         };
       });
 
       setPendingGiftCards(pendingCards);
-      return pendingCards;
+      
+      // Auto-cleanup old cards immediately
+      const cardsToCleanup = pendingCards.filter(card => card.shouldCleanup);
+      if (cardsToCleanup.length > 0) {
+        // Cleanup in background without waiting
+        cleanupOldPendingCards(cardsToCleanup.map(card => card.id));
+      }
+
+      return pendingCards.filter(card => !card.shouldCleanup); // Return only active cards
 
     } catch (error) {
       console.error('Error loading pending gift cards:', error);
@@ -88,7 +94,7 @@ export const useGiftCardPaymentState = () => {
 
       if (error) throw error;
 
-      console.log(`Cleaned up ${cardIds.length} old pending gift cards`);
+      console.log(`Cleaned up ${cardIds.length} old pending gift cards (3+ minutes old)`);
       
       // Remove from local state without triggering a reload
       setPendingGiftCards(prev => prev.filter(card => !cardIds.includes(card.id)));
@@ -96,15 +102,6 @@ export const useGiftCardPaymentState = () => {
     } catch (error) {
       console.error('Error cleaning up old pending cards:', error);
     }
-  };
-
-  // Find reusable pending gift card (more permissive logic)
-  const findReusablePendingCard = (amount: number, currency: string) => {
-    return pendingGiftCards.find(card => 
-      card.canReuse && 
-      card.gift_amount === amount && 
-      card.currency === currency
-    );
   };
 
   // Process payment return
@@ -120,7 +117,7 @@ export const useGiftCardPaymentState = () => {
       } else if (paymentReturn.type === 'cancel') {
         toast({
           title: "Plată Anulată",
-          description: "Plata a fost anulată. Gift card-ul este salvat și poți finaliza plata mai târziu.",
+          description: "Plata a fost anulată.",
           variant: "destructive",
         });
       } else if (paymentReturn.type === 'error') {
@@ -184,11 +181,21 @@ export const useGiftCardPaymentState = () => {
     }
   }, [paymentReturn.type]);
 
+  // Periodic cleanup every 2 minutes to ensure cards are cleaned up promptly
+  useEffect(() => {
+    if (!user) return;
+
+    const cleanupInterval = setInterval(async () => {
+      await loadPendingGiftCards(); // This will auto-cleanup old cards
+    }, 2 * 60 * 1000); // Every 2 minutes
+
+    return () => clearInterval(cleanupInterval);
+  }, [user?.id]);
+
   return {
     pendingGiftCards,
     isLoadingPending,
     paymentReturn,
-    findReusablePendingCard,
     loadPendingGiftCards,
     updateGiftCardStatus,
     cleanupOldPendingCards
