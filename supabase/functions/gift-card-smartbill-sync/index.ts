@@ -81,9 +81,11 @@ Deno.serve(async (req) => {
     const numberMatch = proformaId.match(/(\d+)$/);
     
     const proformaSeries = seriesMatch?.[1] || 'STRP';
-    const proformaNumber = numberMatch?.[1] || proformaId;
+    // Convert to integer and back to string to remove leading zeros
+    const proformaNumberRaw = numberMatch?.[1] || proformaId;
+    const proformaNumber = parseInt(proformaNumberRaw, 10).toString();
 
-    console.log(`Checking proforma - Series: "${proformaSeries}", Number: "${proformaNumber}"`);
+    console.log(`Checking proforma - Series: "${proformaSeries}", Number: "${proformaNumber}" (original: "${proformaNumberRaw}")`);
 
     // SmartBill API credentials
     const smartbillUsername = Deno.env.get('SMARTBILL_USERNAME');
