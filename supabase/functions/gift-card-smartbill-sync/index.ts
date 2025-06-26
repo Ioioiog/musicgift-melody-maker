@@ -1,3 +1,4 @@
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -23,6 +24,68 @@ interface SmartBillPaymentStatusResponse {
   invoiceTotalAmount: number;
   paidAmount: number;
   unpaidAmount: number;
+}
+
+// Simple XML parser for SmartBill responses
+function parseSmartBillXML(xmlText: string): any {
+  try {
+    // Check for error in XML
+    const errorMatch = xmlText.match(/<errorText>(.*?)<\/errorText>/);
+    if (errorMatch) {
+      return { errorText: errorMatch[1] };
+    }
+
+    // Parse estimate invoices response
+    if (xmlText.includes('<areInvoicesCreated>')) {
+      const areInvoicesCreatedMatch = xmlText.match(/<areInvoicesCreated>(.*?)<\/areInvoicesCreated>/);
+      const areInvoicesCreated = areInvoicesCreatedMatch?.[1] === 'true';
+      
+      // Extract invoices if they exist
+      const invoices: Array<{number: string, series: string}> = [];
+      const invoiceMatches = xmlText.matchAll(/<invoice>(.*?)<\/invoice>/gs);
+      
+      for (const invoiceMatch of invoiceMatches) {
+        const invoiceXml = invoiceMatch[1];
+        const numberMatch = invoiceXml.match(/<number>(.*?)<\/number>/);
+        const seriesMatch = invoiceXml.match(/<series>(.*?)<\/series>/);
+        
+        if (numberMatch && seriesMatch) {
+          invoices.push({
+            number: numberMatch[1],
+            series: seriesMatch[1]
+          });
+        }
+      }
+      
+      return {
+        areInvoicesCreated,
+        invoices: invoices.length > 0 ? invoices : undefined
+      };
+    }
+
+    // Parse payment status response
+    if (xmlText.includes('<invoiceTotalAmount>')) {
+      const numberMatch = xmlText.match(/<number>(.*?)<\/number>/);
+      const seriesMatch = xmlText.match(/<series>(.*?)<\/series>/);
+      const totalMatch = xmlText.match(/<invoiceTotalAmount>(.*?)<\/invoiceTotalAmount>/);
+      const paidMatch = xmlText.match(/<paidAmount>(.*?)<\/paidAmount>/);
+      const unpaidMatch = xmlText.match(/<unpaidAmount>(.*?)<\/unpaidAmount>/);
+      
+      return {
+        number: numberMatch?.[1] || '',
+        series: seriesMatch?.[1] || '',
+        invoiceTotalAmount: parseFloat(totalMatch?.[1] || '0'),
+        paidAmount: parseFloat(paidMatch?.[1] || '0'),
+        unpaidAmount: parseFloat(unpaidMatch?.[1] || '0')
+      };
+    }
+
+    // Default response if structure is unknown
+    return { errorText: 'Unknown XML response format' };
+  } catch (error) {
+    console.error('XML parsing error:', error);
+    return { errorText: 'Failed to parse XML response' };
+  }
 }
 
 Deno.serve(async (req) => {
@@ -130,8 +193,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    const estimateData: SmartBillEstimateInvoicesResponse = await estimateResponse.json();
-    console.log('SmartBill estimate response:', estimateData);
+    const estimateXmlText = await estimateResponse.text();
+    console.log('SmartBill estimate XML response:', estimateXmlText);
+    const estimateData: SmartBillEstimateInvoicesResponse = parseSmartBillXML(estimateXmlText);
+    console.log('Parsed estimate response:', estimateData);
 
     // Check for SmartBill errors
     if (estimateData.errorText) {
@@ -205,8 +270,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    const paymentData: SmartBillPaymentStatusResponse = await paymentResponse.json();
-    console.log('SmartBill payment status response:', paymentData);
+    const paymentXmlText = await paymentResponse.text();
+    console.log('SmartBill payment status XML response:', paymentXmlText);
+    const paymentData: SmartBillPaymentStatusResponse = parseSmartBillXML(paymentXmlText);
+    console.log('Parsed payment status response:', paymentData);
 
     // Check for SmartBill payment errors
     if (paymentData.errorText) {
