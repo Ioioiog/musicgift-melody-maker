@@ -1,3 +1,4 @@
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -28,10 +29,10 @@ interface SmartBillPaymentStatusResponse {
 // Simple XML parser for SmartBill responses
 function parseSmartBillXML(xmlText: string): any {
   try {
-    // Check for error in XML
+    // Check for error in XML - only treat non-empty error text as actual errors
     const errorMatch = xmlText.match(/<errorText>(.*?)<\/errorText>/);
-    if (errorMatch) {
-      return { errorText: errorMatch[1] };
+    if (errorMatch && errorMatch[1].trim()) {
+      return { errorText: errorMatch[1].trim() };
     }
 
     // Parse estimate invoices response
@@ -197,8 +198,8 @@ Deno.serve(async (req) => {
     const estimateData: SmartBillEstimateInvoicesResponse = parseSmartBillXML(estimateXmlText);
     console.log('Parsed estimate response:', estimateData);
 
-    // Check for SmartBill errors
-    if (estimateData.errorText) {
+    // Check for SmartBill errors - only treat non-empty error text as actual errors
+    if (estimateData.errorText && estimateData.errorText.trim()) {
       console.error('SmartBill estimate API returned error:', estimateData.errorText);
       
       // If proforma not found or not invoiced, it means payment is still pending
