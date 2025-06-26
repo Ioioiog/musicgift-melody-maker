@@ -1,3 +1,4 @@
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -236,15 +237,15 @@ Deno.serve(async (req) => {
       const invoice = estimateData.invoices[0];
       
       let statusChanged = false;
-      let newPaymentStatus = 'completed';
+      let newPaymentStatus = 'paid'; // Changed from 'completed' to 'paid' to match database constraint
       
-      // Update status if not already completed
-      if (giftCard.payment_status !== 'completed') {
+      // Update status if not already paid
+      if (giftCard.payment_status !== 'paid') {
         statusChanged = true;
         
         const updateData = {
           payment_status: newPaymentStatus,
-          smartbill_proforma_status: newPaymentStatus,
+          smartbill_proforma_status: 'paid', // Changed from 'completed' to 'paid'
           updated_at: new Date().toISOString(),
         };
 
