@@ -6,8 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Gift, CreditCard, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Gift, CreditCard, Loader2, Image } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -51,10 +50,17 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     message_text: '',
     delivery_date: null,
   });
-  const [selectedDesign, setSelectedDesign] = useState(designs?.[0] || null);
+  const [selectedDesign, setSelectedDesign] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [showStatusChecker, setShowStatusChecker] = useState(false);
   const [paymentGiftCardId, setPaymentGiftCardId] = useState<string | null>(null);
+
+  // Set default design when designs are loaded
+  useEffect(() => {
+    if (designs && designs.length > 0 && !selectedDesign) {
+      setSelectedDesign(designs[0].id);
+    }
+  }, [designs, selectedDesign]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -73,8 +79,8 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     setFormData({ ...formData, delivery_date: date || null });
   };
 
-  const handleDesignSelect = (design: any) => {
-    setSelectedDesign(design);
+  const handleDesignSelect = (designId: string) => {
+    setSelectedDesign(designId);
   };
 
   const nextStep = () => {
@@ -116,6 +122,8 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     try {
       setIsProcessing(true);
       
+      const selectedDesignObj = designs?.find(d => d.id === selectedDesign);
+      
       const giftCardData = {
         sender_user_id: user?.id,
         sender_name: formData.sender_name,
@@ -125,7 +133,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
         message_text: formData.message_text,
         currency: formData.currency,
         gift_amount: formData.gift_amount,
-        design_id: selectedDesign?.id,
+        design_id: selectedDesignObj?.id,
         delivery_date: formData.delivery_date || null,
         status: 'active'
       };
@@ -316,25 +324,64 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           Loading designs...
         </div>
       ) : (
-        <RadioGroup defaultValue={selectedDesign?.id} onValueChange={(value) => handleDesignSelect(designs?.find(d => d.id === value))}>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {designs?.map((design) => (
-              <div key={design.id} className="space-y-2">
-                <RadioGroupItem value={design.id} id={design.id} className="aspect-square h-24 w-24 rounded-md bg-muted text-foreground shadow-sm" />
-                <Label htmlFor={design.id} className="text-sm font-medium capitalize">
-                  {design.name}
-                </Label>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {designs?.map((design) => (
+            <div
+              key={design.id}
+              className={cn(
+                "relative cursor-pointer rounded-lg border-2 p-2 transition-all hover:shadow-md",
+                selectedDesign === design.id
+                  ? "border-primary bg-primary/10"
+                  : "border-muted hover:border-primary/50"
+              )}
+              onClick={() => handleDesignSelect(design.id)}
+            >
+              <div className="aspect-[5/3] relative rounded-md overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500">
+                {design.preview_image_url ? (
+                  <img
+                    src={design.preview_image_url}
+                    alt={design.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to gradient background if image fails to load
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-white">
+                    <div className="text-center">
+                      <Gift className="w-8 h-8 mx-auto mb-2" />
+                      <span className="text-sm font-medium">{design.name}</span>
+                    </div>
+                  </div>
+                )}
+                
+                {selectedDesign === design.id && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-primary/20">
+                    <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
-        </RadioGroup>
+              
+              <div className="mt-2 text-center">
+                <p className="text-sm font-medium capitalize">{design.name}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
 
       <div className="flex justify-between">
         <Button variant="outline" onClick={prevStep}>
           {t('back')}
         </Button>
-        <Button onClick={nextStep}>{t('nextReview')}</Button>
+        <Button onClick={nextStep} disabled={!selectedDesign}>
+          {t('nextReview')}
+        </Button>
       </div>
     </CardContent>
   );
@@ -352,7 +399,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           <strong>{t('amount')}:</strong> {formData.gift_amount} {formData.currency}
         </p>
         <p>
-          <strong>{t('design')}:</strong> {selectedDesign?.name}
+          <strong>{t('design')}:</strong> {designs?.find(d => d.id === selectedDesign)?.name}
         </p>
         <p>
           <strong>{t('deliveryDateLabel')}:</strong> {formData.delivery_date ? format(formData.delivery_date, 'PPP') : t('immediate')}
