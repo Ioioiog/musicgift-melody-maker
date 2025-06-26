@@ -1,4 +1,3 @@
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -81,11 +80,10 @@ Deno.serve(async (req) => {
     const numberMatch = proformaId.match(/(\d+)$/);
     
     const proformaSeries = seriesMatch?.[1] || 'STRP';
-    // Convert to integer and back to string to remove leading zeros
-    const proformaNumberRaw = numberMatch?.[1] || proformaId;
-    const proformaNumber = parseInt(proformaNumberRaw, 10).toString();
+    // Keep the original number format with leading zeros (e.g., "0055")
+    const proformaNumber = numberMatch?.[1] || proformaId;
 
-    console.log(`Checking proforma - Series: "${proformaSeries}", Number: "${proformaNumber}" (original: "${proformaNumberRaw}")`);
+    console.log(`Checking proforma - Series: "${proformaSeries}", Number: "${proformaNumber}" (keeping original format with leading zeros)`);
 
     // SmartBill API credentials
     const smartbillUsername = Deno.env.get('SMARTBILL_USERNAME');
