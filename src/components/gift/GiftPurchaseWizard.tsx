@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useGiftCardDesigns } from '@/hooks/useGiftCards';
 import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
 import { useGiftCardPaymentState } from '@/hooks/useGiftCardPaymentState';
+import { useNavigate } from 'react-router-dom';
 import GiftPaymentStatusChecker from './GiftPaymentStatusChecker';
 
 interface GiftPurchaseWizardProps {
@@ -36,6 +37,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { data: designs, isLoading: isLoadingDesigns } = useGiftCardDesigns();
   const initiatePayment = useGiftCardPayment();
   const { 
@@ -180,7 +182,9 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       title: "Gift Card Ready!",
       description: "Your gift card has been created and sent to the recipient.",
     });
-    onComplete?.(paymentGiftCardId);
+    
+    // Redirect to payment success page with gift card details
+    navigate(`/payment/success?type=gift&giftCardId=${paymentGiftCardId}`);
   };
 
   const renderAmountStep = () => (
