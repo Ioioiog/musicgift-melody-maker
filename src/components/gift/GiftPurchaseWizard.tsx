@@ -12,6 +12,7 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Gift, CreditCard, 
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useGiftCardDesigns } from '@/hooks/useGiftCards';
@@ -32,13 +33,13 @@ interface GiftCardFormData {
   recipient_name: string;
   recipient_email: string;
   gift_amount: number;
-  currency: 'RON' | 'EUR';
   message_text?: string;
   delivery_date?: Date | null;
 }
 
 const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   const { t } = useLanguage();
+  const { currency } = useCurrency();
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -55,7 +56,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     recipient_name: '',
     recipient_email: '',
     gift_amount: 50,
-    currency: 'RON',
     message_text: '',
     delivery_date: null,
   });
@@ -75,12 +75,12 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
 
   // Set default payment provider based on currency
   useEffect(() => {
-    if (formData.currency === 'RON' && !selectedPaymentProvider) {
+    if (currency === 'RON' && !selectedPaymentProvider) {
       setSelectedPaymentProvider('smartbill');
-    } else if (formData.currency === 'EUR' && !selectedPaymentProvider) {
+    } else if (currency === 'EUR' && !selectedPaymentProvider) {
       setSelectedPaymentProvider('stripe');
     }
-  }, [formData.currency, selectedPaymentProvider]);
+  }, [currency, selectedPaymentProvider]);
 
   // Single cleanup effect that runs only once when component mounts and user is available
   useEffect(() => {
@@ -110,12 +110,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
 
   const handleAmountChange = (amount: number) => {
     setFormData({ ...formData, gift_amount: amount });
-  };
-
-  const handleCurrencyChange = (currency: 'RON' | 'EUR') => {
-    setFormData({ ...formData, currency: currency });
-    // Reset payment provider when currency changes
-    setSelectedPaymentProvider('');
   };
 
   const handleDeliveryDateChange = (date: Date | undefined) => {
@@ -165,7 +159,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
         recipient_name: formData.recipient_name,
         recipient_email: formData.recipient_email,
         message_text: formData.message_text,
-        currency: formData.currency,
+        currency: currency,
         gift_amount: formData.gift_amount,
         design_id: selectedDesignObj?.id,
         delivery_date: formData.delivery_date || null,
@@ -212,27 +206,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
         <p className="text-sm text-muted-foreground">{t('selectGiftCardValue')}</p>
       </div>
 
-      {/* Currency Selector */}
-      <div className="space-y-2">
-        <Label>{t('chooseCurrency', 'Choose Currency')}</Label>
-        <div className="flex gap-2">
-          <Button
-            variant={formData.currency === 'RON' ? 'default' : 'outline'}
-            onClick={() => handleCurrencyChange('RON')}
-            size="sm"
-          >
-            RON
-          </Button>
-          <Button
-            variant={formData.currency === 'EUR' ? 'default' : 'outline'}
-            onClick={() => handleCurrencyChange('EUR')}
-            size="sm"
-          >
-            EUR
-          </Button>
-        </div>
-      </div>
-
       <div className="grid grid-cols-3 gap-4">
         {[50, 100, 200].map((amount) => (
           <Button
@@ -240,7 +213,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             variant={formData.gift_amount === amount ? 'default' : 'outline'}
             onClick={() => handleAmountChange(amount)}
           >
-            {amount} {formData.currency}
+            {amount} {currency}
           </Button>
         ))}
       </div>
@@ -250,7 +223,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
         <Input
           type="number"
           id="customAmount"
-          placeholder={`${t('enterAmountIn')} ${formData.currency}`}
+          placeholder={`${t('enterAmountIn')} ${currency}`}
           value={formData.gift_amount.toString()}
           onChange={(e) => handleAmountChange(Number(e.target.value))}
         />
@@ -448,7 +421,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
                       message_text: formData.message_text
                     }}
                     amount={formData.gift_amount}
-                    currency={formData.currency}
+                    currency={currency}
                     deliveryDate={formData.delivery_date ? formData.delivery_date.toISOString() : undefined}
                   />
                 </div>
@@ -495,7 +468,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
               message_text: formData.message_text
             }}
             amount={formData.gift_amount}
-            currency={formData.currency}
+            currency={currency}
             deliveryDate={formData.delivery_date ? formData.delivery_date.toISOString() : undefined}
           />
         </div>
@@ -528,7 +501,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             <h6 className="font-medium text-sm text-muted-foreground mb-2">Detalii Card Cadou</h6>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <p><strong>Valoare:</strong> {formData.gift_amount} {formData.currency}</p>
+                <p><strong>Valoare:</strong> {formData.gift_amount} {currency}</p>
                 <p><strong>Design:</strong> {designs?.find(d => d.id === selectedDesign)?.name || 'Design selectat'}</p>
               </div>
               <div className="space-y-1">
@@ -590,7 +563,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           ) : (
             <>
               <CreditCard className="mr-2 h-4 w-4" />
-              {t('pay')} - {formData.gift_amount} {formData.currency}
+              {t('pay')} - {formData.gift_amount} {currency}
             </>
           )}
         </Button>
