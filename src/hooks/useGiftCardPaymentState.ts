@@ -57,18 +57,12 @@ export const useGiftCardPaymentState = () => {
         
         return {
           ...card,
-          canReuse: hoursSinceCreated < 24, // Can reuse if less than 24 hours old
-          shouldCleanup: hoursSinceCreated > 24 // Should cleanup if older than 24 hours
+          canReuse: hoursSinceCreated < 2, // More permissive - 2 hours instead of 24
+          shouldCleanup: hoursSinceCreated > 24 // Still cleanup after 24 hours
         };
       });
 
       setPendingGiftCards(pendingCards);
-
-      // Auto-cleanup old pending cards
-      const cardsToCleanup = pendingCards.filter(card => card.shouldCleanup);
-      if (cardsToCleanup.length > 0) {
-        await cleanupOldPendingCards(cardsToCleanup.map(card => card.id));
-      }
 
     } catch (error) {
       console.error('Error loading pending gift cards:', error);
@@ -79,6 +73,8 @@ export const useGiftCardPaymentState = () => {
 
   // Clean up old pending gift cards
   const cleanupOldPendingCards = async (cardIds: string[]) => {
+    if (cardIds.length === 0) return;
+
     try {
       const { error } = await supabase
         .from('gift_cards')
@@ -88,12 +84,16 @@ export const useGiftCardPaymentState = () => {
       if (error) throw error;
 
       console.log(`Cleaned up ${cardIds.length} old pending gift cards`);
+      
+      // Remove from local state
+      setPendingGiftCards(prev => prev.filter(card => !cardIds.includes(card.id)));
+      
     } catch (error) {
       console.error('Error cleaning up old pending cards:', error);
     }
   };
 
-  // Find reusable pending gift card
+  // Find reusable pending gift card (more permissive logic)
   const findReusablePendingCard = (amount: number, currency: string) => {
     return pendingGiftCards.find(card => 
       card.canReuse && 
@@ -109,19 +109,19 @@ export const useGiftCardPaymentState = () => {
     try {
       if (paymentReturn.type === 'success') {
         toast({
-          title: "Payment Successful!",
-          description: "Your gift card has been created and will be delivered shortly.",
+          title: "Plată Reușită!",
+          description: "Gift card-ul tău a fost creat și va fi livrat în scurt timp.",
         });
       } else if (paymentReturn.type === 'cancel') {
         toast({
-          title: "Payment Cancelled",
-          description: "Your payment was cancelled. The gift card is still saved and you can complete payment later.",
+          title: "Plată Anulată",
+          description: "Plata a fost anulată. Gift card-ul este salvat și poți finaliza plata mai târziu.",
           variant: "destructive",
         });
       } else if (paymentReturn.type === 'error') {
         toast({
-          title: "Payment Error",
-          description: "There was an error processing your payment. Please try again.",
+          title: "Eroare la Plată",
+          description: "A apărut o eroare la procesarea plății. Te rugăm să încerci din nou.",
           variant: "destructive",
         });
       }
@@ -189,3 +189,4 @@ export const useGiftCardPaymentState = () => {
     cleanupOldPendingCards
   };
 };
+

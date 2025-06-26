@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Gift, CreditCard, Loader2, Image } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Gift, CreditCard, Loader2, Image, X, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -16,6 +16,7 @@ import { useGiftCardDesigns } from '@/hooks/useGiftCards';
 import { useGiftCardPayment } from '@/hooks/useGiftCardPayment';
 import { useGiftCardPaymentState } from '@/hooks/useGiftCardPaymentState';
 import GiftPaymentStatusChecker from './GiftPaymentStatusChecker';
+import PendingPaymentNotification from './PendingPaymentNotification';
 
 interface GiftPurchaseWizardProps {
   onComplete?: (data: any) => void;
@@ -38,7 +39,13 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   const { toast } = useToast();
   const { data: designs, isLoading: isLoadingDesigns } = useGiftCardDesigns();
   const initiatePayment = useGiftCardPayment();
-  const { findReusablePendingCard } = useGiftCardPaymentState();
+  const { 
+    pendingGiftCards, 
+    findReusablePendingCard, 
+    cleanupOldPendingCards,
+    loadPendingGiftCards
+  } = useGiftCardPaymentState();
+  
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<GiftCardFormData>({
     sender_name: user?.user_metadata?.full_name || '',
@@ -54,6 +61,8 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showStatusChecker, setShowStatusChecker] = useState(false);
   const [paymentGiftCardId, setPaymentGiftCardId] = useState<string | null>(null);
+  const [showPendingNotification, setShowPendingNotification] = useState(true);
+  const [ignorePendingCards, setIgnorePendingCards] = useState(false);
 
   // Set default design when designs are loaded
   useEffect(() => {
@@ -61,6 +70,22 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       setSelectedDesign(designs[0].id);
     }
   }, [designs, selectedDesign]);
+
+  // Auto-cleanup old pending cards when component mounts
+  useEffect(() => {
+    const cleanup = async () => {
+      if (user && pendingGiftCards.length > 0) {
+        const oldCards = pendingGiftCards.filter(card => card.shouldCleanup);
+        if (oldCards.length > 0) {
+          await cleanupOldPendingCards(oldCards.map(card => card.id));
+          await loadPendingGiftCards();
+          console.log(`Cleaned up ${oldCards.length} old pending gift cards`);
+        }
+      }
+    };
+
+    cleanup();
+  }, [user, pendingGiftCards.length]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -109,14 +134,19 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   }, []);
 
   const handlePayment = async (paymentProvider: string = 'smartbill') => {
-    const reusableCard = findReusablePendingCard(formData.gift_amount, formData.currency);
+    // Only check for reusable cards if user hasn't explicitly chosen to ignore them
+    if (!ignorePendingCards) {
+      const reusableCard = findReusablePendingCard(formData.gift_amount, formData.currency);
 
-    if (reusableCard) {
-      toast({
-        title: "Pending Gift Card Found",
-        description: "You have a pending gift card with the same amount. Please complete the payment for that card or it will be cancelled.",
-      });
-      return;
+      if (reusableCard) {
+        toast({
+          title: "Gift Card Existent",
+          description: "Ai un gift card cu aceeași sumă în așteptarea plății. Poți continua cu plata acestuia sau crea unul nou.",
+          duration: 8000,
+        });
+        setShowPendingNotification(true);
+        return;
+      }
     }
 
     try {
@@ -334,7 +364,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
                   ? "border-primary bg-primary/10"
                   : "border-muted hover:border-primary/50"
               )}
-              onClick={() => handleDesignSelect(design.id)}
+              onClick={() => setSelectedDesign(design.id)}
             >
               <div className="aspect-[5/3] relative rounded-md overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500">
                 {design.preview_image_url ? (
@@ -343,7 +373,6 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
                     alt={design.name}
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      // Fallback to gradient background if image fails to load
                       e.currentTarget.style.display = 'none';
                     }}
                   />
@@ -376,10 +405,10 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       )}
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={prevStep}>
+        <Button variant="outline" onClick={() => setStep(step - 1)}>
           {t('back')}
         </Button>
-        <Button onClick={nextStep} disabled={!selectedDesign}>
+        <Button onClick={() => setStep(step + 1)} disabled={!selectedDesign}>
           {t('nextReview')}
         </Button>
       </div>
@@ -424,6 +453,13 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
     </CardContent>
   );
 
+  // Get pending cards that match current selection criteria
+  const relevantPendingCards = pendingGiftCards.filter(card => 
+    card.canReuse && 
+    card.gift_amount === formData.gift_amount && 
+    card.currency === formData.currency
+  );
+
   if (showStatusChecker && paymentGiftCardId) {
     return (
       <div className="max-w-2xl mx-auto">
@@ -449,6 +485,18 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             Step {step} of 4: {step === 1 ? t('stepAmount') : step === 2 ? t('stepDetails') : step === 3 ? t('stepDesign') : t('stepReview')}
           </CardTitle>
         </CardHeader>
+        
+        {/* Show pending notification if relevant */}
+        {showPendingNotification && relevantPendingCards.length > 0 && (
+          <div className="px-6 pb-4">
+            <PendingPaymentNotification
+              pendingCards={relevantPendingCards}
+              onContinuePayment={handleContinueWithPending}
+              onDismiss={handleDismissPendingNotification}
+            />
+          </div>
+        )}
+        
         {step === 1 && renderAmountStep()}
         {step === 2 && renderDetailsStep()}
         {step === 3 && renderDesignStep()}
