@@ -1,10 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Gift, Mail, Loader2, AlertCircle } from 'lucide-react';
+import { CheckCircle, Gift, Mail, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useGiftCardSync } from '@/hooks/useGiftCardSync';
 
 const GiftPaymentSuccess: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -13,6 +13,8 @@ const GiftPaymentSuccess: React.FC = () => {
   const [paymentVerified, setPaymentVerified] = useState(false);
   const [giftCardData, setGiftCardData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const { syncGiftCard } = useGiftCardSync();
+  const [isAutoSyncing, setIsAutoSyncing] = useState(false);
 
   const paymentStatus = searchParams.get('payment');
   const sessionId = searchParams.get('session_id');
@@ -92,6 +94,58 @@ const GiftPaymentSuccess: React.FC = () => {
     verifyPayment();
   }, [paymentStatus, sessionId]);
 
+  // Auto-sync for pending payments
+  useEffect(() => {
+    const autoSyncPending = async () => {
+      if (giftCardData && giftCardData.payment_status === 'pending' && !isAutoSyncing) {
+        setIsAutoSyncing(true);
+        try {
+          console.log('Auto-syncing pending gift card:', giftCardData.id);
+          await syncGiftCard(giftCardData.id);
+          
+          // Recheck status after sync
+          setTimeout(async () => {
+            const { data: updatedCard } = await supabase
+              .from('gift_cards')
+              .select('payment_status')
+              .eq('id', giftCardData.id)
+              .single();
+            
+            if (updatedCard && updatedCard.payment_status === 'completed') {
+              setGiftCardData(prev => ({ ...prev, payment_status: 'completed' }));
+              setPaymentVerified(true);
+            }
+          }, 2000);
+          
+        } catch (error) {
+          console.error('Auto-sync failed:', error);
+        } finally {
+          setIsAutoSyncing(false);
+        }
+      }
+    };
+
+    if (paymentVerified && giftCardData) {
+      autoSyncPending();
+    }
+  }, [paymentVerified, giftCardData, syncGiftCard, isAutoSyncing]);
+
+  const handleManualSync = async () => {
+    if (!giftCardData) return;
+    
+    try {
+      await syncGiftCard(giftCardData.id);
+      
+      // Refresh the page after sync
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Manual sync failed:', error);
+    }
+  };
+
   if (paymentStatus !== 'success') {
     return null;
   }
@@ -167,7 +221,11 @@ const GiftPaymentSuccess: React.FC = () => {
           <div className="flex justify-center mb-4">
             <div className={`w-16 h-16 ${isPending ? 'bg-yellow-100' : 'bg-green-100'} rounded-full flex items-center justify-center`}>
               {isPending ? (
-                <Loader2 className="w-8 h-8 text-yellow-600 animate-spin" />
+                isAutoSyncing ? (
+                  <Loader2 className="w-8 h-8 text-yellow-600 animate-spin" />
+                ) : (
+                  <Loader2 className="w-8 h-8 text-yellow-600" />
+                )
               ) : (
                 <CheckCircle className="w-8 h-8 text-green-600" />
               )}
@@ -206,12 +264,32 @@ const GiftPaymentSuccess: React.FC = () => {
           </div>
 
           {isPending && (
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <h3 className="font-semibold text-blue-800 mb-2">Payment Processing</h3>
-              <p className="text-sm text-blue-700">
-                Your payment is being processed. The gift card will be activated and the recipient will receive their email once payment is confirmed. This usually takes a few minutes.
-              </p>
-            </div>
+            <>
+              <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                <h3 className="font-semibold text-yellow-800 mb-2">Payment Processing</h3>
+                <p className="text-sm text-yellow-700 mb-3">
+                  Your payment is being processed. The gift card will be activated and the recipient will receive their email once payment is confirmed.
+                </p>
+                {isAutoSyncing && (
+                  <p className="text-xs text-yellow-600 flex items-center justify-center gap-2">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    Checking payment status...
+                  </p>
+                )}
+              </div>
+
+              <div className="flex gap-3 justify-center">
+                <Button
+                  variant="outline"
+                  onClick={handleManualSync}
+                  disabled={isAutoSyncing}
+                  className="flex items-center gap-2"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isAutoSyncing ? 'animate-spin' : ''}`} />
+                  Check Status Now
+                </Button>
+              </div>
+            </>
           )}
 
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">

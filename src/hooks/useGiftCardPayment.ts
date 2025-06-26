@@ -3,8 +3,31 @@ import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
+interface PaymentWindowTracker {
+  giftCardId?: string;
+  paymentWindow?: Window | null;
+}
+
+let paymentTracker: PaymentWindowTracker = {};
+
 export const useGiftCardPayment = () => {
   const { toast } = useToast();
+
+  const trackPaymentWindow = (giftCardId: string, paymentWindow: Window) => {
+    paymentTracker.giftCardId = giftCardId;
+    paymentTracker.paymentWindow = paymentWindow;
+    
+    // Monitor when payment window closes
+    const checkClosed = setInterval(() => {
+      if (paymentWindow.closed) {
+        clearInterval(checkClosed);
+        // Payment window closed - trigger status check
+        window.dispatchEvent(new CustomEvent('paymentWindowClosed', {
+          detail: { giftCardId }
+        }));
+      }
+    }, 1000);
+  };
 
   return useMutation({
     mutationFn: async ({ 
@@ -32,13 +55,18 @@ export const useGiftCardPayment = () => {
     },
     onSuccess: (data) => {
       console.log('Payment response:', data);
-      // Redirect to payment page
+      // Open payment page and track it
       if (data.paymentUrl || data.url) {
         const paymentUrl = data.paymentUrl || data.url;
-        window.open(paymentUrl, '_blank');
+        const paymentWindow = window.open(paymentUrl, '_blank');
+        
+        if (paymentWindow && data.giftCardId) {
+          trackPaymentWindow(data.giftCardId, paymentWindow);
+        }
+        
         toast({
-          title: "Payment Initiated",
-          description: "Please complete the payment in the new tab. Your gift card will be created after successful payment.",
+          title: "Payment Window Opened",
+          description: "Complete your payment in the new tab. We'll automatically check the status once you're done.",
           duration: 5000
         });
       }
@@ -53,3 +81,5 @@ export const useGiftCardPayment = () => {
     },
   });
 };
+
+export const getPaymentTracker = () => paymentTracker;
