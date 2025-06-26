@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -245,8 +244,8 @@ serve(async (req) => {
       throw new Error('Gift card not found')
     }
 
-    // CRITICAL: Check if gift card is active and payment completed
-    if (giftCard.status !== 'active' || giftCard.payment_status !== 'completed') {
+    // FIXED: Check for both 'paid' and 'completed' payment status since SmartBill sync uses 'paid'
+    if (giftCard.status !== 'active' || (giftCard.payment_status !== 'completed' && giftCard.payment_status !== 'paid')) {
       console.error('Gift card is not ready for delivery:', {
         id: giftCard.id,
         code: giftCard.code,

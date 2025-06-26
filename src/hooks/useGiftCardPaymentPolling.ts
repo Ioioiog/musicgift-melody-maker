@@ -1,11 +1,9 @@
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { useGiftCardSync } from './useGiftCardSync';
 
-interface GiftCardPollingOptions {
-  giftCardId?: string;
+interface UseGiftCardPaymentPollingProps {
+  giftCardId: string;
   onStatusChange?: (status: string) => void;
   pollInterval?: number;
   maxAttempts?: number;
@@ -14,144 +12,117 @@ interface GiftCardPollingOptions {
 export const useGiftCardPaymentPolling = ({
   giftCardId,
   onStatusChange,
-  pollInterval = 5000, // 5 seconds
-  maxAttempts = 36 // 3 minutes total
-}: GiftCardPollingOptions = {}) => {
+  pollInterval = 5000,
+  maxAttempts = 36
+}: UseGiftCardPaymentPollingProps) => {
   const [isPolling, setIsPolling] = useState(false);
-  const [currentStatus, setCurrentStatus] = useState<string | null>(null);
+  const [currentStatus, setCurrentStatus] = useState<string>('pending');
   const [attempts, setAttempts] = useState(0);
-  const { toast } = useToast();
-  const { syncGiftCard } = useGiftCardSync();
-  
-  // Use refs to manage interval and prevent multiple polling sessions
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const attemptsRef = useRef(0);
-  const isPollingRef = useRef(false);
+  const intervalRef = useRef<NodeJS.Timeout>();
+  const hasCompletedRef = useRef(false);
 
   const checkGiftCardStatus = useCallback(async () => {
-    if (!giftCardId) return null;
-
     try {
-      const { data, error } = await supabase
+      console.log(`Checking gift card status for: ${giftCardId}`);
+      
+      // First try to sync with SmartBill
+      const { error: syncError } = await supabase.functions.invoke('gift-card-smartbill-sync', {
+        body: { giftCardId }
+      });
+
+      if (syncError) {
+        console.error('SmartBill sync error:', syncError);
+      }
+
+      // Then check the gift card status
+      const { data: giftCard, error } = await supabase
         .from('gift_cards')
-        .select('payment_status, smartbill_proforma_status')
+        .select('payment_status, status')
         .eq('id', giftCardId)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error checking gift card:', error);
+        return 'error';
+      }
 
-      return data.payment_status;
+      console.log('Current gift card status:', {
+        payment_status: giftCard.payment_status,
+        status: giftCard.status
+      });
+
+      // FIXED: Accept both 'paid' and 'completed' as successful payment status
+      const isPaymentComplete = giftCard.payment_status === 'paid' || giftCard.payment_status === 'completed';
+      
+      if (isPaymentComplete && giftCard.status === 'active') {
+        return 'completed';
+      }
+
+      return giftCard.payment_status || 'pending';
+
     } catch (error) {
-      console.error('Error checking gift card status:', error);
-      return null;
+      console.error('Status check error:', error);
+      return 'error';
     }
   }, [giftCardId]);
 
-  const stopPolling = useCallback(() => {
-    console.log('Stopping gift card payment polling');
-    
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    
-    setIsPolling(false);
-    isPollingRef.current = false;
-    setAttempts(0);
-    attemptsRef.current = 0;
-  }, []);
+  const startPolling = useCallback(() => {
+    if (isPolling || hasCompletedRef.current) return;
 
-  const startPolling = useCallback(async () => {
-    if (!giftCardId || isPollingRef.current) {
-      console.log('Polling already active or no gift card ID');
-      return;
-    }
-
-    console.log('Starting gift card payment polling for:', giftCardId);
-    
-    // Prevent multiple polling sessions
-    isPollingRef.current = true;
+    console.log(`Starting payment polling for gift card: ${giftCardId}`);
     setIsPolling(true);
     setAttempts(0);
-    attemptsRef.current = 0;
 
-    const pollStatus = async () => {
+    const poll = async () => {
       try {
-        // First sync with SmartBill to get latest status
-        await syncGiftCard(giftCardId);
-        
-        // Then check the updated status
         const status = await checkGiftCardStatus();
+        setCurrentStatus(status);
         
-        if (status) {
-          setCurrentStatus(status);
-          
-          if (status === 'completed') {
-            console.log('Gift card payment completed!');
-            stopPolling();
-            onStatusChange?.(status);
-            toast({
-              title: "Payment Confirmed!",
-              description: "Your gift card has been processed and will be delivered shortly.",
-            });
-            return true; // Stop polling
+        const currentAttempt = attempts + 1;
+        setAttempts(currentAttempt);
+
+        console.log(`Poll attempt ${currentAttempt}: status = ${status}`);
+
+        if (status === 'completed') {
+          console.log('Payment completed! Stopping polling.');
+          hasCompletedRef.current = true;
+          setIsPolling(false);
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
           }
+          onStatusChange?.(status);
+          return;
         }
 
-        attemptsRef.current += 1;
-        setAttempts(attemptsRef.current);
-        
-        // Check if we've reached max attempts
-        if (attemptsRef.current >= maxAttempts) {
+        if (currentAttempt >= maxAttempts) {
           console.log('Max polling attempts reached');
-          stopPolling();
-          toast({
-            title: "Payment Status Check Timeout",
-            description: "We're still processing your payment. You'll receive an email once it's completed.",
-            variant: "default",
-          });
-          return true; // Stop polling
+          setIsPolling(false);
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+          }
+          return;
         }
-        
-        return false; // Continue polling
+
       } catch (error) {
-        console.error('Error during status polling:', error);
-        attemptsRef.current += 1;
-        setAttempts(attemptsRef.current);
-        
-        if (attemptsRef.current >= maxAttempts) {
-          stopPolling();
-        }
-        
-        return false; // Continue polling despite error
+        console.error('Polling error:', error);
       }
     };
 
     // Initial check
-    const shouldStop = await pollStatus();
-    if (shouldStop) return;
+    poll();
 
-    // Set up interval for continued polling - only if not already set
-    if (!intervalRef.current) {
-      intervalRef.current = setInterval(async () => {
-        const shouldStop = await pollStatus();
-        
-        if (shouldStop) {
-          stopPolling();
-        }
-      }, pollInterval);
+    // Set up interval for subsequent checks
+    intervalRef.current = setInterval(poll, pollInterval);
+
+  }, [giftCardId, isPolling, attempts, maxAttempts, pollInterval, checkGiftCardStatus, onStatusChange]);
+
+  const stopPolling = useCallback(() => {
+    console.log('Stopping payment polling');
+    setIsPolling(false);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = undefined;
     }
-  }, [giftCardId, checkGiftCardStatus, syncGiftCard, onStatusChange, maxAttempts, pollInterval, toast, stopPolling]);
-
-  // Cleanup on unmount or when dependencies change
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-      isPollingRef.current = false;
-    };
   }, []);
 
   return {
