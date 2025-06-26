@@ -153,7 +153,7 @@ serve(async (req) => {
     // Prepare enhanced client data
     const clientData = prepareClientData(giftCardData);
 
-    // Prepare SmartBill proforma XML data with enhanced structure
+    // Prepare SmartBill proforma XML data with enhanced structure and CRUCIAL paymentUrl field
     const proformaXml = `<?xml version="1.0" encoding="UTF-8"?>
 <estimate>
   <companyVatCode>${escapeXml(smartbillConfig.companyVat)}</companyVatCode>
@@ -169,6 +169,7 @@ serve(async (req) => {
   <issueDate>${issueDate}</issueDate>
   <seriesName>${smartbillConfig.series}</seriesName>
   <dueDate>${dueDate}</dueDate>
+  <paymentUrl>Generate URL</paymentUrl>
   <product>
     <name>${escapeXml(`Gift Card - ${giftCardCode}`)}</name>
     <isDiscount>false</isDiscount>
@@ -236,14 +237,18 @@ serve(async (req) => {
       throw new Error('SmartBill API did not return a proforma number');
     }
 
+    if (!paymentUrl) {
+      console.error('SmartBill response missing payment URL:', responseText);
+      throw new Error('SmartBill did not generate a payment URL. Please check if Netopia payment gateway is configured in your SmartBill account.');
+    }
+
     const proformaId = `${proformaSeries}${proformaNumber}`;
-    const finalPaymentUrl = paymentUrl || `https://online.smartbill.ro/public/pay/${proformaNumber}`;
 
     console.log('SmartBill proforma created successfully:', {
       number: proformaNumber,
       series: proformaSeries,
       proformaId: proformaId,
-      url: finalPaymentUrl
+      url: paymentUrl
     });
 
     // Create gift card record in database with enhanced data structure
@@ -254,7 +259,7 @@ serve(async (req) => {
       smartbill_proforma_status: 'created',
       payment_status: 'pending',
       payment_provider: 'smartbill',
-      payment_url: finalPaymentUrl,
+      payment_url: paymentUrl,
       amount_ron: currency === 'RON' ? originalAmount : smartbillAmount,
       amount_eur: currency === 'EUR' ? originalAmount : Math.round(originalAmount / 5)
     };
@@ -282,7 +287,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        url: finalPaymentUrl,
+        url: paymentUrl,
         proformaId: proformaId,
         giftCardId: createdGiftCard.id,
         giftCardCode: giftCardCode,
