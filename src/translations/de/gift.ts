@@ -1,3 +1,4 @@
+
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Teile das Geschenk der Musik",
@@ -128,7 +129,6 @@ export const giftTranslations = {
   selectedAddons: "Ausgewählte Zusätze",
   priceBreakdown: "Preisaufschlüsselung",
   subtotal: "Zwischensumme",
-  giftCardCredit: "Geschenkkarten-Guthaben",
   discount: "Rabatt",
   total: "Gesamt",
   customerInformation: "Kundeninformationen",
