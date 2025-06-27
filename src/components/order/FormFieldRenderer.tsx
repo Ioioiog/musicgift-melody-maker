@@ -205,6 +205,7 @@ interface FormFieldRendererProps {
   selectedPackage?: string;
   selectedPackageData?: Package;
   formData?: any;
+  error?: string; // Add error prop
 }
 const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   field,
@@ -217,7 +218,8 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   onAddonFieldChange,
   selectedPackage = '',
   selectedPackageData,
-  formData = {}
+  formData = {},
+  error // Add error to destructuring
 }) => {
   const {
     t
@@ -645,6 +647,11 @@ const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         {field.required && <span className="text-orange-400 ml-1 text-sm">*</span>}
       </Label>
       {renderField()}
+      {error && (
+        <p className="text-red-400 text-xs mt-1 bg-red-500/20 p-1.5 rounded-md border border-red-400/30">
+          {error}
+        </p>
+      )}
     </div>
   );
 };
