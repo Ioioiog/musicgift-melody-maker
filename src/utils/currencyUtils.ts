@@ -71,7 +71,7 @@ export const convertAmountForSmartBill = (
 };
 
 /**
- * Fixed exchange rate: 1 EUR = 5 RON
+ * Fixed exchange rate: 1 EUR = 5 RON (corrected from previous incorrect rate)
  */
 export const EXCHANGE_RATE_EUR_TO_RON = 5;
 
