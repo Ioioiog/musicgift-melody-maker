@@ -582,7 +582,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                 <CardContent className="p-4">
                   <h3 className="text-md font-semibold text-white mb-2">{t('selectedPackage', 'Selected Package')}</h3>
                   <div className="flex justify-between items-center">
-                    <span className="text-white/80">{selectedPackage?.name || formData.package}</span>
+                    <span className="text-white/80">{selectedPackage?.label_key || formData.package}</span>
                     <span className="text-orange-400 font-semibold">{totalPrice} {currency}</span>
                   </div>
                 </CardContent>
