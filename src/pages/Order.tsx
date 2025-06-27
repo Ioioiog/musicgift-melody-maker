@@ -59,8 +59,43 @@ const Order = () => {
 
   // Check if the preselected package is the gift package
   const isGiftPackage = preselectedPackage === 'gift';
+
   useEffect(() => {
-    if (giftCardCode && urlGiftCard) {
+    // First check for sessionStorage redemption data
+    const redemptionData = sessionStorage.getItem('giftCardRedemption');
+    
+    if (redemptionData) {
+      try {
+        const parsedRedemption = JSON.parse(redemptionData);
+        console.log('Found gift card redemption data in sessionStorage:', parsedRedemption);
+        
+        // Create a gift card object from the redemption data
+        const giftCardFromRedemption = {
+          id: parsedRedemption.giftCardId,
+          code: parsedRedemption.giftCardCode,
+          gift_amount: parsedRedemption.giftCardValue * 100, // Convert to cents for consistency
+          remaining_balance: parsedRedemption.giftCardValue,
+          currency: parsedRedemption.currency,
+          status: 'active'
+        };
+        
+        setAppliedGiftCard(giftCardFromRedemption);
+        
+        toast({
+          title: t('giftCardApplied'),
+          description: `Gift card ${parsedRedemption.giftCardCode} applied with ${parsedRedemption.redeemAmount} ${parsedRedemption.currency} credit`
+        });
+        
+        // Clear the sessionStorage after applying
+        sessionStorage.removeItem('giftCardRedemption');
+        
+      } catch (error) {
+        console.error('Error parsing gift card redemption data:', error);
+        sessionStorage.removeItem('giftCardRedemption'); // Clear corrupted data
+      }
+    }
+    // Fallback to URL-based gift card loading
+    else if (giftCardCode && urlGiftCard) {
       setAppliedGiftCard(urlGiftCard);
       toast({
         title: t('giftCardApplied'),
@@ -68,6 +103,8 @@ const Order = () => {
       });
     }
   }, [giftCardCode, urlGiftCard, toast, t]);
+
+  // Calculate total price
   const calculateTotalPrice = (packageValue: string, selectedAddons: string[]) => {
     const packageData = packages.find(pkg => pkg.value === packageValue);
     const packagePrice = packageData ? getPackagePrice(packageData, currency) : 0;
@@ -173,6 +210,8 @@ Order Management: View full details in the admin panel.
       // Don't throw - this shouldn't block the order process
     }
   };
+
+  // Handle order completion
   const handleOrderComplete = async (orderData: any) => {
     try {
       console.log("🔄 Processing order with selected payment provider:", orderData.paymentProvider);
@@ -405,9 +444,13 @@ Order Management: View full details in the admin panel.
       });
     }
   };
+
+  // Handle gift card purchase completion
   const handleGiftCardComplete = (data: any) => {
     console.log("Gift card purchase completed:", data);
   };
+
+  // Loading state
   if (isLoadingGift && giftCardCode) {
     return <div className="min-h-screen flex items-center justify-center" style={{
       backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
