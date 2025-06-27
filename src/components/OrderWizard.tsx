@@ -21,6 +21,7 @@ import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useOrderPayment } from '@/hooks/useOrderPayment';
 import OrderPaymentStatusChecker from './order/OrderPaymentStatusChecker';
+import OrderReviewStep from './order/OrderReviewStep';
 
 interface OrderWizardProps {
   onComplete: (orderData: any) => void;
@@ -487,99 +488,17 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
               errors={errors}
             />
           ) : currentStep === steps.length + 3 ? (
-            // Review Order Step
-            <>
-              <h2 className="text-lg font-semibold text-white">{t('reviewOrder', 'Review Your Order')}</h2>
-              <Separator className="my-2 bg-white/20" />
-
-              <div className="space-y-6">
-                {/* Package Summary */}
-                <Card className="bg-white/10 backdrop-blur-sm border border-white/30">
-                  <CardContent className="p-4">
-                    <h3 className="text-md font-semibold text-white mb-2">{t('selectedPackage', 'Selected Package')}</h3>
-                    <div className="flex justify-between items-center">
-                      <span className="text-white/80">{selectedPackage?.label_key || formData.package}</span>
-                      <span className="text-orange-400 font-semibold">{totalPrice} {currency}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Addons Summary */}
-                {selectedAddons.length > 0 && (
-                  <Card className="bg-white/10 backdrop-blur-sm border border-white/30">
-                    <CardContent className="p-4">
-                      <h3 className="text-md font-semibold text-white mb-2">{t('selectedAddons', 'Selected Add-ons')}</h3>
-                      <div className="space-y-2">
-                        {selectedAddons.map(addonKey => {
-                          const addon = addons.find(a => a.addon_key === addonKey);
-                          if (!addon) return null;
-                          return (
-                            <div key={addonKey} className="flex justify-between items-center">
-                              <span className="text-white/80">{addon.label_key}</span>
-                              <span className="text-orange-400 font-semibold">+{getAddonPrice(addon, currency)} {currency}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* Contact Information Summary */}
-                <Card className="bg-white/10 backdrop-blur-sm border border-white/30">
-                  <CardContent className="p-4">
-                    <h3 className="text-md font-semibold text-white mb-2">{t('contactInformation', 'Contact Information')}</h3>
-                    <div className="space-y-1 text-white/80">
-                      <p><strong>{t('fullName', 'Full Name')}:</strong> {formData.fullName}</p>
-                      <p><strong>{t('invoiceType', 'Invoice Type')}:</strong> {formData.invoiceType === 'company' ? t('company', 'Company') : t('individual', 'Individual')}</p>
-                      {formData.invoiceType === 'company' ? (
-                        <>
-                          <p><strong>{t('companyName', 'Company Name')}:</strong> {formData.companyName}</p>
-                          <p><strong>{t('companyAddress', 'Company Address')}:</strong> {formData.companyAddress}</p>
-                          <p><strong>{t('representativeName', 'Representative Name')}:</strong> {formData.representativeName}</p>
-                        </>
-                      ) : (
-                        <>
-                          <p><strong>{t('address', 'Address')}:</strong> {formData.address}</p>
-                          <p><strong>{t('city', 'City')}:</strong> {formData.city}</p>
-                        </>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Total Price */}
-                <Card className="bg-white/10 backdrop-blur-sm border border-orange-500/50">
-                  <CardContent className="p-4">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-semibold text-white">{t('totalPrice', 'Total Price')}</h3>
-                      <span className="text-xl font-bold text-orange-400">{totalOrderPrice} {currency}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Order Confirmation */}
-                <div className="bg-amber-500/20 border border-amber-400/30 rounded-lg p-4">
-                  <div className="flex items-start space-x-3">
-                    <Checkbox
-                      id="orderConfirmation"
-                      className="border-white/30 focus:ring-orange-500 mt-1"
-                      checked={orderConfirmed}
-                      onCheckedChange={(checked) => setOrderConfirmed(Boolean(checked))}
-                    />
-                    <div className="flex-1">
-                      <Label htmlFor="orderConfirmation" className="text-white font-medium">
-                        {t('confirmOrderDetails', 'I confirm that all the information provided is correct')}
-                      </Label>
-                      <p className="text-white/80 text-sm mt-1">
-                        {t('orderLockWarning', 'Once confirmed, you will not be able to make changes to your order details.')}
-                      </p>
-                    </div>
-                  </div>
-                  {errors.orderConfirmation && <p className="text-red-400 text-sm mt-2">{errors.orderConfirmation}</p>}
-                </div>
-              </div>
-            </>
+            // Review Order Step - UPDATED
+            <OrderReviewStep
+              formData={formData}
+              selectedPackage={formData.package}
+              selectedPackageData={selectedPackage}
+              selectedAddons={selectedAddons}
+              availableAddons={addons}
+              giftCard={giftCard}
+              appliedDiscount={appliedDiscount}
+              onConfirmationChange={setOrderConfirmed}
+            />
           ) : (
             // Payment Method Step
             <>

@@ -25,10 +25,10 @@ const OrderConfirmationSection: React.FC<OrderConfirmationSectionProps> = ({
             <AlertTriangle className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" />
             <div>
               <h4 className="text-orange-300 font-medium mb-1">
-                {t('attentionOrderReview')}
+                {t('attentionOrderReview', 'Attention: Please Review Carefully')}
               </h4>
               <p className="text-orange-200 text-sm">
-                {t('attentionOrderReviewText')}
+                {t('attentionOrderReviewText', 'Please review all the information above carefully. Once you confirm and proceed to payment, you will not be able to modify your order details.')}
               </p>
             </div>
           </div>
@@ -50,10 +50,10 @@ const OrderConfirmationSection: React.FC<OrderConfirmationSectionProps> = ({
                 htmlFor="order-confirmation" 
                 className="text-white text-sm cursor-pointer"
               >
-                <span className="font-medium">{t('confirmOrderAccuracy')}</span>
+                <span className="font-medium">{t('confirmOrderAccuracy', 'I confirm that all the information provided is correct')}</span>
                 <br />
                 <span className="text-white/70 text-xs">
-                  {t('confirmOrderAccuracyText')}
+                  {t('confirmOrderAccuracyText', 'I have reviewed all my entries including song details, personal information, contact details, and legal agreements.')}
                 </span>
               </label>
             </div>
