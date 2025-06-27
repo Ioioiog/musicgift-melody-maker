@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -74,10 +75,14 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
       const result = await validateGiftCard(giftCardCode.trim());
       setValidatedGiftCard(result);
       setStep('select');
-      const remainingText = result.remaining_balance ? ` (${t('remainingBalance')}: ${formatCurrency(result.remaining_balance, currency)})` : '';
+      
+      // Use the same conversion logic for the toast message
+      const displayValue = getDisplayGiftCardValue(result);
+      const remainingText = result.remaining_balance ? ` (${t('remainingBalance')}: ${formatCurrency(displayValue, currency)})` : '';
+      
       toast({
         title: t('validGiftCard'),
-        description: `${t('giftCardValue')}: ${formatCurrency(result.remaining_balance || result.gift_amount || result.amount_eur || result.amount_ron || 0, currency)}${remainingText}`
+        description: `${t('giftCardValue')}: ${formatCurrency(displayValue, currency)}${remainingText}`
       });
     } catch (error: any) {
       console.error('Error validating gift card:', error);
