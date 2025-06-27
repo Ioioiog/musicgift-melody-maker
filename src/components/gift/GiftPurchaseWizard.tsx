@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -408,9 +409,9 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           {selectedDesign && (
             <div className="space-y-4">
               <div className="border-t pt-6">
-                <h5 className="text-md font-semibold mb-3">Previzualizare Card Cadou</h5>
+                <h5 className="text-md font-semibold mb-3">{t('giftCardPreviewTitle')}</h5>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Așa va arăta cardul cadou cu datele introduse:
+                  {t('howGiftCardWillLook')}
                 </p>
                 <div className="flex justify-center">
                   <GiftCardPreview
@@ -452,13 +453,13 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       <Alert>
         <AlertTriangle className="h-4 w-4" />
         <AlertDescription>
-          <strong>Atenție:</strong> După confirmare, aceste informații nu mai pot fi modificate. Te rugăm să verifici cu atenție toate detaliile.
+          <strong>{t('warningAfterConfirmation')}</strong>
         </AlertDescription>
       </Alert>
 
       {/* Visual Preview */}
       <div className="space-y-4">
-        <h5 className="text-md font-semibold">Previzualizare Finală Card Cadou</h5>
+        <h5 className="text-md font-semibold">{t('finalGiftCardPreview')}</h5>
         <div className="flex justify-center">
           <GiftCardPreview
             design={designs?.find(d => d.id === selectedDesign)}
@@ -476,38 +477,38 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
 
       {/* Detailed Information */}
       <div className="space-y-4">
-        <h5 className="text-md font-semibold">Detalii Complete Card Cadou</h5>
+        <h5 className="text-md font-semibold">{t('completeGiftCardDetails')}</h5>
         
         <div className="bg-muted/50 rounded-lg p-4 space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h6 className="font-medium text-sm text-muted-foreground mb-2">Informații Expeditor</h6>
+              <h6 className="font-medium text-sm text-muted-foreground mb-2">{t('senderInformation')}</h6>
               <div className="space-y-1">
-                <p><strong>Nume:</strong> {formData.sender_name}</p>
-                <p><strong>Email:</strong> {formData.sender_email}</p>
+                <p><strong>{t('name')}</strong> {formData.sender_name}</p>
+                <p><strong>{t('email')}</strong> {formData.sender_email}</p>
               </div>
             </div>
             
             <div>
-              <h6 className="font-medium text-sm text-muted-foreground mb-2">Informații Destinatar</h6>
+              <h6 className="font-medium text-sm text-muted-foreground mb-2">{t('recipientInformation')}</h6>
               <div className="space-y-1">
-                <p><strong>Nume:</strong> {formData.recipient_name}</p>
-                <p><strong>Email:</strong> {formData.recipient_email}</p>
+                <p><strong>{t('name')}</strong> {formData.recipient_name}</p>
+                <p><strong>{t('email')}</strong> {formData.recipient_email}</p>
               </div>
             </div>
           </div>
 
           <div className="border-t pt-3">
-            <h6 className="font-medium text-sm text-muted-foreground mb-2">Detalii Card Cadou</h6>
+            <h6 className="font-medium text-sm text-muted-foreground mb-2">{t('giftCardDetailsSection')}</h6>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <p><strong>Valoare:</strong> {formData.gift_amount} {currency}</p>
-                <p><strong>Design:</strong> {designs?.find(d => d.id === selectedDesign)?.name || 'Design selectat'}</p>
+                <p><strong>{t('value')}</strong> {formData.gift_amount} {currency}</p>
+                <p><strong>{t('design')}</strong> {designs?.find(d => d.id === selectedDesign)?.name || 'Design selectat'}</p>
               </div>
               <div className="space-y-1">
-                <p><strong>Data livrării:</strong> {formData.delivery_date ? format(formData.delivery_date, 'dd/MM/yyyy') : 'Imediat'}</p>
+                <p><strong>{t('deliveryDateLabel')}</strong> {formData.delivery_date ? format(formData.delivery_date, 'dd/MM/yyyy') : t('immediate')}</p>
                 {formData.message_text && (
-                  <p><strong>Mesaj personal:</strong> "{formData.message_text}"</p>
+                  <p><strong>{t('personalMessage')}</strong> "{formData.message_text}"</p>
                 )}
               </div>
             </div>
@@ -517,7 +518,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
 
       {/* Payment Provider Selection */}
       <div className="space-y-4">
-        <h5 className="text-md font-semibold">Alege Metoda de Plată</h5>
+        <h5 className="text-md font-semibold">{t('choosePaymentMethod')}</h5>
         <PaymentProviderSelection
           selectedProvider={selectedPaymentProvider}
           onProviderSelect={setSelectedPaymentProvider}
@@ -537,10 +538,10 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
               htmlFor="confirm-details"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
             >
-              Confirm că toate informațiile sunt corecte
+              {t('confirmAllCorrect')}
             </label>
             <p className="text-xs text-muted-foreground">
-              Înțeleg că după confirmare, aceste detalii nu mai pot fi modificate și cardul cadou va fi procesat pentru plată.
+              {t('understandAfterConfirmation')}
             </p>
           </div>
         </div>
