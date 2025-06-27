@@ -12,13 +12,16 @@ import { useValidateGiftCard } from '@/hooks/useGiftCards';
 import { usePackages } from '@/hooks/usePackageData';
 import { useGiftCardPricing } from '@/hooks/useGiftCardPricing';
 import { formatCurrency } from '@/utils/pricing';
+import { convertCurrency } from '@/utils/currencyUtils';
 import { motion } from 'framer-motion';
 import { Package } from '@/types';
 import PackageSelectionForGiftCard from './PackageSelectionForGiftCard';
 import GiftCardRedemptionSummary from './GiftCardRedemptionSummary';
+
 interface GiftRedemptionProps {
   onRedemption: (giftCard: any, selectedPackage: string, upgradeAmount?: number) => void;
 }
+
 const GiftRedemption: React.FC<GiftRedemptionProps> = ({
   onRedemption
 }) => {
@@ -44,6 +47,27 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
     isLoading: isLoadingPackages
   } = usePackages();
   const pricing = useGiftCardPricing(validatedGiftCard, selectedPackage, currency);
+
+  const getDisplayGiftCardValue = (giftCard: any) => {
+    if (!giftCard) return 0;
+    
+    // Use remaining balance if available, otherwise calculate from original amount
+    let availableBalance = 0;
+    if (giftCard.remaining_balance !== undefined) {
+      availableBalance = giftCard.remaining_balance;
+    } else {
+      // Fallback to original calculation
+      availableBalance = giftCard.gift_amount || giftCard.amount_eur || giftCard.amount_ron || 0;
+    }
+
+    // Convert to current display currency if needed
+    if (giftCard.currency !== currency) {
+      return convertCurrency(availableBalance, giftCard.currency as 'EUR' | 'RON', currency);
+    }
+    
+    return availableBalance;
+  };
+
   const handleValidateGiftCard = async () => {
     if (!giftCardCode.trim()) return;
     try {
@@ -65,14 +89,17 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
       setValidatedGiftCard(null);
     }
   };
+
   const handlePackageSelect = (pkg: Package) => {
     setSelectedPackage(pkg);
   };
+
   const handleProceedToConfirm = () => {
     if (selectedPackage) {
       setStep('confirm');
     }
   };
+
   const handleConfirmRedemption = async () => {
     if (!validatedGiftCard || !selectedPackage) return;
     try {
@@ -107,6 +134,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
       });
     }
   };
+
   const renderValidationStep = () => <motion.div initial={{
     opacity: 0,
     y: 20
@@ -133,6 +161,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
         </div>
       </div>
     </motion.div>;
+
   const renderPackageSelection = () => <motion.div initial={{
     opacity: 0,
     y: 20
@@ -151,7 +180,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
           <div className="flex justify-between text-sm">
             <span className="text-slate-50">{t('giftCardValue')}:</span>
             <span className="font-medium text-orange-500">
-              {formatCurrency(validatedGiftCard.remaining_balance || validatedGiftCard.gift_amount || validatedGiftCard.amount_eur || validatedGiftCard.amount_ron || 0, currency)}
+              {formatCurrency(getDisplayGiftCardValue(validatedGiftCard), currency)}
             </span>
           </div>
           
@@ -206,6 +235,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
         </Button>
       </div>
     </motion.div>;
+
   const renderConfirmation = () => <motion.div initial={{
     opacity: 0,
     y: 20
@@ -241,6 +271,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
         </Button>
       </div>
     </motion.div>;
+
   return <Card className="bg-transparent border-transparent shadow-none">
       <CardHeader className="px-2 sm:px-3">
         <CardTitle className="flex items-center gap-2 text-lg text-orange-500">
@@ -256,4 +287,5 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
       </CardContent>
     </Card>;
 };
+
 export default GiftRedemption;
