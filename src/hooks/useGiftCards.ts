@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -275,8 +276,8 @@ export const useValidateGiftCard = () => {
         throw new Error('This gift card has expired.');
       }
 
-      // Check payment status
-      if (giftCard.payment_status !== 'completed') {
+      // Check payment status - accept both 'completed' and 'paid'
+      if (giftCard.payment_status !== 'completed' && giftCard.payment_status !== 'paid') {
         throw new Error('This gift card payment is not completed yet.');
       }
 
