@@ -94,8 +94,12 @@ export const giftTranslations = {
   invalidGiftCardCode: "Cod invalid al cardului cadou. Te rugăm să verifici și să încerci din nou.",
   giftCardAlreadyUsed: "Acest card cadou a fost deja folosit.",
   giftCardExpired: "Acest card cadou a expirat.",
+  giftCardNotActive: "Acest card cadou nu este activ.",
+  giftCardNotFound: "Cardul cadou nu a fost găsit. Te rugăm să verifici codul și să încerci din nou.",
   failedToCreateGiftCard: "Crearea cardului cadou a eșuat. Te rugăm să încerci din nou.",
   failedToValidateGiftCard: "Validarea cardului cadou a eșuat. Te rugăm să încerci din nou.",
+  invalidDiscountCode: "Cod de reducere invalid sau nu îndeplinește cerințele.",
+  codeApplyError: "Aplicarea codului a eșuat. Te rugăm să încerci din nou.",
   
   // Common actions
   back: "Înapoi",
@@ -121,4 +125,41 @@ export const giftTranslations = {
   stepXOfY: "Pasul {{current}} din {{total}}",
   customAmountLabel: "Sumă Personalizată",
   validateGiftCard: "Validează",
+  
+  // Order review translations
+  reviewOrder: "Revizuiește Comanda",
+  pleaseReviewOrderDetails: "Te rugăm să revizuiești toate detaliile înainte de a proceda la plată",
+  selectedPackage: "Pachet Selectat",
+  selectedAddons: "Suplimente Selectate",
+  priceBreakdown: "Defalcare Preț",
+  subtotal: "Subtotal",
+  discount: "Reducere",
+  total: "Total",
+  customerInformation: "Informații Client",
+  legalConfirmations: "Confirmări Legale",
+  
+  // Updated help text
+  giftCardHelp: "Cardurile cadou încep cu MG-XXXX-XXXX",
+  
+  // Missing alert/warning translations
+  warningAfterConfirmation: "Atenție: După confirmare, aceste informații nu mai pot fi modificate. Te rugăm să verifici cu atenție toate detaliile.",
+  finalGiftCardPreview: "Previzualizare Finală Card Cadou",
+  
+  // Missing gift card details section translations
+  completeGiftCardDetails: "Detalii Complete Card Cadou",
+  senderInformation: "Informații Expeditor",
+  recipientInformation: "Informații Destinatar",
+  giftCardDetailsSection: "Detalii Card Cadou",
+  
+  // Missing form labels
+  name: "Nume:",
+  email: "Email:",
+  value: "Valoare:",
+  
+  // Missing payment and confirmation translations
+  choosePaymentMethod: "Alege Metoda de Plată",
+  confirmAllCorrect: "Confirm că toate informațiile sunt corecte",
+  understandAfterConfirmation: "Înțeleg că după confirmare, aceste detalii nu mai pot fi modificate și cardul cadou va fi procesat pentru plată.",
+  giftCardPreviewTitle: "Previzualizare Card Cadou",
+  howGiftCardWillLook: "Așa va arăta cardul cadou cu datele introduse:",
 };
