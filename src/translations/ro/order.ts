@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -603,5 +604,5 @@ export const orderTranslations = {
   'paymentTimeout': 'Verificarea plății a expirat. Vă rugăm să verificați email-ul sau să contactați suportul.',
   'paymentIssue': 'Problemă la plată',
   'close': 'Închide',
-  'tryAgain': 'Încercați din nou'
+  'tryAgainPayment': 'Încercați din nou'
 };

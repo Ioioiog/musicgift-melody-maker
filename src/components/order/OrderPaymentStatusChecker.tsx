@@ -145,7 +145,7 @@ const OrderPaymentStatusChecker: React.FC<OrderPaymentStatusCheckerProps> = ({
                   onClick={() => window.location.reload()}
                   className="bg-orange-500 hover:bg-orange-600 text-white"
                 >
-                  {t('tryAgain', 'Try Again')}
+                  {t('tryAgainPayment', 'Try Again')}
                 </Button>
               )}
             </div>

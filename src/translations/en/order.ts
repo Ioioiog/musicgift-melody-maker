@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -603,5 +604,5 @@ export const orderTranslations = {
   'paymentTimeout': 'Payment verification timed out. Please check your email or contact support.',
   'paymentIssue': 'Payment Issue',
   'close': 'Close',
-  'tryAgain': 'Try Again'
+  'tryAgainPayment': 'Try Again'
 };
