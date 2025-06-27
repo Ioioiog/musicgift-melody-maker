@@ -483,12 +483,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
               ))}
             </>
           ) : currentStep === steps.length + 1 ? (
-            // Addons Selection Step
+            // Addons Selection Step - Updated with required props
             <AddonSelectionStep
               selectedAddons={selectedAddons}
               onAddonChange={handleAddonChange}
               availableAddons={addons}
               selectedPackageData={selectedPackage}
+              addonFieldValues={addonFieldValues}
+              onAddonFieldChange={handleAddonFieldChange}
             />
           ) : currentStep === steps.length + 2 ? (
             // Contact Details & Legal Step
@@ -498,7 +500,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
               errors={errors}
             />
           ) : currentStep === steps.length + 3 ? (
-            // Review Order Step - UPDATED
+            // Review Order Step
             <OrderReviewStep
               formData={formData}
               selectedPackage={formData.package}
@@ -510,7 +512,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
               onConfirmationChange={setOrderConfirmed}
             />
           ) : (
-            // Payment Method Step - UPDATED WITH DETAILED DESCRIPTIONS
+            // Payment Method Step
             <>
               <h2 className="text-lg font-semibold text-white">{t('choosePaymentMethod', 'Choose Payment Method')}</h2>
               <Separator className="my-2 bg-white/20" />
