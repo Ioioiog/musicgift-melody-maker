@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,6 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { useValidateGiftCard } from '@/hooks/useGiftCards';
 import { usePackages } from '@/hooks/usePackageData';
 import { useGiftCardPricing } from '@/hooks/useGiftCardPricing';
-import { useGiftCardRedemption } from '@/hooks/useGiftCardRedemption';
 import { formatCurrency } from '@/utils/pricing';
 import { motion } from 'framer-motion';
 import { Package } from '@/types';
@@ -37,7 +35,6 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
   
   const { mutateAsync: validateGiftCard, isPending: isValidating } = useValidateGiftCard();
   const { data: packages, isLoading: isLoadingPackages } = usePackages();
-  const redemptionMutation = useGiftCardRedemption();
   
   const pricing = useGiftCardPricing(validatedGiftCard, selectedPackage, currency);
 
@@ -84,15 +81,21 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
       // Calculate redemption amount (minimum of available balance and package price)
       const availableBalance = validatedGiftCard.remaining_balance || validatedGiftCard.gift_amount || validatedGiftCard.amount_eur || validatedGiftCard.amount_ron || 0;
       const redeemAmount = Math.min(availableBalance, pricing.packagePrice);
-      const remainingBalance = Math.max(0, availableBalance - redeemAmount);
 
-      // Create redemption record
-      await redemptionMutation.mutateAsync({
+      // Store gift card redemption details in session storage for order completion
+      sessionStorage.setItem('giftCardRedemption', JSON.stringify({
         giftCardId: validatedGiftCard.id,
-        packageValue: selectedPackage.value,
-        packageName: t(selectedPackage.label_key),
+        giftCardCode: validatedGiftCard.code,
+        giftCardValue: availableBalance,
+        currency: validatedGiftCard.currency,
         redeemAmount: redeemAmount,
-        remainingBalance: remainingBalance,
+        upgradeAmount: pricing.additionalPaymentRequired > 0 ? pricing.additionalPaymentRequired : undefined
+      }));
+
+      // Show success message for gift card application (not redemption yet)
+      toast({
+        title: t('giftCardApplied'),
+        description: t('proceedingToComplete', `Proceeding to complete order for ${t(selectedPackage.label_key)} package.`),
       });
 
       // Call the parent callback to proceed to order flow
@@ -102,7 +105,12 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
         pricing.additionalPaymentRequired > 0 ? pricing.additionalPaymentRequired : undefined
       );
     } catch (error) {
-      console.error('Redemption error:', error);
+      console.error('Gift card application error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to apply gift card. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -282,10 +290,9 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
         
         <Button
           onClick={handleConfirmRedemption}
-          disabled={redemptionMutation.isPending}
           className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
         >
-          {redemptionMutation.isPending ? 'Processing...' : 'Confirm Redemption'}
+          Apply Gift Card
         </Button>
       </div>
     </motion.div>

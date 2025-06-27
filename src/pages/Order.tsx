@@ -266,21 +266,39 @@ Order Management: View full details in the admin panel.
         // Send order notification email
         await sendOrderNotificationEmail(orderData, orderResponse.id, finalPrice);
 
-        // If gift card was used, create redemption record
+        // Create gift card redemption record AFTER successful order creation
         if (appliedGiftCard && giftCreditApplied > 0) {
+          const remainingBalance = Math.max(0, (appliedGiftCard.gift_amount || 0) - giftCreditApplied * 100);
+          
           const { error: redemptionError } = await supabase
             .from('gift_redemptions')
             .insert({
               gift_card_id: appliedGiftCard.id,
               order_id: orderResponse.id,
               redeemed_amount: giftCreditApplied * 100,
-              remaining_balance: Math.max(0, (appliedGiftCard.gift_amount || 0) - giftCreditApplied * 100)
+              remaining_balance: remainingBalance
             });
 
           if (redemptionError) {
             console.error("Error creating gift redemption:", redemptionError);
           } else {
             console.log("Gift card redemption created successfully");
+            
+            // Update gift card status based on remaining balance
+            let newStatus = 'active';
+            if (remainingBalance === 0) {
+              newStatus = 'fully_redeemed';
+            } else if (remainingBalance > 0) {
+              newStatus = 'partially_redeemed';
+            }
+
+            await supabase
+              .from('gift_cards')
+              .update({ 
+                status: newStatus,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', appliedGiftCard.id);
           }
         }
 
@@ -360,23 +378,8 @@ Order Management: View full details in the admin panel.
       // Send order notification email to info@musicgift.ro
       await sendOrderNotificationEmail(orderData, paymentResponse.orderId, finalPrice);
 
-      // If gift card was used, create redemption record
-      if (appliedGiftCard && giftCreditApplied > 0) {
-        const { error: redemptionError } = await supabase
-          .from('gift_redemptions')
-          .insert({
-            gift_card_id: appliedGiftCard.id,
-            order_id: paymentResponse.orderId,
-            redeemed_amount: giftCreditApplied * 100,
-            remaining_balance: Math.max(0, (appliedGiftCard.gift_amount || 0) - giftCreditApplied * 100)
-          });
-
-        if (redemptionError) {
-          console.error("Error creating gift redemption:", redemptionError);
-        } else {
-          console.log("Gift card redemption created successfully");
-        }
-      }
+      // NOTE: Gift card redemption will be handled by payment webhooks after successful payment
+      // This ensures redemptions are only created for actually completed orders
 
       // Show success message
       toast({
