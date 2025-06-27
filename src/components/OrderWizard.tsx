@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -235,7 +236,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                   key={field.key}
                   field={field}
                   value={formData[field.key]}
-                  onChange={handleInputChange}
+                  onChange={(value) => handleInputChange(field.key, value)}
                   register={register}
                   error={errors[field.key]?.message}
                   t={t}
