@@ -97,6 +97,7 @@ export const convertCurrency = (
   fromCurrency: 'EUR' | 'RON', 
   toCurrency: 'EUR' | 'RON'
 ): number => {
+  // Return original amount if same currency (no conversion needed)
   if (fromCurrency === toCurrency) {
     return amount;
   }
@@ -115,11 +116,23 @@ export const convertCurrency = (
 /**
  * Convert gift card amount to target currency
  * Gift cards store amounts in base currency units (not cents)
+ * For same currency, return the original amount without conversion
  */
 export const convertGiftCardAmount = (
   giftAmount: number,
   giftCurrency: 'EUR' | 'RON',
   targetCurrency: 'EUR' | 'RON'
 ): number => {
-  return convertCurrency(giftAmount, giftCurrency, targetCurrency);
+  console.log('convertGiftCardAmount called:', { giftAmount, giftCurrency, targetCurrency });
+  
+  // If same currency, return original amount - no conversion needed
+  if (giftCurrency === targetCurrency) {
+    console.log('Same currency, returning original amount:', giftAmount);
+    return giftAmount;
+  }
+  
+  // Only convert if currencies are different
+  const converted = convertCurrency(giftAmount, giftCurrency, targetCurrency);
+  console.log('Different currencies, converted amount:', converted);
+  return converted;
 };

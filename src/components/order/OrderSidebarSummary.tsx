@@ -86,13 +86,30 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   // Calculate gift card credit with currency conversion (only for non-quote packages)
   let giftCreditApplied = 0;
   if (!packageIsQuoteOnly && appliedGiftCard) {
+    // Debug logging
+    console.log('Gift card debug:', {
+      appliedGiftCard,
+      currency,
+      giftCardCurrency: appliedGiftCard.currency
+    });
+
     // Gift card amounts are stored in base currency units (not cents)
     const giftAmount = appliedGiftCard.gift_amount || 0;
     const giftCurrency = appliedGiftCard.currency || 'RON';
     
-    // Convert gift card amount to current display currency
-    const convertedGiftAmount = convertGiftCardAmount(giftAmount, giftCurrency, currency);
+    console.log('Before conversion:', { giftAmount, giftCurrency, targetCurrency: currency });
+    
+    // For same currency, no conversion needed
+    let convertedGiftAmount = giftAmount;
+    if (giftCurrency !== currency) {
+      convertedGiftAmount = convertGiftCardAmount(giftAmount, giftCurrency, currency);
+    }
+    
+    console.log('After conversion:', { convertedGiftAmount });
+    
     giftCreditApplied = Math.min(convertedGiftAmount, subtotal);
+    
+    console.log('Final gift credit applied:', giftCreditApplied);
   }
 
   // Apply discount (only for non-quote packages)
