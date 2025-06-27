@@ -1,4 +1,3 @@
-
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Teile das Geschenk der Musik",
@@ -121,4 +120,7 @@ export const giftTranslations = {
   stepXOfY: "Schritt {{current}} von {{total}}",
   customAmountLabel: "Benutzerdefinierter Betrag",
   validateGiftCard: "Validieren",
+  
+  // Updated help text for German
+  giftCardHelp: "Geschenkkarten beginnen mit MG-XXXX-XXXX",
 };

@@ -227,10 +227,16 @@ export const useGiftCardByCode = (code: string) => {
         .eq('code', code)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        // Don't throw for not found errors, return null instead
+        if (error.code === 'PGRST116') {
+          return null;
+        }
+        throw error;
+      }
       return data as GiftCard;
     },
-    enabled: !!code,
+    enabled: !!code && code.length > 0,
   });
 };
 

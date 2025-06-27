@@ -1,4 +1,3 @@
-
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Share the Gift of Music",
@@ -94,8 +93,12 @@ export const giftTranslations = {
   invalidGiftCardCode: "Invalid gift card code. Please check and try again.",
   giftCardAlreadyUsed: "This gift card has already been used.",
   giftCardExpired: "This gift card has expired.",
+  giftCardNotActive: "This gift card is not active.",
+  giftCardNotFound: "Gift card not found. Please check the code and try again.",
   failedToCreateGiftCard: "Failed to create gift card. Please try again.",
   failedToValidateGiftCard: "Failed to validate gift card. Please try again.",
+  invalidDiscountCode: "Invalid discount code or does not meet requirements.",
+  codeApplyError: "Failed to apply code. Please try again.",
   
   // Common actions
   back: "Back",
@@ -121,4 +124,7 @@ export const giftTranslations = {
   stepXOfY: "Step {{current}} of {{total}}",
   customAmountLabel: "Custom Amount",
   validateGiftCard: "Validate",
+  
+  // Updated help text
+  giftCardHelp: "Gift cards start with MG-XXXX-XXXX",
 };
