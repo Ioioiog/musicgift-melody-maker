@@ -1,4 +1,3 @@
-
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Share the Gift of Music",
@@ -69,10 +68,6 @@ export const giftTranslations = {
   messageFromSender: "Message from sender",
   choosePackage: "Choose Your Package",
   selectPackageToRedeem: "Select the package you'd like to redeem with your gift card",
-  packagePrice: "Package Price",
-  giftCardCredit: "Gift Card Credit",
-  additionalPayment: "Additional Payment Required",
-  youWillReceiveRefund: "You will receive a refund of",
   proceedWithPackage: "Proceed with",
   
   // Messages and notifications
@@ -97,7 +92,7 @@ export const giftTranslations = {
   giftCardNotActive: "This gift card is not active.",
   giftCardNotFound: "Gift card not found. Please check the code and try again.",
   failedToCreateGiftCard: "Failed to create gift card. Please try again.",
-  failedToValidateGiftCard: "Failed to validate gift card. Please try again.",
+  failedToValidateGiftCard: "Failed tovalidate gift card. Please try again.",
   invalidDiscountCode: "Invalid discount code or does not meet requirements.",
   codeApplyError: "Failed to apply code. Please try again.",
   
@@ -124,7 +119,7 @@ export const giftTranslations = {
   confirmDetailsBeforePayment: "Confirm your details before proceeding to payment.",
   stepXOfY: "Step {{current}} of {{total}}",
   customAmountLabel: "Custom Amount",
-  validateGiftCard: "Validate",
+	validateGiftCard: "Validate",
   
   // Order review translations
   reviewOrder: "Review Your Order",
@@ -162,4 +157,17 @@ export const giftTranslations = {
   understandAfterConfirmation: "I understand that after confirmation, these details cannot be changed and the gift card will be processed for payment.",
   giftCardPreviewTitle: "Gift Card Preview",
   howGiftCardWillLook: "Here's how your gift card will look with the entered data:",
+
+  // Missing translations for package selection interface
+  packagePrice: "Package Price:",
+  giftCardCredit: "Gift Card Credit:",
+  additionalPayment: "Additional Payment:",
+  refund: "Refund:",
+  fullyCovered: "Fully Covered",
+  additionalPaymentRequired: "Additional Payment Required",
+  readyToProceed: "Ready to proceed with",
+  additionalPaymentOf: "Additional payment of",
+  required: "required",
+  youWillReceiveRefund: "You will receive a refund of",
+  packageFullyCovered: "Package fully covered by gift card",
 };

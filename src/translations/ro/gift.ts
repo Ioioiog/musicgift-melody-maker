@@ -1,4 +1,3 @@
-
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Împărtășește Darul Muzicii",
@@ -163,4 +162,17 @@ export const giftTranslations = {
   understandAfterConfirmation: "Înțeleg că după confirmare, aceste detalii nu mai pot fi modificate și cardul cadou va fi procesat pentru plată.",
   giftCardPreviewTitle: "Previzualizare Card Cadou",
   howGiftCardWillLook: "Așa va arăta cardul cadou cu datele introduse:",
+
+  // Missing translations for package selection interface
+  packagePrice: "Prețul Pachetului:",
+  giftCardCredit: "Credit Card Cadou:",
+  additionalPayment: "Plată Suplimentară:",
+  refund: "Rambursare:",
+  fullyCovered: "Acoperit Complet",
+  additionalPaymentRequired: "Plată Suplimentară Necesară",
+  readyToProceed: "Gata să continuați cu",
+  additionalPaymentOf: "Plată suplimentară de",
+  required: "necesară",
+  youWillReceiveRefund: "Veți primi o rambursare de",
+  packageFullyCovered: "Pachet acoperit complet de cardul cadou",
 };
