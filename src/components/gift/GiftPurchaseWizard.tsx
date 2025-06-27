@@ -210,9 +210,14 @@ const GiftPurchaseWizard = ({
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        {[50, 100, 200].map(amount => <Button key={amount} variant={formData.gift_amount === amount ? 'default' : 'outline'} onClick={() => handleAmountChange(amount)} className={cn(formData.gift_amount === amount ? "bg-orange-500 hover:bg-orange-600 text-white" : "bg-white/10 border-white/30 text-white hover:bg-white/20")}>
+        {currency === 'RON' ? 
+          [299, 499, 799].map(amount => <Button key={amount} variant={formData.gift_amount === amount ? 'default' : 'outline'} onClick={() => handleAmountChange(amount)} className={cn(formData.gift_amount === amount ? "bg-orange-500 hover:bg-orange-600 text-white" : "bg-white/10 border-white/30 text-white hover:bg-white/20")}>
             {amount} {currency}
-          </Button>)}
+          </Button>) :
+          [50, 100, 200].map(amount => <Button key={amount} variant={formData.gift_amount === amount ? 'default' : 'outline'} onClick={() => handleAmountChange(amount)} className={cn(formData.gift_amount === amount ? "bg-orange-500 hover:bg-orange-600 text-white" : "bg-white/10 border-white/30 text-white hover:bg-white/20")}>
+            {amount} {currency}
+          </Button>)
+        }
       </div>
 
       <div className="space-y-2">
