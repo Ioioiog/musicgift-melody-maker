@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -121,7 +120,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
           }
 
-          if (field.type === 'email') {
+          if (field.field_type === 'email') {
             if (field.required) {
               fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') }).email({ message: t('invalidEmail', 'Please enter a valid email address') });
             } else {
@@ -129,7 +128,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             }
           }
 
-          if (field.type === 'url') {
+          if (field.field_type === 'url') {
             if (field.required) {
               fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') }).url({ message: t('invalidUrl', 'Please enter a valid URL') });
             } else {
@@ -137,7 +136,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             }
           }
 
-          shape[field.key] = fieldSchema;
+          shape[field.field_name] = fieldSchema;
         });
       }
     }
@@ -171,11 +170,22 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     return z.object(shape);
   }, [steps, formData.invoiceType, t, currentStep]);
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { handleSubmit, formState: { errors }, setValue, getValues } = useForm({
     resolver: zodResolver(validationSchema),
     mode: "onChange",
     defaultValues: formData
   });
+
+  // Enhanced field change handler that updates both form state and custom state
+  const handleFieldChange = useCallback((fieldName: string, value: any) => {
+    console.log('Field change:', fieldName, value);
+    
+    // Update the form state
+    setValue(fieldName, value, { shouldValidate: true });
+    
+    // Update the custom state
+    handleInputChange(fieldName, value);
+  }, [setValue, handleInputChange]);
 
   const onSubmit = async (data: any) => {
     console.log('Form submitted, current step:', currentStep);
@@ -280,10 +290,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
             {steps[currentStep - 1] && steps[currentStep - 1].fields.map((field: any) => (
               <FormFieldRenderer
-                key={field.key}
+                key={field.field_name}
                 field={field}
-                value={formData[field.key]}
-                onChange={(value) => handleInputChange(field.key, value)}
+                value={formData[field.field_name]}
+                onChange={(value) => handleFieldChange(field.field_name, value)}
                 selectedAddons={selectedAddons}
                 onAddonChange={handleAddonChange}
                 availableAddons={addons}
@@ -308,9 +318,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                   id="invoiceType"
                   className="w-full bg-white/10 border-white/30 rounded px-3 py-2 text-white/80 focus:outline-none focus:ring-2 focus:ring-orange-500"
                   value={formData.invoiceType || ''}
-                  {...register('invoiceType')}
                   onChange={(e) => {
-                    handleInputChange('invoiceType', e.target.value);
+                    handleFieldChange('invoiceType', e.target.value);
                   }}
                 >
                   <option value="individual">{t('individual', 'Individual')}</option>
@@ -327,8 +336,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       type="text"
                       id="companyName"
                       className="bg-white/10 border-white/30 text-white/80"
-                      {...register('companyName')}
-                      onChange={(e) => handleInputChange('companyName', e.target.value)}
+                      value={formData.companyName || ''}
+                      onChange={(e) => handleFieldChange('companyName', e.target.value)}
                     />
                     {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>}
                   </div>
@@ -338,8 +347,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       type="text"
                       id="vatCode"
                       className="bg-white/10 border-white/30 text-white/80"
-                      {...register('vatCode')}
-                      onChange={(e) => handleInputChange('vatCode', e.target.value)}
+                      value={formData.vatCode || ''}
+                      onChange={(e) => handleFieldChange('vatCode', e.target.value)}
                     />
                     {errors.vatCode && <p className="text-red-500 text-sm mt-1">{errors.vatCode.message}</p>}
                   </div>
@@ -349,8 +358,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       type="text"
                       id="registrationNumber"
                       className="bg-white/10 border-white/30 text-white/80"
-                      {...register('registrationNumber')}
-                      onChange={(e) => handleInputChange('registrationNumber', e.target.value)}
+                      value={formData.registrationNumber || ''}
+                      onChange={(e) => handleFieldChange('registrationNumber', e.target.value)}
                     />
                     {errors.registrationNumber && <p className="text-red-500 text-sm mt-1">{errors.registrationNumber.message}</p>}
                   </div>
@@ -360,8 +369,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       type="text"
                       id="companyAddress"
                       className="bg-white/10 border-white/30 text-white/80"
-                      {...register('companyAddress')}
-                      onChange={(e) => handleInputChange('companyAddress', e.target.value)}
+                      value={formData.companyAddress || ''}
+                      onChange={(e) => handleFieldChange('companyAddress', e.target.value)}
                     />
                     {errors.companyAddress && <p className="text-red-500 text-sm mt-1">{errors.companyAddress.message}</p>}
                   </div>
@@ -371,8 +380,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       type="text"
                       id="representativeName"
                       className="bg-white/10 border-white/30 text-white/80"
-                      {...register('representativeName')}
-                      onChange={(e) => handleInputChange('representativeName', e.target.value)}
+                      value={formData.representativeName || ''}
+                      onChange={(e) => handleFieldChange('representativeName', e.target.value)}
                     />
                     {errors.representativeName && <p className="text-red-500 text-sm mt-1">{errors.representativeName.message}</p>}
                   </div>
@@ -385,8 +394,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       type="text"
                       id="address"
                       className="bg-white/10 border-white/30 text-white/80"
-                      {...register('address')}
-                      onChange={(e) => handleInputChange('address', e.target.value)}
+                      value={formData.address || ''}
+                      onChange={(e) => handleFieldChange('address', e.target.value)}
                     />
                     {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
                   </div>
@@ -396,8 +405,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       type="text"
                       id="city"
                       className="bg-white/10 border-white/30 text-white/80"
-                      {...register('city')}
-                      onChange={(e) => handleInputChange('city', e.target.value)}
+                      value={formData.city || ''}
+                      onChange={(e) => handleFieldChange('city', e.target.value)}
                     />
                     {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>}
                   </div>
@@ -438,7 +447,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                 <Checkbox
                   id="acceptMentionObligation"
                   className="border-white/30 focus:ring-orange-500"
-                  {...register('acceptMentionObligation')}
+                  checked={formData.acceptMentionObligation || false}
+                  onCheckedChange={(checked) => handleFieldChange('acceptMentionObligation', checked)}
                 />
                 <Label htmlFor="acceptMentionObligation" className="text-white/80">{t('acceptMentionObligation', 'I accept the mention obligation')}</Label>
                 {errors.acceptMentionObligation && <p className="text-red-500 text-sm mt-1">{errors.acceptMentionObligation.message}</p>}
@@ -448,7 +458,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                 <Checkbox
                   id="acceptDistribution"
                   className="border-white/30 focus:ring-orange-500"
-                  {...register('acceptDistribution')}
+                  checked={formData.acceptDistribution || false}
+                  onCheckedChange={(checked) => handleFieldChange('acceptDistribution', checked)}
                 />
                 <Label htmlFor="acceptDistribution" className="text-white/80">{t('acceptDistribution', 'I accept distribution')}</Label>
                 {errors.acceptDistribution && <p className="text-red-500 text-sm mt-1">{errors.acceptDistribution.message}</p>}
@@ -458,7 +469,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                 <Checkbox
                   id="finalNote"
                   className="border-white/30 focus:ring-orange-500"
-                  {...register('finalNote')}
+                  checked={formData.finalNote || false}
+                  onCheckedChange={(checked) => handleFieldChange('finalNote', checked)}
                 />
                 <Label htmlFor="finalNote" className="text-white/80">{t('finalNote', 'I agree to final terms')}</Label>
                 {errors.finalNote && <p className="text-red-500 text-sm mt-1">{errors.finalNote.message}</p>}
