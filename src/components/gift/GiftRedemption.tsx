@@ -172,8 +172,8 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
             </div>}
 
           {validatedGiftCard.message_text && <div className="space-y-1">
-              <span className="text-sm text-gray-600">{t('messageFromSender')}:</span>
-              <p className="text-sm text-purple-600 bg-purple-50/10 p-2 rounded">
+              <span className="text-sm text-zinc-50">{t('messageFromSender')}:</span>
+              <p className="bg-purple-50/10 p-2 rounded text-slate-50 text-base">
                 "{validatedGiftCard.message_text}"
               </p>
             </div>}
