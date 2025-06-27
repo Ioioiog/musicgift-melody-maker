@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -7,7 +6,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { formatCurrency } from '@/utils/pricing';
 import { Gift, Check, AlertCircle } from 'lucide-react';
-
 interface GiftCardRedemptionSummaryProps {
   giftCard: any;
   selectedPackage: Package;
@@ -19,17 +17,18 @@ interface GiftCardRedemptionSummaryProps {
     canAfford: boolean;
   };
 }
-
 const GiftCardRedemptionSummary: React.FC<GiftCardRedemptionSummaryProps> = ({
   giftCard,
   selectedPackage,
-  pricing,
+  pricing
 }) => {
-  const { t } = useLanguage();
-  const { currency } = useCurrency();
-
-  return (
-    <Card className="bg-gradient-to-br from-green-50/10 to-green-100/10 border-green-200/30">
+  const {
+    t
+  } = useLanguage();
+  const {
+    currency
+  } = useCurrency();
+  return <Card className="bg-gradient-to-br from-green-50/10 to-green-100/10 border-green-200/30">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-green-500">
           <Gift className="w-5 h-5" />
@@ -42,7 +41,7 @@ const GiftCardRedemptionSummary: React.FC<GiftCardRedemptionSummaryProps> = ({
           <div className="space-y-3">
             <h4 className="font-medium text-slate-200">Gift Card Details</h4>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
+              <div className="flex justify-between bg-slate-50">
                 <span className="text-slate-400">Code:</span>
                 <span className="text-slate-200 font-mono">{giftCard.code}</span>
               </div>
@@ -52,14 +51,12 @@ const GiftCardRedemptionSummary: React.FC<GiftCardRedemptionSummaryProps> = ({
                   {formatCurrency(pricing.giftCardValue, currency)}
                 </span>
               </div>
-              {giftCard.message_text && (
-                <div className="space-y-1">
+              {giftCard.message_text && <div className="space-y-1">
                   <span className="text-slate-400">Message:</span>
                   <p className="text-slate-300 text-xs bg-slate-800/50 p-2 rounded">
                     "{giftCard.message_text}"
                   </p>
-                </div>
-              )}
+                </div>}
             </div>
           </div>
 
@@ -100,8 +97,7 @@ const GiftCardRedemptionSummary: React.FC<GiftCardRedemptionSummaryProps> = ({
               </span>
             </div>
             <div className="border-t border-slate-600 pt-2 mt-2">
-              {pricing.additionalPaymentRequired > 0 ? (
-                <div className="flex justify-between font-medium">
+              {pricing.additionalPaymentRequired > 0 ? <div className="flex justify-between font-medium">
                   <span className="text-orange-400 flex items-center">
                     <AlertCircle className="w-4 h-4 mr-1" />
                     Additional Payment Required:
@@ -109,9 +105,7 @@ const GiftCardRedemptionSummary: React.FC<GiftCardRedemptionSummaryProps> = ({
                   <span className="text-orange-400">
                     {formatCurrency(pricing.additionalPaymentRequired, currency)}
                   </span>
-                </div>
-              ) : (
-                <>
+                </div> : <>
                   <div className="flex justify-between font-medium text-green-400">
                     <span className="flex items-center">
                       <Check className="w-4 h-4 mr-1" />
@@ -119,29 +113,21 @@ const GiftCardRedemptionSummary: React.FC<GiftCardRedemptionSummaryProps> = ({
                     </span>
                     <span>{formatCurrency(0, currency)}</span>
                   </div>
-                  {pricing.refundAmount > 0 && (
-                    <div className="flex justify-between text-green-300 text-sm mt-1">
+                  {pricing.refundAmount > 0 && <div className="flex justify-between text-green-300 text-sm mt-1">
                       <span>Refund Amount:</span>
                       <span>{formatCurrency(pricing.refundAmount, currency)}</span>
-                    </div>
-                  )}
-                </>
-              )}
+                    </div>}
+                </>}
             </div>
           </div>
         </div>
 
         <div className="flex justify-center">
-          <Badge 
-            variant={pricing.canAfford ? "default" : "secondary"}
-            className={`${pricing.canAfford ? 'bg-green-500' : 'bg-orange-500'} text-white`}
-          >
+          <Badge variant={pricing.canAfford ? "default" : "secondary"} className={`${pricing.canAfford ? 'bg-green-500' : 'bg-orange-500'} text-white`}>
             {pricing.canAfford ? "Ready to Proceed" : "Additional Payment Required"}
           </Badge>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default GiftCardRedemptionSummary;
