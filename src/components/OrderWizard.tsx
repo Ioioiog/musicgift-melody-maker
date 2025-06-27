@@ -237,9 +237,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                   field={field}
                   value={formData[field.key]}
                   onChange={(value) => handleInputChange(field.key, value)}
-                  register={register}
-                  error={errors[field.key]?.message}
-                  t={t}
+                  selectedAddons={selectedAddons}
+                  onAddonChange={handleAddonChange}
+                  availableAddons={addons}
+                  addonFieldValues={addonFieldValues}
+                  onAddonFieldChange={handleAddonFieldChange}
+                  selectedPackage={formData.package}
+                  selectedPackageData={selectedPackage}
+                  formData={formData}
                 />
               ))}
             </>
