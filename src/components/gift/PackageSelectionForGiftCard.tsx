@@ -61,9 +61,9 @@ const PackageSelectionForGiftCard: React.FC<PackageSelectionForGiftCardProps> = 
               <CardContent className="space-y-3">
                 <div className="space-y-2">
                   {pkg.includes?.slice(0, 3).map((include: any, idx: number) => (
-                    <div key={idx} className="flex items-center text-sm text-slate-300">
+                    <div key={`${pkg.id}-${include.id || include.include_key}-${idx}`} className="flex items-center text-sm text-slate-300">
                       <Check className="w-3 h-3 mr-2 text-green-400" />
-                      {include.title}
+                      {t(include.include_key)}
                     </div>
                   ))}
                   {pkg.includes && pkg.includes.length > 3 && (
