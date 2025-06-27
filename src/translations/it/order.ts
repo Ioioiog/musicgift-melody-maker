@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   'order': 'Ordine',
   'package': 'Pacchetto',
@@ -35,5 +34,16 @@ export const orderTranslations = {
   'attentionOrderReview': 'Attenzione',
   'attentionOrderReviewText': 'Dopo la conferma, queste informazioni non possono essere modificate. Si prega di controllare attentamente tutti i dettagli.',
   'confirmOrderAccuracy': 'Confermo che tutte le informazioni sono corrette',
-  'confirmOrderAccuracyText': 'Capisco che dopo la conferma, questi dettagli non possono essere modificati e la carta regalo verrà elaborata per il pagamento.'
+  'confirmOrderAccuracyText': 'Capisco che dopo la conferma, questi dettagli non possono essere modificati e la carta regalo verrà elaborata per il pagamento.',
+  
+  // Payment Processing - NEW
+  'paymentProcessing': 'Il tuo pagamento è in elaborazione. Attendere prego...',
+  'processingPayment': 'Elaborazione pagamento',
+  'paymentComplete': 'Pagamento completato',
+  'paymentSuccessful': 'Pagamento completato con successo!',
+  'paymentFailed': 'Pagamento fallito. Riprova.',
+  'paymentTimeout': 'Verifica del pagamento scaduta. Controlla la tua email o contatta il supporto.',
+  'paymentIssue': 'Problema pagamento',
+  'close': 'Chiudi',
+  'tryAgain': 'Riprova'
 };

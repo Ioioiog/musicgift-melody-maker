@@ -357,8 +357,10 @@ Order Management: View full details in the admin panel.
       let paymentError;
 
       // Route to the correct payment provider (no price conversion in frontend)
+      // NOTE: The OrderWizard will now handle opening payment URLs in new tabs
+      // This function only creates the payment sessions and returns the URLs
       if (paymentProvider === 'stripe') {
-        console.log('🟣 Processing with Stripe');
+        console.log('🟣 Creating Stripe payment session');
         const { data, error } = await supabase.functions.invoke('stripe-create-payment', {
           body: {
             orderData: baseOrderPayload,
@@ -368,7 +370,7 @@ Order Management: View full details in the admin panel.
         paymentResponse = data;
         paymentError = error;
       } else if (paymentProvider === 'revolut') {
-        console.log('🟠 Processing with Revolut');
+        console.log('🟠 Creating Revolut payment session');
         const { data, error } = await supabase.functions.invoke('revolut-create-payment', {
           body: {
             orderData: baseOrderPayload,
@@ -378,7 +380,7 @@ Order Management: View full details in the admin panel.
         paymentResponse = data;
         paymentError = error;
       } else if (paymentProvider === 'smartbill') {
-        console.log('🔵 Processing with SmartBill');
+        console.log('🔵 Creating SmartBill payment session');
         const { data, error } = await supabase.functions.invoke('smartbill-create-invoice', {
           body: {
             orderData: baseOrderPayload
@@ -427,14 +429,10 @@ Order Management: View full details in the admin panel.
         variant: "default"
       });
 
-      // Handle payment redirection based on provider
-      if (paymentResponse?.paymentUrl && finalPrice > 0) {
-        console.log(`🔗 Redirecting to ${paymentProvider.toUpperCase()} payment:`, paymentResponse.paymentUrl);
-        window.location.href = paymentResponse.paymentUrl;
-      } else {
-        console.log("✅ Order completed successfully - no payment required or direct completion");
-        navigate('/payment/success?orderId=' + paymentResponse.orderId);
-      }
+      // NOTE: Payment URL handling is now done in OrderWizard component
+      // The payment will open in a new tab with status checking
+      console.log("✅ Order creation completed - payment will be handled by OrderWizard");
+      
     } catch (error) {
       console.error("💥 Error processing order:", error);
       toast({

@@ -1,5 +1,4 @@
-
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePackages, useAddons, usePackageSteps } from '@/hooks/usePackageData';
@@ -11,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useOrderWizardState } from '@/hooks/useOrderWizardState';
 import { validateFormData, prepareOrderData } from '@/utils/orderValidation';
+import { useOrderPayment } from '@/hooks/useOrderPayment';
 import FormFieldRenderer from './order/FormFieldRenderer';
 import StepIndicator from './order/StepIndicator';
 import PackageSelectionStep from './order/PackageSelectionStep';
@@ -18,6 +18,7 @@ import AddonSelectionStep from './order/AddonSelectionStep';
 import PaymentProviderSelection from './order/PaymentProviderSelection';
 import ContactLegalStep from './order/ContactLegalStep';
 import OrderReviewStep from './order/OrderReviewStep';
+import OrderPaymentStatusChecker from './order/OrderPaymentStatusChecker';
 import WizardNavigation from './order/WizardNavigation';
 
 interface OrderWizardProps {
@@ -64,6 +65,24 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const { data: addons = [] } = useAddons();
   const selectedPackage = formData.package as string;
   const { data: allPackageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
+
+  // Payment processing state
+  const { isPaymentProcessing, paymentProvider: processingProvider, openPaymentWindow, closePaymentWindow } = useOrderPayment();
+  const [processingOrderId, setProcessingOrderId] = useState<string>('');
+
+  // Listen for payment window closure
+  useEffect(() => {
+    const handlePaymentWindowClosed = (event: CustomEvent) => {
+      console.log('🔔 Payment window closed event received:', event.detail);
+      // The OrderPaymentStatusChecker will handle the status checking
+    };
+
+    window.addEventListener('payment-window-closed', handlePaymentWindowClosed as EventListener);
+    
+    return () => {
+      window.removeEventListener('payment-window-closed', handlePaymentWindowClosed as EventListener);
+    };
+  }, []);
 
   // Calculate the base total price
   const calculateBaseTotal = () => {
@@ -406,9 +425,9 @@ Quote Management: Please review and respond to the customer with a personalized 
       
       const orderData = prepareOrderData(formData, selectedAddons, addonFieldValues, selectedPackage, selectedPaymentProvider, finalTotal, packages, currency);
 
-      // Handle SmartBill payment with enhanced error handling and logging
+      // Handle SmartBill payment with new tab approach
       if (selectedPaymentProvider === 'smartbill') {
-        console.log('🔵 Processing payment with SmartBill');
+        console.log('🔵 Processing payment with SmartBill (new tab)');
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('smartbill-create-invoice', {
           body: { orderData }
         });
@@ -439,14 +458,15 @@ Quote Management: Please review and respond to the customer with a personalized 
         }
         if (paymentResponse.paymentUrl) {
           console.log('✅ SmartBill payment URL generated successfully');
-          console.log('🔗 Redirecting to SmartBill payment page');
-          window.location.href = paymentResponse.paymentUrl;
+          console.log('🔗 Opening SmartBill payment in new tab');
+          setProcessingOrderId(paymentResponse.orderId);
+          openPaymentWindow(paymentResponse.paymentUrl, 'SmartBill-Netopia', paymentResponse.orderId);
         } else {
           console.log('✅ Order completed - no payment required');
           navigate('/payment/success?orderId=' + paymentResponse.orderId);
         }
       } else if (selectedPaymentProvider === 'stripe') {
-        console.log('🟣 Processing payment with Stripe');
+        console.log('🟣 Processing payment with Stripe (new tab)');
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('stripe-create-payment', {
           body: {
             orderData: orderData,
@@ -459,12 +479,14 @@ Quote Management: Please review and respond to the customer with a personalized 
           throw new Error(errorMessage);
         }
         if (paymentResponse.paymentUrl) {
-          window.location.href = paymentResponse.paymentUrl;
+          console.log('🔗 Opening Stripe payment in new tab');
+          setProcessingOrderId(paymentResponse.orderId);
+          openPaymentWindow(paymentResponse.paymentUrl, 'Stripe', paymentResponse.orderId);
         } else {
           throw new Error('No payment URL received from Stripe');
         }
       } else if (selectedPaymentProvider === 'revolut') {
-        console.log('🟠 Processing payment with Revolut');
+        console.log('🟠 Processing payment with Revolut (new tab)');
         const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('revolut-create-payment', {
           body: {
             orderData: orderData,
@@ -477,7 +499,9 @@ Quote Management: Please review and respond to the customer with a personalized 
           throw new Error(errorMessage);
         }
         if (paymentResponse.paymentUrl) {
-          window.location.href = paymentResponse.paymentUrl;
+          console.log('🔗 Opening Revolut payment in new tab');
+          setProcessingOrderId(paymentResponse.orderId);
+          openPaymentWindow(paymentResponse.paymentUrl, 'Revolut', paymentResponse.orderId);
         } else {
           navigate('/payment/success?orderId=' + paymentResponse.orderId);
         }
@@ -533,6 +557,23 @@ Quote Management: Please review and respond to the customer with a personalized 
     }
     return true;
   };
+
+  // Show payment status checker if payment is processing
+  if (isPaymentProcessing) {
+    return (
+      <div className="w-full">
+        <Card className="bg-transparent border-transparent shadow-none backdrop-blur-0">
+          <CardContent className="p-1.5">
+            <OrderPaymentStatusChecker
+              orderId={processingOrderId}
+              provider={processingProvider}
+              onClose={closePaymentWindow}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">

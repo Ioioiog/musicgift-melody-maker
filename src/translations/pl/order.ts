@@ -1,4 +1,3 @@
-
 export const orderTranslations = {
   'order': 'Zamówienie',
   'package': 'Pakiet',
@@ -35,5 +34,16 @@ export const orderTranslations = {
   'attentionOrderReview': 'Uwaga',
   'attentionOrderReviewText': 'Po potwierdzeniu te informacje nie mogą być już modyfikowane. Prosimy o dokładne sprawdzenie wszystkich szczegółów.',
   'confirmOrderAccuracy': 'Potwierdzam, że wszystkie informacje są prawidłowe',
-  'confirmOrderAccuracyText': 'Rozumiem, że po potwierdzeniu te szczegóły nie mogą być już modyfikowane, a karta podarunkowa zostanie przetworzona do płatności.'
+  'confirmOrderAccuracyText': 'Rozumiem, że po potwierdzeniu te szczegóły nie mogą być już modyfikowane, a karta podarunkowa zostanie przetworzona do płatności.',
+  
+  // Payment Processing - NEW
+  'paymentProcessing': 'Twoja płatność jest przetwarzana. Proszę czekać...',
+  'processingPayment': 'Przetwarzanie płatności',
+  'paymentComplete': 'Płatność zakończona',
+  'paymentSuccessful': 'Płatność zakończona pomyślnie!',
+  'paymentFailed': 'Płatność nieudana. Spróbuj ponownie.',
+  'paymentTimeout': 'Weryfikacja płatności przekroczyła limit czasu. Sprawdź email lub skontaktuj się z obsługą.',
+  'paymentIssue': 'Problem z płatnością',
+  'close': 'Zamknij',
+  'tryAgain': 'Spróbuj ponownie'
 };

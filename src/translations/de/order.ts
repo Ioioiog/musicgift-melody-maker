@@ -34,5 +34,16 @@ export const orderTranslations = {
   'attentionOrderReview': 'Achtung',
   'attentionOrderReviewText': 'Nach der Bestätigung können diese Informationen nicht mehr geändert werden. Bitte überprüfen Sie alle Details sorgfältig.',
   'confirmOrderAccuracy': 'Ich bestätige, dass alle Informationen korrekt sind',
-  'confirmOrderAccuracyText': 'Ich verstehe, dass nach der Bestätigung diese Details nicht mehr geändert werden können und die Geschenkkarte für die Zahlung verarbeitet wird.'
+  'confirmOrderAccuracyText': 'Ich verstehe, dass nach der Bestätigung diese Details nicht mehr geändert werden können und die Geschenkkarte für die Zahlung verarbeitet wird.',
+  
+  // Payment Processing - NEW
+  'paymentProcessing': 'Ihre Zahlung wird bearbeitet. Bitte warten...',
+  'processingPayment': 'Zahlung wird bearbeitet',
+  'paymentComplete': 'Zahlung abgeschlossen',
+  'paymentSuccessful': 'Zahlung erfolgreich abgeschlossen!',
+  'paymentFailed': 'Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut.',
+  'paymentTimeout': 'Zahlungsüberprüfung ist abgelaufen. Bitte überprüfen Sie Ihre E-Mail oder kontaktieren Sie den Support.',
+  'paymentIssue': 'Zahlungsproblem',
+  'close': 'Schließen',
+  'tryAgain': 'Erneut versuchen'
 };

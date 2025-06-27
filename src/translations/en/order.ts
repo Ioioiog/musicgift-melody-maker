@@ -592,5 +592,16 @@ export const orderTranslations = {
   viewManageOrders: 'View and manage your orders',
   backHome: 'Back Home',
   loadingOrdersError: 'Error loading orders',
-  noOrdersYet: 'No orders yet'
+  noOrdersYet: 'No orders yet',
+  
+  // Payment Processing - NEW
+  'paymentProcessing': 'Your payment is being processed. Please wait...',
+  'processingPayment': 'Processing Payment',
+  'paymentComplete': 'Payment Complete',
+  'paymentSuccessful': 'Payment completed successfully!',
+  'paymentFailed': 'Payment failed. Please try again.',
+  'paymentTimeout': 'Payment verification timed out. Please check your email or contact support.',
+  'paymentIssue': 'Payment Issue',
+  'close': 'Close',
+  'tryAgain': 'Try Again'
 };

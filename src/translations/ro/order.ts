@@ -1,5 +1,3 @@
-
-
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -79,7 +77,7 @@ export const orderTranslations = {
   // Universal UI Elements
   selectAddons: "Selectați suplimente",
   contactDetailsStep: "Detalii de contact și legale",
-  fillContactAndLegalInfo: "Completați detaliile de contact și acceptați termenii legali",
+  fillContactAndLegalInfo: "Completați detaliile de contact și acceptați termenii legale",
   choosePaymentMethod: "Alegeți metoda de plată",
   selectPaymentProvider: "Selectați cum doriți să plătiți comanda",
   proceedToNextStep: "Puteți trece la următorul pas",
@@ -594,6 +592,16 @@ export const orderTranslations = {
   viewManageOrders: 'Vizualizați și gestionați comenzile dvs.',
   backHome: 'Înapoi acasă',
   orderHistoryError: 'Eroare la încărcarea comenzilor',
-  noOrdersYet: 'Nu aveți încă comenzi'
+  noOrdersYet: 'Nu aveți încă comenzi',
+  
+  // Payment Processing - NEW
+  'paymentProcessing': 'Plata dvs. este procesată. Vă rugăm să așteptați...',
+  'processingPayment': 'Procesarea plății',
+  'paymentComplete': 'Plată finalizată',
+  'paymentSuccessful': 'Plata a fost finalizată cu succes!',
+  'paymentFailed': 'Plata a eșuat. Vă rugăm să încercați din nou.',
+  'paymentTimeout': 'Verificarea plății a expirat. Vă rugăm să verificați email-ul sau să contactați suportul.',
+  'paymentIssue': 'Problemă la plată',
+  'close': 'Închide',
+  'tryAgain': 'Încercați din nou'
 };
-
