@@ -136,4 +136,32 @@ export const giftTranslations = {
   
   // Updated help text for German
   giftCardHelp: "Geschenkkarten beginnen mit MG-XXXX-XXXX",
+  
+  // Missing error messages
+  giftCardNotActive: "Diese Geschenkkarte ist nicht aktiv.",
+  giftCardNotFound: "Geschenkkarte nicht gefunden. Bitte überprüfen Sie den Code und versuchen Sie es erneut.",
+  invalidDiscountCode: "Ungültiger Rabattcode oder erfüllt nicht die Anforderungen.",
+  codeApplyError: "Code konnte nicht angewendet werden. Bitte versuchen Sie es erneut.",
+  
+  // Missing alert/warning translations
+  warningAfterConfirmation: "Achtung: Nach der Bestätigung können diese Informationen nicht mehr geändert werden. Bitte überprüfen Sie alle Details sorgfältig.",
+  finalGiftCardPreview: "Finale Geschenkkarten-Vorschau",
+  
+  // Missing gift card details section translations
+  completeGiftCardDetails: "Vollständige Geschenkkarten-Details",
+  senderInformation: "Absender-Informationen",
+  recipientInformation: "Empfänger-Informationen",
+  giftCardDetailsSection: "Geschenkkarten-Details",
+  
+  // Missing form labels
+  name: "Name:",
+  email: "E-Mail:",
+  value: "Wert:",
+  
+  // Missing payment and confirmation translations
+  choosePaymentMethod: "Zahlungsmethode Wählen",
+  confirmAllCorrect: "Ich bestätige, dass alle Informationen korrekt sind",
+  understandAfterConfirmation: "Ich verstehe, dass nach der Bestätigung diese Details nicht mehr geändert werden können und die Geschenkkarte zur Zahlung verarbeitet wird.",
+  giftCardPreviewTitle: "Geschenkkarten-Vorschau",
+  howGiftCardWillLook: "So wird Ihre Geschenkkarte mit den eingegebenen Daten aussehen:",
 };

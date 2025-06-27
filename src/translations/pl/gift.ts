@@ -94,8 +94,12 @@ export const giftTranslations = {
   invalidGiftCardCode: "Nieprawidłowy kod karty podarunkowej. Sprawdź i spróbuj ponownie.",
   giftCardAlreadyUsed: "Ta karta podarunkowa została już wykorzystana.",
   giftCardExpired: "Ta karta podarunkowa wygasła.",
+  giftCardNotActive: "Ta karta podarunkowa nie jest aktywna.",
+  giftCardNotFound: "Karta podarunkowa nie została znaleziona. Sprawdź kod i spróbuj ponownie.",
   failedToCreateGiftCard: "Nie udało się utworzyć karty podarunkowej. Spróbuj ponownie.",
   failedToValidateGiftCard: "Nie udało się zweryfikować karty podarunkowej. Spróbuj ponownie.",
+  invalidDiscountCode: "Nieprawidłowy kod zniżkowy lub nie spełnia wymagań.",
+  codeApplyError: "Nie udało się zastosować kodu. Spróbuj ponownie.",
   
   // Common actions
   back: "Wstecz",
@@ -121,4 +125,41 @@ export const giftTranslations = {
   stepXOfY: "Krok {{current}} z {{total}}",
   customAmountLabel: "Niestandardowa Kwota",
   validateGiftCard: "Zatwierdź",
+  
+  // Order review translations
+  reviewOrder: "Przejrzyj Swoje Zamówienie",
+  pleaseReviewOrderDetails: "Prosimy o przejrzenie wszystkich szczegółów przed przystąpieniem do płatności",
+  selectedPackage: "Wybrany Pakiet",
+  selectedAddons: "Wybrane Dodatki",
+  priceBreakdown: "Podział Ceny",
+  subtotal: "Suma częściowa",
+  discount: "Zniżka",
+  total: "Razem",
+  customerInformation: "Informacje o Kliencie",
+  legalConfirmations: "Potwierdzenia Prawne",
+  
+  // Updated help text
+  giftCardHelp: "Karty podarunkowe zaczynają się od MG-XXXX-XXXX",
+  
+  // Missing alert/warning translations
+  warningAfterConfirmation: "Uwaga: Po potwierdzeniu te informacje nie mogą być już zmienione. Prosimy o uważne sprawdzenie wszystkich szczegółów.",
+  finalGiftCardPreview: "Ostateczny Podgląd Karty Podarunkowej",
+  
+  // Missing gift card details section translations
+  completeGiftCardDetails: "Pełne Szczegóły Karty Podarunkowej",
+  senderInformation: "Informacje Nadawcy",
+  recipientInformation: "Informacje Odbiorcy",
+  giftCardDetailsSection: "Szczegóły Karty Podarunkowej",
+  
+  // Missing form labels
+  name: "Imię:",
+  email: "Email:",
+  value: "Wartość:",
+  
+  // Missing payment and confirmation translations
+  choosePaymentMethod: "Wybierz Metodę Płatności",
+  confirmAllCorrect: "Potwierdzam, że wszystkie informacje są poprawne",
+  understandAfterConfirmation: "Rozumiem, że po potwierdzeniu te szczegóły nie mogą być już zmienione, a karta podarunkowa zostanie przetworziona do płatności.",
+  giftCardPreviewTitle: "Podgląd Karty Podarunkowej",
+  howGiftCardWillLook: "Tak będzie wyglądać karta podarunkowa z wprowadzonymi danymi:",
 };

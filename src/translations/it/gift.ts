@@ -94,8 +94,12 @@ export const giftTranslations = {
   invalidGiftCardCode: "Codice carta regalo non valido. Controlla e riprova.",
   giftCardAlreadyUsed: "Questa carta regalo è già stata utilizzata.",
   giftCardExpired: "Questa carta regalo è scaduta.",
+  giftCardNotActive: "Questa carta regalo non è attiva.",
+  giftCardNotFound: "Carta regalo non trovata. Controlla il codice e riprova.",
   failedToCreateGiftCard: "Creazione carta regalo fallita. Riprova.",
   failedToValidateGiftCard: "Convalida carta regalo fallita. Riprova.",
+  invalidDiscountCode: "Codice sconto non valido o non soddisfa i requisiti.",
+  codeApplyError: "Applicazione del codice fallita. Riprova.",
   
   // Common actions
   back: "Indietro",
@@ -121,4 +125,41 @@ export const giftTranslations = {
   stepXOfY: "Passo {{current}} di {{total}}",
   customAmountLabel: "Importo Personalizzato",
   validateGiftCard: "Convalida",
+  
+  // Order review translations
+  reviewOrder: "Rivedi il Tuo Ordine",
+  pleaseReviewOrderDetails: "Ti preghiamo di rivedere tutti i dettagli prima di procedere al pagamento",
+  selectedPackage: "Pacchetto Selezionato",
+  selectedAddons: "Supplementi Selezionati",
+  priceBreakdown: "Ripartizione Prezzo",
+  subtotal: "Subtotale",
+  discount: "Sconto",
+  total: "Totale",
+  customerInformation: "Informazioni Cliente",
+  legalConfirmations: "Conferme Legali",
+  
+  // Updated help text
+  giftCardHelp: "Le carte regalo iniziano con MG-XXXX-XXXX",
+  
+  // Missing alert/warning translations
+  warningAfterConfirmation: "Attenzione: Dopo la conferma, queste informazioni non possono più essere modificate. Ti preghiamo di verificare attentamente tutti i dettagli.",
+  finalGiftCardPreview: "Anteprima Finale Carta Regalo",
+  
+  // Missing gift card details section translations
+  completeGiftCardDetails: "Dettagli Completi Carta Regalo",
+  senderInformation: "Informazioni Mittente",
+  recipientInformation: "Informazioni Destinatario",
+  giftCardDetailsSection: "Dettagli Carta Regalo",
+  
+  // Missing form labels
+  name: "Nome:",
+  email: "Email:",
+  value: "Valore:",
+  
+  // Missing payment and confirmation translations
+  choosePaymentMethod: "Scegli il Metodo di Pagamento",
+  confirmAllCorrect: "Confermo che tutte le informazioni sono corrette",
+  understandAfterConfirmation: "Comprendo che dopo la conferma, questi dettagli non possono più essere modificati e la carta regalo sarà elaborata per il pagamento.",
+  giftCardPreviewTitle: "Anteprima Carta Regalo",
+  howGiftCardWillLook: "Ecco come apparirà la carta regalo con i tuoi dati:",
 };

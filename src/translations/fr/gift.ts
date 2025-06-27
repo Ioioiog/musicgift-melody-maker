@@ -94,8 +94,12 @@ export const giftTranslations = {
   invalidGiftCardCode: "Code de carte cadeau invalide. Veuillez vérifier et réessayer.",
   giftCardAlreadyUsed: "Cette carte cadeau a déjà été utilisée.",
   giftCardExpired: "Cette carte cadeau a expiré.",
+  giftCardNotActive: "Cette carte cadeau n'est pas active.",
+  giftCardNotFound: "Carte cadeau introuvable. Veuillez vérifier le code et réessayer.",
   failedToCreateGiftCard: "Échec de la création de la carte cadeau. Veuillez réessayer.",
   failedToValidateGiftCard: "Échec de la validation de la carte cadeau. Veuillez réessayer.",
+  invalidDiscountCode: "Code de réduction invalide ou ne répond pas aux exigences.",
+  codeApplyError: "Échec de l'application du code. Veuillez réessayer.",
   
   // Common actions
   back: "Retour",
@@ -121,4 +125,41 @@ export const giftTranslations = {
   stepXOfY: "Étape {{current}} sur {{total}}",
   customAmountLabel: "Montant Personnalisé",
   validateGiftCard: "Valider",
+  
+  // Order review translations
+  reviewOrder: "Examinez Votre Commande",
+  pleaseReviewOrderDetails: "Veuillez examiner tous les détails avant de procéder au paiement",
+  selectedPackage: "Forfait Sélectionné",
+  selectedAddons: "Suppléments Sélectionnés",
+  priceBreakdown: "Répartition des Prix",
+  subtotal: "Sous-total",
+  discount: "Remise",
+  total: "Total",
+  customerInformation: "Informations Client",
+  legalConfirmations: "Confirmations Légales",
+  
+  // Updated help text
+  giftCardHelp: "Les cartes cadeaux commencent par MG-XXXX-XXXX",
+  
+  // Missing alert/warning translations
+  warningAfterConfirmation: "Attention : Après confirmation, ces informations ne peuvent plus être modifiées. Veuillez vérifier attentivement tous les détails.",
+  finalGiftCardPreview: "Aperçu Final de la Carte Cadeau",
+  
+  // Missing gift card details section translations
+  completeGiftCardDetails: "Détails Complets de la Carte Cadeau",
+  senderInformation: "Informations de l'Expéditeur",
+  recipientInformation: "Informations du Destinataire",
+  giftCardDetailsSection: "Détails de la Carte Cadeau",
+  
+  // Missing form labels
+  name: "Nom :",
+  email: "Email :",
+  value: "Valeur :",
+  
+  // Missing payment and confirmation translations
+  choosePaymentMethod: "Choisissez la Méthode de Paiement",
+  confirmAllCorrect: "Je confirme que toutes les informations sont correctes",
+  understandAfterConfirmation: "Je comprends qu'après confirmation, ces détails ne peuvent plus être modifiés et la carte cadeau sera traitée pour le paiement.",
+  giftCardPreviewTitle: "Aperçu de la Carte Cadeau",
+  howGiftCardWillLook: "Voici à quoi ressemblera la carte cadeau avec vos données :",
 };
