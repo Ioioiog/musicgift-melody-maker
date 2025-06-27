@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,9 +13,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
-import { useForm } from 'react-hook-form';
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import FormFieldRenderer from './order/FormFieldRenderer';
 import PackageSelectionStep from './order/PackageSelectionStep';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
@@ -65,6 +63,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   } = useOrderWizardState({ preselectedPackage });
   const { openPaymentWindow, isPaymentProcessing, paymentProvider } = useOrderPayment();
 
+  // State for form errors
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   // Handle payment response when received
   useEffect(() => {
     if (paymentResponse?.paymentUrl && paymentResponse?.provider && paymentResponse?.orderId) {
@@ -89,108 +90,24 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
   useEffect(() => {
     if (onOrderDataChange) {
+      // Map the custom state to the expected format for OrderSidebarSummary
       onOrderDataChange({
-        ...formData,
-        addons: selectedAddons,
+        selectedPackage: formData.package, // Map package to selectedPackage
+        selectedAddons: selectedAddons,
         addonFieldValues: addonFieldValues,
         paymentProvider: selectedPaymentProvider
       });
     }
-  }, [formData, selectedAddons, addonFieldValues, selectedPaymentProvider, onOrderDataChange]);
+  }, [formData.package, selectedAddons, addonFieldValues, selectedPaymentProvider, onOrderDataChange]);
 
   const selectedPackage = packages.find(pkg => pkg.value === formData.package);
   const steps = selectedPackage?.steps || [];
 
-  const validationSchema = React.useMemo(() => {
-    // Don't create validation schema for step 0 (package selection)
-    if (currentStep === 0) {
-      return z.object({});
-    }
+  // Validation function
+  const validateCurrentStep = () => {
+    const newErrors: Record<string, string> = {};
 
-    const shape: { [key: string]: z.ZodTypeAny } = {};
-
-    // Only validate current step fields for steps 1 to steps.length
-    if (currentStep > 0 && currentStep <= steps.length) {
-      const currentStepData = steps[currentStep - 1];
-      if (currentStepData && currentStepData.fields) {
-        currentStepData.fields.forEach((field: any) => {
-          let fieldSchema: z.ZodTypeAny = z.string().optional();
-
-          if (field.required) {
-            fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-          }
-
-          if (field.field_type === 'email') {
-            if (field.required) {
-              fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') }).email({ message: t('invalidEmail', 'Please enter a valid email address') });
-            } else {
-              fieldSchema = z.string().email({ message: t('invalidEmail', 'Please enter a valid email address') }).optional();
-            }
-          }
-
-          if (field.field_type === 'url') {
-            if (field.required) {
-              fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') }).url({ message: t('invalidUrl', 'Please enter a valid URL') });
-            } else {
-              fieldSchema = z.string().url({ message: t('invalidUrl', 'Please enter a valid URL') }).optional();
-            }
-          }
-
-          shape[field.field_name] = fieldSchema;
-        });
-      }
-    }
-
-    // Add validation for final step (contact details & legal)
-    if (currentStep > steps.length) {
-      shape['invoiceType'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-      if (formData.invoiceType === 'company') {
-        shape['companyName'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-        shape['vatCode'] = z.string().optional();
-        shape['registrationNumber'] = z.string().optional();
-        shape['companyAddress'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-        shape['representativeName'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-      } else {
-        shape['address'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-        shape['city'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-      }
-
-      // Add terms and conditions fields to the schema
-      shape['acceptMentionObligation'] = z.boolean().refine(value => value === true, {
-        message: t('fieldRequired', 'This field is required'),
-      });
-      shape['acceptDistribution'] = z.boolean().refine(value => value === true, {
-        message: t('fieldRequired', 'This field is required'),
-      });
-      shape['finalNote'] = z.boolean().refine(value => value === true, {
-        message: t('fieldRequired', 'This field is required'),
-      });
-    }
-
-    return z.object(shape);
-  }, [steps, formData.invoiceType, t, currentStep]);
-
-  const { handleSubmit, formState: { errors }, setValue, getValues } = useForm({
-    resolver: zodResolver(validationSchema),
-    mode: "onChange",
-    defaultValues: formData
-  });
-
-  // Enhanced field change handler that updates both form state and custom state
-  const handleFieldChange = useCallback((fieldName: string, value: any) => {
-    console.log('Field change:', fieldName, value);
-    
-    // Update the form state
-    setValue(fieldName, value, { shouldValidate: true });
-    
-    // Update the custom state
-    handleInputChange(fieldName, value);
-  }, [setValue, handleInputChange]);
-
-  const onSubmit = async (data: any) => {
-    console.log('Form submitted, current step:', currentStep);
-    
-    // Handle package selection step (step 0)
+    // Step 0: Package selection
     if (currentStep === 0) {
       if (!formData.package) {
         toast({
@@ -198,9 +115,93 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
           description: t('pleaseSelectPackage', 'Please select a package to continue'),
           variant: "destructive"
         });
-        return;
+        return false;
       }
-      // Move to first form step after package selection
+      return true;
+    }
+
+    // Steps 1 to steps.length: Form steps
+    if (currentStep > 0 && currentStep <= steps.length) {
+      const currentStepData = steps[currentStep - 1];
+      if (currentStepData && currentStepData.fields) {
+        currentStepData.fields.forEach((field: any) => {
+          const value = formData[field.field_name];
+          
+          if (field.required && (!value || value.toString().trim() === '')) {
+            newErrors[field.field_name] = t('fieldRequired', 'This field is required');
+          } else if (value) {
+            // Validate email
+            if (field.field_type === 'email') {
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (!emailRegex.test(value)) {
+                newErrors[field.field_name] = t('invalidEmail', 'Please enter a valid email address');
+              }
+            }
+            
+            // Validate URL
+            if (field.field_type === 'url') {
+              try {
+                new URL(value);
+              } catch {
+                newErrors[field.field_name] = t('invalidUrl', 'Please enter a valid URL');
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Final step: Contact details & legal
+    if (currentStep > steps.length) {
+      if (!formData.invoiceType) {
+        newErrors['invoiceType'] = t('fieldRequired', 'This field is required');
+      }
+      
+      if (formData.invoiceType === 'company') {
+        if (!formData.companyName?.trim()) {
+          newErrors['companyName'] = t('fieldRequired', 'This field is required');
+        }
+        if (!formData.companyAddress?.trim()) {
+          newErrors['companyAddress'] = t('fieldRequired', 'This field is required');
+        }
+        if (!formData.representativeName?.trim()) {
+          newErrors['representativeName'] = t('fieldRequired', 'This field is required');
+        }
+      } else {
+        if (!formData.address?.trim()) {
+          newErrors['address'] = t('fieldRequired', 'This field is required');
+        }
+        if (!formData.city?.trim()) {
+          newErrors['city'] = t('fieldRequired', 'This field is required');
+        }
+      }
+
+      // Check legal checkboxes
+      if (!formData.acceptMentionObligation) {
+        newErrors['acceptMentionObligation'] = t('fieldRequired', 'This field is required');
+      }
+      if (!formData.acceptDistribution) {
+        newErrors['acceptDistribution'] = t('fieldRequired', 'This field is required');
+      }
+      if (!formData.finalNote) {
+        newErrors['finalNote'] = t('fieldRequired', 'This field is required');
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Form submitted, current step:', currentStep);
+    
+    if (!validateCurrentStep()) {
+      return;
+    }
+
+    // Handle package selection step (step 0)
+    if (currentStep === 0) {
       setCurrentStep(1);
       return;
     }
@@ -226,7 +227,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       try {
         const orderData = {
           ...formData,
-          ...data,
           addons: selectedAddons,
           addonFieldValues: addonFieldValues,
           paymentProvider: selectedPaymentProvider
@@ -247,11 +247,25 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const handlePrevious = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
+      setErrors({}); // Clear errors when going back
     }
   };
 
   const handlePaymentProviderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPaymentProvider(event.target.value);
+  };
+
+  const handleFieldChange = (fieldName: string, value: any) => {
+    console.log('Field change:', fieldName, value);
+    handleInputChange(fieldName, value);
+    
+    // Clear error for this field when user starts typing
+    if (errors[fieldName]) {
+      setErrors(prev => ({
+        ...prev,
+        [fieldName]: ''
+      }));
+    }
   };
 
   const totalPrice = selectedPackage ? getPackagePrice(selectedPackage, currency) : 0;
@@ -276,7 +290,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         </div>
       )}
       
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {currentStep === 0 ? (
           // Package Selection Step
           <PackageSelectionStep
@@ -302,6 +316,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                 selectedPackage={formData.package}
                 selectedPackageData={selectedPackage}
                 formData={formData}
+                error={errors[field.field_name]}
               />
             ))}
           </>
@@ -317,7 +332,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                 <select
                   id="invoiceType"
                   className="w-full bg-white/10 border-white/30 rounded px-3 py-2 text-white/80 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  value={formData.invoiceType || ''}
+                  value={formData.invoiceType || 'individual'}
                   onChange={(e) => {
                     handleFieldChange('invoiceType', e.target.value);
                   }}
@@ -325,7 +340,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                   <option value="individual">{t('individual', 'Individual')}</option>
                   <option value="company">{t('company', 'Company')}</option>
                 </select>
-                {errors.invoiceType && <p className="text-red-500 text-sm mt-1">{errors.invoiceType.message}</p>}
+                {errors.invoiceType && <p className="text-red-500 text-sm mt-1">{errors.invoiceType}</p>}
               </div>
 
               {formData.invoiceType === 'company' ? (
@@ -339,7 +354,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       value={formData.companyName || ''}
                       onChange={(e) => handleFieldChange('companyName', e.target.value)}
                     />
-                    {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>}
+                    {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName}</p>}
                   </div>
                   <div>
                     <Label htmlFor="vatCode" className="text-white/80">{t('vatCode', 'VAT Code')}</Label>
@@ -350,7 +365,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       value={formData.vatCode || ''}
                       onChange={(e) => handleFieldChange('vatCode', e.target.value)}
                     />
-                    {errors.vatCode && <p className="text-red-500 text-sm mt-1">{errors.vatCode.message}</p>}
+                    {errors.vatCode && <p className="text-red-500 text-sm mt-1">{errors.vatCode}</p>}
                   </div>
                   <div>
                     <Label htmlFor="registrationNumber" className="text-white/80">{t('registrationNumber', 'Registration Number')}</Label>
@@ -361,7 +376,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       value={formData.registrationNumber || ''}
                       onChange={(e) => handleFieldChange('registrationNumber', e.target.value)}
                     />
-                    {errors.registrationNumber && <p className="text-red-500 text-sm mt-1">{errors.registrationNumber.message}</p>}
+                    {errors.registrationNumber && <p className="text-red-500 text-sm mt-1">{errors.registrationNumber}</p>}
                   </div>
                   <div>
                     <Label htmlFor="companyAddress" className="text-white/80">{t('companyAddress', 'Company Address')}</Label>
@@ -372,7 +387,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       value={formData.companyAddress || ''}
                       onChange={(e) => handleFieldChange('companyAddress', e.target.value)}
                     />
-                    {errors.companyAddress && <p className="text-red-500 text-sm mt-1">{errors.companyAddress.message}</p>}
+                    {errors.companyAddress && <p className="text-red-500 text-sm mt-1">{errors.companyAddress}</p>}
                   </div>
                   <div>
                     <Label htmlFor="representativeName" className="text-white/80">{t('representativeName', 'Representative Name')}</Label>
@@ -383,7 +398,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       value={formData.representativeName || ''}
                       onChange={(e) => handleFieldChange('representativeName', e.target.value)}
                     />
-                    {errors.representativeName && <p className="text-red-500 text-sm mt-1">{errors.representativeName.message}</p>}
+                    {errors.representativeName && <p className="text-red-500 text-sm mt-1">{errors.representativeName}</p>}
                   </div>
                 </>
               ) : (
@@ -397,7 +412,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       value={formData.address || ''}
                       onChange={(e) => handleFieldChange('address', e.target.value)}
                     />
-                    {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
+                    {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
                   </div>
                   <div>
                     <Label htmlFor="city" className="text-white/80">{t('city', 'City')}</Label>
@@ -408,7 +423,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                       value={formData.city || ''}
                       onChange={(e) => handleFieldChange('city', e.target.value)}
                     />
-                    {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>}
+                    {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
                   </div>
                 </>
               )}
@@ -451,7 +466,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                   onCheckedChange={(checked) => handleFieldChange('acceptMentionObligation', checked)}
                 />
                 <Label htmlFor="acceptMentionObligation" className="text-white/80">{t('acceptMentionObligation', 'I accept the mention obligation')}</Label>
-                {errors.acceptMentionObligation && <p className="text-red-500 text-sm mt-1">{errors.acceptMentionObligation.message}</p>}
+                {errors.acceptMentionObligation && <p className="text-red-500 text-sm mt-1">{errors.acceptMentionObligation}</p>}
               </div>
 
               <div className="flex items-center space-x-2">
@@ -462,7 +477,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                   onCheckedChange={(checked) => handleFieldChange('acceptDistribution', checked)}
                 />
                 <Label htmlFor="acceptDistribution" className="text-white/80">{t('acceptDistribution', 'I accept distribution')}</Label>
-                {errors.acceptDistribution && <p className="text-red-500 text-sm mt-1">{errors.acceptDistribution.message}</p>}
+                {errors.acceptDistribution && <p className="text-red-500 text-sm mt-1">{errors.acceptDistribution}</p>}
               </div>
 
               <div className="flex items-center space-x-2">
@@ -473,7 +488,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                   onCheckedChange={(checked) => handleFieldChange('finalNote', checked)}
                 />
                 <Label htmlFor="finalNote" className="text-white/80">{t('finalNote', 'I agree to final terms')}</Label>
-                {errors.finalNote && <p className="text-red-500 text-sm mt-1">{errors.finalNote.message}</p>}
+                {errors.finalNote && <p className="text-red-500 text-sm mt-1">{errors.finalNote}</p>}
               </div>
             </div>
 
