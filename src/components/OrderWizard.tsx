@@ -270,8 +270,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   };
 
   const handlePrevious = () => {
+    console.log('Previous button clicked, current step:', currentStep);
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+      const newStep = currentStep - 1;
+      console.log('Moving to previous step:', newStep);
+      setCurrentStep(newStep);
       setErrors({}); // Clear errors when going back
     }
   };
@@ -592,7 +595,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
         <div className="flex justify-between mt-6">
           {currentStep > 0 && (
-            <Button variant="outline" onClick={handlePrevious} className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+            <Button 
+              type="button"
+              variant="outline" 
+              onClick={handlePrevious} 
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+              disabled={isSubmitting}
+            >
               {t('previous', 'Previous')}
             </Button>
           )}
