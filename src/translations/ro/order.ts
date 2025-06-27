@@ -57,6 +57,12 @@ export const orderTranslations = {
   giftCardBalance: "Sold:",
   giftCardRemaining: "Rămas după comandă:",
   
+  // Order Review Confirmation - NEW
+  attentionOrderReview: "Atenție",
+  attentionOrderReviewText: "După confirmare, aceste informații nu mai pot fi modificate. Te rugăm să verifici cu atenție toate detaliile.",
+  confirmOrderAccuracy: "Confirm că toate informațiile sunt corecte",
+  confirmOrderAccuracyText: "Înțeleg că după confirmare, aceste detalii nu mai pot fi modificate și cardul cadou va fi procesat pentru plată.",
+  
   // Form Field Renderer
   noAddonsAvailable: "Nu sunt disponibile suplimente pentru acest pachet",
   fieldConfigurationError: "Eroare de configurare câmp: Nu sunt disponibile opțiuni",
@@ -566,7 +572,7 @@ export const orderTranslations = {
   customer: 'Client',
   amount: 'Suma',
   status: 'Status',
-  invoice: 'Factură',
+  payment: 'Factură',
   delivery: 'Livrare',
   actions: 'Acțiuni',
   details: 'Detalii',
@@ -586,5 +592,11 @@ export const orderTranslations = {
   viewManageOrders: 'Vizualizați și gestionați comenzile dvs.',
   backHome: 'Înapoi acasă',
   loadingOrdersError: 'Eroare la încărcarea comenzilor',
-  noOrdersYet: 'Nu aveți încă comenzi'
+  noOrdersYet: 'Nu aveți încă comenzi',
+  
+  // Order Review Confirmation - NEW
+  attentionOrderReview: "Atenție",
+  attentionOrderReviewText: "După confirmare, aceste informații nu mai pot fi modificate. Te rugăm să verifici cu atenție toate detaliile.",
+  confirmOrderAccuracy: "Confirm că toate informațiile sunt corecte",
+  confirmOrderAccuracyText: "Înțeleg că după confirmare, aceste detalii nu mai pot fi modificate și cardul cadou va fi procesat pentru plată."
 };

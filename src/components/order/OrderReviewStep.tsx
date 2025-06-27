@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -8,6 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import DetailedFormReview from './DetailedFormReview';
+import OrderConfirmationSection from './OrderConfirmationSection';
 
 interface OrderReviewStepProps {
   formData: Record<string, any>;
@@ -21,6 +21,7 @@ interface OrderReviewStepProps {
     amount: number;
     type: string;
   };
+  onConfirmationChange?: (confirmed: boolean) => void;
 }
 
 const OrderReviewStep: React.FC<OrderReviewStepProps> = ({
@@ -30,10 +31,12 @@ const OrderReviewStep: React.FC<OrderReviewStepProps> = ({
   selectedAddons,
   availableAddons,
   giftCard,
-  appliedDiscount
+  appliedDiscount,
+  onConfirmationChange
 }) => {
   const { t } = useLanguage();
   const { currency } = useCurrency();
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   // Calculate prices
   const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
@@ -58,6 +61,11 @@ const OrderReviewStep: React.FC<OrderReviewStepProps> = ({
     discountApplied = Math.min(appliedDiscount.amount, finalTotal);
     finalTotal = Math.max(0, finalTotal - discountApplied);
   }
+
+  const handleConfirmationChange = (confirmed: boolean) => {
+    setIsConfirmed(confirmed);
+    onConfirmationChange?.(confirmed);
+  };
 
   return (
     <div className="space-y-4">
@@ -195,6 +203,12 @@ const OrderReviewStep: React.FC<OrderReviewStepProps> = ({
 
       {/* Detailed Form Information */}
       <DetailedFormReview formData={formData} />
+
+      {/* Order Confirmation Section - NEW */}
+      <OrderConfirmationSection 
+        isConfirmed={isConfirmed}
+        onConfirmationChange={handleConfirmationChange}
+      />
 
       {/* Legal Confirmations */}
       <Card className="bg-white/10 border-white/20">

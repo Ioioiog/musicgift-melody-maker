@@ -28,5 +28,11 @@ export const orderTranslations = {
   'viewManageOrders': 'Ihre Bestellungen anzeigen und verwalten',
   'backHome': 'Zurück zur Startseite',
   'orderError': 'Fehler beim Laden der Bestellungen',
-  'noOrdersYet': 'Noch keine Bestellungen'
+  'noOrdersYet': 'Noch keine Bestellungen',
+  
+  // Order Review Confirmation - NEW
+  'attentionOrderReview': 'Achtung',
+  'attentionOrderReviewText': 'Nach der Bestätigung können diese Informationen nicht mehr geändert werden. Bitte überprüfen Sie alle Details sorgfältig.',
+  'confirmOrderAccuracy': 'Ich bestätige, dass alle Informationen korrekt sind',
+  'confirmOrderAccuracyText': 'Ich verstehe, dass nach der Bestätigung diese Details nicht mehr geändert werden können und die Geschenkkarte für die Zahlung verarbeitet wird.'
 };

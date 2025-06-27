@@ -1,5 +1,3 @@
-
-
 export const orderTranslations = {
   loadingPackages: "Loading packages...",
   loadingSteps: "Loading steps...",
@@ -58,6 +56,12 @@ export const orderTranslations = {
   giftCardFrom: "From:",
   giftCardBalance: "Balance:",
   giftCardRemaining: "Remaining after order:",
+  
+  // Order Review Confirmation - NEW
+  attentionOrderReview: "Attention",
+  attentionOrderReviewText: "After confirmation, this information cannot be modified. Please carefully review all details.",
+  confirmOrderAccuracy: "I confirm that all information is correct",
+  confirmOrderAccuracyText: "I understand that after confirmation, these details cannot be modified and the gift card will be processed for payment.",
   
   // Form Field Renderer
   noAddonsAvailable: "No add-ons available for this package",
@@ -590,4 +594,3 @@ export const orderTranslations = {
   loadingOrdersError: 'Error loading orders',
   noOrdersYet: 'No orders yet'
 };
-

@@ -1,7 +1,8 @@
+
 export const orderTranslations = {
   'order': 'Zamówienie',
   'package': 'Pakiet',
-  'orderDate': 'Data Zamówienia',
+  'orderDate': 'Data zamówienia',
   'customer': 'Klient',
   'amount': 'Kwota',
   'status': 'Status',
@@ -17,16 +18,22 @@ export const orderTranslations = {
   'gift': 'Prezent',
   'addonsCount': 'dodatki',
   'daysLeft': 'dni pozostało',
-  'daysOverdue': 'dni spóźnienia',
+  'daysOverdue': 'dni przeterminowane',
   'pending': 'Oczekujące',
   'completed': 'Zakończone',
-  'processing': 'W trakcie',
+  'processing': 'Przetwarzanie',
   'cancelled': 'Anulowane',
-  'failed': 'Niepowodzenie',
-  'viewDetails': 'Zobacz Szczegóły',
-  'orderHistory': 'Historia Zamówień',
+  'failed': 'Nieudane',
+  'viewDetails': 'Zobacz szczegóły',
+  'orderHistory': 'Historia zamówień',
   'viewManageOrders': 'Zobacz i zarządzaj swoimi zamówieniami',
-  'backHome': 'Powrót do Domu',
+  'backHome': 'Powrót do domu',
   'orderError': 'Błąd ładowania zamówień',
-  'noOrdersYet': 'Brak zamówień'
+  'noOrdersYet': 'Brak zamówień',
+  
+  // Order Review Confirmation - NEW
+  'attentionOrderReview': 'Uwaga',
+  'attentionOrderReviewText': 'Po potwierdzeniu te informacje nie mogą być już modyfikowane. Prosimy o dokładne sprawdzenie wszystkich szczegółów.',
+  'confirmOrderAccuracy': 'Potwierdzam, że wszystkie informacje są prawidłowe',
+  'confirmOrderAccuracyText': 'Rozumiem, że po potwierdzeniu te szczegóły nie mogą być już modyfikowane, a karta podarunkowa zostanie przetworzona do płatności.'
 };
