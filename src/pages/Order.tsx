@@ -45,6 +45,7 @@ const Order = () => {
     amount: number;
     type: string;
   } | null>(null);
+  const [paymentResponse, setPaymentResponse] = useState<any>(null);
   const isMobile = useIsMobile();
 
   // Extract gift card parameters from URL
@@ -357,8 +358,6 @@ Order Management: View full details in the admin panel.
       let paymentError;
 
       // Route to the correct payment provider (no price conversion in frontend)
-      // NOTE: The OrderWizard will now handle opening payment URLs in new tabs
-      // This function only creates the payment sessions and returns the URLs
       if (paymentProvider === 'stripe') {
         console.log('🟣 Creating Stripe payment session');
         const { data, error } = await supabase.functions.invoke('stripe-create-payment', {
@@ -419,9 +418,6 @@ Order Management: View full details in the admin panel.
       // Send order notification email to info@musicgift.ro
       await sendOrderNotificationEmail(orderData, paymentResponse.orderId, finalPrice);
 
-      // NOTE: Gift card redemption will be handled by payment webhooks after successful payment
-      // This ensures redemptions are only created for actually completed orders
-
       // Show success message
       toast({
         title: t('orderSuccess'),
@@ -429,9 +425,13 @@ Order Management: View full details in the admin panel.
         variant: "default"
       });
 
-      // NOTE: Payment URL handling is now done in OrderWizard component
-      // The payment will open in a new tab with status checking
-      console.log("✅ Order creation completed - payment will be handled by OrderWizard");
+      // Pass payment response to OrderWizard to handle URL opening
+      setPaymentResponse({
+        ...paymentResponse,
+        provider: paymentProvider
+      });
+      
+      console.log("✅ Order creation completed - payment URL will be opened by OrderWizard");
       
     } catch (error) {
       console.error("💥 Error processing order:", error);
@@ -478,9 +478,12 @@ Order Management: View full details in the admin panel.
         
         <section className="py-2 sm:py-4 md:py-6 lg:py-8 px-[16px]">
           <div className="container mx-auto px-2 sm:px-4 lg:px-6">
-            {isGiftPackage ? <div className="max-w-4xl mx-auto">
+            {isGiftPackage ? (
+              <div className="max-w-4xl mx-auto">
                 <GiftPurchaseWizard onComplete={handleGiftCardComplete} />
-              </div> : <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6 lg:items-end">
+              </div>
+            ) : (
+              <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6 lg:items-end">
                 {/* Main content - Order Wizard */}
                 <div className="flex-1 order-2 lg:order-1 my-0">
                   <OrderWizard 
@@ -488,20 +491,35 @@ Order Management: View full details in the admin panel.
                     giftCard={appliedGiftCard}
                     appliedDiscount={appliedDiscount}
                     preselectedPackage={preselectedPackage} 
-                    onOrderDataChange={setOrderData} 
+                    onOrderDataChange={setOrderData}
+                    paymentResponse={paymentResponse}
+                    onPaymentResponseHandled={() => setPaymentResponse(null)}
                   />
                 </div>
                 
                 {/* Mobile Order Summary - Above wizard on mobile */}
-                {isMobile && orderData?.selectedPackage && <div className="order-1 lg:hidden">
-                    <OrderSidebarSummary orderData={orderData} giftCard={appliedGiftCard} onGiftCardChange={setAppliedGiftCard} onDiscountChange={setAppliedDiscount} />
-                  </div>}
+                {isMobile && orderData?.selectedPackage && (
+                  <div className="order-1 lg:hidden">
+                    <OrderSidebarSummary 
+                      orderData={orderData} 
+                      giftCard={appliedGiftCard} 
+                      onGiftCardChange={setAppliedGiftCard} 
+                      onDiscountChange={setAppliedDiscount} 
+                    />
+                  </div>
+                )}
                 
                 {/* Desktop Sidebar - Order Summary */}
                 <div className="hidden lg:block lg:w-80 xl:w-96 order-3 lg:order-2">
-                  <OrderSidebarSummary orderData={orderData} giftCard={appliedGiftCard} onGiftCardChange={setAppliedGiftCard} onDiscountChange={setAppliedDiscount} />
+                  <OrderSidebarSummary 
+                    orderData={orderData} 
+                    giftCard={appliedGiftCard} 
+                    onGiftCardChange={setAppliedGiftCard} 
+                    onDiscountChange={setAppliedDiscount} 
+                  />
                 </div>
-              </div>}
+              </div>
+            )}
           </div>
         </section>
 

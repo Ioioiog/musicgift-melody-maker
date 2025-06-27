@@ -1,45 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { motion, AnimatePresence } from 'framer-motion';
-import { usePackages, useAddons, usePackageSteps } from '@/hooks/usePackageData';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { useCurrency } from '@/contexts/CurrencyContext';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useOrderWizardState } from "@/hooks/useOrderWizardState";
+import { usePackages, useAddons } from "@/hooks/usePackageData";
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Separator } from "@/components/ui/separator";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import FormFieldRenderer from './form/FormFieldRenderer';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
-import { useOrderWizardState } from '@/hooks/useOrderWizardState';
-import { validateFormData, prepareOrderData } from '@/utils/orderValidation';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { useOrderPayment } from '@/hooks/useOrderPayment';
-import FormFieldRenderer from './order/FormFieldRenderer';
-import StepIndicator from './order/StepIndicator';
-import PackageSelectionStep from './order/PackageSelectionStep';
-import AddonSelectionStep from './order/AddonSelectionStep';
-import PaymentProviderSelection from './order/PaymentProviderSelection';
-import ContactLegalStep from './order/ContactLegalStep';
-import OrderReviewStep from './order/OrderReviewStep';
 import OrderPaymentStatusChecker from './order/OrderPaymentStatusChecker';
-import WizardNavigation from './order/WizardNavigation';
 
 interface OrderWizardProps {
+  onComplete: (orderData: any) => void;
   giftCard?: any;
-  appliedDiscount?: {
-    code: string;
-    amount: number;
-    type: string;
-  };
-  onComplete?: (orderData: any) => Promise<void>;
+  appliedDiscount?: any;
   preselectedPackage?: string;
   onOrderDataChange?: (orderData: any) => void;
+  paymentResponse?: any;
+  onPaymentResponseHandled?: () => void;
 }
 
 const OrderWizard: React.FC<OrderWizardProps> = ({
+  onComplete,
   giftCard,
   appliedDiscount,
-  onComplete,
   preselectedPackage,
-  onOrderDataChange
+  onOrderDataChange,
+  paymentResponse,
+  onPaymentResponseHandled
 }) => {
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { currency } = useCurrency();
+  const { data: packages = [] } = usePackages();
+  const { data: addons = [] } = useAddons();
+
   const {
     currentStep,
     setCurrentStep,
@@ -54,633 +61,454 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     handlePackageSelect,
     handleAddonChange,
     handleAddonFieldChange
-  } = useOrderWizardState({
-    preselectedPackage
-  });
-  const { t } = useLanguage();
-  const { currency } = useCurrency();
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const { data: packages = [] } = usePackages();
-  const { data: addons = [] } = useAddons();
-  const selectedPackage = formData.package as string;
-  const { data: allPackageSteps = [], isLoading: isStepsLoading } = usePackageSteps(selectedPackage);
+  } = useOrderWizardState({ preselectedPackage });
+  const { openPaymentWindow, isPaymentProcessing, paymentProvider } = useOrderPayment();
 
-  // Payment processing state
-  const { isPaymentProcessing, paymentProvider: processingProvider, openPaymentWindow, closePaymentWindow } = useOrderPayment();
-  const [processingOrderId, setProcessingOrderId] = useState<string>('');
-
-  // Listen for payment window closure
+  // Handle payment response when received
   useEffect(() => {
-    const handlePaymentWindowClosed = (event: CustomEvent) => {
-      console.log('🔔 Payment window closed event received:', event.detail);
-      // The OrderPaymentStatusChecker will handle the status checking
-    };
-
-    window.addEventListener('payment-window-closed', handlePaymentWindowClosed as EventListener);
-    
-    return () => {
-      window.removeEventListener('payment-window-closed', handlePaymentWindowClosed as EventListener);
-    };
-  }, []);
-
-  // Calculate the base total price
-  const calculateBaseTotal = () => {
-    const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
-    const packagePrice = selectedPackageData ? getPackagePrice(selectedPackageData, currency) : 0;
-    const addonsPrice = selectedAddons.reduce((total, addonKey) => {
-      const addon = addons.find(addon => addon.addon_key === addonKey);
-      return total + (addon ? getAddonPrice(addon, currency) : 0);
-    }, 0);
-    return packagePrice + addonsPrice;
-  };
-
-  // Calculate final total after discounts and gift cards
-  const calculateFinalTotal = () => {
-    let finalTotal = calculateBaseTotal();
-    
-    // Apply gift card credit
-    if (giftCard) {
-      const giftBalance = (giftCard.gift_amount || 0) / 100; // Convert from cents
-      const giftCreditApplied = Math.min(giftBalance, finalTotal);
-      finalTotal = Math.max(0, finalTotal - giftCreditApplied);
+    if (paymentResponse?.paymentUrl && paymentResponse?.provider && paymentResponse?.orderId) {
+      console.log('🔗 Opening payment URL in new tab:', paymentResponse.paymentUrl);
+      
+      try {
+        openPaymentWindow(
+          paymentResponse.paymentUrl, 
+          paymentResponse.provider, 
+          paymentResponse.orderId
+        );
+        
+        // Clear the payment response after handling
+        if (onPaymentResponseHandled) {
+          onPaymentResponseHandled();
+        }
+      } catch (error) {
+        console.error('❌ Error opening payment window:', error);
+      }
     }
-    
-    // Apply discount
-    if (appliedDiscount) {
-      const discountApplied = Math.min(appliedDiscount.amount, finalTotal);
-      finalTotal = Math.max(0, finalTotal - discountApplied);
-    }
-    
-    return finalTotal;
-  };
+  }, [paymentResponse, openPaymentWindow, onPaymentResponseHandled]);
 
-  const baseTotal = calculateBaseTotal();
-  const finalTotal = calculateFinalTotal();
-
-  // Notify parent component of order data changes
   useEffect(() => {
     if (onOrderDataChange) {
       onOrderDataChange({
-        selectedPackage,
-        selectedAddons,
-        formData,
-        addonFieldValues
+        ...formData,
+        addons: selectedAddons,
+        addonFieldValues: addonFieldValues,
+        paymentProvider: selectedPaymentProvider
       });
     }
-  }, [selectedPackage, selectedAddons, formData, addonFieldValues, onOrderDataChange]);
+  }, [formData, selectedAddons, addonFieldValues, selectedPaymentProvider, onOrderDataChange]);
 
-  // Auto-scroll to top when step changes to show step indicator
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+  const selectedPackage = packages.find(pkg => pkg.value === formData.package);
+  const steps = selectedPackage?.steps || [];
+
+  const validationSchema = React.useMemo(() => {
+    const shape: { [key: string]: z.ZodTypeAny } = {};
+
+    steps.forEach((step: any) => {
+      step.fields.forEach((field: any) => {
+        let fieldSchema: z.ZodTypeAny = z.string().optional();
+
+        if (field.required) {
+          fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+        }
+
+        if (field.type === 'email') {
+          fieldSchema = z.string().email({ message: t('invalidEmail', 'Please enter a valid email address') });
+          if (field.required) {
+            fieldSchema = fieldSchema.min(1, { message: t('fieldRequired', 'This field is required') });
+          }
+        }
+
+        if (field.type === 'url') {
+          fieldSchema = z.string().url({ message: t('invalidUrl', 'Please enter a valid URL') });
+          if (field.required) {
+            fieldSchema = fieldSchema.min(1, { message: t('fieldRequired', 'This field is required') });
+          }
+        }
+
+        shape[field.key] = fieldSchema;
+      });
     });
-  }, [currentStep]);
 
-  // Only get regular package steps (exclude contact/legal as it's now universal)
-  const regularSteps = allPackageSteps.filter(step => step.title_key !== 'contactDetailsStep').sort((a, b) => a.step_number - b.step_number);
+    // Add invoice fields to the schema
+    shape['invoiceType'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+    if (formData.invoiceType === 'company') {
+      shape['companyName'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+      shape['vatCode'] = z.string().optional();
+      shape['registrationNumber'] = z.string().optional();
+      shape['companyAddress'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+      shape['representativeName'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+    } else {
+      shape['address'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+      shape['city'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+    }
 
-  const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
-  
-  // Check if this is a quote-only package or if total is zero
-  const isQuoteOnly = selectedPackageData?.is_quote_only === true;
-  const skipPayment = isQuoteOnly || finalTotal === 0;
+    // Add terms and conditions fields to the schema
+    shape['acceptMentionObligation'] = z.boolean().refine(value => value === true, {
+      message: t('fieldRequired', 'This field is required'),
+    });
+    shape['acceptDistribution'] = z.boolean().refine(value => value === true, {
+      message: t('fieldRequired', 'This field is required'),
+    });
+    shape['finalNote'] = z.boolean().refine(value => value === true, {
+      message: t('fieldRequired', 'This field is required'),
+    });
 
-  // Build the complete step flow - Contact & Legal and Order Review are now ALWAYS present
-  const totalRegularSteps = regularSteps.length;
-  const addonStepIndex = 1 + totalRegularSteps; // After package selection + regular steps
-  const contactLegalStepIndex = addonStepIndex + 1; // Always after addons
-  const reviewStepIndex = contactLegalStepIndex + 1; // Always after contact/legal
-  const paymentStepIndex = skipPayment ? -1 : reviewStepIndex + 1; // Skip payment for quotes or zero total
-  const totalSteps = skipPayment ? reviewStepIndex + 1 : paymentStepIndex + 1;
+    return z.object(shape);
+  }, [steps, formData.invoiceType, t]);
 
-  console.log('🔍 Payment Skip Debug:', {
-    selectedPackage,
-    isQuoteOnly,
-    finalTotal,
-    skipPayment,
-    currentStep,
-    totalSteps,
-    contactLegalStepIndex,
-    reviewStepIndex
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(validationSchema),
+    mode: "onChange",
+    defaultValues: formData
   });
 
-  const buildStepsData = () => {
-    const steps = [];
-
-    // Step 1: Package Selection
-    steps.push({
-      number: 1,
-      label: t('choosePackage'),
-      isCompleted: currentStep > 0,
-      isCurrent: currentStep === 0
-    });
-
-    // Steps 2-N: Regular Package Steps
-    regularSteps.forEach((step, index) => {
-      const stepNumber = index + 2;
-      const stepIndex = index + 1;
-      steps.push({
-        number: stepNumber,
-        label: t(step.title_key) || step.title_key,
-        isCompleted: currentStep > stepIndex,
-        isCurrent: currentStep === stepIndex
-      });
-    });
-
-    // Addons Step
-    const addonStepNumber = regularSteps.length + 2;
-    steps.push({
-      number: addonStepNumber,
-      label: t('selectAddons', 'Select Add-ons'),
-      isCompleted: currentStep > addonStepIndex,
-      isCurrent: currentStep === addonStepIndex
-    });
-
-    // Contact & Legal Step - ALWAYS present
-    const contactStepNumber = addonStepNumber + 1;
-    steps.push({
-      number: contactStepNumber,
-      label: t('contactDetailsStep', 'Contact & Legal'),
-      isCompleted: currentStep > contactLegalStepIndex,
-      isCurrent: currentStep === contactLegalStepIndex
-    });
-
-    // Order Review Step - ALWAYS present
-    const reviewStepNumber = contactStepNumber + 1;
-    steps.push({
-      number: reviewStepNumber,
-      label: t('reviewOrder', 'Review Order'),
-      isCompleted: currentStep > reviewStepIndex,
-      isCurrent: currentStep === reviewStepIndex
-    });
-
-    // Only add Payment Step if payment is required
-    if (!skipPayment) {
-      const paymentStepNumber = reviewStepNumber + 1;
-      steps.push({
-        number: paymentStepNumber,
-        label: t('payment', 'Payment'),
-        isCompleted: false,
-        isCurrent: currentStep === paymentStepIndex
-      });
-    }
-    
-    return steps;
-  };
-
-  const handleNext = () => {
-    if (currentStep === 0) {
-      if (!formData.package) return;
-      setCurrentStep(1); // Go to first form step
-    } else if (currentStep < totalSteps - 1) {
-      // Skip payment step for quote-only packages or zero total
-      if (skipPayment && currentStep === reviewStepIndex) {
-        console.log('⚠️ Should not proceed past review when payment is skipped');
-        return; // Don't proceed past review when payment is skipped
-      }
+  const onSubmit = async (data: any) => {
+    if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
+    } else {
+      setIsSubmitting(true);
+      try {
+        const orderData = {
+          ...formData,
+          ...data,
+          addons: selectedAddons,
+          addonFieldValues: addonFieldValues,
+          paymentProvider: selectedPaymentProvider
+        };
+        await onComplete(orderData);
+      } catch (error: any) {
+        toast({
+          title: t('orderError'),
+          description: error.message || t('orderErrorMessage'),
+          variant: "destructive"
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
-  const handlePrev = () => {
+  const handlePrevious = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
 
-  // Function to send quote request notification email
-  const sendQuoteNotificationEmail = async (quoteData: any, quoteId: string) => {
-    try {
-      const selectedAddonsList = selectedAddons.map((addonKey: string) => {
-        const addon = addons.find(a => a.addon_key === addonKey);
-        return addon ? addon.addon_key : addonKey;
-      });
-
-      const emailSubject = `New Quote Request - ${quoteId.slice(0, 8)}`;
-      const emailMessage = `
-New Quote Request Notification:
-
-Quote ID: ${quoteId}
-Customer: ${quoteData.customer_name}
-Email: ${quoteData.customer_email}
-Phone: ${quoteData.customer_phone || 'Not provided'}
-
-Package: ${quoteData.package_name}
-Selected Add-ons: ${selectedAddonsList.length > 0 ? selectedAddonsList.join(', ') : 'None'}
-Estimated Price: ${quoteData.estimated_price} ${quoteData.currency}
-
-Form Data Summary:
-${Object.entries(quoteData.form_data)
-  .filter(([key, value]) => value && key !== 'package')
-  .map(([key, value]) => `${key}: ${value}`)
-  .join('\n')}
-
-Add-on Field Values:
-${Object.entries(quoteData.addon_field_values || {})
-  .map(([key, value]) => `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`)
-  .join('\n')}
-
----
-This quote request was submitted through the MusicGift website.
-Quote Management: Please review and respond to the customer with a personalized quote.
-      `.trim();
-
-      await supabase.functions.invoke('send-contact-email', {
-        body: {
-          firstName: 'Quote',
-          lastName: 'Request',
-          email: 'system@musicgift.ro',
-          subject: emailSubject,
-          message: emailMessage
-        }
-      });
-
-      console.log('Quote request notification email sent successfully');
-    } catch (error) {
-      console.error('Failed to send quote request notification email:', error);
-      // Don't throw - this shouldn't block the quote request process
-    }
+  const handlePaymentProviderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedPaymentProvider(event.target.value);
   };
 
-  const handleSubmit = async () => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
-    
-    try {
-      // For quote-only packages, create quote request instead of payment
-      if (isQuoteOnly) {
-        console.log("🔄 Creating quote request for quote-only package");
-        
-        // Validate required fields
-        if (!formData.fullName || !formData.email) {
-          throw new Error('Please fill in all required contact information');
-        }
-        
-        // Create quote request in the dedicated table
-        const quoteData = {
-          customer_name: formData.fullName,
-          customer_email: formData.email,
-          customer_phone: formData.phone || null,
-          package_name: selectedPackageData?.label_key || selectedPackage,
-          package_value: selectedPackage,
-          selected_addons: selectedAddons,
-          addon_field_values: addonFieldValues,
-          form_data: formData,
-          estimated_price: baseTotal,
-          currency: currency,
-          status: 'pending',
-          user_id: null // Will be set by RLS if user is authenticated
-        };
-
-        console.log('📝 Creating quote request with data:', {
-          customer_name: quoteData.customer_name,
-          customer_email: quoteData.customer_email,
-          package_name: quoteData.package_name,
-          estimated_price: quoteData.estimated_price,
-          currency: quoteData.currency,
-          addons_count: selectedAddons.length
-        });
-
-        const { data: quoteRequest, error } = await supabase
-          .from('quote_requests')
-          .insert(quoteData)
-          .select()
-          .single();
-          
-        if (error) {
-          console.error('❌ Quote request creation error:', error);
-          throw new Error(`Failed to create quote request: ${error.message}`);
-        }
-        
-        console.log('✅ Quote request created successfully:', quoteRequest.id);
-
-        // Send quote notification email to info@musicgift.ro
-        await sendQuoteNotificationEmail(quoteData, quoteRequest.id);
-        
-        toast({
-          title: t('quoteRequestSubmitted', 'Quote Request Submitted'),
-          description: t('quoteRequestMessage', 'Your quote request has been submitted successfully. We will contact you soon with a personalized quote.'),
-          variant: "default"
-        });
-        
-        // Navigate to success page with quote type - DO NOT call onComplete for quotes
-        navigate(`/payment/success?quoteId=${quoteRequest.id}&type=quote`);
-        return;
-      }
-
-      // Handle zero-total orders (fully covered by gift card/discount)
-      if (finalTotal === 0) {
-        console.log("🔄 Processing zero-total order (fully covered by gift card/discount)");
-        
-        // Validate required fields
-        if (!formData.fullName || !formData.email) {
-          throw new Error('Please fill in all required contact information');
-        }
-        
-        // Call onComplete with zero-total order data
-        if (onComplete) {
-          await onComplete({
-            ...formData,
-            addons: selectedAddons,
-            addonFieldValues,
-            package: selectedPackage,
-            paymentProvider: 'gift_card', // Special identifier for zero-total orders
-            totalPrice: finalTotal
-          });
-          return;
-        }
-      }
-
-      // Continue with existing payment logic for non-quote packages with positive totals
-      console.log(`🔄 Starting payment process with provider: ${selectedPaymentProvider}`);
-      console.log('📦 Order data being submitted:', {
-        package: selectedPackage,
-        addons: selectedAddons.length,
-        baseTotal,
-        finalTotal,
-        paymentProvider: selectedPaymentProvider,
-        customerEmail: formData.email?.substring(0, 5) + '***'
-      });
-      
-      validateFormData(formData, selectedPackage, finalTotal);
-      
-      // Only call onComplete for non-quote packages
-      if (onComplete) {
-        await onComplete({
-          ...formData,
-          addons: selectedAddons,
-          addonFieldValues,
-          package: selectedPackage,
-          paymentProvider: selectedPaymentProvider,
-          totalPrice: finalTotal
-        });
-        return;
-      }
-      
-      if (!selectedPaymentProvider) {
-        throw new Error('Please select a payment method before proceeding');
-      }
-      
-      const orderData = prepareOrderData(formData, selectedAddons, addonFieldValues, selectedPackage, selectedPaymentProvider, finalTotal, packages, currency);
-
-      // Handle SmartBill payment with new tab approach
-      if (selectedPaymentProvider === 'smartbill') {
-        console.log('🔵 Processing payment with SmartBill (new tab)');
-        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('smartbill-create-invoice', {
-          body: { orderData }
-        });
-        console.log('🔵 SmartBill Edge Function Response:', {
-          success: paymentResponse?.success,
-          orderId: paymentResponse?.orderId,
-          errorCode: paymentResponse?.errorCode,
-          hasPaymentUrl: !!paymentResponse?.paymentUrl,
-          message: paymentResponse?.message
-        });
-        if (paymentError) {
-          console.error('❌ SmartBill Edge Function Error:', paymentError);
-          throw new Error(`SmartBill payment failed: ${paymentError.message}`);
-        }
-        if (!paymentResponse?.success) {
-          console.error('❌ SmartBill Payment Response Error:', paymentResponse);
-          const errorCode = paymentResponse?.errorCode || 'paymentFailed';
-          const errorMessage = paymentResponse?.message || paymentResponse?.error || 'SmartBill payment initialization failed';
-          console.log('🔗 Redirecting to error page with details:', {
-            orderId: paymentResponse?.orderId,
-            errorCode,
-            errorMessage: errorMessage.substring(0, 100) + '...'
-          });
-
-          // Navigate to error page with specific error details
-          navigate(`/payment/error?orderId=${paymentResponse?.orderId || 'unknown'}&errorCode=${errorCode}&errorMessage=${encodeURIComponent(errorMessage)}`);
-          return;
-        }
-        if (paymentResponse.paymentUrl) {
-          console.log('✅ SmartBill payment URL generated successfully');
-          console.log('🔗 Opening SmartBill payment in new tab');
-          setProcessingOrderId(paymentResponse.orderId);
-          openPaymentWindow(paymentResponse.paymentUrl, 'SmartBill-Netopia', paymentResponse.orderId);
-        } else {
-          console.log('✅ Order completed - no payment required');
-          navigate('/payment/success?orderId=' + paymentResponse.orderId);
-        }
-      } else if (selectedPaymentProvider === 'stripe') {
-        console.log('🟣 Processing payment with Stripe (new tab)');
-        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('stripe-create-payment', {
-          body: {
-            orderData: orderData,
-            returnUrl: `${window.location.origin}/payment/success`
-          }
-        });
-        console.log('🟣 Stripe response:', paymentResponse);
-        if (paymentError || !paymentResponse?.success) {
-          const errorMessage = paymentError?.message || paymentResponse?.error || 'Stripe payment failed';
-          throw new Error(errorMessage);
-        }
-        if (paymentResponse.paymentUrl) {
-          console.log('🔗 Opening Stripe payment in new tab');
-          setProcessingOrderId(paymentResponse.orderId);
-          openPaymentWindow(paymentResponse.paymentUrl, 'Stripe', paymentResponse.orderId);
-        } else {
-          throw new Error('No payment URL received from Stripe');
-        }
-      } else if (selectedPaymentProvider === 'revolut') {
-        console.log('🟠 Processing payment with Revolut (new tab)');
-        const { data: paymentResponse, error: paymentError } = await supabase.functions.invoke('revolut-create-payment', {
-          body: {
-            orderData: orderData,
-            returnUrl: `${window.location.origin}/payment/success`
-          }
-        });
-        console.log('🟠 Revolut response:', paymentResponse);
-        if (paymentError || !paymentResponse?.success) {
-          const errorMessage = paymentError?.message || paymentResponse?.error || 'Revolut payment failed';
-          throw new Error(errorMessage);
-        }
-        if (paymentResponse.paymentUrl) {
-          console.log('🔗 Opening Revolut payment in new tab');
-          setProcessingOrderId(paymentResponse.orderId);
-          openPaymentWindow(paymentResponse.paymentUrl, 'Revolut', paymentResponse.orderId);
-        } else {
-          navigate('/payment/success?orderId=' + paymentResponse.orderId);
-        }
-      } else {
-        throw new Error(`Unsupported payment provider: ${selectedPaymentProvider}`);
-      }
-    } catch (error) {
-      console.error(`💥 ${isQuoteOnly ? 'QUOTE REQUEST' : finalTotal === 0 ? 'ZERO-TOTAL ORDER' : selectedPaymentProvider?.toUpperCase()} Error:`, error);
-      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-      console.error('💥 Full error details:', {
-        message: errorMessage,
-        provider: selectedPaymentProvider,
-        package: selectedPackage,
-        baseTotal,
-        finalTotal,
-        isQuoteOnly,
-        skipPayment
-      });
-      toast({
-        title: t(isQuoteOnly ? 'quoteRequestError' : 'orderError', isQuoteOnly ? 'Quote Request Error' : 'Order Error'),
-        description: `${isQuoteOnly ? 'Quote request' : finalTotal === 0 ? 'Order processing' : 'Payment'} failed: ${errorMessage}`,
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  // Determine which step we're on
-  const isAddonStep = currentStep === addonStepIndex;
-  const isContactLegalStep = currentStep === contactLegalStepIndex;
-  const isReviewStep = currentStep === reviewStepIndex;
-  const isPaymentStep = !skipPayment && currentStep === paymentStepIndex;
-  const currentPackageStepIndex = currentStep - 1;
-  const currentStepData = currentStep > 0 && currentStep <= totalRegularSteps ? regularSteps?.[currentPackageStepIndex] : null;
-
-  const canProceed = () => {
-    if (currentStep === 0) {
-      return !!formData.package;
-    }
-    if (isAddonStep) {
-      return true;
-    }
-    if (isContactLegalStep) {
-      // Check required fields for contact/legal step
-      return formData.fullName && formData.email && formData.acceptMentionObligation && formData.acceptDistribution && formData.finalNote;
-    }
-    if (isReviewStep) {
-      return true; // All validation done in previous steps
-    }
-    if (isPaymentStep) {
-      return !!selectedPaymentProvider;
-    }
-    return true;
-  };
-
-  // Show payment status checker if payment is processing
-  if (isPaymentProcessing) {
-    return (
-      <div className="w-full">
-        <Card className="bg-transparent border-transparent shadow-none backdrop-blur-0">
-          <CardContent className="p-1.5">
-            <OrderPaymentStatusChecker
-              orderId={processingOrderId}
-              provider={processingProvider}
-              onClose={closePaymentWindow}
-            />
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const totalPrice = selectedPackage ? getPackagePrice(selectedPackage, currency) : 0;
+  const addonsPrice = selectedAddons.reduce((total, addonKey) => {
+    const addon = addons.find(a => a.addon_key === addonKey);
+    return total + (addon ? getAddonPrice(addon, currency) : 0);
+  }, 0);
+  const totalOrderPrice = totalPrice + addonsPrice;
 
   return (
-    <div className="w-full">
-      <Card className="bg-transparent border-transparent shadow-none backdrop-blur-0">
-        <CardHeader className="pb-0 pt-1 px-2 sm:px-3 py-0">
-          <div className="mb-0">
-            <StepIndicator steps={buildStepsData()} className="py-0 my-0 px-0" />
-          </div>
-        </CardHeader>
-        <CardContent className="p-1.5 space-y-1">
-          <AnimatePresence initial={false} mode="wait">
-            <motion.div 
-              key={currentStep} 
-              initial={{ opacity: 0, x: -20 }} 
-              animate={{ opacity: 1, x: 0 }} 
-              exit={{ opacity: 0, x: 20 }} 
-              transition={{ duration: 0.2 }}
-            >
-              <div className="space-y-1">
-                {currentStep === 0 ? (
-                  <PackageSelectionStep 
-                    selectedPackage={formData.package} 
-                    onPackageSelect={handlePackageSelect} 
-                  />
-                ) : currentStepData ? (
-                  <div>
-                    <h3 className="text-base font-semibold text-white mb-1">
-                      {t(currentStepData.title_key) || currentStepData.title_key}
-                    </h3>
-                    {currentStepData.fields
-                      .filter(field => field.field_type !== 'checkbox-group')
-                      .sort((a, b) => a.field_order - b.field_order)
-                      .map(field => (
-                        <FormFieldRenderer 
-                          key={field.id} 
-                          field={field} 
-                          value={formData[field.field_name]} 
-                          onChange={value => handleInputChange(field.field_name, value)} 
-                          selectedAddons={selectedAddons} 
-                          onAddonChange={handleAddonChange} 
-                          availableAddons={addons} 
-                          addonFieldValues={addonFieldValues} 
-                          onAddonFieldChange={handleAddonFieldChange} 
-                          selectedPackage={selectedPackage} 
-                          selectedPackageData={selectedPackageData} 
-                          formData={formData} 
-                        />
-                      ))}
-                  </div>
-                ) : isAddonStep ? (
-                  <AddonSelectionStep 
-                    selectedPackageData={selectedPackageData} 
-                    selectedAddons={selectedAddons} 
-                    onAddonChange={handleAddonChange} 
-                    availableAddons={addons} 
-                    addonFieldValues={addonFieldValues} 
-                    onAddonFieldChange={handleAddonFieldChange} 
-                  />
-                ) : isContactLegalStep ? (
-                  <ContactLegalStep 
-                    formData={formData} 
-                    onInputChange={handleInputChange} 
-                    selectedAddons={selectedAddons} 
-                    onAddonChange={handleAddonChange} 
-                    availableAddons={addons} 
-                    addonFieldValues={addonFieldValues} 
-                    onAddonFieldChange={handleAddonFieldChange} 
-                    selectedPackage={selectedPackage} 
-                    selectedPackageData={selectedPackageData} 
-                  />
-                ) : isReviewStep ? (
-                  <OrderReviewStep 
-                    formData={formData}
-                    selectedPackage={selectedPackage}
-                    selectedPackageData={selectedPackageData}
-                    selectedAddons={selectedAddons}
-                    availableAddons={addons}
-                    giftCard={giftCard}
-                    appliedDiscount={appliedDiscount}
-                  />
-                ) : isPaymentStep ? (
-                  <PaymentProviderSelection 
-                    selectedProvider={selectedPaymentProvider} 
-                    onProviderSelect={setSelectedPaymentProvider} 
-                  />
+    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-white/30">
+      {/* Show payment status checker when payment is processing */}
+      {isPaymentProcessing && (
+        <div className="mb-6">
+          <OrderPaymentStatusChecker
+            orderId={paymentResponse?.orderId}
+            provider={paymentProvider}
+            onClose={() => {
+              // Handle close if needed
+            }}
+          />
+        </div>
+      )}
+      
+      {selectedPackage ? (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {currentStep < steps.length ? (
+            <>
+              <h2 className="text-lg font-semibold text-white">{t('stepPackage', 'Step')} {currentStep + 1} {t('of', 'of')} {steps.length}</h2>
+              <Separator className="my-2 bg-white/20" />
+
+              {steps[currentStep].fields.map((field: any) => (
+                <FormFieldRenderer
+                  key={field.key}
+                  field={field}
+                  value={formData[field.key]}
+                  onChange={handleInputChange}
+                  register={register}
+                  error={errors[field.key]?.message}
+                  t={t}
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              <h2 className="text-lg font-semibold text-white">{t('contactDetailsStep', 'Contact Details & Legal')}</h2>
+              <Separator className="my-2 bg-white/20" />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="invoiceType" className="text-white/80">{t('invoiceType', 'Invoice Type')}</Label>
+                  <select
+                    id="invoiceType"
+                    className="w-full bg-white/10 border-white/30 rounded px-3 py-2 text-white/80 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    value={formData.invoiceType || ''}
+                    {...register('invoiceType')}
+                    onChange={(e) => {
+                      handleInputChange('invoiceType', e.target.value);
+                    }}
+                  >
+                    <option value="individual">{t('individual', 'Individual')}</option>
+                    <option value="company">{t('company', 'Company')}</option>
+                  </select>
+                  {errors.invoiceType && <p className="text-red-500 text-sm mt-1">{errors.invoiceType.message}</p>}
+                </div>
+
+                {formData.invoiceType === 'company' ? (
+                  <>
+                    <div>
+                      <Label htmlFor="companyName" className="text-white/80">{t('companyName', 'Company Name')}</Label>
+                      <Input
+                        type="text"
+                        id="companyName"
+                        className="bg-white/10 border-white/30 text-white/80"
+                        {...register('companyName')}
+                        onChange={(e) => handleInputChange('companyName', e.target.value)}
+                      />
+                      {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>}
+                    </div>
+                    <div>
+                      <Label htmlFor="vatCode" className="text-white/80">{t('vatCode', 'VAT Code')}</Label>
+                      <Input
+                        type="text"
+                        id="vatCode"
+                        className="bg-white/10 border-white/30 text-white/80"
+                        {...register('vatCode')}
+                        onChange={(e) => handleInputChange('vatCode', e.target.value)}
+                      />
+                      {errors.vatCode && <p className="text-red-500 text-sm mt-1">{errors.vatCode.message}</p>}
+                    </div>
+                    <div>
+                      <Label htmlFor="registrationNumber" className="text-white/80">{t('registrationNumber', 'Registration Number')}</Label>
+                      <Input
+                        type="text"
+                        id="registrationNumber"
+                        className="bg-white/10 border-white/30 text-white/80"
+                        {...register('registrationNumber')}
+                        onChange={(e) => handleInputChange('registrationNumber', e.target.value)}
+                      />
+                      {errors.registrationNumber && <p className="text-red-500 text-sm mt-1">{errors.registrationNumber.message}</p>}
+                    </div>
+                    <div>
+                      <Label htmlFor="companyAddress" className="text-white/80">{t('companyAddress', 'Company Address')}</Label>
+                      <Input
+                        type="text"
+                        id="companyAddress"
+                        className="bg-white/10 border-white/30 text-white/80"
+                        {...register('companyAddress')}
+                        onChange={(e) => handleInputChange('companyAddress', e.target.value)}
+                      />
+                      {errors.companyAddress && <p className="text-red-500 text-sm mt-1">{errors.companyAddress.message}</p>}
+                    </div>
+                    <div>
+                      <Label htmlFor="representativeName" className="text-white/80">{t('representativeName', 'Representative Name')}</Label>
+                      <Input
+                        type="text"
+                        id="representativeName"
+                        className="bg-white/10 border-white/30 text-white/80"
+                        {...register('representativeName')}
+                        onChange={(e) => handleInputChange('representativeName', e.target.value)}
+                      />
+                      {errors.representativeName && <p className="text-red-500 text-sm mt-1">{errors.representativeName.message}</p>}
+                    </div>
+                  </>
                 ) : (
-                  <div className="text-center py-3">
-                    <p className="text-white/70 text-sm">{t('loadingSteps')}</p>
+                  <>
+                    <div>
+                      <Label htmlFor="address" className="text-white/80">{t('address', 'Address')}</Label>
+                      <Input
+                        type="text"
+                        id="address"
+                        className="bg-white/10 border-white/30 text-white/80"
+                        {...register('address')}
+                        onChange={(e) => handleInputChange('address', e.target.value)}
+                      />
+                      {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
+                    </div>
+                    <div>
+                      <Label htmlFor="city" className="text-white/80">{t('city', 'City')}</Label>
+                      <Input
+                        type="text"
+                        id="city"
+                        className="bg-white/10 border-white/30 text-white/80"
+                        {...register('city')}
+                        onChange={(e) => handleInputChange('city', e.target.value)}
+                      />
+                      {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <h2 className="text-lg font-semibold text-white mt-6">{t('selectAddons', 'Select Add-ons')}</h2>
+              <Separator className="my-2 bg-white/20" />
+
+              {addons.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {addons.map(addon => (
+                    <Card key={addon.addon_key} className="bg-white/05 backdrop-blur-sm border border-white/30">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor={addon.addon_key} className="text-white/80">{addon.label_key}</Label>
+                          <Checkbox
+                            id={addon.addon_key}
+                            checked={selectedAddons.includes(addon.addon_key)}
+                            onCheckedChange={(checked) => handleAddonChange(addon.addon_key, checked || false)}
+                            className="border-white/30 focus:ring-orange-500"
+                          />
+                        </div>
+                        {selectedAddons.includes(addon.addon_key) && addon.fields && addon.fields.length > 0 && (
+                          <Accordion type="single" collapsible className="w-full mt-2">
+                            <AccordionItem value={addon.addon_key}>
+                              <AccordionTrigger className="text-sm text-white/80 hover:no-underline">{t('more', 'More')}</AccordionTrigger>
+                              <AccordionContent className="py-2">
+                                {addon.fields.map(field => (
+                                  <FormFieldRenderer
+                                    key={field.key}
+                                    field={field}
+                                    value={addonFieldValues[field.key]}
+                                    onChange={(value) => handleAddonFieldChange(field.key, value)}
+                                    t={t}
+                                  />
+                                ))}
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-white/80">{t('noAddonsAvailable', 'No add-ons available for this package')}</p>
+              )}
+
+              <h2 className="text-lg font-semibold text-white mt-6">{t('confirmation', 'Confirmation')}</h2>
+              <Separator className="my-2 bg-white/20" />
+
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="acceptMentionObligation"
+                    className="border-white/30 focus:ring-orange-500"
+                    {...register('acceptMentionObligation')}
+                  />
+                  <Label htmlFor="acceptMentionObligation" className="text-white/80">{t('acceptMentionObligation', 'I accept the mention obligation')}</Label>
+                  {errors.acceptMentionObligation && <p className="text-red-500 text-sm mt-1">{errors.acceptMentionObligation.message}</p>}
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="acceptDistribution"
+                    className="border-white/30 focus:ring-orange-500"
+                    {...register('acceptDistribution')}
+                  />
+                  <Label htmlFor="acceptDistribution" className="text-white/80">{t('acceptDistribution', 'I accept distribution')}</Label>
+                  {errors.acceptDistribution && <p className="text-red-500 text-sm mt-1">{errors.acceptDistribution.message}</p>}
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="finalNote"
+                    className="border-white/30 focus:ring-orange-500"
+                    {...register('finalNote')}
+                  />
+                  <Label htmlFor="finalNote" className="text-white/80">{t('finalNote', 'I agree to final terms')}</Label>
+                  {errors.finalNote && <p className="text-red-500 text-sm mt-1">{errors.finalNote.message}</p>}
+                </div>
+              </div>
+
+              <h2 className="text-lg font-semibold text-white mt-6">{t('choosePaymentMethod', 'Choose Payment Method')}</h2>
+              <Separator className="my-2 bg-white/20" />
+
+              <div className="space-y-2">
+                <div>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      value="smartbill"
+                      checked={selectedPaymentProvider === 'smartbill'}
+                      onChange={handlePaymentProviderChange}
+                      className="focus:ring-orange-500"
+                    />
+                    <span className="text-white/80">SmartBill</span>
+                  </label>
+                </div>
+                <div>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      value="stripe"
+                      checked={selectedPaymentProvider === 'stripe'}
+                      onChange={handlePaymentProviderChange}
+                      className="focus:ring-orange-500"
+                    />
+                    <span className="text-white/80">Stripe</span>
+                  </label>
+                </div>
+                <div>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      value="revolut"
+                      checked={selectedPaymentProvider === 'revolut'}
+                      onChange={handlePaymentProviderChange}
+                      className="focus:ring-orange-500"
+                    />
+                    <span className="text-white/80">Revolut</span>
+                  </label>
+                </div>
+                {giftCard && totalOrderPrice === 0 && (
+                  <div>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        value="gift_card"
+                        checked={selectedPaymentProvider === 'gift_card'}
+                        onChange={handlePaymentProviderChange}
+                        className="focus:ring-orange-500"
+                      />
+                      <span className="text-white/80">{t('fullyCoveredByGiftCard', 'Fully covered by gift card')}</span>
+                    </label>
                   </div>
                 )}
               </div>
-            </motion.div>
-          </AnimatePresence>
+            </>
+          )}
 
-          <WizardNavigation 
-            currentStep={currentStep} 
-            totalSteps={totalSteps} 
-            canProceed={canProceed()} 
-            isSubmitting={isSubmitting} 
-            onPrev={handlePrev} 
-            onNext={handleNext} 
-            onSubmit={handleSubmit}
-            isQuoteOnly={isQuoteOnly}
-            isContactLegalStep={isContactLegalStep}
-          />
-        </CardContent>
-      </Card>
+          <div className="flex justify-between mt-6">
+            {currentStep > 0 && (
+              <Button variant="outline" onClick={handlePrevious} className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                {t('previous', 'Previous')}
+              </Button>
+            )}
+            <Button
+              type="submit"
+              className={cn(
+                "bg-orange-500 hover:bg-orange-600 text-white",
+                isSubmitting && "animate-pulse"
+              )}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? t('submitting', 'Submitting...') : currentStep < steps.length ? t('continue', 'Continue') : t('completeOrder', 'Complete order')}
+            </Button>
+          </div>
+        </form>
+      ) : (
+        <div>
+          <h2 className="text-lg font-semibold text-white">{t('choosePackage', 'Choose package')}</h2>
+          <Separator className="my-2 bg-white/20" />
+          <p className="text-white/80">{t('noStepsConfiguredDesc', "This package doesn't have steps configured yet. Please contact support or choose a different package.")}</p>
+        </div>
+      )}
     </div>
   );
 };
