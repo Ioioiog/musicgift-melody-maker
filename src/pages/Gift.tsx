@@ -41,15 +41,22 @@ const Gift = () => {
       upgradeAmount
     });
 
-    // Here we would redirect to the order flow with the gift card applied
-    // For now, we'll show a success message
+    // Store gift card data in session storage for the order flow
+    sessionStorage.setItem('giftCardRedemption', JSON.stringify({
+      giftCardId: giftCard.id,
+      giftCardCode: giftCard.code,
+      giftCardValue: giftCard.amount_eur || giftCard.gift_amount,
+      currency: giftCard.currency,
+      upgradeAmount: upgradeAmount || 0,
+    }));
+
     toast({
       title: t('giftCardApplied'),
       description: `${t('proceedingToComplete')} ${selectedPackage} ${t('packageOrder')}`
     });
 
-    // TODO: Redirect to order flow with gift card data
-    // window.location.href = `/order?gift=${giftCard.code}&package=${selectedPackage}`;
+    // Redirect to order flow with gift card data
+    window.location.href = `/order?package=${selectedPackage}&gift=${giftCard.code}`;
   };
   return <div className="min-h-screen flex flex-col">
       <Navigation />
