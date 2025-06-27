@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -102,62 +103,73 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const steps = selectedPackage?.steps || [];
 
   const validationSchema = React.useMemo(() => {
-    const shape: { [key: string]: z.ZodTypeAny } = {};
-
-    steps.forEach((step: any) => {
-      step.fields.forEach((field: any) => {
-        let fieldSchema: z.ZodTypeAny = z.string().optional();
-
-        if (field.required) {
-          fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-        }
-
-        if (field.type === 'email') {
-          if (field.required) {
-            fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') }).email({ message: t('invalidEmail', 'Please enter a valid email address') });
-          } else {
-            fieldSchema = z.string().email({ message: t('invalidEmail', 'Please enter a valid email address') }).optional();
-          }
-        }
-
-        if (field.type === 'url') {
-          if (field.required) {
-            fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') }).url({ message: t('invalidUrl', 'Please enter a valid URL') });
-          } else {
-            fieldSchema = z.string().url({ message: t('invalidUrl', 'Please enter a valid URL') }).optional();
-          }
-        }
-
-        shape[field.key] = fieldSchema;
-      });
-    });
-
-    // Add invoice fields to the schema
-    shape['invoiceType'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-    if (formData.invoiceType === 'company') {
-      shape['companyName'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-      shape['vatCode'] = z.string().optional();
-      shape['registrationNumber'] = z.string().optional();
-      shape['companyAddress'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-      shape['representativeName'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-    } else {
-      shape['address'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
-      shape['city'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+    // Don't create validation schema for step 0 (package selection)
+    if (currentStep === 0) {
+      return z.object({});
     }
 
-    // Add terms and conditions fields to the schema
-    shape['acceptMentionObligation'] = z.boolean().refine(value => value === true, {
-      message: t('fieldRequired', 'This field is required'),
-    });
-    shape['acceptDistribution'] = z.boolean().refine(value => value === true, {
-      message: t('fieldRequired', 'This field is required'),
-    });
-    shape['finalNote'] = z.boolean().refine(value => value === true, {
-      message: t('fieldRequired', 'This field is required'),
-    });
+    const shape: { [key: string]: z.ZodTypeAny } = {};
+
+    // Only validate current step fields for steps 1 to steps.length
+    if (currentStep > 0 && currentStep <= steps.length) {
+      const currentStepData = steps[currentStep - 1];
+      if (currentStepData && currentStepData.fields) {
+        currentStepData.fields.forEach((field: any) => {
+          let fieldSchema: z.ZodTypeAny = z.string().optional();
+
+          if (field.required) {
+            fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+          }
+
+          if (field.type === 'email') {
+            if (field.required) {
+              fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') }).email({ message: t('invalidEmail', 'Please enter a valid email address') });
+            } else {
+              fieldSchema = z.string().email({ message: t('invalidEmail', 'Please enter a valid email address') }).optional();
+            }
+          }
+
+          if (field.type === 'url') {
+            if (field.required) {
+              fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') }).url({ message: t('invalidUrl', 'Please enter a valid URL') });
+            } else {
+              fieldSchema = z.string().url({ message: t('invalidUrl', 'Please enter a valid URL') }).optional();
+            }
+          }
+
+          shape[field.key] = fieldSchema;
+        });
+      }
+    }
+
+    // Add validation for final step (contact details & legal)
+    if (currentStep > steps.length) {
+      shape['invoiceType'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+      if (formData.invoiceType === 'company') {
+        shape['companyName'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+        shape['vatCode'] = z.string().optional();
+        shape['registrationNumber'] = z.string().optional();
+        shape['companyAddress'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+        shape['representativeName'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+      } else {
+        shape['address'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+        shape['city'] = z.string().min(1, { message: t('fieldRequired', 'This field is required') });
+      }
+
+      // Add terms and conditions fields to the schema
+      shape['acceptMentionObligation'] = z.boolean().refine(value => value === true, {
+        message: t('fieldRequired', 'This field is required'),
+      });
+      shape['acceptDistribution'] = z.boolean().refine(value => value === true, {
+        message: t('fieldRequired', 'This field is required'),
+      });
+      shape['finalNote'] = z.boolean().refine(value => value === true, {
+        message: t('fieldRequired', 'This field is required'),
+      });
+    }
 
     return z.object(shape);
-  }, [steps, formData.invoiceType, t]);
+  }, [steps, formData.invoiceType, t, currentStep]);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(validationSchema),
@@ -166,25 +178,40 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   });
 
   const onSubmit = async (data: any) => {
-    // Handle package selection step
-    if (currentStep === 0 && !formData.package) {
-      toast({
-        title: t('selectPackageFirst'),
-        description: t('pleaseSelectPackage', 'Please select a package to continue'),
-        variant: "destructive"
-      });
-      return;
-    }
-
+    console.log('Form submitted, current step:', currentStep);
+    
+    // Handle package selection step (step 0)
     if (currentStep === 0) {
+      if (!formData.package) {
+        toast({
+          title: t('selectPackageFirst'),
+          description: t('pleaseSelectPackage', 'Please select a package to continue'),
+          variant: "destructive"
+        });
+        return;
+      }
       // Move to first form step after package selection
       setCurrentStep(1);
       return;
     }
 
-    if (currentStep < steps.length) {
+    // Handle form steps (steps 1 to steps.length)
+    if (currentStep > 0 && currentStep < steps.length) {
+      console.log('Moving to next step:', currentStep + 1);
       setCurrentStep(currentStep + 1);
-    } else {
+      return;
+    }
+
+    // Handle moving from last form step to final step
+    if (currentStep === steps.length) {
+      console.log('Moving to final step (contact & legal)');
+      setCurrentStep(currentStep + 1);
+      return;
+    }
+
+    // Handle final submission (contact details & legal step)
+    if (currentStep > steps.length) {
+      console.log('Final submission');
       setIsSubmitting(true);
       try {
         const orderData = {
