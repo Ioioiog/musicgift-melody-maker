@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -62,8 +63,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   } = useOrderWizardState({ preselectedPackage });
   const { openPaymentWindow, isPaymentProcessing, paymentProvider } = useOrderPayment();
 
-  // State for form errors
+  // State for form errors and order confirmation
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
 
   // Handle payment response when received
   useEffect(() => {
@@ -171,8 +173,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       }
     }
 
-    // Final step: Contact details & legal
-    if (currentStep > steps.length) {
+    // Contact details & legal step
+    if (currentStep === steps.length + 1) {
       // Full name is required for invoice
       if (!formData.fullName?.trim()) {
         newErrors['fullName'] = t('fieldRequired', 'This field is required');
@@ -213,6 +215,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       }
     }
 
+    // Review order step
+    if (currentStep === steps.length + 2) {
+      if (!orderConfirmed) {
+        newErrors['orderConfirmation'] = t('fieldRequired', 'Please confirm your order details are correct');
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -238,15 +247,29 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       return;
     }
 
-    // Handle moving from last form step to final step
+    // Handle moving from last form step to contact details step
     if (currentStep === steps.length) {
-      console.log('Moving to final step (contact & legal)');
+      console.log('Moving to contact details step');
       setCurrentStep(currentStep + 1);
       return;
     }
 
-    // Handle final submission (contact details & legal step)
-    if (currentStep > steps.length) {
+    // Handle moving from contact details to review order step
+    if (currentStep === steps.length + 1) {
+      console.log('Moving to review order step');
+      setCurrentStep(currentStep + 1);
+      return;
+    }
+
+    // Handle moving from review order to payment method step
+    if (currentStep === steps.length + 2) {
+      console.log('Moving to payment method step');
+      setCurrentStep(currentStep + 1);
+      return;
+    }
+
+    // Handle final submission (payment method step)
+    if (currentStep === steps.length + 3) {
       console.log('Final submission');
       setIsSubmitting(true);
       try {
@@ -271,6 +294,17 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
   const handlePrevious = () => {
     console.log('Previous button clicked, current step:', currentStep);
+    
+    // Prevent going back if order is confirmed
+    if (orderConfirmed && currentStep > steps.length + 2) {
+      toast({
+        title: t('orderLocked', 'Order Locked'),
+        description: t('cannotGoBackAfterConfirmation', 'You cannot go back after confirming your order'),
+        variant: "destructive"
+      });
+      return;
+    }
+    
     if (currentStep > 0) {
       const newStep = currentStep - 1;
       console.log('Moving to previous step:', newStep);
@@ -329,6 +363,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             onPackageSelect={handlePackageSelect}
           />
         ) : currentStep <= steps.length ? (
+          // Form Steps
           <>
             <h2 className="text-lg font-semibold text-white">{t('stepPackage', 'Step')} {currentStep} {t('of', 'of')} {steps.length}</h2>
             <Separator className="my-2 bg-white/20" />
@@ -351,7 +386,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
               />
             ))}
           </>
-        ) : (
+        ) : currentStep === steps.length + 1 ? (
           // Contact Details & Legal Step
           <>
             <h2 className="text-lg font-semibold text-white">{t('contactDetailsStep', 'Contact Details & Legal')}</h2>
@@ -534,8 +569,105 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                 {errors.finalNote && <p className="text-red-500 text-sm mt-1">{errors.finalNote}</p>}
               </div>
             </div>
+          </>
+        ) : currentStep === steps.length + 2 ? (
+          // Review Order Step
+          <>
+            <h2 className="text-lg font-semibold text-white">{t('reviewOrder', 'Review Your Order')}</h2>
+            <Separator className="my-2 bg-white/20" />
 
-            <h2 className="text-lg font-semibold text-white mt-6">{t('choosePaymentMethod', 'Choose Payment Method')}</h2>
+            <div className="space-y-6">
+              {/* Package Summary */}
+              <Card className="bg-white/10 backdrop-blur-sm border border-white/30">
+                <CardContent className="p-4">
+                  <h3 className="text-md font-semibold text-white mb-2">{t('selectedPackage', 'Selected Package')}</h3>
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/80">{selectedPackage?.name || formData.package}</span>
+                    <span className="text-orange-400 font-semibold">{totalPrice} {currency}</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Addons Summary */}
+              {selectedAddons.length > 0 && (
+                <Card className="bg-white/10 backdrop-blur-sm border border-white/30">
+                  <CardContent className="p-4">
+                    <h3 className="text-md font-semibold text-white mb-2">{t('selectedAddons', 'Selected Add-ons')}</h3>
+                    <div className="space-y-2">
+                      {selectedAddons.map(addonKey => {
+                        const addon = addons.find(a => a.addon_key === addonKey);
+                        if (!addon) return null;
+                        return (
+                          <div key={addonKey} className="flex justify-between items-center">
+                            <span className="text-white/80">{addon.label_key}</span>
+                            <span className="text-orange-400 font-semibold">+{getAddonPrice(addon, currency)} {currency}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Contact Information Summary */}
+              <Card className="bg-white/10 backdrop-blur-sm border border-white/30">
+                <CardContent className="p-4">
+                  <h3 className="text-md font-semibold text-white mb-2">{t('contactInformation', 'Contact Information')}</h3>
+                  <div className="space-y-1 text-white/80">
+                    <p><strong>{t('fullName', 'Full Name')}:</strong> {formData.fullName}</p>
+                    <p><strong>{t('invoiceType', 'Invoice Type')}:</strong> {formData.invoiceType === 'company' ? t('company', 'Company') : t('individual', 'Individual')}</p>
+                    {formData.invoiceType === 'company' ? (
+                      <>
+                        <p><strong>{t('companyName', 'Company Name')}:</strong> {formData.companyName}</p>
+                        <p><strong>{t('companyAddress', 'Company Address')}:</strong> {formData.companyAddress}</p>
+                        <p><strong>{t('representativeName', 'Representative Name')}:</strong> {formData.representativeName}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p><strong>{t('address', 'Address')}:</strong> {formData.address}</p>
+                        <p><strong>{t('city', 'City')}:</strong> {formData.city}</p>
+                      </>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Total Price */}
+              <Card className="bg-white/10 backdrop-blur-sm border border-orange-500/50">
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold text-white">{t('totalPrice', 'Total Price')}</h3>
+                    <span className="text-xl font-bold text-orange-400">{totalOrderPrice} {currency}</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Order Confirmation */}
+              <div className="bg-amber-500/20 border border-amber-400/30 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="orderConfirmation"
+                    className="border-white/30 focus:ring-orange-500 mt-1"
+                    checked={orderConfirmed}
+                    onCheckedChange={(checked) => setOrderConfirmed(Boolean(checked))}
+                  />
+                  <div className="flex-1">
+                    <Label htmlFor="orderConfirmation" className="text-white font-medium">
+                      {t('confirmOrderDetails', 'I confirm that all the information provided is correct')}
+                    </Label>
+                    <p className="text-white/80 text-sm mt-1">
+                      {t('orderLockWarning', 'Once confirmed, you will not be able to make changes to your order details.')}
+                    </p>
+                  </div>
+                </div>
+                {errors.orderConfirmation && <p className="text-red-400 text-sm mt-2">{errors.orderConfirmation}</p>}
+              </div>
+            </div>
+          </>
+        ) : (
+          // Payment Method Step
+          <>
+            <h2 className="text-lg font-semibold text-white">{t('choosePaymentMethod', 'Choose Payment Method')}</h2>
             <Separator className="my-2 bg-white/20" />
 
             <div className="space-y-2">
@@ -600,7 +732,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
               variant="outline" 
               onClick={handlePrevious} 
               className="bg-white/10 border-white/30 text-white hover:bg-white/20"
-              disabled={isSubmitting}
+              disabled={isSubmitting || (orderConfirmed && currentStep > steps.length + 2)}
             >
               {t('previous', 'Previous')}
             </Button>
@@ -615,7 +747,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
           >
             {isSubmitting ? t('submitting', 'Submitting...') : 
              currentStep === 0 ? t('continue', 'Continue') :
-             currentStep <= steps.length ? t('continue', 'Continue') : 
+             currentStep <= steps.length ? t('continue', 'Continue') :
+             currentStep === steps.length + 1 ? t('continue', 'Continue') :
+             currentStep === steps.length + 2 ? t('continue', 'Continue') :
              t('completeOrder', 'Complete order')}
           </Button>
         </div>
