@@ -173,6 +173,11 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
     // Final step: Contact details & legal
     if (currentStep > steps.length) {
+      // Full name is required for invoice
+      if (!formData.fullName?.trim()) {
+        newErrors['fullName'] = t('fieldRequired', 'This field is required');
+      }
+      
       if (!formData.invoiceType) {
         newErrors['invoiceType'] = t('fieldRequired', 'This field is required');
       }
@@ -350,6 +355,18 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             <Separator className="my-2 bg-white/20" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="fullName" className="text-white/80">{t('fullName', 'Full Name')}</Label>
+                <Input
+                  type="text"
+                  id="fullName"
+                  className="bg-white/10 border-white/30 text-white/80"
+                  value={formData.fullName || ''}
+                  onChange={(e) => handleFieldChange('fullName', e.target.value)}
+                />
+                {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
+              </div>
+
               <div>
                 <Label htmlFor="invoiceType" className="text-white/80">{t('invoiceType', 'Invoice Type')}</Label>
                 <select
