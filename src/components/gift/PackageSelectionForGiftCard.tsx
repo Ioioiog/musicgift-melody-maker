@@ -106,7 +106,7 @@ const PackageSelectionForGiftCard: React.FC<PackageSelectionForGiftCardProps> = 
                 <h4 className="font-medium text-orange-500">
                   Ready to proceed with {t(selectedPackage.label_key)}
                 </h4>
-                <p className="text-sm text-slate-300">
+                <p className="text-sm text-gray-950">
                   {pricing.additionalPaymentRequired > 0 ? `Additional payment of ${formatCurrency(pricing.additionalPaymentRequired, currency)} required` : pricing.refundAmount > 0 ? `You will receive a refund of ${formatCurrency(pricing.refundAmount, currency)}` : "Package fully covered by gift card"}
                 </p>
               </div>
