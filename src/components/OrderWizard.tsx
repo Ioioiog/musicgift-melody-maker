@@ -510,61 +510,129 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
               onConfirmationChange={setOrderConfirmed}
             />
           ) : (
-            // Payment Method Step
+            // Payment Method Step - UPDATED WITH DETAILED DESCRIPTIONS
             <>
               <h2 className="text-lg font-semibold text-white">{t('choosePaymentMethod', 'Choose Payment Method')}</h2>
               <Separator className="my-2 bg-white/20" />
 
-              <div className="space-y-2">
-                <div>
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="radio"
-                      value="smartbill"
-                      checked={selectedPaymentProvider === 'smartbill'}
-                      onChange={handlePaymentProviderChange}
-                      className="focus:ring-orange-500"
-                    />
-                    <span className="text-white/80">SmartBill</span>
-                  </label>
-                </div>
-                <div>
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="radio"
-                      value="stripe"
-                      checked={selectedPaymentProvider === 'stripe'}
-                      onChange={handlePaymentProviderChange}
-                      className="focus:ring-orange-500"
-                    />
-                    <span className="text-white/80">Stripe</span>
-                  </label>
-                </div>
-                <div>
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="radio"
-                      value="revolut"
-                      checked={selectedPaymentProvider === 'revolut'}
-                      onChange={handlePaymentProviderChange}
-                      className="focus:ring-orange-500"
-                    />
-                    <span className="text-white/80">Revolut</span>
-                  </label>
-                </div>
-                {giftCard && totalOrderPrice === 0 && (
-                  <div>
-                    <label className="flex items-center space-x-2">
+              <div className="space-y-4">
+                {/* Netopia Payment Option */}
+                <Card className={`transition-all cursor-pointer ${selectedPaymentProvider === 'smartbill' ? 'border-orange-400 bg-orange-500/10' : 'border-white/20 bg-white/5'}`}>
+                  <CardContent className="p-4">
+                    <label className="flex items-start space-x-3 cursor-pointer">
                       <input
                         type="radio"
-                        value="gift_card"
-                        checked={selectedPaymentProvider === 'gift_card'}
+                        value="smartbill"
+                        checked={selectedPaymentProvider === 'smartbill'}
                         onChange={handlePaymentProviderChange}
-                        className="focus:ring-orange-500"
+                        className="mt-1 focus:ring-orange-500"
                       />
-                      <span className="text-white/80">{t('fullyCoveredByGiftCard', 'Fully covered by gift card')}</span>
+                      <div className="flex-1">
+                        <div className="font-semibold text-white text-lg">Netopia</div>
+                        <p className="text-white/70 text-sm mt-1">
+                          {t('netopiaDescription', 'Secure Romanian payment processing with support for all major banks and cards')}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">
+                            {t('bankCards', 'Bank Cards')}
+                          </span>
+                          <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">
+                            {t('bankTransfer', 'Bank Transfer')}
+                          </span>
+                          <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">
+                            {t('localBanks', 'Local Banks')}
+                          </span>
+                        </div>
+                      </div>
                     </label>
-                  </div>
+                  </CardContent>
+                </Card>
+
+                {/* Stripe Payment Option */}
+                <Card className={`transition-all cursor-pointer ${selectedPaymentProvider === 'stripe' ? 'border-orange-400 bg-orange-500/10' : 'border-white/20 bg-white/5'}`}>
+                  <CardContent className="p-4">
+                    <label className="flex items-start space-x-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="stripe"
+                        checked={selectedPaymentProvider === 'stripe'}
+                        onChange={handlePaymentProviderChange}
+                        className="mt-1 focus:ring-orange-500"
+                      />
+                      <div className="flex-1">
+                        <div className="font-semibold text-white text-lg">Stripe</div>
+                        <p className="text-white/70 text-sm mt-1">
+                          {t('stripeDescription', 'International secure payment processing trusted by millions worldwide')}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">
+                            {t('creditCards', 'Credit/Debit Cards')}
+                          </span>
+                          <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">
+                            {t('applePay', 'Apple Pay')}
+                          </span>
+                          <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">
+                            {t('googlePay', 'Google Pay')}
+                          </span>
+                        </div>
+                      </div>
+                    </label>
+                  </CardContent>
+                </Card>
+
+                {/* Revolut Payment Option */}
+                <Card className={`transition-all cursor-pointer ${selectedPaymentProvider === 'revolut' ? 'border-orange-400 bg-orange-500/10' : 'border-white/20 bg-white/5'}`}>
+                  <CardContent className="p-4">
+                    <label className="flex items-start space-x-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="revolut"
+                        checked={selectedPaymentProvider === 'revolut'}
+                        onChange={handlePaymentProviderChange}
+                        className="mt-1 focus:ring-orange-500"
+                      />
+                      <div className="flex-1">
+                        <div className="font-semibold text-white text-lg">Revolut</div>
+                        <p className="text-white/70 text-sm mt-1">
+                          {t('revolutDescription', 'Modern digital banking with instant transfers and low fees')}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">
+                            {t('instantTransfers', 'Instant Transfers')}
+                          </span>
+                          <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">
+                            {t('lowFees', 'Low Fees')}
+                          </span>
+                          <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded">
+                            {t('digitalWallet', 'Digital Wallet')}
+                          </span>
+                        </div>
+                      </div>
+                    </label>
+                  </CardContent>
+                </Card>
+
+                {/* Gift Card Option (if applicable) */}
+                {giftCard && totalOrderPrice === 0 && (
+                  <Card className={`transition-all cursor-pointer ${selectedPaymentProvider === 'gift_card' ? 'border-orange-400 bg-orange-500/10' : 'border-white/20 bg-white/5'}`}>
+                    <CardContent className="p-4">
+                      <label className="flex items-start space-x-3 cursor-pointer">
+                        <input
+                          type="radio"
+                          value="gift_card"
+                          checked={selectedPaymentProvider === 'gift_card'}
+                          onChange={handlePaymentProviderChange}
+                          className="mt-1 focus:ring-orange-500"
+                        />
+                        <div className="flex-1">
+                          <div className="font-semibold text-white text-lg">{t('giftCard', 'Gift Card')}</div>
+                          <p className="text-white/70 text-sm mt-1">
+                            {t('fullyCoveredByGiftCard', 'Your order is fully covered by your gift card balance')}
+                          </p>
+                        </div>
+                      </label>
+                    </CardContent>
+                  </Card>
                 )}
               </div>
             </>
