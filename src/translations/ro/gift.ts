@@ -1,3 +1,4 @@
+
 export const giftTranslations = {
   // Gift page hero
   shareGiftOfMusic: "Împărtășește Darul Muzicii",
@@ -69,10 +70,6 @@ export const giftTranslations = {
   messageFromSender: "Mesaj de la expeditor",
   choosePackage: "Alege Pachetul",
   selectPackageToRedeem: "Selectează pachetul pe care vrei să îl folosești cu cardul cadou",
-  packagePrice: "Prețul Pachetului",
-  giftCardCredit: "Credit Card Cadou",
-  additionalPayment: "Plată Suplimentară Necesară",
-  youWillReceiveRefund: "Vei primi o rambursare de",
   proceedWithPackage: "Continuă cu",
   
   // Messages and notifications
@@ -163,7 +160,7 @@ export const giftTranslations = {
   giftCardPreviewTitle: "Previzualizare Card Cadou",
   howGiftCardWillLook: "Așa va arăta cardul cadou cu datele introduse:",
 
-  // Missing translations for package selection interface
+  // Package selection interface translations
   packagePrice: "Prețul Pachetului:",
   giftCardCredit: "Credit Card Cadou:",
   additionalPayment: "Plată Suplimentară:",
