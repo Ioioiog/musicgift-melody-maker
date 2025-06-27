@@ -140,4 +140,26 @@ export const giftTranslations = {
   
   // Updated help text
   giftCardHelp: "Gift cards start with MG-XXXX-XXXX",
+  
+  // Missing alert/warning translations
+  warningAfterConfirmation: "Warning: After confirmation, this information cannot be changed anymore. Please carefully check all details.",
+  finalGiftCardPreview: "Final Gift Card Preview",
+  
+  // Missing gift card details section translations
+  completeGiftCardDetails: "Complete Gift Card Details",
+  senderInformation: "Sender Information",
+  recipientInformation: "Recipient Information",
+  giftCardDetailsSection: "Gift Card Details",
+  
+  // Missing form labels
+  name: "Name:",
+  email: "Email:",
+  value: "Value:",
+  
+  // Missing payment and confirmation translations
+  choosePaymentMethod: "Choose Payment Method",
+  confirmAllCorrect: "I confirm that all information is correct",
+  understandAfterConfirmation: "I understand that after confirmation, these details cannot be changed and the gift card will be processed for payment.",
+  giftCardPreviewTitle: "Gift Card Preview",
+  howGiftCardWillLook: "Here's how your gift card will look with the entered data:",
 };
