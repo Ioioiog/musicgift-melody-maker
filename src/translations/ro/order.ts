@@ -1,4 +1,5 @@
 
+
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -592,6 +593,7 @@ export const orderTranslations = {
   orderHistory: 'Istoricul comenzilor',
   viewManageOrders: 'Vizualizați și gestionați comenzile dvs.',
   backHome: 'Înapoi acasă',
-  orderError: 'Eroare caricamento ordini',
+  orderHistoryError: 'Eroare la încărcarea comenzilor',
   noOrdersYet: 'Nu aveți încă comenzi'
 };
+
