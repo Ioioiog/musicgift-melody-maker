@@ -7,6 +7,7 @@ import { CheckCircle, Package, CreditCard, Tag, User, Mail, Phone, MapPin } from
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
+import { convertGiftCardAmount } from '@/utils/currencyUtils';
 import DetailedFormReview from './DetailedFormReview';
 import OrderConfirmationSection from './OrderConfirmationSection';
 
@@ -47,12 +48,20 @@ const OrderReviewStep: React.FC<OrderReviewStepProps> = ({
   }, 0);
   const subtotal = packagePrice + addonsPrice;
 
-  // Calculate gift card application
+  // Calculate gift card application - gift cards are stored in base currency units
   let giftCreditApplied = 0;
   let finalTotal = subtotal;
   if (giftCard) {
-    const giftBalance = (giftCard.gift_amount || 0) / 100;
-    giftCreditApplied = Math.min(giftBalance, subtotal);
+    // Gift card amounts are already in base currency units, no division needed
+    const giftAmount = giftCard.gift_amount || 0;
+    const giftCurrency = giftCard.currency || 'RON';
+    
+    // Convert to target currency if needed
+    const convertedGiftAmount = giftCurrency === currency 
+      ? giftAmount 
+      : convertGiftCardAmount(giftAmount, giftCurrency, currency);
+    
+    giftCreditApplied = Math.min(convertedGiftAmount, subtotal);
     finalTotal = Math.max(0, subtotal - giftCreditApplied);
   }
 

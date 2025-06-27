@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
@@ -15,28 +16,17 @@ import { useGiftCardByCode } from "@/hooks/useGiftCards";
 import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { convertGiftCardAmount } from "@/utils/currencyUtils";
 import { FileMetadata } from "@/types/order";
 
 const Order = () => {
-  const {
-    toast
-  } = useToast();
-  const {
-    t
-  } = useLanguage();
-  const {
-    user
-  } = useAuth();
-  const {
-    currency
-  } = useCurrency();
+  const { toast } = useToast();
+  const { t } = useLanguage();
+  const { user } = useAuth();
+  const { currency } = useCurrency();
   const navigate = useNavigate();
-  const {
-    data: packages = []
-  } = usePackages();
-  const {
-    data: addons = []
-  } = useAddons();
+  const { data: packages = [] } = usePackages();
+  const { data: addons = [] } = useAddons();
   const [searchParams] = useSearchParams();
   const [orderData, setOrderData] = useState<any>(null);
   const [appliedGiftCard, setAppliedGiftCard] = useState<any>(null);
@@ -53,10 +43,7 @@ const Order = () => {
   const preselectedPackage = searchParams.get('package');
 
   // Fetch gift card data if code is provided
-  const {
-    data: urlGiftCard,
-    isLoading: isLoadingGift
-  } = useGiftCardByCode(giftCardCode || '');
+  const { data: urlGiftCard, isLoading: isLoadingGift } = useGiftCardByCode(giftCardCode || '');
 
   // Check if the preselected package is the gift package
   const isGiftPackage = preselectedPackage === 'gift';
@@ -70,11 +57,11 @@ const Order = () => {
         const parsedRedemption = JSON.parse(redemptionData);
         console.log('Found gift card redemption data in sessionStorage:', parsedRedemption);
         
-        // Create a gift card object from the redemption data
+        // Create a gift card object from the redemption data - gift cards are in base currency units
         const giftCardFromRedemption = {
           id: parsedRedemption.giftCardId,
           code: parsedRedemption.giftCardCode,
-          gift_amount: parsedRedemption.giftCardValue * 100, // Convert to cents for consistency
+          gift_amount: parsedRedemption.giftCardValue, // Keep as base currency units (no multiplication)
           remaining_balance: parsedRedemption.giftCardValue,
           currency: parsedRedemption.currency,
           status: 'active'
@@ -143,14 +130,8 @@ const Order = () => {
       return;
     }
     try {
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke('associate-files-with-order', {
-        body: {
-          orderId,
-          fileData
-        }
+      const { data, error } = await supabase.functions.invoke('associate-files-with-order', {
+        body: { orderId, fileData }
       });
       if (error) {
         console.error('Error associating files with order:', error);
@@ -184,7 +165,7 @@ Selected Add-ons: ${selectedAddonsList.length > 0 ? selectedAddonsList.join(', '
 Total Price: ${totalPrice} ${currency}
 Payment Provider: ${orderData.paymentProvider || 'N/A'}
 
-${appliedGiftCard ? `Gift Card Applied: ${appliedGiftCard.code} (${(appliedGiftCard.gift_amount || 0) / 100} ${currency})` : ''}
+${appliedGiftCard ? `Gift Card Applied: ${appliedGiftCard.code} (${appliedGiftCard.gift_amount || 0} ${currency})` : ''}
 ${appliedDiscount ? `Discount Applied: ${appliedDiscount.code} (${appliedDiscount.amount} ${currency})` : ''}
 
 Customer Details:
@@ -227,12 +208,20 @@ Order Management: View full details in the admin panel.
       // Calculate total price
       const totalPrice = calculateTotalPrice(orderData.package, orderData.addons || []);
 
-      // Calculate gift card application (keep in base monetary units)
+      // Calculate gift card application - gift cards are in base currency units
       let giftCreditApplied = 0;
       let finalPrice = totalPrice;
       if (appliedGiftCard) {
-        const giftBalance = (appliedGiftCard.gift_amount || 0) / 100; // Convert from cents to base units
-        giftCreditApplied = Math.min(giftBalance, totalPrice);
+        // Gift card amounts are already in base currency units, no division needed
+        const giftAmount = appliedGiftCard.gift_amount || 0;
+        const giftCurrency = appliedGiftCard.currency || 'RON';
+        
+        // Convert to target currency if needed
+        const convertedGiftAmount = giftCurrency === currency 
+          ? giftAmount 
+          : convertGiftCardAmount(giftAmount, giftCurrency, currency);
+        
+        giftCreditApplied = Math.min(convertedGiftAmount, totalPrice);
         finalPrice = Math.max(0, totalPrice - giftCreditApplied);
       }
 
@@ -258,15 +247,13 @@ Order Management: View full details in the admin panel.
         total_price: finalPrice,
         status: 'pending',
         payment_status: finalPrice > 0 ? 'pending' : 'completed',
-        // Gift card fields (keep gift_credit_applied in cents for database consistency)
+        // Gift card fields - store gift_credit_applied in cents for database consistency
         gift_card_id: appliedGiftCard?.id || null,
         is_gift_redemption: !!appliedGiftCard,
-        gift_credit_applied: giftCreditApplied * 100,
-        // Convert to cents for database
+        gift_credit_applied: giftCreditApplied * 100, // Convert to cents for database
         // Discount fields
         discount_code: appliedDiscount?.code || null,
-        discount_amount: discountApplied * 100,
-        // Convert to cents for database
+        discount_amount: discountApplied * 100, // Convert to cents for database
         // Package detail columns
         package_value: selectedPackage.value,
         package_name: selectedPackage.label_key,
@@ -308,14 +295,15 @@ Order Management: View full details in the admin panel.
 
         // Create gift card redemption record AFTER successful order creation
         if (appliedGiftCard && giftCreditApplied > 0) {
-          const remainingBalance = Math.max(0, (appliedGiftCard.gift_amount || 0) - giftCreditApplied * 100);
+          // For redemptions, store amounts in cents in the database
+          const remainingBalance = Math.max(0, (appliedGiftCard.gift_amount || 0) * 100 - giftCreditApplied * 100);
           
           const { error: redemptionError } = await supabase
             .from('gift_redemptions')
             .insert({
               gift_card_id: appliedGiftCard.id,
               order_id: orderResponse.id,
-              redeemed_amount: giftCreditApplied * 100,
+              redeemed_amount: giftCreditApplied * 100, // Convert to cents for database
               remaining_balance: remainingBalance
             });
 
@@ -450,25 +438,29 @@ Order Management: View full details in the admin panel.
 
   // Loading state
   if (isLoadingGift && giftCardCode) {
-    return <div className="min-h-screen flex items-center justify-center" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }}>
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{
+        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="text-center relative z-10">
           <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-white">{t('loadingGiftCard')}</p>
         </div>
-      </div>;
+      </div>
+    );
   }
-  return <div className="min-h-screen relative overflow-hidden" style={{
-    backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat'
-  }}>
+
+  return (
+    <div className="min-h-screen relative overflow-hidden" style={{
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
       <div className="absolute inset-0 bg-black/20"></div>
 
       <div className="relative z-10">
@@ -525,7 +517,8 @@ Order Management: View full details in the admin panel.
 
         <Footer />
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default Order;
