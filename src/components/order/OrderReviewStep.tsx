@@ -7,6 +7,7 @@ import { CheckCircle, Package, CreditCard, Tag, User, Mail, Phone, MapPin } from
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
+import DetailedFormReview from './DetailedFormReview';
 
 interface OrderReviewStepProps {
   formData: Record<string, any>;
@@ -191,6 +192,9 @@ const OrderReviewStep: React.FC<OrderReviewStepProps> = ({
           )}
         </CardContent>
       </Card>
+
+      {/* Detailed Form Information */}
+      <DetailedFormReview formData={formData} />
 
       {/* Legal Confirmations */}
       <Card className="bg-white/10 border-white/20">
