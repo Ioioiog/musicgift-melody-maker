@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import FormFieldRenderer from './form/FormFieldRenderer';
+import FormFieldRenderer from './order/FormFieldRenderer';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useOrderPayment } from '@/hooks/useOrderPayment';
@@ -112,16 +113,18 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
         }
 
         if (field.type === 'email') {
-          fieldSchema = z.string().email({ message: t('invalidEmail', 'Please enter a valid email address') });
           if (field.required) {
-            fieldSchema = fieldSchema.min(1, { message: t('fieldRequired', 'This field is required') });
+            fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') }).email({ message: t('invalidEmail', 'Please enter a valid email address') });
+          } else {
+            fieldSchema = z.string().email({ message: t('invalidEmail', 'Please enter a valid email address') }).optional();
           }
         }
 
         if (field.type === 'url') {
-          fieldSchema = z.string().url({ message: t('invalidUrl', 'Please enter a valid URL') });
           if (field.required) {
-            fieldSchema = fieldSchema.min(1, { message: t('fieldRequired', 'This field is required') });
+            fieldSchema = z.string().min(1, { message: t('fieldRequired', 'This field is required') }).url({ message: t('invalidUrl', 'Please enter a valid URL') });
+          } else {
+            fieldSchema = z.string().url({ message: t('invalidUrl', 'Please enter a valid URL') }).optional();
           }
         }
 
@@ -361,28 +364,10 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
                           <Checkbox
                             id={addon.addon_key}
                             checked={selectedAddons.includes(addon.addon_key)}
-                            onCheckedChange={(checked) => handleAddonChange(addon.addon_key, checked || false)}
+                            onCheckedChange={(checked) => handleAddonChange(addon.addon_key, Boolean(checked))}
                             className="border-white/30 focus:ring-orange-500"
                           />
                         </div>
-                        {selectedAddons.includes(addon.addon_key) && addon.fields && addon.fields.length > 0 && (
-                          <Accordion type="single" collapsible className="w-full mt-2">
-                            <AccordionItem value={addon.addon_key}>
-                              <AccordionTrigger className="text-sm text-white/80 hover:no-underline">{t('more', 'More')}</AccordionTrigger>
-                              <AccordionContent className="py-2">
-                                {addon.fields.map(field => (
-                                  <FormFieldRenderer
-                                    key={field.key}
-                                    field={field}
-                                    value={addonFieldValues[field.key]}
-                                    onChange={(value) => handleAddonFieldChange(field.key, value)}
-                                    t={t}
-                                  />
-                                ))}
-                              </AccordionContent>
-                            </AccordionItem>
-                          </Accordion>
-                        )}
                       </CardContent>
                     </Card>
                   ))}
