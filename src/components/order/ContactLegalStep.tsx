@@ -1,7 +1,12 @@
+
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent } from '@/components/ui/card';
-import FormFieldRenderer from './FormFieldRenderer';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Separator } from '@/components/ui/separator';
+
 interface ContactLegalStepProps {
   formData: Record<string, any>;
   onInputChange: (field: string, value: any) => void;
@@ -13,155 +18,170 @@ interface ContactLegalStepProps {
   selectedPackage: string;
   selectedPackageData: any;
 }
+
 const ContactLegalStep: React.FC<ContactLegalStepProps> = ({
   formData,
-  onInputChange,
-  selectedAddons,
-  onAddonChange,
-  availableAddons,
-  addonFieldValues,
-  onAddonFieldChange,
-  selectedPackage,
-  selectedPackageData
+  onInputChange
 }) => {
-  const {
-    t
-  } = useLanguage();
-  const contactLegalStepFields = [{
-    id: 'fullName',
-    field_name: 'fullName',
-    field_type: 'text',
-    label_key: 'fullName',
-    placeholder_key: 'fullName',
-    required: true,
-    field_order: 1
-  }, {
-    id: 'email',
-    field_name: 'email',
-    field_type: 'email',
-    label_key: 'email',
-    placeholder_key: 'email',
-    required: true,
-    field_order: 2
-  }, {
-    id: 'phone',
-    field_name: 'phone',
-    field_type: 'tel',
-    label_key: 'phone',
-    placeholder_key: 'phone',
-    required: false,
-    field_order: 3
-  }, {
-    id: 'address',
-    field_name: 'address',
-    field_type: 'text',
-    label_key: 'address',
-    placeholder_key: 'address',
-    required: false,
-    field_order: 4
-  }, {
-    id: 'city',
-    field_name: 'city',
-    field_type: 'text',
-    label_key: 'city',
-    placeholder_key: 'city',
-    required: false,
-    field_order: 5
-  }, {
-    id: 'invoiceType',
-    field_name: 'invoiceType',
-    field_type: 'select',
-    label_key: 'invoiceType',
-    placeholder_key: 'invoiceType',
-    required: true,
-    field_order: 6,
-    options: [{
-      value: 'individual',
-      label_key: 'individual'
-    }, {
-      value: 'company',
-      label_key: 'company'
-    }]
-  }, {
-    id: 'companyName',
-    field_name: 'companyName',
-    field_type: 'text',
-    label_key: 'companyName',
-    placeholder_key: 'companyName',
-    required: false,
-    field_order: 7
-  }, {
-    id: 'vatCode',
-    field_name: 'vatCode',
-    field_type: 'text',
-    label_key: 'vatCode',
-    placeholder_key: 'vatCode',
-    required: false,
-    field_order: 8
-  }, {
-    id: 'registrationNumber',
-    field_name: 'registrationNumber',
-    field_type: 'text',
-    label_key: 'registrationNumber',
-    placeholder_key: 'registrationNumber',
-    required: false,
-    field_order: 9
-  }, {
-    id: 'companyAddress',
-    field_name: 'companyAddress',
-    field_type: 'text',
-    label_key: 'companyAddress',
-    placeholder_key: 'companyAddress',
-    required: false,
-    field_order: 10
-  }, {
-    id: 'representativeName',
-    field_name: 'representativeName',
-    field_type: 'text',
-    label_key: 'representativeName',
-    placeholder_key: 'representativeName',
-    required: false,
-    field_order: 11
-  }, {
-    id: 'acceptMentionObligation',
-    field_name: 'acceptMentionObligation',
-    field_type: 'checkbox',
-    label_key: 'acceptMentionObligation',
-    placeholder_key: 'acceptMentionObligation',
-    required: true,
-    field_order: 12
-  }, {
-    id: 'acceptDistribution',
-    field_name: 'acceptDistribution',
-    field_type: 'checkbox',
-    label_key: 'acceptDistribution',
-    placeholder_key: 'acceptDistribution',
-    required: true,
-    field_order: 13
-  }, {
-    id: 'finalNote',
-    field_name: 'finalNote',
-    field_type: 'checkbox',
-    label_key: 'finalNote',
-    placeholder_key: 'finalNote',
-    required: true,
-    field_order: 14
-  }];
-  return <div className="space-y-1">
-      <div className="text-center hidden md:block">
-        <h3 className="text-base font-semibold text-white mb-1">
-          {t('contactDetailsStep', 'Contact Details & Legal Acceptance')}
-        </h3>
-        <p className="text-white/70 text-sm">
+  const { t } = useLanguage();
+
+  return (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-lg font-semibold text-white">{t('contactDetailsStep', 'Contact Details & Legal')}</h2>
+        <p className="text-white/70 text-sm mt-1">
           {t('fillContactAndLegalInfo', 'Fill in your contact details and accept the legal terms')}
         </p>
       </div>
+      
+      <Separator className="my-2 bg-white/20" />
 
-      {contactLegalStepFields.sort((a, b) => a.field_order - b.field_order).map(field => <Card key={field.id} className="bg-transparent border-none">
-            <CardContent className="p-1.5 py-0">
-              <FormFieldRenderer field={field} value={formData[field.field_name]} onChange={value => onInputChange(field.field_name, value)} selectedAddons={selectedAddons} onAddonChange={onAddonChange} availableAddons={availableAddons} addonFieldValues={addonFieldValues} onAddonFieldChange={onAddonFieldChange} selectedPackage={selectedPackage} selectedPackageData={selectedPackageData} formData={formData} />
-            </CardContent>
-          </Card>)}
-    </div>;
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="fullName" className="text-white/80">{t('fullName', 'Full Name')}</Label>
+          <Input
+            type="text"
+            id="fullName"
+            className="bg-white/10 border-white/30 text-white/80"
+            value={formData.fullName || ''}
+            onChange={(e) => onInputChange('fullName', e.target.value)}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="invoiceType" className="text-white/80">{t('invoiceType', 'Invoice Type')}</Label>
+          <select
+            id="invoiceType"
+            className="w-full bg-white/10 border-white/30 rounded px-3 py-2 text-white/80 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            value={formData.invoiceType || 'individual'}
+            onChange={(e) => onInputChange('invoiceType', e.target.value)}
+          >
+            <option value="individual">{t('individual', 'Individual')}</option>
+            <option value="company">{t('company', 'Company')}</option>
+          </select>
+        </div>
+
+        {formData.invoiceType === 'company' ? (
+          <>
+            <div>
+              <Label htmlFor="companyName" className="text-white/80">{t('companyName', 'Company Name')}</Label>
+              <Input
+                type="text"
+                id="companyName"
+                className="bg-white/10 border-white/30 text-white/80"
+                value={formData.companyName || ''}
+                onChange={(e) => onInputChange('companyName', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="vatCode" className="text-white/80">{t('vatCode', 'VAT Code')}</Label>
+              <Input
+                type="text"
+                id="vatCode"
+                className="bg-white/10 border-white/30 text-white/80"
+                value={formData.vatCode || ''}
+                onChange={(e) => onInputChange('vatCode', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="registrationNumber" className="text-white/80">{t('registrationNumber', 'Registration Number')}</Label>
+              <Input
+                type="text"
+                id="registrationNumber"
+                className="bg-white/10 border-white/30 text-white/80"
+                value={formData.registrationNumber || ''}
+                onChange={(e) => onInputChange('registrationNumber', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="companyAddress" className="text-white/80">{t('companyAddress', 'Company Address')}</Label>
+              <Input
+                type="text"
+                id="companyAddress"
+                className="bg-white/10 border-white/30 text-white/80"
+                value={formData.companyAddress || ''}
+                onChange={(e) => onInputChange('companyAddress', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="representativeName" className="text-white/80">{t('representativeName', 'Representative Name')}</Label>
+              <Input
+                type="text"
+                id="representativeName"
+                className="bg-white/10 border-white/30 text-white/80"
+                value={formData.representativeName || ''}
+                onChange={(e) => onInputChange('representativeName', e.target.value)}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <Label htmlFor="address" className="text-white/80">{t('address', 'Address')}</Label>
+              <Input
+                type="text"
+                id="address"
+                className="bg-white/10 border-white/30 text-white/80"
+                value={formData.address || ''}
+                onChange={(e) => onInputChange('address', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="city" className="text-white/80">{t('city', 'City')}</Label>
+              <Input
+                type="text"
+                id="city"
+                className="bg-white/10 border-white/30 text-white/80"
+                value={formData.city || ''}
+                onChange={(e) => onInputChange('city', e.target.value)}
+              />
+            </div>
+          </>
+        )}
+      </div>
+
+      <h3 className="text-lg font-semibold text-white mt-6">{t('confirmation', 'Legal Agreements')}</h3>
+      <Separator className="my-2 bg-white/20" />
+
+      <div className="space-y-4">
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="acceptMentionObligation"
+            className="border-white/30 focus:ring-orange-500"
+            checked={formData.acceptMentionObligation || false}
+            onCheckedChange={(checked) => onInputChange('acceptMentionObligation', checked)}
+          />
+          <Label htmlFor="acceptMentionObligation" className="text-white/80 cursor-pointer">
+            {t('acceptMentionObligation', 'I accept the mention obligation')}
+          </Label>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="acceptDistribution"
+            className="border-white/30 focus:ring-orange-500"
+            checked={formData.acceptDistribution || false}
+            onCheckedChange={(checked) => onInputChange('acceptDistribution', checked)}
+          />
+          <Label htmlFor="acceptDistribution" className="text-white/80 cursor-pointer">
+            {t('acceptDistribution', 'I accept distribution')}
+          </Label>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="finalNote"
+            className="border-white/30 focus:ring-orange-500"
+            checked={formData.finalNote || false}
+            onCheckedChange={(checked) => onInputChange('finalNote', checked)}
+          />
+          <Label htmlFor="finalNote" className="text-white/80 cursor-pointer">
+            {t('finalNote', 'I agree to final terms')}
+          </Label>
+        </div>
+      </div>
+    </div>
+  );
 };
+
 export default ContactLegalStep;

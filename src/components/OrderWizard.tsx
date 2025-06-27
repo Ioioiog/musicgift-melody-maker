@@ -11,10 +11,11 @@ import { usePackages, useAddons } from "@/hooks/usePackageData";
 import { useNavigate } from 'react-router-dom';
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 import FormFieldRenderer from './order/FormFieldRenderer';
 import PackageSelectionStep from './order/PackageSelectionStep';
+import AddonSelectionStep from './order/AddonSelectionStep';
+import ContactLegalStep from './order/ContactLegalStep';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useOrderPayment } from '@/hooks/useOrderPayment';
@@ -104,27 +105,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const selectedPackage = packages.find(pkg => pkg.value === formData.package);
   const steps = selectedPackage?.steps || [];
 
-  // Helper function to check if addon should be shown based on package's available_addons
-  const shouldShowAddon = (addon: any) => {
-    if (!addon.is_active) return false;
-
-    // Use the selected package data if available
-    if (selectedPackage) {
-      const isAvailable = selectedPackage.available_addons.includes(addon.addon_key);
-      console.log('Addon availability check:', {
-        addonKey: addon.addon_key,
-        selectedPackage: selectedPackage.value,
-        packageAvailableAddons: selectedPackage.available_addons,
-        isAvailable
-      });
-      return isAvailable;
-    }
-
-    // Fallback: if no package data is provided, don't show any addons
-    console.warn('No package data provided for addon filtering');
-    return false;
-  };
-
   // Validation function
   const validateCurrentStep = () => {
     const newErrors: Record<string, string> = {};
@@ -173,8 +153,14 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       }
     }
 
-    // Contact details & legal step
+    // Addons step (steps.length + 1)
     if (currentStep === steps.length + 1) {
+      // No validation needed for addons step - it's optional
+      return true;
+    }
+
+    // Contact details & legal step (steps.length + 2)
+    if (currentStep === steps.length + 2) {
       // Full name is required for invoice
       if (!formData.fullName?.trim()) {
         newErrors['fullName'] = t('fieldRequired', 'This field is required');
@@ -215,8 +201,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       }
     }
 
-    // Review order step
-    if (currentStep === steps.length + 2) {
+    // Review order step (steps.length + 3)
+    if (currentStep === steps.length + 3) {
       if (!orderConfirmed) {
         newErrors['orderConfirmation'] = t('fieldRequired', 'Please confirm your order details are correct');
       }
@@ -247,29 +233,36 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       return;
     }
 
-    // Handle moving from last form step to contact details step
+    // Handle moving from last form step to addons step
     if (currentStep === steps.length) {
+      console.log('Moving to addons step');
+      setCurrentStep(currentStep + 1);
+      return;
+    }
+
+    // Handle moving from addons step to contact details step
+    if (currentStep === steps.length + 1) {
       console.log('Moving to contact details step');
       setCurrentStep(currentStep + 1);
       return;
     }
 
     // Handle moving from contact details to review order step
-    if (currentStep === steps.length + 1) {
+    if (currentStep === steps.length + 2) {
       console.log('Moving to review order step');
       setCurrentStep(currentStep + 1);
       return;
     }
 
     // Handle moving from review order to payment method step
-    if (currentStep === steps.length + 2) {
+    if (currentStep === steps.length + 3) {
       console.log('Moving to payment method step');
       setCurrentStep(currentStep + 1);
       return;
     }
 
     // Handle final submission (payment method step)
-    if (currentStep === steps.length + 3) {
+    if (currentStep === steps.length + 4) {
       console.log('Final submission');
       setIsSubmitting(true);
       try {
@@ -296,7 +289,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     console.log('Previous button clicked, current step:', currentStep);
     
     // Prevent going back if order is confirmed
-    if (orderConfirmed && currentStep > steps.length + 2) {
+    if (orderConfirmed && currentStep > steps.length + 3) {
       toast({
         title: t('orderLocked', 'Order Locked'),
         description: t('cannotGoBackAfterConfirmation', 'You cannot go back after confirming your order'),
@@ -336,9 +329,6 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     return total + (addon ? getAddonPrice(addon, currency) : 0);
   }, 0);
   const totalOrderPrice = totalPrice + addonsPrice;
-
-  // Filter addons to only show those available for the selected package
-  const filteredAddons = addons.filter(addon => shouldShowAddon(addon));
 
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-white/30">
@@ -387,190 +377,27 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             ))}
           </>
         ) : currentStep === steps.length + 1 ? (
-          // Contact Details & Legal Step
-          <>
-            <h2 className="text-lg font-semibold text-white">{t('contactDetailsStep', 'Contact Details & Legal')}</h2>
-            <Separator className="my-2 bg-white/20" />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="fullName" className="text-white/80">{t('fullName', 'Full Name')}</Label>
-                <Input
-                  type="text"
-                  id="fullName"
-                  className="bg-white/10 border-white/30 text-white/80"
-                  value={formData.fullName || ''}
-                  onChange={(e) => handleFieldChange('fullName', e.target.value)}
-                />
-                {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
-              </div>
-
-              <div>
-                <Label htmlFor="invoiceType" className="text-white/80">{t('invoiceType', 'Invoice Type')}</Label>
-                <select
-                  id="invoiceType"
-                  className="w-full bg-white/10 border-white/30 rounded px-3 py-2 text-white/80 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  value={formData.invoiceType || 'individual'}
-                  onChange={(e) => {
-                    handleFieldChange('invoiceType', e.target.value);
-                  }}
-                >
-                  <option value="individual">{t('individual', 'Individual')}</option>
-                  <option value="company">{t('company', 'Company')}</option>
-                </select>
-                {errors.invoiceType && <p className="text-red-500 text-sm mt-1">{errors.invoiceType}</p>}
-              </div>
-
-              {formData.invoiceType === 'company' ? (
-                <>
-                  <div>
-                    <Label htmlFor="companyName" className="text-white/80">{t('companyName', 'Company Name')}</Label>
-                    <Input
-                      type="text"
-                      id="companyName"
-                      className="bg-white/10 border-white/30 text-white/80"
-                      value={formData.companyName || ''}
-                      onChange={(e) => handleFieldChange('companyName', e.target.value)}
-                    />
-                    {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName}</p>}
-                  </div>
-                  <div>
-                    <Label htmlFor="vatCode" className="text-white/80">{t('vatCode', 'VAT Code')}</Label>
-                    <Input
-                      type="text"
-                      id="vatCode"
-                      className="bg-white/10 border-white/30 text-white/80"
-                      value={formData.vatCode || ''}
-                      onChange={(e) => handleFieldChange('vatCode', e.target.value)}
-                    />
-                    {errors.vatCode && <p className="text-red-500 text-sm mt-1">{errors.vatCode}</p>}
-                  </div>
-                  <div>
-                    <Label htmlFor="registrationNumber" className="text-white/80">{t('registrationNumber', 'Registration Number')}</Label>
-                    <Input
-                      type="text"
-                      id="registrationNumber"
-                      className="bg-white/10 border-white/30 text-white/80"
-                      value={formData.registrationNumber || ''}
-                      onChange={(e) => handleFieldChange('registrationNumber', e.target.value)}
-                    />
-                    {errors.registrationNumber && <p className="text-red-500 text-sm mt-1">{errors.registrationNumber}</p>}
-                  </div>
-                  <div>
-                    <Label htmlFor="companyAddress" className="text-white/80">{t('companyAddress', 'Company Address')}</Label>
-                    <Input
-                      type="text"
-                      id="companyAddress"
-                      className="bg-white/10 border-white/30 text-white/80"
-                      value={formData.companyAddress || ''}
-                      onChange={(e) => handleFieldChange('companyAddress', e.target.value)}
-                    />
-                    {errors.companyAddress && <p className="text-red-500 text-sm mt-1">{errors.companyAddress}</p>}
-                  </div>
-                  <div>
-                    <Label htmlFor="representativeName" className="text-white/80">{t('representativeName', 'Representative Name')}</Label>
-                    <Input
-                      type="text"
-                      id="representativeName"
-                      className="bg-white/10 border-white/30 text-white/80"
-                      value={formData.representativeName || ''}
-                      onChange={(e) => handleFieldChange('representativeName', e.target.value)}
-                    />
-                    {errors.representativeName && <p className="text-red-500 text-sm mt-1">{errors.representativeName}</p>}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div>
-                    <Label htmlFor="address" className="text-white/80">{t('address', 'Address')}</Label>
-                    <Input
-                      type="text"
-                      id="address"
-                      className="bg-white/10 border-white/30 text-white/80"
-                      value={formData.address || ''}
-                      onChange={(e) => handleFieldChange('address', e.target.value)}
-                    />
-                    {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
-                  </div>
-                  <div>
-                    <Label htmlFor="city" className="text-white/80">{t('city', 'City')}</Label>
-                    <Input
-                      type="text"
-                      id="city"
-                      className="bg-white/10 border-white/30 text-white/80"
-                      value={formData.city || ''}
-                      onChange={(e) => handleFieldChange('city', e.target.value)}
-                    />
-                    {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
-                  </div>
-                </>
-              )}
-            </div>
-
-            <h2 className="text-lg font-semibold text-white mt-6">{t('selectAddons', 'Select Add-ons')}</h2>
-            <Separator className="my-2 bg-white/20" />
-
-            {filteredAddons.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredAddons.map(addon => (
-                  <Card key={addon.addon_key} className="bg-white/05 backdrop-blur-sm border border-white/30">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor={addon.addon_key} className="text-white/80">{addon.label_key}</Label>
-                        <Checkbox
-                          id={addon.addon_key}
-                          checked={selectedAddons.includes(addon.addon_key)}
-                          onCheckedChange={(checked) => handleAddonChange(addon.addon_key, Boolean(checked))}
-                          className="border-white/30 focus:ring-orange-500"
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <p className="text-white/80">{t('noAddonsAvailable', 'No add-ons available for this package')}</p>
-            )}
-
-            <h2 className="text-lg font-semibold text-white mt-6">{t('confirmation', 'Confirmation')}</h2>
-            <Separator className="my-2 bg-white/20" />
-
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="acceptMentionObligation"
-                  className="border-white/30 focus:ring-orange-500"
-                  checked={formData.acceptMentionObligation || false}
-                  onCheckedChange={(checked) => handleFieldChange('acceptMentionObligation', checked)}
-                />
-                <Label htmlFor="acceptMentionObligation" className="text-white/80">{t('acceptMentionObligation', 'I accept the mention obligation')}</Label>
-                {errors.acceptMentionObligation && <p className="text-red-500 text-sm mt-1">{errors.acceptMentionObligation}</p>}
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="acceptDistribution"
-                  className="border-white/30 focus:ring-orange-500"
-                  checked={formData.acceptDistribution || false}
-                  onCheckedChange={(checked) => handleFieldChange('acceptDistribution', checked)}
-                />
-                <Label htmlFor="acceptDistribution" className="text-white/80">{t('acceptDistribution', 'I accept distribution')}</Label>
-                {errors.acceptDistribution && <p className="text-red-500 text-sm mt-1">{errors.acceptDistribution}</p>}
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="finalNote"
-                  className="border-white/30 focus:ring-orange-500"
-                  checked={formData.finalNote || false}
-                  onCheckedChange={(checked) => handleFieldChange('finalNote', checked)}
-                />
-                <Label htmlFor="finalNote" className="text-white/80">{t('finalNote', 'I agree to final terms')}</Label>
-                {errors.finalNote && <p className="text-red-500 text-sm mt-1">{errors.finalNote}</p>}
-              </div>
-            </div>
-          </>
+          // Addons Selection Step
+          <AddonSelectionStep
+            selectedAddons={selectedAddons}
+            onAddonChange={handleAddonChange}
+            availableAddons={addons}
+            selectedPackageData={selectedPackage}
+          />
         ) : currentStep === steps.length + 2 ? (
+          // Contact Details & Legal Step
+          <ContactLegalStep
+            formData={formData}
+            onInputChange={handleFieldChange}
+            selectedAddons={selectedAddons}
+            onAddonChange={handleAddonChange}
+            availableAddons={addons}
+            addonFieldValues={addonFieldValues}
+            onAddonFieldChange={handleAddonFieldChange}
+            selectedPackage={formData.package}
+            selectedPackageData={selectedPackage}
+          />
+        ) : currentStep === steps.length + 3 ? (
           // Review Order Step
           <>
             <h2 className="text-lg font-semibold text-white">{t('reviewOrder', 'Review Your Order')}</h2>
@@ -732,7 +559,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
               variant="outline" 
               onClick={handlePrevious} 
               className="bg-white/10 border-white/30 text-white hover:bg-white/20"
-              disabled={isSubmitting || (orderConfirmed && currentStep > steps.length + 2)}
+              disabled={isSubmitting || (orderConfirmed && currentStep > steps.length + 3)}
             >
               {t('previous', 'Previous')}
             </Button>
@@ -750,6 +577,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
              currentStep <= steps.length ? t('continue', 'Continue') :
              currentStep === steps.length + 1 ? t('continue', 'Continue') :
              currentStep === steps.length + 2 ? t('continue', 'Continue') :
+             currentStep === steps.length + 3 ? t('continue', 'Continue') :
              t('completeOrder', 'Complete order')}
           </Button>
         </div>
