@@ -1,3 +1,4 @@
+
 export const orderTranslations = {
   loadingPackages: "Se încarcă pachetele...",
   loadingSteps: "Se încarcă pașii...",
@@ -57,7 +58,7 @@ export const orderTranslations = {
   giftCardBalance: "Sold:",
   giftCardRemaining: "Rămas după comandă:",
   
-  // Order Review Confirmation - NEW
+  // Order Review Confirmation
   attentionOrderReview: "Atenție",
   attentionOrderReviewText: "După confirmare, aceste informații nu mai pot fi modificate. Te rugăm să verifici cu atenție toate detaliile.",
   confirmOrderAccuracy: "Confirm că toate informațiile sunt corecte",
@@ -240,7 +241,7 @@ export const orderTranslations = {
   instrumentalDescriptionPlaceholder: "Descrieți instrumentalul dorit",
   instrumentalReferences: "Referințe instrumentale",
   instrumentalReferencesPlaceholder: "Oferiți referințe pentru instrumental",
-  loopRequirements: "Instrumentalul să fie în buclă (loop)?",
+  loopRequirements: "Cerințe pentru buclă",
   
   // Couple Details
   coupleNames: "Numele cuplului",
@@ -380,7 +381,7 @@ export const orderTranslations = {
   intendedUsePerformance: "Performanță",
   intendedUseMeditationRelaxation: "Meditație/Relaxare",
   intendedUseContentCreation: "Crearea de conținut",
-  loopRequirementsPlaceholder: "Instrumentalul să fie în buclă (loop)?",
+  loopRequirementsPlaceholder: "Creați bucle perfecte pentru acest instrumental",
 
   // Wedding Package Enhanced Fields
   coupleNamesPronunciationPlaceholder: "Înregistrați cum se pronunță numele cuplului",
@@ -469,7 +470,7 @@ export const orderTranslations = {
   businessUsageTvRadio: "TV și Radio",
   businessUsageOnlineAds: "Publicitate online",
   businessUsageEvents: "Evenimente corporative",
-  businessContactNamePlaceholder: "Persoanas de contact principală",
+  businessContactNamePlaceholder: "Persoana de contact principală",
   businessAcceptTermsPlaceholder: "Accept termenii comerciali",
 
   // Artist Package
@@ -572,7 +573,7 @@ export const orderTranslations = {
   customer: 'Client',
   amount: 'Suma',
   status: 'Status',
-  payment: 'Factură',
+  invoice: 'Factură',
   delivery: 'Livrare',
   actions: 'Acțiuni',
   details: 'Detalii',
@@ -591,12 +592,6 @@ export const orderTranslations = {
   orderHistory: 'Istoricul comenzilor',
   viewManageOrders: 'Vizualizați și gestionați comenzile dvs.',
   backHome: 'Înapoi acasă',
-  loadingOrdersError: 'Eroare la încărcarea comenzilor',
-  noOrdersYet: 'Nu aveți încă comenzi',
-  
-  // Order Review Confirmation - NEW
-  attentionOrderReview: "Atenție",
-  attentionOrderReviewText: "După confirmare, aceste informații nu mai pot fi modificate. Te rugăm să verifici cu atenție toate detaliile.",
-  confirmOrderAccuracy: "Confirm că toate informațiile sunt corecte",
-  confirmOrderAccuracyText: "Înțeleg că după confirmare, aceste detalii nu mai pot fi modificate și cardul cadou va fi procesat pentru plată."
+  orderError: 'Eroare caricamento ordini',
+  noOrdersYet: 'Nu aveți încă comenzi'
 };
