@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -102,6 +101,27 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
   const selectedPackage = packages.find(pkg => pkg.value === formData.package);
   const steps = selectedPackage?.steps || [];
+
+  // Helper function to check if addon should be shown based on package's available_addons
+  const shouldShowAddon = (addon: any) => {
+    if (!addon.is_active) return false;
+
+    // Use the selected package data if available
+    if (selectedPackage) {
+      const isAvailable = selectedPackage.available_addons.includes(addon.addon_key);
+      console.log('Addon availability check:', {
+        addonKey: addon.addon_key,
+        selectedPackage: selectedPackage.value,
+        packageAvailableAddons: selectedPackage.available_addons,
+        isAvailable
+      });
+      return isAvailable;
+    }
+
+    // Fallback: if no package data is provided, don't show any addons
+    console.warn('No package data provided for addon filtering');
+    return false;
+  };
 
   // Validation function
   const validateCurrentStep = () => {
@@ -275,6 +295,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   }, 0);
   const totalOrderPrice = totalPrice + addonsPrice;
 
+  // Filter addons to only show those available for the selected package
+  const filteredAddons = addons.filter(addon => shouldShowAddon(addon));
+
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-white/30">
       {/* Show payment status checker when payment is processing */}
@@ -432,9 +455,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             <h2 className="text-lg font-semibold text-white mt-6">{t('selectAddons', 'Select Add-ons')}</h2>
             <Separator className="my-2 bg-white/20" />
 
-            {addons.length > 0 ? (
+            {filteredAddons.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {addons.map(addon => (
+                {filteredAddons.map(addon => (
                   <Card key={addon.addon_key} className="bg-white/05 backdrop-blur-sm border border-white/30">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
