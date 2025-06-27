@@ -79,7 +79,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
       await redemptionMutation.mutateAsync({
         giftCardId: validatedGiftCard.id,
         packageValue: selectedPackage.value,
-        packageName: selectedPackage.name,
+        packageName: t(selectedPackage.label_key),
         redeemAmount: Math.min(pricing.giftCardValue, pricing.packagePrice),
         remainingBalance: Math.max(0, pricing.giftCardValue - pricing.packagePrice),
       });

@@ -47,7 +47,7 @@ const PackageSelectionForGiftCard: React.FC<PackageSelectionForGiftCardProps> = 
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg text-orange-500">
-                    {pkg.name}
+                    {t(pkg.label_key)}
                   </CardTitle>
                   {isSelected && (
                     <Check className="w-5 h-5 text-orange-500" />
@@ -128,7 +128,7 @@ const PackageSelectionForGiftCard: React.FC<PackageSelectionForGiftCardProps> = 
             <div className="flex justify-between items-center">
               <div>
                 <h4 className="font-medium text-orange-500">
-                  Ready to proceed with {selectedPackage.name}
+                  Ready to proceed with {t(selectedPackage.label_key)}
                 </h4>
                 <p className="text-sm text-slate-300">
                   {pricing.additionalPaymentRequired > 0 
@@ -143,7 +143,7 @@ const PackageSelectionForGiftCard: React.FC<PackageSelectionForGiftCardProps> = 
                 onClick={onProceed}
                 className="bg-orange-500 hover:bg-orange-600"
               >
-                {t('proceedWithPackage')} {selectedPackage.name}
+                {t('proceedWithPackage')} {t(selectedPackage.label_key)}
               </Button>
             </div>
           </CardContent>

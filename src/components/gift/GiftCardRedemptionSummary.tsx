@@ -68,7 +68,7 @@ const GiftCardRedemptionSummary: React.FC<GiftCardRedemptionSummaryProps> = ({
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-slate-400">Package:</span>
-                <span className="text-slate-200">{selectedPackage.name}</span>
+                <span className="text-slate-200">{t(selectedPackage.label_key)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">Price:</span>
@@ -78,7 +78,7 @@ const GiftCardRedemptionSummary: React.FC<GiftCardRedemptionSummaryProps> = ({
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">Delivery:</span>
-                <span className="text-slate-200">{selectedPackage.delivery_time}</span>
+                <span className="text-slate-200">{t(selectedPackage.delivery_time_key)}</span>
               </div>
             </div>
           </div>
