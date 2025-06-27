@@ -9,6 +9,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Gift, CreditCard, Loader2, Image, X, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -201,10 +202,10 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
   };
 
   const renderAmountStep = () => (
-    <CardContent className="space-y-4">
+    <div className="space-y-6">
       <div className="space-y-2">
-        <h4 className="text-lg font-semibold">{t('chooseGiftCardAmount')}</h4>
-        <p className="text-sm text-muted-foreground">{t('selectGiftCardValue')}</p>
+        <h4 className="text-lg font-semibold text-white">{t('chooseGiftCardAmount')}</h4>
+        <p className="text-sm text-white/70">{t('selectGiftCardValue')}</p>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
@@ -213,6 +214,11 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             key={amount}
             variant={formData.gift_amount === amount ? 'default' : 'outline'}
             onClick={() => handleAmountChange(amount)}
+            className={cn(
+              formData.gift_amount === amount 
+                ? "bg-orange-500 hover:bg-orange-600 text-white" 
+                : "bg-white/10 border-white/30 text-white hover:bg-white/20"
+            )}
           >
             {amount} {currency}
           </Button>
@@ -220,30 +226,36 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="customAmount">{t('enterCustomValue')}</Label>
+        <Label htmlFor="customAmount" className="text-white/90">{t('enterCustomValue')}</Label>
         <Input
           type="number"
           id="customAmount"
           placeholder={`${t('enterAmountIn')} ${currency}`}
           value={formData.gift_amount.toString()}
           onChange={(e) => handleAmountChange(Number(e.target.value))}
+          className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400"
         />
       </div>
 
-      <Button onClick={nextStep}>{t('nextDetails')}</Button>
-    </CardContent>
+      <Button 
+        onClick={nextStep}
+        className="bg-orange-500 hover:bg-orange-600 text-white w-full"
+      >
+        {t('nextDetails')}
+      </Button>
+    </div>
   );
 
   const renderDetailsStep = () => (
-    <CardContent className="space-y-4">
+    <div className="space-y-6">
       <div className="space-y-2">
-        <h4 className="text-lg font-semibold">{t('enterGiftDetails')}</h4>
-        <p className="text-sm text-muted-foreground">{t('tellUsWhoGiftFor')}</p>
+        <h4 className="text-lg font-semibold text-white">{t('enterGiftDetails')}</h4>
+        <p className="text-sm text-white/70">{t('tellUsWhoGiftFor')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="sender_name">{t('yourName')}</Label>
+          <Label htmlFor="sender_name" className="text-white/90">{t('yourName')}</Label>
           <Input
             type="text"
             id="sender_name"
@@ -251,11 +263,12 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             placeholder={t('enterYourFullName')}
             value={formData.sender_name}
             onChange={handleInputChange}
+            className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="sender_email">{t('yourEmail')}</Label>
+          <Label htmlFor="sender_email" className="text-white/90">{t('yourEmail')}</Label>
           <Input
             type="email"
             id="sender_email"
@@ -263,11 +276,12 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             placeholder="Enter your email"
             value={formData.sender_email}
             onChange={handleInputChange}
+            className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="recipient_name">{t('recipientName')}</Label>
+          <Label htmlFor="recipient_name" className="text-white/90">{t('recipientName')}</Label>
           <Input
             type="text"
             id="recipient_name"
@@ -275,11 +289,12 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             placeholder={t('enterRecipientName')}
             value={formData.recipient_name}
             onChange={handleInputChange}
+            className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="recipient_email">{t('recipientEmail')}</Label>
+          <Label htmlFor="recipient_email" className="text-white/90">{t('recipientEmail')}</Label>
           <Input
             type="email"
             id="recipient_email"
@@ -287,30 +302,33 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             placeholder="Enter recipient's email"
             value={formData.recipient_email}
             onChange={handleInputChange}
+            className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400"
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="message_text">{t('personalMessage')}</Label>
+        <Label htmlFor="message_text" className="text-white/90">{t('personalMessage')}</Label>
         <Textarea
           id="message_text"
           name="message_text"
           placeholder={t('writeHeartfeltMessage')}
           value={formData.message_text}
           onChange={handleInputChange}
+          className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400 resize-none"
+          rows={3}
         />
       </div>
 
       <div className="space-y-2">
-        <Label>{t('deliveryDate')}</Label>
+        <Label className="text-white/90">{t('deliveryDate')}</Label>
         <Popover>
           <PopoverTrigger asChild>
             <Button
               variant={'outline'}
               className={cn(
-                'w-[240px] justify-start text-left font-normal',
-                !formData.delivery_date && 'text-muted-foreground'
+                'w-full justify-start text-left font-normal bg-white/10 border-white/30 text-white hover:bg-white/20',
+                !formData.delivery_date && 'text-white/50'
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -321,36 +339,46 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="center" side="bottom">
+          <PopoverContent className="w-auto p-0 bg-white/10 backdrop-blur-sm border-white/30" align="center" side="bottom">
             <Calendar
               mode="single"
               selected={formData.delivery_date}
               onSelect={handleDeliveryDateChange}
               disabled={(date) => date < new Date()}
               initialFocus
+              className="bg-white/10 text-white"
             />
           </PopoverContent>
         </Popover>
       </div>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={prevStep}>
+        <Button 
+          variant="outline" 
+          onClick={prevStep}
+          className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+        >
           {t('back')}
         </Button>
-        <Button onClick={nextStep}>{t('nextDesign')}</Button>
+        <Button 
+          onClick={nextStep}
+          className="bg-orange-500 hover:bg-orange-600 text-white"
+        >
+          {t('nextDesign')}
+        </Button>
       </div>
-    </CardContent>
+    </div>
   );
 
   const renderDesignStep = () => (
-    <CardContent className="space-y-6">
+    <div className="space-y-6">
       <div className="space-y-2">
-        <h4 className="text-lg font-semibold">{t('selectDesign')}</h4>
-        <p className="text-sm text-muted-foreground">{t('chooseDesignPreview')}</p>
+        <h4 className="text-lg font-semibold text-white">{t('selectDesign')}</h4>
+        <p className="text-sm text-white/70">{t('chooseDesignPreview')}</p>
       </div>
 
       {isLoadingDesigns ? (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center text-white">
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           Loading designs...
         </div>
@@ -363,8 +391,8 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
                 className={cn(
                   "relative cursor-pointer rounded-lg border-2 p-2 transition-all hover:shadow-md",
                   selectedDesign === design.id
-                    ? "border-primary bg-primary/10"
-                    : "border-muted hover:border-primary/50"
+                    ? "border-orange-400 bg-orange-500/10"
+                    : "border-white/30 hover:border-orange-400/50 bg-white/5"
                 )}
                 onClick={() => setSelectedDesign(design.id)}
               >
@@ -388,8 +416,8 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
                   )}
                   
                   {selectedDesign === design.id && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-primary/20">
-                      <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                    <div className="absolute inset-0 flex items-center justify-center bg-orange-500/20">
+                      <div className="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center">
                         <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
@@ -399,7 +427,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
                 </div>
                 
                 <div className="mt-2 text-center">
-                  <p className="text-sm font-medium capitalize">{design.name}</p>
+                  <p className="text-sm font-medium capitalize text-white">{design.name}</p>
                 </div>
               </div>
             ))}
@@ -408,9 +436,9 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           {/* Dynamic Gift Card Preview */}
           {selectedDesign && (
             <div className="space-y-4">
-              <div className="border-t pt-6">
-                <h5 className="text-md font-semibold mb-3">{t('giftCardPreviewTitle')}</h5>
-                <p className="text-sm text-muted-foreground mb-4">
+              <div className="border-t pt-6 border-white/20">
+                <h5 className="text-md font-semibold mb-3 text-white">{t('giftCardPreviewTitle')}</h5>
+                <p className="text-sm text-white/70 mb-4">
                   {t('howGiftCardWillLook')}
                 </p>
                 <div className="flex justify-center">
@@ -433,33 +461,41 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       )}
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => setStep(step - 1)}>
+        <Button 
+          variant="outline" 
+          onClick={() => setStep(step - 1)}
+          className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+        >
           {t('back')}
         </Button>
-        <Button onClick={() => setStep(step + 1)} disabled={!selectedDesign}>
+        <Button 
+          onClick={() => setStep(step + 1)} 
+          disabled={!selectedDesign}
+          className="bg-orange-500 hover:bg-orange-600 text-white disabled:opacity-50"
+        >
           {t('nextReview')}
         </Button>
       </div>
-    </CardContent>
+    </div>
   );
 
   const renderReviewStep = () => (
-    <CardContent className="space-y-6">
+    <div className="space-y-6">
       <div className="space-y-2">
-        <h4 className="text-lg font-semibold">{t('reviewGiftCard')}</h4>
-        <p className="text-sm text-muted-foreground">{t('confirmDetailsBeforePayment')}</p>
+        <h4 className="text-lg font-semibold text-white">{t('reviewGiftCard')}</h4>
+        <p className="text-sm text-white/70">{t('confirmDetailsBeforePayment')}</p>
       </div>
 
-      <Alert>
-        <AlertTriangle className="h-4 w-4" />
-        <AlertDescription>
+      <Alert className="bg-orange-500/10 border-orange-400/30">
+        <AlertTriangle className="h-4 w-4 text-orange-400" />
+        <AlertDescription className="text-white/90">
           <strong>{t('warningAfterConfirmation')}</strong>
         </AlertDescription>
       </Alert>
 
       {/* Visual Preview */}
       <div className="space-y-4">
-        <h5 className="text-md font-semibold">{t('finalGiftCardPreview')}</h5>
+        <h5 className="text-md font-semibold text-white">{t('finalGiftCardPreview')}</h5>
         <div className="flex justify-center">
           <GiftCardPreview
             design={designs?.find(d => d.id === selectedDesign)}
@@ -477,35 +513,37 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
 
       {/* Detailed Information */}
       <div className="space-y-4">
-        <h5 className="text-md font-semibold">{t('completeGiftCardDetails')}</h5>
+        <h5 className="text-md font-semibold text-white">{t('completeGiftCardDetails')}</h5>
         
-        <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+        <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 space-y-3 border border-white/20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h6 className="font-medium text-sm text-muted-foreground mb-2">{t('senderInformation')}</h6>
-              <div className="space-y-1">
+              <h6 className="font-medium text-sm text-white/70 mb-2">{t('senderInformation')}</h6>
+              <div className="space-y-1 text-white">
                 <p><strong>{t('name')}</strong> {formData.sender_name}</p>
                 <p><strong>{t('email')}</strong> {formData.sender_email}</p>
               </div>
             </div>
             
             <div>
-              <h6 className="font-medium text-sm text-muted-foreground mb-2">{t('recipientInformation')}</h6>
-              <div className="space-y-1">
+              <h6 className="font-medium text-sm text-white/70 mb-2">{t('recipientInformation')}</h6>
+              <div className="space-y-1 text-white">
                 <p><strong>{t('name')}</strong> {formData.recipient_name}</p>
                 <p><strong>{t('email')}</strong> {formData.recipient_email}</p>
               </div>
             </div>
           </div>
 
-          <div className="border-t pt-3">
-            <h6 className="font-medium text-sm text-muted-foreground mb-2">{t('giftCardDetailsSection')}</h6>
+          <Separator className="bg-white/20" />
+
+          <div>
+            <h6 className="font-medium text-sm text-white/70 mb-2">{t('giftCardDetailsSection')}</h6>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1">
+              <div className="space-y-1 text-white">
                 <p><strong>{t('value')}</strong> {formData.gift_amount} {currency}</p>
                 <p><strong>{t('design')}</strong> {designs?.find(d => d.id === selectedDesign)?.name || 'Design selectat'}</p>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 text-white">
                 <p><strong>{t('deliveryDateLabel')}</strong> {formData.delivery_date ? format(formData.delivery_date, 'dd/MM/yyyy') : t('immediate')}</p>
                 {formData.message_text && (
                   <p><strong>{t('personalMessage')}</strong> "{formData.message_text}"</p>
@@ -518,7 +556,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
 
       {/* Payment Provider Selection */}
       <div className="space-y-4">
-        <h5 className="text-md font-semibold">{t('choosePaymentMethod')}</h5>
+        <h5 className="text-md font-semibold text-white">{t('choosePaymentMethod')}</h5>
         <PaymentProviderSelection
           selectedProvider={selectedPaymentProvider}
           onProviderSelect={setSelectedPaymentProvider}
@@ -532,15 +570,16 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             id="confirm-details" 
             checked={isConfirmed}
             onCheckedChange={(checked) => setIsConfirmed(checked === true)}
+            className="border-white/30 focus:ring-orange-500 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
           />
           <div className="grid gap-1.5 leading-none">
             <label
               htmlFor="confirm-details"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer text-white"
             >
               {t('confirmAllCorrect')}
             </label>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/60">
               {t('understandAfterConfirmation')}
             </p>
           </div>
@@ -548,13 +587,20 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       </div>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={prevStep}>
+        <Button 
+          variant="outline" 
+          onClick={prevStep}
+          className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+        >
           {t('back')}
         </Button>
         <Button 
           disabled={isProcessing || !isConfirmed || !selectedPaymentProvider} 
           onClick={() => handlePayment()}
-          className={cn((!isConfirmed || !selectedPaymentProvider) && "opacity-50 cursor-not-allowed")}
+          className={cn(
+            "bg-orange-500 hover:bg-orange-600 text-white",
+            (!isConfirmed || !selectedPaymentProvider) && "opacity-50 cursor-not-allowed"
+          )}
         >
           {isProcessing ? (
             <>
@@ -569,7 +615,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           )}
         </Button>
       </div>
-    </CardContent>
+    </div>
   );
 
   if (showStatusChecker && paymentGiftCardId) {
@@ -591,18 +637,19 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            Step {step} of 4: {step === 1 ? t('stepAmount') : step === 2 ? t('stepDetails') : step === 3 ? t('stepDesign') : t('stepReview')}
-          </CardTitle>
-        </CardHeader>
+      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/30">
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold text-white mb-2">
+            {t('stepXOfY', { current: step, total: 4 })} {step === 1 ? t('stepAmount') : step === 2 ? t('stepDetails') : step === 3 ? t('stepDesign') : t('stepReview')}
+          </h3>
+          <Separator className="bg-white/20" />
+        </div>
         
         {step === 1 && renderAmountStep()}
         {step === 2 && renderDetailsStep()}
         {step === 3 && renderDesignStep()}
         {step === 4 && renderReviewStep()}
-      </Card>
+      </div>
     </div>
   );
 };
