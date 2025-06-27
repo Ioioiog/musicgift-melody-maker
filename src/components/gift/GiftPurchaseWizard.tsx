@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -233,7 +232,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           placeholder={`${t('enterAmountIn')} ${currency}`}
           value={formData.gift_amount.toString()}
           onChange={(e) => handleAmountChange(Number(e.target.value))}
-          className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400"
+          className="bg-white/10 border-white/30 text-black placeholder:text-gray-500 focus:border-orange-400"
         />
       </div>
 
@@ -263,7 +262,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             placeholder={t('enterYourFullName')}
             value={formData.sender_name}
             onChange={handleInputChange}
-            className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400"
+            className="bg-white/10 border-white/30 text-black placeholder:text-gray-500 focus:border-orange-400"
           />
         </div>
 
@@ -276,7 +275,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             placeholder="Enter your email"
             value={formData.sender_email}
             onChange={handleInputChange}
-            className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400"
+            className="bg-white/10 border-white/30 text-black placeholder:text-gray-500 focus:border-orange-400"
           />
         </div>
 
@@ -289,7 +288,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             placeholder={t('enterRecipientName')}
             value={formData.recipient_name}
             onChange={handleInputChange}
-            className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400"
+            className="bg-white/10 border-white/30 text-black placeholder:text-gray-500 focus:border-orange-400"
           />
         </div>
 
@@ -302,7 +301,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
             placeholder="Enter recipient's email"
             value={formData.recipient_email}
             onChange={handleInputChange}
-            className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400"
+            className="bg-white/10 border-white/30 text-black placeholder:text-gray-500 focus:border-orange-400"
           />
         </div>
       </div>
@@ -315,7 +314,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
           placeholder={t('writeHeartfeltMessage')}
           value={formData.message_text}
           onChange={handleInputChange}
-          className="bg-white/10 border-white/30 text-white placeholder:text-white/50 focus:border-orange-400 resize-none"
+          className="bg-white/10 border-white/30 text-black placeholder:text-gray-500 focus:border-orange-400 resize-none"
           rows={3}
         />
       </div>
@@ -640,7 +639,7 @@ const GiftPurchaseWizard = ({ onComplete }: GiftPurchaseWizardProps) => {
       <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/30">
         <div className="mb-6">
           <h3 className="text-xl font-semibold text-white mb-2">
-            {t('stepXOfY', { current: step, total: 4 })} {step === 1 ? t('stepAmount') : step === 2 ? t('stepDetails') : step === 3 ? t('stepDesign') : t('stepReview')}
+            {t('step')} {step} {t('of')} 4 - {step === 1 ? t('stepAmount') : step === 2 ? t('stepDetails') : step === 3 ? t('stepDesign') : t('stepReview')}
           </h3>
           <Separator className="bg-white/20" />
         </div>
