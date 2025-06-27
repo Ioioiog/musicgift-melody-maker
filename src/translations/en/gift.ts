@@ -125,6 +125,19 @@ export const giftTranslations = {
   customAmountLabel: "Custom Amount",
   validateGiftCard: "Validate",
   
+  // Order review translations
+  reviewOrder: "Review Your Order",
+  pleaseReviewOrderDetails: "Please review all the details before proceeding to payment",
+  selectedPackage: "Selected Package",
+  selectedAddons: "Selected Add-ons",
+  priceBreakdown: "Price Breakdown",
+  subtotal: "Subtotal",
+  giftCardCredit: "Gift Card Credit",
+  discount: "Discount",
+  total: "Total",
+  customerInformation: "Customer Information",
+  legalConfirmations: "Legal Confirmations",
+  
   // Updated help text
   giftCardHelp: "Gift cards start with MG-XXXX-XXXX",
 };

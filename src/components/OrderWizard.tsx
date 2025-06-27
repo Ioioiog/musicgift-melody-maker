@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,6 +17,7 @@ import PackageSelectionStep from './order/PackageSelectionStep';
 import AddonSelectionStep from './order/AddonSelectionStep';
 import PaymentProviderSelection from './order/PaymentProviderSelection';
 import ContactLegalStep from './order/ContactLegalStep';
+import OrderReviewStep from './order/OrderReviewStep';
 import WizardNavigation from './order/WizardNavigation';
 
 interface OrderWizardProps {
@@ -126,12 +128,13 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
   const isQuoteOnly = selectedPackageData?.is_quote_only === true;
   const skipPayment = isQuoteOnly || finalTotal === 0;
 
-  // Build the complete step flow - Contact & Legal is now ALWAYS present
+  // Build the complete step flow - Contact & Legal and Order Review are now ALWAYS present
   const totalRegularSteps = regularSteps.length;
   const addonStepIndex = 1 + totalRegularSteps; // After package selection + regular steps
   const contactLegalStepIndex = addonStepIndex + 1; // Always after addons
-  const paymentStepIndex = skipPayment ? -1 : contactLegalStepIndex + 1; // Skip payment for quotes or zero total
-  const totalSteps = skipPayment ? contactLegalStepIndex + 1 : paymentStepIndex + 1;
+  const reviewStepIndex = contactLegalStepIndex + 1; // Always after contact/legal
+  const paymentStepIndex = skipPayment ? -1 : reviewStepIndex + 1; // Skip payment for quotes or zero total
+  const totalSteps = skipPayment ? reviewStepIndex + 1 : paymentStepIndex + 1;
 
   console.log('🔍 Payment Skip Debug:', {
     selectedPackage,
@@ -140,7 +143,8 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
     skipPayment,
     currentStep,
     totalSteps,
-    contactLegalStepIndex
+    contactLegalStepIndex,
+    reviewStepIndex
   });
 
   const buildStepsData = () => {
@@ -184,9 +188,18 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       isCurrent: currentStep === contactLegalStepIndex
     });
 
+    // Order Review Step - ALWAYS present
+    const reviewStepNumber = contactStepNumber + 1;
+    steps.push({
+      number: reviewStepNumber,
+      label: t('reviewOrder', 'Review Order'),
+      isCompleted: currentStep > reviewStepIndex,
+      isCurrent: currentStep === reviewStepIndex
+    });
+
     // Only add Payment Step if payment is required
     if (!skipPayment) {
-      const paymentStepNumber = contactStepNumber + 1;
+      const paymentStepNumber = reviewStepNumber + 1;
       steps.push({
         number: paymentStepNumber,
         label: t('payment', 'Payment'),
@@ -204,9 +217,9 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
       setCurrentStep(1); // Go to first form step
     } else if (currentStep < totalSteps - 1) {
       // Skip payment step for quote-only packages or zero total
-      if (skipPayment && currentStep === contactLegalStepIndex) {
-        console.log('⚠️ Should not proceed past contact/legal when payment is skipped');
-        return; // Don't proceed past contact/legal when payment is skipped
+      if (skipPayment && currentStep === reviewStepIndex) {
+        console.log('⚠️ Should not proceed past review when payment is skipped');
+        return; // Don't proceed past review when payment is skipped
       }
       setCurrentStep(currentStep + 1);
     }
@@ -496,6 +509,7 @@ Quote Management: Please review and respond to the customer with a personalized 
   // Determine which step we're on
   const isAddonStep = currentStep === addonStepIndex;
   const isContactLegalStep = currentStep === contactLegalStepIndex;
+  const isReviewStep = currentStep === reviewStepIndex;
   const isPaymentStep = !skipPayment && currentStep === paymentStepIndex;
   const currentPackageStepIndex = currentStep - 1;
   const currentStepData = currentStep > 0 && currentStep <= totalRegularSteps ? regularSteps?.[currentPackageStepIndex] : null;
@@ -510,6 +524,9 @@ Quote Management: Please review and respond to the customer with a personalized 
     if (isContactLegalStep) {
       // Check required fields for contact/legal step
       return formData.fullName && formData.email && formData.acceptMentionObligation && formData.acceptDistribution && formData.finalNote;
+    }
+    if (isReviewStep) {
+      return true; // All validation done in previous steps
     }
     if (isPaymentStep) {
       return !!selectedPaymentProvider;
@@ -585,6 +602,16 @@ Quote Management: Please review and respond to the customer with a personalized 
                     onAddonFieldChange={handleAddonFieldChange} 
                     selectedPackage={selectedPackage} 
                     selectedPackageData={selectedPackageData} 
+                  />
+                ) : isReviewStep ? (
+                  <OrderReviewStep 
+                    formData={formData}
+                    selectedPackage={selectedPackage}
+                    selectedPackageData={selectedPackageData}
+                    selectedAddons={selectedAddons}
+                    availableAddons={addons}
+                    giftCard={giftCard}
+                    appliedDiscount={appliedDiscount}
                   />
                 ) : isPaymentStep ? (
                   <PaymentProviderSelection 

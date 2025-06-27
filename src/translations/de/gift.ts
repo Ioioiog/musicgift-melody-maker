@@ -121,6 +121,19 @@ export const giftTranslations = {
   customAmountLabel: "Benutzerdefinierter Betrag",
   validateGiftCard: "Validieren",
   
+  // Order review translations
+  reviewOrder: "Bestellung Überprüfen",
+  pleaseReviewOrderDetails: "Bitte überprüfen Sie alle Details, bevor Sie zur Zahlung gehen",
+  selectedPackage: "Ausgewähltes Paket",
+  selectedAddons: "Ausgewählte Zusätze",
+  priceBreakdown: "Preisaufschlüsselung",
+  subtotal: "Zwischensumme",
+  giftCardCredit: "Geschenkkarten-Guthaben",
+  discount: "Rabatt",
+  total: "Gesamt",
+  customerInformation: "Kundeninformationen",
+  legalConfirmations: "Rechtliche Bestätigungen",
+  
   // Updated help text for German
   giftCardHelp: "Geschenkkarten beginnen mit MG-XXXX-XXXX",
 };
