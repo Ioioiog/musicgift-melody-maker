@@ -232,7 +232,7 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
         </Card>}
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => setStep('select')} className="border-white/30 text-white hover:bg-white/10">
+        <Button variant="outline" onClick={() => setStep('select')} className="border-white/30 text-black hover:bg-white/10">
           {t('back')}
         </Button>
         

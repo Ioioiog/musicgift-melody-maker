@@ -39,21 +39,21 @@ const GiftCardRedemptionSummary: React.FC<GiftCardRedemptionSummaryProps> = ({
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-3">
-            <h4 className="font-medium text-slate-200">Gift Card Details</h4>
+            <h4 className="font-medium text-zinc-950">Gift Card Details</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between bg-slate-50">
-                <span className="text-slate-400">Code:</span>
-                <span className="text-slate-200 font-mono">{giftCard.code}</span>
+                <span className="text-zinc-950">Code:</span>
+                <span className="font-mono text-zinc-950">{giftCard.code}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Value:</span>
-                <span className="text-slate-200">
+                <span className="text-zinc-950">Value:</span>
+                <span className="text-zinc-950">
                   {formatCurrency(pricing.giftCardValue, currency)}
                 </span>
               </div>
               {giftCard.message_text && <div className="space-y-1">
-                  <span className="text-slate-400">Message:</span>
-                  <p className="text-slate-300 text-xs bg-slate-800/50 p-2 rounded">
+                  <span className="text-zinc-950">Message:</span>
+                  <p className="bg-slate-800/50 p-2 rounded text-zinc-950 text-base">
                     "{giftCard.message_text}"
                   </p>
                 </div>}
@@ -61,32 +61,32 @@ const GiftCardRedemptionSummary: React.FC<GiftCardRedemptionSummaryProps> = ({
           </div>
 
           <div className="space-y-3">
-            <h4 className="font-medium text-slate-200">Selected Package</h4>
+            <h4 className="font-medium text-zinc-950">Selected Package</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-slate-400">Package:</span>
-                <span className="text-slate-200">{t(selectedPackage.label_key)}</span>
+                <span className="text-zinc-950">Package:</span>
+                <span className="text-zinc-950">{t(selectedPackage.label_key)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Price:</span>
-                <span className="text-slate-200">
+                <span className="text-zinc-950">Price:</span>
+                <span className="text-zinc-950">
                   {formatCurrency(pricing.packagePrice, currency)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Delivery:</span>
-                <span className="text-slate-200">{t(selectedPackage.delivery_time_key)}</span>
+                <span className="text-zinc-950">Delivery:</span>
+                <span className="text-zinc-950">{t(selectedPackage.delivery_time_key)}</span>
               </div>
             </div>
           </div>
         </div>
 
         <div className="border-t border-slate-600 pt-4">
-          <h4 className="font-medium text-slate-200 mb-3">Payment Breakdown</h4>
+          <h4 className="font-medium mb-3 text-zinc-950">Payment Breakdown</h4>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-400">Package Price:</span>
-              <span className="text-slate-200">
+              <span className="text-zinc-950">Package Price:</span>
+              <span className="text-zinc-950">
                 {formatCurrency(pricing.packagePrice, currency)}
               </span>
             </div>
