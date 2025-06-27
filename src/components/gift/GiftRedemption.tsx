@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Gift, Check, AlertCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Gift, Check, AlertCircle, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -12,6 +13,7 @@ import { useValidateGiftCard } from '@/hooks/useGiftCards';
 import { usePackages } from '@/hooks/usePackageData';
 import { useGiftCardPricing } from '@/hooks/useGiftCardPricing';
 import { useGiftCardRedemption } from '@/hooks/useGiftCardRedemption';
+import { formatCurrency } from '@/utils/pricing';
 import { motion } from 'framer-motion';
 import { Package } from '@/types';
 import PackageSelectionForGiftCard from './PackageSelectionForGiftCard';
@@ -46,15 +48,19 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
       const result = await validateGiftCard(giftCardCode.trim());
       setValidatedGiftCard(result);
       setStep('select');
+      
+      const remainingText = result.remaining_balance ? 
+        ` (${t('remainingBalance')}: ${formatCurrency(result.remaining_balance, currency)})` : '';
+      
       toast({
         title: t('validGiftCard'),
-        description: `${t('giftCardValue')}: ${result.amount_eur || result.gift_amount} ${result.currency}`
+        description: `${t('giftCardValue')}: ${formatCurrency(result.remaining_balance || result.gift_amount || result.amount_eur || result.amount_ron || 0, currency)}${remainingText}`
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error validating gift card:', error);
       toast({
         title: "Error",
-        description: t('invalidGiftCardCode'),
+        description: error.message || t('invalidGiftCardCode'),
         variant: "destructive"
       });
       setValidatedGiftCard(null);
@@ -75,13 +81,18 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
     if (!validatedGiftCard || !selectedPackage) return;
 
     try {
+      // Calculate redemption amount (minimum of available balance and package price)
+      const availableBalance = validatedGiftCard.remaining_balance || validatedGiftCard.gift_amount || validatedGiftCard.amount_eur || validatedGiftCard.amount_ron || 0;
+      const redeemAmount = Math.min(availableBalance, pricing.packagePrice);
+      const remainingBalance = Math.max(0, availableBalance - redeemAmount);
+
       // Create redemption record
       await redemptionMutation.mutateAsync({
         giftCardId: validatedGiftCard.id,
         packageValue: selectedPackage.value,
         packageName: t(selectedPackage.label_key),
-        redeemAmount: Math.min(pricing.giftCardValue, pricing.packagePrice),
-        remainingBalance: Math.max(0, pricing.giftCardValue - pricing.packagePrice),
+        redeemAmount: redeemAmount,
+        remainingBalance: remainingBalance,
       });
 
       // Call the parent callback to proceed to order flow
@@ -151,9 +162,30 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
           <div className="flex justify-between text-sm">
             <span className="text-slate-50">{t('giftCardValue')}:</span>
             <span className="font-medium text-orange-500">
-              {validatedGiftCard.amount_eur || validatedGiftCard.gift_amount} {validatedGiftCard.currency}
+              {formatCurrency(validatedGiftCard.remaining_balance || validatedGiftCard.gift_amount || validatedGiftCard.amount_eur || validatedGiftCard.amount_ron || 0, currency)}
             </span>
           </div>
+          
+          {/* Show status information */}
+          <div className="flex justify-between text-sm">
+            <span className="text-slate-50">Status:</span>
+            <Badge variant={validatedGiftCard.status === 'active' ? 'default' : 'secondary'}>
+              {validatedGiftCard.status === 'active' ? 'Active' : 
+               validatedGiftCard.status === 'partially_redeemed' ? 'Partially Used' :
+               validatedGiftCard.status}
+            </Badge>
+          </div>
+
+          {/* Show total redeemed if any */}
+          {validatedGiftCard.total_redeemed > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-50">Previously Used:</span>
+              <span className="text-slate-400">
+                {formatCurrency(validatedGiftCard.total_redeemed, currency)}
+              </span>
+            </div>
+          )}
+
           {validatedGiftCard.message_text && (
             <div className="space-y-1">
               <span className="text-sm text-gray-600">{t('messageFromSender')}:</span>
@@ -220,6 +252,24 @@ const GiftRedemption: React.FC<GiftRedemptionProps> = ({
         selectedPackage={selectedPackage!}
         pricing={pricing}
       />
+
+      {/* Warning for partial redemption */}
+      {pricing.remainingBalance > 0 && (
+        <Card className="bg-blue-50/10 border-blue-200/30">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <Info className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+              <div className="text-sm">
+                <p className="text-blue-300 font-medium mb-1">Partial Redemption Notice</p>
+                <p className="text-blue-200">
+                  After this redemption, you will have {formatCurrency(pricing.remainingBalance, currency)} remaining on your gift card. 
+                  You can use this balance for future purchases.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex justify-between">
         <Button 

@@ -66,6 +66,7 @@ export const giftTranslations = {
   giftCardDetails: "Detaliile Cardului Cadou",
   validGiftCard: "Card Cadou Valid",
   giftCardValue: "Valoarea Cardului Cadou",
+  remainingBalance: "Sold Rămas",
   messageFromSender: "Mesaj de la expeditor",
   choosePackage: "Alege Pachetul",
   selectPackageToRedeem: "Selectează pachetul pe care vrei să îl folosești cu cardul cadou",

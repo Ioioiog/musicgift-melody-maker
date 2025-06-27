@@ -243,15 +243,81 @@ export const useGiftCardByCode = (code: string) => {
 export const useValidateGiftCard = () => {
   return useMutation({
     mutationFn: async (code: string) => {
-      const { data, error } = await supabase
+      // First, get the gift card with its redemption history
+      const { data: giftCard, error: cardError } = await supabase
         .from('gift_cards')
-        .select('*')
+        .select(`
+          *,
+          gift_redemptions(
+            id,
+            redeemed_amount,
+            remaining_balance,
+            redemption_date
+          )
+        `)
         .eq('code', code)
-        .eq('status', 'active')
         .single();
 
-      if (error) throw error;
-      return data as GiftCard;
+      if (cardError) {
+        if (cardError.code === 'PGRST116') {
+          throw new Error('Gift card not found. Please check the code and try again.');
+        }
+        throw cardError;
+      }
+
+      // Check if gift card exists and basic validation
+      if (!giftCard) {
+        throw new Error('Gift card not found. Please check the code and try again.');
+      }
+
+      // Check if gift card has expired
+      if (giftCard.expires_at && new Date(giftCard.expires_at) < new Date()) {
+        throw new Error('This gift card has expired.');
+      }
+
+      // Check payment status
+      if (giftCard.payment_status !== 'completed') {
+        throw new Error('This gift card payment is not completed yet.');
+      }
+
+      // Check if gift card is fully redeemed
+      if (giftCard.status === 'fully_redeemed') {
+        throw new Error('This gift card has already been fully used.');
+      }
+
+      // Check if gift card is cancelled or expired
+      if (giftCard.status === 'cancelled') {
+        throw new Error('This gift card has been cancelled.');
+      }
+
+      if (giftCard.status === 'expired') {
+        throw new Error('This gift card has expired.');
+      }
+
+      // Calculate remaining balance
+      const originalAmount = giftCard.gift_amount || giftCard.amount_eur || giftCard.amount_ron || 0;
+      const totalRedeemed = (giftCard.gift_redemptions || [])
+        .reduce((sum: number, redemption: any) => sum + (redemption.redeemed_amount || 0), 0);
+      const remainingBalance = originalAmount - totalRedeemed;
+
+      // Check if there's any balance left
+      if (remainingBalance <= 0) {
+        // Update status to fully_redeemed if not already
+        if (giftCard.status !== 'fully_redeemed') {
+          await supabase
+            .from('gift_cards')
+            .update({ status: 'fully_redeemed' })
+            .eq('id', giftCard.id);
+        }
+        throw new Error('This gift card has no remaining balance.');
+      }
+
+      // Return gift card with calculated remaining balance
+      return {
+        ...giftCard,
+        remaining_balance: remainingBalance,
+        total_redeemed: totalRedeemed
+      } as GiftCard & { remaining_balance: number; total_redeemed: number };
     },
   });
 };

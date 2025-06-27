@@ -2,7 +2,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 interface RedeemGiftCardParams {
   giftCardId: string;
@@ -15,12 +14,12 @@ interface RedeemGiftCardParams {
 
 export const useGiftCardRedemption = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (params: RedeemGiftCardParams) => {
-      const { data, error } = await supabase
+      // Start a transaction to ensure atomicity
+      const { data: redemptionData, error: redemptionError } = await supabase
         .from('gift_redemptions')
         .insert({
           gift_card_id: params.giftCardId,
@@ -31,34 +30,57 @@ export const useGiftCardRedemption = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (redemptionError) throw redemptionError;
 
-      // Update gift card status if fully redeemed
+      // Determine the new status based on remaining balance
+      let newStatus = 'active';
       if (params.remainingBalance === 0) {
-        const { error: updateError } = await supabase
-          .from('gift_cards')
-          .update({ status: 'used' })
-          .eq('id', params.giftCardId);
-
-        if (updateError) throw updateError;
+        newStatus = 'fully_redeemed';
+      } else if (params.remainingBalance > 0) {
+        newStatus = 'partially_redeemed';
       }
 
-      return data;
+      // Update gift card status
+      const { error: updateError } = await supabase
+        .from('gift_cards')
+        .update({ 
+          status: newStatus,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', params.giftCardId);
+
+      if (updateError) throw updateError;
+
+      return redemptionData;
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['gift-card', variables.giftCardId] });
       queryClient.invalidateQueries({ queryKey: ['gift-card-balance', variables.giftCardId] });
       
+      const statusMessage = variables.remainingBalance === 0 ? 
+        'Gift card fully redeemed!' : 
+        `Gift card partially redeemed! Remaining balance: ${variables.remainingBalance}`;
+      
       toast({
         title: "Gift Card Applied!",
-        description: `Successfully applied ${variables.redeemAmount} ${variables.remainingBalance > 0 ? `(${variables.remainingBalance} remaining)` : ''}`,
+        description: statusMessage,
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Gift card redemption error:', error);
+      
+      let errorMessage = "Failed to apply gift card. Please try again.";
+      
+      // Handle specific error cases
+      if (error.message?.includes('exceeds available balance')) {
+        errorMessage = "The redemption amount exceeds the available gift card balance.";
+      } else if (error.message?.includes('violates row-level security')) {
+        errorMessage = "You don't have permission to redeem this gift card.";
+      }
+      
       toast({
         title: "Redemption Failed",
-        description: "Failed to apply gift card. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     },
