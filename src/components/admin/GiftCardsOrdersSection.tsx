@@ -25,6 +25,7 @@ import {
   Search,
   CreditCard,
   Gift,
+  Mail,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -65,6 +66,8 @@ import { Badge } from "@/components/ui/badge";
 import { format } from 'date-fns';
 
 import GiftCardSyncButton from "./GiftCardSyncButton";
+import PaymentStatusBadge from "./PaymentStatusBadge";
+import GiftCardEmailButton from "./GiftCardEmailButton";
 
 interface GiftCard {
   id: string;
@@ -90,42 +93,6 @@ interface GiftCard {
   updated_at: string;
   smartbill_proforma_id?: string;
 }
-
-const PaymentStatusBadge = ({ status }: { status: string }) => {
-  let badgeText = status;
-  let badgeVariant: "default" | "destructive" | "outline" | "secondary" = "secondary";
-
-  switch (status) {
-    case "pending":
-      badgeText = "Pending";
-      badgeVariant = "default";
-      break;
-    case "completed":
-      badgeText = "Completed";
-      badgeVariant = "default";
-      break;
-    case "failed":
-      badgeText = "Failed";
-      badgeVariant = "destructive";
-      break;
-    case "cancelled":
-      badgeText = "Cancelled";
-      badgeVariant = "destructive";
-      break;
-    default:
-      badgeText = "Unknown";
-      break;
-  }
-
-  return (
-    <Badge 
-      variant={badgeVariant} 
-      className={status === "completed" ? "bg-green-100 text-green-800 border-green-200" : ""}
-    >
-      {badgeText}
-    </Badge>
-  );
-};
 
 const GiftCardsOrdersSection = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -323,7 +290,8 @@ const GiftCardsOrdersSection = () => {
                   <th className="text-left p-3 font-medium">Code</th>
                   <th className="text-left p-3 font-medium">Recipient</th>
                   <th className="text-left p-3 font-medium">Amount</th>
-                  <th className="text-left p-3 font-medium">Status</th>
+                  <th className="text-left p-3 font-medium">Payment Status</th>
+                  <th className="text-left p-3 font-medium">Card Status</th>
                   <th className="text-left p-3 font-medium">Created</th>
                   <th className="text-left p-3 font-medium">Actions</th>
                 </tr>
@@ -349,7 +317,10 @@ const GiftCardsOrdersSection = () => {
                       </div>
                     </td>
                     <td className="p-3">
-                      <PaymentStatusBadge status={giftCard.payment_status} />
+                      <PaymentStatusBadge status={giftCard.payment_status} type="payment" />
+                    </td>
+                    <td className="p-3">
+                      <PaymentStatusBadge status={giftCard.status} type="payment" />
                     </td>
                     <td className="p-3">
                       <div className="text-sm text-gray-500">
@@ -364,6 +335,10 @@ const GiftCardsOrdersSection = () => {
                             // Refresh the gift cards list
                             window.location.reload();
                           }} 
+                        />
+                        <GiftCardEmailButton 
+                          giftCardId={giftCard.id}
+                          recipientEmail={giftCard.recipient_email}
                         />
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>

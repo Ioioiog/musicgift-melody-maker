@@ -42,6 +42,7 @@ const PaymentStatusBadge = ({ status, type }: PaymentStatusBadgeProps) => {
       return 'Not Created';
     }
     
+    // Show the exact status from database
     return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
