@@ -242,6 +242,16 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
 
     // Contact details & legal step (steps.length + 2)
     if (currentStep === steps.length + 2) {
+      // Email is required
+      if (!formData.email?.trim()) {
+        newErrors['email'] = t('fieldRequired', 'This field is required');
+      } else {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          newErrors['email'] = t('invalidEmail', 'Please enter a valid email address');
+        }
+      }
+
       // Full name is required for invoice
       if (!formData.fullName?.trim()) {
         newErrors['fullName'] = t('fieldRequired', 'This field is required');
