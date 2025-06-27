@@ -179,6 +179,43 @@ class EnhancedSMTPClient {
   }
 }
 
+// Function to wrap long lines in email content
+function wrapEmailLines(content: string, maxLength: number = 78): string {
+  const lines = content.split('\n');
+  const wrappedLines: string[] = [];
+  
+  for (const line of lines) {
+    if (line.length <= maxLength) {
+      wrappedLines.push(line);
+    } else {
+      // For HTML content, try to break at safe points
+      const words = line.split(' ');
+      let currentLine = '';
+      
+      for (const word of words) {
+        if ((currentLine + ' ' + word).length <= maxLength) {
+          currentLine += (currentLine ? ' ' : '') + word;
+        } else {
+          if (currentLine) {
+            wrappedLines.push(currentLine);
+            currentLine = word;
+          } else {
+            // Word is too long, break it
+            wrappedLines.push(word.substring(0, maxLength));
+            currentLine = word.substring(maxLength);
+          }
+        }
+      }
+      
+      if (currentLine) {
+        wrappedLines.push(currentLine);
+      }
+    }
+  }
+  
+  return wrappedLines.join('\r\n');
+}
+
 // Function to try multiple SMTP configurations
 async function sendEmailWithFallback(from: string, to: string[], subject: string, body: string, password: string): Promise<string> {
   const configurations = [
@@ -277,81 +314,133 @@ serve(async (req) => {
     const redemptionUrl = `${Deno.env.get('SITE_URL')}/gift?gift=${giftCard.code}`
     const giftAmount = giftCard.gift_amount
 
-    // Prepare email content with consistent styling
-    const emailHtml = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>Your Musical Gift Awaits!</title>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
-            .gift-card { background: white; border: 2px dashed #667eea; padding: 20px; margin: 20px 0; text-align: center; border-radius: 10px; }
-            .code { font-size: 24px; font-weight: bold; color: #667eea; letter-spacing: 2px; margin: 10px 0; }
-            .amount { font-size: 28px; font-weight: bold; color: #764ba2; }
-            .btn { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 30px; font-size: 14px; color: #666; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>🎵 Your Musical Gift Has Arrived! 🎵</h1>
-              <p>Someone special has sent you a personalized song</p>
-            </div>
-            
-            <div class="content">
-              <h2>Hello ${giftCard.recipient_name}!</h2>
-              
-              <p><strong>${giftCard.sender_name}</strong> has sent you a special musical gift!</p>
-              
-              ${giftCard.message_text ? `
-                <div style="background: white; padding: 20px; border-left: 4px solid #667eea; margin: 20px 0; font-style: italic;">
-                  "${giftCard.message_text}"
-                </div>
-              ` : ''}
-              
-              <div class="gift-card">
-                <h3>🎁 Gift Card Details</h3>
-                <div class="amount">${giftAmount} ${giftCard.currency}</div>
-                <div class="code">${giftCard.code}</div>
-                <p>Use this code to create your personalized song</p>
-              </div>
-              
-              <div style="text-align: center;">
-                <a href="${redemptionUrl}" class="btn">Redeem Your Gift Card</a>
-              </div>
-              
-              <h3>How it works:</h3>
-              <ol>
-                <li>Click the "Redeem Your Gift Card" button above</li>
-                <li>Enter your gift card code: <strong>${giftCard.code}</strong></li>
-                <li>Choose your preferred music package</li>
-                <li>Share your story and preferences</li>
-                <li>Receive your personalized song within a few days</li>
-              </ol>
-              
-              <p><strong>Your gift card expires on:</strong> ${new Date(giftCard.expires_at || '').toLocaleDateString()}</p>
-            </div>
-            
-            <div class="footer">
-              <p>This gift card was purchased through MusicGift</p>
-              <p>If you have any questions, please contact our support team</p>
-            </div>
-          </div>
-        </body>
-      </html>
-    `
+    // Prepare email content with proper line wrapping for SMTP compliance
+    const emailHtml = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Your Musical Gift Awaits!</title>
+<style>
+body { 
+  font-family: Arial, sans-serif; 
+  line-height: 1.6; 
+  color: #333; 
+}
+.container { 
+  max-width: 600px; 
+  margin: 0 auto; 
+  padding: 20px; 
+}
+.header { 
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+  color: white; 
+  padding: 30px; 
+  text-align: center; 
+  border-radius: 10px 10px 0 0; 
+}
+.content { 
+  background: #f8f9fa; 
+  padding: 30px; 
+  border-radius: 0 0 10px 10px; 
+}
+.gift-card { 
+  background: white; 
+  border: 2px dashed #667eea; 
+  padding: 20px; 
+  margin: 20px 0; 
+  text-align: center; 
+  border-radius: 10px; 
+}
+.code { 
+  font-size: 24px; 
+  font-weight: bold; 
+  color: #667eea; 
+  letter-spacing: 2px; 
+  margin: 10px 0; 
+}
+.amount { 
+  font-size: 28px; 
+  font-weight: bold; 
+  color: #764ba2; 
+}
+.btn { 
+  display: inline-block; 
+  background: #667eea; 
+  color: white; 
+  padding: 12px 30px; 
+  text-decoration: none; 
+  border-radius: 25px; 
+  margin: 20px 0; 
+}
+.footer { 
+  text-align: center; 
+  margin-top: 30px; 
+  font-size: 14px; 
+  color: #666; 
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>🎵 Your Musical Gift Has Arrived! 🎵</h1>
+<p>Someone special has sent you a personalized song</p>
+</div>
+
+<div class="content">
+<h2>Hello ${giftCard.recipient_name}!</h2>
+
+<p><strong>${giftCard.sender_name}</strong> has sent you a special 
+musical gift!</p>
+
+${giftCard.message_text ? `
+<div style="background: white; padding: 20px; border-left: 4px solid 
+#667eea; margin: 20px 0; font-style: italic;">
+"${giftCard.message_text}"
+</div>
+` : ''}
+
+<div class="gift-card">
+<h3>🎁 Gift Card Details</h3>
+<div class="amount">${giftAmount} ${giftCard.currency}</div>
+<div class="code">${giftCard.code}</div>
+<p>Use this code to create your personalized song</p>
+</div>
+
+<div style="text-align: center;">
+<a href="${redemptionUrl}" class="btn">Redeem Your Gift Card</a>
+</div>
+
+<h3>How it works:</h3>
+<ol>
+<li>Click the "Redeem Your Gift Card" button above</li>
+<li>Enter your gift card code: <strong>${giftCard.code}</strong></li>
+<li>Choose your preferred music package</li>
+<li>Share your story and preferences</li>
+<li>Receive your personalized song within a few days</li>
+</ol>
+
+<p><strong>Your gift card expires on:</strong> 
+${new Date(giftCard.expires_at || '').toLocaleDateString()}</p>
+</div>
+
+<div class="footer">
+<p>This gift card was purchased through MusicGift</p>
+<p>If you have any questions, please contact our support team</p>
+</div>
+</div>
+</body>
+</html>`
+
+    // Wrap the email content to ensure no lines are too long
+    const wrappedEmailContent = wrapEmailLines(emailHtml, 78);
 
     // Send email via cPanel SMTP
     const result = await sendEmailWithFallback(
       'info@musicgift.ro',
       [giftCard.recipient_email],
       `🎵 Musical Gift from ${giftCard.sender_name} - ${giftAmount} ${giftCard.currency}`,
-      emailHtml,
+      wrappedEmailContent,
       smtpPassword
     );
 
