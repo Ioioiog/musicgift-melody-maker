@@ -73,14 +73,30 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    /* Performance optimizations */
+    /* Enhanced performance optimizations */
     text-rendering: optimizeSpeed;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-display: swap;
   }
 }
 
-/* Optimized scroll animation with hardware acceleration */
+/* Critical performance optimizations */
+.critical-resource {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+  will-change: auto;
+}
+
+/* Enhanced hardware acceleration */
+.hw-accelerated {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimized scroll animation with reduced motion support */
 @keyframes scroll {
   0% {
     transform: translate3d(0, 0, 0);
@@ -90,7 +106,7 @@
   }
 }
 
-/* Optimized float animation with hardware acceleration */
+/* Enhanced float animation with hardware acceleration */
 @keyframes float {
   0%, 100% { 
     transform: translate3d(0, 0px, 0); 
@@ -104,39 +120,37 @@
   animation: float 6s ease-in-out infinite;
   will-change: transform;
   transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
-/* Performance optimizations with hardware acceleration */
+/* Performance optimizations with containment */
 .will-change-transform {
   will-change: transform;
   transform: translate3d(0, 0, 0);
+  contain: layout style paint;
 }
 
-/* Critical resource optimization for above-the-fold content */
-.critical-resource {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 500px;
-  will-change: auto;
-}
-
-/* LCP optimizations for images */
+/* Enhanced LCP optimizations */
 .lcp-optimized {
   content-visibility: auto;
   will-change: auto;
   transform: translate3d(0, 0, 0);
+  contain: layout style paint;
 }
 
-/* Performance optimized navigation */
+/* Performance optimized navigation with containment */
 .nav-optimized {
   contain: layout style paint;
   will-change: transform;
   transform: translate3d(0, 0, 0);
+  isolation: isolate;
 }
 
-/* Optimized fade animation */
+/* Optimized fade animation with containment */
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
   will-change: opacity, transform;
+  contain: layout style paint;
 }
 
 @keyframes fadeIn {
@@ -150,7 +164,7 @@
   }
 }
 
-/* Optimized pulse animation with hardware acceleration */
+/* Enhanced pulse animation with hardware acceleration */
 @keyframes optimizedPulse {
   0%, 100% {
     opacity: 1;
@@ -166,14 +180,18 @@
   animation: optimizedPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   will-change: opacity, transform;
   transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
-/* Reduce motion for users who prefer it */
+/* Enhanced reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
   .animate-fade-in,
-  .animate-pulse {
+  .animate-pulse,
+  .hw-accelerated {
     animation: none;
+    transform: none;
+    will-change: auto;
   }
   
   * {
@@ -183,19 +201,21 @@
   }
 }
 
-/* Performance optimizations for video and images */
+/* Enhanced performance for media elements */
 video, img {
   will-change: auto;
   content-visibility: auto;
+  contain-intrinsic-size: 300px 200px;
 }
 
-/* Optimized background images */
+/* Optimized background images with containment */
 .bg-cover {
   background-size: cover;
   will-change: auto;
+  contain: layout style paint;
 }
 
-/* Logo specific optimizations for LCP */
+/* Enhanced logo optimization for LCP */
 .logo-lcp-optimized {
   content-visibility: auto;
   contain-intrinsic-size: 256px 64px;
@@ -203,19 +223,70 @@ video, img {
   transform: translate3d(0, 0, 0);
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+  contain: layout style paint;
 }
 
-/* Video hero optimizations */
+/* Enhanced video hero optimizations */
 .video-hero-optimized {
   content-visibility: auto;
   will-change: auto;
   contain: layout style paint;
+  isolation: isolate;
 }
 
-/* Defer non-critical styles */
-@media screen and (min-width: 1px) {
-  .defer-load {
-    content-visibility: auto;
-    contain-intrinsic-size: 0 300px;
+/* Enhanced defer loading with intersection observer support */
+.defer-load {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 300px;
+  contain: layout style paint;
+}
+
+/* Critical CSS utilities for Core Web Vitals */
+.prevent-cls {
+  contain: layout style paint;
+  content-visibility: auto;
+}
+
+.optimize-lcp {
+  will-change: auto;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+/* Enhanced button hover states for better FID */
+button, .clickable {
+  touch-action: manipulation;
+  will-change: transform;
+  transition: transform 0.15s ease-out;
+}
+
+button:hover, .clickable:hover {
+  transform: translate3d(0, -1px, 0);
+}
+
+/* Optimized focus states for accessibility */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Enhanced loading states */
+.loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 25%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }

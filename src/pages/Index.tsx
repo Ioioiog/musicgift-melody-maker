@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -10,6 +11,10 @@ import CollaborationSection from "@/components/CollaborationSection";
 import SEOHead from "@/components/SEOHead";
 import StructuredDataLoader from "@/components/StructuredDataLoader";
 import WelcomeBanner from "@/components/WelcomeBanner";
+import PerformanceMonitor from "@/components/PerformanceMonitor";
+import CriticalCSS from "@/components/CriticalCSS";
+import EnhancedStructuredData from "@/components/EnhancedStructuredData";
+import OptimizedImage from "@/components/OptimizedImage";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
@@ -37,6 +42,10 @@ const Index = () => {
         title="MusicGift.ro - Cadouri Muzicale Personalizate"
         description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste."
       />
+      
+      {/* Performance and Critical CSS Components */}
+      <PerformanceMonitor />
+      <CriticalCSS />
       
       {/* Skip Navigation for Accessibility */}
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-blue-600 text-white p-2 z-50">
@@ -159,7 +168,7 @@ const Index = () => {
         <CollaborationSection />
       </section>
 
-      {/* Call-to-Action Section - Deferred for LCP and using consistent background */}
+      {/* Call-to-Action Section - Deferred for LCP with optimized images */}
       <section className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8 defer-load" aria-labelledby="cta-heading">
         
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 py-0" />
@@ -201,6 +210,7 @@ const Index = () => {
       
       {/* Load structured data at the end for better performance */}
       <StructuredDataLoader />
+      <EnhancedStructuredData />
       
       {/* Voice Search Structured Data */}
       <VoiceSearchStructuredData />
