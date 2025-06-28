@@ -603,14 +603,14 @@ export const orderTranslations = {
   'paymentTimeout': 'Verificarea plății a expirat. Te rog să verifici email-ul sau să contactezi suportul.',
   'paymentIssue': 'Problemă cu plata',
   'close': 'Închide',
-  'tryAgainPayment': 'Încearcă din nou'
+  'tryAgainPayment': 'Încearcă din nou',
 //step 4 
-artistName: "Numele artistului"
-artistNamePlaceholder: "Introdu numele artistului"
+artistName: "Numele artistului",
+artistNamePlaceholder: "Introdu ce nume vrei sa apara pe youtube si pe alte platforme",
 //Add songTitle translations:
-songTitle: "Titlul cântecului"
-songTitlePlaceholder: "Introdu titlul cântecului"
+songTitle: "Titlul cântecului",
+songTitlePlaceholder: "Introdu ce titlu vrei sa apara pe  youtube si pe alte platforme",
 //Add releaseDate translations:
-releaseDate: "Data lansării"
+releaseDate: "Data lansării",
 releaseDatePlaceholder: "Alege data lansării"
 };
