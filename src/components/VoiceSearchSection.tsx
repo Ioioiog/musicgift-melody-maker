@@ -4,10 +4,21 @@ import { motion } from 'framer-motion';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { MessageCircle, Volume2, Search, MapPin, Clock, Star, Music } from 'lucide-react';
 
 const VoiceSearchSection: React.FC = () => {
   const { t, language } = useLanguage();
+  const { currency } = useCurrency();
+
+  // Get pricing based on currency
+  const getPersonalPrice = () => {
+    return currency === 'EUR' ? '59' : '299';
+  };
+
+  const getPremiumPrice = () => {
+    return currency === 'EUR' ? '99' : '499';
+  };
 
   const voiceSearchFAQs = [
     {
@@ -27,7 +38,9 @@ const VoiceSearchSection: React.FC = () => {
     },
     {
       question: t('bestAnniversaryGifts'),
-      answer: t('bestAnniversaryGiftsAnswer'),
+      answer: language === 'ro' 
+        ? `Pentru aniversări recomandăm Pachetul Personal (${getPersonalPrice()} RON) sau Pachetul Premium (${getPremiumPrice()} RON). Acestea includ melodii personalizate cu versuri care spun povestea persoanei sărbătorite.`
+        : `For anniversaries, we recommend the Personal Package (${getPersonalPrice()} EUR) or Premium Package (${getPremiumPrice()} EUR). These include personalized songs with lyrics that tell the story of the person being celebrated.`,
       category: "gifts"
     },
     {
