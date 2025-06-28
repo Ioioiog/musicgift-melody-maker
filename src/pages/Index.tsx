@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHeroOptimized from "@/components/VideoHeroOptimized";
@@ -27,6 +28,7 @@ import BreadcrumbStructuredData from "@/components/BreadcrumbStructuredData";
 import AdvancedResourcePreloader from "@/components/AdvancedResourcePreloader";
 import ServiceWorkerProvider from "@/components/ServiceWorkerProvider";
 import AdvancedPerformanceMonitor from "@/components/AdvancedPerformanceMonitor";
+import CriticalCSSOptimized from "@/components/CriticalCSSOptimized";
 
 const Index = () => {
   const { t } = useLocalization();
@@ -56,6 +58,7 @@ const Index = () => {
       />
       <ServiceWorkerProvider />
       <AdvancedPerformanceMonitor />
+      <CriticalCSSOptimized />
       
       <FontOptimizer />
       <EnhancedPerformanceMonitor />

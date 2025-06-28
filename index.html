@@ -197,55 +197,91 @@
       }
     </style>
     
-    <!-- Deferred Brevo Conversations Widget for better performance -->
+    <!-- Optimized Third-party Scripts - Deferred for Performance -->
+    <script>
+      // Optimized Analytics with Minimal Impact
+      window.addEventListener('load', function() {
+        // Only load analytics after user interaction to improve FID
+        let analyticsLoaded = false;
+        
+        function loadAnalytics() {
+          if (analyticsLoaded) return;
+          analyticsLoaded = true;
+          
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-EHVL7BL5FS';
+          document.head.appendChild(script);
+          
+          script.onload = function() {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-EHVL7BL5FS', {
+              page_title: document.title,
+              page_location: window.location.href
+            });
+          };
+        }
+        
+        // Load analytics on first user interaction
+        ['click', 'scroll', 'touchstart', 'keydown'].forEach(event => {
+          document.addEventListener(event, loadAnalytics, { once: true, passive: true });
+        });
+        
+        // Fallback: load after 5 seconds if no interaction
+        setTimeout(loadAnalytics, 5000);
+      });
+    </script>
+    
+    <!-- Optimized Brevo Conversations Widget -->
     <script>
         window.addEventListener('load', function() {
-          (function(d, w, c) {
-              w.BrevoConversationsID = '68374d9e93ba39a2030dfb0e';
-              w[c] = w[c] || function() {
-                  (w[c].q = w[c].q || []).push(arguments);
-              };
-              var s = d.createElement('script');
-              s.async = true;
-              s.defer = true;
-              s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
-              if (d.head) d.head.appendChild(s);
-          })(document, window, 'BrevoConversations');
+          // Defer Brevo widget until after page load and user interaction
+          let brevoLoaded = false;
+          
+          function loadBrevo() {
+            if (brevoLoaded) return;
+            brevoLoaded = true;
+            
+            (function(d, w, c) {
+                w.BrevoConversationsID = '68374d9e93ba39a2030dfb0e';
+                w[c] = w[c] || function() {
+                    (w[c].q = w[c].q || []).push(arguments);
+                };
+                var s = d.createElement('script');
+                s.async = true;
+                s.defer = true;
+                s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
+                if (d.head) d.head.appendChild(s);
+            })(document, window, 'BrevoConversations');
+          }
+          
+          // Load on user interaction for better FID
+          ['click', 'scroll', 'touchstart'].forEach(event => {
+            document.addEventListener(event, loadBrevo, { once: true, passive: true });
+          });
+          
+          // Fallback: load after 3 seconds
+          setTimeout(loadBrevo, 3000);
         });
     </script>
   </head>
   
   <body>
-    <!-- Enhanced Google Analytics with deferred loading -->
-    <script>
-      window.addEventListener('load', function() {
-        var script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-EHVL7BL5FS';
-        document.head.appendChild(script);
-        
-        script.onload = function() {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-EHVL7BL5FS', {
-            page_title: document.title,
-            page_location: window.location.href
-          });
-        };
-      });
-    </script>
-    
     <div id="root"></div>
     
-    <!-- Deferred non-critical scripts for better performance -->
+    <!-- Further Deferred Non-critical Scripts -->
     <script>
       window.addEventListener('load', function() {
-        var gpScript = document.createElement('script');
-        gpScript.src = 'https://cdn.gpteng.co/gptengineer.js';
-        gpScript.type = 'module';
-        gpScript.defer = true;
-        document.head.appendChild(gpScript);
+        // Load GPT Engineer script with maximum delay for better performance
+        setTimeout(function() {
+          var gpScript = document.createElement('script');
+          gpScript.src = 'https://cdn.gpteng.co/gptengineer.js';
+          gpScript.type = 'module';
+          gpScript.defer = true;
+          document.head.appendChild(gpScript);
+        }, 10000); // 10 second delay for non-essential script
       });
     </script>
     
