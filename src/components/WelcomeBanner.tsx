@@ -4,12 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocationContext } from '@/contexts/LocationContext';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocalization } from '@/contexts/OptimizedLocalizationContext';
 import { useCookieContext } from '@/contexts/CookieContext';
 
 const WelcomeBanner: React.FC = () => {
   const { location, loading } = useLocationContext();
-  const { t, language } = useLanguage();
+  const { t, language } = useLocalization();
   const { isCookieAllowed } = useCookieContext();
   const [isVisible, setIsVisible] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(false);

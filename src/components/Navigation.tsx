@@ -1,8 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
-import { useCurrency } from "@/contexts/CurrencyContext";
+import { useLocalization } from "@/contexts/OptimizedLocalizationContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { ShoppingCart, Check, Globe, LogOut, UserCircle, User, History, ChevronDown, ChevronUp, Settings } from "lucide-react";
 import CurrencyIcon from "@/components/CurrencyIcon";
@@ -17,12 +16,10 @@ const Navigation = () => {
   const {
     language,
     setLanguage,
-    t
-  } = useLanguage();
-  const {
     currency,
-    setCurrency
-  } = useCurrency();
+    setCurrency,
+    t
+  } = useLocalization();
   const {
     user,
     signOut
@@ -161,7 +158,15 @@ const Navigation = () => {
     path: "/contact",
     label: t("contact") || "Contact"
   }];
-  const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
+  const languages = ["en", "ro", "fr", "pl", "de"] as const;
+  const languageNames = {
+    en: "English",
+    ro: "Română", 
+    fr: "Français",
+    pl: "Polski",
+    de: "Deutsch"
+  };
+
   return <>
       {/* Background behind navbar */}
       <div style={{

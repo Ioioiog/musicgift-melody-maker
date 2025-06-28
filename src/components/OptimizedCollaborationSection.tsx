@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocalization } from '@/contexts/OptimizedLocalizationContext';
 import { supabase } from '@/integrations/supabase/client';
 
 // Debounce utility function
@@ -24,7 +24,7 @@ const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
 
 const OptimizedCollaborationSection = () => {
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t } = useLocalization();
   const [formData, setFormData] = useState({
     name: '',
     email: '',

@@ -1,6 +1,6 @@
 
 import { Helmet } from 'react-helmet-async';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocalization } from '@/contexts/OptimizedLocalizationContext';
 
 interface SEOHeadProps {
   title?: string;
@@ -19,7 +19,7 @@ const SEOHead = ({
   type = "website",
   structuredData
 }: SEOHeadProps) => {
-  const { language, t } = useLanguage();
+  const { language, t } = useLocalization();
   
   const defaultTitle = t('siteTitle', 'MusicGift.ro - Personalized Musical Gifts');
   const defaultDescription = t('siteDescription', 'Create personalized songs and unique musical gifts. Professional composition services. Over 2000 songs created with love.');

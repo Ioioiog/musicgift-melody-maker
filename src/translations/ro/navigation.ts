@@ -11,4 +11,9 @@ export const navigationTranslations = {
   admin: "Admin",
   history: "Istoric",
   viewManageOrders: "Vizualizează și gestionează istoricul comenzilor",
+  blog: "Blog",
+  user: "Utilizator",
+  signIn: "Conectare",
+  signOut: "Deconectare",
+  accountSettings: "Setări cont",
 };

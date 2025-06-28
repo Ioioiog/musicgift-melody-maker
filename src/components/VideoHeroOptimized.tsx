@@ -1,5 +1,4 @@
-
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocalization } from '@/contexts/OptimizedLocalizationContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
@@ -7,7 +6,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useLocation } from 'react-router-dom';
 
 const VideoHeroOptimized = () => {
-  const { t, language } = useLanguage();
+  const { t, language } = useLocalization();
   const location = useLocation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMobile = useIsMobile();

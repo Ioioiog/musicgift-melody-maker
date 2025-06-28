@@ -16,7 +16,7 @@ import CriticalCSS from "@/components/CriticalCSS";
 import EnhancedStructuredData from "@/components/EnhancedStructuredData";
 import FontOptimizer from "@/components/FontOptimizer";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLocalization } from "@/contexts/OptimizedLocalizationContext";
 import { Link } from "react-router-dom";
 import { Music, ShoppingCart, Gift } from "lucide-react";
 import { useEffect } from "react";
@@ -27,7 +27,7 @@ import FAQStructuredData from "@/components/FAQStructuredData";
 import BreadcrumbStructuredData from "@/components/BreadcrumbStructuredData";
 
 const Index = () => {
-  const { t } = useLanguage();
+  const { t } = useLocalization();
   
   useEffect(() => {
     performance.mark('index-page-start');
