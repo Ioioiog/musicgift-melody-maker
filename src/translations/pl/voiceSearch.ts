@@ -9,7 +9,7 @@ export const voiceSearchTranslations = {
   howToOrderAnswer: "Aby zamówić spersonalizowaną piosenkę, odwiedź naszą stronę zamówień, wybierz żądany pakiet, wypełnij formularz swoją historią i dokonaj płatności. Proces zajmuje tylko 5 minut, a piosenkę otrzymasz w ciągu 3-5 dni roboczych.",
   
   weddingSongCost: "Ile kosztuje piosenka weselna?",
-  weddingSongCostAnswer: "Pakiet weselny kosztuje 350 zł i obejmuje profesjonalną spersonalizowaną piosenkę, nagranie wokalne w jakości studyjnej, jedną bezpłatną korektę i dostawę w wysokiej jakości formacie cyfrowym.",
+  weddingSongCostAnswer: "Pakiet weselny kosztuje 59 EUR i obejmuje profesjonalną spersonalizowaną piosenkę, nagranie wokalne w jakości studyjnej, jedną bezpłatną korektę i dostawę w wysokiej jakości formacie cyfrowym.",
   
   deliveryTime: "Jak długo będę czekać na mój prezent muzyczny?",
   deliveryTimeAnswer: "Twój prezent muzyczny będzie gotowy w ciągu 3-5 dni roboczych po potwierdzeniu zamówienia. W przypadku bardziej złożonych pakietów czas dostawy może wynosić do 7 dni.",

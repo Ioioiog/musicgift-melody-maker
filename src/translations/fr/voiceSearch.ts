@@ -9,7 +9,7 @@ export const voiceSearchTranslations = {
   howToOrderAnswer: "Pour commander une chanson personnalisée, visitez notre page de commande, choisissez le forfait désiré, complétez le formulaire avec votre histoire et effectuez le paiement. Le processus ne prend que 5 minutes et vous recevrez votre chanson dans 3-5 jours ouvrables.",
   
   weddingSongCost: "Combien coûte une chanson de mariage?",
-  weddingSongCostAnswer: "Le forfait mariage coûte 85€ et comprend une chanson personnalisée professionnelle, un enregistrement vocal de qualité studio, une révision gratuite et la livraison en format numérique haute qualité.",
+  weddingSongCostAnswer: "Le forfait mariage coûte 59 EUR et comprend une chanson personnalisée professionnelle, un enregistrement vocal de qualité studio, une révision gratuite et la livraison en format numérique haute qualité.",
   
   deliveryTime: "Dans combien de temps vais-je recevoir mon cadeau musical?",
   deliveryTimeAnswer: "Votre cadeau musical sera prêt dans 3-5 jours ouvrables après confirmation de la commande. Pour les forfaits plus complexes, le délai de livraison peut aller jusqu'à 7 jours.",

@@ -9,7 +9,7 @@ export const voiceSearchTranslations = {
   howToOrderAnswer: "Um ein personalisiertes Lied zu bestellen, besuchen Sie unsere Bestellseite, wählen Sie Ihr gewünschtes Paket, füllen Sie das Formular mit Ihrer Geschichte aus und tätigen Sie die Zahlung. Der Prozess dauert nur 5 Minuten und Sie erhalten Ihr Lied innerhalb von 3-5 Werktagen.",
   
   weddingSongCost: "Was kostet ein Hochzeitslied?",
-  weddingSongCostAnswer: "Das Hochzeitspaket kostet 85€ und beinhaltet ein professionelles personalisiertes Lied, Studio-qualität Gesangsaufnahme, eine kostenlose Überarbeitung und Lieferung in hochwertigem digitalem Format.",
+  weddingSongCostAnswer: "Das Hochzeitspaket kostet 59 EUR und beinhaltet ein professionelles personalisiertes Lied, Studio-qualität Gesangsaufnahme, eine kostenlose Überarbeitung und Lieferung in hochwertigem digitalem Format.",
   
   deliveryTime: "Wie lange dauert es, bis ich mein Musikgeschenk erhalte?",
   deliveryTimeAnswer: "Ihr Musikgeschenk wird innerhalb von 3-5 Werktagen nach Bestellbestätigung fertig sein. Für komplexere Pakete kann die Lieferzeit bis zu 7 Tage betragen.",

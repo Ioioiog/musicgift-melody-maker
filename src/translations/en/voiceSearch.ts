@@ -9,7 +9,7 @@ export const voiceSearchTranslations = {
   howToOrderAnswer: "To order a personalized song, visit our order page, choose your desired package, complete the form with your story, and make payment. The process takes just 5 minutes and you'll receive your song within 3-5 business days.",
   
   weddingSongCost: "How much does it cost to make a wedding song?",
-  weddingSongCostAnswer: "The wedding package costs £75 and includes a professional personalized song, studio-quality vocal recording, one free revision, and delivery in high-quality digital format.",
+  weddingSongCostAnswer: "The wedding package costs 59 EUR and includes a professional personalized song, studio-quality vocal recording, one free revision, and delivery in high-quality digital format.",
   
   deliveryTime: "How long until I receive my musical gift?",
   deliveryTimeAnswer: "Your musical gift will be ready within 3-5 business days after order confirmation. For more complex packages, delivery time may be up to 7 days.",
