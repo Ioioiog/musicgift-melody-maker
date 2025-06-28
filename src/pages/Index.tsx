@@ -4,14 +4,14 @@ import Footer from "@/components/Footer";
 import VideoHeroOptimized from "@/components/VideoHeroOptimized";
 import HeroContent from "@/components/HeroContent";
 import ScenarioHero from "@/components/ScenarioHero";
-import AnimatedStepFlow from "@/components/AnimatedStepFlow";
-import OptimizedTestimonialSlider from "@/components/OptimizedTestimonialSlider";
+import LazyAnimatedStepFlow from "@/components/LazyAnimatedStepFlow";
+import LazyTestimonialSlider from "@/components/LazyTestimonialSlider";
 import OptimizedImpactCards from "@/components/OptimizedImpactCards";
-import CollaborationSection from "@/components/CollaborationSection";
+import LazyCollaborationSection from "@/components/LazyCollaborationSection";
 import SEOHead from "@/components/SEOHead";
 import StructuredDataLoader from "@/components/StructuredDataLoader";
 import WelcomeBanner from "@/components/WelcomeBanner";
-import PerformanceMonitor from "@/components/PerformanceMonitor";
+import EnhancedPerformanceMonitor from "@/components/EnhancedPerformanceMonitor";
 import CriticalCSS from "@/components/CriticalCSS";
 import EnhancedStructuredData from "@/components/EnhancedStructuredData";
 import FontOptimizer from "@/components/FontOptimizer";
@@ -45,7 +45,7 @@ const Index = () => {
       />
       
       <FontOptimizer />
-      <PerformanceMonitor />
+      <EnhancedPerformanceMonitor />
       <CriticalCSS />
       
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-blue-600 text-white p-2 z-50">
@@ -76,7 +76,7 @@ const Index = () => {
 
           <section className="py-2 md:py-4" aria-labelledby="process-heading" style={{ contain: 'layout' }}>
             <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
-            <AnimatedStepFlow />
+            <LazyAnimatedStepFlow />
           </section>
 
           <section aria-labelledby="voice-faq-heading" style={{ contain: 'layout' }}>
@@ -91,7 +91,7 @@ const Index = () => {
 
           <section className="py-2 md:py-4" aria-labelledby="testimonials-heading" style={{ contain: 'layout' }}>
             <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
-            <OptimizedTestimonialSlider />
+            <LazyTestimonialSlider />
           </section>
 
           <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[1px]" role="separator" aria-hidden="true" />
@@ -100,7 +100,7 @@ const Index = () => {
 
       <section aria-labelledby="collaboration-heading" style={{ contain: 'layout' }}>
         <h2 id="collaboration-heading" className="sr-only">Colaborarea Noastră cu Artiștii</h2>
-        <CollaborationSection />
+        <LazyCollaborationSection />
       </section>
 
       <section 
