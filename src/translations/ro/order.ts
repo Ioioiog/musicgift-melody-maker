@@ -161,6 +161,11 @@ export const orderTranslations = {
   voiceFemale: "Voce feminină",
   voiceMale: "Voce masculină",
   voiceDuet: "Duet (ambele voci)",
+  popStyle: "Pop",
+  rockStyle: "Rock",
+  balladStyle: "Baladă",
+  folkStyle: "Folk",
+  jazzStyle: "Jazz",
 
   // Song Theme
   songThemePlaceholder: "Descrie tema principală a cântecului...",
