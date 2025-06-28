@@ -1,23 +1,20 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useCurrency } from '@/contexts/CurrencyContext';
 import { MessageCircle, Volume2, Search, MapPin, Clock, Star, Music } from 'lucide-react';
 
 const VoiceSearchSection: React.FC = () => {
   const { t, language } = useLanguage();
-  const { currency } = useCurrency();
 
-  // Get pricing based on currency
+  // Get pricing based on language (not currency)
   const getPersonalPrice = () => {
-    return currency === 'EUR' ? '59' : '299';
+    return language === 'ro' ? '299' : '59';
   };
 
   const getPremiumPrice = () => {
-    return currency === 'EUR' ? '99' : '499';
+    return language === 'ro' ? '499' : '99';
   };
 
   const voiceSearchFAQs = [
