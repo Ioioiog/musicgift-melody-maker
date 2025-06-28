@@ -640,7 +640,7 @@ const OrderWizard: React.FC<OrderWizardProps> = ({
             </>
           )}
 
-          <div className="flex justify-between mt-6">
+          <div className={`flex mt-6 ${currentStep > 0 ? 'justify-between' : 'justify-end'}`}>
             {currentStep > 0 && (
               <Button 
                 type="button"
