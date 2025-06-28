@@ -1,13 +1,13 @@
+
 import { useLocalization } from '@/contexts/OptimizedLocalizationContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useLocation } from 'react-router-dom';
+import AdvancedOptimizedImage from './AdvancedOptimizedImage';
 
 const VideoHeroOptimized = () => {
   const { t, language } = useLocalization();
-  const location = useLocation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMobile = useIsMobile();
   const [hasAudio, setHasAudio] = useState(false);
@@ -88,13 +88,21 @@ const VideoHeroOptimized = () => {
   if (!isMounted) {
     return (
       <div 
-        className="video-hero-skeleton relative overflow-hidden"
+        className="video-hero-skeleton hero-critical"
         style={{ 
           aspectRatio: '16/9',
           minHeight: isMobile ? '56.25vw' : '60vh',
           containIntrinsicSize: '100vw 56.25vw'
         }}
       >
+        <AdvancedOptimizedImage
+          src={posterSrc}
+          alt="MusicGift Hero Background"
+          width={1920}
+          height={1080}
+          priority={true}
+          className="absolute inset-0 w-full h-full"
+        />
         <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-purple-900 to-gray-900 animate-pulse" />
         <div className="absolute bottom-12 left-0 right-0 text-center px-4">
           <div className="h-12 bg-white/20 rounded-lg animate-pulse mx-auto max-w-md" />
@@ -105,7 +113,7 @@ const VideoHeroOptimized = () => {
 
   return (
     <section
-      className="video-hero-optimized relative overflow-hidden"
+      className="video-hero-optimized video-hero-critical hero-critical"
       style={{
         aspectRatio: '16/9',
         minHeight: isMobile ? '56.25vw' : '60vh',
@@ -115,13 +123,14 @@ const VideoHeroOptimized = () => {
         containIntrinsicSize: '100vw 56.25vw'
       }}
     >
-      {/* Fixed background to prevent CLS */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ 
-          backgroundImage: `url(${posterSrc})`,
-          contain: 'strict'
-        }}
+      {/* Optimized background image */}
+      <AdvancedOptimizedImage
+        src={posterSrc}
+        alt="MusicGift Hero Background"
+        width={1920}
+        height={1080}
+        priority={true}
+        className="absolute inset-0"
       />
 
       <video
@@ -185,7 +194,7 @@ const VideoHeroOptimized = () => {
       {/* Fixed title positioning */}
       <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
         <h1 
-          className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent animate-fade-in-optimized"
           style={{ contain: 'layout style' }}
         >
           {t('heroTitle')}

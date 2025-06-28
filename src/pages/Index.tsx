@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHeroOptimized from "@/components/VideoHeroOptimized";
@@ -25,6 +24,9 @@ import VoiceSearchContent from "@/components/VoiceSearchContent";
 import VoiceSearchStructuredData from "@/components/VoiceSearchStructuredData";
 import FAQStructuredData from "@/components/FAQStructuredData";
 import BreadcrumbStructuredData from "@/components/BreadcrumbStructuredData";
+import AdvancedResourcePreloader from "@/components/AdvancedResourcePreloader";
+import ServiceWorkerProvider from "@/components/ServiceWorkerProvider";
+import AdvancedPerformanceMonitor from "@/components/AdvancedPerformanceMonitor";
 
 const Index = () => {
   const { t } = useLocalization();
@@ -43,6 +45,17 @@ const Index = () => {
         title="MusicGift.ro - Cadouri Muzicale Personalizate"
         description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste."
       />
+      
+      {/* Enhanced Performance Components */}
+      <AdvancedResourcePreloader 
+        criticalResources={[
+          '/uploads/logo_musicgift.webp',
+          '/uploads/background.webp',
+          '/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png'
+        ]}
+      />
+      <ServiceWorkerProvider />
+      <AdvancedPerformanceMonitor />
       
       <FontOptimizer />
       <EnhancedPerformanceMonitor />
