@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -23,6 +22,8 @@ import { useEffect } from "react";
 import VoiceSearchFAQ from "@/components/VoiceSearchFAQ";
 import VoiceSearchContent from "@/components/VoiceSearchContent";
 import VoiceSearchStructuredData from "@/components/VoiceSearchStructuredData";
+import FAQStructuredData from "@/components/FAQStructuredData";
+import BreadcrumbStructuredData from "@/components/BreadcrumbStructuredData";
 
 const Index = () => {
   const { t } = useLanguage();
@@ -208,9 +209,11 @@ const Index = () => {
 
       <Footer />
       
-      {/* Load structured data at the end for better performance */}
+      {/* Enhanced structured data components */}
       <StructuredDataLoader />
       <EnhancedStructuredData />
+      <FAQStructuredData />
+      <BreadcrumbStructuredData />
       
       {/* Voice Search Structured Data */}
       <VoiceSearchStructuredData />
