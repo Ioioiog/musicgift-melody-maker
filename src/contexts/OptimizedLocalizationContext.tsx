@@ -4,7 +4,7 @@ import { useLocation } from '@/hooks/useLocation';
 import { translations } from '@/translations';
 import type { Language } from '@/types/language';
 
-type Currency = 'EUR' | 'RON' | 'PLN';
+type Currency = 'EUR' | 'RON';
 
 interface LocalizationContextType {
   language: Language;
@@ -21,7 +21,7 @@ const CURRENCY_MAP: Record<string, Currency> = {
   'en': 'EUR',
   'fr': 'EUR', 
   'de': 'EUR',
-  'pl': 'PLN'
+  'pl': 'EUR'
 };
 
 export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
