@@ -36,9 +36,6 @@ const Index = () => {
         description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste."
       />
       
-      {/* Welcome Banner for First-Time Visitors */}
-      <WelcomeBanner />
-      
       {/* Skip Navigation for Accessibility */}
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-blue-600 text-white p-2 z-50">
         Sari la conținutul principal
@@ -50,6 +47,9 @@ const Index = () => {
       <div className="video-hero-optimized">
         <VideoHero />
       </div>
+
+      {/* Welcome Banner for First-Time Visitors - positioned after video header */}
+      <WelcomeBanner />
 
       {/* Main Content with Semantic HTML and SEO Optimizations - Simplified for LCP */}
       <main id="main-content" className="main-lcp-critical relative overflow-hidden critical-resource">
