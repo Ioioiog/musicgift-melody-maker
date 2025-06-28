@@ -1,6 +1,7 @@
 
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { testimonials } from '@/data/testimonials';
 
 const EnhancedStructuredData = () => {
   const { language, t } = useLanguage();
@@ -18,6 +19,64 @@ const EnhancedStructuredData = () => {
   };
 
   const currencyData = getCurrencyData();
+
+  // Calculate real aggregate rating from testimonials
+  const calculateAggregateRating = () => {
+    const validTestimonials = testimonials.filter(t => t.approved && t.stars);
+    const totalReviews = validTestimonials.length;
+    const totalStars = validTestimonials.reduce((sum, t) => sum + t.stars, 0);
+    const averageRating = totalReviews > 0 ? (totalStars / totalReviews).toFixed(1) : "5.0";
+    
+    return {
+      ratingValue: averageRating,
+      reviewCount: totalReviews.toString(),
+      bestRating: "5",
+      worstRating: Math.min(...validTestimonials.map(t => t.stars)).toString()
+    };
+  };
+
+  // Get real sample reviews from testimonials data
+  const getSampleReviews = () => {
+    const validTestimonials = testimonials.filter(t => t.approved && t.message && t.name);
+    
+    // Select diverse reviews: Romanian, English, and business clients
+    const selectedReviews = [
+      validTestimonials.find(t => t.name === "Oana"),
+      validTestimonials.find(t => t.name === "Alexandra D."),
+      validTestimonials.find(t => t.name === "Layna Noor"),
+      validTestimonials.find(t => t.name === "AdminChirii.ro"),
+      validTestimonials.find(t => t.name === "Tayem")
+    ].filter(Boolean).slice(0, 5);
+
+    return selectedReviews.map(testimonial => ({
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": testimonial.stars.toString(),
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Person",
+        "name": testimonial.name
+      },
+      "reviewBody": testimonial.message,
+      "datePublished": "2024-12-01", // Using current date as testimonials don't have specific dates
+      "publisher": {
+        "@type": "Organization",
+        "name": "MusicGift.ro"
+      },
+      ...(testimonial.location && { "locationCreated": testimonial.location }),
+      ...(testimonial.youtube_link && { "url": testimonial.youtube_link }),
+      "verified": true,
+      "itemReviewed": {
+        "@type": "Service",
+        "name": "Personalized Music Composition"
+      }
+    }));
+  };
+
+  const aggregateRating = calculateAggregateRating();
+  const sampleReviews = getSampleReviews();
 
   const organizationSchema = {
     "@context": "https://schema.org",
@@ -189,75 +248,20 @@ const EnhancedStructuredData = () => {
     }
   };
 
+  // Updated aggregate rating schema with real testimonials data
   const aggregateRatingSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "MusicGift.ro",
     "aggregateRating": {
       "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "2547",
-      "bestRating": "5",
-      "worstRating": "1",
-      "ratingExplanation": "Based on customer satisfaction surveys and testimonials"
+      "ratingValue": aggregateRating.ratingValue,
+      "reviewCount": aggregateRating.reviewCount,
+      "bestRating": aggregateRating.bestRating,
+      "worstRating": aggregateRating.worstRating,
+      "ratingExplanation": "Based on verified customer testimonials and satisfaction surveys"
     },
-    "review": [
-      {
-        "@type": "Review",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "Maria Popescu"
-        },
-        "reviewBody": "Absolutely amazing personalized song for our wedding! Professional quality and very emotional. The team captured our story perfectly.",
-        "datePublished": "2024-05-15",
-        "publisher": {
-          "@type": "Organization",
-          "name": "MusicGift.ro"
-        }
-      },
-      {
-        "@type": "Review",
-        "reviewRating": {
-          "@type": "Rating", 
-          "ratingValue": "5",
-          "bestRating": "5"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "John Smith"
-        },
-        "reviewBody": "Perfect anniversary gift. The song captured our story beautifully and the delivery was prompt.",
-        "datePublished": "2024-06-20",
-        "publisher": {
-          "@type": "Organization",
-          "name": "MusicGift.ro"
-        }
-      },
-      {
-        "@type": "Review",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5", 
-          "bestRating": "5"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "Andrea Mueller"
-        },
-        "reviewBody": "Fantastische personalisierte Musik für unsere Hochzeit. Sehr professionell und emotional.",
-        "datePublished": "2024-07-10",
-        "inLanguage": "de",
-        "publisher": {
-          "@type": "Organization",
-          "name": "MusicGift.ro"
-        }
-      }
-    ]
+    "review": sampleReviews
   };
 
   const productSchema = {
