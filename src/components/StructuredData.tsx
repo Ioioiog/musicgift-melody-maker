@@ -123,37 +123,6 @@ export const useStructuredData = () => {
     }
   };
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Cât durează să creați o melodie personalizată?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "În funcție de pachetul ales, durata variază între 7-14 zile lucrătoare pentru o melodie personalizată completă."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Pot să aleg stilul muzical pentru melodia mea?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Da, puteți alege din diverse stiluri muzicale: pop, rock, folk, jazz, clasic, și multe altele în funcție de preferințele dumneavoastră."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Cum funcționează procesul de comandă?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Alegeți pachetul dorit, completați formularul cu detaliile melodiei, efectuați plata, și echipa noastră va începe lucrul la compoziția dumneavoastră personalizată."
-        }
-      }
-    ]
-  };
-
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -175,7 +144,6 @@ export const useStructuredData = () => {
         organizationSchema,
         localBusinessSchema,
         serviceSchema,
-        faqSchema,
         breadcrumbSchema
       ]
     }

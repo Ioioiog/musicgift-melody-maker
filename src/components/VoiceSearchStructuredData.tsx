@@ -76,61 +76,6 @@ export const VoiceSearchStructuredData = () => {
     const countryCode = getCountryCode();
     const coords = getGeoCoordinates();
 
-    const faqSchema = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": t('howToOrderSong'),
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": t('howToOrderAnswer')
-          }
-        },
-        {
-          "@type": "Question",
-          "name": t('weddingSongCost'),
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": t('weddingSongCostAnswer')
-          }
-        },
-        {
-          "@type": "Question",
-          "name": t('deliveryTime'),
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": t('deliveryTimeAnswer')
-          }
-        },
-        {
-          "@type": "Question",
-          "name": t('bestAnniversaryGifts'),
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": t('bestAnniversaryGiftsAnswer')
-          }
-        },
-        {
-          "@type": "Question",
-          "name": t('musicServicesNearMe'),
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": t('musicServicesNearMeAnswer')
-          }
-        },
-        {
-          "@type": "Question",
-          "name": t('bestGiftForWife'),
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": t('bestGiftForWifeAnswer')
-          }
-        }
-      ]
-    };
-
     const howToSchema = {
       "@context": "https://schema.org",
       "@type": "HowTo",
@@ -258,11 +203,10 @@ export const VoiceSearchStructuredData = () => {
       }
     };
 
-    // Combine all schemas
+    // Combine schemas (removed FAQ schema to avoid duplication)
     const combinedSchema = {
       "@context": "https://schema.org",
       "@graph": [
-        faqSchema,
         howToSchema,
         speakableSchema,
         localBusinessSchema
