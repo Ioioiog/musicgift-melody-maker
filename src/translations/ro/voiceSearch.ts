@@ -9,7 +9,7 @@ export const voiceSearchTranslations = {
   howToOrderAnswer: "Pentru a comanda o melodie personalizată, accesați pagina de comenzi, alegeți pachetul dorit, completați formularul cu povestea dumneavoastră și efectuați plata. Procesul durează doar 5 minute și veți primi melodia în 3-5 zile lucrătoare.",
   
   weddingSongCost: "Cât costă să fac o melodie pentru nuntă?",
-  weddingSongCostAnswer: "Pachetul de nuntă costă 899 RON și include o melodie personalizată profesională, înregistrare vocală de calitate studio, o revizuire gratuită și livrare în format digital de înaltă calitate.",
+  weddingSongCostAnswer: "Pachetul de nuntă costă 299 RON și include o melodie personalizată profesională, înregistrare vocală de calitate studio, o revizuire gratuită și livrare în format digital de înaltă calitate.",
   
   deliveryTime: "În cât timp primesc cadoul muzical?",
   deliveryTimeAnswer: "Cadoul dumneavoastră muzical va fi gata în 3-5 zile lucrătoare după confirmarea comenzii. Pentru pachetele mai complexe, timpul de livrare poate fi de până la 7 zile.",
