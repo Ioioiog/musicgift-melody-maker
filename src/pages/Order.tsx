@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
@@ -6,7 +5,7 @@ import OrderHeroSection from "@/components/order/OrderHeroSection";
 import OrderSidebarSummary from "@/components/order/OrderSidebarSummary";
 import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLocalization } from "@/contexts/OptimizedLocalizationContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { usePackages, useAddons } from "@/hooks/usePackageData";
@@ -21,7 +20,7 @@ import { FileMetadata } from "@/types/order";
 
 const Order = () => {
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t } = useLocalization();
   const { user } = useAuth();
   const { currency } = useCurrency();
   const navigate = useNavigate();
