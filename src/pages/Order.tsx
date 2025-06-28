@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import OrderWizard from "@/components/OrderWizard";
@@ -5,7 +6,7 @@ import OrderHeroSection from "@/components/order/OrderHeroSection";
 import OrderSidebarSummary from "@/components/order/OrderSidebarSummary";
 import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalization } from "@/contexts/OptimizedLocalizationContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { usePackages, useAddons } from "@/hooks/usePackageData";
@@ -13,14 +14,16 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useGiftCardByCode } from "@/hooks/useGiftCards";
 import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { convertGiftCardAmount } from "@/utils/currencyUtils";
 import { FileMetadata } from "@/types/order";
 
 const Order = () => {
   const { toast } = useToast();
-  const { t, currency } = useLocalization();
+  const { t } = useLanguage();
   const { user } = useAuth();
+  const { currency } = useCurrency();
   const navigate = useNavigate();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();

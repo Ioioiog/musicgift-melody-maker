@@ -7,7 +7,8 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CookieProvider } from "@/contexts/CookieContext";
 import { LocationProvider } from "@/contexts/LocationContext";
-import { LocalizationProvider } from "@/contexts/OptimizedLocalizationContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -16,8 +17,6 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes (replaces cacheTime)
     },
   },
 });
@@ -32,9 +31,11 @@ root.render(
           <AuthProvider>
             <CookieProvider>
               <LocationProvider>
-                <LocalizationProvider>
-                  <App />
-                </LocalizationProvider>
+                <LanguageProvider>
+                  <CurrencyProvider>
+                    <App />
+                  </CurrencyProvider>
+                </LanguageProvider>
               </LocationProvider>
             </CookieProvider>
           </AuthProvider>

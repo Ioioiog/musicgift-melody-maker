@@ -6,7 +6,8 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Gift, Package, Plus, ChevronDown, ChevronUp, CheckCircle, Tag } from 'lucide-react';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
-import { useLocalization } from '@/contexts/OptimizedLocalizationContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { convertCurrency, convertGiftCardAmount } from '@/utils/currencyUtils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -32,7 +33,8 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
 }) => {
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
-  const { t, currency } = useLocalization();
+  const { t } = useLanguage();
+  const { currency } = useCurrency();
   const isMobile = useIsMobile();
 
   // Local state for applied codes
@@ -75,9 +77,9 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
   // Check if this is a quote-only package
   const packageIsQuoteOnly = selectedPackageData?.is_quote_only === true || isQuoteOnly;
 
-  const packagePrice = getPackagePrice(selectedPackageData, currency as 'EUR' | 'RON');
+  const packagePrice = getPackagePrice(selectedPackageData, currency);
   const addonsPrice = selectedAddonsData.reduce((total, addon) => 
-    total + (addon ? getAddonPrice(addon, currency as 'EUR' | 'RON') : 0), 0
+    total + (addon ? getAddonPrice(addon, currency) : 0), 0
   );
   const subtotal = packagePrice + addonsPrice;
 
@@ -100,7 +102,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
     // For same currency, no conversion needed
     let convertedGiftAmount = giftAmount;
     if (giftCurrency !== currency) {
-      convertedGiftAmount = convertGiftCardAmount(giftAmount, giftCurrency, currency as 'EUR' | 'RON');
+      convertedGiftAmount = convertGiftCardAmount(giftAmount, giftCurrency, currency);
     }
     
     console.log('After conversion:', { convertedGiftAmount });
@@ -190,7 +192,7 @@ const OrderSidebarSummary: React.FC<OrderSidebarSummaryProps> = ({
                           {t(addon.label_key)}
                         </span>
                         <span className="text-white shrink-0">
-                          {currency} {getAddonPrice(addon, currency as 'EUR' | 'RON').toFixed(2)}
+                          {currency} {getAddonPrice(addon, currency).toFixed(2)}
                         </span>
                       </div>
                     ))}

@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,21 +6,25 @@ import { Gift as GiftIcon, Heart, Users } from "lucide-react";
 import GiftPurchaseWizard from "@/components/gift/GiftPurchaseWizard";
 import GiftRedemption from "@/components/gift/GiftRedemption";
 import GiftPaymentSuccess from "@/components/gift/GiftPaymentSuccess";
-import { useLocalization } from "@/contexts/OptimizedLocalizationContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-
 const Gift = () => {
-  const { t } = useLocalization();
-  const { user } = useAuth();
-  const { toast } = useToast();
+  const {
+    t
+  } = useLanguage();
+  const {
+    user
+  } = useAuth();
+  const {
+    toast
+  } = useToast();
   const [searchParams] = useSearchParams();
 
   // Check if returning from payment
   const paymentStatus = searchParams.get('payment');
-  
   const handleGiftPurchaseComplete = (data: any) => {
     console.log("Gift purchase completed:", data);
     // This will now be called only after successful payment
@@ -31,7 +34,6 @@ const Gift = () => {
       description: `${t('giftCardCode')} ${data.code} ${t('giftCardWillBeDelivered')} ${data.recipient_email}`
     });
   };
-  
   const handleGiftRedemption = (giftCard: any, selectedPackage: string, upgradeAmount?: number) => {
     console.log("Gift redemption:", {
       giftCard,
@@ -56,53 +58,51 @@ const Gift = () => {
     // Redirect to order flow with gift card data
     window.location.href = `/order?package=${selectedPackage}&gift=${giftCard.code}`;
   };
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Navigation />
       
       {/* Compact Hero Section - Adjusted padding for seamless connection to navbar */}
       <section className="pt-16 md:pt-20 lg:pt-24 pb-6 text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/20 py-0"></div>
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <motion.div className="flex justify-center mb-6" initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6,
-            delay: 0.2
-          }}>
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.2
+        }}>
           </motion.div>
           <motion.h2 className="text-2xl md:text-3xl font-bold mb-2" initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6,
-            delay: 0.4
-          }}>
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.4
+        }}>
             {t('shareGiftOfMusic')}
           </motion.h2>
           <motion.p className="text-base md:text-lg opacity-90 mb-4" initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6,
-            delay: 0.5
-          }}>
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.5
+        }}>
             {t('givePersonalizedSong')} {t('createDigitalGiftCard')}
           </motion.p>
         </div>
@@ -110,29 +110,26 @@ const Gift = () => {
 
       {/* Main Content - Flexible to fill remaining space with background */}
       <section className="flex-1 flex items-center py-4 relative" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/30 py-[22px]"></div>
         <motion.div initial={{
-          opacity: 0,
-          y: 30
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.8,
-          delay: 0.6
-        }} className="w-full relative z-10 px-4 py-[10px]">
+        opacity: 0,
+        y: 30
+      }} animate={{
+        opacity: 1,
+        y: 0
+      }} transition={{
+        duration: 0.8,
+        delay: 0.6
+      }} className="w-full relative z-10 px-4 py-[10px]">
           <div className="max-w-4xl mx-auto">
-            {paymentStatus === 'success' ? (
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
+            {paymentStatus === 'success' ? <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
                 <GiftPaymentSuccess />
-              </div>
-            ) : (
-              <Tabs defaultValue="purchase" className="w-full">
+              </div> : <Tabs defaultValue="purchase" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/10 backdrop-blur-sm border border-white/20 py-1 my-[26px] h-auto">
                   <TabsTrigger value="purchase" className="text-sm sm:text-base lg:text-lg data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/80 py-2 sm:py-3 px-2 sm:px-4 h-auto min-h-[44px] leading-tight">
                     <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-center sm:text-left">
@@ -175,16 +172,13 @@ const Gift = () => {
                     </div>
                   </div>
                 </TabsContent>
-              </Tabs>
-            )}
+              </Tabs>}
           </div>
         </motion.div>
       </section>
 
       {/* Footer */}
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Gift;
