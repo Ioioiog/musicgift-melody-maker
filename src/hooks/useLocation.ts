@@ -1,18 +1,18 @@
 
 import { useState, useEffect } from 'react';
 import { LocationService } from '@/services/locationService';
-import { useCookieConsent } from '@/hooks/useCookieConsent';
+import { useCookieContext } from '@/contexts/CookieContext';
 import type { LocationData } from '@/types/location';
 
 export const useLocation = () => {
   const [location, setLocation] = useState<LocationData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { analyticsConsent } = useCookieConsent();
+  const { isCookieAllowed } = useCookieContext();
 
   const detectLocation = async () => {
     // Only detect location if user has consented to analytics cookies
-    if (!analyticsConsent) {
+    if (!isCookieAllowed('analytics')) {
       return;
     }
 
@@ -40,7 +40,7 @@ export const useLocation = () => {
 
   useEffect(() => {
     detectLocation();
-  }, [analyticsConsent]);
+  }, [isCookieAllowed('analytics')]);
 
   return {
     location,
