@@ -1,4 +1,3 @@
-
 import { commonTranslations } from './common';
 import { navigationTranslations } from './navigation';
 import { heroTranslations } from './hero';
@@ -18,6 +17,7 @@ import { cookiesTranslations } from './cookies';
 import { newsletterTranslations } from './newsletter';
 import { blogTranslations } from './blog';
 import { welcomeTranslations } from './welcome';
+import { voiceSearchTranslations } from './voiceSearch';
 
 export const roTranslations = {
   ...commonTranslations,
@@ -39,4 +39,5 @@ export const roTranslations = {
   ...newsletterTranslations,
   ...blogTranslations,
   ...welcomeTranslations,
+  ...voiceSearchTranslations,
 };

@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -16,6 +15,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 import { Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
 import { useEffect } from "react";
+import VoiceSearchFAQ from "@/components/VoiceSearchFAQ";
+import VoiceSearchContent from "@/components/VoiceSearchContent";
+import VoiceSearchStructuredData from "@/components/VoiceSearchStructuredData";
 
 const Index = () => {
   const { t } = useLanguage();
@@ -77,6 +79,18 @@ const Index = () => {
           <section className="py-2 md:py-4 defer-load" aria-labelledby="process-heading">
             <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
             <AnimatedStepFlow />
+          </section>
+
+          {/* Voice Search FAQ Section - New for Voice Search SEO */}
+          <section className="defer-load" aria-labelledby="voice-faq-heading">
+            <h2 id="voice-faq-heading" className="sr-only">Întrebări Frecvente pentru Căutări Vocale</h2>
+            <VoiceSearchFAQ />
+          </section>
+
+          {/* Voice Search Content Section - New for Voice Search SEO */}
+          <section className="defer-load" aria-labelledby="voice-content-heading">
+            <h2 id="voice-content-heading" className="sr-only">Conținut Optimizat pentru Căutări Vocale</h2>
+            <VoiceSearchContent />
           </section>
 
           {/* Testimonials Section - Deferred for LCP */}
@@ -187,6 +201,9 @@ const Index = () => {
       
       {/* Load structured data at the end for better performance */}
       <StructuredDataLoader />
+      
+      {/* Voice Search Structured Data */}
+      <VoiceSearchStructuredData />
     </div>
   );
 };
