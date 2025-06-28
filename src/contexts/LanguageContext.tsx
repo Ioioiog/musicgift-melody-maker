@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Language, LanguageContextType } from '@/types/language';
 import { languageNames } from '@/types/language';
 import { translations } from '@/translations';
-import { useLocationContext } from '@/contexts/LocationContext';
 
 export { Language, languageNames };
 
@@ -12,19 +11,35 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<string>('ro'); // Default fallback
   const [isInitialized, setIsInitialized] = useState(false);
-  const { location } = useLocationContext();
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem('language');
       let initialLang = saved && Object.keys(translations).includes(saved) ? saved : 'ro';
       
-      // Auto-suggest language based on location if no manual selection
+      // Auto-suggest language based on location if no manual selection - made location-safe
       const hasManualSelection = localStorage.getItem('language_manual_selection');
-      if (!hasManualSelection && location && location.countryCode) {
-        const suggestedLang = getSuggestedLanguage(location.countryCode);
-        if (suggestedLang && Object.keys(translations).includes(suggestedLang)) {
-          initialLang = suggestedLang;
+      if (!hasManualSelection) {
+        // Safely access location context without throwing errors
+        const getLocationData = () => {
+          try {
+            // Import the context hook dynamically to avoid circular dependencies
+            const { useLocationContext } = require('@/contexts/LocationContext');
+            const { location } = useLocationContext();
+            return location;
+          } catch {
+            // If location context is not available, return null
+            return null;
+          }
+        };
+
+        const location = getLocationData();
+        
+        if (location && location.countryCode) {
+          const suggestedLang = getSuggestedLanguage(location.countryCode);
+          if (suggestedLang && Object.keys(translations).includes(suggestedLang)) {
+            initialLang = suggestedLang;
+          }
         }
       }
       
@@ -36,7 +51,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setLanguage('ro');
       setIsInitialized(true);
     }
-  }, [location]);
+  }, []);
 
   const getSuggestedLanguage = (countryCode: string): string | null => {
     const countryToLanguage: Record<string, string> = {

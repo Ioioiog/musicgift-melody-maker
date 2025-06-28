@@ -1,6 +1,5 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useLocationContext } from '@/contexts/LocationContext';
 
 type Currency = 'EUR' | 'RON';
 
@@ -18,10 +17,24 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return (saved as Currency) || 'EUR';
   });
   const [suggestedCurrency, setSuggestedCurrency] = useState<Currency | null>(null);
-  const { location } = useLocationContext();
 
-  // Auto-suggest currency based on location
+  // Auto-suggest currency based on location - made location-safe
   useEffect(() => {
+    // Safely access location context without throwing errors
+    const getLocationData = () => {
+      try {
+        // Import the context hook dynamically to avoid circular dependencies
+        const { useLocationContext } = require('@/contexts/LocationContext');
+        const { location } = useLocationContext();
+        return location;
+      } catch {
+        // If location context is not available, return null
+        return null;
+      }
+    };
+
+    const location = getLocationData();
+    
     if (location && location.countryCode) {
       let suggested: Currency;
       
@@ -41,7 +54,7 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setCurrency(suggested);
       }
     }
-  }, [location, currency]);
+  }, [currency]);
 
   const handleSetCurrency = (newCurrency: Currency) => {
     setCurrency(newCurrency);

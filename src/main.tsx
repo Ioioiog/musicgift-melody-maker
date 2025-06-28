@@ -4,11 +4,11 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import { CurrencyProvider } from "@/contexts/CurrencyContext";
-import { LocationProvider } from "@/contexts/LocationContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CookieProvider } from "@/contexts/CookieContext";
+import { LocationProvider } from "@/contexts/LocationContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import App from "./App.tsx";
 import "./index.css";
 

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -5,7 +6,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { CookieProvider } from "@/contexts/CookieContext";
 import CookieConsent from "@/components/CookieConsent";
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -90,15 +90,11 @@ const AppContent = () => (
 );
 
 const App = () => (
-  <>
-    <CookieProvider>
-      <TooltipProvider>
-        <AppContent />
-      </TooltipProvider>
-    </CookieProvider>
+  <TooltipProvider>
+    <AppContent />
     <Toaster />
     <Sonner />
-  </>
+  </TooltipProvider>
 );
 
 export default App;
