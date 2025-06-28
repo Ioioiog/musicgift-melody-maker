@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import VideoHero from "@/components/VideoHero";
@@ -9,6 +10,7 @@ import ImpactCards from "@/components/ImpactCards";
 import CollaborationSection from "@/components/CollaborationSection";
 import SEOHead from "@/components/SEOHead";
 import StructuredDataLoader from "@/components/StructuredDataLoader";
+import WelcomeBanner from "@/components/WelcomeBanner";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
@@ -33,6 +35,9 @@ const Index = () => {
         title="MusicGift.ro - Cadouri Muzicale Personalizate"
         description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste."
       />
+      
+      {/* Welcome Banner for First-Time Visitors */}
+      <WelcomeBanner />
       
       {/* Skip Navigation for Accessibility */}
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-blue-600 text-white p-2 z-50">
