@@ -9,6 +9,11 @@ export interface LocationData {
   currency: string;
   latitude?: number;
   longitude?: number;
+  postalCode?: string;
+  utcOffset?: string;
+  isp?: string;
+  accuracyRadius?: number;
+  languages?: string[];
 }
 
 export interface LocationContextType {
@@ -16,4 +21,17 @@ export interface LocationContextType {
   loading: boolean;
   error: string | null;
   refreshLocation: () => Promise<void>;
+  timezone: string | null;
+  localTime: Date | null;
+}
+
+export interface LocationProvider {
+  name: string;
+  url: string;
+  transform: (data: any) => LocationData;
+  priority: number;
+  rateLimit: {
+    requests: number;
+    period: string;
+  };
 }

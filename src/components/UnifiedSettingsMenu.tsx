@@ -11,15 +11,27 @@ import {
 import { useLanguage, languageNames, Language } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useLocationContext } from '@/contexts/LocationContext';
-import { Settings, Check, Globe, MapPin } from 'lucide-react';
+import { useTimezone } from '@/hooks/useTimezone';
+import { Settings, Check, Globe, MapPin, Clock, RefreshCw } from 'lucide-react';
 import CurrencyIcon from '@/components/CurrencyIcon';
+import LocationGreeting from '@/components/LocationGreeting';
+import LocalTimeClock from '@/components/LocalTimeClock';
 
 const UnifiedSettingsMenu = () => {
   const { language, setLanguage } = useLanguage();
   const { currency, setCurrency, suggestedCurrency } = useCurrency();
-  const { location } = useLocationContext();
+  const { location, refreshLocation, loading } = useLocationContext();
+  const { isBusinessHours } = useTimezone();
 
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
+
+  const handleRefreshLocation = async () => {
+    try {
+      await refreshLocation();
+    } catch (error) {
+      console.error('Failed to refresh location:', error);
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -39,17 +51,40 @@ const UnifiedSettingsMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end" 
-        className="w-56 bg-white/95 backdrop-blur-md border-2 border-gray-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200"
+        className="w-72 bg-white/95 backdrop-blur-md border-2 border-gray-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200"
       >
-        {/* Location Info */}
+        {/* Enhanced Location Info */}
         {location && (
           <>
             <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-1">
               <MapPin className="w-3 h-3" />
-              Location
+              Location Details
             </div>
-            <div className="px-3 py-1 text-sm text-gray-600 mb-2">
-              {location.city}, {location.country}
+            <div className="px-3 py-2 space-y-1">
+              <LocationGreeting format="long" showIcon={false} className="text-sm font-medium text-gray-700" />
+              <div className="text-xs text-gray-500 space-y-1">
+                <div>IP: {location.ip}</div>
+                {location.postalCode && <div>Postal: {location.postalCode}</div>}
+                {location.isp && <div>ISP: {location.isp}</div>}
+              </div>
+              <LocalTimeClock className="mt-2" showTimezone={true} />
+              {!isBusinessHours() && (
+                <div className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                  Outside business hours
+                </div>
+              )}
+            </div>
+            <div className="px-3 py-1 flex justify-end">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRefreshLocation}
+                disabled={loading}
+                className="text-xs h-6 px-2"
+              >
+                <RefreshCw className={`w-3 h-3 mr-1 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
             </div>
             <DropdownMenuSeparator className="bg-gray-200 my-2" />
           </>
