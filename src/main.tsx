@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
+import { LocationProvider } from "@/contexts/LocationContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CookieProvider } from "@/contexts/CookieContext";
 import App from "./App.tsx";
@@ -28,13 +29,15 @@ root.render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AuthProvider>
-            <LanguageProvider>
-              <CurrencyProvider>
-                <CookieProvider>
-                  <App />
-                </CookieProvider>
-              </CurrencyProvider>
-            </LanguageProvider>
+            <CookieProvider>
+              <LocationProvider>
+                <LanguageProvider>
+                  <CurrencyProvider>
+                    <App />
+                  </CurrencyProvider>
+                </LanguageProvider>
+              </LocationProvider>
+            </CookieProvider>
           </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
