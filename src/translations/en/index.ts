@@ -18,6 +18,7 @@ import { cookiesTranslations } from './cookies';
 import { newsletterTranslations } from './newsletter';
 import { blogTranslations } from './blog';
 import { welcomeTranslations } from './welcome';
+import { voiceSearchTranslations } from './voiceSearch';
 
 export const enTranslations = {
   ...commonTranslations,
@@ -39,4 +40,5 @@ export const enTranslations = {
   ...newsletterTranslations,
   ...blogTranslations,
   ...welcomeTranslations,
+  ...voiceSearchTranslations,
 };

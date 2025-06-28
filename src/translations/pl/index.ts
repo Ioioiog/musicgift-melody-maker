@@ -16,6 +16,7 @@ import { footerTranslations } from './footer';
 import { cookiesTranslations } from './cookies';
 import { newsletterTranslations } from './newsletter';
 import { blogTranslations } from './blog';
+import { voiceSearchTranslations } from './voiceSearch';
 
 export const plTranslations = {
   ...commonTranslations,
@@ -35,4 +36,5 @@ export const plTranslations = {
   ...cookiesTranslations,
   ...newsletterTranslations,
   ...blogTranslations,
+  ...voiceSearchTranslations,
 };

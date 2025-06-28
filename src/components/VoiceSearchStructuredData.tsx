@@ -3,12 +3,78 @@ import { useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export const VoiceSearchStructuredData = () => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   
   useEffect(() => {
     // Clean up existing voice search structured data
     const existingScripts = document.querySelectorAll('script[data-voice-search-schema]');
     existingScripts.forEach(script => script.remove());
+
+    // Get currency based on language/region
+    const getCurrency = () => {
+      switch (language) {
+        case 'en': return 'GBP';
+        case 'fr': return 'EUR';
+        case 'de': return 'EUR';
+        case 'pl': return 'PLN';
+        case 'it': return 'EUR';
+        default: return 'RON';
+      }
+    };
+
+    // Get base price based on currency
+    const getBasePrice = () => {
+      switch (language) {
+        case 'en': return '35';
+        case 'fr': return '45';
+        case 'de': return '45';
+        case 'pl': return '180';
+        case 'it': return '45';
+        default: return '399';
+      }
+    };
+
+    // Get wedding price based on currency
+    const getWeddingPrice = () => {
+      switch (language) {
+        case 'en': return '75';
+        case 'fr': return '85';
+        case 'de': return '85';
+        case 'pl': return '350';
+        case 'it': return '85';
+        default: return '899';
+      }
+    };
+
+    // Get country code for geo data
+    const getCountryCode = () => {
+      switch (language) {
+        case 'en': return 'GB';
+        case 'fr': return 'FR';
+        case 'de': return 'DE';
+        case 'pl': return 'PL';
+        case 'it': return 'IT';
+        default: return 'RO';
+      }
+    };
+
+    // Get geo coordinates
+    const getGeoCoordinates = () => {
+      switch (language) {
+        case 'en': return { lat: "51.5074", lng: "-0.1278" }; // London
+        case 'fr': return { lat: "48.8566", lng: "2.3522" }; // Paris
+        case 'de': return { lat: "52.5200", lng: "13.4050" }; // Berlin
+        case 'pl': return { lat: "52.2297", lng: "21.0122" }; // Warsaw
+        case 'it': return { lat: "41.9028", lng: "12.4964" }; // Rome
+        default: return { lat: "45.9432", lng: "24.9668" }; // Romania center
+      }
+    };
+
+    const currency = getCurrency();
+    const basePrice = getBasePrice();
+    const weddingPrice = getWeddingPrice();
+    const countryCode = getCountryCode();
+    const coords = getGeoCoordinates();
 
     const faqSchema = {
       "@context": "https://schema.org",
@@ -16,34 +82,50 @@ export const VoiceSearchStructuredData = () => {
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Cum pot să comand o melodie personalizată?",
+          "name": t('howToOrderSong'),
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Pentru a comanda o melodie personalizată, accesați pagina de comenzi, alegeți pachetul dorit, completați formularul cu povestea dumneavoastră și efectuați plata. Procesul durează doar 5 minute și veți primi melodia în 3-5 zile lucrătoare."
+            "text": t('howToOrderAnswer')
           }
         },
         {
           "@type": "Question",
-          "name": "Cât costă să fac o melodie pentru nuntă?",
+          "name": t('weddingSongCost'),
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Pachetul de nuntă costă 899 RON și include o melodie personalizată profesională, înregistrare vocală de calitate studio, o revizuire gratuită și livrare în format digital de înaltă calitate."
+            "text": t('weddingSongCostAnswer')
           }
         },
         {
           "@type": "Question",
-          "name": "În cât timp primesc cadoul muzical?",
+          "name": t('deliveryTime'),
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Cadoul dumneavoastră muzical va fi gata în 3-5 zile lucrătoare după confirmarea comenzii. Pentru pachetele mai complexe, timpul de livrare poate fi de până la 7 zile."
+            "text": t('deliveryTimeAnswer')
           }
         },
         {
           "@type": "Question",
-          "name": "Care sunt cele mai bune cadouri muzicale pentru aniversări?",
+          "name": t('bestAnniversaryGifts'),
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Pentru aniversări recomandăm Pachetul Personal (399 RON) sau Pachetul Premium (599 RON). Acestea includ melodii personalizate cu versuri care spun povestea persoanei sărbătorite."
+            "text": t('bestAnniversaryGiftsAnswer')
+          }
+        },
+        {
+          "@type": "Question",
+          "name": t('musicServicesNearMe'),
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": t('musicServicesNearMeAnswer')
+          }
+        },
+        {
+          "@type": "Question",
+          "name": t('bestGiftForWife'),
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": t('bestGiftForWifeAnswer')
           }
         }
       ]
@@ -52,53 +134,53 @@ export const VoiceSearchStructuredData = () => {
     const howToSchema = {
       "@context": "https://schema.org",
       "@type": "HowTo",
-      "name": "Cum să comandați o melodie personalizată",
-      "description": "Ghid pas cu pas pentru comandarea unei melodii personalizate la MusicGift.ro",
+      "name": t('howToOrderSong'),
+      "description": t('howToOrderAnswer'),
       "image": "https://www.musicgift.ro/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
       "totalTime": "PT5M",
       "estimatedCost": {
         "@type": "MonetaryAmount",
-        "currency": "RON",
-        "value": "399"
+        "currency": currency,
+        "value": basePrice
       },
       "supply": [
         {
           "@type": "HowToSupply",
-          "name": "Povestea dumneavoastră personală"
+          "name": t('yourStory', 'Your personal story')
         },
         {
           "@type": "HowToSupply", 
-          "name": "Preferințe muzicale"
+          "name": t('musicalPreferences', 'Musical preferences')
         }
       ],
       "tool": [
         {
           "@type": "HowToTool",
-          "name": "Formularul de comandă MusicGift.ro"
+          "name": "MusicGift.ro " + t('orderForm', 'Order Form')
         }
       ],
       "step": [
         {
           "@type": "HowToStep",
-          "name": "Alegeți pachetul",
-          "text": "Selectați pachetul muzical care se potrivește nevoilor dumneavoastră din pagina de pachete.",
+          "name": t('choosePackage', 'Choose package'),
+          "text": t('selectPackageStep', 'Select the musical package that fits your needs from our packages page.'),
           "url": "https://www.musicgift.ro/packages"
         },
         {
           "@type": "HowToStep",
-          "name": "Completați formularul",
-          "text": "Povestiți-ne despre persoana sau momentul special pentru care doriți melodia personalizată.",
+          "name": t('fillForm', 'Complete the form'),
+          "text": t('fillFormStep', 'Tell us about the person or special moment you want the personalized song for.'),
           "url": "https://www.musicgift.ro/order"
         },
         {
           "@type": "HowToStep",
-          "name": "Efectuați plata",
-          "text": "Alegeți metoda de plată preferată și finalizați comanda în siguranță."
+          "name": t('makePayment', 'Make payment'),
+          "text": t('paymentStep', 'Choose your preferred payment method and securely complete your order.')
         },
         {
           "@type": "HowToStep",
-          "name": "Primiți melodia",
-          "text": "Veți primi melodia personalizată prin email în 3-5 zile lucrătoare."
+          "name": t('receiveSong', 'Receive your song'),
+          "text": t('receiveSongStep', 'You will receive your personalized song via email within 3-5 business days.')
         }
       ]
     };
@@ -106,7 +188,7 @@ export const VoiceSearchStructuredData = () => {
     const speakableSchema = {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": "MusicGift.ro - Cadouri Muzicale Personalizate",
+      "name": "MusicGift.ro - " + t('personalizedMusicalGifts', 'Personalized Musical Gifts'),
       "speakable": {
         "@type": "SpeakableSpecification",
         "cssSelector": [".voice-search-content", ".faq-answer", ".package-description"]
@@ -118,44 +200,21 @@ export const VoiceSearchStructuredData = () => {
       "@type": "LocalBusiness",
       "@id": "https://www.musicgift.ro",
       "name": "MusicGift.ro",
-      "alternateName": "Music Gift Romania",
-      "description": "Servicii profesionale de compoziții muzicale personalizate și cadouri muzicale unice în România",
+      "alternateName": "Music Gift " + countryCode,
+      "description": t('businessDescription', 'Professional personalized music composition services and unique musical gifts'),
       "url": "https://www.musicgift.ro",
       "telephone": "+40-XXX-XXX-XXX",
       "priceRange": "€€",
       "image": "https://www.musicgift.ro/uploads/logo_musicgift.webp",
       "address": {
         "@type": "PostalAddress",
-        "addressCountry": "RO",
-        "addressLocality": "România"
+        "addressCountry": countryCode
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": "45.9432",
-        "longitude": "24.9668"
+        "latitude": coords.lat,
+        "longitude": coords.lng
       },
-      "areaServed": [
-        {
-          "@type": "City",
-          "name": "București"
-        },
-        {
-          "@type": "City", 
-          "name": "Cluj-Napoca"
-        },
-        {
-          "@type": "City",
-          "name": "Timișoara"
-        },
-        {
-          "@type": "City",
-          "name": "Iași"
-        },
-        {
-          "@type": "Country",
-          "name": "România"
-        }
-      ],
       "openingHoursSpecification": [
         {
           "@type": "OpeningHoursSpecification",
@@ -173,27 +232,27 @@ export const VoiceSearchStructuredData = () => {
       },
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
-        "name": "Pachete Muzicale Personalizate",
+        "name": t('personalizedMusicPackages', 'Personalized Music Packages'),
         "itemListElement": [
           {
             "@type": "Offer",
             "itemOffered": {
               "@type": "Service",
-              "name": "Pachet Personal - Melodie Personalizată",
-              "description": "Melodie personalizată pentru momente speciale"
+              "name": t('personalPackage', 'Personal Package - Personalized Song'),
+              "description": t('personalPackageDesc', 'Personalized song for special moments')
             },
-            "price": "399",
-            "priceCurrency": "RON"
+            "price": basePrice,
+            "priceCurrency": currency
           },
           {
             "@type": "Offer",
             "itemOffered": {
               "@type": "Service", 
-              "name": "Pachet Nuntă - Melodie de Nuntă",
-              "description": "Melodie personalizată pentru nunta dumneavoastră"
+              "name": t('weddingPackage', 'Wedding Package - Wedding Song'),
+              "description": t('weddingPackageDesc', 'Personalized song for your wedding')
             },
-            "price": "899",
-            "priceCurrency": "RON"
+            "price": weddingPrice,
+            "priceCurrency": currency
           }
         ]
       }
@@ -222,7 +281,7 @@ export const VoiceSearchStructuredData = () => {
       const scripts = document.querySelectorAll('script[data-voice-search-schema]');
       scripts.forEach(script => script.remove());
     };
-  }, [language]);
+  }, [language, t]);
 
   return null;
 };

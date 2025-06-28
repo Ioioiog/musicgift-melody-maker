@@ -9,47 +9,100 @@ import { MapPin, Clock, Star, Music, Heart, Gift } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const VoiceSearchContent: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const conversationalContent = [
     {
-      question: "Unde pot să găsesc servicii de compoziții muzicale lângă mine?",
-      answer: "MusicGift.ro oferă servicii profesionale de compoziții muzicale personalizate în toată România, inclusiv în București, Cluj-Napoca, Timișoara, Iași și toate celelalte orașe.",
+      question: t('musicServicesNearMe'),
+      answer: t('musicServicesNearMeAnswer'),
       icon: <MapPin className="w-6 h-6" />,
-      badge: "Național",
-      cta: "Vezi Serviciile"
+      badge: t('fastDelivery'),
+      cta: t('seePackages', 'See Services')
     },
     {
-      question: "Care este cel mai bun cadou muzical pentru soția mea?",
-      answer: "Pentru soția dumneavoastră recomandăm Pachetul Premium cu o melodie personalizată care să povestească momentele speciale din relația voastră, fiind un cadou romantic și emoționant.",
+      question: t('bestGiftForWife'),
+      answer: t('bestGiftForWifeAnswer'),
       icon: <Heart className="w-6 h-6" />,
-      badge: "Romantic",
-      cta: "Comandă Acum"
+      badge: t('qualityGuaranteed'),
+      cta: t('orderNow', 'Order Now')
     },
     {
-      question: "Cum să aleg cel mai bun studio de înregistrări pentru melodia mea?",
-      answer: "MusicGift.ro lucrează cu studiouri profesionale echipate cu tehnologie de ultimă generație și compozitori cu peste 20 de ani de experiență în industria muzicală românească.",
+      question: t('howToOrderSong'),
+      answer: t('howToOrderAnswer'),
       icon: <Music className="w-6 h-6" />,
-      badge: "Profesional",
-      cta: "Despre Noi"
+      badge: t('vastExperience'),
+      cta: t('about', 'About Us')
     },
     {
-      question: "Ce cadouri muzicale sunt potrivite pentru părinți?",
-      answer: "Pentru părinți recomandăm melodii personalizate care să celebreze sacrificiile și dragostea lor necondiționată, cu versuri care să exprime recunoștința și respectul pentru tot ce au făcut.",
+      question: t('bestAnniversaryGifts'),
+      answer: t('bestAnniversaryGiftsAnswer'),
       icon: <Gift className="w-6 h-6" />,
-      badge: "Familie",
-      cta: "Pachete Cadou"
+      badge: t('perfectGifts', 'Perfect Gifts'),
+      cta: t('packages', 'Gift Packages')
     }
   ];
 
-  const localCities = [
-    { name: "București", description: "Servicii de compoziții muzicale profesionale în Capitală" },
-    { name: "Cluj-Napoca", description: "Cadouri muzicale personalizate în inima Transilvaniei" },
-    { name: "Timișoara", description: "Melodii personalizate în orașul florilor" },
-    { name: "Iași", description: "Compoziții muzicale în orașul celor șapte coline" },
-    { name: "Constanța", description: "Cadouri muzicale la malul mării" },
-    { name: "Brașov", description: "Servicii muzicale în orașul de la poalele Tâmpei" }
-  ];
+  // Region-specific cities based on language
+  const getLocalCities = () => {
+    switch (language) {
+      case 'en':
+        return [
+          { name: "London", description: t('londonServices', 'Professional music composition services in the capital') },
+          { name: "Manchester", description: t('manchesterServices', 'Personalized musical gifts in the heart of England') },
+          { name: "Birmingham", description: t('birminghamServices', 'Custom songs in England\'s second city') },
+          { name: "Glasgow", description: t('glasgowServices', 'Music compositions in Scotland\'s largest city') },
+          { name: "Dublin", description: t('dublinServices', 'Musical gifts in the Irish capital') },
+          { name: "Edinburgh", description: t('edinburghServices', 'Music services in Scotland\'s historic capital') }
+        ];
+      case 'fr':
+        return [
+          { name: "Paris", description: t('parisServices', 'Services de composition musicale professionnels dans la capitale') },
+          { name: "Lyon", description: t('lyonServices', 'Cadeaux musicaux personnalisés dans la capitale gastronomique') },
+          { name: "Marseille", description: t('marseilleServices', 'Chansons personnalisées dans la cité phocéenne') },
+          { name: "Toulouse", description: t('toulouseServices', 'Compositions musicales dans la ville rose') },
+          { name: "Bordeaux", description: t('bordeauxServices', 'Cadeaux musicaux dans la capitale mondiale du vin') },
+          { name: "Lille", description: t('lilleServices', 'Services musicaux dans le nord de la France') }
+        ];
+      case 'de':
+        return [
+          { name: "Berlin", description: t('berlinServices', 'Professionelle Musikkompositionsdienste in der Hauptstadt') },
+          { name: "München", description: t('munichenServices', 'Personalisierte Musikgeschenke im Herzen Bayerns') },
+          { name: "Hamburg", description: t('hamburgServices', 'Maßgeschneiderte Lieder in der Hansestadt') },
+          { name: "Köln", description: t('cologneServices', 'Musikcompositionen in der Domstadt') },
+          { name: "Frankfurt", description: t('frankfurtServices', 'Musikgeschenke in der Finanzmetropole') },
+          { name: "Stuttgart", description: t('stuttgartServices', 'Musikdienste in der Automobilstadt') }
+        ];
+      case 'pl':
+        return [
+          { name: "Warszawa", description: t('warsawServices', 'Profesjonalne usługi kompozycji muzycznej w stolicy') },
+          { name: "Kraków", description: t('krakowServices', 'Spersonalizowane prezenty muzyczne w królewskim mieście') },
+          { name: "Gdańsk", description: t('gdanskServices', 'Niestandardowe piosenki nad Bałtykiem') },
+          { name: "Wrocław", description: t('wroclawServices', 'Kompozycje muzyczne w mieście stu mostów') },
+          { name: "Poznań", description: t('poznanServices', 'Prezenty muzyczne w kolebce Polski') },
+          { name: "Łódź", description: t('lodzServices', 'Usługi muzyczne w sercu Polski') }
+        ];
+      case 'it':
+        return [
+          { name: "Roma", description: t('romeServices', 'Servizi professionali di composizione musicale nella capitale') },
+          { name: "Milano", description: t('milanServices', 'Regali musicali personalizzati nella capitale della moda') },
+          { name: "Napoli", description: t('naplesServices', 'Canzoni personalizzate nella città della pizza') },
+          { name: "Torino", description: t('turinServices', 'Composizioni musicali nella prima capitale d\'Italia') },
+          { name: "Firenze", description: t('florenceServices', 'Regali musicali nella culla del Rinascimento') },
+          { name: "Venezia", description: t('veniceServices', 'Servizi musicali nella città dei canali') }
+        ];
+      default: // Romanian
+        return [
+          { name: "București", description: "Servicii de compoziții muzicale profesionale în Capitală" },
+          { name: "Cluj-Napoca", description: "Cadouri muzicale personalizate în inima Transilvaniei" },
+          { name: "Timișoara", description: "Melodii personalizate în orașul florilor" },
+          { name: "Iași", description: "Compoziții muzicale în orașul celor șapte coline" },
+          { name: "Constanța", description: "Cadouri muzicale la malul mării" },
+          { name: "Brașov", description: "Servicii muzicale în orașul de la poalele Tâmpei" }
+        ];
+    }
+  };
+
+  const localCities = getLocalCities();
 
   return (
     <section className="py-16 px-4 bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
@@ -62,10 +115,10 @@ const VoiceSearchContent: React.FC = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 voice-search-content">
-            Răspunsuri la Întrebările Dumneavoastră despre Cadourile Muzicale
+            {t('voiceSearchFaqTitle')}
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto voice-search-content">
-            Găsiți rapid informațiile de care aveți nevoie despre serviciile noastre de compoziții muzicale personalizate
+            {t('voiceSearchFaqSubtitle')}
           </p>
         </motion.div>
 
@@ -113,10 +166,10 @@ const VoiceSearchContent: React.FC = () => {
           <Card className="bg-gradient-to-r from-blue-500/5 to-purple-500/5 border-blue-200">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
-                Servicii de Compoziții Muzicale în Toată România
+                {t('servicesInCountry')}
               </CardTitle>
               <CardDescription className="text-lg">
-                Oferim cadouri muzicale personalizate în toate orașele mari din România
+                {t('servicesInCountryDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -145,9 +198,9 @@ const VoiceSearchContent: React.FC = () => {
           <Card className="text-center bg-white/80 backdrop-blur-sm">
             <CardContent className="pt-6">
               <Clock className="w-8 h-8 text-green-600 mx-auto mb-3" />
-              <h3 className="font-semibold text-gray-900 mb-2">Livrare Rapidă</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">{t('fastDelivery')}</h3>
               <p className="text-sm text-gray-600 voice-search-content">
-                Melodia dumneavoastră personalizată va fi gata în doar 3-5 zile lucrătoare
+                {t('fastDeliveryDesc')}
               </p>
             </CardContent>
           </Card>
@@ -155,9 +208,9 @@ const VoiceSearchContent: React.FC = () => {
           <Card className="text-center bg-white/80 backdrop-blur-sm">
             <CardContent className="pt-6">
               <Star className="w-8 h-8 text-yellow-500 mx-auto mb-3" />
-              <h3 className="font-semibold text-gray-900 mb-2">Calitate Garantată</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">{t('qualityGuaranteed')}</h3>
               <p className="text-sm text-gray-600 voice-search-content">
-                Peste 2000 de melodii create cu o rată de satisfacție de 98%
+                {t('qualityGuaranteedDesc')}
               </p>
             </CardContent>
           </Card>
@@ -165,9 +218,9 @@ const VoiceSearchContent: React.FC = () => {
           <Card className="text-center bg-white/80 backdrop-blur-sm">
             <CardContent className="pt-6">
               <Music className="w-8 h-8 text-purple-600 mx-auto mb-3" />
-              <h3 className="font-semibold text-gray-900 mb-2">Experiență Vastă</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">{t('vastExperience')}</h3>
               <p className="text-sm text-gray-600 voice-search-content">
-                Peste 20 de ani de experiență în industria muzicală românească
+                {t('vastExperienceDesc')}
               </p>
             </CardContent>
           </Card>

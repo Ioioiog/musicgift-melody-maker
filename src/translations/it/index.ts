@@ -7,6 +7,7 @@ import { newsletterTranslations } from './newsletter';
 import { orderTranslations } from './order';
 import { packagesTranslations } from './packages';
 import { blogTranslations } from './blog';
+import { voiceSearchTranslations } from './voiceSearch';
 
 export const itTranslations = {
   ...commonTranslations,
@@ -17,4 +18,5 @@ export const itTranslations = {
   ...orderTranslations,
   ...packagesTranslations,
   ...blogTranslations,
+  ...voiceSearchTranslations,
 };
