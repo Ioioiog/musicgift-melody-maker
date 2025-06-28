@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 
 interface PerformanceMetrics {
@@ -61,8 +60,8 @@ const AdvancedPerformanceMonitor = () => {
             metricsRef.current.ttfb = navEntry.responseStart - navEntry.requestStart;
             reportMetric('TTFB', metricsRef.current.ttfb);
             
-            // Calculate Time to Interactive (approximate)
-            metricsRef.current.tti = navEntry.domInteractive - navEntry.navigationStart;
+            // Calculate Time to Interactive (approximate) - using startTime as base
+            metricsRef.current.tti = navEntry.domInteractive - navEntry.startTime;
             reportMetric('TTI', metricsRef.current.tti);
             break;
             
@@ -155,10 +154,10 @@ const AdvancedPerformanceMonitor = () => {
       const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
       
       if (paintEntries.length > 0 && navEntry) {
-        // Simplified Speed Index calculation
+        // Simplified Speed Index calculation - using startTime as base
         const fcp = paintEntries.find(entry => entry.name === 'first-contentful-paint');
         if (fcp) {
-          metricsRef.current.si = fcp.startTime + (navEntry.domContentLoadedEventEnd - navEntry.navigationStart) / 2;
+          metricsRef.current.si = fcp.startTime + (navEntry.domContentLoadedEventEnd - navEntry.startTime) / 2;
           reportMetric('Speed Index', metricsRef.current.si);
         }
       }
