@@ -5,8 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Gift, Package, Plus } from 'lucide-react';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { useCurrency } from '@/contexts/CurrencyContext';
+import { useLocalization } from '@/contexts/OptimizedLocalizationContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { convertGiftCardAmount } from '@/utils/currencyUtils';
 
@@ -19,8 +18,7 @@ interface OrderSummaryProps {
 const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAddons, giftCard }) => {
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
-  const { t } = useLanguage();
-  const { currency } = useCurrency();
+  const { t, currency } = useLocalization();
 
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
   const selectedAddonsData = selectedAddons.map(addonKey => 
@@ -29,9 +27,9 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
 
   if (!selectedPackageData) return null;
 
-  const packagePrice = getPackagePrice(selectedPackageData, currency);
+  const packagePrice = getPackagePrice(selectedPackageData, currency as 'EUR' | 'RON');
   const addonsPrice = selectedAddonsData.reduce((total, addon) => 
-    total + (addon ? getAddonPrice(addon, currency) : 0), 0);
+    total + (addon ? getAddonPrice(addon, currency as 'EUR' | 'RON') : 0), 0);
   const subtotal = packagePrice + addonsPrice;
   
   let giftCreditApplied = 0;
@@ -41,7 +39,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
     const giftCurrency = giftCard.currency || 'RON';
     
     // Convert gift card amount to current display currency
-    const convertedGiftAmount = convertGiftCardAmount(giftAmount, giftCurrency, currency);
+    const convertedGiftAmount = convertGiftCardAmount(giftAmount, giftCurrency, currency as 'EUR' | 'RON');
     giftCreditApplied = Math.min(convertedGiftAmount, subtotal);
   }
   
@@ -81,7 +79,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ selectedPackage, selectedAd
                   addon && (
                     <div key={addon.addon_key} className="flex justify-between items-center text-sm">
                       <span className="text-white/80">{t(addon.label_key)}</span>
-                      <span className="text-white">{currency} {getAddonPrice(addon, currency).toFixed(2)}</span>
+                      <span className="text-white">{currency} {getAddonPrice(addon, currency as 'EUR' | 'RON').toFixed(2)}</span>
                     </div>
                   )
                 ))}
