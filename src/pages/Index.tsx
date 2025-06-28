@@ -19,8 +19,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "react-router-dom";
 import { Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
 import { useEffect } from "react";
-import VoiceSearchFAQ from "@/components/VoiceSearchFAQ";
-import VoiceSearchContent from "@/components/VoiceSearchContent";
+import VoiceSearchSection from "@/components/VoiceSearchSection";
 import VoiceSearchStructuredData from "@/components/VoiceSearchStructuredData";
 import FAQStructuredData from "@/components/FAQStructuredData";
 import BreadcrumbStructuredData from "@/components/BreadcrumbStructuredData";
@@ -91,18 +90,6 @@ const Index = () => {
             <AnimatedStepFlow />
           </section>
 
-          {/* Voice Search FAQ Section - New for Voice Search SEO */}
-          <section className="defer-load" aria-labelledby="voice-faq-heading">
-            <h2 id="voice-faq-heading" className="sr-only">Întrebări Frecvente pentru Căutări Vocale</h2>
-            <VoiceSearchFAQ />
-          </section>
-
-          {/* Voice Search Content Section - New for Voice Search SEO */}
-          <section className="defer-load" aria-labelledby="voice-content-heading">
-            <h2 id="voice-content-heading" className="sr-only">Conținut Optimizat pentru Căutări Vocale</h2>
-            <VoiceSearchContent />
-          </section>
-
           {/* Testimonials Section - Deferred for LCP */}
           <section className="py-2 md:py-4 defer-load" aria-labelledby="testimonials-heading">
             <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
@@ -162,6 +149,12 @@ const Index = () => {
           <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[1px]" role="separator" aria-hidden="true" />
         </div>
       </main>
+
+      {/* Unified Voice Search Section - New single section combining FAQ and content */}
+      <section className="defer-load" aria-labelledby="voice-search-heading">
+        <h2 id="voice-search-heading" className="sr-only">Întrebări Frecvente și Căutări Vocale</h2>
+        <VoiceSearchSection />
+      </section>
 
       {/* Collaboration Section - Keep separate background - Deferred for LCP */}
       <section aria-labelledby="collaboration-heading" className="defer-load">
