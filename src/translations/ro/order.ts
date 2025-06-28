@@ -604,4 +604,13 @@ export const orderTranslations = {
   'paymentIssue': 'Problemă cu plata',
   'close': 'Închide',
   'tryAgainPayment': 'Încearcă din nou'
+//step 4 
+artistName: "Numele artistului"
+artistNamePlaceholder: "Introdu numele artistului"
+//Add songTitle translations:
+songTitle: "Titlul cântecului"
+songTitlePlaceholder: "Introdu titlul cântecului"
+//Add releaseDate translations:
+releaseDate: "Data lansării"
+releaseDatePlaceholder: "Alege data lansării"
 };
