@@ -2,15 +2,58 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Check, ChevronRight } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { stepContent } from '@/data/stepContent';
+import { useLocalization } from '@/contexts/OptimizedLocalizationContext';
 
 const OptimizedAnimatedStepFlow = () => {
-  const { language } = useLanguage();
+  const { t } = useLocalization();
   const [activeStep, setActiveStep] = useState(0);
   const animationFrameRef = useRef<number>();
   const lastUpdateRef = useRef(Date.now());
   const STEP_DURATION = 5000; // 5 seconds per step
+
+  // Define step content directly in the component
+  const stepContent = [
+    {
+      ro: {
+        title: t('step1Title'),
+        description: t('step1Description')
+      },
+      en: {
+        title: t('step1Title'),
+        description: t('step1Description')
+      }
+    },
+    {
+      ro: {
+        title: t('step2Title'),
+        description: t('step2Description')
+      },
+      en: {
+        title: t('step2Title'),
+        description: t('step2Description')
+      }
+    },
+    {
+      ro: {
+        title: t('step3Title'),
+        description: t('step3Description')
+      },
+      en: {
+        title: t('step3Title'),
+        description: t('step3Description')
+      }
+    },
+    {
+      ro: {
+        title: t('step4Title'),
+        description: t('step4Description')
+      },
+      en: {
+        title: t('step4Title'),
+        description: t('step4Description')
+      }
+    }
+  ];
 
   const updateActiveStep = useCallback(() => {
     const now = Date.now();
@@ -45,13 +88,10 @@ const OptimizedAnimatedStepFlow = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            {language === 'ro' ? 'Cum funcționează procesul' : 'How it works'}
+            {t('howItWorksTitle', 'How it works')}
           </h2>
           <p className="text-white/80 text-sm md:text-base max-w-2xl mx-auto">
-            {language === 'ro' 
-              ? 'Urmează acești pași simpli pentru a-ți crea melodia personalizată'
-              : 'Follow these simple steps to create your personalized song'
-            }
+            {t('howItWorksSubtitle', 'Follow these simple steps to create your personalized song')}
           </p>
         </div>
 
@@ -92,10 +132,10 @@ const OptimizedAnimatedStepFlow = () => {
                 </div>
 
                 <h3 className="text-lg font-semibold text-white mb-2">
-                  {step[language]?.title || step.ro.title}
+                  {step.ro?.title || `Step ${index + 1}`}
                 </h3>
                 <p className="text-white/80 text-sm leading-relaxed">
-                  {step[language]?.description || step.ro.description}
+                  {step.ro?.description || `Description for step ${index + 1}`}
                 </p>
 
                 {isActive && (

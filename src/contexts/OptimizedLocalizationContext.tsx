@@ -23,9 +23,12 @@ const CURRENCY_MAP: Record<string, string> = {
 };
 
 export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { country } = useLocation();
+  const locationContext = useLocation();
   const [language, setLanguageState] = useState<Language>('ro');
   const [currency, setCurrencyState] = useState('RON');
+
+  // Safely get country from location context
+  const country = locationContext?.location?.country || 'RO';
 
   // Memoized language detection
   const detectedLanguage = useMemo(() => {

@@ -1,6 +1,13 @@
 
 import { useEffect } from 'react';
 
+// Declare gtag as optional global function
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
+
 interface PerformanceMetrics {
   lcp?: number;
   fid?: number;
@@ -56,8 +63,8 @@ const EnhancedPerformanceMonitor = () => {
         console.log('Enhanced Web Vitals:', metrics);
         
         // Send to analytics service if available
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'web_vitals', {
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'web_vitals', {
             event_category: 'Performance',
             event_label: 'Core Web Vitals',
             custom_map: metrics
