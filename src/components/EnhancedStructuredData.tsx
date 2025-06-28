@@ -1,4 +1,3 @@
-
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { testimonials } from '@/data/testimonials';
@@ -6,15 +5,15 @@ import { testimonials } from '@/data/testimonials';
 const EnhancedStructuredData = () => {
   const { language, t } = useLanguage();
 
-  // Get currency and pricing based on language
+  // Get currency and pricing based on language - CORRECTED PRICES
   const getCurrencyData = () => {
     switch (language) {
-      case 'en': return { currency: 'GBP', personal: '35', premium: '55', wedding: '75' };
-      case 'de': return { currency: 'EUR', personal: '45', premium: '65', wedding: '85' };
-      case 'fr': return { currency: 'EUR', personal: '45', premium: '65', wedding: '85' };
-      case 'pl': return { currency: 'PLN', personal: '180', premium: '270', wedding: '350' };
-      case 'it': return { currency: 'EUR', personal: '45', premium: '65', wedding: '85' };
-      default: return { currency: 'RON', personal: '150', premium: '230', wedding: '300' };
+      case 'en': return { currency: 'GBP', personal: '49', premium: '79', wedding: '49' };
+      case 'de': return { currency: 'EUR', personal: '59', premium: '99', wedding: '59' };
+      case 'fr': return { currency: 'EUR', personal: '59', premium: '99', wedding: '59' };
+      case 'pl': return { currency: 'PLN', personal: '255', premium: '425', wedding: '255' };
+      case 'it': return { currency: 'EUR', personal: '59', premium: '99', wedding: '59' };
+      default: return { currency: 'RON', personal: '299', premium: '499', wedding: '299' };
     }
   };
 
@@ -97,6 +96,7 @@ const EnhancedStructuredData = () => {
       {
         "@type": "ContactPoint",
         "contactType": "customer service",
+        "telephone": "+40-721-501-141",
         "email": "contact@musicgift.ro",
         "availableLanguage": ["Romanian", "English", "German", "French", "Polish", "Italian"],
         "areaServed": "Worldwide"
@@ -104,6 +104,7 @@ const EnhancedStructuredData = () => {
       {
         "@type": "ContactPoint", 
         "contactType": "sales",
+        "telephone": "+40-721-501-141",
         "email": "sales@musicgift.ro",
         "availableLanguage": ["Romanian", "English"]
       }
@@ -182,7 +183,7 @@ const EnhancedStructuredData = () => {
     "availableChannel": {
       "@type": "ServiceChannel",
       "serviceUrl": "https://www.musicgift.ro/order",
-      "servicePhone": "+40-XXX-XXX-XXX",
+      "servicePhone": "+40-721-501-141",
       "availableLanguage": ["ro", "en", "de", "fr", "pl", "it"]
     },
     "hoursAvailable": {
@@ -332,7 +333,7 @@ const EnhancedStructuredData = () => {
     "image": "https://www.musicgift.ro/uploads/logo_musicgift.webp",
     "description": "Professional personalized music composition services and unique musical gifts",
     "url": "https://www.musicgift.ro",
-    "telephone": "+40-XXX-XXX-XXX",
+    "telephone": "+40-721-501-141",
     "email": "contact@musicgift.ro",
     "priceRange": "€€",
     "paymentAccepted": ["Credit Card", "Debit Card", "PayPal", "Bank Transfer", "Revolut"],

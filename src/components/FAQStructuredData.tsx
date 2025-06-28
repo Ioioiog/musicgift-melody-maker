@@ -10,15 +10,15 @@ const FAQStructuredData = () => {
     const existingScripts = document.querySelectorAll('script[data-faq-schema]');
     existingScripts.forEach(script => script.remove());
 
-    // Get currency and pricing based on language
+    // Get currency and pricing based on language - CORRECTED PRICES
     const getCurrencyData = () => {
       switch (language) {
-        case 'en': return { currency: 'GBP', symbol: '£', personal: '35', premium: '55', wedding: '75' };
-        case 'de': return { currency: 'EUR', symbol: '€', personal: '45', premium: '65', wedding: '85' };
-        case 'fr': return { currency: 'EUR', symbol: '€', personal: '45', premium: '65', wedding: '85' };
-        case 'pl': return { currency: 'PLN', symbol: 'PLN', personal: '180', premium: '270', wedding: '350' };
-        case 'it': return { currency: 'EUR', symbol: '€', personal: '45', premium: '65', wedding: '85' };
-        default: return { currency: 'RON', symbol: 'RON', personal: '150', premium: '230', wedding: '300' };
+        case 'en': return { currency: 'GBP', symbol: '£', personal: '49', premium: '79', wedding: '49' };
+        case 'de': return { currency: 'EUR', symbol: '€', personal: '59', premium: '99', wedding: '59' };
+        case 'fr': return { currency: 'EUR', symbol: '€', personal: '59', premium: '99', wedding: '59' };
+        case 'pl': return { currency: 'PLN', symbol: 'PLN', personal: '255', premium: '425', wedding: '255' };
+        case 'it': return { currency: 'EUR', symbol: '€', personal: '59', premium: '99', wedding: '59' };
+        default: return { currency: 'RON', symbol: 'RON', personal: '299', premium: '499', wedding: '299' };
       }
     };
 

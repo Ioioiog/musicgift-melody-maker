@@ -29,7 +29,7 @@ export const useStructuredData = () => {
     "foundingDate": "2004",
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+40-XXX-XXX-XXX",
+      "telephone": "+40-721-501-141",
       "contactType": "customer service",
       "areaServed": "RO",
       "availableLanguage": ["Romanian", "English"]
@@ -52,7 +52,7 @@ export const useStructuredData = () => {
     "image": "https://www.musicgift.ro/uploads/logo_musicgift.webp",
     "description": "Servicii profesionale de compoziții muzicale personalizate, înregistrări și producție muzicală",
     "url": "https://www.musicgift.ro",
-    "telephone": "+40-XXX-XXX-XXX",
+    "telephone": "+40-721-501-141",
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "RO"

@@ -22,27 +22,27 @@ export const VoiceSearchStructuredData = () => {
       }
     };
 
-    // Get base price based on currency
+    // Get base price based on currency - CORRECTED PRICES
     const getBasePrice = () => {
       switch (language) {
-        case 'en': return '35';
-        case 'fr': return '45';
-        case 'de': return '45';
-        case 'pl': return '180';
-        case 'it': return '45';
-        default: return '399';
+        case 'en': return '49';
+        case 'fr': return '59';
+        case 'de': return '59';
+        case 'pl': return '255';
+        case 'it': return '59';
+        default: return '299';
       }
     };
 
-    // Get wedding price based on currency
+    // Get wedding price based on currency - CORRECTED PRICES
     const getWeddingPrice = () => {
       switch (language) {
-        case 'en': return '75';
-        case 'fr': return '85';
-        case 'de': return '85';
-        case 'pl': return '350';
-        case 'it': return '85';
-        default: return '899';
+        case 'en': return '49';
+        case 'fr': return '59';
+        case 'de': return '59';
+        case 'pl': return '255';
+        case 'it': return '59';
+        default: return '299';
       }
     };
 
@@ -148,7 +148,7 @@ export const VoiceSearchStructuredData = () => {
       "alternateName": "Music Gift " + countryCode,
       "description": t('businessDescription', 'Professional personalized music composition services and unique musical gifts'),
       "url": "https://www.musicgift.ro",
-      "telephone": "+40-XXX-XXX-XXX",
+      "telephone": "+40-721-501-141",
       "priceRange": "€€",
       "image": "https://www.musicgift.ro/uploads/logo_musicgift.webp",
       "address": {
