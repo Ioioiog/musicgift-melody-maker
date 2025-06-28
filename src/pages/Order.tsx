@@ -13,16 +13,14 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useGiftCardByCode } from "@/hooks/useGiftCards";
 import { getPackagePrice, getAddonPrice } from "@/utils/pricing";
-import { useCurrency } from "@/contexts/CurrencyContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { convertGiftCardAmount } from "@/utils/currencyUtils";
 import { FileMetadata } from "@/types/order";
 
 const Order = () => {
   const { toast } = useToast();
-  const { t } = useLocalization();
+  const { t, currency } = useLocalization();
   const { user } = useAuth();
-  const { currency } = useCurrency();
   const navigate = useNavigate();
   const { data: packages = [] } = usePackages();
   const { data: addons = [] } = useAddons();
