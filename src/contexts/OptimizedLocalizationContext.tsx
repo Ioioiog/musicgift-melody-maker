@@ -4,17 +4,19 @@ import { useLocation } from '@/hooks/useLocation';
 import { translations } from '@/translations';
 import type { Language } from '@/types/language';
 
+type Currency = 'EUR' | 'RON' | 'PLN';
+
 interface LocalizationContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  currency: string;
-  setCurrency: (curr: string) => void;
+  currency: Currency;
+  setCurrency: (curr: Currency) => void;
   t: (key: string, fallback?: string) => string;
 }
 
 const LocalizationContext = createContext<LocalizationContextType | undefined>(undefined);
 
-const CURRENCY_MAP: Record<string, string> = {
+const CURRENCY_MAP: Record<string, Currency> = {
   'ro': 'RON',
   'en': 'EUR',
   'fr': 'EUR', 
@@ -25,7 +27,7 @@ const CURRENCY_MAP: Record<string, string> = {
 export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const locationContext = useLocation();
   const [language, setLanguageState] = useState<Language>('ro');
-  const [currency, setCurrencyState] = useState('RON');
+  const [currency, setCurrencyState] = useState<Currency>('RON');
 
   // Safely get country from location context
   const country = locationContext?.location?.country || 'RO';
@@ -75,7 +77,7 @@ export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }, []);
 
   const setCurrency = useMemo(() => {
-    return (curr: string) => {
+    return (curr: Currency) => {
       setCurrencyState(curr);
       localStorage.setItem('preferred-currency', curr);
     };
