@@ -1,24 +1,28 @@
 
 import { useState, useEffect } from 'react';
-import { useLocationContext } from '@/contexts/LocationContext';
+import type { LocationData } from '@/types/location';
 
-export const useTimezone = () => {
-  const { location } = useLocationContext();
+interface UseTimezoneOptions {
+  location?: LocationData | null;
+  timezone?: string;
+}
+
+export const useTimezone = (options: UseTimezoneOptions = {}) => {
   const [localTime, setLocalTime] = useState<Date>(new Date());
-  const [timezone, setTimezone] = useState<string>('');
+  
+  // Determine timezone from options, location, or browser default
+  const timezone = options.timezone || 
+                  options.location?.timezone || 
+                  Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   useEffect(() => {
-    // Set timezone from location or browser default
-    const tz = location?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
-    setTimezone(tz);
-
     // Update local time every second
     const interval = setInterval(() => {
       setLocalTime(new Date());
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [location]);
+  }, []);
 
   const formatLocalTime = (format: 'short' | 'long' | 'time' | 'date' = 'short'): string => {
     if (!timezone) return localTime.toLocaleString();

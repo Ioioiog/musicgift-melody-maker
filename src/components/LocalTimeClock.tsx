@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useTimezone } from '@/hooks/useTimezone';
+import { useLocationContext } from '@/contexts/LocationContext';
 import { Clock } from 'lucide-react';
 
 interface LocalTimeClockProps {
@@ -16,7 +17,11 @@ const LocalTimeClock: React.FC<LocalTimeClockProps> = ({
   showTimezone = true,
   format = 'time'
 }) => {
-  const { formatLocalTime, getTimezoneName, timezone } = useTimezone();
+  // Get location data safely
+  const { location } = useLocationContext();
+  
+  // Use timezone hook with location data
+  const { formatLocalTime, getTimezoneName, timezone } = useTimezone({ location });
 
   if (!timezone) return null;
 
