@@ -1,7 +1,7 @@
 
 import type { LocationData, LocationProvider } from '@/types/location';
 
-export const ipApiProvider: LocationProvider = {
+export const ipApiComProvider: LocationProvider = {
   name: 'ip-api.com',
   url: 'http://ip-api.com/json/',
   priority: 2,
@@ -25,8 +25,8 @@ export const ipApiProvider: LocationProvider = {
   })
 };
 
-export const fetchFromIpApi = async (): Promise<LocationData> => {
-  const response = await fetch(ipApiProvider.url);
+export const fetchFromIpApiCom = async (): Promise<LocationData> => {
+  const response = await fetch(ipApiComProvider.url);
 
   if (!response.ok) {
     throw new Error(`ip-api.com error: ${response.status}`);
@@ -38,5 +38,5 @@ export const fetchFromIpApi = async (): Promise<LocationData> => {
     throw new Error(data.message || 'ip-api.com detection failed');
   }
 
-  return ipApiProvider.transform(data);
+  return ipApiComProvider.transform(data);
 };

@@ -2,7 +2,7 @@
 import type { LocationData } from '@/types/location';
 import { LocationCache } from './locationCache';
 import { fetchFromIpapi } from './providers/ipapiProvider';
-import { fetchFromIpApi } from './providers/ipApiProvider';
+import { fetchFromIpApiCom } from './providers/ipApiComProvider';
 // Note: ipGeolocation requires API key, commented out for now
 // import { fetchFromIpGeolocation } from './providers/ipGeolocationProvider';
 
@@ -12,7 +12,7 @@ export class LocationService {
   private static instance: LocationService;
   private providers: LocationProviderFn[] = [
     fetchFromIpapi,
-    fetchFromIpApi,
+    fetchFromIpApiCom,
     // fetchFromIpGeolocation, // Requires API key
   ];
   
