@@ -317,27 +317,42 @@
     padding: 1rem;
   }
 
-  /* Responsive content adjustments for smaller video containers */
+  /* Responsive content adjustments for much smaller mobile content */
   @media (max-width: 768px) {
     .video-hero-content-overlay {
-      bottom: 1rem;
-      padding: 0.5rem;
+      bottom: 0.5rem;
+      padding: 0.25rem;
     }
     
     .video-hero-content-overlay h1 {
-      font-size: 1.875rem !important; /* Smaller text on mobile */
-      line-height: 2.25rem !important;
-      margin-bottom: 1rem !important;
+      font-size: 1.25rem !important; /* Much smaller - from 1.875rem to 1.25rem */
+      line-height: 1.5rem !important;
+      margin-bottom: 0.5rem !important;
     }
     
     .video-hero-content-overlay .bg-gradient-to-r {
-      padding: 1rem !important; /* Reduced padding on mobile */
-      margin-bottom: 1rem !important;
+      padding: 0.5rem !important; /* Much smaller padding */
+      margin-bottom: 0.5rem !important;
     }
     
     .video-hero-content-overlay p {
-      font-size: 0.875rem !important; /* Smaller subtitle on mobile */
-      margin-bottom: 1rem !important;
+      font-size: 0.75rem !important; /* Much smaller subtitle */
+      margin-bottom: 0.5rem !important;
+    }
+    
+    .video-hero-content-overlay .flex {
+      gap: 0.25rem !important; /* Smaller gap between buttons */
+    }
+    
+    .video-hero-content-overlay a {
+      font-size: 0.75rem !important; /* Much smaller button text */
+      padding: 0.5rem 1rem !important; /* Much smaller button padding */
+      min-width: 100px !important; /* Much smaller button width */
+    }
+    
+    .video-hero-content-overlay .w-6 {
+      width: 1rem !important; /* Much smaller icons */
+      height: 1rem !important;
     }
   }
 
