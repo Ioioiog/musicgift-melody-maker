@@ -347,10 +347,10 @@ const VideoHero = () => {
             )}
           </p>
         </div>
-        {/* Updated content overlay with mobile spacing */}
-        <div className="absolute bottom-2 sm:bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 w-full z-50 flex justify-center align-items-flex-end px-4 pt-20 sm:pt-16 md:pt-8">
+        {/* Updated content overlay with mobile navigation spacing */}
+        <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 w-full z-10 flex justify-center align-items-flex-end px-4 pt-24 sm:pt-20 md:pt-12">
           <div className="text-center max-w-6xl mx-auto">
-            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight px-4">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight px-4 video-hero-title">
               {heroTitle || heroTitleFallback}
             </h1>
           </div>
@@ -424,10 +424,10 @@ const VideoHero = () => {
       {/* Gradient overlay */}
       <div className="video-hero-gradient" />
 
-      {/* Updated title overlay with mobile-specific positioning */}
-      <div className="absolute bottom-2 sm:bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 w-full z-50 flex justify-center align-items-flex-end px-4 pt-20 sm:pt-16 md:pt-8">
+      {/* Updated title overlay with proper z-index and mobile spacing */}
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 w-full z-10 flex justify-center align-items-flex-end px-4 pt-24 sm:pt-20 md:pt-12">
         <div className="text-center max-w-6xl mx-auto">
-          <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight px-4">
+          <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight px-4 video-hero-title">
             {heroTitle || heroTitleFallback}
           </h1>
         </div>

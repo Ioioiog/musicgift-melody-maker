@@ -227,6 +227,7 @@
   @media (max-width: 768px) {
     .video-hero-container {
       aspect-ratio: 16 / 9;
+      /* Remove padding-top as it was causing issues */
     }
     
     .video-hero-element {
@@ -237,6 +238,7 @@
   @media (min-width: 769px) and (max-width: 1024px) {
     .video-hero-container {
       aspect-ratio: 16 / 9;
+      /* Remove padding-top for tablet */
     }
   }
 
@@ -339,17 +341,21 @@
     z-index: 10;
   }
 
-  /* Enhanced mobile positioning for hero content to avoid navigation overlap */
-  @media (max-width: 640px) {
-    .video-hero-container {
-      padding-top: 4rem; /* Add space for mobile navigation */
-    }
+  /* Hero title styling with text shadow for better visibility */
+  .video-hero-title {
+    text-shadow: 0 0 30px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 0.6);
+    color: white !important;
   }
 
-  @media (min-width: 641px) and (max-width: 768px) {
-    .video-hero-container {
-      padding-top: 3rem; /* Smaller space for tablet */
-    }
+  /* Error positioning */
+  .video-hero-error {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 25;
+    padding: 1rem;
+    max-width: 90%;
   }
 
   /* Content offset - no longer needed as video hero is not fixed */
