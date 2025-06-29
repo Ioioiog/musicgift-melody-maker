@@ -1,5 +1,7 @@
 
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "headers": [
     {
       "source": "/(.*)\\.js$",
@@ -7,6 +9,10 @@
         {
           "key": "Content-Type",
           "value": "text/javascript; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     },
@@ -16,6 +22,10 @@
         {
           "key": "Content-Type",
           "value": "text/javascript; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     },
@@ -25,20 +35,41 @@
         {
           "key": "Content-Type",
           "value": "text/css; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     },
     {
-      "source": "/static/(.*)",
+      "source": "/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    },
+    {
+      "source": "/uploads/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000"
+        }
+      ]
     }
   ],
   "rewrites": [
+    {
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
+    },
+    {
+      "source": "/uploads/(.*)",
+      "destination": "/uploads/$1"
+    },
     {
       "source": "/((?!.*\\.).*)",
       "destination": "/index.html"
