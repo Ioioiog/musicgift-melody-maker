@@ -1,4 +1,3 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
@@ -147,7 +146,7 @@
     user-select: none;
   }
 
-  /* Simplified Video Hero Styles - Fixed 16:9 aspect ratio */
+  /* Full-width video hero that covers entire screen */
   .video-hero-container {
     position: fixed;
     top: 0;
@@ -162,43 +161,39 @@
     justify-content: center;
   }
 
-  /* Proper 16:9 aspect ratio video that doesn't get cut */
+  /* Video element that fills entire screen width */
   .video-hero-element {
     width: 100vw;
-    height: 56.25vw; /* 16:9 aspect ratio */
-    max-height: 100vh;
-    max-width: 177.78vh; /* For tall screens */
-    object-fit: contain; /* Prevents cutting, shows full video */
+    height: 100vh;
+    object-fit: cover; /* This ensures the video covers the entire screen */
     background-color: #000;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
   }
 
-  /* Mobile specific adjustments */
+  /* Remove responsive adjustments to ensure consistent full-width behavior */
   @media (max-width: 768px) {
     .video-hero-element {
       width: 100vw;
-      height: 56.25vw; /* Maintain 16:9 */
-      max-height: 100vh;
-      object-fit: contain; /* Show full video without cutting */
+      height: 100vh;
+      object-fit: cover;
     }
   }
 
-  /* For very tall screens (taller than 16:9) */
-  @media (min-aspect-ratio: 16/9) {
+  @media (min-width: 769px) and (max-width: 1024px) {
     .video-hero-element {
       width: 100vw;
-      height: 56.25vw;
+      height: 100vh;
+      object-fit: cover;
     }
   }
 
-  /* For very wide screens (wider than 16:9) */
-  @media (max-aspect-ratio: 16/9) {
+  @media (min-width: 1025px) {
     .video-hero-element {
-      width: 177.78vh;
+      width: 100vw;
       height: 100vh;
+      object-fit: cover;
     }
   }
 
@@ -332,8 +327,6 @@
     aspect-ratio: 1 / 1;
   }
 }
-
-/* ... keep existing code (animations and other styles) the same ... */
 
 /* Optimized scroll animation for statistics */
 @keyframes scroll {
