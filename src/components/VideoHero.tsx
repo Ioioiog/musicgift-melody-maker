@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
@@ -30,6 +31,7 @@ const VideoHero = () => {
   const [showPlayOverlay, setShowPlayOverlay] = useState(false);
   const [userInteracted, setUserInteracted] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
@@ -41,7 +43,7 @@ const VideoHero = () => {
     setUseWebM(supportsWebM() && !isSafari());
     setIsMounted(true);
     
-    // Enhanced mobile/Safari handling
+    // Always show play overlay on mobile Safari
     if (isMobileDevice() || isSafari()) {
       setShowPlayOverlay(true);
       setHasAudio(false);
@@ -52,14 +54,26 @@ const VideoHero = () => {
 
   const startVideoWithSound = useCallback(async () => {
     const video = videoRef.current;
-    if (!video || !videoLoaded) return;
+    if (!video) return;
 
     try {
-      // Safari-specific handling
+      // Safari-specific preparation
       if (isSafari()) {
         video.load();
-        await new Promise(resolve => {
-          video.addEventListener('canplay', resolve, { once: true });
+        // Wait for video to be ready
+        await new Promise((resolve, reject) => {
+          const onCanPlay = () => {
+            video.removeEventListener('canplay', onCanPlay);
+            video.removeEventListener('error', onError);
+            resolve(true);
+          };
+          const onError = () => {
+            video.removeEventListener('canplay', onCanPlay);
+            video.removeEventListener('error', onError);
+            reject(new Error('Video failed to load'));
+          };
+          video.addEventListener('canplay', onCanPlay);
+          video.addEventListener('error', onError);
         });
       }
 
@@ -71,8 +85,9 @@ const VideoHero = () => {
       setIsPlaying(true);
       setShowPlayOverlay(false);
       setUserInteracted(true);
+      setVideoError(false);
     } catch (error) {
-      console.warn('Autoplay with sound failed, starting muted:', error);
+      console.warn('Video playback with sound failed:', error);
       // Fallback to muted play
       try {
         video.muted = true;
@@ -80,19 +95,19 @@ const VideoHero = () => {
         await video.play();
         setIsPlaying(true);
         setShowPlayOverlay(false);
+        setUserInteracted(true);
       } catch (mutedError) {
-        console.warn('Even muted autoplay failed:', mutedError);
-        // Keep overlay visible for manual interaction
+        console.warn('Even muted video playback failed:', mutedError);
+        setVideoError(true);
       }
     }
-  }, [videoLoaded]);
+  }, []);
 
   const startVideoMuted = useCallback(async () => {
     const video = videoRef.current;
-    if (!video || !videoLoaded) return;
+    if (!video) return;
 
     try {
-      // Safari-specific handling
       if (isSafari()) {
         video.load();
       }
@@ -104,32 +119,42 @@ const VideoHero = () => {
       await video.play();
       setIsPlaying(true);
       setShowPlayOverlay(false);
+      setUserInteracted(true);
     } catch (error) {
-      console.warn('Muted autoplay failed:', error);
+      console.warn('Muted video playback failed:', error);
+      setVideoError(true);
     }
-  }, [videoLoaded]);
+  }, []);
 
   // Video load handler
   const handleVideoCanPlay = useCallback(() => {
     setVideoLoaded(true);
+    setVideoError(false);
+  }, []);
+
+  const handleVideoError = useCallback(() => {
+    console.warn('Video failed to load');
+    setVideoError(true);
+    setVideoLoaded(false);
   }, []);
 
   // Handle language changes - restart video
   useEffect(() => {
-    if (!isMounted || !videoLoaded) return;
+    if (!isMounted) return;
     
     const video = videoRef.current;
     if (video) {
       video.pause();
       setIsPlaying(false);
+      setVideoLoaded(false);
+      setVideoError(false);
       
-      if ((isMobileDevice() || isSafari()) && !userInteracted) {
+      // Always show overlay on mobile/Safari for new video
+      if (isMobileDevice() || isSafari()) {
         setShowPlayOverlay(true);
-      } else {
-        startVideoWithSound();
       }
     }
-  }, [language, isMounted, videoLoaded, userInteracted, startVideoWithSound]);
+  }, [language, isMounted]);
 
   // Handle route changes - pause when leaving home page
   useEffect(() => {
@@ -138,15 +163,9 @@ const VideoHero = () => {
       if (location.pathname !== '/') {
         video.pause();
         setIsPlaying(false);
-      } else {
-        if ((isMobileDevice() || isSafari()) && !userInteracted) {
-          setShowPlayOverlay(true);
-        } else {
-          startVideoWithSound();
-        }
       }
     }
-  }, [location.pathname, userInteracted, videoLoaded, startVideoWithSound]);
+  }, [location.pathname, videoLoaded]);
 
   const handleVideoEnd = () => {
     setIsPlaying(false);
@@ -181,7 +200,9 @@ const VideoHero = () => {
     }
   }, [hasAudio, videoLoaded]);
 
-  const handlePlayWithSound = useCallback(() => {
+  const handlePlayWithSound = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setUserInteracted(true);
     startVideoWithSound();
   }, [startVideoWithSound]);
@@ -189,81 +210,68 @@ const VideoHero = () => {
   // Enhanced mobile video interaction handlers
   const handleVideoTouch = useCallback((e: React.TouchEvent) => {
     e.preventDefault();
-    if ((isMobileDevice() || isSafari()) && !userInteracted) {
-      handlePlayWithSound();
+    e.stopPropagation();
+    if ((isMobileDevice() || isSafari()) && showPlayOverlay) {
+      handlePlayWithSound(e);
     }
-  }, [userInteracted, handlePlayWithSound]);
+  }, [showPlayOverlay, handlePlayWithSound]);
 
-  const handleVideoClick = useCallback(() => {
-    if ((isMobileDevice() || isSafari()) && !userInteracted) {
-      handlePlayWithSound();
+  const handleVideoClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    if ((isMobileDevice() || isSafari()) && showPlayOverlay) {
+      handlePlayWithSound(e);
     }
-  }, [userInteracted, handlePlayWithSound]);
+  }, [showPlayOverlay, handlePlayWithSound]);
 
   if (!isMounted) {
-    // Fixed skeleton to prevent CLS
     return (
-      <section 
-        className="fixed top-0 left-0 w-screen h-screen bg-black loading-skeleton"
-        style={{ 
-          aspectRatio: '16/9',
-          contain: 'layout style paint',
-          backgroundImage: `url(${posterSrc})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      />
+      <section className="mobile-video-hero">
+        <div 
+          className="mobile-video-placeholder"
+          style={{ 
+            backgroundImage: `url(${posterSrc})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+      </section>
     );
   }
 
   return (
-    <section
-      className="fixed top-0 left-0 w-screen h-screen bg-black overflow-hidden"
-      style={{ 
-        aspectRatio: '16/9',
-        contain: 'layout style paint',
-        contentVisibility: 'auto',
-        zIndex: 1
-      }}
-    >
+    <section className="mobile-video-hero">
       {/* Full-screen video background */}
       <video
         key={language}
         ref={videoRef}
-        autoPlay={!isMobileDevice() && !isSafari()}
+        autoPlay={false}
         playsInline
-        webkit-playsinline="true"
-        x-webkit-airplay="allow"
-        preload="metadata"
+        preload="none"
         muted={!hasAudio}
         controls={false}
         disablePictureInPicture
         onEnded={handleVideoEnd}
         onCanPlay={handleVideoCanPlay}
+        onError={handleVideoError}
         onClick={handleVideoClick}
         onTouchStart={handleVideoTouch}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="mobile-video-element"
         poster={posterSrc}
         width="1920"
         height="1080"
-        style={{ 
-          contain: 'layout style paint',
-          touchAction: 'manipulation'
-        }}
       >
         {useWebM && <source src={videoWebM} type="video/webm" />}
         <source src={videoSrc} type="video/mp4" />
       </video>
 
-      {/* Enhanced Mobile/Safari Play Overlay */}
-      {showPlayOverlay && (isMobileDevice() || isSafari()) && (
-        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-20">
+      {/* Mobile/Safari Play Overlay */}
+      {showPlayOverlay && (
+        <div className="mobile-video-overlay">
           <Button
             onClick={handlePlayWithSound}
-            onTouchEnd={handlePlayWithSound}
+            onTouchStart={handlePlayWithSound}
             size="lg"
-            className="bg-white/95 text-black rounded-full shadow-2xl hover:bg-white transform hover:scale-110 transition-all duration-300 animate-pulse min-w-[200px] min-h-[60px] text-lg font-semibold"
-            style={{ touchAction: 'manipulation' }}
+            className="mobile-play-button"
             aria-label="Redă videoul cu sunet"
           >
             <Play className="w-8 h-8 mr-3" />
@@ -272,13 +280,12 @@ const VideoHero = () => {
         </div>
       )}
 
-      {/* Video controls - positioned relative to viewport */}
-      <div className="fixed top-24 right-4 z-30 flex gap-2">
+      {/* Video controls */}
+      <div className="mobile-video-controls">
         <Button 
           onClick={handleTogglePlay} 
           size="icon" 
-          className="bg-white/90 text-black rounded-full shadow-lg backdrop-blur-sm min-w-[48px] min-h-[48px]"
-          style={{ touchAction: 'manipulation' }}
+          className="mobile-control-button"
           aria-label={isPlaying ? "Pauză video" : "Redă video"}
         >
           {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
@@ -286,8 +293,7 @@ const VideoHero = () => {
         <Button 
           onClick={handleToggleAudio} 
           size="icon" 
-          className="bg-white/90 text-black rounded-full shadow-lg backdrop-blur-sm min-w-[48px] min-h-[48px]"
-          style={{ touchAction: 'manipulation' }}
+          className="mobile-control-button"
           aria-label={hasAudio ? "Dezactivează sunetul" : "Activează sunetul"}
         >
           {hasAudio ? <Volume2 className="w-6 h-6" /> : <VolumeX className="w-6 h-6" />}
@@ -295,14 +301,23 @@ const VideoHero = () => {
       </div>
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/20 to-black/50 pointer-events-none" />
+      <div className="mobile-video-gradient" />
 
-      {/* Hero title - positioned relative to viewport */}
-      <div className="fixed bottom-12 left-0 right-0 text-center text-white px-4 z-10">
+      {/* Hero title */}
+      <div className="mobile-video-title">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
           {t('heroTitle')}
         </h1>
       </div>
+
+      {/* Error state */}
+      {videoError && (
+        <div className="mobile-video-error">
+          <p className="text-white text-center">
+            {t('videoError', 'Video failed to load. Please refresh the page.')}
+          </p>
+        </div>
+      )}
     </section>
   );
 };

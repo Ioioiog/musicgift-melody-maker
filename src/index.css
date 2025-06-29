@@ -147,26 +147,129 @@
     user-select: none;
   }
 
-  /* Full-Screen Video Hero Optimizations */
-  .video-hero-optimized {
+  /* Mobile Video Hero Styles */
+  .mobile-video-hero {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    contain: layout style paint;
-    content-visibility: auto;
+    background-color: #000;
     z-index: 1;
   }
 
-  .video-hero-optimized video {
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
+  .mobile-video-element {
     position: absolute;
     top: 0;
     left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    background-color: #000;
+  }
+
+  .mobile-video-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+  }
+
+  .mobile-video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+
+  .mobile-play-button {
+    background: rgba(255, 255, 255, 0.95);
+    color: #000;
+    border-radius: 9999px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    min-width: 250px;
+    min-height: 70px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .mobile-play-button:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.05);
+  }
+
+  .mobile-video-controls {
+    position: fixed;
+    top: 6rem;
+    right: 1rem;
+    z-index: 30;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .mobile-control-button {
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+    border-radius: 9999px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
+    min-width: 48px;
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+
+  .mobile-control-button:hover {
+    background: rgba(255, 255, 255, 1);
+  }
+
+  .mobile-video-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(
+      to bottom right,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(147, 51, 234, 0.2) 50%,
+      rgba(0, 0, 0, 0.5) 100%
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .mobile-video-title {
+    position: fixed;
+    bottom: 3rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    padding: 0 1rem;
+    z-index: 10;
+  }
+
+  .mobile-video-error {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 25;
+    padding: 1rem;
   }
 
   /* Content Offset for Fixed Video */
@@ -253,6 +356,10 @@
     animation: none;
     background: rgba(255, 255, 255, 0.1);
   }
+  
+  .mobile-play-button {
+    animation: none;
+  }
 }
 
 /* Font Loading Optimization */
@@ -265,7 +372,7 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Critical CSS for initial load stability - Full Screen Video */
+/* Critical CSS for initial load stability */
 .video-hero-critical {
   position: fixed;
   top: 0;
@@ -275,7 +382,6 @@
   overflow: hidden;
   content-visibility: auto;
   contain-intrinsic-size: 100vw 100vh;
-  contain: layout style paint;
   background-color: #000;
   background-image: url('/uploads/video_placeholder.png');
   background-size: cover;
