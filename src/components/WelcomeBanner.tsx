@@ -49,52 +49,59 @@ const WelcomeBanner: React.FC = () => {
   };
 
   if (loading) {
-    return null;
+    return (
+      <div className="welcome-banner-space w-full bg-transparent" style={{ minHeight: '120px' }}>
+        <div className="loading-skeleton w-full h-full rounded-lg" />
+      </div>
+    );
   }
 
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="relative w-full bg-white text-black shadow-xl border-b border-orange-500/30"
-        >
-          <div className="max-w-6xl mx-auto px-4 py-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <div className="bg-orange-500 rounded-full p-3 shadow-lg">
-                  <MapPin className="w-6 h-6 text-white" />
+    <div className="welcome-banner-space w-full" style={{ minHeight: '120px' }}>
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="relative w-full bg-white text-black shadow-xl border-b border-orange-500/30"
+            style={{ contain: 'layout style' }}
+          >
+            <div className="max-w-6xl mx-auto px-4 py-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="bg-orange-500 rounded-full p-3 shadow-lg hw-accelerated">
+                    <MapPin className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="content-container">
+                    <p className="font-medium text-lg md:text-xl lg:text-2xl mb-1 text-black text-stability">
+                      {getWelcomeMessage()}
+                    </p>
+                    <p className="text-sm md:text-base text-gray-600 text-stability">
+                      {t('welcomeSubtitle', 'Create personalized musical gifts that touch hearts')}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-lg md:text-xl lg:text-2xl mb-1 text-black">
-                    {getWelcomeMessage()}
-                  </p>
-                  <p className="text-sm md:text-base text-gray-600">
-                    {t('welcomeSubtitle', 'Create personalized musical gifts that touch hearts')}
-                  </p>
-                </div>
+                
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleDismiss}
+                  className="text-black hover:bg-orange-500/20 hover:text-orange-600 h-10 w-10 shrink-0 border border-gray-300/50 hover:border-orange-500/50 transition-all duration-200 hw-accelerated"
+                  aria-label="Close welcome banner"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
               </div>
-              
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleDismiss}
-                className="text-black hover:bg-orange-500/20 hover:text-orange-600 h-10 w-10 shrink-0 border border-gray-300/50 hover:border-orange-500/50 transition-all duration-200"
-                aria-label="Close welcome banner"
-              >
-                <X className="w-5 h-5" />
-              </Button>
             </div>
-          </div>
-          
-          {/* Orange accent line at the bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            
+            {/* Orange accent line at the bottom */}
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
