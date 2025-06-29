@@ -55,13 +55,31 @@ const Footer = () => {
                   {t('footerDescription')}
                 </p>
                 <div className="flex space-x-4">
-                  <a href="https://facebook.com/musicgift.ro" className="text-gray-600 hover:text-blue-600 transition-colors">
+                  <a 
+                    href="https://facebook.com/musicgift.ro" 
+                    className="text-gray-600 hover:text-blue-600 transition-colors"
+                    aria-label="Vizitează pagina noastră de Facebook"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Facebook className="w-5 h-5" />
                   </a>
-                  <a href="https://instagram.com/musicgift.ro" className="text-gray-600 hover:text-pink-600 transition-colors">
+                  <a 
+                    href="https://instagram.com/musicgift.ro" 
+                    className="text-gray-600 hover:text-pink-600 transition-colors"
+                    aria-label="Vizitează pagina noastră de Instagram"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Instagram className="w-5 h-5" />
                   </a>
-                  <a href="https://youtube.com/@musicgift" className="text-gray-600 hover:text-red-600 transition-colors">
+                  <a 
+                    href="https://youtube.com/@musicgift" 
+                    className="text-gray-600 hover:text-red-600 transition-colors"
+                    aria-label="Vizitează canalul nostru de YouTube"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Youtube className="w-5 h-5" />
                   </a>
                 </div>
@@ -76,11 +94,11 @@ const Footer = () => {
               >
                 <h4 className="text-md font-semibold text-black">{t('quickLinks')}</h4>
                 <ul className="space-y-2 text-sm">
-                  <li><Link to="/packages" className="text-gray-700 hover:text-orange-500 transition-colors">{t('packages')}</Link></li>
-                  <li><Link to="/how-it-works" className="text-gray-700 hover:text-orange-500 transition-colors">{t('howItWorks')}</Link></li>
-                  <li><Link to="/about" className="text-gray-700 hover:text-orange-500 transition-colors">{t('about')}</Link></li>
-                  <li><Link to="/contact" className="text-gray-700 hover:text-orange-500 transition-colors">{t('contact')}</Link></li>
-                  <li><Link to="/testimonials" className="text-gray-700 hover:text-orange-500 transition-colors">{t('testimonials')}</Link></li>
+                  <li><Link to="/packages" className="text-gray-700 hover:text-orange-500 transition-colors" aria-label="Vezi pachetele de servicii muzicale">{t('packages')}</Link></li>
+                  <li><Link to="/how-it-works" className="text-gray-700 hover:text-orange-500 transition-colors" aria-label="Află cum funcționează procesul nostru">{t('howItWorks')}</Link></li>
+                  <li><Link to="/about" className="text-gray-700 hover:text-orange-500 transition-colors" aria-label="Citește despre echipa noastră">{t('about')}</Link></li>
+                  <li><Link to="/contact" className="text-gray-700 hover:text-orange-500 transition-colors" aria-label="Contactează-ne pentru întrebări">{t('contact')}</Link></li>
+                  <li><Link to="/testimonials" className="text-gray-700 hover:text-orange-500 transition-colors" aria-label="Citește mărturiile clienților noștri">{t('testimonials')}</Link></li>
                 </ul>
               </motion.div>
 
@@ -95,19 +113,19 @@ const Footer = () => {
                 <ul className="space-y-3 text-sm">
                   <li className="flex items-center space-x-2">
                     <Phone className="w-4 h-4 text-orange-500" />
-                    <a href="tel:+40723141501" className="text-gray-700 hover:text-orange-500 transition-colors">
+                    <a href="tel:+40723141501" className="text-gray-700 hover:text-orange-500 transition-colors" aria-label="Sună-ne la numărul de telefon +40 723 141 501">
                       +40 723 141 501
                     </a>
                   </li>
                   <li className="flex items-center space-x-2">
                     <MessageCircle className="w-4 h-4 text-orange-500" />
-                    <a href="https://wa.me/40723141501" className="text-gray-700 hover:text-orange-500 transition-colors">
+                    <a href="https://wa.me/40723141501" className="text-gray-700 hover:text-orange-500 transition-colors" aria-label="Contactează-ne pe WhatsApp" target="_blank" rel="noopener noreferrer">
                       WhatsApp
                     </a>
                   </li>
                   <li className="flex items-center space-x-2">
                     <Mail className="w-4 h-4 text-orange-500" />
-                    <a href="mailto:info@musicgift.ro" className="text-gray-700 hover:text-orange-500 transition-colors">
+                    <a href="mailto:info@musicgift.ro" className="text-gray-700 hover:text-orange-500 transition-colors" aria-label="Trimite-ne un email la info@musicgift.ro">
                       info@musicgift.ro
                     </a>
                   </li>
@@ -145,30 +163,35 @@ const Footer = () => {
                   <button
                     onClick={() => setShowLegalModal('terms')}
                     className="text-gray-600 hover:text-orange-500 transition-colors"
+                    aria-label="Citește termenii și condițiile"
                   >
                     {t('termsConditions')}
                   </button>
                   <button
                     onClick={() => setShowLegalModal('privacy')}
                     className="text-gray-600 hover:text-orange-500 transition-colors"
+                    aria-label="Citește politica de confidențialitate"
                   >
                     {t('privacyPolicy')}
                   </button>
                   <button
                     onClick={() => setShowLegalModal('refund')}
                     className="text-gray-600 hover:text-orange-500 transition-colors"
+                    aria-label="Citește politica de rambursare"
                   >
                     {t('refundPolicy')}
                   </button>
                   <button
                     onClick={() => setShowLegalModal('cookies')}
                     className="text-gray-600 hover:text-orange-500 transition-colors"
+                    aria-label="Citește politica de cookies"
                   >
                     {t('cookiePolicy')}
                   </button>
                   <button
                     onClick={() => setShowCookieSettings(true)}
                     className="text-gray-600 hover:text-orange-500 transition-colors flex items-center gap-1"
+                    aria-label="Gestionează setările de cookies"
                   >
                     <Cookie className="w-3 h-3" />
                     {t('manageCookies')}
@@ -188,7 +211,7 @@ const Footer = () => {
               className="text-center text-xs text-gray-600 border-t border-gray-300 pt-6"
             >
               <p>{t('copyright', `© ${currentYear} MusicGift.ro. All rights reserved. Made by RED DOMAIN with ❤️ for music lovers`)}</p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </footer>

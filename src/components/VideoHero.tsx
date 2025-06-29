@@ -197,6 +197,7 @@ const VideoHero = () => {
             onClick={handlePlayWithSound}
             size="lg"
             className="bg-white/90 text-black rounded-full shadow-lg hover:bg-white transform hover:scale-105 transition-all duration-300 animate-pulse"
+            aria-label="Redă videoul cu sunet"
           >
             <Play className="w-8 h-8 mr-3" />
             {t('tapToPlayWithSound', 'Tap to play with sound')}
@@ -206,10 +207,20 @@ const VideoHero = () => {
 
       {/* Video controls */}
       <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
-        <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
+        <Button 
+          onClick={handleTogglePlay} 
+          size="icon" 
+          className="bg-white/80 text-black rounded-full shadow hw-accelerated"
+          aria-label={isPlaying ? "Pauză video" : "Redă video"}
+        >
           {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
         </Button>
-        <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
+        <Button 
+          onClick={handleToggleAudio} 
+          size="icon" 
+          className="bg-white/80 text-black rounded-full shadow hw-accelerated"
+          aria-label={hasAudio ? "Dezactivează sunetul" : "Activează sunetul"}
+        >
           {hasAudio ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
         </Button>
       </div>
