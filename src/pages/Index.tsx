@@ -1,4 +1,3 @@
-
 import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -205,22 +204,22 @@ const Index = () => {
         <CollaborationSection />
       </Suspense>
 
-      {/* Call-to-Action Section with stable layout */}
+      {/* Call-to-Action Section with reduced spacing */}
       <section 
-        className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8" 
+        className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-2 md:py-4" 
         aria-labelledby="cta-heading"
         style={{ contain: 'layout style' }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
         <div className="max-w-4xl mx-auto relative z-10">
-          <h2 id="cta-heading" className="text-base md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3 text-stability">
+          <h2 id="cta-heading" className="text-base md:text-2xl lg:text-3xl font-bold mb-1 md:mb-2 text-stability">
             {t('heroCtaTitle')}
           </h2>
-          <p className="text-sm md:text-xl mb-4 md:mb-6 opacity-90 text-stability">
+          <p className="text-sm md:text-xl mb-2 md:mb-4 opacity-90 text-stability">
             {t('heroCtaSubtitle')}
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center items-center">
             <Link to="/order" aria-label="Comandă acum o melodie personalizată">
               <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white border-0 min-w-[140px] md:min-w-[180px] text-sm md:text-base transform-gpu">
                 <ShoppingCart className="w-4 h-4 md:w-5 md:h-5 mr-2" />
