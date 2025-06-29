@@ -21,20 +21,24 @@ const HeroCallToAction = lazy(() => import("@/components/HeroCallToAction"));
 const EnhancedVoiceSearchSection = lazy(() => import("@/components/voice-search/EnhancedVoiceSearchSection"));
 
 // Enhanced Loading fallback component with fixed dimensions
-const LoadingFallback = ({ className = "", height = "h-32", aspectRatio }: { className?: string; height?: string; aspectRatio?: string }) => (
-  <div 
-    className={`loading-skeleton bg-white/10 rounded-lg ${height} ${className}`} 
-    style={{ 
-      contain: 'layout style paint',
-      aspectRatio: aspectRatio || 'auto',
-      contentVisibility: 'auto'
-    }} 
-  />
-);
-
+const LoadingFallback = ({
+  className = "",
+  height = "h-32",
+  aspectRatio
+}: {
+  className?: string;
+  height?: string;
+  aspectRatio?: string;
+}) => <div className={`loading-skeleton bg-white/10 rounded-lg ${height} ${className}`} style={{
+  contain: 'layout style paint',
+  aspectRatio: aspectRatio || 'auto',
+  contentVisibility: 'auto'
+}} />;
 const Index = () => {
-  const { t } = useLanguage();
-  
+  const {
+    t
+  } = useLanguage();
+
   // Performance monitoring
   useEffect(() => {
     performance.mark('index-page-start');
@@ -43,17 +47,14 @@ const Index = () => {
       performance.measure('index-page-load', 'index-page-start', 'index-page-end');
     };
   }, []);
-
-  return (
-    <div className="min-h-screen" style={{ contain: 'layout style' }}>
+  return <div className="min-h-screen" style={{
+    contain: 'layout style'
+  }}>
       {/* Enhanced Voice Search Structured Data */}
       <EnhancedVoiceSearchStructuredData />
       
       <Suspense fallback={<LoadingFallback className="h-4" />}>
-        <SEOHead 
-          title="MusicGift.ro - Cadouri Muzicale Personalizate"
-          description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste."
-        />
+        <SEOHead title="MusicGift.ro - Cadouri Muzicale Personalizate" description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste." />
       </Suspense>
       
       {/* Skip Navigation for Accessibility */}
@@ -61,30 +62,26 @@ const Index = () => {
         Sari la conținutul principal
       </a>
       
-      <Suspense fallback={<div className="nav-critical bg-black/90 backdrop-blur-sm fixed top-0 left-0 right-0 z-50" style={{ height: '4rem' }} />}>
+      <Suspense fallback={<div className="nav-critical bg-black/90 backdrop-blur-sm fixed top-0 left-0 right-0 z-50" style={{
+      height: '4rem'
+    }} />}>
         <Navigation />
       </Suspense>
       
       {/* Video Hero Section - now responsive sized */}
-      <Suspense fallback={
-        <div 
-          className="video-hero-critical w-full aspect-video loading-skeleton"
-          style={{ 
-            backgroundImage: 'url(/uploads/video_placeholder.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        />
-      }>
+      <Suspense fallback={<div className="video-hero-critical w-full aspect-video loading-skeleton" style={{
+      backgroundImage: 'url(/uploads/video_placeholder.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }} />}>
         <VideoHero />
       </Suspense>
 
       {/* Main Content - no offset needed */}
-      <main 
-        id="main-content" 
-        className="main-lcp-critical relative"
-        style={{ contain: 'layout style', zIndex: 2 }}
-      >
+      <main id="main-content" className="main-lcp-critical relative" style={{
+      contain: 'layout style',
+      zIndex: 2
+    }}>
         {/* Welcome Banner - No reserved space to prevent layout jumps */}
         <Suspense fallback={null}>
           <WelcomeBanner />
@@ -100,11 +97,9 @@ const Index = () => {
         <div className="relative z-10">
           
           {/* Impact Cards Section */}
-          <section 
-            className="py-2 md:py-4 section-container" 
-            aria-labelledby="impact-heading"
-            style={{ contain: 'layout style' }}
-          >
+          <section className="py-2 md:py-4 section-container" aria-labelledby="impact-heading" style={{
+          contain: 'layout style'
+        }}>
             <h2 id="impact-heading" className="sr-only">Impactul Serviciilor Noastre Muzicale</h2>
             <Suspense fallback={<LoadingFallback height="h-48" />}>
               <ImpactCards />
@@ -112,11 +107,9 @@ const Index = () => {
           </section>
 
           {/* Process Flow Section */}
-          <section 
-            className="py-2 md:py-4 section-container" 
-            aria-labelledBy="process-heading"
-            style={{ contain: 'layout style' }}
-          >
+          <section className="py-2 md:py-4 section-container" aria-labelledBy="process-heading" style={{
+          contain: 'layout style'
+        }}>
             <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
             <Suspense fallback={<LoadingFallback height="h-64" />}>
               <AnimatedStepFlow />
@@ -124,11 +117,9 @@ const Index = () => {
           </section>
 
           {/* Optimized Testimonials Section */}
-          <section 
-            className="py-2 md:py-4 section-container" 
-            aria-labelledby="testimonials-heading"
-            style={{ contain: 'layout style' }}
-          >
+          <section className="py-2 md:py-4 section-container" aria-labelledby="testimonials-heading" style={{
+          contain: 'layout style'
+        }}>
             <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
             <Suspense fallback={<LoadingFallback height="h-48" />}>
               <OptimizedTestimonialSlider />
@@ -136,15 +127,11 @@ const Index = () => {
           </section>
 
           {/* Statistics Section with stable layout */}
-          <section 
-            className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 md:my-4 overflow-hidden stats-section" 
-            aria-labelledby="stats-heading"
-            style={{ 
-              minHeight: '80px',
-              contain: 'layout style',
-              contentVisibility: 'auto'
-            }}
-          >
+          <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 md:my-4 overflow-hidden stats-section" aria-labelledby="stats-heading" style={{
+          minHeight: '80px',
+          contain: 'layout style',
+          contentVisibility: 'auto'
+        }}>
             <h2 id="stats-heading" className="sr-only">Statistici și Realizări MusicGift.ro</h2>
             <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[2px] relative z-10">
               <div className="flex space-x-8 md:space-x-16 whitespace-nowrap animate-scroll transform-gpu">
@@ -200,11 +187,8 @@ const Index = () => {
       </Suspense>
 
       {/* Call-to-Action Section with content-based height */}
-      <section 
-        className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-1 md:py-2 min-h-0 h-auto" 
-        aria-labelledby="cta-heading"
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
+      <section className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-1 md:py-2 min-h-0 h-auto" aria-labelledby="cta-heading">
+        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50 px-0 my-0 mx-0 py-0" />
         <div className="max-w-4xl mx-auto relative z-10 h-auto">
           <h2 id="cta-heading" className="text-base md:text-2xl lg:text-3xl font-bold mb-1 text-stability">
             {t('heroCtaTitle')}
@@ -241,8 +225,6 @@ const Index = () => {
       <Suspense fallback={<LoadingFallback height="h-32" />}>
         <Footer />
       </Suspense>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
