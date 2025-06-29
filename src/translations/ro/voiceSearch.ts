@@ -15,7 +15,7 @@ export const voiceSearchTranslations = {
   deliveryTimeAnswer: "Cadoul dumneavoastră muzical va fi gata în 3-5 zile lucrătoare după confirmarea comenzii. Pentru pachetele mai complexe, timpul de livrare poate fi de până la 7 zile.",
   
   bestAnniversaryGifts: "Care sunt cele mai bune cadouri muzicale pentru aniversări?",
-  bestAnniversaryGiftsAnswer: "Pentru aniversări recomandăm Pachetul Personal (399 RON) sau Pachetul Premium (599 RON). Acestea includ melodii personalizate cu versuri care spun povestea persoanei sărbătorite.",
+  bestAnniversaryGiftsAnswer: "Pentru aniversări recomandăm Pachetul Personal (299 RON) sau Pachetul Premium (499 RON). Acestea includ melodii personalizate cu versuri care spun povestea persoanei sărbătorite.",
   
   // Local Search Terms
   musicServicesNearMe: "Unde pot să găsesc servicii de compoziții muzicale lângă mine?",

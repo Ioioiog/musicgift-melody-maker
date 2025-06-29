@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +22,7 @@ const VoiceSearchFAQ = () => {
       case 'en': return { symbol: '£', personal: '49', premium: '79', wedding: '59' };
       case 'de': return { symbol: '€', personal: '59', premium: '99', wedding: '69' };
       case 'fr': return { symbol: '€', personal: '59', premium: '99', wedding: '69' };
-      default: return { symbol: 'RON', personal: '299', premium: '499', wedding: '399' };
+      default: return { symbol: 'RON', personal: '299', premium: '499', wedding: '299' };
     }
   };
 
@@ -67,7 +66,7 @@ const VoiceSearchFAQ = () => {
     },
     {
       question: t('weddingSongCost'),
-      answer: t('weddingSongCostAnswer').replace('59 EUR', `${currencyData.symbol}${currencyData.wedding}`),
+      answer: t('weddingSongCostAnswer'),
       category: 'pricing'
     },
     {
@@ -77,7 +76,7 @@ const VoiceSearchFAQ = () => {
     },
     {
       question: t('bestAnniversaryGifts'),
-      answer: t('bestAnniversaryGiftsAnswer').replace('£35', `${currencyData.symbol}${currencyData.personal}`).replace('£55', `${currencyData.symbol}${currencyData.premium}`),
+      answer: t('bestAnniversaryGiftsAnswer'),
       category: 'gifts'
     }
   ];
