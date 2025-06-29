@@ -1,8 +1,9 @@
 
-// Service Worker v2.0 - Fixed HEAD request handling
-const CACHE_VERSION = 'v2.0';
+
+// Service Worker v2.1 - Enhanced scheme filtering and error handling
+const CACHE_VERSION = 'v2.1';
 const CACHE_NAME = `musicgift-cache-${CACHE_VERSION}`;
-const OLD_CACHE_NAMES = ['musicgift-cache-v1.0', 'musicgift-cache'];
+const OLD_CACHE_NAMES = ['musicgift-cache-v2.0', 'musicgift-cache-v1.0', 'musicgift-cache'];
 
 // Resources to cache (only for GET requests)
 const STATIC_RESOURCES = [
@@ -14,7 +15,7 @@ const STATIC_RESOURCES = [
 
 // Install event - Cache static resources and clean up old caches
 self.addEventListener('install', (event) => {
-  console.log('Service Worker v2.0 installing...');
+  console.log('Service Worker v2.1 installing...');
   
   event.waitUntil(
     Promise.all([
@@ -32,7 +33,7 @@ self.addEventListener('install', (event) => {
 
 // Activate event - Take control and cleanup
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker v2.0 activating...');
+  console.log('Service Worker v2.1 activating...');
   
   event.waitUntil(
     Promise.all([
@@ -42,7 +43,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - Handle requests with proper method filtering
+// Fetch event - Handle requests with proper scheme and method filtering
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   
@@ -50,6 +51,27 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') {
     console.log(`Ignoring ${request.method} request to ${request.url}`);
     return; // Let the browser handle non-GET requests normally
+  }
+  
+  // Check URL scheme first - only handle http/https requests
+  let requestUrl;
+  try {
+    requestUrl = new URL(request.url);
+  } catch (error) {
+    console.warn('Invalid URL in fetch event:', request.url, error);
+    return; // Let browser handle malformed URLs
+  }
+  
+  // Only handle HTTP/HTTPS schemes
+  if (requestUrl.protocol !== 'http:' && requestUrl.protocol !== 'https:') {
+    console.log(`Ignoring ${requestUrl.protocol} request to ${request.url}`);
+    return; // Let browser handle non-HTTP schemes (chrome-extension:, file:, etc.)
+  }
+  
+  // Only handle same-origin requests or specific allowed origins
+  if (requestUrl.origin !== self.location.origin && !isAllowedOrigin(requestUrl.origin)) {
+    console.log(`Ignoring cross-origin request to ${request.url}`);
+    return; // Let browser handle cross-origin requests
   }
   
   // Only cache certain resources
@@ -68,10 +90,15 @@ self.addEventListener('fetch', (event) => {
                 const responseClone = response.clone();
                 caches.open(CACHE_NAME)
                   .then((cache) => {
-                    cache.put(request, responseClone);
+                    // Additional safety check before caching
+                    try {
+                      cache.put(request, responseClone);
+                    } catch (error) {
+                      console.warn('Failed to cache resource:', request.url, error);
+                    }
                   })
                   .catch((error) => {
-                    console.warn('Failed to cache resource:', error);
+                    console.warn('Failed to open cache for resource:', error);
                   });
               }
               return response;
@@ -81,30 +108,59 @@ self.addEventListener('fetch', (event) => {
               throw error;
             });
         })
+        .catch((error) => {
+          console.warn('Cache match failed:', error);
+          // Fallback to network
+          return fetch(request);
+        })
     );
   }
 });
 
 // Helper function to determine if a resource should be cached
 function shouldCache(url) {
-  const urlObj = new URL(url);
-  
-  // Cache static assets
-  if (urlObj.pathname.startsWith('/uploads/') || 
-      urlObj.pathname.endsWith('.webp') || 
-      urlObj.pathname.endsWith('.png') || 
-      urlObj.pathname.endsWith('.jpg') || 
-      urlObj.pathname.endsWith('.css') || 
-      urlObj.pathname.endsWith('.js')) {
-    return true;
+  try {
+    const urlObj = new URL(url);
+    
+    // Only cache HTTP/HTTPS schemes
+    if (urlObj.protocol !== 'http:' && urlObj.protocol !== 'https:') {
+      return false;
+    }
+    
+    // Only cache same-origin requests
+    if (urlObj.origin !== self.location.origin) {
+      return false;
+    }
+    
+    // Cache static assets
+    if (urlObj.pathname.startsWith('/uploads/') || 
+        urlObj.pathname.endsWith('.webp') || 
+        urlObj.pathname.endsWith('.png') || 
+        urlObj.pathname.endsWith('.jpg') || 
+        urlObj.pathname.endsWith('.css') || 
+        urlObj.pathname.endsWith('.js')) {
+      return true;
+    }
+    
+    // Cache main page
+    if (urlObj.pathname === '/' || urlObj.pathname === '/index.html') {
+      return true;
+    }
+    
+    return false;
+  } catch (error) {
+    console.warn('Error parsing URL for caching decision:', url, error);
+    return false;
   }
-  
-  // Cache main page
-  if (urlObj.pathname === '/' || urlObj.pathname === '/index.html') {
-    return true;
-  }
-  
-  return false;
+}
+
+// Helper function to check if origin is allowed
+function isAllowedOrigin(origin) {
+  const allowedOrigins = [
+    'https://fonts.googleapis.com',
+    'https://fonts.gstatic.com'
+  ];
+  return allowedOrigins.includes(origin);
 }
 
 // Helper function to clean up old caches
@@ -138,11 +194,14 @@ self.addEventListener('message', (event) => {
   }
 });
 
-// Error handling
+// Enhanced error handling
 self.addEventListener('error', (event) => {
   console.error('Service Worker error:', event.error);
 });
 
 self.addEventListener('unhandledrejection', (event) => {
   console.error('Service Worker unhandled rejection:', event.reason);
+  // Prevent the default behavior to avoid console spam
+  event.preventDefault();
 });
+
