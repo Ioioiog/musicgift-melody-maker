@@ -22,13 +22,6 @@ const WelcomeBanner: React.FC = () => {
     // Show banner when location is loaded
     if (location && !loading) {
       setIsVisible(true);
-      
-      // Auto-dismiss after 10 seconds
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-      }, 10000);
-      
-      return () => clearTimeout(timer);
     }
   }, [location, loading, isCookieAllowed]);
 
@@ -67,19 +60,19 @@ const WelcomeBanner: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="relative w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-lg"
+          className="relative w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-xl border-b border-white/20"
         >
-          <div className="max-w-6xl mx-auto px-4 py-3">
+          <div className="max-w-6xl mx-auto px-4 py-8">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="bg-white/20 rounded-full p-2">
-                  <MapPin className="w-4 h-4" />
+              <div className="flex items-center gap-6">
+                <div className="bg-white/20 rounded-full p-3">
+                  <MapPin className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="font-medium text-sm md:text-base">
+                  <p className="font-medium text-lg md:text-xl lg:text-2xl mb-1">
                     {getWelcomeMessage()}
                   </p>
-                  <p className="text-xs text-white/80">
+                  <p className="text-sm md:text-base text-white/90">
                     {t('welcomeSubtitle', 'Create personalized musical gifts that touch hearts')}
                   </p>
                 </div>
@@ -89,10 +82,10 @@ const WelcomeBanner: React.FC = () => {
                 variant="ghost"
                 size="icon"
                 onClick={handleDismiss}
-                className="text-white hover:bg-white/20 h-8 w-8 shrink-0"
+                className="text-white hover:bg-white/20 h-10 w-10 shrink-0"
                 aria-label="Close welcome banner"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </Button>
             </div>
           </div>
