@@ -204,14 +204,13 @@ const Index = () => {
         <CollaborationSection />
       </Suspense>
 
-      {/* Call-to-Action Section with minimal spacing */}
+      {/* Call-to-Action Section with content-based height */}
       <section 
-        className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-1 md:py-2" 
+        className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-1 md:py-2 min-h-0 h-auto" 
         aria-labelledby="cta-heading"
-        style={{ contain: 'layout style' }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="max-w-4xl mx-auto relative z-10 h-auto">
           <h2 id="cta-heading" className="text-base md:text-2xl lg:text-3xl font-bold mb-1 text-stability">
             {t('heroCtaTitle')}
           </h2>
