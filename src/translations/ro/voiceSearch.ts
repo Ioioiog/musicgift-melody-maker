@@ -46,5 +46,78 @@ export const voiceSearchTranslations = {
   timisoaraServices: "Melodii personalizate în orașul florilor",
   iasiServices: "Compoziții muzicale în orașul celor șapte coline",
   constantaServices: "Cadouri muzicale la malul mării",
-  brasovServices: "Servicii muzicale în orașul de la poalele Tâmpei"
+  brasovServices: "Servicii muzicale în orașul de la poalele Tâmpei",
+  
+  // Missing translations for Intent-Based Content
+  comparePersonalizedSongs: "Cum se compară melodiile personalizate cu alte cadouri?",
+  comparePersonalizedSongsAnswer: "Melodiile personalizate sunt cadouri unice, emoționale și de durată care creează amintiri, spre deosebire de cadourile materiale care pot fi uitate.",
+  
+  whyChoosePersonalizedMusic: "De ce să aleg muzica personalizată în locul cadourilor din magazin?",
+  whyChoosePersonalizedMusicAnswer: "Muzica personalizată arată o gândire profundă și creează o conexiune emotională pe care cadourile produse în masă nu o pot egala.",
+  
+  bestTimeToOrder: "Care este cel mai bun moment să comand o melodie personalizată?",
+  bestTimeToOrderAnswer: "Comandați cu cel puțin 1-2 săptămâni înainte de ocazia specială pentru a asigura sincronizarea perfectă și pentru a permite eventuale revizuiri.",
+  
+  // Long-tail specific questions
+  personalizedSongForHusband50thBirthday: "Pot să comand o melodie personalizată pentru aniversarea de 50 de ani a soțului meu?",
+  personalizedSongForHusband50thBirthdayAnswer: "Absolut! Ne specializăm în melodii pentru aniversări importante care sărbătoresc realizările din viață și călătoriile personale.",
+  
+  romanticSongAnniversary25Years: "Cum să creez o melodie romantică pentru aniversarea căsătoriei de 25 de ani?",
+  romanticSongAnniversary25YearsAnswer: "Melodiile pentru nunta de argint sunt speciale - incorporăm călătoria voastră de 25 de ani, amintirile și dragostea continuă într-o compoziție frumoasă.",
+  
+  // Seasonal trending labels
+  springTrending: "Tendință Primăvară",
+  summerTrending: "Tendință Vară", 
+  autumnTrending: "Tendință Toamnă",
+  winterTrending: "Tendință Iarnă",
+  
+  // Seasonal questions
+  springWeddingSongs: "Care sunt cele mai bune melodii de nuntă de primăvară?",
+  springWeddingSongsAnswer: "Nunțile de primăvară cer melodii proaspete și romantice. Pachetul nostru de nuntă de primăvară include compoziții inspirate de natură, perfecte pentru ceremonii în aer liber.",
+  
+  summerAnniversarySongs: "Cum să creez melodii de aniversare de vară?",
+  summerAnniversarySongsAnswer: "Aniversările de vară merită compoziții veselе și pline de energie. Creăm melodii personalizate care surprind căldura și energia dragostei de vară.",
+  
+  autumnRomanticGifts: "Care sunt cadourile muzicale romantice de toamnă?",
+  autumnRomanticGiftsAnswer: "Toamna aduce o atmosferă caldă și intimă, perfectă pentru cadouri muzicale emoționante. Colecția noastră de toamnă prezintă aranjamente calde și acustice.",
+  
+  holidayPersonalizedSongs: "Puteți crea melodii personalizate pentru sărbători?",
+  holidayPersonalizedSongsAnswer: "Da! Creăm melodii magice pentru sărbători, perfecte pentru Crăciun, Anul Nou și celebrările de iarnă cu povestea voastră personală.",
+  
+  // Additional missing translations
+  awardWinning: "Premiat",
+  awardWinningDesc: "Recunoscut pentru excelența în compoziția muzicală personalizată",
+  
+  // Form and UI related translations
+  selectOption: "Selectează opțiunea",
+  pickDate: "Alege data",
+  noAddonsAvailable: "Nu sunt disponibile opțiuni suplimentare",
+  fieldConfigurationError: "Eroare de configurare câmp",
+  unknownFieldType: "Tip de câmp necunoscut: {fieldType}",
+  
+  // File upload related
+  uploadFiles: "Încarcă fișiere",
+  clickToUploadFiles: "Click pentru a încărca fișiere",
+  maxFiles: "Maxim",
+  files: "fișiere",
+  totalSize: "mărime totală",
+  recordAudioMessage: "Înregistrează mesaj audio",
+  
+  // Voice Search Tips component
+  voiceSearchTipsTitle: "Sfaturi pentru Căutarea Vocală",
+  voiceSearchTipsSubtitle: "Optimizați experiența de căutare vocală pentru serviciile noastre",
+  askVoiceAssistant: "Întrebați asistentul vocal",
+  useNaturalLanguage: "Folosiți limbajul natural",
+  beSpecific: "Fiți specific în întrebări",
+  
+  // Additional categories
+  ordering: "comandă",
+  pricing: "preț",
+  delivery: "livrare",
+  gifts: "cadouri",
+  comparison: "comparație",
+  timing: "programare",
+  specific: "specific",
+  location: "locație",
+  relationship: "relație"
 };
