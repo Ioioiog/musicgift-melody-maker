@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Volume2, MessageCircle } from 'lucide-react';
@@ -33,7 +32,7 @@ const EnhancedVoiceSearchSection = () => {
 
   if (!isVisible) {
     return (
-      <div ref={sectionRef} className="py-16 px-4 bg-gradient-to-br from-slate-50 to-blue-50">
+      <div ref={sectionRef} className="py-16 px-4">
         <div className="max-w-6xl mx-auto h-96 flex items-center justify-center">
           <div className="animate-pulse text-gray-400">Loading Enhanced FAQ...</div>
         </div>
@@ -42,7 +41,7 @@ const EnhancedVoiceSearchSection = () => {
   }
 
   return (
-    <section ref={sectionRef} className="py-16 px-4 bg-gradient-to-br from-slate-50 to-blue-50">
+    <section ref={sectionRef} className="py-16 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
