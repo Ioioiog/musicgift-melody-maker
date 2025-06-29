@@ -1,6 +1,5 @@
 
 
-
 export const voiceSearchTranslations = {
   // Voice Search FAQ
   voiceSearchFaqTitle: "Întrebări Frecvente despre Cadourile Muzicale",
@@ -105,22 +104,12 @@ export const voiceSearchTranslations = {
   totalSize: "mărime totală",
   recordAudioMessage: "Înregistrează mesaj audio",
   
-  // Simplified Voice Search Tips
-  quickSearchTitle: "Căutare Rapidă",
-  searchMethods: "Indiferent cum preferi să cauți - vocal, prin text, sau prin telefon - suntem aici să te ajutăm",
-  handsOccupiedTitle: "Exemple când ai mâinile ocupate:",
-  whileDriving: "În timp ce conduci: 'OK Google, găsește MusicGift'",
-  holdingBaby: "Când ții copilul în brațe: 'Alexa, cât costă o melodie personalizată?'",
-  whileCooking: "În timp ce gătești: 'Siri, număr telefon MusicGift'",
-  whileCleaning: "Când faci curat prin casă: 'Hey Google, melodii pentru aniversare'",
-  
-  // Removed old VoiceSearchTips translations
-  tryTheseQuestions: "Încercați aceste întrebări vocale:",
-  voiceSearchBenefits: "Beneficiile căutării vocale:",
-  handsFreeBrowsing: "Navigare fără mâini în timpul multitaskingului",
-  naturalLanguage: "Puneți întrebări în limbaj natural",
-  quickAnswers: "Obțineți răspunsuri rapide la întrebări specifice",
-  localResults: "Găsiți servicii locale cu ușurință",
+  // Voice Search Tips component
+  voiceSearchTipsTitle: "Sfaturi pentru Căutarea Vocală",
+  voiceSearchTipsSubtitle: "Optimizați experiența de căutare vocală pentru serviciile noastre",
+  askVoiceAssistant: "Întrebați asistentul vocal",
+  useNaturalLanguage: "Folosiți limbajul natural",
+  beSpecific: "Fiți specific în întrebări",
   
   // Additional categories
   ordering: "comandă",
@@ -160,5 +149,4 @@ export const voiceSearchTranslations = {
   showsThoughtfulness: "Demonstrează gândire profundă și grijă",
   createsLegacy: "Creează o moștenire muzicală pentru generațiile viitoare"
 };
-
 
