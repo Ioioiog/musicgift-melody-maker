@@ -105,7 +105,7 @@ const ScenarioHero = () => {
   } = scenarios[index];
   
   return <section className="relative h-30 overflow-hidden" style={{
-    backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+    backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
