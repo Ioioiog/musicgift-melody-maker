@@ -1,3 +1,4 @@
+
 import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -17,7 +18,7 @@ const SEOHead = lazy(() => import("@/components/SEOHead"));
 const OptimizedVoiceSearchSection = lazy(() => import("@/components/OptimizedVoiceSearchSection"));
 const WelcomeBanner = lazy(() => import("@/components/WelcomeBanner"));
 
-// Enhanced Loading fallback component with fixed dimensions and proper containment
+// Enhanced Loading fallback component with fixed dimensions
 const LoadingFallback = ({ className = "", height = "h-32", aspectRatio }: { className?: string; height?: string; aspectRatio?: string }) => (
   <div 
     className={`loading-skeleton bg-white/10 rounded-lg ${height} ${className}`} 
@@ -55,32 +56,36 @@ const Index = () => {
         Sari la conținutul principal
       </a>
       
-      <Suspense fallback={<div className="nav-critical bg-black/90 backdrop-blur-sm" style={{ height: '4rem' }} />}>
+      <Suspense fallback={<div className="nav-critical bg-black/90 backdrop-blur-sm fixed top-0 left-0 right-0 z-50" style={{ height: '4rem' }} />}>
         <Navigation />
       </Suspense>
       
-      {/* Video Hero Section with reserved space to prevent CLS */}
+      {/* Full-Screen Video Hero Section */}
       <Suspense fallback={
-        <LoadingFallback 
-          className="video-hero-critical" 
-          height="h-full" 
-          aspectRatio="16/9"
+        <div 
+          className="video-hero-critical fixed top-0 left-0 w-screen h-screen bg-black loading-skeleton"
+          style={{ 
+            backgroundImage: 'url(/uploads/video_placeholder.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            zIndex: 1
+          }}
         />
       }>
         <VideoHero />
       </Suspense>
 
-      {/* Welcome Banner - No reserved space to prevent layout jumps */}
-      <Suspense fallback={null}>
-        <WelcomeBanner />
-      </Suspense>
-
-      {/* Main Content with stable layout */}
+      {/* Main Content with offset for fixed video */}
       <main 
         id="main-content" 
-        className="main-lcp-critical relative overflow-hidden"
-        style={{ contain: 'layout style' }}
+        className="content-offset main-lcp-critical relative"
+        style={{ contain: 'layout style', marginTop: '100vh', zIndex: 2 }}
       >
+        {/* Welcome Banner - No reserved space to prevent layout jumps */}
+        <Suspense fallback={null}>
+          <WelcomeBanner />
+        </Suspense>
+
         <div className="overlay-container" />
 
         <div className="relative z-10">

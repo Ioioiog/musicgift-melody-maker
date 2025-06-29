@@ -14,6 +14,10 @@ const isMobileDevice = (): boolean => {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 };
 
+const isSafari = (): boolean => {
+  return /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+};
+
 const VideoHero = () => {
   const { t, language } = useLanguage();
   const location = useLocation();
@@ -25,19 +29,20 @@ const VideoHero = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPlayOverlay, setShowPlayOverlay] = useState(false);
   const [userInteracted, setUserInteracted] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
   const videoWebM = `/uploads/${baseName}.webm`;
   const posterSrc = '/uploads/video_placeholder.png';
 
-  // Initialize video format support
+  // Initialize video format support and Safari detection
   useEffect(() => {
-    setUseWebM(supportsWebM());
+    setUseWebM(supportsWebM() && !isSafari());
     setIsMounted(true);
     
-    // On mobile, show overlay for user interaction
-    if (isMobileDevice()) {
+    // Enhanced mobile/Safari handling
+    if (isMobileDevice() || isSafari()) {
       setShowPlayOverlay(true);
       setHasAudio(false);
     } else {
@@ -47,9 +52,17 @@ const VideoHero = () => {
 
   const startVideoWithSound = useCallback(async () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !videoLoaded) return;
 
     try {
+      // Safari-specific handling
+      if (isSafari()) {
+        video.load();
+        await new Promise(resolve => {
+          video.addEventListener('canplay', resolve, { once: true });
+        });
+      }
+
       video.muted = false;
       setHasAudio(true);
       video.currentTime = 0;
@@ -60,67 +73,80 @@ const VideoHero = () => {
       setUserInteracted(true);
     } catch (error) {
       console.warn('Autoplay with sound failed, starting muted:', error);
-      video.muted = true;
-      setHasAudio(false);
+      // Fallback to muted play
       try {
+        video.muted = true;
+        setHasAudio(false);
         await video.play();
         setIsPlaying(true);
         setShowPlayOverlay(false);
       } catch (mutedError) {
         console.warn('Even muted autoplay failed:', mutedError);
+        // Keep overlay visible for manual interaction
       }
     }
-  }, []);
+  }, [videoLoaded]);
 
   const startVideoMuted = useCallback(async () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !videoLoaded) return;
 
     try {
+      // Safari-specific handling
+      if (isSafari()) {
+        video.load();
+      }
+
       video.muted = true;
       setHasAudio(false);
       video.currentTime = 0;
       
       await video.play();
       setIsPlaying(true);
+      setShowPlayOverlay(false);
     } catch (error) {
       console.warn('Muted autoplay failed:', error);
     }
+  }, [videoLoaded]);
+
+  // Video load handler
+  const handleVideoCanPlay = useCallback(() => {
+    setVideoLoaded(true);
   }, []);
 
   // Handle language changes - restart video
   useEffect(() => {
+    if (!isMounted || !videoLoaded) return;
+    
     const video = videoRef.current;
-    if (video && isMounted) {
+    if (video) {
       video.pause();
       setIsPlaying(false);
       
-      if (isMobileDevice() && !userInteracted) {
-        // On mobile without interaction, start muted
-        startVideoMuted();
+      if ((isMobileDevice() || isSafari()) && !userInteracted) {
+        setShowPlayOverlay(true);
       } else {
-        // On desktop or after user interaction, try with sound
         startVideoWithSound();
       }
     }
-  }, [language, isMounted, userInteracted, startVideoMuted, startVideoWithSound]);
+  }, [language, isMounted, videoLoaded, userInteracted, startVideoWithSound]);
 
   // Handle route changes - pause when leaving home page
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
+    if (video && videoLoaded) {
       if (location.pathname !== '/') {
         video.pause();
         setIsPlaying(false);
       } else {
-        if (isMobileDevice() && !userInteracted) {
-          startVideoMuted();
+        if ((isMobileDevice() || isSafari()) && !userInteracted) {
+          setShowPlayOverlay(true);
         } else {
           startVideoWithSound();
         }
       }
     }
-  }, [location.pathname, userInteracted, startVideoMuted, startVideoWithSound]);
+  }, [location.pathname, userInteracted, videoLoaded, startVideoWithSound]);
 
   const handleVideoEnd = () => {
     setIsPlaying(false);
@@ -128,7 +154,7 @@ const VideoHero = () => {
 
   const handleTogglePlay = () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !videoLoaded) return;
     
     if (isPlaying) {
       video.pause();
@@ -143,7 +169,7 @@ const VideoHero = () => {
 
   const handleToggleAudio = useCallback(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !videoLoaded) return;
     
     if (hasAudio) {
       video.muted = true;
@@ -153,38 +179,38 @@ const VideoHero = () => {
       setHasAudio(true);
       setUserInteracted(true);
     }
-  }, [hasAudio]);
+  }, [hasAudio, videoLoaded]);
 
-  const handlePlayWithSound = () => {
+  const handlePlayWithSound = useCallback(() => {
     setUserInteracted(true);
     startVideoWithSound();
-  };
+  }, [startVideoWithSound]);
 
-  // Enhanced mobile video click handler
-  const handleVideoClick = () => {
-    if (isMobileDevice() && !userInteracted) {
+  // Enhanced mobile video interaction handlers
+  const handleVideoTouch = useCallback((e: React.TouchEvent) => {
+    e.preventDefault();
+    if ((isMobileDevice() || isSafari()) && !userInteracted) {
       handlePlayWithSound();
     }
-  };
+  }, [userInteracted, handlePlayWithSound]);
 
-  // Calculate responsive height with aspect ratio
-  const getVideoHeight = () => {
-    if (isMobile) {
-      return `min(100vh, ${(window.innerWidth * 9) / 16}px)`;
+  const handleVideoClick = useCallback(() => {
+    if ((isMobileDevice() || isSafari()) && !userInteracted) {
+      handlePlayWithSound();
     }
-    return '80vh';
-  };
+  }, [userInteracted, handlePlayWithSound]);
 
   if (!isMounted) {
-    // Return skeleton with fixed dimensions to prevent CLS
+    // Fixed skeleton to prevent CLS
     return (
       <section 
-        className="video-hero-critical loading-skeleton"
+        className="fixed top-0 left-0 w-screen h-screen bg-black loading-skeleton"
         style={{ 
-          height: isMobile ? '56.25vw' : '80vh',
-          maxHeight: '100vh',
           aspectRatio: '16/9',
-          contain: 'layout style paint'
+          contain: 'layout style paint',
+          backgroundImage: `url(${posterSrc})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
         }}
       />
     );
@@ -192,51 +218,52 @@ const VideoHero = () => {
 
   return (
     <section
-      className="video-hero relative overflow-hidden video-hero-optimized"
+      className="fixed top-0 left-0 w-screen h-screen bg-black overflow-hidden"
       style={{ 
-        height: getVideoHeight(),
         aspectRatio: '16/9',
         contain: 'layout style paint',
-        contentVisibility: 'auto'
+        contentVisibility: 'auto',
+        zIndex: 1
       }}
     >
-      {/* Optimized background placeholder with explicit dimensions */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ 
-          backgroundImage: `url(${posterSrc})`,
-          contain: 'layout style paint'
-        }}
-      />
-
+      {/* Full-screen video background */}
       <video
         key={language}
         ref={videoRef}
-        autoPlay
+        autoPlay={!isMobileDevice() && !isSafari()}
         playsInline
         webkit-playsinline="true"
         x-webkit-airplay="allow"
         preload="metadata"
         muted={!hasAudio}
+        controls={false}
+        disablePictureInPicture
         onEnded={handleVideoEnd}
+        onCanPlay={handleVideoCanPlay}
         onClick={handleVideoClick}
-        className="absolute top-0 left-0 w-full h-full object-cover transform-gpu"
+        onTouchStart={handleVideoTouch}
+        className="absolute inset-0 w-full h-full object-cover"
         poster={posterSrc}
         width="1920"
         height="1080"
-        style={{ contain: 'layout style paint' }}
+        style={{ 
+          contain: 'layout style paint',
+          touchAction: 'manipulation'
+        }}
       >
         {useWebM && <source src={videoWebM} type="video/webm" />}
         <source src={videoSrc} type="video/mp4" />
       </video>
 
-      {/* Mobile Play Overlay - Enhanced for Safari */}
-      {showPlayOverlay && isMobileDevice() && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
+      {/* Enhanced Mobile/Safari Play Overlay */}
+      {showPlayOverlay && (isMobileDevice() || isSafari()) && (
+        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-20">
           <Button
             onClick={handlePlayWithSound}
+            onTouchEnd={handlePlayWithSound}
             size="lg"
-            className="bg-white/90 text-black rounded-full shadow-lg hover:bg-white transform hover:scale-105 transition-all duration-300 animate-pulse touch-manipulation"
+            className="bg-white/95 text-black rounded-full shadow-2xl hover:bg-white transform hover:scale-110 transition-all duration-300 animate-pulse min-w-[200px] min-h-[60px] text-lg font-semibold"
+            style={{ touchAction: 'manipulation' }}
             aria-label="Redă videoul cu sunet"
           >
             <Play className="w-8 h-8 mr-3" />
@@ -245,30 +272,34 @@ const VideoHero = () => {
         </div>
       )}
 
-      {/* Video controls */}
-      <div className="absolute top-24 right-4 z-30 flex gap-2">
+      {/* Video controls - positioned relative to viewport */}
+      <div className="fixed top-24 right-4 z-30 flex gap-2">
         <Button 
           onClick={handleTogglePlay} 
           size="icon" 
-          className="bg-white/80 text-black rounded-full shadow transform-gpu touch-manipulation"
+          className="bg-white/90 text-black rounded-full shadow-lg backdrop-blur-sm min-w-[48px] min-h-[48px]"
+          style={{ touchAction: 'manipulation' }}
           aria-label={isPlaying ? "Pauză video" : "Redă video"}
         >
-          {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+          {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
         </Button>
         <Button 
           onClick={handleToggleAudio} 
           size="icon" 
-          className="bg-white/80 text-black rounded-full shadow transform-gpu touch-manipulation"
+          className="bg-white/90 text-black rounded-full shadow-lg backdrop-blur-sm min-w-[48px] min-h-[48px]"
+          style={{ touchAction: 'manipulation' }}
           aria-label={hasAudio ? "Dezactivează sunetul" : "Activează sunetul"}
         >
-          {hasAudio ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+          {hasAudio ? <Volume2 className="w-6 h-6" /> : <VolumeX className="w-6 h-6" />}
         </Button>
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/20 to-black/50 pointer-events-none" />
 
-      <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent transform-gpu">
+      {/* Hero title - positioned relative to viewport */}
+      <div className="fixed bottom-12 left-0 right-0 text-center text-white px-4 z-10">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
           {t('heroTitle')}
         </h1>
       </div>
