@@ -79,6 +79,60 @@
   }
 }
 
+/* Safari-specific fixes for button text visibility */
+@supports (-webkit-appearance: none) {
+  button, .button, a[role="button"] {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  button[class*="bg-orange"] {
+    color: #ffffff !important;
+  }
+  
+  button[class*="text-white"] {
+    color: #ffffff !important;
+  }
+  
+  .bg-orange-500 {
+    color: #ffffff !important;
+  }
+  
+  .text-white {
+    color: #ffffff !important;
+  }
+  
+  /* Ensure Safari renders button text properly */
+  button * {
+    color: inherit;
+  }
+}
+
+/* Enhanced Safari button fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  button, .button {
+    -webkit-text-stroke: 0.01px transparent;
+    text-rendering: geometricPrecision;
+  }
+  
+  /* Force text color for Safari */
+  button.bg-orange-500,
+  a.bg-orange-500 {
+    color: #ffffff !important;
+  }
+  
+  button.text-white,
+  a.text-white {
+    color: #ffffff !important;
+  }
+  
+  /* Force inheritance for child elements */
+  button span,
+  a span {
+    color: inherit !important;
+  }
+}
+
 /* Enhanced CLS Prevention Utilities */
 @layer utilities {
   .layout-stable {

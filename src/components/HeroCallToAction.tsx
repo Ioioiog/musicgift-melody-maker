@@ -18,17 +18,23 @@ const HeroCallToAction = () => {
             <a
               href="/order"
               className="group bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 flex items-center gap-3 min-w-[200px] justify-center"
+              style={{ color: '#ffffff' }}
             >
               <Heart className="w-6 h-6 group-hover:animate-pulse" />
-              {t('getStarted') || 'Get Started'}
+              <span className="text-white font-bold">
+                {t('getStarted') || 'Get Started'}
+              </span>
             </a>
             
             <a
               href="/packages"
               className="group border-2 border-white/60 hover:border-white text-white hover:bg-white/10 font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 backdrop-blur-sm flex items-center gap-3 min-w-[200px] justify-center"
+              style={{ color: '#ffffff' }}
             >
               <Sparkles className="w-6 h-6 group-hover:animate-spin" />
-              {t('viewPackages') || 'View Packages'}
+              <span className="text-white font-bold">
+                {t('viewPackages') || 'View Packages'}
+              </span>
             </a>
           </div>
         </div>
