@@ -8,7 +8,6 @@ import { Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy
 const Navigation = lazy(() => import("@/components/Navigation"));
 const Footer = lazy(() => import("@/components/Footer"));
 const VideoHero = lazy(() => import("@/components/VideoHero"));
-const HeroContent = lazy(() => import("@/components/HeroContent"));
 const AnimatedStepFlow = lazy(() => import("@/components/AnimatedStepFlow"));
 const OptimizedTestimonialSlider = lazy(() => import("@/components/OptimizedTestimonialSlider"));
 const ImpactCards = lazy(() => import("@/components/ImpactCards"));
@@ -59,7 +58,7 @@ const Index = () => {
         <Navigation />
       </Suspense>
       
-      {/* Full-Screen Video Hero Section */}
+      {/* Full-Screen Video Hero Section with Integrated Hero Content */}
       <Suspense fallback={
         <div 
           className="video-hero-critical fixed top-0 left-0 w-screen h-screen bg-black loading-skeleton"
@@ -89,21 +88,6 @@ const Index = () => {
 
         <div className="relative z-10">
           
-          {/* Hero Content Section */}
-          <section 
-            className="py-4 md:py-0 section-container" 
-            aria-labelledby="hero-heading"
-            style={{ contain: 'layout style' }}
-          >
-            <div className="sr-only">
-              <h2 id="hero-heading">Cadouri Muzicale Personalizate - MusicGift.ro</h2>
-              <p>Transformă emoțiile în muzică cu serviciile noastre profesionale de compoziție muzicală personalizată.</p>
-            </div>
-            <Suspense fallback={<LoadingFallback height="h-64" />}>
-              <HeroContent />
-            </Suspense>
-          </section>
-
           {/* Impact Cards Section */}
           <section 
             className="py-2 md:py-4 section-container" 
@@ -119,7 +103,7 @@ const Index = () => {
           {/* Process Flow Section */}
           <section 
             className="py-2 md:py-4 section-container" 
-            aria-labelledby="process-heading"
+            aria-labelledBy="process-heading"
             style={{ contain: 'layout style' }}
           >
             <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
