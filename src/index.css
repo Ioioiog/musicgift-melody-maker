@@ -12,7 +12,7 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
+    --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96%;
     --secondary-foreground: 222.2 84% 4.9%;
@@ -24,13 +24,13 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
   }
 
   .dark {
@@ -40,8 +40,8 @@
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 84% 4.9%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
@@ -52,7 +52,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 94.1%;
+    --ring: 212.7 26.8% 83.9%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -67,36 +67,10 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: "Inter", sans-serif;
-    background-image: url('/uploads/background.webp');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    /* Enhanced performance optimizations */
-    text-rendering: optimizeSpeed;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-display: swap;
   }
 }
 
-/* Critical performance optimizations */
-.critical-resource {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 500px;
-  will-change: auto;
-}
-
-/* Enhanced hardware acceleration */
-.hw-accelerated {
-  transform: translate3d(0, 0, 0);
-  will-change: transform;
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* Optimized scroll animation with reduced motion support */
+/* Optimized scroll animation for statistics */
 @keyframes scroll {
   0% {
     transform: translate3d(0, 0, 0);
@@ -106,187 +80,30 @@
   }
 }
 
-/* Enhanced float animation with hardware acceleration */
-@keyframes float {
-  0%, 100% { 
-    transform: translate3d(0, 0px, 0); 
-  }
-  50% { 
-    transform: translate3d(0, -10px, 0); 
-  }
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+  will-change: transform;
 }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-  will-change: transform;
+/* Line clamp utility */
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Performance optimizations */
+.hw-accelerated {
   transform: translate3d(0, 0, 0);
+  will-change: transform;
   backface-visibility: hidden;
 }
 
-/* Performance optimizations with containment */
-.will-change-transform {
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  contain: layout style paint;
-}
-
-/* Enhanced LCP optimizations */
-.lcp-optimized {
-  content-visibility: auto;
-  will-change: auto;
-  transform: translate3d(0, 0, 0);
-  contain: layout style paint;
-}
-
-/* Performance optimized navigation with containment */
-.nav-optimized {
-  contain: layout style paint;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  isolation: isolate;
-}
-
-/* Optimized fade animation with containment */
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out;
-  will-change: opacity, transform;
-  contain: layout style paint;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 10px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-/* Enhanced pulse animation with hardware acceleration */
-@keyframes optimizedPulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale3d(1, 1, 1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale3d(1.05, 1.05, 1);
-  }
-}
-
-.animate-pulse {
-  animation: optimizedPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  will-change: opacity, transform;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-}
-
-/* Enhanced reduced motion support */
+/* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  .animate-float,
-  .animate-fade-in,
-  .animate-pulse,
-  .hw-accelerated {
-    animation: none;
-    transform: none;
-    will-change: auto;
-  }
-  
-  * {
+  .animate-scroll {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Enhanced performance for media elements */
-video, img {
-  will-change: auto;
-  content-visibility: auto;
-  contain-intrinsic-size: 300px 200px;
-}
-
-/* Optimized background images with containment */
-.bg-cover {
-  background-size: cover;
-  will-change: auto;
-  contain: layout style paint;
-}
-
-/* Enhanced logo optimization for LCP */
-.logo-lcp-optimized {
-  content-visibility: auto;
-  contain-intrinsic-size: 256px 64px;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  contain: layout style paint;
-}
-
-/* Enhanced video hero optimizations */
-.video-hero-optimized {
-  content-visibility: auto;
-  will-change: auto;
-  contain: layout style paint;
-  isolation: isolate;
-}
-
-/* Enhanced defer loading with intersection observer support */
-.defer-load {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 300px;
-  contain: layout style paint;
-}
-
-/* Critical CSS utilities for Core Web Vitals */
-.prevent-cls {
-  contain: layout style paint;
-  content-visibility: auto;
-}
-
-.optimize-lcp {
-  will-change: auto;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-}
-
-/* Enhanced button hover states for better FID */
-button, .clickable {
-  touch-action: manipulation;
-  will-change: transform;
-  transition: transform 0.15s ease-out;
-}
-
-button:hover, .clickable:hover {
-  transform: translate3d(0, -1px, 0);
-}
-
-/* Optimized focus states for accessibility */
-:focus-visible {
-  outline: 2px solid hsl(var(--ring));
-  outline-offset: 2px;
-}
-
-/* Enhanced loading states */
-.loading-skeleton {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.1) 25%,
-    rgba(255, 255, 255, 0.2) 50%,
-    rgba(255, 255, 255, 0.1) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
   }
 }
