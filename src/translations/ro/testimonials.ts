@@ -5,4 +5,9 @@ export const testimonialsTranslations = {
   noTestimonialsYet: "Nu sunt încă mărturii disponibile.",
   submitTestimonial: "Împărtășește Povestea Ta",
   submitTestimonialDesc: "Spune-ne despre experiența ta MusicGift",
+  happyCustomersFromCities: "Clienți Mulțumiți din Orașele pe Care le Deservim",
+  realTestimonialsFromCustomers: "Mărturii reale de la clienți mulțumiți din diferite locații",
+  happyCustomers: "clienți mulțumiți",
+  watchVideo: "Urmărește Video",
+  viewAllTestimonials: "Vezi Toate Mărturiile",
 };

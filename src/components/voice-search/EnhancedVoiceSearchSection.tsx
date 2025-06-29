@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Volume2, MessageCircle } from 'lucide-react';
 import VoiceSearchFAQ from './VoiceSearchFAQ';
-import LocalServicesSection from './LocalServicesSection';
+import TestimonialsByLocationSection from './TestimonialsByLocationSection';
 import IntentBasedContent from './IntentBasedContent';
 import QuickFactsSection from './QuickFactsSection';
 import VoiceSearchTips from './VoiceSearchTips';
@@ -64,8 +64,8 @@ const EnhancedVoiceSearchSection = () => {
         {/* Enhanced FAQ */}
         <VoiceSearchFAQ />
 
-        {/* Local Services */}
-        <LocalServicesSection />
+        {/* Testimonials by Location - replaces LocalServicesSection */}
+        <TestimonialsByLocationSection />
 
         {/* Quick Facts */}
         <QuickFactsSection />
