@@ -291,7 +291,27 @@
     z-index: 10;
   }
 
-  /* REMOVED the old .video-hero-title CSS class to prevent conflicts */
+  /* Fixed positioning for video hero title - simplified approach */
+  .video-hero-title {
+    position: absolute;
+    bottom: 3rem;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    background: rgba(255, 0, 0, 0.3);
+    border: 2px solid yellow;
+  }
+
+  .video-hero-title h1 {
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.6);
+    color: white !important;
+    margin: 0;
+    padding: 10px;
+  }
 
   .video-hero-error {
     position: absolute;

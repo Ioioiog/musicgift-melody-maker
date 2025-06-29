@@ -49,7 +49,7 @@ const VideoHero = () => {
     
     // Test if the title element exists in DOM
     setTimeout(() => {
-      const titleElement = document.querySelector('.video-hero-title h1');
+      const titleElement = document.querySelector('.video-hero-title');
       if (titleElement) {
         console.log('- Title element found in DOM');
         console.log('- Title element text content:', titleElement.textContent);
@@ -347,16 +347,8 @@ const VideoHero = () => {
             )}
           </p>
         </div>
-        <div className="fixed bottom-12 left-0 right-0 text-center z-50">
-          <h1 
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white px-4"
-            style={{ 
-              textShadow: '0 0 20px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.8)',
-              background: 'rgba(255, 0, 0, 0.3)',
-              border: '2px solid yellow',
-              padding: '10px'
-            }}
-          >
+        <div className="video-hero-title">
+          <h1 className="text-4xl md:text-6xl font-bold text-white text-center px-4">
             {heroTitle || heroTitleFallback}
           </h1>
         </div>
@@ -429,18 +421,9 @@ const VideoHero = () => {
       {/* Gradient overlay */}
       <div className="video-hero-gradient" />
 
-      {/* Fixed positioned hero title - simplified positioning */}
-      <div className="fixed bottom-12 left-0 right-0 text-center z-50">
-        <h1 
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white px-4"
-          style={{ 
-            textShadow: '0 0 20px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.6)',
-            color: 'white',
-            background: 'rgba(255, 0, 0, 0.3)',
-            border: '2px solid yellow',
-            padding: '10px'
-          }}
-        >
+      {/* Hero title - now using CSS class for positioning */}
+      <div className="video-hero-title">
+        <h1 className="text-4xl md:text-6xl font-bold text-white text-center px-4">
           {heroTitle || heroTitleFallback}
         </h1>
       </div>
