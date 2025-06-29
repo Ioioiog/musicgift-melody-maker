@@ -1,9 +1,9 @@
-
 import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
+import EnhancedVoiceSearchStructuredData from "@/components/voice-search/EnhancedVoiceSearchStructuredData";
 
 // Lazy load non-critical components
 const Navigation = lazy(() => import("@/components/Navigation"));
@@ -14,9 +14,11 @@ const OptimizedTestimonialSlider = lazy(() => import("@/components/OptimizedTest
 const ImpactCards = lazy(() => import("@/components/ImpactCards"));
 const CollaborationSection = lazy(() => import("@/components/CollaborationSection"));
 const SEOHead = lazy(() => import("@/components/SEOHead"));
-const OptimizedVoiceSearchSection = lazy(() => import("@/components/OptimizedVoiceSearchSection"));
 const WelcomeBanner = lazy(() => import("@/components/WelcomeBanner"));
 const HeroCallToAction = lazy(() => import("@/components/HeroCallToAction"));
+
+// Replace OptimizedVoiceSearchSection with EnhancedVoiceSearchSection
+const EnhancedVoiceSearchSection = lazy(() => import("@/components/voice-search/EnhancedVoiceSearchSection"));
 
 // Enhanced Loading fallback component with fixed dimensions
 const LoadingFallback = ({ className = "", height = "h-32", aspectRatio }: { className?: string; height?: string; aspectRatio?: string }) => (
@@ -44,6 +46,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen" style={{ contain: 'layout style' }}>
+      {/* Enhanced Voice Search Structured Data */}
+      <EnhancedVoiceSearchStructuredData />
+      
       <Suspense fallback={<LoadingFallback className="h-4" />}>
         <SEOHead 
           title="MusicGift.ro - Cadouri Muzicale Personalizate"
@@ -184,9 +189,9 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Optimized Voice Search Section */}
+      {/* Enhanced Voice Search Section */}
       <Suspense fallback={<LoadingFallback height="h-64" />}>
-        <OptimizedVoiceSearchSection />
+        <EnhancedVoiceSearchSection />
       </Suspense>
 
       {/* Collaboration Section */}
