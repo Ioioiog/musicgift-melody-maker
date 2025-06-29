@@ -111,6 +111,14 @@ export const voiceSearchTranslations = {
   useNaturalLanguage: "Folosiți limbajul natural",
   beSpecific: "Fiți specific în întrebări",
   
+  // Missing VoiceSearchTips translations
+  tryTheseQuestions: "Încercați aceste întrebări vocale:",
+  voiceSearchBenefits: "Beneficiile căutării vocale:",
+  handsFreeBrowsing: "Navigare fără mâini în timpul multitaskingului",
+  naturalLanguage: "Puneți întrebări în limbaj natural",
+  quickAnswers: "Obțineți răspunsuri rapide la întrebări specifice",
+  localResults: "Găsiți servicii locale cu ușurință",
+  
   // Additional categories
   ordering: "comandă",
   pricing: "preț",
