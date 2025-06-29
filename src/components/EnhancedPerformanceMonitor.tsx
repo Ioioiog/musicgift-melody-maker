@@ -55,8 +55,8 @@ const EnhancedPerformanceMonitor = () => {
           if (entry.entryType === 'navigation') {
             const navEntry = entry as PerformanceNavigationTiming;
             performanceMetrics.ttfb = navEntry.responseStart - navEntry.requestStart;
-            performanceMetrics.domContentLoaded = navEntry.domContentLoadedEventEnd - navEntry.navigationStart;
-            performanceMetrics.loadEventEnd = navEntry.loadEventEnd - navEntry.navigationStart;
+            performanceMetrics.domContentLoaded = navEntry.domContentLoadedEventEnd - navEntry.fetchStart;
+            performanceMetrics.loadEventEnd = navEntry.loadEventEnd - navEntry.fetchStart;
           }
         }
 

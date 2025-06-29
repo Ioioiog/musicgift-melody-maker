@@ -12,7 +12,7 @@ const WebVitalsReporter = () => {
     const reportWebVitals = async () => {
       try {
         // Dynamic import to reduce bundle size
-        const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
+        const { onCLS, onINP, onFCP, onLCP, onTTFB } = await import('web-vitals');
         
         const sendToAnalytics = ({ name, delta, value, id }: any) => {
           // Send to Google Analytics if available
@@ -36,12 +36,12 @@ const WebVitalsReporter = () => {
           // });
         };
 
-        // Measure all Web Vitals
-        getCLS(sendToAnalytics);
-        getFID(sendToAnalytics);
-        getFCP(sendToAnalytics);
-        getLCP(sendToAnalytics);
-        getTTFB(sendToAnalytics);
+        // Measure all Web Vitals (using updated function names)
+        onCLS(sendToAnalytics);
+        onINP(sendToAnalytics); // INP replaced FID
+        onFCP(sendToAnalytics);
+        onLCP(sendToAnalytics);
+        onTTFB(sendToAnalytics);
         
       } catch (error) {
         console.warn('Web Vitals measurement failed:', error);

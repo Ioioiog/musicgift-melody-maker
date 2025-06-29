@@ -60,8 +60,7 @@ const InternalLinkingOptimizer = () => {
       const walker = document.createTreeWalker(
         element,
         NodeFilter.SHOW_TEXT,
-        null,
-        false
+        null
       );
       
       let node;
