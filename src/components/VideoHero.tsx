@@ -32,46 +32,87 @@ const VideoHero = () => {
   const [userInteracted, setUserInteracted] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [videoFileExists, setVideoFileExists] = useState(true);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
   const videoWebM = `/uploads/${baseName}.webm`;
   const posterSrc = '/uploads/video_placeholder.png';
 
+  // Check if video file exists
+  const checkVideoFile = useCallback(async (url: string) => {
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      return response.ok;
+    } catch (error) {
+      console.warn(`Video file check failed for ${url}:`, error);
+      return false;
+    }
+  }, []);
+
   // Initialize video format support and Safari detection
   useEffect(() => {
     setUseWebM(supportsWebM() && !isSafari());
     setIsMounted(true);
     
-    // Always show play overlay on mobile Safari
+    // Always show play overlay on mobile Safari or mobile devices
     if (isMobileDevice() || isSafari()) {
       setShowPlayOverlay(true);
       setHasAudio(false);
     } else {
       setHasAudio(true);
     }
-  }, []);
+
+    // Check if video files exist
+    const checkFiles = async () => {
+      const mp4Exists = await checkVideoFile(videoSrc);
+      console.log(`Video file exists for ${language}:`, mp4Exists, videoSrc);
+      
+      if (!mp4Exists) {
+        console.warn(`Romanian video file missing: ${videoSrc}`);
+        setVideoError(true);
+        setVideoFileExists(false);
+      } else {
+        setVideoFileExists(true);
+      }
+    };
+
+    checkFiles();
+  }, [language, videoSrc, checkVideoFile]);
 
   const startVideoWithSound = useCallback(async () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !videoFileExists) return;
 
     try {
+      console.log('Starting video with sound on Safari mobile');
+      
       // Safari-specific preparation
       if (isSafari()) {
         video.load();
-        // Wait for video to be ready
+        
+        // Wait for video to be ready with timeout
         await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            video.removeEventListener('canplay', onCanPlay);
+            video.removeEventListener('error', onError);
+            reject(new Error('Video load timeout'));
+          }, 5000);
+
           const onCanPlay = () => {
+            clearTimeout(timeout);
             video.removeEventListener('canplay', onCanPlay);
             video.removeEventListener('error', onError);
             resolve(true);
           };
+          
           const onError = () => {
+            clearTimeout(timeout);
             video.removeEventListener('canplay', onCanPlay);
             video.removeEventListener('error', onError);
             reject(new Error('Video failed to load'));
           };
+          
           video.addEventListener('canplay', onCanPlay);
           video.addEventListener('error', onError);
         });
@@ -86,56 +127,41 @@ const VideoHero = () => {
       setShowPlayOverlay(false);
       setUserInteracted(true);
       setVideoError(false);
+      console.log('Video started successfully with sound');
     } catch (error) {
       console.warn('Video playback with sound failed:', error);
+      
       // Fallback to muted play
       try {
-        video.muted = true;
-        setHasAudio(false);
-        await video.play();
-        setIsPlaying(true);
-        setShowPlayOverlay(false);
-        setUserInteracted(true);
+        const video = videoRef.current;
+        if (video) {
+          video.muted = true;
+          setHasAudio(false);
+          await video.play();
+          setIsPlaying(true);
+          setShowPlayOverlay(false);
+          setUserInteracted(true);
+          console.log('Fallback: Video started muted');
+        }
       } catch (mutedError) {
-        console.warn('Even muted video playback failed:', mutedError);
+        console.error('Even muted video playback failed:', mutedError);
         setVideoError(true);
       }
     }
-  }, []);
-
-  const startVideoMuted = useCallback(async () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    try {
-      if (isSafari()) {
-        video.load();
-      }
-
-      video.muted = true;
-      setHasAudio(false);
-      video.currentTime = 0;
-      
-      await video.play();
-      setIsPlaying(true);
-      setShowPlayOverlay(false);
-      setUserInteracted(true);
-    } catch (error) {
-      console.warn('Muted video playback failed:', error);
-      setVideoError(true);
-    }
-  }, []);
+  }, [videoFileExists]);
 
   // Video load handler
   const handleVideoCanPlay = useCallback(() => {
+    console.log('Video can play - loaded successfully');
     setVideoLoaded(true);
     setVideoError(false);
   }, []);
 
-  const handleVideoError = useCallback(() => {
-    console.warn('Video failed to load');
+  const handleVideoError = useCallback((e: any) => {
+    console.error('Video failed to load:', e);
     setVideoError(true);
     setVideoLoaded(false);
+    setVideoFileExists(false);
   }, []);
 
   // Handle language changes - restart video
@@ -173,7 +199,7 @@ const VideoHero = () => {
 
   const handleTogglePlay = () => {
     const video = videoRef.current;
-    if (!video || !videoLoaded) return;
+    if (!video || !videoLoaded || !videoFileExists) return;
     
     if (isPlaying) {
       video.pause();
@@ -188,7 +214,7 @@ const VideoHero = () => {
 
   const handleToggleAudio = useCallback(() => {
     const video = videoRef.current;
-    if (!video || !videoLoaded) return;
+    if (!video || !videoLoaded || !videoFileExists) return;
     
     if (hasAudio) {
       video.muted = true;
@@ -198,11 +224,12 @@ const VideoHero = () => {
       setHasAudio(true);
       setUserInteracted(true);
     }
-  }, [hasAudio, videoLoaded]);
+  }, [hasAudio, videoLoaded, videoFileExists]);
 
   const handlePlayWithSound = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    console.log('Play button touched');
     setUserInteracted(true);
     startVideoWithSound();
   }, [startVideoWithSound]);
@@ -238,15 +265,45 @@ const VideoHero = () => {
     );
   }
 
+  // Show error state if video file doesn't exist
+  if (!videoFileExists && videoError) {
+    return (
+      <section className="mobile-video-hero">
+        <div 
+          className="mobile-video-placeholder"
+          style={{ 
+            backgroundImage: `url(${posterSrc})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+        <div className="mobile-video-error">
+          <p className="text-white text-center bg-black/60 p-4 rounded">
+            {language === 'ro' 
+              ? 'Videoul în română se încarcă în curând...' 
+              : 'Video is loading, please try refreshing the page.'
+            }
+          </p>
+        </div>
+        {/* Hero title overlay */}
+        <div className="mobile-video-title">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+            {t('heroTitle')}
+          </h1>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="mobile-video-hero">
-      {/* Full-screen video background */}
+      {/* Video with proper 16:9 aspect ratio on mobile */}
       <video
-        key={language}
+        key={`${language}-${videoFileExists}`}
         ref={videoRef}
         autoPlay={false}
-        playsInline
-        preload="none"
+        playsInline={true}
+        preload="metadata"
         muted={!hasAudio}
         controls={false}
         disablePictureInPicture
@@ -260,8 +317,8 @@ const VideoHero = () => {
         width="1920"
         height="1080"
       >
-        {useWebM && <source src={videoWebM} type="video/webm" />}
-        <source src={videoSrc} type="video/mp4" />
+        {useWebM && videoFileExists && <source src={videoWebM} type="video/webm" />}
+        {videoFileExists && <source src={videoSrc} type="video/mp4" />}
       </video>
 
       {/* Mobile/Safari Play Overlay */}
@@ -287,6 +344,7 @@ const VideoHero = () => {
           size="icon" 
           className="mobile-control-button"
           aria-label={isPlaying ? "Pauză video" : "Redă video"}
+          disabled={!videoFileExists}
         >
           {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
         </Button>
@@ -295,6 +353,7 @@ const VideoHero = () => {
           size="icon" 
           className="mobile-control-button"
           aria-label={hasAudio ? "Dezactivează sunetul" : "Activează sunetul"}
+          disabled={!videoFileExists}
         >
           {hasAudio ? <Volume2 className="w-6 h-6" /> : <VolumeX className="w-6 h-6" />}
         </Button>
@@ -311,7 +370,7 @@ const VideoHero = () => {
       </div>
 
       {/* Error state */}
-      {videoError && (
+      {videoError && videoFileExists && (
         <div className="mobile-video-error">
           <p className="text-white text-center">
             {t('videoError', 'Video failed to load. Please refresh the page.')}
