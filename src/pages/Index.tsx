@@ -1,4 +1,3 @@
-
 import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -16,6 +15,7 @@ const CollaborationSection = lazy(() => import("@/components/CollaborationSectio
 const SEOHead = lazy(() => import("@/components/SEOHead"));
 const OptimizedVoiceSearchSection = lazy(() => import("@/components/OptimizedVoiceSearchSection"));
 const WelcomeBanner = lazy(() => import("@/components/WelcomeBanner"));
+const HeroCallToAction = lazy(() => import("@/components/HeroCallToAction"));
 
 // Enhanced Loading fallback component with fixed dimensions
 const LoadingFallback = ({ className = "", height = "h-32", aspectRatio }: { className?: string; height?: string; aspectRatio?: string }) => (
@@ -84,6 +84,11 @@ const Index = () => {
         {/* Welcome Banner - No reserved space to prevent layout jumps */}
         <Suspense fallback={null}>
           <WelcomeBanner />
+        </Suspense>
+
+        {/* Hero Call-to-Action Section - New section after video hero */}
+        <Suspense fallback={<LoadingFallback height="h-48" />}>
+          <HeroCallToAction />
         </Suspense>
 
         <div className="overlay-container" />

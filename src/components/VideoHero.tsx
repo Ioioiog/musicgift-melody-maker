@@ -1,6 +1,6 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Play, Pause, Volume2, VolumeX, Heart, Sparkles } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useLocation } from 'react-router-dom';
@@ -423,39 +423,12 @@ const VideoHero = () => {
       {/* Gradient overlay */}
       <div className="video-hero-gradient" />
 
-      {/* Integrated Hero Content Overlay - moved to bottom */}
+      {/* Simple title overlay - only the main title now */}
       <div className="video-hero-content-overlay">
         <div className="text-center max-w-6xl mx-auto px-4">
-          {/* Main H1 Title */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
             {heroTitle || heroTitleFallback}
           </h1>
-          
-          {/* Subtitle */}
-          <div className="bg-gradient-to-r from-white/10 via-white/15 to-white/10 backdrop-blur-lg rounded-3xl border border-white/20 p-6 md:p-8 shadow-2xl mb-8">
-            <p className="text-lg md:text-xl text-white/90 mb-6 max-w-4xl mx-auto leading-relaxed">
-              {t('heroCtaSubtitle') || 'Let us help you create a personalized musical gift that will be treasured forever'}
-            </p>
-            
-            {/* Call-to-Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a
-                href="/order"
-                className="group bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 flex items-center gap-3 min-w-[200px] justify-center"
-              >
-                <Heart className="w-6 h-6 group-hover:animate-pulse" />
-                {t('getStarted') || 'Get Started'}
-              </a>
-              
-              <a
-                href="/packages"
-                className="group border-2 border-white/60 hover:border-white text-white hover:bg-white/10 font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 backdrop-blur-sm flex items-center gap-3 min-w-[200px] justify-center"
-              >
-                <Sparkles className="w-6 h-6 group-hover:animate-spin" />
-                {t('viewPackages') || 'View Packages'}
-              </a>
-            </div>
-          </div>
         </div>
       </div>
 
