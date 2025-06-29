@@ -34,6 +34,7 @@ const VideoHero = () => {
   const [videoError, setVideoError] = useState(false);
   const [videoFileExists, setVideoFileExists] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isSafariBrowser, setIsSafariBrowser] = useState(false);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
@@ -54,18 +55,26 @@ const VideoHero = () => {
     }
   }, []);
 
-  // Initialize video settings
+  // Initialize video settings and browser detection
   useEffect(() => {
-    setUseWebM(supportsWebM() && !isSafari());
+    const safariDetected = isSafari();
+    const mobileDetected = isMobileDevice();
+    
+    setIsSafariBrowser(safariDetected);
+    setUseWebM(supportsWebM() && !safariDetected);
     setIsMounted(true);
     
-    // Set initial audio state based on device
-    const isMobileSafari = isMobileDevice() || isSafari();
-    if (isMobileSafari) {
+    console.log(`Browser detection - Safari: ${safariDetected}, Mobile: ${mobileDetected}`);
+    
+    // Set initial audio and overlay state based on browser
+    if (safariDetected || mobileDetected) {
       setShowPlayOverlay(true);
       setHasAudio(false);
+      console.log('Safari/Mobile detected - showing play overlay, audio muted');
     } else {
+      setShowPlayOverlay(false);
       setHasAudio(true);
+      console.log('Non-Safari desktop detected - enabling autoplay with sound');
     }
 
     // Check video file existence
@@ -98,7 +107,45 @@ const VideoHero = () => {
     checkFiles();
   }, [language, videoSrc, checkVideoFile]);
 
-  // Simplified video play with sound function
+  // Attempt autoplay for non-Safari browsers
+  const attemptAutoplay = useCallback(async () => {
+    const video = videoRef.current;
+    if (!video || !videoFileExists || isSafariBrowser) {
+      console.log('Skipping autoplay - Safari browser or video not available');
+      return;
+    }
+
+    try {
+      console.log('Attempting autoplay with sound for non-Safari browser');
+      
+      // Reset video to beginning
+      video.currentTime = 0;
+      video.muted = false;
+      
+      await video.play();
+      setIsPlaying(true);
+      setHasAudio(true);
+      setUserInteracted(true);
+      console.log('Autoplay with sound successful');
+      
+    } catch (error) {
+      console.warn('Autoplay with sound failed, trying muted fallback:', error);
+      
+      // Fallback to muted autoplay
+      try {
+        video.muted = true;
+        await video.play();
+        setIsPlaying(true);
+        setHasAudio(false);
+        console.log('Fallback: Autoplay muted successful');
+      } catch (mutedError) {
+        console.error('Even muted autoplay failed:', mutedError);
+        setShowPlayOverlay(true);
+      }
+    }
+  }, [videoFileExists, isSafariBrowser]);
+
+  // Simplified video play with sound function for Safari manual interaction
   const startVideoWithSound = useCallback(async () => {
     const video = videoRef.current;
     if (!video || !videoFileExists) {
@@ -107,41 +154,22 @@ const VideoHero = () => {
     }
 
     try {
-      console.log('Starting video with sound');
+      console.log('Starting video with sound (manual interaction)');
       
       // Reset video to beginning
       video.currentTime = 0;
       video.muted = false;
       setHasAudio(true);
       
-      // For Safari, ensure video is loaded before playing
-      if (isSafari() && video.readyState < 2) {
-        console.log('Safari: waiting for video to load...');
-        await new Promise((resolve, reject) => {
-          const timeout = setTimeout(() => {
-            reject(new Error('Video load timeout'));
-          }, 5000);
-
-          const onCanPlay = () => {
-            clearTimeout(timeout);
-            video.removeEventListener('canplay', onCanPlay);
-            resolve(true);
-          };
-          
-          video.addEventListener('canplay', onCanPlay);
-          video.load();
-        });
-      }
-      
       await video.play();
       setIsPlaying(true);
       setShowPlayOverlay(false);
       setUserInteracted(true);
       setVideoError(false);
-      console.log('Video started successfully with sound');
+      console.log('Manual video start successful with sound');
       
     } catch (error) {
-      console.warn('Video playback with sound failed, trying muted:', error);
+      console.warn('Manual video playback with sound failed, trying muted:', error);
       
       // Fallback to muted playback
       try {
@@ -151,7 +179,7 @@ const VideoHero = () => {
         setIsPlaying(true);
         setShowPlayOverlay(false);
         setUserInteracted(true);
-        console.log('Fallback: Video started muted');
+        console.log('Fallback: Manual video started muted');
       } catch (mutedError) {
         console.error('Even muted video playback failed:', mutedError);
         setVideoError(true);
@@ -166,7 +194,12 @@ const VideoHero = () => {
     setVideoLoaded(true);
     setVideoError(false);
     setErrorMessage('');
-  }, []);
+    
+    // Attempt autoplay for non-Safari browsers once video is ready
+    if (!isSafariBrowser && !userInteracted) {
+      attemptAutoplay();
+    }
+  }, [isSafariBrowser, userInteracted, attemptAutoplay]);
 
   const handleVideoError = useCallback((e: any) => {
     console.error('Video failed to load:', e);
@@ -187,13 +220,14 @@ const VideoHero = () => {
       setVideoLoaded(false);
       setVideoError(false);
       setErrorMessage('');
+      setUserInteracted(false);
       
-      // Reset overlay for mobile/Safari
-      if (isMobileDevice() || isSafari()) {
+      // Reset overlay for Safari/mobile
+      if (isSafariBrowser || isMobileDevice()) {
         setShowPlayOverlay(true);
       }
     }
-  }, [language, isMounted]);
+  }, [language, isMounted, isSafariBrowser]);
 
   // Handle route changes
   useEffect(() => {
@@ -237,7 +271,7 @@ const VideoHero = () => {
     }
   }, [hasAudio, videoLoaded, videoFileExists]);
 
-  // Simplified touch/click handlers
+  // Simplified touch/click handlers for Safari
   const handlePlayButtonClick = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -293,14 +327,14 @@ const VideoHero = () => {
 
   return (
     <section className="video-hero-container">
-      {/* Video with proper aspect ratio */}
+      {/* Video with browser-specific autoplay settings */}
       <video
         key={`${language}-${videoFileExists}`}
         ref={videoRef}
-        autoPlay={false}
+        autoPlay={!isSafariBrowser} // Enable autoplay for non-Safari browsers
         playsInline={true}
         preload="metadata"
-        muted={!hasAudio}
+        muted={isSafariBrowser ? true : !hasAudio} // Safari starts muted, others with sound
         controls={false}
         disablePictureInPicture
         onEnded={handleVideoEnd}
@@ -315,7 +349,7 @@ const VideoHero = () => {
         {videoFileExists && <source src={videoSrc} type="video/mp4" />}
       </video>
 
-      {/* Play overlay for mobile/Safari */}
+      {/* Play overlay - only shown for Safari/mobile browsers */}
       {showPlayOverlay && (
         <div className="video-hero-overlay">
           <Button
