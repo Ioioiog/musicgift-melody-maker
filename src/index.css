@@ -147,8 +147,8 @@
     user-select: none;
   }
 
-  /* Mobile Video Hero Styles - Fixed for 16:9 aspect ratio */
-  .mobile-video-hero {
+  /* Simplified Video Hero Styles - Fixed 16:9 aspect ratio */
+  .video-hero-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -162,52 +162,47 @@
     justify-content: center;
   }
 
-  /* Mobile video element with proper 16:9 aspect ratio */
-  .mobile-video-element {
+  /* Proper 16:9 aspect ratio video that doesn't get cut */
+  .video-hero-element {
+    width: 100vw;
+    height: 56.25vw; /* 16:9 aspect ratio */
+    max-height: 100vh;
+    max-width: 177.78vh; /* For tall screens */
+    object-fit: contain; /* Prevents cutting, shows full video */
+    background-color: #000;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100vw;
-    height: 56.25vw; /* 16:9 aspect ratio */
-    min-height: 100vh;
-    min-width: 177.78vh; /* Ensures full coverage on tall screens */
-    object-fit: contain;
-    background-color: #000;
   }
 
-  /* Responsive adjustments for mobile video */
+  /* Mobile specific adjustments */
   @media (max-width: 768px) {
-    .mobile-video-element {
+    .video-hero-element {
       width: 100vw;
-      height: 56.25vw; /* 16:9 aspect ratio */
-      min-height: auto;
-      min-width: auto;
-      object-fit: contain;
-    }
-    
-    /* If screen is taller than 16:9, center the video */
-    @media (min-aspect-ratio: 16/9) {
-      .mobile-video-element {
-        width: 100vw;
-        height: 56.25vw;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-    
-    /* If screen is wider than 16:9, fit to height */
-    @media (max-aspect-ratio: 16/9) {
-      .mobile-video-element {
-        width: 177.78vh;
-        height: 100vh;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
+      height: 56.25vw; /* Maintain 16:9 */
+      max-height: 100vh;
+      object-fit: contain; /* Show full video without cutting */
     }
   }
 
-  .mobile-video-placeholder {
+  /* For very tall screens (taller than 16:9) */
+  @media (min-aspect-ratio: 16/9) {
+    .video-hero-element {
+      width: 100vw;
+      height: 56.25vw;
+    }
+  }
+
+  /* For very wide screens (wider than 16:9) */
+  @media (max-aspect-ratio: 16/9) {
+    .video-hero-element {
+      width: 177.78vh;
+      height: 100vh;
+    }
+  }
+
+  .video-hero-placeholder {
     position: absolute;
     top: 0;
     left: 0;
@@ -216,7 +211,7 @@
     background-color: #000;
   }
 
-  .mobile-video-overlay {
+  .video-hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -230,7 +225,7 @@
     touch-action: manipulation;
   }
 
-  .mobile-play-button {
+  .video-hero-play-button {
     background: rgba(255, 255, 255, 0.95);
     color: #000;
     border-radius: 9999px;
@@ -247,13 +242,13 @@
     cursor: pointer;
   }
 
-  .mobile-play-button:hover,
-  .mobile-play-button:active {
+  .video-hero-play-button:hover,
+  .video-hero-play-button:active {
     background: rgba(255, 255, 255, 1);
     transform: scale(1.05);
   }
 
-  .mobile-video-controls {
+  .video-hero-controls {
     position: fixed;
     top: 6rem;
     right: 1rem;
@@ -262,7 +257,7 @@
     gap: 0.5rem;
   }
 
-  .mobile-control-button {
+  .video-hero-control-button {
     background: rgba(255, 255, 255, 0.9);
     color: #000;
     border-radius: 9999px;
@@ -274,17 +269,17 @@
     cursor: pointer;
   }
 
-  .mobile-control-button:hover,
-  .mobile-control-button:active {
+  .video-hero-control-button:hover,
+  .video-hero-control-button:active {
     background: rgba(255, 255, 255, 1);
   }
 
-  .mobile-control-button:disabled {
+  .video-hero-control-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .mobile-video-gradient {
+  .video-hero-gradient {
     position: absolute;
     top: 0;
     left: 0;
@@ -300,7 +295,7 @@
     z-index: 10;
   }
 
-  .mobile-video-title {
+  .video-hero-title {
     position: fixed;
     bottom: 3rem;
     left: 0;
@@ -311,7 +306,7 @@
     z-index: 10;
   }
 
-  .mobile-video-error {
+  .video-hero-error {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -408,7 +403,7 @@
     background: rgba(255, 255, 255, 0.1);
   }
   
-  .mobile-play-button {
+  .video-hero-play-button {
     animation: none;
   }
 }
