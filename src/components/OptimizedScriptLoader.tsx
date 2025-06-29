@@ -6,7 +6,6 @@ declare global {
   interface Window {
     gtag?: (...args: any[]) => void;
     dataLayer?: any[];
-    requestIdleCallback?: (callback: IdleRequestCallback) => number;
   }
 }
 
@@ -88,7 +87,7 @@ const OptimizedScriptLoader = () => {
     );
 
     // Load idle scripts when browser is idle
-    if ('requestIdleCallback' in window) {
+    if ('requestIdleCallback' in window && typeof window.requestIdleCallback === 'function') {
       window.requestIdleCallback(() => {
         loadScriptsByPriority('idle');
       });
