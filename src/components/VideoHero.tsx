@@ -347,15 +347,14 @@ const VideoHero = () => {
             )}
           </p>
         </div>
-        <div className="video-hero-title">
+        <div className="fixed bottom-12 left-0 right-0 text-center z-50">
           <h1 
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white px-4"
             style={{ 
-              zIndex: 50, 
-              position: 'relative',
               textShadow: '0 0 20px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.8)',
-              backgroundColor: 'rgba(255, 0, 0, 0.3)', // Temporary debug background
-              border: '2px solid yellow' // Temporary debug border
+              background: 'rgba(255, 0, 0, 0.3)',
+              border: '2px solid yellow',
+              padding: '10px'
             }}
           >
             {heroTitle || heroTitleFallback}
@@ -430,17 +429,15 @@ const VideoHero = () => {
       {/* Gradient overlay */}
       <div className="video-hero-gradient" />
 
-      {/* Hero title with enhanced debugging */}
-      <div className="video-hero-title" style={{ zIndex: 50 }}>
+      {/* Fixed positioned hero title - simplified positioning */}
+      <div className="fixed bottom-12 left-0 right-0 text-center z-50">
         <h1 
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white px-4"
           style={{ 
-            zIndex: 51, 
-            position: 'relative',
             textShadow: '0 0 20px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.6)',
-            color: 'white !important',
-            backgroundColor: 'rgba(255, 0, 0, 0.3)', // Temporary debug background
-            border: '2px solid yellow', // Temporary debug border
+            color: 'white',
+            background: 'rgba(255, 0, 0, 0.3)',
+            border: '2px solid yellow',
             padding: '10px'
           }}
         >
