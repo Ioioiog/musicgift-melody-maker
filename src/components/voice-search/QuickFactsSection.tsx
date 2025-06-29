@@ -1,7 +1,7 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Clock, Star, Music, Shield, Award, Headphones } from 'lucide-react';
+import { Clock, Star, Music, Award } from 'lucide-react';
 
 const QuickFactsSection = () => {
   const { t } = useLanguage();
@@ -26,22 +26,10 @@ const QuickFactsSection = () => {
       color: 'text-purple-600'
     },
     {
-      icon: Shield,
-      title: t('moneyBackGuarantee', 'Money-Back Guarantee'),
-      description: t('moneyBackGuaranteeDesc', '100% satisfaction guaranteed or your money back'),
-      color: 'text-blue-600'
-    },
-    {
       icon: Award,
       title: t('awardWinning', 'Award-Winning'),
       description: t('awardWinningDesc', 'Recognized for excellence in personalized music composition'),
       color: 'text-orange-500'
-    },
-    {
-      icon: Headphones,
-      title: t('studioQuality', 'Studio Quality'),
-      description: t('studioQualityDesc', 'Professional recording and mastering in state-of-the-art studios'),
-      color: 'text-indigo-600'
     }
   ];
 
