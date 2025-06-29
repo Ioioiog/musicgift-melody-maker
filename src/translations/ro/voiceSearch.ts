@@ -1,4 +1,5 @@
 
+
 export const voiceSearchTranslations = {
   // Voice Search FAQ
   voiceSearchFaqTitle: "Întrebări Frecvente despre Cadourile Muzicale",
@@ -119,5 +120,33 @@ export const voiceSearchTranslations = {
   timing: "programare",
   specific: "specific",
   location: "locație",
-  relationship: "relație"
+  relationship: "relație",
+
+  // Intent-Based Content translations
+  whyChooseUs: "De ce să alegeți muzica personalizată?",
+  uniqueMemories: "Creează amintiri unice și de durată, spre deosebire de orice alt cadou",
+  emotionalConnection: "Construiește conexiuni emoționale profunde prin povestire personalizată",
+  professionalQuality: "Calitate profesională de studio cu compozitori experimentați",
+  affordablePrice: "Mai semnificativ decât bijuteriile scumpe, mai durabil decât florile",
+
+  perfectFor: "Perfect pentru fiecare ocazie",
+  weddings: "Nunți - Melodii pentru prima dans și muzică de ceremonie",
+  anniversaries: "Aniversări - Sărbătorind călătoria voastră de dragoste",
+  birthdays: "Zile de naștere - Sărbători importante și omagii personale",
+  valentines: "Ziua Îndrăgostiților - Declarații romantice de iubire",
+  holidays: "Sărbători - Crăciun, Anul Nou, sărbătorirea Paștelor",
+
+  whoItsFor: "Pentru cine este",
+  forSpouses: "Soți - Parteneri romantici care caută cadouri pline de sens",
+  forParents: "Părinți - Copii care omagiază poveștile părinților lor",
+  forCouples: "Cupluri - Sărbătorind momentele importante din relație",
+  forFriends: "Prieteni - Comemorări unice ale prieteniei",
+  forBusinesses: "Afaceri - Evenimente corporative și sărbători de echipă",
+
+  emotionalBenefits: "Beneficii emoționale",
+  touchesHearts: "Atinge inimile în moduri în care cadourile materiale nu pot",
+  preservesMemories: "Păstrează amintirile prețioase în formă muzicală",
+  showsThoughtfulness: "Demonstrează gândire profundă și grijă",
+  createsLegacy: "Creează o moștenire muzicală pentru generațiile viitoare"
 };
+
