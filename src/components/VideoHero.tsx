@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
@@ -317,7 +316,7 @@ const VideoHero = () => {
           </p>
         </div>
         <div className="video-hero-title">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
             {t('heroTitle')}
           </h1>
         </div>
@@ -392,7 +391,7 @@ const VideoHero = () => {
 
       {/* Hero title */}
       <div className="video-hero-title">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
           {t('heroTitle')}
         </h1>
       </div>
