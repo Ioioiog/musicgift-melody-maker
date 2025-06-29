@@ -12,7 +12,6 @@ const WelcomeBanner: React.FC = () => {
   const { t, language } = useLanguage();
   const { isCookieAllowed } = useCookieContext();
   const [isVisible, setIsVisible] = useState(false);
-  const [isFirstVisit, setIsFirstVisit] = useState(false);
 
   useEffect(() => {
     // Only show banner if analytics cookies are allowed
@@ -20,17 +19,8 @@ const WelcomeBanner: React.FC = () => {
       return;
     }
 
-    // Check if this is first visit
-    const hasVisited = localStorage.getItem('musicgift_first_visit');
-    if (!hasVisited) {
-      setIsFirstVisit(true);
-      localStorage.setItem('musicgift_first_visit', 'true');
-    }
-  }, [isCookieAllowed]);
-
-  useEffect(() => {
-    // Show banner when location is loaded and it's first visit
-    if (isFirstVisit && location && !loading) {
+    // Show banner when location is loaded
+    if (location && !loading) {
       setIsVisible(true);
       
       // Auto-dismiss after 10 seconds
@@ -40,7 +30,7 @@ const WelcomeBanner: React.FC = () => {
       
       return () => clearTimeout(timer);
     }
-  }, [isFirstVisit, location, loading]);
+  }, [location, loading, isCookieAllowed]);
 
   const getWelcomeMessage = (): string => {
     if (!location) return t('welcomeDefault', 'Welcome to MusicGift!');
@@ -65,7 +55,7 @@ const WelcomeBanner: React.FC = () => {
     setIsVisible(false);
   };
 
-  if (!isFirstVisit || loading) {
+  if (loading) {
     return null;
   }
 
