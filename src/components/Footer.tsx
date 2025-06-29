@@ -211,7 +211,7 @@ const Footer = () => {
               className="text-center text-xs text-gray-600 border-t border-gray-300 pt-6"
             >
               <p>{t('copyright', `© ${currentYear} MusicGift.ro. All rights reserved. Made by RED DOMAIN with ❤️ for music lovers`)}</p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </footer>
