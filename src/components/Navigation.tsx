@@ -163,13 +163,13 @@ const Navigation = () => {
   }];
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
   return <>
-      {/* Background behind navbar */}
+      {/* Background behind navbar - Fixed z-index */}
       <div style={{
       backgroundImage: 'url(/uploads/c84c3950-498f-4375-9214-40fe7004aa5f.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
-    }} className="fixed top-0 left-0 w-full h-8 sm:h-10 z-1"></div>
+    }} className="fixed top-0 left-0 w-full h-8 sm:h-10 z-0"></div>
 
       {/* Floating Logo - Mobile responsive positioning and sizing */}
       <div className="fixed top-2 left-1 sm:top-3 sm:left-5 md:top-4 md:left-6 z-50">

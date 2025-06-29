@@ -103,13 +103,6 @@
     pointer-events: none;
   }
   
-  .welcome-banner-space {
-    min-height: 120px;
-    contain: layout style;
-    content-visibility: auto;
-    contain-intrinsic-size: 100vw 120px;
-  }
-  
   .stats-section {
     min-height: 80px;
     contain: layout style;
@@ -121,6 +114,36 @@
     font-size-adjust: 0.5;
     line-height: 1.5;
     contain: layout style;
+  }
+
+  /* Mobile Safari Video Optimizations */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Video Hero Mobile Fixes */
+  .video-hero-optimized {
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (max-width: 768px) {
+    .video-hero-optimized {
+      height: auto;
+      min-height: 50vh;
+    }
+    
+    .video-hero-optimized video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   }
 }
 

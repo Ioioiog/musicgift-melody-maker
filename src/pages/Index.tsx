@@ -1,4 +1,3 @@
-
 import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -53,15 +52,13 @@ const Index = () => {
         <Navigation />
       </Suspense>
       
-      {/* Video Hero Section with Reserved Space */}
-      <div className="video-hero-critical">
-        <Suspense fallback={<LoadingFallback className="video-hero-critical" height="h-full" />}>
-          <VideoHero />
-        </Suspense>
-      </div>
+      {/* Video Hero Section - No reserved space */}
+      <Suspense fallback={<LoadingFallback className="video-hero-critical" height="h-full" />}>
+        <VideoHero />
+      </Suspense>
 
-      {/* Welcome Banner with Reserved Space */}
-      <Suspense fallback={<div className="welcome-banner-space" />}>
+      {/* Welcome Banner - No reserved space */}
+      <Suspense fallback={null}>
         <WelcomeBanner />
       </Suspense>
 

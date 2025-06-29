@@ -20,7 +20,7 @@ const VideoHero = () => {
   const location = useLocation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMobile = useIsMobile();
-  const [hasAudio, setHasAudio] = useState(false); // Start with audio disabled for mobile
+  const [hasAudio, setHasAudio] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [useWebM, setUseWebM] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -66,6 +66,7 @@ const VideoHero = () => {
       try {
         await video.play();
         setIsPlaying(true);
+        setShowPlayOverlay(false);
       } catch (mutedError) {
         console.warn('Even muted autoplay failed:', mutedError);
       }
@@ -160,6 +161,13 @@ const VideoHero = () => {
     startVideoWithSound();
   };
 
+  // Enhanced mobile video click handler
+  const handleVideoClick = () => {
+    if (isMobileDevice() && !userInteracted) {
+      handlePlayWithSound();
+    }
+  };
+
   const mobileHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
 
   if (!isMounted) return null;
@@ -180,23 +188,25 @@ const VideoHero = () => {
         autoPlay
         playsInline
         webkit-playsinline="true"
+        x-webkit-airplay="allow"
         preload="metadata"
         muted={!hasAudio}
         onEnded={handleVideoEnd}
-        className={`absolute ${isMobile ? 'top-16' : 'top-0'} left-0 w-full ${isMobile ? 'h-auto' : 'h-full'} object-cover hw-accelerated`}
+        onClick={handleVideoClick}
+        className={`absolute ${isMobile ? 'top-0' : 'top-0'} left-0 w-full ${isMobile ? 'h-full object-cover' : 'h-full object-cover'} hw-accelerated cursor-pointer`}
         poster={posterSrc}
       >
         {useWebM && <source src={videoWebM} type="video/webm" />}
         <source src={videoSrc} type="video/mp4" />
       </video>
 
-      {/* Mobile Play Overlay */}
+      {/* Mobile Play Overlay - Enhanced for Safari */}
       {showPlayOverlay && isMobileDevice() && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
           <Button
             onClick={handlePlayWithSound}
             size="lg"
-            className="bg-white/90 text-black rounded-full shadow-lg hover:bg-white transform hover:scale-105 transition-all duration-300 animate-pulse"
+            className="bg-white/90 text-black rounded-full shadow-lg hover:bg-white transform hover:scale-105 transition-all duration-300 animate-pulse touch-manipulation"
             aria-label="Redă videoul cu sunet"
           >
             <Play className="w-8 h-8 mr-3" />
@@ -210,7 +220,7 @@ const VideoHero = () => {
         <Button 
           onClick={handleTogglePlay} 
           size="icon" 
-          className="bg-white/80 text-black rounded-full shadow hw-accelerated"
+          className="bg-white/80 text-black rounded-full shadow hw-accelerated touch-manipulation"
           aria-label={isPlaying ? "Pauză video" : "Redă video"}
         >
           {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
@@ -218,7 +228,7 @@ const VideoHero = () => {
         <Button 
           onClick={handleToggleAudio} 
           size="icon" 
-          className="bg-white/80 text-black rounded-full shadow hw-accelerated"
+          className="bg-white/80 text-black rounded-full shadow hw-accelerated touch-manipulation"
           aria-label={hasAudio ? "Dezactivează sunetul" : "Activează sunetul"}
         >
           {hasAudio ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
