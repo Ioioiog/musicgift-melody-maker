@@ -290,17 +290,17 @@
     z-index: 10;
   }
 
-  /* Integrated hero content overlay */
+  /* Integrated hero content overlay - positioned at bottom */
   .video-hero-content-overlay {
     position: absolute;
-    top: 50%;
+    bottom: 2rem;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     width: 100%;
     z-index: 50;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     padding: 1rem;
   }
 

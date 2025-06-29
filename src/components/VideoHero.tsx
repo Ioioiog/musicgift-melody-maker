@@ -423,7 +423,7 @@ const VideoHero = () => {
       {/* Gradient overlay */}
       <div className="video-hero-gradient" />
 
-      {/* Integrated Hero Content Overlay */}
+      {/* Integrated Hero Content Overlay - moved to bottom */}
       <div className="video-hero-content-overlay">
         <div className="text-center max-w-6xl mx-auto px-4">
           {/* Main H1 Title */}
