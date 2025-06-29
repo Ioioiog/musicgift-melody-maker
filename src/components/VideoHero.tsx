@@ -28,12 +28,44 @@ const VideoHero = () => {
   const [useWebM, setUseWebM] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPlayOverlay, setShowPlayOverlay] = useState(false);
-  const [userInteracted, setUserInteracted] = useState(false);
+  const [userInteracted, setUserInterracted] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [videoFileExists, setVideoFileExists] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSafariBrowser, setIsSafariBrowser] = useState(false);
+
+  // Debug translation context
+  const heroTitle = t('heroTitle');
+  const heroTitleFallback = 'Transformă Emoțiile în Muzică';
+  
+  // Add debug logging
+  useEffect(() => {
+    console.log('VideoHero Debug Info:');
+    console.log('- Language:', language);
+    console.log('- Hero Title from translation:', heroTitle);
+    console.log('- Translation function type:', typeof t);
+    console.log('- Is mounted:', isMounted);
+    
+    // Test if the title element exists in DOM
+    setTimeout(() => {
+      const titleElement = document.querySelector('.video-hero-title h1');
+      if (titleElement) {
+        console.log('- Title element found in DOM');
+        console.log('- Title element text content:', titleElement.textContent);
+        console.log('- Title element computed styles:', {
+          color: window.getComputedStyle(titleElement).color,
+          zIndex: window.getComputedStyle(titleElement).zIndex,
+          position: window.getComputedStyle(titleElement).position,
+          display: window.getComputedStyle(titleElement).display,
+          opacity: window.getComputedStyle(titleElement).opacity,
+          visibility: window.getComputedStyle(titleElement).visibility
+        });
+      } else {
+        console.log('- Title element NOT found in DOM');
+      }
+    }, 1000);
+  }, [language, heroTitle, t, isMounted]);
 
   const baseName = language === 'ro' ? 'musicgift_ro' : 'musicgift_eng';
   const videoSrc = `/uploads/${baseName}.mp4`;
@@ -124,7 +156,7 @@ const VideoHero = () => {
       await video.play();
       setIsPlaying(true);
       setHasAudio(true);
-      setUserInteracted(true);
+      setUserInterracted(true);
       console.log('Autoplay with sound successful');
       
     } catch (error) {
@@ -163,7 +195,7 @@ const VideoHero = () => {
       await video.play();
       setIsPlaying(true);
       setShowPlayOverlay(false);
-      setUserInteracted(true);
+      setUserInterracted(true);
       setVideoError(false);
       console.log('Manual video start successful with sound');
       
@@ -177,7 +209,7 @@ const VideoHero = () => {
         await video.play();
         setIsPlaying(true);
         setShowPlayOverlay(false);
-        setUserInteracted(true);
+        setUserInterracted(true);
         console.log('Fallback: Manual video started muted');
       } catch (mutedError) {
         console.error('Even muted video playback failed:', mutedError);
@@ -219,7 +251,7 @@ const VideoHero = () => {
       setVideoLoaded(false);
       setVideoError(false);
       setErrorMessage('');
-      setUserInteracted(false);
+      setUserInterracted(false);
       
       // Reset overlay for Safari/mobile
       if (isSafariBrowser || isMobileDevice()) {
@@ -266,7 +298,7 @@ const VideoHero = () => {
     } else {
       video.muted = false;
       setHasAudio(true);
-      setUserInteracted(true);
+      setUserInterracted(true);
     }
   }, [hasAudio, videoLoaded, videoFileExists]);
 
@@ -275,7 +307,7 @@ const VideoHero = () => {
     e.preventDefault();
     e.stopPropagation();
     console.log('Play button clicked/touched');
-    setUserInteracted(true);
+    setUserInterracted(true);
     startVideoWithSound();
   }, [startVideoWithSound]);
 
@@ -316,8 +348,17 @@ const VideoHero = () => {
           </p>
         </div>
         <div className="video-hero-title">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
-            {t('heroTitle')}
+          <h1 
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white"
+            style={{ 
+              zIndex: 50, 
+              position: 'relative',
+              textShadow: '0 0 20px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.8)',
+              backgroundColor: 'rgba(255, 0, 0, 0.3)', // Temporary debug background
+              border: '2px solid yellow' // Temporary debug border
+            }}
+          >
+            {heroTitle || heroTitleFallback}
           </h1>
         </div>
       </section>
@@ -389,10 +430,21 @@ const VideoHero = () => {
       {/* Gradient overlay */}
       <div className="video-hero-gradient" />
 
-      {/* Hero title */}
-      <div className="video-hero-title">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
-          {t('heroTitle')}
+      {/* Hero title with enhanced debugging */}
+      <div className="video-hero-title" style={{ zIndex: 50 }}>
+        <h1 
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white"
+          style={{ 
+            zIndex: 51, 
+            position: 'relative',
+            textShadow: '0 0 20px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.6)',
+            color: 'white !important',
+            backgroundColor: 'rgba(255, 0, 0, 0.3)', // Temporary debug background
+            border: '2px solid yellow', // Temporary debug border
+            padding: '10px'
+          }}
+        >
+          {heroTitle || heroTitleFallback}
         </h1>
       </div>
 
