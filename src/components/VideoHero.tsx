@@ -347,9 +347,10 @@ const VideoHero = () => {
             )}
           </p>
         </div>
-        <div className="video-hero-content-overlay">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 px-4">
+        {/* Updated content overlay with mobile spacing */}
+        <div className="absolute bottom-2 sm:bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 w-full z-50 flex justify-center align-items-flex-end px-4 pt-20 sm:pt-16 md:pt-8">
+          <div className="text-center max-w-6xl mx-auto">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight px-4">
               {heroTitle || heroTitleFallback}
             </h1>
           </div>
@@ -423,10 +424,10 @@ const VideoHero = () => {
       {/* Gradient overlay */}
       <div className="video-hero-gradient" />
 
-      {/* Simple title overlay - only the main title now */}
-      <div className="video-hero-content-overlay">
-        <div className="text-center max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+      {/* Updated title overlay with mobile-specific positioning */}
+      <div className="absolute bottom-2 sm:bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 w-full z-50 flex justify-center align-items-flex-end px-4 pt-20 sm:pt-16 md:pt-8">
+        <div className="text-center max-w-6xl mx-auto">
+          <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight px-4">
             {heroTitle || heroTitleFallback}
           </h1>
         </div>
