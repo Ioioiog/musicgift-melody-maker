@@ -116,6 +116,22 @@
     contain: layout style;
   }
 
+  /* Cookie Banner CLS Prevention */
+  .cookie-banner-container {
+    min-height: 140px;
+    contain: layout style;
+    content-visibility: auto;
+    contain-intrinsic-size: 100vw 140px;
+  }
+
+  /* Enhanced GPU Acceleration */
+  .transform-gpu {
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
   /* Mobile Safari Video Optimizations */
   .touch-manipulation {
     touch-action: manipulation;
@@ -128,12 +144,15 @@
   .video-hero-optimized {
     position: relative;
     overflow: hidden;
+    contain: layout style paint;
+    content-visibility: auto;
   }
 
   @media (max-width: 768px) {
     .video-hero-optimized {
       height: auto;
       min-height: 50vh;
+      aspect-ratio: 16/9;
     }
     
     .video-hero-optimized video {
@@ -144,6 +163,15 @@
       top: 0;
       left: 0;
     }
+  }
+
+  /* Responsive Aspect Ratios */
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  .aspect-square {
+    aspect-ratio: 1 / 1;
   }
 }
 
@@ -160,6 +188,7 @@
 .animate-scroll {
   animation: scroll 30s linear infinite;
   will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 /* Line clamp utility */
@@ -177,7 +206,7 @@
   backface-visibility: hidden;
 }
 
-/* Enhanced Loading Skeleton */
+/* Enhanced Loading Skeleton with reduced motion */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -193,6 +222,7 @@
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   contain: layout style paint;
+  content-visibility: auto;
 }
 
 /* Reduced motion preferences */
@@ -207,6 +237,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  
+  .loading-skeleton {
+    animation: none;
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
 /* Font Loading Optimization */
@@ -217,4 +252,48 @@
   font-display: swap;
   src: url('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Critical CSS for initial load stability */
+.video-hero-critical {
+  height: 60vh;
+  position: relative;
+  overflow: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: 100vw 60vh;
+  contain: layout style paint;
+  background-color: #000;
+  background-image: url('/uploads/video_placeholder.png');
+  background-size: cover;
+  background-position: center;
+  aspect-ratio: 16/9;
+}
+
+@media (min-width: 640px) {
+  .video-hero-critical { 
+    height: 70vh;
+    contain-intrinsic-size: 100vw 70vh;
+  }
+}
+
+@media (min-width: 768px) {
+  .video-hero-critical { 
+    height: 80vh;
+    contain-intrinsic-size: 100vw 80vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .video-hero-critical { 
+    height: 100vh;
+    contain-intrinsic-size: 100vw 100vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .video-hero-critical {
+    height: 56.25vw;
+    max-height: 100vh;
+    aspect-ratio: 16/9;
+  }
 }

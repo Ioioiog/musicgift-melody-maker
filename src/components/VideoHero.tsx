@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
@@ -168,19 +167,47 @@ const VideoHero = () => {
     }
   };
 
-  const mobileHeight = isMobile ? `${(window.innerWidth * 9) / 16}px` : undefined;
+  // Calculate responsive height with aspect ratio
+  const getVideoHeight = () => {
+    if (isMobile) {
+      return `min(100vh, ${(window.innerWidth * 9) / 16}px)`;
+    }
+    return '80vh';
+  };
 
-  if (!isMounted) return null;
+  if (!isMounted) {
+    // Return skeleton with fixed dimensions to prevent CLS
+    return (
+      <section 
+        className="video-hero-critical loading-skeleton"
+        style={{ 
+          height: isMobile ? '56.25vw' : '80vh',
+          maxHeight: '100vh',
+          aspectRatio: '16/9',
+          contain: 'layout style paint'
+        }}
+      />
+    );
+  }
 
   return (
     <section
-      className={`video-hero relative overflow-hidden video-hero-optimized critical-resource ${isMobile ? '' : 'h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen'}`}
-      style={isMobile && mobileHeight ? { height: mobileHeight } : {}}
+      className="video-hero relative overflow-hidden video-hero-optimized"
+      style={{ 
+        height: getVideoHeight(),
+        aspectRatio: '16/9',
+        contain: 'layout style paint',
+        contentVisibility: 'auto'
+      }}
     >
+      {/* Optimized background placeholder with explicit dimensions */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${posterSrc})` }}
-      ></div>
+        style={{ 
+          backgroundImage: `url(${posterSrc})`,
+          contain: 'layout style paint'
+        }}
+      />
 
       <video
         key={language}
@@ -193,8 +220,11 @@ const VideoHero = () => {
         muted={!hasAudio}
         onEnded={handleVideoEnd}
         onClick={handleVideoClick}
-        className={`absolute ${isMobile ? 'top-0' : 'top-0'} left-0 w-full ${isMobile ? 'h-full object-cover' : 'h-full object-cover'} hw-accelerated cursor-pointer`}
+        className="absolute top-0 left-0 w-full h-full object-cover transform-gpu"
         poster={posterSrc}
+        width="1920"
+        height="1080"
+        style={{ contain: 'layout style paint' }}
       >
         {useWebM && <source src={videoWebM} type="video/webm" />}
         <source src={videoSrc} type="video/mp4" />
@@ -216,11 +246,11 @@ const VideoHero = () => {
       )}
 
       {/* Video controls */}
-      <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
+      <div className="absolute top-24 right-4 z-30 flex gap-2">
         <Button 
           onClick={handleTogglePlay} 
           size="icon" 
-          className="bg-white/80 text-black rounded-full shadow hw-accelerated touch-manipulation"
+          className="bg-white/80 text-black rounded-full shadow transform-gpu touch-manipulation"
           aria-label={isPlaying ? "Pauză video" : "Redă video"}
         >
           {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
@@ -228,17 +258,17 @@ const VideoHero = () => {
         <Button 
           onClick={handleToggleAudio} 
           size="icon" 
-          className="bg-white/80 text-black rounded-full shadow hw-accelerated touch-manipulation"
+          className="bg-white/80 text-black rounded-full shadow transform-gpu touch-manipulation"
           aria-label={hasAudio ? "Dezactivează sunetul" : "Activează sunetul"}
         >
           {hasAudio ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
         </Button>
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
 
       <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent hw-accelerated">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent transform-gpu">
           {t('heroTitle')}
         </h1>
       </div>
