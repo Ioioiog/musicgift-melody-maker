@@ -1,21 +1,27 @@
 
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import VideoHero from "@/components/VideoHero";
-import HeroContent from "@/components/HeroContent";
-import ScenarioHero from "@/components/ScenarioHero";
-import AnimatedStepFlow from "@/components/AnimatedStepFlow";
-import OptimizedTestimonialSlider from "@/components/OptimizedTestimonialSlider";
-import ImpactCards from "@/components/ImpactCards";
-import CollaborationSection from "@/components/CollaborationSection";
-import SEOHead from "@/components/SEOHead";
-import OptimizedVoiceSearchSection from "@/components/OptimizedVoiceSearchSection";
-import WelcomeBanner from "@/components/WelcomeBanner";
-import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Button } from "@/components/ui/button";
 import { Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
-import { useEffect } from "react";
+
+// Lazy load non-critical components
+const Navigation = lazy(() => import("@/components/Navigation"));
+const Footer = lazy(() => import("@/components/Footer"));
+const VideoHero = lazy(() => import("@/components/VideoHero"));
+const HeroContent = lazy(() => import("@/components/HeroContent"));
+const AnimatedStepFlow = lazy(() => import("@/components/AnimatedStepFlow"));
+const OptimizedTestimonialSlider = lazy(() => import("@/components/OptimizedTestimonialSlider"));
+const ImpactCards = lazy(() => import("@/components/ImpactCards"));
+const CollaborationSection = lazy(() => import("@/components/CollaborationSection"));
+const SEOHead = lazy(() => import("@/components/SEOHead"));
+const OptimizedVoiceSearchSection = lazy(() => import("@/components/OptimizedVoiceSearchSection"));
+const WelcomeBanner = lazy(() => import("@/components/WelcomeBanner"));
+
+// Loading fallback component
+const LoadingFallback = ({ className = "" }: { className?: string }) => (
+  <div className={`animate-pulse bg-white/10 rounded-lg ${className}`} />
+);
 
 const Index = () => {
   const { t } = useLanguage();
@@ -31,25 +37,33 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      <SEOHead 
-        title="MusicGift.ro - Cadouri Muzicale Personalizate"
-        description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste."
-      />
+      <Suspense fallback={<LoadingFallback className="h-4" />}>
+        <SEOHead 
+          title="MusicGift.ro - Cadouri Muzicale Personalizate"
+          description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste."
+        />
+      </Suspense>
       
       {/* Skip Navigation for Accessibility */}
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-blue-600 text-white p-2 z-50">
         Sari la conținutul principal
       </a>
       
-      <Navigation />
+      <Suspense fallback={<LoadingFallback className="h-16" />}>
+        <Navigation />
+      </Suspense>
       
       {/* Video Hero Section */}
       <div className="video-hero-optimized">
-        <VideoHero />
+        <Suspense fallback={<LoadingFallback className="h-96" />}>
+          <VideoHero />
+        </Suspense>
       </div>
 
       {/* Welcome Banner */}
-      <WelcomeBanner />
+      <Suspense fallback={<LoadingFallback className="h-12" />}>
+        <WelcomeBanner />
+      </Suspense>
 
       {/* Main Content - Simplified structure */}
       <main id="main-content" className="main-lcp-critical relative overflow-hidden">
@@ -63,25 +77,33 @@ const Index = () => {
               <h2 id="hero-heading">Cadouri Muzicale Personalizate - MusicGift.ro</h2>
               <p>Transformă emoțiile în muzică cu serviciile noastre profesionale de compoziție muzicală personalizată.</p>
             </div>
-            <HeroContent />
+            <Suspense fallback={<LoadingFallback className="h-64" />}>
+              <HeroContent />
+            </Suspense>
           </section>
 
           {/* Impact Cards Section */}
           <section className="py-2 md:py-4" aria-labelledby="impact-heading">
             <h2 id="impact-heading" className="sr-only">Impactul Serviciilor Noastre Muzicale</h2>
-            <ImpactCards />
+            <Suspense fallback={<LoadingFallback className="h-48" />}>
+              <ImpactCards />
+            </Suspense>
           </section>
 
           {/* Process Flow Section */}
           <section className="py-2 md:py-4" aria-labelledby="process-heading">
             <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
-            <AnimatedStepFlow />
+            <Suspense fallback={<LoadingFallback className="h-64" />}>
+              <AnimatedStepFlow />
+            </Suspense>
           </section>
 
           {/* Optimized Testimonials Section */}
           <section className="py-2 md:py-4" aria-labelledby="testimonials-heading">
             <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
-            <OptimizedTestimonialSlider />
+            <Suspense fallback={<LoadingFallback className="h-48" />}>
+              <OptimizedTestimonialSlider />
+            </Suspense>
           </section>
 
           {/* Simplified Statistics Section */}
@@ -131,10 +153,14 @@ const Index = () => {
       </main>
 
       {/* Optimized Voice Search Section */}
-      <OptimizedVoiceSearchSection />
+      <Suspense fallback={<LoadingFallback className="h-64" />}>
+        <OptimizedVoiceSearchSection />
+      </Suspense>
 
       {/* Collaboration Section */}
-      <CollaborationSection />
+      <Suspense fallback={<LoadingFallback className="h-48" />}>
+        <CollaborationSection />
+      </Suspense>
 
       {/* Call-to-Action Section */}
       <section className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8" aria-labelledby="cta-heading">
@@ -172,7 +198,9 @@ const Index = () => {
         </div>
       </section>
 
-      <Footer />
+      <Suspense fallback={<LoadingFallback className="h-32" />}>
+        <Footer />
+      </Suspense>
     </div>
   );
 };

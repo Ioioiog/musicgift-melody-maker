@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ro">
   <head>
@@ -199,59 +200,109 @@
         }
       }
     </style>
+  </head>
+  
+  <body>
+    <div id="root"></div>
     
-    <!-- Deferred Brevo Conversations Widget for better performance -->
+    <!-- Optimized script loading - only essential scripts initially -->
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Deferred non-critical scripts for optimal performance -->
     <script>
-        window.addEventListener('load', function() {
-          (function(d, w, c) {
+      // Optimized script loader - loads only when needed
+      class OptimizedScriptLoader {
+        constructor() {
+          this.loadedScripts = new Set();
+          this.pendingScripts = new Map();
+          this.initializeOnInteraction();
+        }
+        
+        initializeOnInteraction() {
+          const events = ['scroll', 'mouseover', 'touchstart', 'keydown'];
+          const onFirstInteraction = () => {
+            this.loadNonCriticalScripts();
+            events.forEach(event => 
+              document.removeEventListener(event, onFirstInteraction, { passive: true })
+            );
+          };
+          
+          events.forEach(event => 
+            document.addEventListener(event, onFirstInteraction, { passive: true })
+          );
+          
+          // Fallback - load after 3 seconds if no interaction
+          setTimeout(onFirstInteraction, 3000);
+        }
+        
+        loadNonCriticalScripts() {
+          // Load Analytics
+          this.loadScript('https://www.googletagmanager.com/gtag/js?id=G-EHVL7BL5FS', () => {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-EHVL7BL5FS', {
+              page_title: document.title,
+              page_location: window.location.href
+            });
+          });
+          
+          // Load Brevo Conversations - only when really needed
+          setTimeout(() => {
+            (function(d, w, c) {
               w.BrevoConversationsID = '68374d9e93ba39a2030dfb0e';
               w[c] = w[c] || function() {
-                  (w[c].q = w[c].q || []).push(arguments);
+                (w[c].q = w[c].q || []).push(arguments);
               };
               var s = d.createElement('script');
               s.async = true;
               s.defer = true;
               s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
               if (d.head) d.head.appendChild(s);
-          })(document, window, 'BrevoConversations');
-        });
-    </script>
-  </head>
-  
-  <body>
-    <!-- Enhanced Google Analytics with deferred loading -->
-    <script>
-      window.addEventListener('load', function() {
-        var script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-EHVL7BL5FS';
-        document.head.appendChild(script);
+            })(document, window, 'BrevoConversations');
+          }, 5000);
+        }
         
-        script.onload = function() {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-EHVL7BL5FS', {
-            page_title: document.title,
-            page_location: window.location.href
-          });
-        };
-      });
+        loadScript(src, callback) {
+          if (this.loadedScripts.has(src)) {
+            callback && callback();
+            return;
+          }
+          
+          if (this.pendingScripts.has(src)) {
+            this.pendingScripts.get(src).push(callback);
+            return;
+          }
+          
+          this.pendingScripts.set(src, callback ? [callback] : []);
+          
+          const script = document.createElement('script');
+          script.src = src;
+          script.async = true;
+          script.defer = true;
+          
+          script.onload = () => {
+            this.loadedScripts.add(src);
+            const callbacks = this.pendingScripts.get(src) || [];
+            callbacks.forEach(cb => cb && cb());
+            this.pendingScripts.delete(src);
+          };
+          
+          script.onerror = () => {
+            console.warn('Failed to load script:', src);
+            this.pendingScripts.delete(src);
+          };
+          
+          document.head.appendChild(script);
+        }
+      }
+      
+      // Initialize optimized loading only after DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => new OptimizedScriptLoader());
+      } else {
+        new OptimizedScriptLoader();
+      }
     </script>
-    
-    <div id="root"></div>
-    
-    <!-- Deferred non-critical scripts for better performance -->
-    <script>
-      window.addEventListener('load', function() {
-        var gpScript = document.createElement('script');
-        gpScript.src = 'https://cdn.gpteng.co/gptengineer.js';
-        gpScript.type = 'module';
-        gpScript.defer = true;
-        document.head.appendChild(gpScript);
-      });
-    </script>
-    
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
