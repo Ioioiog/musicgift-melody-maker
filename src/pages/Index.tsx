@@ -1,3 +1,4 @@
+
 import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -16,9 +17,15 @@ const CollaborationSection = lazy(() => import("@/components/CollaborationSectio
 const SEOHead = lazy(() => import("@/components/SEOHead"));
 const WelcomeBanner = lazy(() => import("@/components/WelcomeBanner"));
 const HeroCallToAction = lazy(() => import("@/components/HeroCallToAction"));
-
-// Replace OptimizedVoiceSearchSection with EnhancedVoiceSearchSection
 const EnhancedVoiceSearchSection = lazy(() => import("@/components/voice-search/EnhancedVoiceSearchSection"));
+
+// New performance and SEO components
+const EnhancedPerformanceMonitor = lazy(() => import("@/components/EnhancedPerformanceMonitor"));
+const BreadcrumbNavigation = lazy(() => import("@/components/BreadcrumbNavigation"));
+const ServiceWorkerRegistration = lazy(() => import("@/components/ServiceWorkerRegistration"));
+const WebVitalsReporter = lazy(() => import("@/components/WebVitalsReporter"));
+const InternalLinkingOptimizer = lazy(() => import("@/components/InternalLinkingOptimizer"));
+const ContentFreshnessManager = lazy(() => import("@/components/ContentFreshnessManager"));
 
 // Enhanced Loading fallback component with fixed dimensions
 const LoadingFallback = ({ className = "", height = "h-32", aspectRatio }: { className?: string; height?: string; aspectRatio?: string }) => (
@@ -56,6 +63,15 @@ const Index = () => {
         />
       </Suspense>
       
+      {/* Performance and SEO Enhancement Components */}
+      <Suspense fallback={null}>
+        <EnhancedPerformanceMonitor />
+        <ServiceWorkerRegistration />
+        <WebVitalsReporter />
+        <InternalLinkingOptimizer />
+        <ContentFreshnessManager />
+      </Suspense>
+      
       {/* Skip Navigation for Accessibility */}
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-blue-600 text-white p-2 z-50">
         Sari la conținutul principal
@@ -63,6 +79,11 @@ const Index = () => {
       
       <Suspense fallback={<div className="nav-critical bg-black/90 backdrop-blur-sm fixed top-0 left-0 right-0 z-50" style={{ height: '4rem' }} />}>
         <Navigation />
+      </Suspense>
+
+      {/* Breadcrumb Navigation */}
+      <Suspense fallback={null}>
+        <BreadcrumbNavigation />
       </Suspense>
       
       {/* Video Hero Section - now responsive sized */}
