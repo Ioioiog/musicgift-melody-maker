@@ -60,19 +60,19 @@ const WelcomeBanner: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="relative w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-xl border-b border-white/20"
+          className="relative w-full bg-gradient-to-r from-black via-gray-900 to-black text-white shadow-xl border-b border-orange-500/30"
         >
           <div className="max-w-6xl mx-auto px-4 py-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-6">
-                <div className="bg-white/20 rounded-full p-3">
-                  <MapPin className="w-6 h-6" />
+                <div className="bg-orange-500 rounded-full p-3 shadow-lg">
+                  <MapPin className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <p className="font-medium text-lg md:text-xl lg:text-2xl mb-1">
+                  <p className="font-medium text-lg md:text-xl lg:text-2xl mb-1 text-white">
                     {getWelcomeMessage()}
                   </p>
-                  <p className="text-sm md:text-base text-white/90">
+                  <p className="text-sm md:text-base text-gray-300">
                     {t('welcomeSubtitle', 'Create personalized musical gifts that touch hearts')}
                   </p>
                 </div>
@@ -82,13 +82,16 @@ const WelcomeBanner: React.FC = () => {
                 variant="ghost"
                 size="icon"
                 onClick={handleDismiss}
-                className="text-white hover:bg-white/20 h-10 w-10 shrink-0"
+                className="text-white hover:bg-orange-500/20 hover:text-orange-200 h-10 w-10 shrink-0 border border-gray-700/50 hover:border-orange-500/50 transition-all duration-200"
                 aria-label="Close welcome banner"
               >
                 <X className="w-5 h-5" />
               </Button>
             </div>
           </div>
+          
+          {/* Orange accent line at the bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
         </motion.div>
       )}
     </AnimatePresence>
