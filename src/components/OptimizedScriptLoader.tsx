@@ -1,6 +1,15 @@
 
 import { useEffect, useRef } from 'react';
 
+// Extend Window interface for Google Analytics
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+    dataLayer?: any[];
+    requestIdleCallback?: (callback: IdleRequestCallback) => number;
+  }
+}
+
 interface ScriptConfig {
   src: string;
   defer?: boolean;
@@ -23,8 +32,9 @@ const OptimizedScriptLoader = () => {
         onLoad: () => {
           window.dataLayer = window.dataLayer || [];
           function gtag(...args: any[]) {
-            window.dataLayer.push(args);
+            window.dataLayer!.push(args);
           }
+          window.gtag = gtag;
           gtag('js', new Date());
           gtag('config', 'G-EHVL7BL5FS', {
             page_title: document.title,
@@ -69,12 +79,12 @@ const OptimizedScriptLoader = () => {
     const onFirstInteraction = () => {
       loadScriptsByPriority('low');
       events.forEach(event => 
-        document.removeEventListener(event, onFirstInteraction, { passive: true })
+        document.removeEventListener(event, onFirstInteraction, true)
       );
     };
 
     events.forEach(event => 
-      document.addEventListener(event, onFirstInteraction, { passive: true })
+      document.addEventListener(event, onFirstInteraction, true)
     );
 
     // Load idle scripts when browser is idle
@@ -88,7 +98,7 @@ const OptimizedScriptLoader = () => {
 
     return () => {
       events.forEach(event => 
-        document.removeEventListener(event, onFirstInteraction, { passive: true })
+        document.removeEventListener(event, onFirstInteraction, true)
       );
     };
   }, []);
