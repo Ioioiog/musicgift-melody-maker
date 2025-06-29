@@ -28,20 +28,20 @@ const WelcomeBanner: React.FC = () => {
   const getWelcomeMessage = (): string => {
     if (!location) return t('welcomeDefault', 'Welcome to MusicGift!');
 
-    const { city, country, countryCode } = location;
+    const { country, countryCode } = location;
     
     // Custom messages based on country/language
     const welcomeKey = `welcomeFrom${countryCode}`;
-    const fallbackKey = 'welcomeFromCity';
+    const fallbackKey = 'welcomeFromCountry';
     
     // Try country-specific message first, then fallback
     const countryMessage = t(welcomeKey, '');
     if (countryMessage) {
-      return countryMessage.replace('{city}', city).replace('{country}', country);
+      return countryMessage.replace('{country}', country);
     }
     
-    // Fallback to generic city message
-    return t(fallbackKey, 'Welcome to MusicGift from {city}!').replace('{city}', city);
+    // Fallback to generic country message
+    return t(fallbackKey, 'Welcome to MusicGift from {country}!').replace('{country}', country);
   };
 
   const handleDismiss = () => {
