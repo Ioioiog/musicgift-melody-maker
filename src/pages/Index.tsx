@@ -1,3 +1,4 @@
+
 import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -58,11 +59,12 @@ const Index = () => {
         <Navigation />
       </Suspense>
       
-      {/* Full-Screen Video Hero Section with Integrated Hero Content */}
+      {/* Responsive Video Hero Section with Integrated Hero Content */}
       <Suspense fallback={
         <div 
-          className="video-hero-critical fixed top-0 left-0 w-screen h-screen bg-black loading-skeleton"
+          className="video-hero-critical fixed top-0 left-0 w-screen loading-skeleton"
           style={{ 
+            height: '80vh', /* Match new desktop height */
             backgroundImage: 'url(/uploads/video_placeholder.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -73,11 +75,11 @@ const Index = () => {
         <VideoHero />
       </Suspense>
 
-      {/* Main Content with offset for fixed video */}
+      {/* Main Content with responsive offset for fixed video */}
       <main 
         id="main-content" 
         className="content-offset main-lcp-critical relative"
-        style={{ contain: 'layout style', marginTop: '100vh', zIndex: 2 }}
+        style={{ contain: 'layout style', zIndex: 2 }}
       >
         {/* Welcome Banner - No reserved space to prevent layout jumps */}
         <Suspense fallback={null}>

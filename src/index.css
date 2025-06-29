@@ -1,3 +1,4 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
@@ -146,13 +147,13 @@
     user-select: none;
   }
 
-  /* Full-width video hero that covers entire screen */
+  /* Full-width video hero with responsive heights */
   .video-hero-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 80vh; /* Desktop: Reduced from 100vh to 80vh (20% reduction) */
     overflow: hidden;
     background-color: #000;
     z-index: 1;
@@ -161,7 +162,7 @@
     justify-content: center;
   }
 
-  /* Video element that fills entire screen width */
+  /* Video element that fills container */
   .video-hero-element {
     width: 100%;
     height: 100%;
@@ -172,8 +173,12 @@
     left: 0;
   }
 
-  /* Remove responsive adjustments to ensure consistent full-width behavior */
+  /* Responsive video hero heights */
   @media (max-width: 768px) {
+    .video-hero-container {
+      height: 50vh; /* Mobile: Much smaller at 50% viewport height */
+    }
+    
     .video-hero-element {
       width: 100%;
       height: 100%;
@@ -182,6 +187,10 @@
   }
 
   @media (min-width: 769px) and (max-width: 1024px) {
+    .video-hero-container {
+      height: 70vh; /* Tablet: Medium size at 70% viewport height */
+    }
+    
     .video-hero-element {
       width: 100%;
       height: 100%;
@@ -190,6 +199,10 @@
   }
 
   @media (min-width: 1025px) {
+    .video-hero-container {
+      height: 80vh; /* Desktop: 80% viewport height */
+    }
+    
     .video-hero-element {
       width: 100%;
       height: 100%;
@@ -290,7 +303,7 @@
     z-index: 10;
   }
 
-  /* Integrated hero content overlay - positioned at bottom */
+  /* Integrated hero content overlay - positioned at bottom with responsive adjustments */
   .video-hero-content-overlay {
     position: absolute;
     bottom: 2rem;
@@ -302,6 +315,41 @@
     justify-content: center;
     align-items: flex-end;
     padding: 1rem;
+  }
+
+  /* Responsive content adjustments for smaller video containers */
+  @media (max-width: 768px) {
+    .video-hero-content-overlay {
+      bottom: 1rem;
+      padding: 0.5rem;
+    }
+    
+    .video-hero-content-overlay h1 {
+      font-size: 1.875rem !important; /* Smaller text on mobile */
+      line-height: 2.25rem !important;
+      margin-bottom: 1rem !important;
+    }
+    
+    .video-hero-content-overlay .bg-gradient-to-r {
+      padding: 1rem !important; /* Reduced padding on mobile */
+      margin-bottom: 1rem !important;
+    }
+    
+    .video-hero-content-overlay p {
+      font-size: 0.875rem !important; /* Smaller subtitle on mobile */
+      margin-bottom: 1rem !important;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .video-hero-content-overlay {
+      bottom: 1.5rem;
+    }
+    
+    .video-hero-content-overlay h1 {
+      font-size: 2.5rem !important; /* Medium text on tablet */
+      line-height: 3rem !important;
+    }
   }
 
   .video-hero-content-overlay h1 {
@@ -320,11 +368,30 @@
     max-width: 90%;
   }
 
-  /* Content Offset for Fixed Video */
+  /* Content Offset for Fixed Video - Responsive */
   .content-offset {
-    margin-top: 100vh;
+    margin-top: 80vh; /* Desktop: Match video hero height */
     position: relative;
     z-index: 2;
+  }
+
+  /* Responsive content offsets */
+  @media (max-width: 768px) {
+    .content-offset {
+      margin-top: 50vh; /* Mobile: Match smaller video hero height */
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .content-offset {
+      margin-top: 70vh; /* Tablet: Match medium video hero height */
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .content-offset {
+      margin-top: 80vh; /* Desktop: Match larger video hero height */
+    }
   }
 
   /* Responsive Aspect Ratios */
