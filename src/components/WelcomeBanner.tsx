@@ -61,20 +61,20 @@ const WelcomeBanner: React.FC = () => {
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="relative w-full bg-white/10 backdrop-blur-lg text-white shadow-xl border border-white/20"
+          className="relative w-full bg-white text-black shadow-xl border-b border-orange-500/30"
           style={{ contain: 'layout style' }}
         >
           <div className="max-w-6xl mx-auto px-4 py-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-6">
-                <div className="bg-orange-500/90 backdrop-blur-sm rounded-full p-3 shadow-lg hw-accelerated">
+                <div className="bg-orange-500 rounded-full p-3 shadow-lg hw-accelerated">
                   <MapPin className="w-6 h-6 text-white" />
                 </div>
                 <div className="content-container">
-                  <p className="font-medium text-lg md:text-xl lg:text-2xl mb-1 text-white text-stability">
+                  <p className="font-medium text-lg md:text-xl lg:text-2xl mb-1 text-black text-stability">
                     {getWelcomeMessage()}
                   </p>
-                  <p className="text-sm md:text-base text-white/80 text-stability">
+                  <p className="text-sm md:text-base text-gray-600 text-stability">
                     {t('welcomeSubtitle', 'Create personalized musical gifts that touch hearts')}
                   </p>
                 </div>
@@ -84,7 +84,7 @@ const WelcomeBanner: React.FC = () => {
                 variant="ghost"
                 size="icon"
                 onClick={handleDismiss}
-                className="text-white hover:bg-white/20 hover:text-white h-10 w-10 shrink-0 border border-white/30 hover:border-white/50 transition-all duration-200 hw-accelerated"
+                className="text-black hover:bg-orange-500/20 hover:text-orange-600 h-10 w-10 shrink-0 border border-gray-300/50 hover:border-orange-500/50 transition-all duration-200 hw-accelerated"
                 aria-label="Close welcome banner"
               >
                 <X className="w-5 h-5" />
@@ -93,7 +93,7 @@ const WelcomeBanner: React.FC = () => {
           </div>
           
           {/* Orange accent line at the bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500/80 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
         </motion.div>
       )}
     </AnimatePresence>
