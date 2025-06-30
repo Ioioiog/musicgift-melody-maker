@@ -3,10 +3,13 @@ import { useState, useEffect, useRef } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { MessageCircle, Volume2, Search, MapPin, Clock, Star, Music } from 'lucide-react';
+import { useLocationContext } from '@/contexts/LocationContext';
+import { MessageCircle, Volume2, Search, MapPin, Clock, Star, Music, Quote } from 'lucide-react';
+import { testimonials } from '@/data/testimonials';
 
 const OptimizedVoiceSearchSection = () => {
   const { t, language } = useLanguage();
+  const { location, loading: locationLoading } = useLocationContext();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +46,55 @@ const OptimizedVoiceSearchSection = () => {
   const getPersonalPrice = () => language === 'ro' ? '299' : '59';
   const getPremiumPrice = () => language === 'ro' ? '499' : '99';
 
+  // Filter testimonials based on location
+  const getLocationBasedTestimonials = () => {
+    const approvedTestimonials = testimonials.filter(t => t.approved);
+    
+    if (!location) {
+      // Fallback to Romanian testimonials if no location
+      return approvedTestimonials
+        .filter(t => t.location && (t.location.includes('Bucuresti') || t.location.includes('Cluj') || t.location.includes('Timisoara')))
+        .slice(0, 3);
+    }
+
+    // First try to match by city
+    let cityMatches = approvedTestimonials.filter(t => 
+      t.location && t.location.toLowerCase().includes(location.city.toLowerCase())
+    );
+
+    if (cityMatches.length >= 2) {
+      return cityMatches.slice(0, 3);
+    }
+
+    // Then try to match by country
+    const countryMatches = approvedTestimonials.filter(t => {
+      if (!t.location) return false;
+      
+      // Map country codes to testimonial locations
+      const countryMappings: { [key: string]: string[] } = {
+        'RO': ['Bucuresti', 'Cluj', 'Timisoara', 'Iași', 'Constanța'],
+        'FR': ['France', 'Lyon'],
+        'CA': ['Vancouver'],
+        'GB': ['London', 'Manchester'],
+        'DE': ['Berlin', 'München'],
+      };
+
+      const locationPatterns = countryMappings[location.countryCode] || [];
+      return locationPatterns.some(pattern => t.location!.includes(pattern));
+    });
+
+    if (countryMatches.length >= 2) {
+      return [...cityMatches, ...countryMatches].slice(0, 3);
+    }
+
+    // Fallback to top testimonials
+    return approvedTestimonials
+      .sort((a, b) => (b.display_order || 0) - (a.display_order || 0))
+      .slice(0, 3);
+  };
+
+  const locationTestimonials = getLocationBasedTestimonials();
+
   // Reduced FAQ items for better performance
   const voiceSearchFAQs = [
     {
@@ -65,18 +117,23 @@ const OptimizedVoiceSearchSection = () => {
     }
   ];
 
-  // Simplified cities data
-  const localCities = language === 'ro' 
-    ? [
-        { name: "București", description: "Servicii de compoziții muzicale în Capitală" },
-        { name: "Cluj-Napoca", description: "Cadouri muzicale în Transilvania" },
-        { name: "Timișoara", description: "Melodii personalizate în orașul florilor" }
-      ]
-    : [
-        { name: "London", description: "Professional music services in the capital" },
-        { name: "Manchester", description: "Personalized musical gifts in England" },
-        { name: "Birmingham", description: "Custom songs in England's second city" }
-      ];
+  const getLocationTitle = () => {
+    if (locationLoading) return t('testimonials', 'Testimonials');
+    
+    if (location?.city) {
+      return language === 'ro' 
+        ? `Mărturii din ${location.city}` 
+        : `Testimonials from ${location.city}`;
+    }
+    
+    if (location?.country) {
+      return language === 'ro' 
+        ? `Mărturii din ${location.country}` 
+        : `Testimonials from ${location.country}`;
+    }
+    
+    return t('testimonials', 'Testimonials');
+  };
 
   return (
     <section ref={sectionRef} className="py-16 px-4 bg-gradient-to-br from-slate-50 to-blue-50">
@@ -117,25 +174,55 @@ const OptimizedVoiceSearchSection = () => {
           </Card>
         </div>
 
-        {/* Local Services - simplified */}
+        {/* Location-Based Testimonials */}
         <Card className="bg-gradient-to-r from-blue-500/5 to-purple-500/5 border-blue-200 mb-12">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-gray-900">
-              {t('servicesInCountry')}
+              {getLocationTitle()}
             </CardTitle>
+            <CardDescription className="text-lg">
+              {language === 'ro' 
+                ? 'Ce spun clienții noștri din zona dumneavoastră'
+                : 'What our clients from your area are saying'}
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {localCities.map((city, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-white/60 rounded-lg">
-                  <MapPin className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{city.name}</h4>
-                    <p className="text-sm text-gray-600">{city.description}</p>
-                  </div>
+            {locationLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-pulse text-gray-400">
+                  {language === 'ro' ? 'Se încarcă...' : 'Loading...'}
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {locationTestimonials.map((testimonial, index) => (
+                  <Card key={testimonial.id} className="bg-white/60 hover:bg-white/80 transition-colors">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Quote className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                        <div className="flex items-center gap-1">
+                          {[...Array(testimonial.stars || 5)].map((_, i) => (
+                            <Star key={i} className="w-4 h-4 text-yellow-500 fill-current" />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-700 mb-3 line-clamp-3">
+                        {testimonial.message}
+                      </p>
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <span className="font-medium">{testimonial.name}</span>
+                        {testimonial.location && (
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            <span>{testimonial.location}</span>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
