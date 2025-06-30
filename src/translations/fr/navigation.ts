@@ -1,14 +1,21 @@
 
 export const navigationTranslations = {
-  home: "Accueil",
-  packages: "Forfaits",
-  howItWorks: "Comment ça marche",
-  about: "À propos",
-  testimonials: "Témoignages",
-  contact: "Contact",
-  getStarted: "Commencer",
-  orderNow: "Commander maintenant",
-  admin: "Admin",
-  history: "Historique",
-  viewManageOrders: "Voir et gérer votre historique de commandes",
+  home: 'Accueil',
+  about: 'À propos',
+  blog: 'Blog',
+  packages: 'Forfaits',
+  howItWorks: 'Comment ça marche',
+  testimonials: 'Témoignages',
+  contact: 'Contact',
+  signIn: 'Se connecter',
+  signOut: 'Se déconnecter',
+  user: 'Utilisateur',
+  history: 'Historique des commandes',
+  accountSettings: 'Paramètres du compte',
+  
+  // Aria-label translations for accessibility
+  menuToggle: 'Basculer le menu de navigation',
+  settingsMenu: 'Menu paramètres et langue',
+  userMenu: 'Menu compte utilisateur',
+  languageMenu: 'Paramètres langue et devise',
 };

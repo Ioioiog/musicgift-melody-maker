@@ -26,4 +26,10 @@ export const footerTranslations = {
   onlineDisputeResolution: "Online Dispute Resolution",
   paymentPartners: "Payment Partners",
   businessPartners: "Business Partners",
+  
+  // Aria-label translations for accessibility
+  followFacebook: "Follow us on Facebook",
+  followInstagram: "Follow us on Instagram",
+  followYoutube: "Watch our videos on YouTube",
+  manageCookies: "Manage cookie preferences",
 };

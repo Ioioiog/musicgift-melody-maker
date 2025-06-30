@@ -25,4 +25,11 @@ export const footerTranslations = {
   consumerProtection: "Protection des consommateurs",
   onlineDisputeResolution: "Résolution de litiges en ligne",
   paymentPartners: "Partenaires de paiement",
+  businessPartners: "Partenaires commerciaux",
+  
+  // Aria-label translations for accessibility
+  followFacebook: "Suivez-nous sur Facebook",
+  followInstagram: "Suivez-nous sur Instagram",
+  followYoutube: "Regardez nos vidéos sur YouTube",
+  manageCookies: "Gérer les préférences de cookies",
 };

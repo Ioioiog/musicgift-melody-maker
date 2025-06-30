@@ -1,14 +1,21 @@
 
 export const navigationTranslations = {
-  home: "Acasă",
-  packages: "Pachete",
-  howItWorks: "Cum funcționează",
-  about: "Despre noi",
-  testimonials: "Testimoniale",
-  contact: "Contact",
-  getStarted: "Începe",
-  orderNow: "Comandă acum",
-  admin: "Admin",
-  history: "Istoric",
-  viewManageOrders: "Vizualizează și gestionează istoricul comenzilor",
+  home: 'Acasă',
+  about: 'Despre noi',
+  blog: 'Blog',
+  packages: 'Pachete',
+  howItWorks: 'Cum funcționează',
+  testimonials: 'Mărturii',
+  contact: 'Contact',
+  signIn: 'Conectare',
+  signOut: 'Deconectare',
+  user: 'Utilizator',
+  history: 'Istoric comenzi',
+  accountSettings: 'Setări cont',
+  
+  // Aria-label translations for accessibility
+  menuToggle: 'Comută meniul de navigare',
+  settingsMenu: 'Meniu setări și limbă',
+  userMenu: 'Meniu cont utilizator',
+  languageMenu: 'Setări limbă și monedă',
 };

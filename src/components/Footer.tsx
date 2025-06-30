@@ -55,13 +55,25 @@ const Footer = () => {
                   {t('footerDescription')}
                 </p>
                 <div className="flex space-x-4">
-                  <a href="https://facebook.com/musicgift.ro" className="text-gray-600 hover:text-blue-600 transition-colors">
+                  <a 
+                    href="https://facebook.com/musicgift.ro" 
+                    className="text-gray-600 hover:text-blue-600 transition-colors"
+                    aria-label={t('followFacebook')}
+                  >
                     <Facebook className="w-5 h-5" />
                   </a>
-                  <a href="https://instagram.com/musicgift.ro" className="text-gray-600 hover:text-pink-600 transition-colors">
+                  <a 
+                    href="https://instagram.com/musicgift.ro" 
+                    className="text-gray-600 hover:text-pink-600 transition-colors"
+                    aria-label={t('followInstagram')}
+                  >
                     <Instagram className="w-5 h-5" />
                   </a>
-                  <a href="https://youtube.com/@musicgift" className="text-gray-600 hover:text-red-600 transition-colors">
+                  <a 
+                    href="https://youtube.com/@musicgift" 
+                    className="text-gray-600 hover:text-red-600 transition-colors"
+                    aria-label={t('followYoutube')}
+                  >
                     <Youtube className="w-5 h-5" />
                   </a>
                 </div>
@@ -169,6 +181,7 @@ const Footer = () => {
                   <button
                     onClick={() => setShowCookieSettings(true)}
                     className="text-gray-600 hover:text-orange-500 transition-colors flex items-center gap-1"
+                    aria-label={t('manageCookies')}
                   >
                     <Cookie className="w-3 h-3" />
                     {t('manageCookies')}

@@ -201,7 +201,13 @@ const Navigation = () => {
             <div className="hidden lg:flex items-center space-x-3 ml-auto">
               {/* Settings Dropdown */}
               <div className="relative">
-                <button ref={desktopSettingsDropdownButtonRef} onClick={handleDesktopSettingsDropdownToggle} className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-gray-200/50 hover:border-gray-300 text-gray-700 hover:text-gray-800 transition-all duration-300 rounded-xl px-3 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-1 min-h-[40px] touch-manipulation">
+                <button 
+                  ref={desktopSettingsDropdownButtonRef} 
+                  onClick={handleDesktopSettingsDropdownToggle} 
+                  className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-gray-200/50 hover:border-gray-300 text-gray-700 hover:text-gray-800 transition-all duration-300 rounded-xl px-3 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-1 min-h-[40px] touch-manipulation"
+                  aria-label={t('settingsMenu')}
+                  aria-expanded={isDesktopSettingsDropdownOpen}
+                >
                   <Settings className="w-4 h-4" />
                 </button>
 
@@ -253,7 +259,13 @@ const Navigation = () => {
 
               {/* User Menu */}
               <div className="relative">
-                {user ? <button ref={desktopUserDropdownButtonRef} onClick={handleDesktopUserDropdownToggle} className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-rose-200/50 hover:border-rose-300 text-gray-700 hover:text-rose-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2">
+                {user ? <button 
+                    ref={desktopUserDropdownButtonRef} 
+                    onClick={handleDesktopUserDropdownToggle} 
+                    className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-rose-200/50 hover:border-rose-300 text-gray-700 hover:text-rose-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2"
+                    aria-label={t('userMenu')}
+                    aria-expanded={isDesktopUserDropdownOpen}
+                  >
                     <User className="w-4 h-4" />
                     <span className="hidden md:inline text-sm font-medium">
                       {user.user_metadata?.full_name || user.email?.split('@')[0] || t('user')}
@@ -305,14 +317,26 @@ const Navigation = () => {
             <div className="lg:hidden flex items-center space-x-2 ml-auto">
               {/* Mobile Language/Currency Button */}
               <div className="relative">
-                <button ref={languageCurrencyButtonRef} onClick={handleLanguageCurrencyToggle} className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center">
+                <button 
+                  ref={languageCurrencyButtonRef} 
+                  onClick={handleLanguageCurrencyToggle} 
+                  className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center"
+                  aria-label={t('languageMenu')}
+                  aria-expanded={isLanguageCurrencyDropdownOpen}
+                >
                   <Settings className="w-5 h-5 text-gray-700" />
                 </button>
               </div>
 
               {/* Mobile User Account Button */}
               <div className="relative">
-                {user ? <button ref={userDropdownButtonRef} onClick={handleUserDropdownToggle} className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center relative">
+                {user ? <button 
+                    ref={userDropdownButtonRef} 
+                    onClick={handleUserDropdownToggle} 
+                    className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center relative"
+                    aria-label={t('userMenu')}
+                    aria-expanded={isUserDropdownOpen}
+                  >
                     <User className="w-5 h-5 text-gray-700" />
                     {/* Online indicator */}
                     <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
@@ -322,7 +346,13 @@ const Navigation = () => {
               </div>
 
               {/* Mobile Menu Toggle */}
-              <button ref={mainMenuButtonRef} className="p-3 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" onClick={handleMainMenuToggle}>
+              <button 
+                ref={mainMenuButtonRef} 
+                className="p-3 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" 
+                onClick={handleMainMenuToggle}
+                aria-label={t('menuToggle')}
+                aria-expanded={isMenuOpen}
+              >
                 <div className="w-6 h-6 flex flex-col justify-center items-center">
                   <div className={`w-5 h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-0.5" : ""}`} />
                   <div className={`w-5 h-0.5 my-0.5 transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""}`} />
