@@ -1,4 +1,5 @@
 
+
 import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -82,14 +83,6 @@ const Index = () => {
             </Suspense>
           </section>
 
-          {/* Impact Cards Section */}
-          <section className="py-2 md:py-4" aria-labelledby="impact-heading">
-            <h2 id="impact-heading" className="sr-only">Impactul Serviciilor Noastre Muzicale</h2>
-            <Suspense fallback={<LoadingFallback className="h-48" />}>
-              <ImpactCards />
-            </Suspense>
-          </section>
-
           {/* Process Flow Section */}
           <section className="py-2 md:py-4" aria-labelledby="process-heading">
             <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
@@ -162,6 +155,14 @@ const Index = () => {
         <CollaborationSection />
       </Suspense>
 
+      {/* Impact Cards Section - moved here before CTA */}
+      <section className="py-2 md:py-4" aria-labelledby="impact-heading">
+        <h2 id="impact-heading" className="sr-only">Impactul Serviciilor Noastre Muzicale</h2>
+        <Suspense fallback={<LoadingFallback className="h-48" />}>
+          <ImpactCards />
+        </Suspense>
+      </section>
+
       {/* Call-to-Action Section */}
       <section className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8" aria-labelledby="cta-heading">
         <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
@@ -206,3 +207,4 @@ const Index = () => {
 };
 
 export default Index;
+
