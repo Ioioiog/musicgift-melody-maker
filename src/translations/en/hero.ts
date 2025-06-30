@@ -1,14 +1,12 @@
 
 export const heroTranslations = {
-  heroTitle: "Transform Your Emotions Into Music",
-  heroSubtitle: "The most beautiful gift: a song created especially for someone dear",
-  heroCtaTitle: "Ready to Create Something Special?",
-  heroCtaSubtitle: "Let us help you create a personalized musical gift that will be treasured forever",
+  heroTitle: "Custom Songs That Touch Hearts",
+  heroSubtitle: "Turn your most precious memories into personalized songs. From proposals to celebrations, we create musical masterpieces that capture your unique story and emotions.",
+  orderNow: "Order Now",
   seePackages: "See Packages",
-  listenToSamples: "Listen to Samples",
-  
-  // Trust indicators
-  trustedByThousands: "Trusted by thousands",
-  customCompositions: "Custom compositions", 
-  perfectGifts: "Perfect gifts",
+  heroCtaTitle: "Ready to Create Your Perfect Song?",
+  heroCtaSubtitle: "Join thousands of happy customers who've turned their emotions into unforgettable melodies.",
+  tapToPlayWithSound: "Tap to play with sound",
+  deliveryTime: "Delivery: 3-5 days",
+  startingFrom: "Starting from"
 };

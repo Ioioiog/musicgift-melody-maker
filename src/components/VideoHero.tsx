@@ -1,10 +1,10 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useLocation } from 'react-router-dom';
+import PricingBadge from '@/components/PricingBadge';
 
 const supportsWebM = (): boolean => {
   const video = document.createElement('video');
@@ -204,8 +204,20 @@ const VideoHero = () => {
         </div>
       )}
 
-      {/* Video controls */}
-      <div className="absolute top-24 right-4 z-30 flex gap-2 defer-load">
+      {/* Pricing Badge - Top Right */}
+      <div className="absolute top-6 right-6 z-30 hidden sm:block">
+        <PricingBadge />
+      </div>
+
+      {/* Mobile Pricing Badge - Adjusted position */}
+      <div className="absolute top-20 right-4 z-30 block sm:hidden">
+        <div className="scale-90">
+          <PricingBadge />
+        </div>
+      </div>
+
+      {/* Video controls - Adjusted position to avoid badge overlap */}
+      <div className="absolute top-24 right-4 sm:top-32 sm:right-6 z-30 flex gap-2 defer-load">
         <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
           {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
         </Button>

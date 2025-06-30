@@ -1,27 +1,12 @@
 
 export const heroTranslations = {
-  heroTitle: "Transformă Emoțiile în Muzică",
-  heroSubtitle: "Cel mai frumos cadou: o melodie creată special pentru cineva drag",
-  heroCtaTitle: "Gata să Creezi Ceva Special?",
-  heroCtaSubtitle: "Lasă-ne să te ajutăm să creezi un cadou muzical personalizat care va fi prețuit pentru totdeauna",
-  seePackages: "Vezi Pachetele",
-  listenToSamples: "Ascultă Mostre",
-  getStarted: "Începe Acum",
-  viewPackages: "Vezi Pachetele",
+  heroTitle: "Cântece Personalizate Care Ating Sufletul",
+  heroSubtitle: "Transformă amintirile tale cele mai prețioase în cântece personalizate. De la cereri în căsătorie la sărbători, creăm capodopere muzicale care îți surprind povestea și emoțiile unice.",
   orderNow: "Comandă Acum",
-  playWithSound: "Redă cu Sunet",
-  
-  // Trust indicators
-  trustedByThousands: "De încredere pentru mii",
-  customCompositions: "Compoziții personalizate",
-  perfectGifts: "Cadouri perfecte",
-  
-  // Statistics
-  personalizedSongs: "melodii personalizate",
-  yearsMusicalPassion: "ani de pasiune muzicală",
-  happyClients: "clienți mulțumiți",
-  launchedArtists: "artiști lansați",
-  memorableEvents: "evenimente memorabile",
-  releasedAlbums: "albume lansate",
-  copiesSold: "copii vândute",
+  seePackages: "Vezi Pachetele",
+  heroCtaTitle: "Gata să Îți Creezi Cântecul Perfect?",
+  heroCtaSubtitle: "Alătură-te miilor de clienți fericiți care și-au transformat emoțiile în melodii de neuitat.",
+  tapToPlayWithSound: "Apasă pentru a reda cu sunet",
+  deliveryTime: "Livrare: 3-5 zile",
+  startingFrom: "Începând de la"
 };

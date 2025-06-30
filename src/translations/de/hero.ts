@@ -1,14 +1,12 @@
 
 export const heroTranslations = {
-  heroTitle: "Verwandeln Sie Ihre Emotionen in Musik",
-  heroSubtitle: "Das schönste Geschenk: ein Lied, das speziell für jemand Besonderen geschaffen wurde",
-  heroCtaTitle: "Bereit, etwas Besonderes zu schaffen?",
-  heroCtaSubtitle: "Lassen Sie uns Ihnen helfen, ein personalisiertes Musikgeschenk zu schaffen, das für immer geschätzt wird",
-  seePackages: "Pakete ansehen",
-  listenToSamples: "Hörproben anhören",
-  
-  // Trust indicators
-  trustedByThousands: "Von Tausenden vertraut",
-  customCompositions: "Maßgeschneiderte Kompositionen",
-  perfectGifts: "Perfekte Geschenke",
+  heroTitle: "Personalisierte Songs Die Herzen Berühren",
+  heroSubtitle: "Verwandeln Sie Ihre wertvollsten Erinnerungen in personalisierte Lieder. Von Heiratsanträgen bis zu Feiern kreieren wir musikalische Meisterwerke, die Ihre einzigartige Geschichte und Emotionen einfangen.",
+  orderNow: "Jetzt Bestellen",
+  seePackages: "Pakete Ansehen",
+  heroCtaTitle: "Bereit, Ihr Perfektes Lied zu Erstellen?",
+  heroCtaSubtitle: "Schließen Sie sich Tausenden zufriedener Kunden an, die ihre Emotionen in unvergessliche Melodien verwandelt haben.",
+  tapToPlayWithSound: "Tippen Sie, um mit Ton abzuspielen",
+  deliveryTime: "Lieferung: 3-5 Tage",
+  startingFrom: "Ab"
 };
