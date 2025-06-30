@@ -1,3 +1,4 @@
+
 import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -16,6 +17,7 @@ const CollaborationSection = lazy(() => import("@/components/CollaborationSectio
 const SEOHead = lazy(() => import("@/components/SEOHead"));
 const OptimizedVoiceSearchSection = lazy(() => import("@/components/OptimizedVoiceSearchSection"));
 const WelcomeBanner = lazy(() => import("@/components/WelcomeBanner"));
+const MobileHeroSection = lazy(() => import("@/components/MobileHeroSection"));
 
 // Loading fallback component
 const LoadingFallback = ({
@@ -23,10 +25,9 @@ const LoadingFallback = ({
 }: {
   className?: string;
 }) => <div className={`animate-pulse bg-white/10 rounded-lg ${className}`} />;
+
 const Index = () => {
-  const {
-    t
-  } = useLanguage();
+  const { t } = useLanguage();
 
   // Performance monitoring
   useEffect(() => {
@@ -36,7 +37,9 @@ const Index = () => {
       performance.measure('index-page-load', 'index-page-start', 'index-page-end');
     };
   }, []);
-  return <div className="min-h-screen">
+
+  return (
+    <div className="min-h-screen">
       <Suspense fallback={<LoadingFallback className="h-4" />}>
         <SEOHead title="MusicGift.ro - Cadouri Muzicale Personalizate" description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste." />
       </Suspense>
@@ -60,6 +63,11 @@ const Index = () => {
       {/* Welcome Banner */}
       <Suspense fallback={<LoadingFallback className="h-12" />}>
         <WelcomeBanner />
+      </Suspense>
+
+      {/* Mobile Hero Section - Shows only on mobile after welcome banner */}
+      <Suspense fallback={<LoadingFallback className="h-24" />}>
+        <MobileHeroSection />
       </Suspense>
 
       {/* Main Content - Simplified structure */}
@@ -198,6 +206,8 @@ const Index = () => {
       <Suspense fallback={<LoadingFallback className="h-32" />}>
         <Footer />
       </Suspense>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;

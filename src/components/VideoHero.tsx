@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
@@ -21,7 +20,7 @@ const VideoHero = () => {
   const location = useLocation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMobile = useIsMobile();
-  const [hasAudio, setHasAudio] = useState(false); // Start with audio disabled for mobile
+  const [hasAudio, setHasAudio] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [useWebM, setUseWebM] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -215,21 +214,15 @@ const VideoHero = () => {
         </Button>
       </div>
 
-      {/* Pricing Badge - Positioned below video controls */}
-      <div className="absolute top-40 right-4 sm:top-48 sm:right-6 z-30 hidden sm:block">
+      {/* Desktop Pricing Badge - Hidden on mobile */}
+      <div className="absolute top-40 right-4 sm:top-48 sm:right-6 z-30 hidden lg:block">
         <PricingBadge />
-      </div>
-
-      {/* Mobile Pricing Badge - Positioned below mobile controls */}
-      <div className="absolute top-36 right-4 z-30 block sm:hidden">
-        <div className="scale-90">
-          <PricingBadge />
-        </div>
       </div>
 
       <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
 
-      <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4">
+      {/* Desktop Hero Title - Hidden on mobile */}
+      <div className="absolute bottom-12 left-0 right-0 text-center text-white px-4 hidden sm:block">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent hw-accelerated">
           {t('heroTitle')}
         </h1>
