@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export interface CookiePreferences {
   essential: boolean;
@@ -29,18 +29,11 @@ export const useCookieConsent = () => {
     preferences: false,
   });
 
-  // Use ref to track if initial load is complete to prevent excessive logging
-  const isInitialLoadComplete = useRef(false);
-  const lastLogTime = useRef(0);
-
   // Load consent data from localStorage
   useEffect(() => {
     const loadConsentData = () => {
-      console.log('🍪 Loading cookie consent data...');
-      
       try {
         const stored = localStorage.getItem(COOKIE_CONSENT_KEY);
-        
         if (stored) {
           const data: CookieConsentData = JSON.parse(stored);
           
@@ -49,36 +42,22 @@ export const useCookieConsent = () => {
           const isOldVersion = data.version !== CONSENT_VERSION;
           
           if (!isExpired && !isOldVersion) {
-            console.log('🍪 Valid consent found');
             setHasConsented(data.hasConsented);
             setPreferences(data.preferences);
             setShowBanner(false);
-            isInitialLoadComplete.current = true;
             return;
-          } else {
-            console.log('🍪 Consent expired or old version, removing stored data');
-            localStorage.removeItem(COOKIE_CONSENT_KEY);
           }
         }
         
         // No valid consent found, show banner
-        console.log('🍪 No valid consent found - showing banner');
-        setHasConsented(false);
         setShowBanner(true);
-        isInitialLoadComplete.current = true;
-        
       } catch (error) {
-        console.error('🍪 Error loading cookie consent:', error);
-        setHasConsented(false);
+        console.error('Error loading cookie consent:', error);
         setShowBanner(true);
-        isInitialLoadComplete.current = true;
       }
     };
 
-    // Add a small delay to ensure DOM is ready
-    const timer = setTimeout(loadConsentData, 100);
-    
-    return () => clearTimeout(timer);
+    loadConsentData();
   }, []);
 
   // Save consent data to localStorage
@@ -90,17 +69,14 @@ export const useCookieConsent = () => {
         timestamp: Date.now(),
         version: CONSENT_VERSION,
       };
-      
-      console.log('🍪 Saving consent data');
       localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(data));
     } catch (error) {
-      console.error('🍪 Error saving cookie consent:', error);
+      console.error('Error saving cookie consent:', error);
     }
   }, []);
 
   // Accept all cookies
   const acceptAll = useCallback(() => {
-    console.log('🍪 Accept all cookies triggered');
     const allAccepted: CookiePreferences = {
       essential: true,
       analytics: true,
@@ -115,7 +91,6 @@ export const useCookieConsent = () => {
 
   // Reject all non-essential cookies
   const rejectAll = useCallback(() => {
-    console.log('🍪 Reject all cookies triggered');
     const essentialOnly: CookiePreferences = {
       essential: true,
       analytics: false,
@@ -130,30 +105,19 @@ export const useCookieConsent = () => {
 
   // Save custom preferences
   const savePreferences = useCallback((customPrefs: CookiePreferences) => {
-    console.log('🍪 Save custom preferences triggered');
     setPreferences(customPrefs);
     setHasConsented(true);
     setShowBanner(false);
     saveConsentData(true, customPrefs);
   }, [saveConsentData]);
 
-  // Check if a specific cookie type is allowed - optimized with debouncing
+  // Check if a specific cookie type is allowed
   const isCookieAllowed = useCallback((type: keyof CookiePreferences) => {
-    const allowed = hasConsented && preferences[type];
-    
-    // Only log if initial load is complete and enough time has passed since last log
-    const now = Date.now();
-    if (isInitialLoadComplete.current && now - lastLogTime.current > 5000) {
-      console.log(`🍪 Cookie check for ${type}:`, { hasConsented, preference: preferences[type], allowed });
-      lastLogTime.current = now;
-    }
-    
-    return allowed;
+    return hasConsented && preferences[type];
   }, [hasConsented, preferences]);
 
   // Withdraw consent (show banner again)
   const withdrawConsent = useCallback(() => {
-    console.log('🍪 Withdraw consent triggered');
     localStorage.removeItem(COOKIE_CONSENT_KEY);
     setHasConsented(false);
     setShowBanner(true);
@@ -165,12 +129,6 @@ export const useCookieConsent = () => {
     });
   }, []);
 
-  // Enhanced setShowBanner with logging
-  const setShowBannerWithLogging = useCallback((show: boolean) => {
-    console.log(`🍪 Setting banner visibility to: ${show}`);
-    setShowBanner(show);
-  }, []);
-
   return {
     hasConsented,
     showBanner,
@@ -180,6 +138,6 @@ export const useCookieConsent = () => {
     savePreferences,
     isCookieAllowed,
     withdrawConsent,
-    setShowBanner: setShowBannerWithLogging,
+    setShowBanner,
   };
 };

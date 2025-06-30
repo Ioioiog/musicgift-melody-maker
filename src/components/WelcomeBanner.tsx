@@ -48,8 +48,7 @@ const WelcomeBanner: React.FC = () => {
     setIsVisible(false);
   };
 
-  // Don't render any reserved space when loading or not visible
-  if (loading || !isVisible) {
+  if (loading) {
     return null;
   }
 
@@ -57,24 +56,23 @@ const WelcomeBanner: React.FC = () => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="relative w-full bg-white text-black shadow-xl border-b border-orange-500/30"
-          style={{ contain: 'layout style' }}
         >
           <div className="max-w-6xl mx-auto px-4 py-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-6">
-                <div className="bg-orange-500 rounded-full p-3 shadow-lg hw-accelerated">
+                <div className="bg-orange-500 rounded-full p-3 shadow-lg">
                   <MapPin className="w-6 h-6 text-white" />
                 </div>
-                <div className="content-container">
-                  <p className="font-medium text-lg md:text-xl lg:text-2xl mb-1 text-black text-stability">
+                <div>
+                  <p className="font-medium text-lg md:text-xl lg:text-2xl mb-1 text-black">
                     {getWelcomeMessage()}
                   </p>
-                  <p className="text-sm md:text-base text-gray-600 text-stability">
+                  <p className="text-sm md:text-base text-gray-600">
                     {t('welcomeSubtitle', 'Create personalized musical gifts that touch hearts')}
                   </p>
                 </div>
@@ -84,7 +82,7 @@ const WelcomeBanner: React.FC = () => {
                 variant="ghost"
                 size="icon"
                 onClick={handleDismiss}
-                className="text-black hover:bg-orange-500/20 hover:text-orange-600 h-10 w-10 shrink-0 border border-gray-300/50 hover:border-orange-500/50 transition-all duration-200 hw-accelerated"
+                className="text-black hover:bg-orange-500/20 hover:text-orange-600 h-10 w-10 shrink-0 border border-gray-300/50 hover:border-orange-500/50 transition-all duration-200"
                 aria-label="Close welcome banner"
               >
                 <X className="w-5 h-5" />

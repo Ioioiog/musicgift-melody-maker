@@ -22,5 +22,4 @@ export const footerTranslations = {
   onlineDisputeResolution: "Rezolvarea online a disputelor",
   paymentPartners: "Parteneri de plată",
   businessPartners: "Parteneri de afaceri",
-  manageCookies: "Gestionează cookie-urile",
 };

@@ -163,17 +163,17 @@ const Navigation = () => {
   }];
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
   return <>
-      {/* Background behind navbar - Fixed z-index */}
+      {/* Background behind navbar */}
       <div style={{
       backgroundImage: 'url(/uploads/c84c3950-498f-4375-9214-40fe7004aa5f.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
-    }} className="fixed top-0 left-0 w-full h-8 sm:h-10 z-0"></div>
+    }} className="fixed top-0 left-0 w-full h-8 sm:h-10 z-1"></div>
 
       {/* Floating Logo - Mobile responsive positioning and sizing */}
       <div className="fixed top-2 left-1 sm:top-3 sm:left-5 md:top-4 md:left-6 z-50">
-        <Link to="/" className="block group" aria-label="Acasă - Logo MusicGift">
+        <Link to="/" className="block group">
           <img alt="MusicGift Logo" className="w-32 sm:w-40 md:w-48 lg:w-60 h-auto transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]" src="/uploads/logo_musicgift.webp" />
         </Link>
       </div>
@@ -191,7 +191,7 @@ const Navigation = () => {
             {/* Desktop Nav - enhanced */}
             <nav className="hidden lg:flex items-center">
               <div className="flex items-center space-x-6 xl:space-x-8">
-                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`relative text-sm font-semibold transition-all duration-300 hover:text-violet-600 ${location.pathname === item.path ? "text-violet-600" : "text-gray-700 hover:text-violet-600"} after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-violet-600 after:left-0 after:-bottom-1 after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left ${location.pathname === item.path ? "after:scale-x-100" : ""}`} aria-label={`Navighează la ${item.label}`}>
+                {navItems.map(item => <Link key={item.path + item.label} to={item.path} className={`relative text-sm font-semibold transition-all duration-300 hover:text-violet-600 ${location.pathname === item.path ? "text-violet-600" : "text-gray-700 hover:text-violet-600"} after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-violet-600 after:left-0 after:-bottom-1 after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left ${location.pathname === item.path ? "after:scale-x-100" : ""}`}>
                     {item.label}
                   </Link>)}
               </div>
@@ -201,12 +201,12 @@ const Navigation = () => {
             <div className="hidden lg:flex items-center space-x-3 ml-auto">
               {/* Settings Dropdown */}
               <div className="relative">
-                <button ref={desktopSettingsDropdownButtonRef} onClick={handleDesktopSettingsDropdownToggle} className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-gray-200/50 hover:border-gray-300 text-gray-700 hover:text-gray-800 transition-all duration-300 rounded-xl px-3 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-1 min-h-[40px] touch-manipulation" aria-label="Deschide setările de limbă și monedă" aria-expanded={isDesktopSettingsDropdownOpen}>
+                <button ref={desktopSettingsDropdownButtonRef} onClick={handleDesktopSettingsDropdownToggle} className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-gray-200/50 hover:border-gray-300 text-gray-700 hover:text-gray-800 transition-all duration-300 rounded-xl px-3 py-2 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-1 min-h-[40px] touch-manipulation">
                   <Settings className="w-4 h-4" />
                 </button>
 
                 {/* Settings Dropdown Menu */}
-                {isDesktopSettingsDropdownOpen && <div ref={desktopSettingsDropdownRef} className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md border-2 border-gray-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200" role="menu" aria-label="Setări limbă și monedă">
+                {isDesktopSettingsDropdownOpen && <div ref={desktopSettingsDropdownRef} className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md border-2 border-gray-200 shadow-2xl z-50 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
                     {/* Currency Section */}
                     <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Currency
@@ -214,7 +214,7 @@ const Navigation = () => {
                     <button onClick={() => {
                   setCurrency('EUR');
                   closeAllMenus();
-                }} className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`} role="menuitem" aria-label="Selectează moneda EUR">
+                }} className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}>
                       <div className="flex items-center space-x-2">
                         <CurrencyIcon currency="EUR" className="w-4 h-4" />
                         <span>EUR</span>
@@ -224,7 +224,7 @@ const Navigation = () => {
                     <button onClick={() => {
                   setCurrency('RON');
                   closeAllMenus();
-                }} className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`} role="menuitem" aria-label="Selectează moneda RON">
+                }} className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}>
                       <div className="flex items-center space-x-2">
                         <CurrencyIcon currency="RON" className="w-4 h-4" />
                         <span>RON</span>
@@ -241,7 +241,7 @@ const Navigation = () => {
                     {languages.map(lang => <button key={lang} onClick={() => {
                   setLanguage(lang);
                   closeAllMenus();
-                }} className={`w-full hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold shadow-sm" : "text-gray-700"}`} role="menuitem" aria-label={`Selectează limba ${languageNames[lang]}`}>
+                }} className={`w-full hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${language === lang ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold shadow-sm" : "text-gray-700"}`}>
                         <div className="flex items-center space-x-2">
                           <Globe className="w-4 h-4" />
                           <span>{languageNames[lang]}</span>
@@ -253,12 +253,12 @@ const Navigation = () => {
 
               {/* User Menu */}
               <div className="relative">
-                {user ? <button ref={desktopUserDropdownButtonRef} onClick={handleDesktopUserDropdownToggle} className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-rose-200/50 hover:border-rose-300 text-gray-700 hover:text-rose-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2" aria-label="Deschide meniul utilizator" aria-expanded={isDesktopUserDropdownOpen}>
+                {user ? <button ref={desktopUserDropdownButtonRef} onClick={handleDesktopUserDropdownToggle} className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-rose-200/50 hover:border-rose-300 text-gray-700 hover:text-rose-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2">
                     <User className="w-4 h-4" />
                     <span className="hidden md:inline text-sm font-medium">
                       {user.user_metadata?.full_name || user.email?.split('@')[0] || t('user')}
                     </span>
-                  </button> : <Link to="/auth" aria-label="Conectează-te în cont">
+                  </button> : <Link to="/auth">
                     <button className="relative overflow-hidden group bg-white/80 backdrop-blur-sm border-2 border-emerald-200/50 hover:border-emerald-300 text-gray-700 hover:text-emerald-700 transition-all duration-300 rounded-xl px-4 py-2.5 shadow-lg hover:shadow-xl hover:bg-white/90 flex items-center space-x-2">
                       <UserCircle className="w-4 h-4" />
                       <span className="text-sm font-medium">{t('signIn')}</span>
@@ -266,22 +266,22 @@ const Navigation = () => {
                   </Link>}
 
                 {/* User Dropdown Menu */}
-                {user && isDesktopUserDropdownOpen && <div ref={desktopUserDropdownRef} className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md shadow-2xl border-2 border-pink-200 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200" role="menu" aria-label="Meniu utilizator">
+                {user && isDesktopUserDropdownOpen && <div ref={desktopUserDropdownRef} className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-md shadow-2xl border-2 border-pink-200 rounded-xl p-2 animate-in slide-in-from-top-2 duration-200">
                     <div className="px-3 py-2 text-sm text-gray-600 bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg mx-1 mb-2 border border-pink-100">
                       <div className="font-medium text-gray-800">{user.user_metadata?.full_name || 'User'}</div>
                       <div className="text-xs text-gray-500 truncate">{user.email}</div>
                     </div>
                     <div className="bg-pink-200 my-2 h-px" />
-                    <Link to="/history" className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105" onClick={closeAllMenus} role="menuitem" aria-label="Vezi istoricul comenzilor">
+                    <Link to="/history" className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105" onClick={closeAllMenus}>
                       <History className="w-4 h-4 mr-3" />
                       <span className="font-medium">{t('history')}</span>
                     </Link>
-                    <Link to="/settings" className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105" onClick={closeAllMenus} role="menuitem" aria-label="Accesează setările contului">
+                    <Link to="/settings" className="flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 transition-all duration-300 rounded-lg mx-1 text-gray-700 hover:text-pink-700 px-3 py-2 transform hover:scale-105" onClick={closeAllMenus}>
                       <Settings className="w-4 h-4 mr-3" />
                       <span className="font-medium">{t('accountSettings')}</span>
                     </Link>
                     <div className="bg-pink-200 my-2 h-px" />
-                    <button onClick={handleSignOut} className="w-full text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer font-medium transform hover:scale-105 flex items-center" role="menuitem" aria-label="Deconectează-te din cont">
+                    <button onClick={handleSignOut} className="w-full text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer font-medium transform hover:scale-105 flex items-center">
                       <LogOut className="w-4 h-4 mr-3" />
                       {t('signOut')}
                     </button>
@@ -289,7 +289,7 @@ const Navigation = () => {
               </div>
               
               {/* Orange Shopping Cart Button */}
-              <Link to="/order" className="relative group" aria-label="Comandă o melodie personalizată">
+              <Link to="/order" className="relative group">
                 <div className="flex items-center bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full h-10 pl-3 pr-12 min-h-[40px] touch-manipulation">
                   <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center mr-2">
                     <ShoppingCart className="w-4 h-4 text-orange-500" />
@@ -305,24 +305,24 @@ const Navigation = () => {
             <div className="lg:hidden flex items-center space-x-2 ml-auto">
               {/* Mobile Language/Currency Button */}
               <div className="relative">
-                <button ref={languageCurrencyButtonRef} onClick={handleLanguageCurrencyToggle} className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" aria-label="Deschide setările de limbă și monedă" aria-expanded={isLanguageCurrencyDropdownOpen}>
+                <button ref={languageCurrencyButtonRef} onClick={handleLanguageCurrencyToggle} className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center">
                   <Settings className="w-5 h-5 text-gray-700" />
                 </button>
               </div>
 
               {/* Mobile User Account Button */}
               <div className="relative">
-                {user ? <button ref={userDropdownButtonRef} onClick={handleUserDropdownToggle} className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center relative" aria-label="Deschide meniul utilizator" aria-expanded={isUserDropdownOpen}>
+                {user ? <button ref={userDropdownButtonRef} onClick={handleUserDropdownToggle} className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center relative">
                     <User className="w-5 h-5 text-gray-700" />
                     {/* Online indicator */}
                     <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                  </button> : <Link to="/auth" className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" aria-label="Conectează-te în cont">
+                  </button> : <Link to="/auth" className="p-2 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center">
                     <UserCircle className="w-5 h-5 text-gray-700" />
                   </Link>}
               </div>
 
               {/* Mobile Menu Toggle */}
-              <button ref={mainMenuButtonRef} className="p-3 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" onClick={handleMainMenuToggle} aria-label="Deschide meniul principal" aria-expanded={isMenuOpen}>
+              <button ref={mainMenuButtonRef} className="p-3 rounded-lg hover:bg-gray-100/80 transition-colors duration-200 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" onClick={handleMainMenuToggle}>
                 <div className="w-6 h-6 flex flex-col justify-center items-center">
                   <div className={`w-5 h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-0.5" : ""}`} />
                   <div className={`w-5 h-0.5 my-0.5 transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""}`} />
@@ -331,7 +331,7 @@ const Navigation = () => {
               </button>
 
               {/* Mobile Order Button - Icon Only - After Menu */}
-              <Link to="/order" className="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-md transition duration-300 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center" aria-label="Comandă o melodie personalizată">
+              <Link to="/order" className="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-md transition duration-300 min-h-[44px] min-w-[44px] touch-manipulation flex items-center justify-center">
                 <ShoppingCart className="h-5 w-5" />
               </Link>
             </div>
