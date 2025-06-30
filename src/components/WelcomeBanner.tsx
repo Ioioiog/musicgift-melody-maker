@@ -60,7 +60,7 @@ const WelcomeBanner: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="relative w-full bg-white text-black shadow-xl border-b border-orange-500/30"
+          className="relative w-full bg-white text-black shadow-xl border-b border-orange-500/30 z-50"
         >
           <div className="max-w-6xl mx-auto px-4 py-8">
             <div className="flex items-center justify-between">
@@ -82,10 +82,11 @@ const WelcomeBanner: React.FC = () => {
                 variant="ghost"
                 size="icon"
                 onClick={handleDismiss}
-                className="text-black hover:bg-orange-500/20 hover:text-orange-600 h-10 w-10 shrink-0 border border-gray-300/50 hover:border-orange-500/50 transition-all duration-200"
+                className="text-black hover:bg-orange-500/20 hover:text-orange-600 h-12 w-12 shrink-0 border border-gray-300/50 hover:border-orange-500/50 transition-all duration-200 relative z-10 touch-manipulation"
                 aria-label="Close welcome banner"
+                style={{ minWidth: '48px', minHeight: '48px' }}
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" />
               </Button>
             </div>
           </div>

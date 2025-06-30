@@ -60,7 +60,7 @@ const Index = () => {
         </Suspense>
       </div>
 
-      {/* Welcome Banner */}
+      {/* Welcome Banner - High z-index to stay above overlays */}
       <Suspense fallback={<LoadingFallback className="h-12" />}>
         <WelcomeBanner />
       </Suspense>
@@ -70,37 +70,44 @@ const Index = () => {
         <MobileHeroSection />
       </Suspense>
 
-      {/* Main Content - Simplified structure */}
+      {/* Main Content - Restructured overlay to not interfere with welcome banner */}
       <main id="main-content" className="main-lcp-critical relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/40" />
-
         <div className="relative z-10">
           
           {/* Hero Content Section */}
-          <section className="py-4 md:py-0" aria-labelledby="hero-heading">
+          <section className="py-4 md:py-0 relative" aria-labelledby="hero-heading">
+            <div className="absolute inset-0 bg-black/30" />
             <div className="sr-only">
               <h2 id="hero-heading">Cadouri Muzicale Personalizate - MusicGift.ro</h2>
               <p>Transformă emoțiile în muzică cu serviciile noastre profesionale de compoziție muzicală personalizată.</p>
             </div>
-            <Suspense fallback={<LoadingFallback className="h-64" />}>
-              <HeroContent />
-            </Suspense>
+            <div className="relative z-10">
+              <Suspense fallback={<LoadingFallback className="h-64" />}>
+                <HeroContent />
+              </Suspense>
+            </div>
           </section>
 
           {/* Process Flow Section */}
-          <section className="py-2 md:py-4" aria-labelledby="process-heading">
+          <section className="py-2 md:py-4 relative" aria-labelledby="process-heading">
+            <div className="absolute inset-0 bg-black/20" />
             <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
-            <Suspense fallback={<LoadingFallback className="h-64" />}>
-              <AnimatedStepFlow />
-            </Suspense>
+            <div className="relative z-10">
+              <Suspense fallback={<LoadingFallback className="h-64" />}>
+                <AnimatedStepFlow />
+              </Suspense>
+            </div>
           </section>
 
           {/* Optimized Testimonials Section */}
-          <section className="py-2 md:py-4" aria-labelledby="testimonials-heading">
+          <section className="py-2 md:py-4 relative" aria-labelledby="testimonials-heading">
+            <div className="absolute inset-0 bg-black/20" />
             <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
-            <Suspense fallback={<LoadingFallback className="h-48" />}>
-              <OptimizedTestimonialSlider />
-            </Suspense>
+            <div className="relative z-10">
+              <Suspense fallback={<LoadingFallback className="h-48" />}>
+                <OptimizedTestimonialSlider />
+              </Suspense>
+            </div>
           </section>
 
           {/* Simplified Statistics Section */}

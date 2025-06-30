@@ -12,7 +12,7 @@ const MobileHeroSection: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="block sm:hidden bg-gradient-to-br from-purple-900/20 via-black/30 to-purple-900/20 py-8 px-4"
+      className="block sm:hidden bg-gradient-to-br from-purple-900/10 via-black/20 to-purple-900/10 py-8 px-4"
     >
       <div className="max-w-lg mx-auto text-center">
         {/* Mobile Hero Title */}
