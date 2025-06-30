@@ -13,7 +13,7 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { motion } from "framer-motion";
 import { Clock, Download, Gift, Star, Music, Heart } from "lucide-react";
 import { usePackages } from "@/hooks/usePackageData";
-import { formatCurrency } from "@/utils/currencyUtils";
+import { getPackagePrice } from "@/utils/pricing";
 
 const France = () => {
   const { language, setLanguage, t } = useLanguage();
@@ -30,28 +30,56 @@ const France = () => {
     }
   }, [language, currency, setLanguage, setCurrency]);
 
-  const getDeliveryTimeText = (deliveryDays: number, packageValue: string) => {
+  // Map package values to estimated delivery days for display
+  const getEstimatedDeliveryDays = (packageValue: string) => {
+    const deliveryMapping: { [key: string]: number } = {
+      'gift': 0, // Instant
+      'plus': 1.5, // 1-2 days
+      'personal': 4, // 3-5 days
+      'premium': 6, // 5-7 days
+      'business': 6, // 5-7 days
+      'artist': 8.5, // 7-10 days
+      'remix': 4, // 3-5 days
+      'instrumental': 4, // 3-5 days
+      'wedding': 6, // 5-7 days
+      'baptism': 4, // 3-5 days
+      'comingOfAge': 6, // 5-7 days
+      'dj': 8.5 // 7-10 days
+    };
+    return deliveryMapping[packageValue] || 5;
+  };
+
+  const getDeliveryTimeText = (packageValue: string) => {
     if (packageValue === 'gift') {
       return 'Instantané';
     }
-    if (deliveryDays === 1) {
+    
+    const days = getEstimatedDeliveryDays(packageValue);
+    
+    if (days <= 1) {
       return '1 jour ouvrable';
     }
-    if (deliveryDays <= 2) {
+    if (days <= 2) {
       return '1-2 jours ouvrables';
     }
-    if (deliveryDays <= 3) {
+    if (days <= 3) {
       return '2-3 jours ouvrables';
     }
-    if (deliveryDays <= 5) {
+    if (days <= 5) {
       return '3-5 jours ouvrables';
     }
-    return `${deliveryDays} jours ouvrables`;
+    if (days <= 7) {
+      return '5-7 jours ouvrables';
+    }
+    return '7-10 jours ouvrables';
   };
 
-  const getPackagePrice = (pkg: any) => {
-    const price = pkg.eur_price || pkg.price || 0;
-    return formatCurrency(price, 'EUR');
+  const getPackagePriceFormatted = (pkg: any) => {
+    const price = getPackagePrice(pkg, 'EUR');
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(price);
   };
 
   if (isLoading) {
@@ -207,7 +235,7 @@ const France = () => {
                 <Card className="h-full hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <div className="flex justify-between items-start mb-2">
-                      <CardTitle className="text-xl">{t(pkg.name_key)}</CardTitle>
+                      <CardTitle className="text-xl">{t(pkg.label_key)}</CardTitle>
                       {pkg.value === 'gift' && (
                         <Badge variant="secondary" className="bg-green-100 text-green-800">
                           <Gift className="w-3 h-3 mr-1" />
@@ -217,11 +245,11 @@ const France = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-2xl font-bold text-orange-500">
-                        {getPackagePrice(pkg)}
+                        {getPackagePriceFormatted(pkg)}
                       </span>
                       <div className="flex items-center text-sm text-gray-500">
                         <Clock className="w-4 h-4 mr-1" />
-                        {getDeliveryTimeText(pkg.delivery_days || 5, pkg.value)}
+                        {getDeliveryTimeText(pkg.value)}
                       </div>
                     </div>
                   </CardHeader>
@@ -234,7 +262,7 @@ const France = () => {
                         {pkg.includes.slice(0, 3).map((include: any) => (
                           <li key={include.id} className="flex items-center text-sm">
                             <Star className="w-3 h-3 mr-2 text-orange-500 flex-shrink-0" />
-                            <span>{t(include.description_key)}</span>
+                            <span>{t(include.include_key)}</span>
                           </li>
                         ))}
                         {pkg.includes.length > 3 && (
