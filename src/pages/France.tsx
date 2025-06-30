@@ -13,11 +13,20 @@ import { motion } from "framer-motion";
 import { Clock, Download, Gift, Star, Music, Heart } from "lucide-react";
 import { usePackages } from "@/hooks/usePackageData";
 import { getPackagePrice } from "@/utils/pricing";
-
 const France = () => {
-  const { language, setLanguage, t } = useLanguage();
-  const { currency, setCurrency } = useCurrency();
-  const { data: packages = [], isLoading } = usePackages();
+  const {
+    language,
+    setLanguage,
+    t
+  } = useLanguage();
+  const {
+    currency,
+    setCurrency
+  } = useCurrency();
+  const {
+    data: packages = [],
+    isLoading
+  } = usePackages();
 
   // Auto-set French language and EUR currency for France visitors
   useEffect(() => {
@@ -31,30 +40,40 @@ const France = () => {
 
   // Map package values to estimated delivery days for display
   const getEstimatedDeliveryDays = (packageValue: string) => {
-    const deliveryMapping: { [key: string]: number } = {
-      'gift': 0, // Instant
-      'plus': 1.5, // 1-2 days
-      'personal': 4, // 3-5 days
-      'premium': 6, // 5-7 days
-      'business': 6, // 5-7 days
-      'artist': 8.5, // 7-10 days
-      'remix': 4, // 3-5 days
-      'instrumental': 4, // 3-5 days
-      'wedding': 6, // 5-7 days
-      'baptism': 4, // 3-5 days
-      'comingOfAge': 6, // 5-7 days
+    const deliveryMapping: {
+      [key: string]: number;
+    } = {
+      'gift': 0,
+      // Instant
+      'plus': 1.5,
+      // 1-2 days
+      'personal': 4,
+      // 3-5 days
+      'premium': 6,
+      // 5-7 days
+      'business': 6,
+      // 5-7 days
+      'artist': 8.5,
+      // 7-10 days
+      'remix': 4,
+      // 3-5 days
+      'instrumental': 4,
+      // 3-5 days
+      'wedding': 6,
+      // 5-7 days
+      'baptism': 4,
+      // 3-5 days
+      'comingOfAge': 6,
+      // 5-7 days
       'dj': 8.5 // 7-10 days
     };
     return deliveryMapping[packageValue] || 5;
   };
-
   const getDeliveryTimeText = (packageValue: string) => {
     if (packageValue === 'gift') {
       return 'Instantané';
     }
-    
     const days = getEstimatedDeliveryDays(packageValue);
-    
     if (days <= 1) {
       return '1 jour ouvrable';
     }
@@ -72,7 +91,6 @@ const France = () => {
     }
     return '7-10 jours ouvrables';
   };
-
   const getPackagePriceFormatted = (pkg: any) => {
     const price = getPackagePrice(pkg, 'EUR');
     return new Intl.NumberFormat('fr-FR', {
@@ -80,10 +98,8 @@ const France = () => {
       currency: 'EUR'
     }).format(price);
   };
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col">
+    return <div className="min-h-screen flex flex-col">
         <Navigation />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
@@ -92,34 +108,30 @@ const France = () => {
           </div>
         </div>
         <Footer />
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      <SEOHead
-        title="Cadeaux Musicaux Personnalisés France | Chansons sur Mesure par Mihai Gruia"
-        description="Créez des chansons personnalisées uniques en France. Livraison numérique rapide, qualité studio professionnelle. Cartes cadeaux instantanées disponibles."
-        url="https://www.musicgift.ro/fr"
-      />
+  return <div className="min-h-screen flex flex-col">
+      <SEOHead title="Cadeaux Musicaux Personnalisés France | Chansons sur Mesure par Mihai Gruia" description="Créez des chansons personnalisées uniques en France. Livraison numérique rapide, qualité studio professionnelle. Cartes cadeaux instantanées disponibles." url="https://www.musicgift.ro/fr" />
       <StructuredDataLoader />
       <Navigation />
       
       {/* Hero Section */}
       <section className="pt-20 pb-12 text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}>
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="max-w-6xl mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 30
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.8
+        }} className="text-center my-[75px]">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Cadeaux Musicaux Personnalisés
               <span className="block text-orange-400">en France 🇫🇷</span>
@@ -149,12 +161,15 @@ const France = () => {
       {/* Digital Service Benefits */}
       <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
         <div className="max-w-6xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }} className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Service Musical Numérique Premium
             </h2>
@@ -164,12 +179,16 @@ const France = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-center"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.1
+          }} className="text-center">
               <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Download className="w-8 h-8 text-orange-500" />
               </div>
@@ -177,12 +196,16 @@ const France = () => {
               <p className="text-gray-600">Fichiers MP3 et WAV professionnels, prêts pour tous vos besoins</p>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-center"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.2
+          }} className="text-center">
               <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Clock className="w-8 h-8 text-orange-500" />
               </div>
@@ -190,12 +213,16 @@ const France = () => {
               <p className="text-gray-600">Cartes cadeaux instantanées, chansons personnalisées en 1-5 jours</p>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-center"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.3
+          }} className="text-center">
               <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Heart className="w-8 h-8 text-orange-500" />
               </div>
@@ -209,12 +236,15 @@ const France = () => {
       {/* Packages Section */}
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }} className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Nos Forfaits Musicaux
             </h2>
@@ -224,23 +254,24 @@ const France = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {packages.map((pkg, index) => (
-              <motion.div
-                key={pkg.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
+            {packages.map((pkg, index) => <motion.div key={pkg.id} initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: index * 0.1
+          }}>
                 <Card className="h-full hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <div className="flex justify-between items-start mb-2">
                       <CardTitle className="text-xl">{t(pkg.label_key)}</CardTitle>
-                      {pkg.value === 'gift' && (
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                      {pkg.value === 'gift' && <Badge variant="secondary" className="bg-green-100 text-green-800">
                           <Gift className="w-3 h-3 mr-1" />
                           Instantané
-                        </Badge>
-                      )}
+                        </Badge>}
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-2xl font-bold text-orange-500">
@@ -256,21 +287,15 @@ const France = () => {
                     <p className="text-sm text-gray-600 mb-4">
                       {t(pkg.description_key)}
                     </p>
-                    {pkg.includes && pkg.includes.length > 0 && (
-                      <ul className="space-y-2 mb-4">
-                        {pkg.includes.slice(0, 3).map((include: any) => (
-                          <li key={include.id} className="flex items-center text-sm">
+                    {pkg.includes && pkg.includes.length > 0 && <ul className="space-y-2 mb-4">
+                        {pkg.includes.slice(0, 3).map((include: any) => <li key={include.id} className="flex items-center text-sm">
                             <Star className="w-3 h-3 mr-2 text-orange-500 flex-shrink-0" />
                             <span>{t(include.include_key)}</span>
-                          </li>
-                        ))}
-                        {pkg.includes.length > 3 && (
-                          <li className="text-sm text-gray-500">
+                          </li>)}
+                        {pkg.includes.length > 3 && <li className="text-sm text-gray-500">
                             +{pkg.includes.length - 3} autres avantages
-                          </li>
-                        )}
-                      </ul>
-                    )}
+                          </li>}
+                      </ul>}
                     <Button asChild className="w-full" variant={pkg.value === 'premium' ? 'default' : 'outline'}>
                       <Link to={pkg.value === 'gift' ? '/gift' : '/order'}>
                         {pkg.value === 'gift' ? 'Acheter maintenant' : 'Choisir ce forfait'}
@@ -278,16 +303,19 @@ const France = () => {
                     </Button>
                   </CardContent>
                 </Card>
-              </motion.div>
-            ))}
+              </motion.div>)}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-center mt-12"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.5
+        }} className="text-center mt-12">
             <Button asChild size="lg" variant="outline">
               <Link to="/packages">
                 Voir tous les forfaits détaillés
@@ -300,11 +328,15 @@ const France = () => {
       {/* Rush Delivery Section */}
       <section className="py-16 bg-orange-50">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6
+        }}>
             <h2 className="text-3xl font-bold mb-4">
               Besoin d'une livraison express ? 🚀
             </h2>
@@ -321,8 +353,6 @@ const France = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default France;
