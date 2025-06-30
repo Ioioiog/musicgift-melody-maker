@@ -168,7 +168,7 @@ const VideoHero = () => {
         </div>}
 
       {/* Video controls - Top position */}
-      <div className="absolute top-24 right-4 sm:top-32 sm:right-6 z-30 flex gap-2 defer-load mx-[64px] my-[34px]">
+      <div className="absolute top-24 right-4 sm:top-32 sm:right-6 z-30 flex gap-2 defer-load mx-[64px] my-[25px]">
         <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
           {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
         </Button>
