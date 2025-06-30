@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
@@ -204,19 +205,7 @@ const VideoHero = () => {
         </div>
       )}
 
-      {/* Pricing Badge - Top Right */}
-      <div className="absolute top-6 right-6 z-30 hidden sm:block">
-        <PricingBadge />
-      </div>
-
-      {/* Mobile Pricing Badge - Adjusted position */}
-      <div className="absolute top-20 right-4 z-30 block sm:hidden">
-        <div className="scale-90">
-          <PricingBadge />
-        </div>
-      </div>
-
-      {/* Video controls - Adjusted position to avoid badge overlap */}
+      {/* Video controls - Top position */}
       <div className="absolute top-24 right-4 sm:top-32 sm:right-6 z-30 flex gap-2 defer-load">
         <Button onClick={handleTogglePlay} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
           {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
@@ -224,6 +213,18 @@ const VideoHero = () => {
         <Button onClick={handleToggleAudio} size="icon" className="bg-white/80 text-black rounded-full shadow hw-accelerated">
           {hasAudio ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
         </Button>
+      </div>
+
+      {/* Pricing Badge - Positioned below video controls */}
+      <div className="absolute top-40 right-4 sm:top-48 sm:right-6 z-30 hidden sm:block">
+        <PricingBadge />
+      </div>
+
+      {/* Mobile Pricing Badge - Positioned below mobile controls */}
+      <div className="absolute top-36 right-4 z-30 block sm:hidden">
+        <div className="scale-90">
+          <PricingBadge />
+        </div>
       </div>
 
       <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50"></div>
