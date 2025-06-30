@@ -218,8 +218,11 @@ const Footer = () => {
 
       {/* Legal Modals */}
       <LegalModals 
-        showModal={showLegalModal} 
-        onClose={() => setShowLegalModal(null)} 
+        showTerms={showLegalModal === 'terms'}
+        showPrivacy={showLegalModal === 'privacy'}
+        showRefund={showLegalModal === 'refund'}
+        showCookie={showLegalModal === 'cookies'}
+        onClose={() => setShowLegalModal(null)}
       />
 
       {/* Cookie Settings Modal */}
