@@ -13,11 +13,20 @@ import { motion } from "framer-motion";
 import { Clock, Download, Gift, Star, Music, Heart } from "lucide-react";
 import { usePackages } from "@/hooks/usePackageData";
 import { getPackagePrice } from "@/utils/pricing";
-
 const France = () => {
-  const { language, setLanguage, t } = useLanguage();
-  const { currency, setCurrency } = useCurrency();
-  const { data: packages = [], isLoading } = usePackages();
+  const {
+    language,
+    setLanguage,
+    t
+  } = useLanguage();
+  const {
+    currency,
+    setCurrency
+  } = useCurrency();
+  const {
+    data: packages = [],
+    isLoading
+  } = usePackages();
 
   // Auto-set French language and EUR currency for France visitors
   useEffect(() => {
@@ -89,10 +98,8 @@ const France = () => {
       currency: 'EUR'
     }).format(price);
   };
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col">
+    return <div className="min-h-screen flex flex-col">
         <Navigation />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
@@ -101,34 +108,30 @@ const France = () => {
           </div>
         </div>
         <Footer />
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      <SEOHead 
-        title="Cadeaux Musicaux Personnalisés France | Chansons sur Mesure par Mihai Gruia" 
-        description="Créez des chansons personnalisées uniques en France. Livraison numérique rapide, qualité studio professionnelle. Cartes cadeaux instantanées disponibles." 
-        url="https://www.musicgift.ro/fr" 
-      />
+  return <div className="min-h-screen flex flex-col">
+      <SEOHead title="Cadeaux Musicaux Personnalisés France | Chansons sur Mesure par Mihai Gruia" description="Créez des chansons personnalisées uniques en France. Livraison numérique rapide, qualité studio professionnelle. Cartes cadeaux instantanées disponibles." url="https://www.musicgift.ro/fr" />
       <StructuredDataLoader />
       <Navigation />
       
       {/* Hero Section */}
       <section className="pt-20 pb-12 text-white relative overflow-hidden" style={{
-        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}>
+      backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}>
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="max-w-6xl mx-auto px-4 relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.8 }} 
-            className="text-center my-[75px]"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 30
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.8
+        }} className="text-center my-[75px]">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Cadeaux Musicaux Personnalisés
               <span className="block text-orange-400">en France 🇫🇷</span>
@@ -170,7 +173,7 @@ const France = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Service Musical Numérique Premium
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl max-w-3xl mx-auto text-zinc-50">
               Livraison numérique rapide, accès permanent, qualité studio professionnelle
             </p>
           </motion.div>
@@ -190,7 +193,7 @@ const France = () => {
                 <Download className="w-8 h-8 text-orange-500" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Téléchargement Haute Qualité</h3>
-              <p className="text-gray-600">Fichiers MP3 et WAV professionnels, prêts pour tous vos besoins</p>
+              <p className="text-zinc-50">Fichiers MP3 et WAV professionnels, prêts pour tous vos besoins</p>
             </motion.div>
 
             <motion.div initial={{
@@ -207,7 +210,7 @@ const France = () => {
                 <Clock className="w-8 h-8 text-orange-500" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Livraison Rapide</h3>
-              <p className="text-gray-600">Cartes cadeaux instantanées, chansons personnalisées en 1-5 jours</p>
+              <p className="text-zinc-50">Cartes cadeaux instantanées, chansons personnalisées en 1-5 jours</p>
             </motion.div>
 
             <motion.div initial={{
@@ -224,7 +227,7 @@ const France = () => {
                 <Heart className="w-8 h-8 text-orange-500" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Accès Permanent</h3>
-              <p className="text-gray-600">Vos chansons sont à vous pour toujours, téléchargement illimité</p>
+              <p className="text-zinc-50">Vos chansons sont à vous pour toujours, téléchargement illimité</p>
             </motion.div>
           </div>
         </div>
@@ -350,8 +353,6 @@ const France = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default France;
