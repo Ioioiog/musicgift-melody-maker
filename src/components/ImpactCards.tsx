@@ -188,6 +188,8 @@ const ImpactCards = () => {
       style={backgroundStyle}
       className="relative overflow-hidden py-[16px] my-0 md:py-[15px]"
     >
+      {/* Add the same gradient overlay filter as Call-to-Action section */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
       
       <div className="max-w-full mx-auto px-0 relative z-10">
         <div className="overflow-hidden">
