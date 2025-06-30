@@ -13,20 +13,11 @@ import { motion } from "framer-motion";
 import { Clock, Download, Gift, Star, Music, Heart } from "lucide-react";
 import { usePackages } from "@/hooks/usePackageData";
 import { getPackagePrice } from "@/utils/pricing";
+
 const France = () => {
-  const {
-    language,
-    setLanguage,
-    t
-  } = useLanguage();
-  const {
-    currency,
-    setCurrency
-  } = useCurrency();
-  const {
-    data: packages = [],
-    isLoading
-  } = usePackages();
+  const { language, setLanguage, t } = useLanguage();
+  const { currency, setCurrency } = useCurrency();
+  const { data: packages = [], isLoading } = usePackages();
 
   // Auto-set French language and EUR currency for France visitors
   useEffect(() => {
@@ -98,8 +89,10 @@ const France = () => {
       currency: 'EUR'
     }).format(price);
   };
+
   if (isLoading) {
-    return <div className="min-h-screen flex flex-col">
+    return (
+      <div className="min-h-screen flex flex-col">
         <Navigation />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
@@ -108,30 +101,34 @@ const France = () => {
           </div>
         </div>
         <Footer />
-      </div>;
+      </div>
+    );
   }
-  return <div className="min-h-screen flex flex-col">
-      <SEOHead title="Cadeaux Musicaux Personnalisés France | Chansons sur Mesure par Mihai Gruia" description="Créez des chansons personnalisées uniques en France. Livraison numérique rapide, qualité studio professionnelle. Cartes cadeaux instantanées disponibles." url="https://www.musicgift.ro/fr" />
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <SEOHead 
+        title="Cadeaux Musicaux Personnalisés France | Chansons sur Mesure par Mihai Gruia" 
+        description="Créez des chansons personnalisées uniques en France. Livraison numérique rapide, qualité studio professionnelle. Cartes cadeaux instantanées disponibles." 
+        url="https://www.musicgift.ro/fr" 
+      />
       <StructuredDataLoader />
       <Navigation />
       
       {/* Hero Section */}
       <section className="pt-20 pb-12 text-white relative overflow-hidden" style={{
-      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }}>
+        backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}>
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="max-w-6xl mx-auto px-4 relative z-10">
-          <motion.div initial={{
-          opacity: 0,
-          y: 30
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.8
-        }} className="text-center my-[75px]">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.8 }} 
+            className="text-center my-[75px]"
+          >
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Cadeaux Musicaux Personnalisés
               <span className="block text-orange-400">en France 🇫🇷</span>
@@ -353,6 +350,8 @@ const France = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default France;
