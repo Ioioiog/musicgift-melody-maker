@@ -1,10 +1,9 @@
 
 import React from 'react';
-import { Clock, Euro } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { motion } from 'framer-motion';
-import CurrencyIcon from '@/components/CurrencyIcon';
 
 const PricingBadge: React.FC = () => {
   const { t, language } = useLanguage();
@@ -30,19 +29,19 @@ const PricingBadge: React.FC = () => {
            'Delivery: 3-5 days';
   };
 
-  // Direct starting from translations for each language
-  const getStartingFrom = () => {
-    const startingFromTexts = {
-      'ro': 'Începând de la',
-      'en': 'Starting from',
-      'fr': 'À partir de',
-      'de': 'Ab',
-      'pl': 'Począwszy od'
+  // Direct pricing text translations for each language
+  const getPricingText = () => {
+    const pricingTexts = {
+      'ro': `Prețuri începând de la ${currentPrice} ${currency}`,
+      'en': `Prices starting from ${currentPrice} ${currency}`,
+      'fr': `Prix à partir de ${currentPrice} ${currency}`,
+      'de': `Preise ab ${currentPrice} ${currency}`,
+      'pl': `Ceny od ${currentPrice} ${currency}`
     };
     
-    return startingFromTexts[language as keyof typeof startingFromTexts] || 
-           startingFromTexts['en'] || 
-           'Starting from';
+    return pricingTexts[language as keyof typeof pricingTexts] || 
+           pricingTexts['en'] || 
+           `Prices starting from ${currentPrice} ${currency}`;
   };
   
   return (
@@ -67,11 +66,10 @@ const PricingBadge: React.FC = () => {
             </span>
           </div>
           
-          {/* Price Row */}
+          {/* Price Row - without currency icon */}
           <div className="flex items-center gap-2">
-            <CurrencyIcon currency={currency} className="w-4 h-4 text-orange-100" />
             <span className="text-lg font-bold text-white">
-              {getStartingFrom()} {currentPrice} {currency}
+              {getPricingText()}
             </span>
           </div>
         </div>
