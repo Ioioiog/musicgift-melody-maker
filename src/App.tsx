@@ -29,11 +29,13 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentError from "./pages/PaymentError";
 import PaymentCancel from "./pages/PaymentCancel";
 import Unsubscribe from "./pages/Unsubscribe";
+import France from "./pages/France";
 
 const AppContent = () => (
   <ErrorBoundary>
     <Routes>
       <Route path="/" element={<Index />} />
+      <Route path="/fr" element={<France />} />
       <Route path="/about" element={<About />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/blog/:id" element={<BlogPost />} />
