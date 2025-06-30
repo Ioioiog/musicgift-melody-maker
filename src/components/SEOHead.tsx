@@ -1,6 +1,7 @@
 
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocation } from 'react-router-dom';
 
 interface SEOHeadProps {
   title?: string;
@@ -15,17 +16,48 @@ const SEOHead = ({
   title, 
   description, 
   image = "/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png",
-  url = "https://www.musicgift.ro",
+  url,
   type = "website",
   structuredData
 }: SEOHeadProps) => {
   const { language, t } = useLanguage();
+  const location = useLocation();
   
   const defaultTitle = t('siteTitle', 'MusicGift.ro - Personalized Musical Gifts');
   const defaultDescription = t('siteDescription', 'Create personalized songs and unique musical gifts. Professional composition services. Over 2000 songs created with love.');
 
   const finalTitle = title || defaultTitle;
   const finalDescription = description || defaultDescription;
+
+  // Generate dynamic hreflang URLs based on current path
+  const generateHreflangUrls = () => {
+    const baseUrl = 'https://www.musicgift.ro';
+    const currentPath = location.pathname;
+    
+    // Language mapping for hreflang URLs
+    const languageRoutes = {
+      'ro': currentPath === '/fr' || currentPath === '/en' || currentPath === '/de' || currentPath === '/pl' || currentPath === '/it' ? '/' : currentPath,
+      'en': currentPath === '/fr' || currentPath === '/de' || currentPath === '/pl' || currentPath === '/it' ? '/en' : currentPath === '/' ? '/en' : currentPath,
+      'fr': currentPath === '/en' || currentPath === '/de' || currentPath === '/pl' || currentPath === '/it' ? '/fr' : currentPath === '/' ? '/fr' : currentPath,
+      'de': currentPath === '/fr' || currentPath === '/en' || currentPath === '/pl' || currentPath === '/it' ? '/de' : currentPath === '/' ? '/de' : currentPath,
+      'pl': currentPath === '/fr' || currentPath === '/en' || currentPath === '/de' || currentPath === '/it' ? '/pl' : currentPath === '/' ? '/pl' : currentPath,
+      'it': currentPath === '/fr' || currentPath === '/en' || currentPath === '/de' || currentPath === '/pl' ? '/it' : currentPath === '/' ? '/it' : currentPath
+    };
+
+    return {
+      'ro': `${baseUrl}${languageRoutes.ro}`,
+      'en': `${baseUrl}${languageRoutes.en}`,
+      'fr': `${baseUrl}${languageRoutes.fr}`,
+      'de': `${baseUrl}${languageRoutes.de}`,
+      'pl': `${baseUrl}${languageRoutes.pl}`,
+      'it': `${baseUrl}${languageRoutes.it}`
+    };
+  };
+
+  const hreflangUrls = generateHreflangUrls();
+  
+  // Use provided URL or generate canonical URL
+  const canonicalUrl = url || `https://www.musicgift.ro${location.pathname}`;
 
   // Language-specific voice search keywords
   const getVoiceSearchKeywords = () => {
@@ -179,17 +211,17 @@ const SEOHead = ({
       <meta name="geo.position" content={geoData.position} />
       <meta name="ICBM" content={geoData.icbm} />
       
-      {/* Language-specific hreflang tags */}
-      <link rel="alternate" hrefLang="ro" href="https://www.musicgift.ro/" />
-      <link rel="alternate" hrefLang="en" href="https://www.musicgift.ro/en" />
-      <link rel="alternate" hrefLang="fr" href="https://www.musicgift.ro/fr" />
-      <link rel="alternate" hrefLang="de" href="https://www.musicgift.ro/de" />
-      <link rel="alternate" hrefLang="pl" href="https://www.musicgift.ro/pl" />
-      <link rel="alternate" hrefLang="it" href="https://www.musicgift.ro/it" />
+      {/* Dynamic hreflang tags based on current page */}
+      <link rel="alternate" hrefLang="ro" href={hreflangUrls.ro} />
+      <link rel="alternate" hrefLang="en" href={hreflangUrls.en} />
+      <link rel="alternate" hrefLang="fr" href={hreflangUrls.fr} />
+      <link rel="alternate" hrefLang="de" href={hreflangUrls.de} />
+      <link rel="alternate" hrefLang="pl" href={hreflangUrls.pl} />
+      <link rel="alternate" hrefLang="it" href={hreflangUrls.it} />
       <link rel="alternate" hrefLang="x-default" href="https://www.musicgift.ro/" />
       
       {/* Canonical URL */}
-      <link rel="canonical" href={url} />
+      <link rel="canonical" href={canonicalUrl} />
       
       {/* Language and Locale */}
       <meta httpEquiv="content-language" content={language} />
@@ -198,11 +230,11 @@ const SEOHead = ({
       {/* Open Graph Tags */}
       <meta property="og:title" content={finalTitle} />
       <meta property="og:description" content={finalDescription} />
-      <meta property="og:image" content={`${url}${image}`} />
+      <meta property="og:image" content={`https://www.musicgift.ro${image}`} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={finalTitle} />
-      <meta property="og:url" content={url} />
+      <meta property="og:url" content={canonicalUrl} />
       <meta property="og:type" content={type} />
       <meta property="og:site_name" content="MusicGift.ro" />
       <meta property="og:locale" content={language === 'ro' ? 'ro_RO' : language === 'en' ? 'en_US' : language === 'fr' ? 'fr_FR' : language === 'de' ? 'de_DE' : language === 'pl' ? 'pl_PL' : 'it_IT'} />
@@ -211,7 +243,7 @@ const SEOHead = ({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={finalTitle} />
       <meta name="twitter:description" content={finalDescription} />
-      <meta name="twitter:image" content={`${url}${image}`} />
+      <meta name="twitter:image" content={`https://www.musicgift.ro${image}`} />
       <meta name="twitter:image:alt" content={finalTitle} />
       
       {/* Voice Search Specific Tags */}
