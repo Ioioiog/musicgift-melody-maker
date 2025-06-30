@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -20,13 +19,13 @@ const English = () => {
   const { currency, setCurrency } = useCurrency();
   const { data: packages = [], isLoading } = usePackages();
 
-  // Auto-set English language and GBP currency for UK visitors
+  // Auto-set English language and EUR currency for UK visitors
   useEffect(() => {
     if (language !== 'en') {
       setLanguage('en');
     }
-    if (currency !== 'GBP') {
-      setCurrency('GBP');
+    if (currency !== 'EUR') {
+      setCurrency('EUR');
     }
   }, [language, currency, setLanguage, setCurrency]);
 
@@ -72,10 +71,10 @@ const English = () => {
   };
 
   const getPackagePriceFormatted = (pkg: any) => {
-    const price = getPackagePrice(pkg, 'GBP');
+    const price = getPackagePrice(pkg, 'EUR');
     return new Intl.NumberFormat('en-GB', {
       style: 'currency',
-      currency: 'GBP'
+      currency: 'EUR'
     }).format(price);
   };
 

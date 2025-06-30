@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -20,13 +19,13 @@ const Poland = () => {
   const { currency, setCurrency } = useCurrency();
   const { data: packages = [], isLoading } = usePackages();
 
-  // Auto-set Polish language and PLN currency for Polish visitors
+  // Auto-set Polish language and EUR currency for Polish visitors
   useEffect(() => {
     if (language !== 'pl') {
       setLanguage('pl');
     }
-    if (currency !== 'PLN') {
-      setCurrency('PLN');
+    if (currency !== 'EUR') {
+      setCurrency('EUR');
     }
   }, [language, currency, setLanguage, setCurrency]);
 
@@ -72,10 +71,10 @@ const Poland = () => {
   };
 
   const getPackagePriceFormatted = (pkg: any) => {
-    const price = getPackagePrice(pkg, 'PLN');
+    const price = getPackagePrice(pkg, 'EUR');
     return new Intl.NumberFormat('pl-PL', {
       style: 'currency',
-      currency: 'PLN'
+      currency: 'EUR'
     }).format(price);
   };
 
