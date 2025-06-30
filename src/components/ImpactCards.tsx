@@ -1,11 +1,10 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Music, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
 
 const stats = [
   {
-    icon: Music,
+    icon: "🎵",
     title: {
       ro: "2.000+",
       en: "2,000+",
@@ -19,10 +18,17 @@ const stats = [
       fr: "Chansons Personnalisées",
       de: "Personalisierte Songs",
       pl: "Piosenki na Zamówienie"
+    },
+    desc: {
+      ro: "Emoții transformate în muzică.",
+      en: "Emotions turned into music.",
+      fr: "Des émotions transformées en musique.",
+      de: "Emotionen in Musik verwandelt.",
+      pl: "Emocje przekształcone w muzykę."
     }
   },
   {
-    icon: Mic,
+    icon: "🎤",
     title: {
       ro: "20+",
       en: "20+",
@@ -36,10 +42,17 @@ const stats = [
       fr: "Années de Passion Musicale",
       de: "Jahre Musikalischer Leidenschaft",
       pl: "Lata Muzycznej Pasji"
+    },
+    desc: {
+      ro: "Două decenii de creație și inspirație.",
+      en: "Two decades of creation and inspiration.",
+      fr: "Deux décennies de création et d'inspiration.",
+      de: "Zwei Jahrzehnte Kreativität und Inspiration.",
+      pl: "Dwie dekady twórczości i inspiracji."
     }
   },
   {
-    icon: Star,
+    icon: "🌟",
     title: {
       ro: "98%",
       en: "98%",
@@ -53,10 +66,17 @@ const stats = [
       fr: "Clients Satisfaits",
       de: "Zufriedene Kunden",
       pl: "Zadowoleni Klienci"
+    },
+    desc: {
+      ro: "Mii de recenzii care ne-au confirmat misiunea.",
+      en: "Thousands of reviews confirming our mission.",
+      fr: "Des milliers d'avis qui confirment notre mission.",
+      de: "Tausende Bewertungen, die unsere Mission bestätigen.",
+      pl: "Tysiące opinii potwierdzających naszą misję."
     }
   },
   {
-    icon: Rocket,
+    icon: "🚀",
     title: {
       ro: "50+",
       en: "50+",
@@ -70,10 +90,17 @@ const stats = [
       fr: "Artistes Lancés",
       de: "Künstler Entdeckt",
       pl: "Wypromowanych Artystów"
+    },
+    desc: {
+      ro: "Reflectoare puse pe talente care inspiră.",
+      en: "Spotlights on talents that inspire.",
+      fr: "Lumières sur des talents inspirants.",
+      de: "Scheinwerfer auf inspirierende Talente.",
+      pl: "Reflektory skierowane na inspirujące talenty."
     }
   },
   {
-    icon: PartyPopper,
+    icon: "🎉",
     title: {
       ro: "400+",
       en: "400+",
@@ -87,10 +114,17 @@ const stats = [
       fr: "Événements Mémorables",
       de: "Unvergessliche Events",
       pl: "Niezapomniane Wydarzenia"
+    },
+    desc: {
+      ro: "Fiecare spectacol, o poveste unică.",
+      en: "Each show, a unique story.",
+      fr: "Chaque spectacle, une histoire unique.",
+      de: "Jede Show, eine einzigartige Geschichte.",
+      pl: "Każdy występ to wyjątkowa historia."
     }
   },
   {
-    icon: Disc,
+    icon: "💿",
     title: {
       ro: "100+",
       en: "100+",
@@ -104,10 +138,17 @@ const stats = [
       fr: "Albums Sortis",
       de: "Veröffentlichte Alben",
       pl: "Wydanych Albumów"
+    },
+    desc: {
+      ro: "Suntem parte din discografia lor.",
+      en: "We are part of their discography.",
+      fr: "Nous faisons partie de leur discographie.",
+      de: "Wir sind Teil ihrer Diskografie.",
+      pl: "Jesteśmy częścią ich dyskografii."
     }
   },
   {
-    icon: Trophy,
+    icon: "🏆",
     title: {
       ro: "1 Milion+",
       en: "1 Million+",
@@ -121,45 +162,85 @@ const stats = [
       fr: "Exemplaires Vendus",
       de: "Verkaufte Exemplare",
       pl: "Sprzedanych Egzemplarzy"
+    },
+    desc: {
+      ro: "Album premiat, reper în industrie.",
+      en: "Award-winning album, industry benchmark.",
+      fr: "Album primé, référence dans l'industrie.",
+      de: "Ausgezeichnetes Album, Branchenmaßstab.",
+      pl: "Album nagrodzony, wzór w branży."
     }
   }
 ];
 
 const ImpactCards = () => {
   const { language } = useLanguage();
+  
+  const backgroundStyle = {
+    backgroundImage: 'url(/uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
+  };
 
   return (
-    <section className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-2 md:my-4 overflow-hidden">
-      <div className="bg-gradient-to-r from-white/5 via-white/20 to-white/5 backdrop-blur-sm border-y border-white/10 py-[2px] relative z-10">
-        <div className="flex space-x-8 md:space-x-16 whitespace-nowrap animate-scroll">
-          {/* First set of stats */}
-          {stats.map((item, idx) => {
-            const IconComponent = item.icon;
-            const title = item.title[language as keyof typeof item.title] || item.title.ro;
-            const subtitle = item.subtitle[language as keyof typeof item.subtitle] || item.subtitle.ro;
+    <section 
+      style={backgroundStyle}
+      className="relative overflow-hidden py-[16px] my-0 md:py-[15px]"
+    >
+      
+      <div className="max-w-full mx-auto px-0 relative z-10">
+        <div className="overflow-hidden">
+          <div 
+            className="flex gap-2 md:gap-4 animate-scroll"
+            style={{
+              minWidth: 'max-content',
+              animation: 'scroll 30s linear infinite'
+            }}
+          >
+            {/* First set of cards */}
+            {stats.map((item, idx) => {
+              const title = item.title[language as keyof typeof item.title] || item.title.ro;
+              const subtitle = item.subtitle[language as keyof typeof item.subtitle] || item.subtitle.ro;
+              const desc = item.desc[language as keyof typeof item.desc] || item.desc.ro;
 
-            return (
-              <div key={idx} className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                <IconComponent className="w-6 h-6 md:w-12 md:h-12 text-blue-300" />
-                <span className="text-lg md:text-3xl text-white">{title}</span>
-                <span className="opacity-90 text-sm md:text-xl text-white">{subtitle}</span>
-              </div>
-            );
-          })}
-          {/* Duplicate set for seamless scrolling */}
-          {stats.map((item, idx) => {
-            const IconComponent = item.icon;
-            const title = item.title[language as keyof typeof item.title] || item.title.ro;
-            const subtitle = item.subtitle[language as keyof typeof item.subtitle] || item.subtitle.ro;
+              return (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: idx * 0.1 }}
+                  className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-xl shadow-lg text-center hover:scale-105 transition-transform flex-shrink-0 w-36 md:w-48"
+                >
+                  <div className="text-2xl md:text-3xl mb-1 md:mb-2">{item.icon}</div>
+                  <h3 className="text-lg md:text-2xl font-extrabold text-purple-600 mb-1">{title}</h3>
+                  <p className="text-xs md:text-sm font-semibold text-gray-900 mb-1">{subtitle}</p>
+                  <p className="text-xs text-gray-600">{desc}</p>
+                </motion.div>
+              );
+            })}
+            {/* Duplicate set for seamless scrolling */}
+            {stats.map((item, idx) => {
+              const title = item.title[language as keyof typeof item.title] || item.title.ro;
+              const subtitle = item.subtitle[language as keyof typeof item.subtitle] || item.subtitle.ro;
+              const desc = item.desc[language as keyof typeof item.desc] || item.desc.ro;
 
-            return (
-              <div key={`duplicate-${idx}`} className="flex items-center space-x-2 md:space-x-4 text-sm md:text-xl font-bold">
-                <IconComponent className="w-6 h-6 md:w-12 md:h-12 text-purple-300" />
-                <span className="text-lg md:text-3xl text-white">{title}</span>
-                <span className="opacity-90 text-sm md:text-xl text-white">{subtitle}</span>
-              </div>
-            );
-          })}
+              return (
+                <motion.div
+                  key={`duplicate-${idx}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: idx * 0.1 }}
+                  className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-xl shadow-lg text-center hover:scale-105 transition-transform flex-shrink-0 w-36 md:w-48"
+                >
+                  <div className="text-2xl md:text-3xl mb-1 md:mb-2">{item.icon}</div>
+                  <h3 className="text-lg md:text-2xl font-extrabold text-purple-600 mb-1">{title}</h3>
+                  <p className="text-xs md:text-sm font-semibold text-gray-900 mb-1">{subtitle}</p>
+                  <p className="text-xs text-gray-600">{desc}</p>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
