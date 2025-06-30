@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
@@ -348,14 +347,12 @@ const VideoHero = () => {
             )}
           </p>
         </div>
-        {/* Fixed content overlay with proper mobile navigation spacing */}
-        <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-8">
-          <div className="max-w-6xl mx-auto pt-32 sm:pt-24 md:pt-16">
-            <div className="text-center">
-              <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight video-hero-title">
-                {heroTitle || heroTitleFallback}
-              </h1>
-            </div>
+        {/* Updated content overlay with mobile navigation spacing */}
+        <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 w-full z-10 flex justify-center align-items-flex-end px-4 pt-24 sm:pt-20 md:pt-12">
+          <div className="text-center max-w-6xl mx-auto">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight px-4 video-hero-title">
+              {heroTitle || heroTitleFallback}
+            </h1>
           </div>
         </div>
       </section>
@@ -427,14 +424,12 @@ const VideoHero = () => {
       {/* Gradient overlay */}
       <div className="video-hero-gradient" />
 
-      {/* Enhanced title overlay with proper mobile navigation spacing */}
-      <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-8">
-        <div className="max-w-6xl mx-auto pt-32 sm:pt-24 md:pt-16">
-          <div className="text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight video-hero-title">
-              {heroTitle || heroTitleFallback}
-            </h1>
-          </div>
+      {/* Updated title overlay with proper z-index and mobile spacing */}
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 w-full z-10 flex justify-center align-items-flex-end px-4 pt-24 sm:pt-20 md:pt-12">
+        <div className="text-center max-w-6xl mx-auto">
+          <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight px-4 video-hero-title">
+            {heroTitle || heroTitleFallback}
+          </h1>
         </div>
       </div>
 
