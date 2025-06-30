@@ -8,5 +8,11 @@ export const heroTranslations = {
   heroCtaSubtitle: "Rejoignez des milliers de clients satisfaits qui ont transformé leurs émotions en mélodies inoubliables.",
   tapToPlayWithSound: "Appuyez pour lire avec le son",
   deliveryTime: "Livraison: 3-5 jours",
-  startingFrom: "À partir de"
+  startingFrom: "À partir de",
+  
+  // Add missing translations
+  getStarted: "Commencer",
+  seoTitle: "MusicGift.ro - Cadeaux Musicaux Personnalisés",
+  seoDescription: "Créez des chansons personnalisées et des cadeaux musicaux uniques. Services de composition professionnels. Plus de 2000 chansons créées avec amour.",
+  seoKeywords: "comment puis-je commander, combien ça coûte, où puis-je trouver, quels sont les meilleurs, comment choisir"
 };

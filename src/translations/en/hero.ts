@@ -8,5 +8,11 @@ export const heroTranslations = {
   heroCtaSubtitle: "Join thousands of happy customers who've turned their emotions into unforgettable melodies.",
   tapToPlayWithSound: "Tap to play with sound",
   deliveryTime: "Delivery: 3-5 days",
-  startingFrom: "Starting from"
+  startingFrom: "Starting from",
+  
+  // Add missing translations
+  getStarted: "Get Started",
+  seoTitle: "MusicGift.ro - Personalized Musical Gifts",
+  seoDescription: "Create personalized songs and unique musical gifts. Professional composition services. Over 2000 songs created with love.",
+  seoKeywords: "how can I order, how much does it cost, where can I find, what are the best, how to choose"
 };
