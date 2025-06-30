@@ -231,10 +231,17 @@ const LegalModals: React.FC<LegalModalsProps> = ({
     return contentObj[language] || contentObj['ro'] || contentObj['en'];
   };
 
+  // Fixed: Properly handle onOpenChange callback
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      onClose();
+    }
+  };
+
   return (
     <>
       {/* Terms and Conditions Modal */}
-      <Dialog open={showTerms} onOpenChange={onClose}>
+      <Dialog open={showTerms} onOpenChange={handleOpenChange}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{getContent(termsContent).title}</DialogTitle>
@@ -254,7 +261,7 @@ const LegalModals: React.FC<LegalModalsProps> = ({
       </Dialog>
 
       {/* Privacy Policy Modal */}
-      <Dialog open={showPrivacy} onOpenChange={onClose}>
+      <Dialog open={showPrivacy} onOpenChange={handleOpenChange}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{getContent(privacyContent).title}</DialogTitle>
@@ -274,7 +281,7 @@ const LegalModals: React.FC<LegalModalsProps> = ({
       </Dialog>
 
       {/* Refund Policy Modal */}
-      <Dialog open={showRefund} onOpenChange={onClose}>
+      <Dialog open={showRefund} onOpenChange={handleOpenChange}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{getContent(refundContent).title}</DialogTitle>
@@ -294,7 +301,7 @@ const LegalModals: React.FC<LegalModalsProps> = ({
       </Dialog>
 
       {/* Cookie Policy Modal */}
-      <Dialog open={showCookie} onOpenChange={onClose}>
+      <Dialog open={showCookie} onOpenChange={handleOpenChange}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{getContent(cookieContent).title}</DialogTitle>

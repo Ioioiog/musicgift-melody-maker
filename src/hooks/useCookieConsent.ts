@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 export interface CookiePreferences {
   essential: boolean;
@@ -29,6 +29,10 @@ export const useCookieConsent = () => {
     preferences: false,
   });
 
+  // Use ref to track if initial load is complete to prevent excessive logging
+  const isInitialLoadComplete = useRef(false);
+  const lastLogTime = useRef(0);
+
   // Load consent data from localStorage
   useEffect(() => {
     const loadConsentData = () => {
@@ -36,30 +40,20 @@ export const useCookieConsent = () => {
       
       try {
         const stored = localStorage.getItem(COOKIE_CONSENT_KEY);
-        console.log('🍪 Stored consent data:', stored);
         
         if (stored) {
           const data: CookieConsentData = JSON.parse(stored);
-          console.log('🍪 Parsed consent data:', data);
           
           // Check if consent is still valid (not expired and same version)
           const isExpired = Date.now() - data.timestamp > CONSENT_EXPIRY_DAYS * 24 * 60 * 60 * 1000;
           const isOldVersion = data.version !== CONSENT_VERSION;
           
-          console.log('🍪 Consent validation:', {
-            isExpired,
-            isOldVersion,
-            timestamp: data.timestamp,
-            currentTime: Date.now(),
-            version: data.version,
-            currentVersion: CONSENT_VERSION
-          });
-          
           if (!isExpired && !isOldVersion) {
-            console.log('🍪 Valid consent found, setting state');
+            console.log('🍪 Valid consent found');
             setHasConsented(data.hasConsented);
             setPreferences(data.preferences);
             setShowBanner(false);
+            isInitialLoadComplete.current = true;
             return;
           } else {
             console.log('🍪 Consent expired or old version, removing stored data');
@@ -71,12 +65,13 @@ export const useCookieConsent = () => {
         console.log('🍪 No valid consent found - showing banner');
         setHasConsented(false);
         setShowBanner(true);
+        isInitialLoadComplete.current = true;
         
       } catch (error) {
         console.error('🍪 Error loading cookie consent:', error);
-        console.log('🍪 Error occurred - showing banner as fallback');
         setHasConsented(false);
         setShowBanner(true);
+        isInitialLoadComplete.current = true;
       }
     };
 
@@ -96,9 +91,8 @@ export const useCookieConsent = () => {
         version: CONSENT_VERSION,
       };
       
-      console.log('🍪 Saving consent data:', data);
+      console.log('🍪 Saving consent data');
       localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(data));
-      console.log('🍪 Consent data saved successfully');
     } catch (error) {
       console.error('🍪 Error saving cookie consent:', error);
     }
@@ -117,7 +111,6 @@ export const useCookieConsent = () => {
     setHasConsented(true);
     setShowBanner(false);
     saveConsentData(true, allAccepted);
-    console.log('🍪 All cookies accepted and banner hidden');
   }, [saveConsentData]);
 
   // Reject all non-essential cookies
@@ -133,23 +126,28 @@ export const useCookieConsent = () => {
     setHasConsented(true);
     setShowBanner(false);
     saveConsentData(true, essentialOnly);
-    console.log('🍪 All non-essential cookies rejected and banner hidden');
   }, [saveConsentData]);
 
   // Save custom preferences
   const savePreferences = useCallback((customPrefs: CookiePreferences) => {
-    console.log('🍪 Save custom preferences triggered:', customPrefs);
+    console.log('🍪 Save custom preferences triggered');
     setPreferences(customPrefs);
     setHasConsented(true);
     setShowBanner(false);
     saveConsentData(true, customPrefs);
-    console.log('🍪 Custom preferences saved and banner hidden');
   }, [saveConsentData]);
 
-  // Check if a specific cookie type is allowed
+  // Check if a specific cookie type is allowed - optimized with debouncing
   const isCookieAllowed = useCallback((type: keyof CookiePreferences) => {
     const allowed = hasConsented && preferences[type];
-    console.log(`🍪 Cookie check for ${type}:`, { hasConsented, preference: preferences[type], allowed });
+    
+    // Only log if initial load is complete and enough time has passed since last log
+    const now = Date.now();
+    if (isInitialLoadComplete.current && now - lastLogTime.current > 5000) {
+      console.log(`🍪 Cookie check for ${type}:`, { hasConsented, preference: preferences[type], allowed });
+      lastLogTime.current = now;
+    }
+    
     return allowed;
   }, [hasConsented, preferences]);
 
@@ -165,7 +163,6 @@ export const useCookieConsent = () => {
       marketing: false,
       preferences: false,
     });
-    console.log('🍪 Consent withdrawn and banner shown');
   }, []);
 
   // Enhanced setShowBanner with logging
@@ -173,15 +170,6 @@ export const useCookieConsent = () => {
     console.log(`🍪 Setting banner visibility to: ${show}`);
     setShowBanner(show);
   }, []);
-
-  // Debug logging for state changes
-  useEffect(() => {
-    console.log('🍪 Cookie consent state changed:', {
-      hasConsented,
-      showBanner,
-      preferences
-    });
-  }, [hasConsented, showBanner, preferences]);
 
   return {
     hasConsented,

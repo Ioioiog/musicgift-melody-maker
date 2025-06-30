@@ -44,6 +44,13 @@ const CookieSettings: React.FC<CookieSettingsProps> = ({
     onClose();
   };
 
+  // Fixed: Properly handle onOpenChange callback
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      onClose();
+    }
+  };
+
   const cookieCategories = [
     {
       key: 'essential' as const,
@@ -72,7 +79,7 @@ const CookieSettings: React.FC<CookieSettingsProps> = ({
   ];
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
