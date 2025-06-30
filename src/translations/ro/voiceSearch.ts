@@ -1,5 +1,4 @@
 
-
 export const voiceSearchTranslations = {
   // Voice Search FAQ
   voiceSearchFaqTitle: "Întrebări Frecvente despre Cadourile Muzicale",
@@ -49,7 +48,7 @@ export const voiceSearchTranslations = {
   constantaServices: "Cadouri muzicale la malul mării",
   brasovServices: "Servicii muzicale în orașul de la poalele Tâmpei",
   
-  // Missing translations for Intent-Based Content
+  // Intent-Based Content translations
   comparePersonalizedSongs: "Cum se compară melodiile personalizate cu alte cadouri?",
   comparePersonalizedSongsAnswer: "Melodiile personalizate sunt cadouri unice, emoționale și de durată care creează amintiri, spre deosebire de cadourile materiale care pot fi uitate.",
   
@@ -85,33 +84,7 @@ export const voiceSearchTranslations = {
   holidayPersonalizedSongs: "Puteți crea melodii personalizate pentru sărbători?",
   holidayPersonalizedSongsAnswer: "Da! Creăm melodii magice pentru sărbători, perfecte pentru Crăciun, Anul Nou și celebrările de iarnă cu povestea voastră personală.",
   
-  // Additional missing translations
-  awardWinning: "Premiat",
-  awardWinningDesc: "Recunoscut pentru excelența în compoziția muzicală personalizată",
-  
-  // Form and UI related translations
-  selectOption: "Selectează opțiunea",
-  pickDate: "Alege data",
-  noAddonsAvailable: "Nu sunt disponibile opțiuni suplimentare",
-  fieldConfigurationError: "Eroare de configurare câmp",
-  unknownFieldType: "Tip de câmp necunoscut: {fieldType}",
-  
-  // File upload related
-  uploadFiles: "Încarcă fișiere",
-  clickToUploadFiles: "Click pentru a încărca fișiere",
-  maxFiles: "Maxim",
-  files: "fișiere",
-  totalSize: "mărime totală",
-  recordAudioMessage: "Înregistrează mesaj audio",
-  
-  // Voice Search Tips component
-  voiceSearchTipsTitle: "Sfaturi pentru Căutarea Vocală",
-  voiceSearchTipsSubtitle: "Optimizați experiența de căutare vocală pentru serviciile noastre",
-  askVoiceAssistant: "Întrebați asistentul vocal",
-  useNaturalLanguage: "Folosiți limbajul natural",
-  beSpecific: "Fiți specific în întrebări",
-  
-  // Additional categories
+  // Category labels
   ordering: "comandă",
   pricing: "preț",
   delivery: "livrare",
@@ -122,7 +95,7 @@ export const voiceSearchTranslations = {
   location: "locație",
   relationship: "relație",
 
-  // Intent-Based Content translations
+  // Intent-Based Content translations - additional entries
   whyChooseUs: "De ce să alegeți muzica personalizată?",
   uniqueMemories: "Creează amintiri unice și de durată, spre deosebire de orice alt cadou",
   emotionalConnection: "Construiește conexiuni emoționale profunde prin povestire personalizată",
@@ -149,4 +122,3 @@ export const voiceSearchTranslations = {
   showsThoughtfulness: "Demonstrează gândire profundă și grijă",
   createsLegacy: "Creează o moștenire muzicală pentru generațiile viitoare"
 };
-
