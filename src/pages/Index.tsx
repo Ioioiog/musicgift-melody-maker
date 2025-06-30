@@ -1,5 +1,3 @@
-
-
 import { lazy, Suspense, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -20,13 +18,16 @@ const OptimizedVoiceSearchSection = lazy(() => import("@/components/OptimizedVoi
 const WelcomeBanner = lazy(() => import("@/components/WelcomeBanner"));
 
 // Loading fallback component
-const LoadingFallback = ({ className = "" }: { className?: string }) => (
-  <div className={`animate-pulse bg-white/10 rounded-lg ${className}`} />
-);
-
+const LoadingFallback = ({
+  className = ""
+}: {
+  className?: string;
+}) => <div className={`animate-pulse bg-white/10 rounded-lg ${className}`} />;
 const Index = () => {
-  const { t } = useLanguage();
-  
+  const {
+    t
+  } = useLanguage();
+
   // Performance monitoring
   useEffect(() => {
     performance.mark('index-page-start');
@@ -35,14 +36,9 @@ const Index = () => {
       performance.measure('index-page-load', 'index-page-start', 'index-page-end');
     };
   }, []);
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Suspense fallback={<LoadingFallback className="h-4" />}>
-        <SEOHead 
-          title="MusicGift.ro - Cadouri Muzicale Personalizate"
-          description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste."
-        />
+        <SEOHead title="MusicGift.ro - Cadouri Muzicale Personalizate" description="Creează melodii personalizate și cadouri muzicale unice. Servicii profesionale de compoziție. Peste 2000 melodii create cu dragoste." />
       </Suspense>
       
       {/* Skip Navigation for Accessibility */}
@@ -156,7 +152,7 @@ const Index = () => {
       </Suspense>
 
       {/* Impact Cards Section - moved here before CTA */}
-      <section className="py-2 md:py-4" aria-labelledby="impact-heading">
+      <section aria-labelledby="impact-heading" className="py-2 md:py-0">
         <h2 id="impact-heading" className="sr-only">Impactul Serviciilor Noastre Muzicale</h2>
         <Suspense fallback={<LoadingFallback className="h-48" />}>
           <ImpactCards />
@@ -202,9 +198,6 @@ const Index = () => {
       <Suspense fallback={<LoadingFallback className="h-32" />}>
         <Footer />
       </Suspense>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
-
