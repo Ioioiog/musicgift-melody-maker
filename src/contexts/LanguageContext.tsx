@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Language, LanguageContextType } from '@/types/language';
 import { languageNames } from '@/types/language';
@@ -108,13 +107,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       // If no translation found, try English fallback
       const englishFallback = translations['en']?.[key];
       if (englishFallback) {
-        console.warn('LanguageProvider: Using English fallback for missing key:', key);
+        console.warn('LanguageProvider: Using English fallback for missing key:', key, 'Current language:', language);
         return englishFallback;
       }
       
       // Final fallback
       const finalFallback = fallback || key;
-      console.warn('LanguageProvider: No translation found, using fallback:', finalFallback);
+      console.warn('LanguageProvider: No translation found, using fallback:', finalFallback, 'Key:', key, 'Language:', language);
       return finalFallback;
       
     } catch (error) {

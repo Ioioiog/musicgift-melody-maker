@@ -7,12 +7,43 @@ import { motion } from 'framer-motion';
 import CurrencyIcon from '@/components/CurrencyIcon';
 
 const PricingBadge: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { currency } = useCurrency();
   
   const priceRON = 299;
   const priceEUR = 59;
   const currentPrice = currency === 'RON' ? priceRON : priceEUR;
+  
+  // Direct delivery time translations for each language
+  const getDeliveryTime = () => {
+    const deliveryTimes = {
+      'ro': 'Livrare: 3-5 zile',
+      'en': 'Delivery: 3-5 days',
+      'fr': 'Livraison: 3-5 jours',
+      'de': 'Lieferung: 3-5 Tage',
+      'pl': 'Dostawa: 3-5 dni'
+    };
+    
+    // Get the delivery time for current language, fallback to English, then default
+    return deliveryTimes[language as keyof typeof deliveryTimes] || 
+           deliveryTimes['en'] || 
+           'Delivery: 3-5 days';
+  };
+
+  // Direct starting from translations for each language
+  const getStartingFrom = () => {
+    const startingFromTexts = {
+      'ro': 'Începând de la',
+      'en': 'Starting from',
+      'fr': 'À partir de',
+      'de': 'Ab',
+      'pl': 'Począwszy od'
+    };
+    
+    return startingFromTexts[language as keyof typeof startingFromTexts] || 
+           startingFromTexts['en'] || 
+           'Starting from';
+  };
   
   return (
     <motion.div
@@ -32,7 +63,7 @@ const PricingBadge: React.FC = () => {
           <div className="flex items-center gap-2 mb-2">
             <Clock className="w-4 h-4 text-orange-100" />
             <span className="text-sm font-semibold text-orange-50">
-              {t('deliveryTime', '3-5 days')}
+              {getDeliveryTime()}
             </span>
           </div>
           
@@ -40,7 +71,7 @@ const PricingBadge: React.FC = () => {
           <div className="flex items-center gap-2">
             <CurrencyIcon currency={currency} className="w-4 h-4 text-orange-100" />
             <span className="text-lg font-bold text-white">
-              {t('startingFrom', 'Starting from')} {currentPrice} {currency}
+              {getStartingFrom()} {currentPrice} {currency}
             </span>
           </div>
         </div>
