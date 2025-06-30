@@ -7,7 +7,7 @@ import AuthGuard from "@/components/AuthGuard";
 import RoleGuard from "@/components/RoleGuard";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import CookieConsent from "@/components/CookieConsent";
-import Index from "./pages/Index";
+import LocalizedIndex from "./pages/LocalizedIndex";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
@@ -33,7 +33,8 @@ import Unsubscribe from "./pages/Unsubscribe";
 const AppContent = () => (
   <ErrorBoundary>
     <Routes>
-      <Route path="/" element={<Index />} />
+      <Route path="/" element={<LocalizedIndex />} />
+      <Route path="/:countryCode" element={<LocalizedIndex />} />
       <Route path="/about" element={<About />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/blog/:id" element={<BlogPost />} />
