@@ -71,9 +71,14 @@ export const convertAmountForSmartBill = (
 };
 
 /**
- * Fixed exchange rate: 1 EUR = 5 RON (corrected from previous incorrect rate)
+ * Exchange rates:
+ * - 1 EUR = 5 RON (existing fixed rate)
+ * - 1 USD = 0.85 EUR (approximate rate)
+ * - 1 USD = 4.25 RON (calculated: 0.85 * 5)
  */
 export const EXCHANGE_RATE_EUR_TO_RON = 5;
+export const EXCHANGE_RATE_USD_TO_EUR = 0.85;
+export const EXCHANGE_RATE_USD_TO_RON = EXCHANGE_RATE_USD_TO_EUR * EXCHANGE_RATE_EUR_TO_RON; // 4.25
 
 /**
  * Convert RON to EUR using fixed rate (1 EUR = 5 RON)
@@ -90,24 +95,68 @@ export const convertEurToRon = (eurAmount: number): number => {
 };
 
 /**
+ * Convert USD to EUR using fixed rate (1 USD = 0.85 EUR)
+ */
+export const convertUsdToEur = (usdAmount: number): number => {
+  return usdAmount * EXCHANGE_RATE_USD_TO_EUR;
+};
+
+/**
+ * Convert EUR to USD using fixed rate (1 USD = 0.85 EUR)
+ */
+export const convertEurToUsd = (eurAmount: number): number => {
+  return eurAmount / EXCHANGE_RATE_USD_TO_EUR;
+};
+
+/**
+ * Convert USD to RON using fixed rate (1 USD = 4.25 RON)
+ */
+export const convertUsdToRon = (usdAmount: number): number => {
+  return usdAmount * EXCHANGE_RATE_USD_TO_RON;
+};
+
+/**
+ * Convert RON to USD using fixed rate (1 USD = 4.25 RON)
+ */
+export const convertRonToUsd = (ronAmount: number): number => {
+  return ronAmount / EXCHANGE_RATE_USD_TO_RON;
+};
+
+/**
  * Convert amount between currencies
  */
 export const convertCurrency = (
   amount: number, 
-  fromCurrency: 'EUR' | 'RON', 
-  toCurrency: 'EUR' | 'RON'
+  fromCurrency: 'EUR' | 'RON' | 'USD', 
+  toCurrency: 'EUR' | 'RON' | 'USD'
 ): number => {
   // Return original amount if same currency (no conversion needed)
   if (fromCurrency === toCurrency) {
     return amount;
   }
   
+  // RON ↔ EUR conversions
   if (fromCurrency === 'RON' && toCurrency === 'EUR') {
     return convertRonToEur(amount);
   }
-  
   if (fromCurrency === 'EUR' && toCurrency === 'RON') {
     return convertEurToRon(amount);
+  }
+  
+  // USD ↔ EUR conversions
+  if (fromCurrency === 'USD' && toCurrency === 'EUR') {
+    return convertUsdToEur(amount);
+  }
+  if (fromCurrency === 'EUR' && toCurrency === 'USD') {
+    return convertEurToUsd(amount);
+  }
+  
+  // USD ↔ RON conversions
+  if (fromCurrency === 'USD' && toCurrency === 'RON') {
+    return convertUsdToRon(amount);
+  }
+  if (fromCurrency === 'RON' && toCurrency === 'USD') {
+    return convertRonToUsd(amount);
   }
   
   return amount;
@@ -120,8 +169,8 @@ export const convertCurrency = (
  */
 export const convertGiftCardAmount = (
   giftAmount: number,
-  giftCurrency: 'EUR' | 'RON',
-  targetCurrency: 'EUR' | 'RON'
+  giftCurrency: 'EUR' | 'RON' | 'USD',
+  targetCurrency: 'EUR' | 'RON' | 'USD'
 ): number => {
   console.log('convertGiftCardAmount called:', { giftAmount, giftCurrency, targetCurrency });
   

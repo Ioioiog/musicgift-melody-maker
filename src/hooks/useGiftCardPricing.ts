@@ -16,7 +16,7 @@ interface GiftCardPricingCalculation {
 export const useGiftCardPricing = (
   giftCard: any | null,
   selectedPackage: Package | null,
-  currency: 'EUR' | 'RON'
+  currency: 'EUR' | 'RON' | 'USD'
 ): GiftCardPricingCalculation => {
   return useMemo(() => {
     if (!giftCard || !selectedPackage) {
@@ -39,11 +39,11 @@ export const useGiftCardPricing = (
       availableBalance = giftCard.remaining_balance;
     } else {
       // Fallback to original calculation
-      let originalAmount = giftCard.gift_amount || giftCard.amount_eur || giftCard.amount_ron || 0;
+      let originalAmount = giftCard.gift_amount || giftCard.amount_eur || giftCard.amount_ron || giftCard.amount_usd || 0;
       
       // Convert gift card value to current currency if needed
       if (giftCard.currency !== currency) {
-        originalAmount = convertCurrency(originalAmount, giftCard.currency as 'EUR' | 'RON', currency);
+        originalAmount = convertCurrency(originalAmount, giftCard.currency as 'EUR' | 'RON' | 'USD', currency);
       }
       
       availableBalance = originalAmount;
@@ -52,7 +52,7 @@ export const useGiftCardPricing = (
     // Convert available balance to current currency if needed
     let giftCardValue = availableBalance;
     if (giftCard.currency !== currency) {
-      giftCardValue = convertCurrency(availableBalance, giftCard.currency as 'EUR' | 'RON', currency);
+      giftCardValue = convertCurrency(availableBalance, giftCard.currency as 'EUR' | 'RON' | 'USD', currency);
     }
 
     // Calculate additional payment or refund
