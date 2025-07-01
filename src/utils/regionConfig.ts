@@ -1,4 +1,3 @@
-
 export interface RegionConfig {
   domain: string;
   defaultLanguage: string;
@@ -16,7 +15,7 @@ const REGION_CONFIGS: Record<string, RegionConfig> = {
     defaultLanguage: 'ro',
     defaultCurrency: 'RON',
     supportedLanguages: ['ro', 'en', 'de', 'it', 'fr', 'pl'],
-    supportedCurrencies: ['RON', 'EUR'],
+    supportedCurrencies: ['RON', 'EUR', 'USD'],
     region: 'RO',
     countryCode: 'RO',
     locale: 'ro-RO'
@@ -26,7 +25,7 @@ const REGION_CONFIGS: Record<string, RegionConfig> = {
     defaultLanguage: 'en',
     defaultCurrency: 'EUR',
     supportedLanguages: ['en', 'ro', 'de', 'it', 'fr', 'pl'],
-    supportedCurrencies: ['EUR'],
+    supportedCurrencies: ['EUR', 'RON', 'USD'],
     region: 'EU',
     countryCode: 'GB', // Default to UK for EU domain
     locale: 'en-GB'
@@ -36,7 +35,7 @@ const REGION_CONFIGS: Record<string, RegionConfig> = {
     defaultLanguage: 'en',
     defaultCurrency: 'USD',
     supportedLanguages: ['en'],
-    supportedCurrencies: ['USD'],
+    supportedCurrencies: ['USD', 'EUR', 'RON'],
     region: 'US',
     countryCode: 'US',
     locale: 'en-US'
