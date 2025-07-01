@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useRegionConfig } from "@/hooks/useRegionConfig";
 import { motion } from "framer-motion";
 import { Clock, Download, Gift, Star, Music, Heart } from "lucide-react";
 import { usePackages } from "@/hooks/usePackageData";
@@ -17,17 +18,28 @@ import { getPackagePrice } from "@/utils/pricing";
 const English = () => {
   const { language, setLanguage, t } = useLanguage();
   const { currency, setCurrency } = useCurrency();
+  const { regionConfig } = useRegionConfig();
   const { data: packages = [], isLoading } = usePackages();
 
-  // Auto-set English language and EUR currency for UK visitors
+  // Set language and currency based on region config, but only if not manually selected
   useEffect(() => {
-    if (language !== 'en') {
+    if (!regionConfig) return;
+    
+    // Only auto-set if this is the region's default language and no manual selection
+    const hasManualLanguageSelection = localStorage.getItem('language_manual_selection');
+    const hasManualCurrencySelection = localStorage.getItem('currency_manual_selection');
+    
+    if (!hasManualLanguageSelection && language !== 'en' && regionConfig.supportedLanguages.includes('en')) {
       setLanguage('en');
     }
-    if (currency !== 'EUR') {
-      setCurrency('EUR');
+    
+    if (!hasManualCurrencySelection && regionConfig.supportedCurrencies.includes(currency)) {
+      // Use region default if current currency is not optimal for this region
+      if (regionConfig.defaultCurrency !== currency && regionConfig.supportedCurrencies.includes(regionConfig.defaultCurrency as any)) {
+        setCurrency(regionConfig.defaultCurrency as any);
+      }
     }
-  }, [language, currency, setLanguage, setCurrency]);
+  }, [language, currency, setLanguage, setCurrency, regionConfig]);
 
   const getEstimatedDeliveryDays = (packageValue: string) => {
     const deliveryMapping: { [key: string]: number } = {
@@ -71,10 +83,11 @@ const English = () => {
   };
 
   const getPackagePriceFormatted = (pkg: any) => {
-    const price = getPackagePrice(pkg, 'EUR');
-    return new Intl.NumberFormat('en-GB', {
+    const price = getPackagePrice(pkg, currency as 'EUR' | 'RON');
+    const locale = regionConfig?.locale || 'en-GB';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
-      currency: 'EUR'
+      currency: currency
     }).format(price);
   };
 
@@ -93,12 +106,15 @@ const English = () => {
     );
   }
 
+  const regionTitle = regionConfig?.region === 'RO' ? 'in Romania 🇷🇴' : 
+                    regionConfig?.region === 'US' ? 'in the USA 🇺🇸' : 
+                    'in Europe 🇪🇺';
+
   return (
     <div className="min-h-screen flex flex-col">
       <SEOHead 
-        title="Personalized Musical Gifts UK | Custom Songs by Mihai Gruia" 
-        description="Create unique personalized songs in the UK. Fast digital delivery, professional studio quality. Instant gift cards available." 
-        url="https://www.musicgift.ro/en" 
+        title={`Personalized Musical Gifts ${regionConfig?.region} | Custom Songs by Mihai Gruia`}
+        description={`Create unique personalized songs ${regionConfig?.region === 'RO' ? 'in Romania' : regionConfig?.region === 'US' ? 'in the USA' : 'in Europe'}. Fast digital delivery, professional studio quality. Instant gift cards available.`}
       />
       <StructuredDataLoader />
       <Navigation />
@@ -119,7 +135,7 @@ const English = () => {
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Personalized Musical Gifts
-              <span className="block text-orange-400">in the UK 🇬🇧</span>
+              <span className="block text-orange-400">{regionTitle}</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto">
               Create unique songs with Mihai Gruia from Akcent. 

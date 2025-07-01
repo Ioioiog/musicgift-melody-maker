@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useRegionConfig } from "@/hooks/useRegionConfig";
 import { motion } from "framer-motion";
 import { Clock, Download, Gift, Star, Music, Heart } from "lucide-react";
 import { usePackages } from "@/hooks/usePackageData";
@@ -17,17 +18,28 @@ import { getPackagePrice } from "@/utils/pricing";
 const Poland = () => {
   const { language, setLanguage, t } = useLanguage();
   const { currency, setCurrency } = useCurrency();
+  const { regionConfig } = useRegionConfig();
   const { data: packages = [], isLoading } = usePackages();
 
-  // Auto-set Polish language and EUR currency for Polish visitors
+  // Set language and currency based on region config, but only if not manually selected
   useEffect(() => {
-    if (language !== 'pl') {
+    if (!regionConfig) return;
+    
+    // Only auto-set if this is the region's default language and no manual selection
+    const hasManualLanguageSelection = localStorage.getItem('language_manual_selection');
+    const hasManualCurrencySelection = localStorage.getItem('currency_manual_selection');
+    
+    if (!hasManualLanguageSelection && language !== 'pl' && regionConfig.supportedLanguages.includes('pl')) {
       setLanguage('pl');
     }
-    if (currency !== 'EUR') {
-      setCurrency('EUR');
+    
+    if (!hasManualCurrencySelection && regionConfig.supportedCurrencies.includes(currency)) {
+      // Use region default if current currency is not optimal for this region
+      if (regionConfig.defaultCurrency !== currency && regionConfig.supportedCurrencies.includes(regionConfig.defaultCurrency as any)) {
+        setCurrency(regionConfig.defaultCurrency as any);
+      }
     }
-  }, [language, currency, setLanguage, setCurrency]);
+  }, [language, currency, setLanguage, setCurrency, regionConfig]);
 
   const getEstimatedDeliveryDays = (packageValue: string) => {
     const deliveryMapping: { [key: string]: number } = {
@@ -71,10 +83,11 @@ const Poland = () => {
   };
 
   const getPackagePriceFormatted = (pkg: any) => {
-    const price = getPackagePrice(pkg, 'EUR');
-    return new Intl.NumberFormat('pl-PL', {
+    const price = getPackagePrice(pkg, currency as 'EUR' | 'RON');
+    const locale = regionConfig?.locale || 'pl-PL';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
-      currency: 'EUR'
+      currency: currency
     }).format(price);
   };
 
@@ -93,11 +106,15 @@ const Poland = () => {
     );
   }
 
+  const regionTitle = regionConfig?.region === 'RO' ? 'w Rumunii 🇷🇴' : 
+                    regionConfig?.region === 'US' ? 'w USA 🇺🇸' : 
+                    'w Europie 🇪🇺';
+
   return (
     <div className="min-h-screen flex flex-col">
       <SEOHead 
-        title="Spersonalizowane Prezenty Muzyczne Polska | Piosenki na Zamówienie od Mihai Gruia" 
-        description="Stwórz unikalne spersonalizowane piosenki w Polsce. Szybka dostawa cyfrowa, profesjonalna jakość studyjna. Dostępne natychmiastowe karty podarunkowe." 
+        title={`Spersonalizowane Prezenty Muzyczne ${regionConfig?.region} | Piosenki na Zamówienie od Mihai Gruia`}
+        description={`Stwórz unikalne spersonalizowane piosenki ${regionConfig?.region === 'RO' ? 'w Rumunii' : regionConfig?.region === 'US' ? 'w USA' : 'w Europie'}. Szybka dostawa cyfrowa, profesjonalna jakość studyjna. Dostępne natychmiastowe karty podarunkowe.`}
         url="https://www.musicgift.ro/pl" 
       />
       <StructuredDataLoader />
@@ -119,7 +136,7 @@ const Poland = () => {
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Spersonalizowane Prezenty Muzyczne
-              <span className="block text-orange-400">w Polsce 🇵🇱</span>
+              <span className="block text-orange-400">{regionTitle}</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto">
               Twórz unikalne piosenki z Mihai Gruia z Akcent. 

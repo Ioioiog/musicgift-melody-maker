@@ -1,7 +1,9 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Language, LanguageContextType } from '@/types/language';
 import { languageNames } from '@/types/language';
 import { translations } from '@/translations';
+import { useRegionConfig } from '@/hooks/useRegionConfig';
 
 export { Language, languageNames };
 
@@ -10,24 +12,28 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<string>('ro'); // Default fallback
   const [isInitialized, setIsInitialized] = useState(false);
+  const { regionConfig, isLoading } = useRegionConfig();
 
   useEffect(() => {
+    if (isLoading || !regionConfig) return;
+
     try {
       const saved = localStorage.getItem('language');
-      let initialLang = saved && Object.keys(translations).includes(saved) ? saved : 'ro';
-      
-      // Auto-suggest language based on location if no manual selection - made location-safe
       const hasManualSelection = localStorage.getItem('language_manual_selection');
-      if (!hasManualSelection) {
-        // Safely access location context without throwing errors
+      
+      let initialLang = regionConfig.defaultLanguage;
+      
+      // If user has manually selected a language and it's supported by current domain
+      if (hasManualSelection && saved && regionConfig.supportedLanguages.includes(saved)) {
+        initialLang = saved;
+      } else if (!hasManualSelection) {
+        // Auto-suggest language based on location if no manual selection
         const getLocationData = () => {
           try {
-            // Import the context hook dynamically to avoid circular dependencies
             const { useLocationContext } = require('@/contexts/LocationContext');
             const { location } = useLocationContext();
             return location;
           } catch {
-            // If location context is not available, return null
             return null;
           }
         };
@@ -36,21 +42,25 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         
         if (location && location.countryCode) {
           const suggestedLang = getSuggestedLanguage(location.countryCode);
-          if (suggestedLang && Object.keys(translations).includes(suggestedLang)) {
+          if (suggestedLang && regionConfig.supportedLanguages.includes(suggestedLang)) {
             initialLang = suggestedLang;
           }
         }
+      }
+      
+      // Ensure the selected language is supported by the current domain
+      if (!regionConfig.supportedLanguages.includes(initialLang)) {
+        initialLang = regionConfig.defaultLanguage;
       }
       
       setLanguage(initialLang);
       setIsInitialized(true);
     } catch (error) {
       console.error('LanguageProvider: Error during initialization:', error);
-      // Fallback to default language
-      setLanguage('ro');
+      setLanguage(regionConfig.defaultLanguage);
       setIsInitialized(true);
     }
-  }, []);
+  }, [regionConfig, isLoading]);
 
   const getSuggestedLanguage = (countryCode: string): string | null => {
     const countryToLanguage: Record<string, string> = {
@@ -69,6 +79,11 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const handleSetLanguage = (newLanguage: string) => {
+    if (!regionConfig || !regionConfig.supportedLanguages.includes(newLanguage)) {
+      console.warn('Language not supported by current domain:', newLanguage);
+      return;
+    }
+    
     setLanguage(newLanguage);
     localStorage.setItem('language_manual_selection', 'true');
   };
@@ -85,33 +100,28 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const t = (key: string, fallback?: string): string => {
     try {
-      // Get the current language translations
       const currentLangTranslations = translations[language as keyof typeof translations];
       
       if (!currentLangTranslations) {
         console.warn('LanguageProvider: No translations found for language:', language);
-        // Fallback to English if current language translations are missing
         const englishTranslations = translations['en'];
         if (englishTranslations && englishTranslations[key]) {
           return englishTranslations[key];
         }
       }
       
-      // Try to get the translation
       const translation = currentLangTranslations?.[key];
       
       if (translation) {
         return translation;
       }
       
-      // If no translation found, try English fallback
       const englishFallback = translations['en']?.[key];
       if (englishFallback) {
         console.warn('LanguageProvider: Using English fallback for missing key:', key, 'Current language:', language);
         return englishFallback;
       }
       
-      // Final fallback
       const finalFallback = fallback || key;
       console.warn('LanguageProvider: No translation found, using fallback:', finalFallback, 'Key:', key, 'Language:', language);
       return finalFallback;
@@ -142,14 +152,12 @@ export const useLanguage = (): LanguageContextType => {
     if (context === undefined) {
       console.error('useLanguage: Context is undefined, providing fallback');
       
-      // Provide a fallback context to prevent app crashes
       return {
         language: 'ro',
         setLanguage: (lang: string) => {
           console.warn('useLanguage: Fallback setLanguage called with:', lang);
         },
         t: (key: string, fallback?: string) => {
-          // Try to get translation directly from translations object
           try {
             const roTranslations = translations['ro'];
             const enTranslations = translations['en'];
@@ -166,7 +174,6 @@ export const useLanguage = (): LanguageContextType => {
   } catch (error) {
     console.error('useLanguage: Error accessing context:', error);
     
-    // Emergency fallback
     return {
       language: 'ro',
       setLanguage: () => {},

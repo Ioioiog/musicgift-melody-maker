@@ -2,24 +2,30 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useRegionConfig } from '@/hooks/useRegionConfig';
 
 const BreadcrumbStructuredData = () => {
   const location = useLocation();
   const { t } = useLanguage();
+  const { regionConfig } = useRegionConfig();
   
   useEffect(() => {
+    if (!regionConfig) return;
+
     // Clean up existing breadcrumb structured data
     const existingScripts = document.querySelectorAll('script[data-breadcrumb-schema]');
     existingScripts.forEach(script => script.remove());
 
     const getBreadcrumbItems = () => {
       const pathSegments = location.pathname.split('/').filter(Boolean);
+      const baseUrl = `https://${regionConfig.domain}`;
+      
       const items = [
         {
           "@type": "ListItem",
           "position": 1,
           "name": t('home', 'Home'),
-          "item": "https://www.musicgift.ro"
+          "item": baseUrl
         }
       ];
 
@@ -27,7 +33,7 @@ const BreadcrumbStructuredData = () => {
       pathSegments.forEach((segment, index) => {
         currentPath += `/${segment}`;
         let name = segment;
-        let url = `https://www.musicgift.ro${currentPath}`;
+        let url = `${baseUrl}${currentPath}`;
 
         // Map segments to user-friendly names
         switch (segment) {
@@ -94,7 +100,7 @@ const BreadcrumbStructuredData = () => {
       const scripts = document.querySelectorAll('script[data-breadcrumb-schema]');
       scripts.forEach(script => script.remove());
     };
-  }, [location.pathname, t]);
+  }, [location.pathname, t, regionConfig]);
 
   return null;
 };

@@ -36,6 +36,23 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -43,5 +60,10 @@
       "source": "/((?!.*\\.).*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "app/**/*.js": {
+      "includeFiles": "public/**"
+    }
+  }
 }

@@ -1,7 +1,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useRegionConfig } from '@/hooks/useRegionConfig';
 
-type Currency = 'EUR' | 'RON';
+type Currency = 'EUR' | 'RON' | 'USD';
 
 interface CurrencyContextType {
   currency: Currency;
@@ -12,61 +13,91 @@ interface CurrencyContextType {
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currency, setCurrency] = useState<Currency>(() => {
-    const saved = localStorage.getItem('currency');
-    return (saved as Currency) || 'EUR';
-  });
+  const [currency, setCurrency] = useState<Currency>('EUR'); // Default fallback
   const [suggestedCurrency, setSuggestedCurrency] = useState<Currency | null>(null);
+  const { regionConfig, isLoading } = useRegionConfig();
 
-  // Auto-suggest currency based on location - made location-safe
   useEffect(() => {
-    // Safely access location context without throwing errors
-    const getLocationData = () => {
-      try {
-        // Import the context hook dynamically to avoid circular dependencies
-        const { useLocationContext } = require('@/contexts/LocationContext');
-        const { location } = useLocationContext();
-        return location;
-      } catch {
-        // If location context is not available, return null
-        return null;
-      }
-    };
+    if (isLoading || !regionConfig) return;
 
-    const location = getLocationData();
-    
-    if (location && location.countryCode) {
-      let suggested: Currency;
-      
-      // Map country codes to currencies
-      if (location.countryCode === 'RO') {
-        suggested = 'RON';
-      } else {
-        // Default to EUR for European countries and others
-        suggested = 'EUR';
-      }
-      
-      setSuggestedCurrency(suggested);
-      
-      // Only auto-set if user hasn't manually selected a currency
+    try {
+      const saved = localStorage.getItem('currency') as Currency;
       const hasManualSelection = localStorage.getItem('currency_manual_selection');
-      if (!hasManualSelection && suggested !== currency) {
-        setCurrency(suggested);
+      
+      let initialCurrency = regionConfig.defaultCurrency as Currency;
+      
+      // If user has manually selected a currency and it's supported by current domain
+      if (hasManualSelection && saved && regionConfig.supportedCurrencies.includes(saved)) {
+        initialCurrency = saved;
+      } else if (!hasManualSelection) {
+        // Auto-suggest currency based on location if no manual selection
+        const getLocationData = () => {
+          try {
+            const { useLocationContext } = require('@/contexts/LocationContext');
+            const { location } = useLocationContext();
+            return location;
+          } catch {
+            return null;
+          }
+        };
+
+        const location = getLocationData();
+        
+        if (location && location.countryCode) {
+          let suggested: Currency;
+          
+          if (location.countryCode === 'RO') {
+            suggested = 'RON';
+          } else if (location.countryCode === 'US') {
+            suggested = 'USD';
+          } else {
+            suggested = 'EUR';
+          }
+          
+          // Only use suggestion if it's supported by the current domain
+          if (regionConfig.supportedCurrencies.includes(suggested)) {
+            initialCurrency = suggested;
+            setSuggestedCurrency(suggested);
+          }
+        }
       }
+      
+      // Ensure the selected currency is supported by the current domain
+      if (!regionConfig.supportedCurrencies.includes(initialCurrency)) {
+        initialCurrency = regionConfig.defaultCurrency as Currency;
+      }
+      
+      setCurrency(initialCurrency);
+    } catch (error) {
+      console.error('CurrencyProvider: Error during initialization:', error);
+      setCurrency(regionConfig.defaultCurrency as Currency);
     }
-  }, [currency]);
+  }, [regionConfig, isLoading]);
 
   const handleSetCurrency = (newCurrency: Currency) => {
+    if (!regionConfig || !regionConfig.supportedCurrencies.includes(newCurrency)) {
+      console.warn('Currency not supported by current domain:', newCurrency);
+      return;
+    }
+    
     setCurrency(newCurrency);
     localStorage.setItem('currency_manual_selection', 'true');
   };
 
   useEffect(() => {
-    localStorage.setItem('currency', currency);
+    try {
+      localStorage.setItem('currency', currency);
+    } catch (error) {
+      console.error('CurrencyProvider: Error saving currency to localStorage:', error);
+    }
   }, [currency]);
 
   return (
-    <CurrencyContext.Provider value={{ currency, setCurrency: handleSetCurrency, suggestedCurrency }}>
+    <CurrencyContext.Provider value={{ 
+      currency, 
+      setCurrency: handleSetCurrency, 
+      suggestedCurrency 
+    }}>
       {children}
     </CurrencyContext.Provider>
   );
