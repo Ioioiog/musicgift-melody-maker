@@ -10,6 +10,7 @@ export const packages: Package[] = [
     delivery_time_key: "personalDelivery",
     price_ron: 299,
     price_eur: 59,
+    price_usd: 69,
     tag: "popular",
     is_active: true,
     is_popular: true,
@@ -231,6 +232,7 @@ export const packages: Package[] = [
     delivery_time_key: "premiumDelivery",
     price_ron: 499,
     price_eur: 99,
+    price_usd: 115,
     tag: "premium",
     is_active: true,
     available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "audioMessageFromSender", "extendedSong"],
@@ -481,6 +483,7 @@ export const packages: Package[] = [
     delivery_time_key: "businessDelivery",
     price_ron: 499,
     price_eur: 99,
+    price_usd: 115,
     available_addons: ["rushDelivery", "socialMediaRights", "brandedAudioMessage", "commercialRightsUpgrade", "customVideo", "extendedSong"],
     includes: [
       { id: "b1", include_key: "businessInclude1", include_order: 1 },
@@ -724,6 +727,7 @@ export const packages: Package[] = [
     delivery_time_key: "artistDelivery",
     price_ron: 7999,
     price_eur: 1499,
+    price_usd: 1749,
     is_quote_only: true,
     available_addons: [],
     includes: [
@@ -969,6 +973,7 @@ export const packages: Package[] = [
     delivery_time_key: "remixDelivery",
     price_ron: 499,
     price_eur: 99,
+    price_usd: 115,
     available_addons: ["rushDelivery", "mangoRecordsDistribution", "customVideo", "separatedStems"],
     includes: [
       { id: "r1", include_key: "remixInclude1", include_order: 1 },
@@ -1065,6 +1070,7 @@ export const packages: Package[] = [
     delivery_time_key: "instrumentalDelivery",
     price_ron: 499,
     price_eur: 99,
+    price_usd: 115,
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo", "separatedStems"],
     includes: [
       { id: "i1", include_key: "instrumentalInclude1", include_order: 1 },
@@ -1203,6 +1209,7 @@ export const packages: Package[] = [
     delivery_time_key: "weddingDelivery",
     price_ron: 299,
     price_eur: 59,
+    price_usd: 69,
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo", "audioMessageFromSender", "extendedSong", "godparentsMelody"],
     includes: [
       { id: "w1", include_key: "weddingInclude1", include_order: 1 },
@@ -1359,6 +1366,7 @@ export const packages: Package[] = [
     delivery_time_key: "baptismDelivery",
     price_ron: 299,
     price_eur: 59,
+    price_usd: 69,
     available_addons: ["rushDelivery", "socialMediaRights", "mangoRecordsDistribution", "customVideo", "audioMessageFromSender", "extendedSong"],
     includes: [
       { id: "bp1", include_key: "baptismInclude1", include_order: 1 },
@@ -1553,6 +1561,7 @@ export const packages: Package[] = [
     delivery_time_key: "comingOfAgeDelivery",
     price_ron: 299,
     price_eur: 59,
+    price_usd: 69,
     available_addons: ["rushDelivery", "socialMediaRights", "customVideo", "audioMessageFromSender", "extendedSong"],
     includes: [
       { id: "ca1", include_key: "comingOfAgeInclude1", include_order: 1 },
@@ -1774,6 +1783,7 @@ export const packages: Package[] = [
     delivery_time_key: "djDelivery",
     price_ron: 499,
     price_eur: 99,
+    price_usd: 115,
     tag: "exclusive",
     is_active: true,
     is_popular: false,
@@ -1977,6 +1987,7 @@ export const addOns: Addon[] = [
     description_key: "rushDeliveryDesc",
     price_ron: 99,
     price_eur: 20,
+    price_usd: 23,
     is_active: true
   },
   {
@@ -1986,6 +1997,7 @@ export const addOns: Addon[] = [
     description_key: "socialMediaRightsDesc",
     price_ron: 0,
     price_eur: 0,
+    price_usd: 0,
     is_active: true
   },
   {
@@ -1995,6 +2007,7 @@ export const addOns: Addon[] = [
     description_key: "mangoRecordsDistributionDesc",
     price_ron: 199,
     price_eur: 40,
+    price_usd: 47,
     is_active: true
   },
   {
@@ -2004,6 +2017,7 @@ export const addOns: Addon[] = [
     description_key: "customVideoDesc",
     price_ron: 149,
     price_eur: 30,
+    price_usd: 35,
     is_active: true,
     trigger_field_type: "file",
     trigger_field_config: {
@@ -2019,6 +2033,7 @@ export const addOns: Addon[] = [
     description_key: "audioMessageFromSenderDesc",
     price_ron: 99,
     price_eur: 20,
+    price_usd: 23,
     is_active: true,
     trigger_field_type: "audio-recorder",
     trigger_field_config: {
@@ -2032,6 +2047,7 @@ export const addOns: Addon[] = [
     description_key: "brandedAudioMessageDesc",
     price_ron: 0,
     price_eur: 0,
+    price_usd: 0,
     is_active: true,
     trigger_field_type: "audio-recorder",
     trigger_field_config: {
@@ -2045,6 +2061,7 @@ export const addOns: Addon[] = [
     description_key: "commercialRightsUpgradeDesc",
     price_ron: 399,
     price_eur: 80,
+    price_usd: 93,
     is_active: true
   },
   {
@@ -2054,6 +2071,7 @@ export const addOns: Addon[] = [
     description_key: "extendedSongDesc",
     price_ron: 49,
     price_eur: 10,
+    price_usd: 12,
     is_active: true
   },
   {
@@ -2063,6 +2081,7 @@ export const addOns: Addon[] = [
     description_key: "godparentsMelodyDesc",
     price_ron: 199,
     price_eur: 40,
+    price_usd: 47,
     is_active: true
   },
   {
@@ -2072,6 +2091,7 @@ export const addOns: Addon[] = [
     description_key: "separatedStemsDesc",
     price_ron: 149,
     price_eur: 30,
+    price_usd: 35,
     is_active: true
   }
 ];
