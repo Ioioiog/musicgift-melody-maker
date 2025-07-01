@@ -10,7 +10,7 @@ import DidYouKnowCarousel from '@/components/DidYouKnowCarousel';
 import { usePackages, useAddons } from '@/hooks/usePackageData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
-import { getAddonPrice } from '@/utils/pricing';
+import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useState } from 'react';
 
 const PackageDetails = () => {
@@ -55,22 +55,23 @@ const PackageDetails = () => {
     );
   }
 
-  const getPackagePrice = (pkg: any) => {
-    return currency === 'EUR' ? pkg.price_eur : pkg.price_ron;
-  };
-
   const renderPackagePrice = (pkg: any) => {
     if (pkg.value === 'gift') {
+      const startingPrice = currency === 'EUR' ? '€59' : currency === 'USD' ? '$69' : '299 RON';
       return (
         <div className="text-3xl font-bold mb-2 text-white">
-          {t('startingFrom', 'Starting from')} {currency === 'EUR' ? '€59' : '299 RON'}
+          {t('startingFrom', 'Starting from')} {startingPrice}
         </div>
       );
     }
     
+    const price = getPackagePrice(pkg, currency);
+    const currencySymbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : 'RON';
+    const displayPrice = currency === 'RON' ? `${price} ${currencySymbol}` : `${currencySymbol}${price}`;
+    
     return (
       <div className="text-4xl font-bold mb-2 text-white">
-        {currency === 'EUR' ? '€' : 'RON'} {getPackagePrice(pkg)}
+        {displayPrice}
       </div>
     );
   };
@@ -80,7 +81,11 @@ const PackageDetails = () => {
       return t('orderNow');
     }
     
-    return `${t('orderNow')} - ${currency === 'EUR' ? '€' : 'RON'} ${getPackagePrice(pkg)}`;
+    const price = getPackagePrice(pkg, currency);
+    const currencySymbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : 'RON';
+    const displayPrice = currency === 'RON' ? `${price} ${currencySymbol}` : `${currencySymbol}${price}`;
+    
+    return `${t('orderNow')} - ${displayPrice}`;
   };
 
   const getPackageFeatures = (packageValue: string) => {
@@ -388,14 +393,23 @@ const PackageDetails = () => {
     
     return addons.filter(addon => 
       packageData.available_addons.includes(addon.addon_key)
-    ).map(addon => ({
-      title: t(addon.label_key),
-      description: t(addon.description_key),
-      price: addon.price_ron === 0 && addon.price_eur === 0 
-        ? t('free', 'Free') 
-        : `${currency === 'EUR' ? '€' : 'RON'} ${getAddonPrice(addon, currency)}`,
-      icon: getAddonIcon(addon.addon_key)
-    }));
+    ).map(addon => {
+      const price = getAddonPrice(addon, currency);
+      const priceDisplay = addon.price_ron === 0 && addon.price_eur === 0 && addon.price_usd === 0
+        ? t('free', 'Free')
+        : currency === 'EUR' 
+          ? `€${price}`
+          : currency === 'USD'
+            ? `$${price}`
+            : `${price} RON`;
+      
+      return {
+        title: t(addon.label_key),
+        description: t(addon.description_key),
+        price: priceDisplay,
+        icon: getAddonIcon(addon.addon_key)
+      };
+    });
   }
 
   function getRevisionAnswer(packageValue: string) {
@@ -567,34 +581,40 @@ const PackageDetails = () => {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-1 gap-3">
-                      {relatedPackages.map((pkg) => (
-                        <Link key={pkg.value} to={`/packages/${pkg.value}`}>
-                          <div className="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
-                            <div className="flex justify-between items-center">
-                              <div className="flex-1">
-                                <h4 className="font-semibold text-white text-sm mb-1">{t(pkg.label_key, pkg.value)}</h4>
-                                <p className="text-white/70 text-xs">
-                                  {pkg.value === 'gift' 
-                                    ? `${t('startingFrom', 'Starting from')} ${currency === 'EUR' ? '€59' : '299 RON'}`
-                                    : `${currency === 'EUR' ? '€' : 'RON'} ${getPackagePrice(pkg)}`
-                                  }
-                                </p>
+                      {relatedPackages.map((pkg) => {
+                        const price = getPackagePrice(pkg, currency);
+                        const priceDisplay = pkg.value === 'gift' 
+                          ? `${t('startingFrom', 'Starting from')} ${currency === 'EUR' ? '€59' : currency === 'USD' ? '$69' : '299 RON'}`
+                          : currency === 'EUR' 
+                            ? `€${price}`
+                            : currency === 'USD'
+                              ? `$${price}`
+                              : `${price} RON`;
+                        
+                        return (
+                          <Link key={pkg.value} to={`/packages/${pkg.value}`}>
+                            <div className="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
+                              <div className="flex justify-between items-center">
+                                <div className="flex-1">
+                                  <h4 className="font-semibold text-white text-sm mb-1">{t(pkg.label_key, pkg.value)}</h4>
+                                  <p className="text-white/70 text-xs">{priceDisplay}</p>
+                                </div>
+                                {pkg.tag === 'popular' && (
+                                  <Badge variant="secondary" className="ml-2 text-xs">
+                                    <Star className="w-3 h-3 mr-1" />
+                                    Popular
+                                  </Badge>
+                                )}
+                                {pkg.tag === 'new' && (
+                                  <Badge variant="outline" className="ml-2 text-xs text-white border-white/30">
+                                    New
+                                  </Badge>
+                                )}
                               </div>
-                              {pkg.tag === 'popular' && (
-                                <Badge variant="secondary" className="ml-2 text-xs">
-                                  <Star className="w-3 h-3 mr-1" />
-                                  Popular
-                                </Badge>
-                              )}
-                              {pkg.tag === 'new' && (
-                                <Badge variant="outline" className="ml-2 text-xs text-white border-white/30">
-                                  New
-                                </Badge>
-                              )}
                             </div>
-                          </div>
-                        </Link>
-                      ))}
+                          </Link>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>
