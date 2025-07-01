@@ -1,3 +1,4 @@
+
 export interface PackageInclude {
   id?: string;
   include_key: string;
@@ -42,6 +43,7 @@ export interface Package {
   description_key: string;
   price_ron: number;
   price_eur: number;
+  price_usd?: number;
   delivery_time_key: string;
   tag?: string;
   is_active?: boolean;
@@ -59,6 +61,7 @@ export interface Addon {
   description_key: string;
   price_ron: number;
   price_eur: number;
+  price_usd?: number;
   is_active?: boolean;
   trigger_field_type?: any;
   trigger_field_config?: any;
