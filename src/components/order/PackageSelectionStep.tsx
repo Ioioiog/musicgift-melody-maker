@@ -49,6 +49,17 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
     }
   };
 
+  const formatPrice = (pkg: any) => {
+    const price = getPackagePrice(pkg, currency);
+    if (currency === 'EUR') {
+      return `€${price}`;
+    } else if (currency === 'USD') {
+      return `$${price}`;
+    } else {
+      return `${price} RON`;
+    }
+  };
+
   const selectedPackageData = packages.find(pkg => pkg.value === selectedPackage);
 
   return (
@@ -100,7 +111,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                         </div>
                         <div className="flex items-center gap-2 sm:gap-3 shrink-0 justify-between sm:justify-end w-full sm:w-auto">
                           <div className="text-sm font-bold text-orange-600">
-                            {currency === 'EUR' ? '€' : ''}{getPackagePrice(pkg, currency)}{currency === 'RON' ? ' RON' : ''}
+                            {formatPrice(pkg)}
                           </div>
                           {selectedPackage === pkg.value && <Check className="w-4 h-4 text-orange-600" />}
                         </div>
@@ -138,7 +149,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
                   </div>
                   <div className="text-right">
                     <div className="text-xl font-bold text-orange-600">
-                      {currency === 'EUR' ? '€' : ''}{getPackagePrice(selectedPackageData, currency)}{currency === 'RON' ? ' RON' : ''}
+                      {formatPrice(selectedPackageData)}
                     </div>
                     {selectedPackageData.tag && (
                       <Badge className={`${getTagColor(selectedPackageData.tag)} mt-2 text-xs px-2 py-1 font-medium`}>
