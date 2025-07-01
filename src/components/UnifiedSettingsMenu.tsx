@@ -11,6 +11,7 @@ import {
 import { useLanguage, languageNames, Language } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useLocationContext } from '@/contexts/LocationContext';
+import { useRegionConfig } from '@/hooks/useRegionConfig';
 import { useTimezone } from '@/hooks/useTimezone';
 import { Settings, Check, Globe, MapPin, Clock, RefreshCw } from 'lucide-react';
 import CurrencyIcon from '@/components/CurrencyIcon';
@@ -21,6 +22,7 @@ const UnifiedSettingsMenu = () => {
   const { language, setLanguage } = useLanguage();
   const { currency, setCurrency, suggestedCurrency } = useCurrency();
   const { location, refreshLocation, loading } = useLocationContext();
+  const { regionConfig } = useRegionConfig();
   const { isBusinessHours } = useTimezone();
 
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
@@ -32,6 +34,9 @@ const UnifiedSettingsMenu = () => {
       console.error('Failed to refresh location:', error);
     }
   };
+
+  // Get supported currencies from region config
+  const supportedCurrencies = regionConfig?.supportedCurrencies || ['EUR', 'RON'];
 
   return (
     <DropdownMenu>
@@ -94,32 +99,57 @@ const UnifiedSettingsMenu = () => {
         <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
           Currency
         </div>
-        <DropdownMenuItem 
-          onClick={() => setCurrency('EUR')} 
-          className={`hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}
-        >
-          <div className="flex items-center space-x-2">
-            <CurrencyIcon currency="EUR" className="w-4 h-4" />
-            <span>EUR</span>
-            {suggestedCurrency === 'EUR' && (
-              <span className="text-xs bg-blue-100 text-blue-600 px-1 rounded">suggested</span>
-            )}
-          </div>
-          {currency === 'EUR' && <Check className="w-4 h-4" />}
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={() => setCurrency('RON')} 
-          className={`hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}
-        >
-          <div className="flex items-center space-x-2">
-            <CurrencyIcon currency="RON" className="w-4 h-4" />
-            <span>RON</span>
-            {suggestedCurrency === 'RON' && (
-              <span className="text-xs bg-blue-100 text-blue-600 px-1 rounded">suggested</span>
-            )}
-          </div>
-          {currency === 'RON' && <Check className="w-4 h-4" />}
-        </DropdownMenuItem>
+        
+        {/* EUR Option */}
+        {supportedCurrencies.includes('EUR') && (
+          <DropdownMenuItem 
+            onClick={() => setCurrency('EUR')} 
+            className={`hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}
+          >
+            <div className="flex items-center space-x-2">
+              <CurrencyIcon currency="EUR" className="w-4 h-4" />
+              <span>EUR</span>
+              {suggestedCurrency === 'EUR' && (
+                <span className="text-xs bg-blue-100 text-blue-600 px-1 rounded">suggested</span>
+              )}
+            </div>
+            {currency === 'EUR' && <Check className="w-4 h-4" />}
+          </DropdownMenuItem>
+        )}
+        
+        {/* RON Option */}
+        {supportedCurrencies.includes('RON') && (
+          <DropdownMenuItem 
+            onClick={() => setCurrency('RON')} 
+            className={`hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}
+          >
+            <div className="flex items-center space-x-2">
+              <CurrencyIcon currency="RON" className="w-4 h-4" />
+              <span>RON</span>
+              {suggestedCurrency === 'RON' && (
+                <span className="text-xs bg-blue-100 text-blue-600 px-1 rounded">suggested</span>
+              )}
+            </div>
+            {currency === 'RON' && <Check className="w-4 h-4" />}
+          </DropdownMenuItem>
+        )}
+        
+        {/* USD Option */}
+        {supportedCurrencies.includes('USD') && (
+          <DropdownMenuItem 
+            onClick={() => setCurrency('USD')} 
+            className={`hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'USD' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}
+          >
+            <div className="flex items-center space-x-2">
+              <CurrencyIcon currency="USD" className="w-4 h-4" />
+              <span>USD</span>
+              {suggestedCurrency === 'USD' && (
+                <span className="text-xs bg-blue-100 text-blue-600 px-1 rounded">suggested</span>
+              )}
+            </div>
+            {currency === 'USD' && <Check className="w-4 h-4" />}
+          </DropdownMenuItem>
+        )}
 
         <DropdownMenuSeparator className="bg-gray-200 my-2" />
 

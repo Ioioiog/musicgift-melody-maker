@@ -1,15 +1,19 @@
 
 import React from 'react';
-import { Euro } from 'lucide-react';
+import { Euro, DollarSign } from 'lucide-react';
 
 interface CurrencyIconProps {
-  currency: 'EUR' | 'RON';
+  currency: 'EUR' | 'RON' | 'USD';
   className?: string;
 }
 
 const CurrencyIcon: React.FC<CurrencyIconProps> = ({ currency, className }) => {
   if (currency === 'EUR') {
     return <Euro className={className} />;
+  }
+  
+  if (currency === 'USD') {
+    return <DollarSign className={className} />;
   }
   
   // RON icon using text
