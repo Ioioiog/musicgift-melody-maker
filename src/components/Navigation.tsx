@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage, languageNames, Language } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRegionConfig } from "@/hooks/useRegionConfig";
 import { ShoppingCart, Check, Globe, LogOut, UserCircle, User, History, ChevronDown, ChevronUp, Settings } from "lucide-react";
 import CurrencyIcon from "@/components/CurrencyIcon";
 
@@ -27,6 +28,7 @@ const Navigation = () => {
     user,
     signOut
   } = useAuth();
+  const { regionConfig } = useRegionConfig();
 
   // Refs for click outside detection
   const mainMenuRef = useRef<HTMLDivElement>(null);
@@ -162,6 +164,10 @@ const Navigation = () => {
     label: t("contact") || "Contact"
   }];
   const languages: Language[] = ["en", "ro", "fr", "pl", "de"];
+
+  // Get supported currencies from region config
+  const supportedCurrencies = regionConfig?.supportedCurrencies || ['EUR', 'RON', 'USD'];
+
   return <>
       {/* Background behind navbar */}
       <div style={{
@@ -217,26 +223,24 @@ const Navigation = () => {
                     <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Currency
                     </div>
-                    <button onClick={() => {
-                  setCurrency('EUR');
-                  closeAllMenus();
-                }} className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'EUR' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}>
-                      <div className="flex items-center space-x-2">
-                        <CurrencyIcon currency="EUR" className="w-4 h-4" />
-                        <span>EUR</span>
-                      </div>
-                      {currency === 'EUR' && <Check className="w-4 h-4" />}
-                    </button>
-                    <button onClick={() => {
-                  setCurrency('RON');
-                  closeAllMenus();
-                }} className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === 'RON' ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}>
-                      <div className="flex items-center space-x-2">
-                        <CurrencyIcon currency="RON" className="w-4 h-4" />
-                        <span>RON</span>
-                      </div>
-                      {currency === 'RON' && <Check className="w-4 h-4" />}
-                    </button>
+                    
+                    {/* Dynamic Currency Options */}
+                    {supportedCurrencies.map(currencyCode => (
+                      <button 
+                        key={currencyCode}
+                        onClick={() => {
+                          setCurrency(currencyCode as 'EUR' | 'RON' | 'USD');
+                          closeAllMenus();
+                        }} 
+                        className={`w-full hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-50 transition-all duration-300 rounded-lg mx-1 px-3 py-2 cursor-pointer transform hover:scale-105 min-h-[40px] touch-manipulation flex items-center justify-between ${currency === currencyCode ? "bg-gradient-to-r from-orange-100 to-orange-100 text-orange-700 font-semibold shadow-sm" : "text-gray-700"}`}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <CurrencyIcon currency={currencyCode as 'EUR' | 'RON' | 'USD'} className="w-4 h-4" />
+                          <span>{currencyCode}</span>
+                        </div>
+                        {currency === currencyCode && <Check className="w-4 h-4" />}
+                      </button>
+                    ))}
 
                     <div className="bg-gray-200 my-2 h-px" />
 
@@ -395,27 +399,23 @@ const Navigation = () => {
                 </div>
                 
                 <div className="space-y-0.5">
-                  <button onClick={() => {
-                setCurrency('EUR');
-                closeAllMenus();
-              }} className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${currency === 'EUR' ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" : "text-gray-700 hover:text-emerald-700"}`}>
-                    <div className="flex items-center space-x-2">
-                      <CurrencyIcon currency="EUR" className="w-4 h-4" />
-                      <span className="font-medium text-sm">EUR</span>
-                    </div>
-                    {currency === 'EUR' && <Check className="w-4 h-4 animate-pulse" />}
-                  </button>
-                  
-                  <button onClick={() => {
-                setCurrency('RON');
-                closeAllMenus();
-              }} className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${currency === 'RON' ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" : "text-gray-700 hover:text-emerald-700"}`}>
-                    <div className="flex items-center space-x-2">
-                      <CurrencyIcon currency="RON" className="w-4 h-4" />
-                      <span className="font-medium text-sm">RON</span>
-                    </div>
-                    {currency === 'RON' && <Check className="w-4 h-4 animate-pulse" />}
-                  </button>
+                  {/* Dynamic Currency Options for Mobile */}
+                  {supportedCurrencies.map(currencyCode => (
+                    <button 
+                      key={currencyCode}
+                      onClick={() => {
+                        setCurrency(currencyCode as 'EUR' | 'RON' | 'USD');
+                        closeAllMenus();
+                      }} 
+                      className={`group w-full flex items-center justify-between py-2.5 px-4 rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm hover:shadow-md transform hover:scale-[1.02] ${currency === currencyCode ? "bg-white/20 backdrop-blur-sm text-emerald-700 shadow-lg font-semibold" : "text-gray-700 hover:text-emerald-700"}`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <CurrencyIcon currency={currencyCode as 'EUR' | 'RON' | 'USD'} className="w-4 h-4" />
+                        <span className="font-medium text-sm">{currencyCode}</span>
+                      </div>
+                      {currency === currencyCode && <Check className="w-4 h-4 animate-pulse" />}
+                    </button>
+                  ))}
                 </div>
               </div>
 
