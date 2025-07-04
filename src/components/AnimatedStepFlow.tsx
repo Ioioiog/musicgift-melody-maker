@@ -218,7 +218,7 @@ const AnimatedStepFlow = () => {
               </div>
 
               {/* Footer Note */}
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-1.5 md:p-3 relative z-10 border border-white/30">
+              <div className="bg-white/10 rounded-lg p-1.5 md:p-3 relative z-10 border border-white/30">
                 <p className="text-xs md:text-sm text-white italic leading-relaxed">
                   {steps[activeStep].details.footer}
                 </p>
