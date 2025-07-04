@@ -183,7 +183,7 @@ const AnimatedStepFlow = () => {
               {/* Header with step info */}
               <div className="mb-2 md:mb-4 relative z-10">
                 <div className="flex items-center gap-1.5 md:gap-3 mb-1.5 md:mb-3">
-                  <div className="w-6 h-6 md:w-10 md:h-10 rounded-lg flex items-center justify-center bg-white/20 backdrop-blur-sm text-white shadow-lg border border-white/30">
+                  <div className="w-6 h-6 md:w-10 md:h-10 rounded-lg flex items-center justify-center bg-white/10 text-white shadow-lg border border-white/30">
                     {React.createElement(stepIcons[activeStep], {
                     className: "w-3 h-3 md:w-5 md:h-5",
                     strokeWidth: 2
