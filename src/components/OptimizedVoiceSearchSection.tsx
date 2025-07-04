@@ -3,12 +3,14 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLocationContext } from '@/contexts/LocationContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { MessageCircle, Volume2, Search, MapPin, Clock, Star, Music, Quote } from 'lucide-react';
 import { testimonials } from '@/data/testimonials';
 
 const OptimizedVoiceSearchSection = () => {
   const { t, language } = useLanguage();
   const { location, loading: locationLoading } = useLocationContext();
+  const isMobile = useIsMobile();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -44,7 +46,7 @@ const OptimizedVoiceSearchSection = () => {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        <div className="absolute inset-0 bg-black/30"></div>
+        {!isMobile && <div className="absolute inset-0 bg-black/30"></div>}
         <div className="max-w-6xl mx-auto h-96 flex items-center justify-center relative z-10">
           <div className="animate-pulse text-white">Loading FAQ...</div>
         </div>
@@ -156,7 +158,7 @@ const OptimizedVoiceSearchSection = () => {
       }}
     >
       {/* Semi-transparent overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/30"></div>
+      {!isMobile && <div className="absolute inset-0 bg-black/30"></div>}
       
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header - simplified */}
