@@ -26,7 +26,7 @@ const HeroContent = () => {
             
             <a
               href="/packages"
-              className="group border-2 border-white/60 hover:border-white text-white hover:bg-white/10 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full text-sm sm:text-lg transition-all duration-300 backdrop-blur-sm flex items-center gap-2 sm:gap-3 min-w-[180px] sm:min-w-[200px] justify-center"
+              className="group border-2 border-white/60 hover:border-white text-white bg-white/10 hover:bg-white/20 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full text-sm sm:text-lg transition-all duration-300 flex items-center gap-2 sm:gap-3 min-w-[180px] sm:min-w-[200px] justify-center"
             >
               <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 group-hover:animate-spin" />
               {t('viewPackages') || 'View Packages'}
