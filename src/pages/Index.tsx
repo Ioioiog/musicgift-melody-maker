@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Music, ShoppingCart, Gift, Mic, Star, Rocket, PartyPopper, Disc, Trophy } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Lazy load non-critical components
 const Navigation = lazy(() => import("@/components/Navigation"));
@@ -28,6 +29,7 @@ const LoadingFallback = ({
 
 const Index = () => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
   // Performance monitoring
   useEffect(() => {
@@ -76,7 +78,7 @@ const Index = () => {
           
           {/* Hero Content Section */}
           <section className="py-4 md:py-0 relative" aria-labelledby="hero-heading">
-            <div className="absolute inset-0 bg-black/30" />
+            {!isMobile && <div className="absolute inset-0 bg-black/30" />}
             <div className="sr-only">
               <h2 id="hero-heading">Cadouri Muzicale Personalizate - MusicGift.ro</h2>
               <p>Transformă emoțiile în muzică cu serviciile noastre profesionale de compoziție muzicală personalizată.</p>
@@ -90,7 +92,7 @@ const Index = () => {
 
           {/* Process Flow Section */}
           <section className="py-2 md:py-4 relative" aria-labelledby="process-heading">
-            <div className="absolute inset-0 bg-black/20" />
+            {!isMobile && <div className="absolute inset-0 bg-black/20" />}
             <h2 id="process-heading" className="sr-only">Cum Funcționează Procesul de Creare a Melodiilor Personalizate</h2>
             <div className="relative z-10">
               <Suspense fallback={<LoadingFallback className="h-64" />}>
@@ -101,7 +103,7 @@ const Index = () => {
 
           {/* Optimized Testimonials Section */}
           <section className="py-2 md:py-4 relative" aria-labelledby="testimonials-heading">
-            <div className="absolute inset-0 bg-black/20" />
+            {!isMobile && <div className="absolute inset-0 bg-black/20" />}
             <h2 id="testimonials-heading" className="sr-only">Mărturii ale Clienților Noștri Mulțumiți</h2>
             <div className="relative z-10">
               <Suspense fallback={<LoadingFallback className="h-48" />}>
@@ -176,7 +178,7 @@ const Index = () => {
 
       {/* Call-to-Action Section */}
       <section className="main-lcp-critical px-2 md:px-4 text-white text-center relative overflow-hidden py-4 md:py-8" aria-labelledby="cta-heading">
-        <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />
+        {!isMobile && <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-purple-900/30 to-black/50" />}
         <div className="max-w-4xl mx-auto relative z-10">
           <h2 id="cta-heading" className="text-base md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3">
             {t('heroCtaTitle')}
