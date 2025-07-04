@@ -68,7 +68,7 @@ const OptimizedVoiceSearchSection = () => {
 
     // First try to match by city
     let cityMatches = approvedTestimonials.filter(t => 
-      t.location && t.location.toLowerCase().includes(location.city.toLowerCase())
+      t.location && location.city && t.location.toLowerCase().includes(location.city.toLowerCase())
     );
 
     if (cityMatches.length >= 2) {
