@@ -5,7 +5,7 @@ export const navigationTranslations = {
   blog: 'Blog',
   packages: 'Pachete',
   howItWorks: 'Cum funcționează',
-  testimonials: 'Mărturii',
+  testimonials: 'Testimoniale',
   contact: 'Contact',
   signIn: 'Conectare',
   signOut: 'Deconectare',
