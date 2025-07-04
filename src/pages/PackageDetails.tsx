@@ -12,32 +12,37 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { getPackagePrice, getAddonPrice } from '@/utils/pricing';
 import { useState } from 'react';
-
 const PackageDetails = () => {
-  const { packageId } = useParams();
-  const { t } = useLanguage();
-  const { currency } = useCurrency();
-  const { data: packages, isLoading } = usePackages();
-  const { data: addons, isLoading: addonsLoading } = useAddons();
+  const {
+    packageId
+  } = useParams();
+  const {
+    t
+  } = useLanguage();
+  const {
+    currency
+  } = useCurrency();
+  const {
+    data: packages,
+    isLoading
+  } = usePackages();
+  const {
+    data: addons,
+    isLoading: addonsLoading
+  } = useAddons();
   const [expandedFeature, setExpandedFeature] = useState<string | null>(null);
-
   if (isLoading || addonsLoading) {
-    return (
-      <div className="min-h-screen">
+    return <div className="min-h-screen">
         <Navigation />
         <div className="container mx-auto py-8 px-4">
           <div className="text-center">Loading package details...</div>
         </div>
         <Footer />
-      </div>
-    );
+      </div>;
   }
-
   const packageData = packages?.find(pkg => pkg.value === packageId);
-
   if (!packageData) {
-    return (
-      <div className="min-h-screen">
+    return <div className="min-h-screen">
         <Navigation />
         <div className="container mx-auto py-8 px-4">
           <div className="text-center">
@@ -51,320 +56,227 @@ const PackageDetails = () => {
           </div>
         </div>
         <Footer />
-      </div>
-    );
+      </div>;
   }
-
   const renderPackagePrice = (pkg: any) => {
     if (pkg.value === 'gift') {
       const startingPrice = currency === 'EUR' ? '€59' : currency === 'USD' ? '$69' : '299 RON';
-      return (
-        <div className="text-3xl font-bold mb-2 text-white">
+      return <div className="text-3xl font-bold mb-2 text-white">
           {t('startingFrom', 'Starting from')} {startingPrice}
-        </div>
-      );
+        </div>;
     }
-    
     const price = getPackagePrice(pkg, currency);
     const currencySymbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : 'RON';
     const displayPrice = currency === 'RON' ? `${price} ${currencySymbol}` : `${currencySymbol}${price}`;
-    
-    return (
-      <div className="text-4xl font-bold mb-2 text-white">
+    return <div className="text-4xl font-bold mb-2 text-white">
         {displayPrice}
-      </div>
-    );
+      </div>;
   };
-
   const renderOrderButtonPrice = (pkg: any) => {
     if (pkg.value === 'gift') {
       return t('orderNow');
     }
-    
     const price = getPackagePrice(pkg, currency);
     const currencySymbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : 'RON';
     const displayPrice = currency === 'RON' ? `${price} ${currencySymbol}` : `${currencySymbol}${price}`;
-    
     return `${t('orderNow')} - ${displayPrice}`;
   };
-
   const getPackageFeatures = (packageValue: string) => {
-    const baseFeatures = [
-      {
-        icon: <Music className="w-5 h-5" />,
-        title: t('professionalProduction', 'Professional Production'),
-        description: t('highQualityStudio', 'High-quality studio recording and production')
-      },
-      {
-        icon: <Mic className="w-5 h-5" />,
-        title: t('expertVocals', 'Expert Vocals'),
-        description: t('professionalSingers', 'Professional singers with years of experience')
-      },
-      {
-        icon: <FileText className="w-5 h-5" />,
-        title: t('customLyrics', 'Custom Lyrics'),
-        description: t('personalizedSong', 'Personalized song based on your story')
-      }
-    ];
-
+    const baseFeatures = [{
+      icon: <Music className="w-5 h-5" />,
+      title: t('professionalProduction', 'Professional Production'),
+      description: t('highQualityStudio', 'High-quality studio recording and production')
+    }, {
+      icon: <Mic className="w-5 h-5" />,
+      title: t('expertVocals', 'Expert Vocals'),
+      description: t('professionalSingers', 'Professional singers with years of experience')
+    }, {
+      icon: <FileText className="w-5 h-5" />,
+      title: t('customLyrics', 'Custom Lyrics'),
+      description: t('personalizedSong', 'Personalized song based on your story')
+    }];
     if (packageValue === 'premium') {
-      return [
-        ...baseFeatures,
-        {
-          icon: <Users className="w-5 h-5" />,
-          title: t('globalDistribution', 'Global Distribution'),
-          description: t('worldwideRelease', 'Release your song on all major platforms worldwide')
-        }
-      ];
+      return [...baseFeatures, {
+        icon: <Users className="w-5 h-5" />,
+        title: t('globalDistribution', 'Global Distribution'),
+        description: t('worldwideRelease', 'Release your song on all major platforms worldwide')
+      }];
     }
-
     return baseFeatures;
   };
-
   const getDidYouKnowFacts = (packageValue: string) => {
     switch (packageValue) {
       case 'wedding':
-        return [
-          {
-            title: t('didYouKnowWedding1Title'),
-            description: t('didYouKnowWedding1Desc')
-          },
-          {
-            title: t('didYouKnowWedding2Title'),
-            description: t('didYouKnowWedding2Desc')
-          },
-          {
-            title: t('didYouKnowWedding3Title'),
-            description: t('didYouKnowWedding3Desc')
-          },
-          {
-            title: t('didYouKnowWedding4Title'),
-            description: t('didYouKnowWedding4Desc')
-          },
-          {
-            title: t('didYouKnowWedding5Title'),
-            description: t('didYouKnowWedding5Desc')
-          }
-        ];
-        
+        return [{
+          title: t('didYouKnowWedding1Title'),
+          description: t('didYouKnowWedding1Desc')
+        }, {
+          title: t('didYouKnowWedding2Title'),
+          description: t('didYouKnowWedding2Desc')
+        }, {
+          title: t('didYouKnowWedding3Title'),
+          description: t('didYouKnowWedding3Desc')
+        }, {
+          title: t('didYouKnowWedding4Title'),
+          description: t('didYouKnowWedding4Desc')
+        }, {
+          title: t('didYouKnowWedding5Title'),
+          description: t('didYouKnowWedding5Desc')
+        }];
       case 'baptism':
-        return [
-          {
-            title: t('didYouKnowBaptism1Title'),
-            description: t('didYouKnowBaptism1Desc')
-          },
-          {
-            title: t('didYouKnowBaptism2Title'),
-            description: t('didYouKnowBaptism2Desc')
-          },
-          {
-            title: t('didYouKnowBaptism3Title'),
-            description: t('didYouKnowBaptism3Desc')
-          },
-          {
-            title: t('didYouKnowBaptism4Title'),
-            description: t('didYouKnowBaptism4Desc')
-          },
-          {
-            title: t('didYouKnowBaptism5Title'),
-            description: t('didYouKnowBaptism5Desc')
-          }
-        ];
-
+        return [{
+          title: t('didYouKnowBaptism1Title'),
+          description: t('didYouKnowBaptism1Desc')
+        }, {
+          title: t('didYouKnowBaptism2Title'),
+          description: t('didYouKnowBaptism2Desc')
+        }, {
+          title: t('didYouKnowBaptism3Title'),
+          description: t('didYouKnowBaptism3Desc')
+        }, {
+          title: t('didYouKnowBaptism4Title'),
+          description: t('didYouKnowBaptism4Desc')
+        }, {
+          title: t('didYouKnowBaptism5Title'),
+          description: t('didYouKnowBaptism5Desc')
+        }];
       case 'comingOfAge':
-        return [
-          {
-            title: t('didYouKnowComingOfAge1Title'),
-            description: t('didYouKnowComingOfAge1Desc')
-          },
-          {
-            title: t('didYouKnowComingOfAge2Title'),
-            description: t('didYouKnowComingOfAge2Desc')
-          },
-          {
-            title: t('didYouKnowComingOfAge3Title'),
-            description: t('didYouKnowComingOfAge3Desc')
-          },
-          {
-            title: t('didYouKnowComingOfAge4Title'),
-            description: t('didYouKnowComingOfAge4Desc')
-          },
-          {
-            title: t('didYouKnowComingOfAge5Title'),
-            description: t('didYouKnowComingOfAge5Desc')
-          }
-        ];
-        
+        return [{
+          title: t('didYouKnowComingOfAge1Title'),
+          description: t('didYouKnowComingOfAge1Desc')
+        }, {
+          title: t('didYouKnowComingOfAge2Title'),
+          description: t('didYouKnowComingOfAge2Desc')
+        }, {
+          title: t('didYouKnowComingOfAge3Title'),
+          description: t('didYouKnowComingOfAge3Desc')
+        }, {
+          title: t('didYouKnowComingOfAge4Title'),
+          description: t('didYouKnowComingOfAge4Desc')
+        }, {
+          title: t('didYouKnowComingOfAge5Title'),
+          description: t('didYouKnowComingOfAge5Desc')
+        }];
       case 'personal':
-        return [
-          {
-            title: t('didYouKnowPersonal1Title'),
-            description: t('didYouKnowPersonal1Desc')
-          },
-          {
-            title: t('didYouKnowPersonal2Title'),
-            description: t('didYouKnowPersonal2Desc')
-          },
-          {
-            title: t('didYouKnowPersonal3Title'),
-            description: t('didYouKnowPersonal3Desc')
-          },
-          {
-            title: t('didYouKnowPersonal4Title'),
-            description: t('didYouKnowPersonal4Desc')
-          },
-          {
-            title: t('didYouKnowPersonal5Title'),
-            description: t('didYouKnowPersonal5Desc')
-          }
-        ];
-      
+        return [{
+          title: t('didYouKnowPersonal1Title'),
+          description: t('didYouKnowPersonal1Desc')
+        }, {
+          title: t('didYouKnowPersonal2Title'),
+          description: t('didYouKnowPersonal2Desc')
+        }, {
+          title: t('didYouKnowPersonal3Title'),
+          description: t('didYouKnowPersonal3Desc')
+        }, {
+          title: t('didYouKnowPersonal4Title'),
+          description: t('didYouKnowPersonal4Desc')
+        }, {
+          title: t('didYouKnowPersonal5Title'),
+          description: t('didYouKnowPersonal5Desc')
+        }];
       case 'premium':
-        return [
-          {
-            title: t('didYouKnowPremium1Title'),
-            description: t('didYouKnowPremium1Desc')
-          },
-          {
-            title: t('didYouKnowPremium2Title'),
-            description: t('didYouKnowPremium2Desc')
-          },
-          {
-            title: t('didYouKnowPremium3Title'),
-            description: t('didYouKnowPremium3Desc')
-          },
-          {
-            title: t('didYouKnowPremium4Title'),
-            description: t('didYouKnowPremium4Desc')
-          },
-          {
-            title: t('didYouKnowPremium5Title'),
-            description: t('didYouKnowPremium5Desc')
-          }
-        ];
-      
+        return [{
+          title: t('didYouKnowPremium1Title'),
+          description: t('didYouKnowPremium1Desc')
+        }, {
+          title: t('didYouKnowPremium2Title'),
+          description: t('didYouKnowPremium2Desc')
+        }, {
+          title: t('didYouKnowPremium3Title'),
+          description: t('didYouKnowPremium3Desc')
+        }, {
+          title: t('didYouKnowPremium4Title'),
+          description: t('didYouKnowPremium4Desc')
+        }, {
+          title: t('didYouKnowPremium5Title'),
+          description: t('didYouKnowPremium5Desc')
+        }];
       case 'business':
-        return [
-          {
-            title: t('didYouKnowBusiness1Title'),
-            description: t('didYouKnowBusiness1Desc')
-          },
-          {
-            title: t('didYouKnowBusiness2Title'),
-            description: t('didYouKnowBusiness2Desc')
-          }
-        ];
-      
+        return [{
+          title: t('didYouKnowBusiness1Title'),
+          description: t('didYouKnowBusiness1Desc')
+        }, {
+          title: t('didYouKnowBusiness2Title'),
+          description: t('didYouKnowBusiness2Desc')
+        }];
       case 'artist':
-        return [
-          {
-            title: t('didYouKnowArtist1Title'),
-            description: t('didYouKnowArtist1Desc')
-          },
-          {
-            title: t('didYouKnowArtist2Title'),
-            description: t('didYouKnowArtist2Desc')
-          },
-          {
-            title: t('didYouKnowArtist3Title'),
-            description: t('didYouKnowArtist3Desc')
-          },
-          {
-            title: t('didYouKnowArtist4Title'),
-            description: t('didYouKnowArtist4Desc')
-          },
-          {
-            title: t('didYouKnowArtist5Title'),
-            description: t('didYouKnowArtist5Desc')
-          }
-        ];
-
+        return [{
+          title: t('didYouKnowArtist1Title'),
+          description: t('didYouKnowArtist1Desc')
+        }, {
+          title: t('didYouKnowArtist2Title'),
+          description: t('didYouKnowArtist2Desc')
+        }, {
+          title: t('didYouKnowArtist3Title'),
+          description: t('didYouKnowArtist3Desc')
+        }, {
+          title: t('didYouKnowArtist4Title'),
+          description: t('didYouKnowArtist4Desc')
+        }, {
+          title: t('didYouKnowArtist5Title'),
+          description: t('didYouKnowArtist5Desc')
+        }];
       case 'instrumental':
-        return [
-          {
-            title: t('didYouKnowInstrumental1Title'),
-            description: t('didYouKnowInstrumental1Desc')
-          },
-          {
-            title: t('didYouKnowInstrumental2Title'),
-            description: t('didYouKnowInstrumental2Desc')
-          },
-          {
-            title: t('didYouKnowInstrumental3Title'),
-            description: t('didYouKnowInstrumental3Desc')
-          },
-          {
-            title: t('didYouKnowInstrumental4Title'),
-            description: t('didYouKnowInstrumental4Desc')
-          },
-          {
-            title: t('didYouKnowInstrumental5Title'),
-            description: t('didYouKnowInstrumental5Desc')
-          }
-        ];
-
+        return [{
+          title: t('didYouKnowInstrumental1Title'),
+          description: t('didYouKnowInstrumental1Desc')
+        }, {
+          title: t('didYouKnowInstrumental2Title'),
+          description: t('didYouKnowInstrumental2Desc')
+        }, {
+          title: t('didYouKnowInstrumental3Title'),
+          description: t('didYouKnowInstrumental3Desc')
+        }, {
+          title: t('didYouKnowInstrumental4Title'),
+          description: t('didYouKnowInstrumental4Desc')
+        }, {
+          title: t('didYouKnowInstrumental5Title'),
+          description: t('didYouKnowInstrumental5Desc')
+        }];
       case 'remix':
-        return [
-          {
-            title: t('didYouKnowRemix1Title'),
-            description: t('didYouKnowRemix1Desc')
-          },
-          {
-            title: t('didYouKnowRemix2Title'),
-            description: t('didYouKnowRemix2Desc')
-          },
-          {
-            title: t('didYouKnowRemix3Title'),
-            description: t('didYouKnowRemix3Desc')
-          },
-          {
-            title: t('didYouKnowRemix4Title'),
-            description: t('didYouKnowRemix4Desc')
-          },
-          {
-            title: t('didYouKnowRemix5Title'),
-            description: t('didYouKnowRemix5Desc')
-          }
-        ];
-      
+        return [{
+          title: t('didYouKnowRemix1Title'),
+          description: t('didYouKnowRemix1Desc')
+        }, {
+          title: t('didYouKnowRemix2Title'),
+          description: t('didYouKnowRemix2Desc')
+        }, {
+          title: t('didYouKnowRemix3Title'),
+          description: t('didYouKnowRemix3Desc')
+        }, {
+          title: t('didYouKnowRemix4Title'),
+          description: t('didYouKnowRemix4Desc')
+        }, {
+          title: t('didYouKnowRemix5Title'),
+          description: t('didYouKnowRemix5Desc')
+        }];
       case 'gift':
-        return [
-          {
-            title: t('didYouKnowGift1Title'),
-            description: t('didYouKnowGift1Desc')
-          },
-          {
-            title: t('didYouKnowGift2Title'),
-            description: t('didYouKnowGift2Desc')
-          },
-          {
-            title: t('didYouKnowGift3Title'),
-            description: t('didYouKnowGift3Desc')
-          },
-          {
-            title: t('didYouKnowGift4Title'),
-            description: t('didYouKnowGift4Desc')
-          },
-          {
-            title: t('didYouKnowGift5Title'),
-            description: t('didYouKnowGift5Desc')
-          }
-        ];
-      
+        return [{
+          title: t('didYouKnowGift1Title'),
+          description: t('didYouKnowGift1Desc')
+        }, {
+          title: t('didYouKnowGift2Title'),
+          description: t('didYouKnowGift2Desc')
+        }, {
+          title: t('didYouKnowGift3Title'),
+          description: t('didYouKnowGift3Desc')
+        }, {
+          title: t('didYouKnowGift4Title'),
+          description: t('didYouKnowGift4Desc')
+        }, {
+          title: t('didYouKnowGift5Title'),
+          description: t('didYouKnowGift5Desc')
+        }];
       default:
-        return [
-          {
-            title: t('didYouKnowPersonal1Title'),
-            description: t('didYouKnowPersonal1Desc')
-          },
-          {
-            title: t('didYouKnowPersonal2Title'),
-            description: t('didYouKnowPersonal2Desc')
-          }
-        ];
+        return [{
+          title: t('didYouKnowPersonal1Title'),
+          description: t('didYouKnowPersonal1Desc')
+        }, {
+          title: t('didYouKnowPersonal2Title'),
+          description: t('didYouKnowPersonal2Desc')
+        }];
     }
   };
-
   function getAddonIcon(addonKey: string) {
     switch (addonKey) {
       case 'rushDelivery':
@@ -387,22 +299,11 @@ const PackageDetails = () => {
         return <Plus className="w-4 h-4" />;
     }
   }
-
   function getAvailableAddOns() {
     if (!addons || !packageData.available_addons) return [];
-    
-    return addons.filter(addon => 
-      packageData.available_addons.includes(addon.addon_key)
-    ).map(addon => {
+    return addons.filter(addon => packageData.available_addons.includes(addon.addon_key)).map(addon => {
       const price = getAddonPrice(addon, currency);
-      const priceDisplay = addon.price_ron === 0 && addon.price_eur === 0 && addon.price_usd === 0
-        ? t('free', 'Free')
-        : currency === 'EUR' 
-          ? `€${price}`
-          : currency === 'USD'
-            ? `$${price}`
-            : `${price} RON`;
-      
+      const priceDisplay = addon.price_ron === 0 && addon.price_eur === 0 && addon.price_usd === 0 ? t('free', 'Free') : currency === 'EUR' ? `€${price}` : currency === 'USD' ? `$${price}` : `${price} RON`;
       return {
         title: t(addon.label_key),
         description: t(addon.description_key),
@@ -411,43 +312,41 @@ const PackageDetails = () => {
       };
     });
   }
-
   function getRevisionAnswer(packageValue: string) {
     if (packageValue === 'wedding') {
       return t('faqRevisionsAnswerWedding', 'Yes, the wedding package includes one free revision to ensure your complete satisfaction with the final product.');
     }
     return t('faqRevisionsAnswerOther', 'Revisions are only available for the Wedding package. Other packages do not include revision options to maintain our streamlined production process and competitive pricing.');
   }
-
   const packageFeatures = getPackageFeatures(packageData.value);
   const didYouKnowFacts = getDidYouKnowFacts(packageData.value);
   const availableAddOns = getAvailableAddOns();
-  
+
   // Debug logging for related packages
   console.log('=== PACKAGE DEBUG INFO ===');
   console.log('Current package:', packageData.value);
-  console.log('All packages:', packages?.map(p => ({ value: p.value, label_key: p.label_key })));
+  console.log('All packages:', packages?.map(p => ({
+    value: p.value,
+    label_key: p.label_key
+  })));
   console.log('All package values:', packages?.map(p => p.value));
-  
   const relatedPackages = packages?.filter(pkg => pkg.value !== packageData.value);
-  console.log('Related packages (filtered):', relatedPackages?.map(p => ({ 
-    value: p.value, 
+  console.log('Related packages (filtered):', relatedPackages?.map(p => ({
+    value: p.value,
     label_key: p.label_key,
     translation: t(p.label_key)
   })));
   console.log('Related packages count:', relatedPackages?.length);
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navigation />
       
       {/* Hero Section with Music Background */}
       <div className="py-20 px-4 relative overflow-hidden min-h-screen" style={{
-        backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
+      backgroundImage: 'url(/lovable-uploads/1247309a-2342-4b12-af03-20eca7d1afab.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container mx-auto relative z-10">
           <div className="mb-6">
@@ -474,12 +373,10 @@ const PackageDetails = () => {
                         {t(packageData.tagline_key)}
                       </CardDescription>
                     </div>
-                    {packageData.tag === 'popular' && (
-                      <Badge className="ml-4 bg-purple-500 hover:bg-purple-600">
+                    {packageData.tag === 'popular' && <Badge className="ml-4 bg-purple-500 hover:bg-purple-600">
                         <Star className="w-4 h-4 mr-1" />
                         Popular
-                      </Badge>
-                    )}
+                      </Badge>}
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -503,18 +400,15 @@ const PackageDetails = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-4">
-                    {packageData.includes?.map((item, index) => (
-                      <li key={index} className="flex items-start">
+                    {packageData.includes?.map((item, index) => <li key={index} className="flex items-start">
                         <Check className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-white/90 text-lg">{t(item.include_key)}</span>
-                      </li>
-                    ))}
+                      </li>)}
                   </ul>
                 </CardContent>
               </Card>
 
-              {availableAddOns.length > 0 && (
-                <Card className="bg-white/10 backdrop-blur-md border border-white/20">
+              {availableAddOns.length > 0 && <Card className="bg-white/10 backdrop-blur-md border border-white/20">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
                       <ShoppingCart className="w-5 h-5 mr-2 text-blue-400" />
@@ -526,8 +420,7 @@ const PackageDetails = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {availableAddOns.map((addon, index) => (
-                        <div key={index} className="p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                      {availableAddOns.map((addon, index) => <div key={index} className="p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
                           <div className="flex items-start space-x-3">
                             <div className="text-blue-400 mt-1">
                               {addon.icon}
@@ -538,12 +431,10 @@ const PackageDetails = () => {
                               <div className="text-blue-300 font-medium text-sm">{addon.price}</div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        </div>)}
                     </div>
                   </CardContent>
-                </Card>
-              )}
+                </Card>}
             </div>
 
             {/* Sidebar */}
@@ -557,7 +448,7 @@ const PackageDetails = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <Link to={`/order?package=${packageData.value}`}>
-                    <Button className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm" size="lg">
+                    <Button size="lg" className="w-full border-white/30 backdrop-blur-sm text-zinc-50 bg-orange-500 hover:bg-orange-400">
                       {renderOrderButtonPrice(packageData)}
                     </Button>
                   </Link>
@@ -574,51 +465,36 @@ const PackageDetails = () => {
                 </CardContent>
               </Card>
 
-              {relatedPackages && relatedPackages.length > 0 && (
-                <Card className="bg-white/10 backdrop-blur-md border border-white/20">
+              {relatedPackages && relatedPackages.length > 0 && <Card className="bg-white/10 backdrop-blur-md border border-white/20">
                   <CardHeader>
                     <CardTitle className="text-white">{t('otherPackages', 'Other Packages')}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-1 gap-3">
-                      {relatedPackages.map((pkg) => {
-                        const price = getPackagePrice(pkg, currency);
-                        const priceDisplay = pkg.value === 'gift' 
-                          ? `${t('startingFrom', 'Starting from')} ${currency === 'EUR' ? '€59' : currency === 'USD' ? '$69' : '299 RON'}`
-                          : currency === 'EUR' 
-                            ? `€${price}`
-                            : currency === 'USD'
-                              ? `$${price}`
-                              : `${price} RON`;
-                        
-                        return (
-                          <Link key={pkg.value} to={`/packages/${pkg.value}`}>
+                      {relatedPackages.map(pkg => {
+                    const price = getPackagePrice(pkg, currency);
+                    const priceDisplay = pkg.value === 'gift' ? `${t('startingFrom', 'Starting from')} ${currency === 'EUR' ? '€59' : currency === 'USD' ? '$69' : '299 RON'}` : currency === 'EUR' ? `€${price}` : currency === 'USD' ? `$${price}` : `${price} RON`;
+                    return <Link key={pkg.value} to={`/packages/${pkg.value}`}>
                             <div className="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
                               <div className="flex justify-between items-center">
                                 <div className="flex-1">
                                   <h4 className="font-semibold text-white text-sm mb-1">{t(pkg.label_key, pkg.value)}</h4>
                                   <p className="text-white/70 text-xs">{priceDisplay}</p>
                                 </div>
-                                {pkg.tag === 'popular' && (
-                                  <Badge variant="secondary" className="ml-2 text-xs">
+                                {pkg.tag === 'popular' && <Badge variant="secondary" className="ml-2 text-xs">
                                     <Star className="w-3 h-3 mr-1" />
                                     Popular
-                                  </Badge>
-                                )}
-                                {pkg.tag === 'new' && (
-                                  <Badge variant="outline" className="ml-2 text-xs text-white border-white/30">
+                                  </Badge>}
+                                {pkg.tag === 'new' && <Badge variant="outline" className="ml-2 text-xs text-white border-white/30">
                                     New
-                                  </Badge>
-                                )}
+                                  </Badge>}
                               </div>
                             </div>
-                          </Link>
-                        );
-                      })}
+                          </Link>;
+                  })}
                     </div>
                   </CardContent>
-                </Card>
-              )}
+                </Card>}
             </div>
           </div>
 
@@ -691,8 +567,6 @@ const PackageDetails = () => {
       </div>
       
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default PackageDetails;
