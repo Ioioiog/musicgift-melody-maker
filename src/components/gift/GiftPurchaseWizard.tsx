@@ -463,7 +463,7 @@ const GiftPurchaseWizard = ({
       </div>;
   }
   return <div className="max-w-4xl mx-auto">
-      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/30">
+      <div className="bg-white/10 rounded-lg p-6 border border-white/30">
         <div className="mb-6">
           <h3 className="text-xl font-semibold text-white mb-2">
             {t('step')} {step} {t('of')} 4 - {step === 1 ? t('stepAmount') : step === 2 ? t('stepDetails') : step === 3 ? t('stepDesign') : t('stepReview')}
