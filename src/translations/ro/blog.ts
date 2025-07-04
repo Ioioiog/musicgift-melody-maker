@@ -11,7 +11,7 @@ export const blogTranslations = {
   blogCtaTitle: "Gata să-ți Creezi Cadoul Muzical?",
   blogCtaDescription: "Lasă echipa noastră de experți să creeze o melodie personalizată care să-ți spună povestea unică",
   viewPackages: "Vezi Pachetele",
-  getInTouch: "Ia Legătura",
+  getInTouch: "Contactează-ne",
   
   // Categories
   categoryTips: "Sfaturi Muzicale",
