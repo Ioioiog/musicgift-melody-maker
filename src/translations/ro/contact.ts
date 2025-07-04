@@ -9,8 +9,8 @@ export const contactTranslations = {
   message: "Mesaj",
   
   // Contact info
-  getInTouch: "Ia Legătura cu Noi",
-  getInTouchContent: "Ne-ar plăcea să auzim de la tine. Trimite-ne un mesaj și îți vom răspunde cât mai curând posibil.",
+  getInTouch: "Contactează-ne",
+  getInTouchContent: "Trimite-ne un mesaj și îți vom răspunde cât mai curând posibil.",
   phone: "Telefon",
   location: "Locație",
   
@@ -26,6 +26,6 @@ export const contactTranslations = {
   closed: "Închis",
   
   // Newsletter
-  stayUpdated: "Rămâi la Curent",
+  stayUpdated: "Abonează-te la newsletter",
   subscribeNewsletter: "Abonează-te la newsletter-ul nostru pentru cele mai recente actualizări și oferte exclusive",
 };
